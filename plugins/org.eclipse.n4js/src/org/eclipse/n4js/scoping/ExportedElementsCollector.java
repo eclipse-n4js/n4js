@@ -23,6 +23,7 @@ import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker;
 import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.ElementExportDefinition;
 import org.eclipse.n4js.ts.types.ExportDefinition;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.ModuleExportDefinition;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TFunction;
@@ -34,10 +35,12 @@ import org.eclipse.n4js.utils.DeclMergingHelper;
 import org.eclipse.n4js.utils.DeclMergingUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.RecursionGuard;
+import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -110,6 +113,7 @@ public class ExportedElementsCollector {
 			boolean includeHollows, boolean includeValueOnlyElements) {
 
 		CollectionInfo info = new CollectionInfo(namespace, context, includeHollows, includeValueOnlyElements);
+
 		doCollectElements(namespace, info);
 
 		if (DeclMergingUtils.mayBeMerged(namespace)) {
@@ -117,15 +121,21 @@ public class ExportedElementsCollector {
 			for (AbstractNamespace mergedNamespace : mergedNamespaces) {
 				doCollectElements(mergedNamespace, info);
 			}
+		}
+
+		if (ResourceType.getResourceType(namespace) == ResourceType.DTS) {
 			return Iterables.concat(
 					declMergingHelper.chooseRepresentatives(info.visible),
 					declMergingHelper.chooseRepresentatives(info.invisible));
 		}
-
 		return Iterables.concat(info.visible, info.invisible);
 	}
 
 	private void doCollectElements(AbstractNamespace namespace, CollectionInfo info) {
+
+		if (namespace instanceof TModule) {
+			handleExportEquals((TModule) namespace, info);
+		}
 
 		for (ExportDefinition exportDef : Lists.reverse(namespace.getExportDefinitions())) {
 			if (exportDef instanceof ElementExportDefinition) {
@@ -174,9 +184,8 @@ public class ExportedElementsCollector {
 
 	private void doCollectElement(String exportedName, TExportableElement exportedElem, CollectionInfo info) {
 
-		boolean include = (info.includeHollows || !N4JSLanguageUtils.isHollowElement(exportedElem, variantHelper))
-				&& (info.includeValueOnlyElements
-						|| !N4JSLanguageUtils.isValueOnlyElement(exportedElem, variantHelper));
+		boolean include = N4JSLanguageUtils.checkInclude(exportedElem,
+				info.includeHollows, info.includeValueOnlyElements, variantHelper);
 
 		if (include) {
 			TypeVisibility visibility = isVisible(info.context, exportedElem);
@@ -197,6 +206,24 @@ public class ExportedElementsCollector {
 				 * is false) compared to includeHollows because: ParameterizedTypeRef#declaredType is of type Type.
 				 * Since TVariable is no subtype of Type, it cannot be linked to that property 'declaredType'.
 				 */
+			}
+		}
+	}
+
+	private void handleExportEquals(TModule module, CollectionInfo info) {
+		Optional<List<IdentifiableElement>> exportEqualsElems = ExportedElementsUtils
+				.getElementsExportedViaExportEquals(module);
+		if (exportEqualsElems.isPresent()) {
+			boolean haveDefaultExport = false;
+			for (IdentifiableElement elem : exportEqualsElems.get()) {
+				if (elem instanceof TNamespace) {
+					doCollectElements((TNamespace) elem, info);
+				} else if (elem instanceof TFunction || elem instanceof TVariable) {
+					if (!haveDefaultExport) {
+						doCollectElement("default", (TExportableElement) elem, info);
+						haveDefaultExport = true;
+					}
+				}
 			}
 		}
 	}

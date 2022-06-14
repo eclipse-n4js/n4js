@@ -219,9 +219,9 @@
     "vsce": "1.95.1"
   },
   "dependencies": {
+    "@types/node": "^16",
     "n4js-cli": "latest",
     "n4js-runtime": "latest",
-    "n4js-runtime-node": "latest",
     "n4js-runtime-es2015": "latest",
     "npmlog": "4.1.2",
     "vscode-languageclient": "7.0.0"
@@ -236,7 +236,6 @@
     },
     "output": "src-gen",
     "requiredRuntimeLibraries": [
-      "n4js-runtime-node",
       "n4js-runtime-es2015"
     ]
   }

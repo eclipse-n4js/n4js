@@ -32,18 +32,17 @@
     },
     "requiredRuntimeLibraries": [
       "n4js-runtime-v8",
-      "n4js-runtime-es2015",
-      "n4js-runtime-node"
+      "n4js-runtime-es2015"
     ],
     "generator": {
       "rewriteCjsImports": true
     }
   },
   "dependencies": {
+    "@types/node": "^16",
     "n4js-runtime": "^0.1.0",
     "n4js-runtime-v8": "^0.1.0",
-    "n4js-runtime-es2015": "^0.1.0",
-    "n4js-runtime-node": "^0.1.0"
+    "n4js-runtime-es2015": "^0.1.0"
   },
   "devDependencies": {}
 }

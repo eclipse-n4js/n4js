@@ -132,19 +132,34 @@ public class EnumLiteralTypeRefImpl extends LiteralTypeRefImpl implements EnumLi
 	 * @generated
 	 */
 	@Override
-	public String internalGetTypeRefAsString() {
+	public String internalGetTypeRefAsString(final boolean resolveProxies) {
+		if (((this.getValue() == null) && (this.getAstValue() != null))) {
+			return this.getAstValue().toString();
+		}
+		String _elvis = null;
 		TEnum _enumType = this.getEnumType();
 		String _name = null;
 		if (_enumType!=null) {
 			_name=_enumType.getName();
 		}
-		String _plus = (_name + ".");
+		if (_name != null) {
+			_elvis = _name;
+		} else {
+			_elvis = "\u00ABnull\u00BB";
+		}
+		String _plus = (_elvis + ".");
+		String _elvis_1 = null;
 		TEnumLiteral _value = this.getValue();
 		String _name_1 = null;
 		if (_value!=null) {
 			_name_1=_value.getName();
 		}
-		return (_plus + _name_1);
+		if (_name_1 != null) {
+			_elvis_1 = _name_1;
+		} else {
+			_elvis_1 = "\u00ABnull\u00BB";
+		}
+		return (_plus + _elvis_1);
 	}
 
 	/**
@@ -216,8 +231,8 @@ public class EnumLiteralTypeRefImpl extends LiteralTypeRefImpl implements EnumLi
 		switch (operationID) {
 			case TypeRefsPackage.ENUM_LITERAL_TYPE_REF___GET_ENUM_TYPE:
 				return getEnumType();
-			case TypeRefsPackage.ENUM_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
-				return internalGetTypeRefAsString();
+			case TypeRefsPackage.ENUM_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN:
+				return internalGetTypeRefAsString((Boolean)arguments.get(0));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

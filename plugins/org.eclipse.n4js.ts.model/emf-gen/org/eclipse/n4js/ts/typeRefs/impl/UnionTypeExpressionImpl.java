@@ -54,8 +54,8 @@ public class UnionTypeExpressionImpl extends ComposedTypeRefImpl implements Unio
 	 * @generated
 	 */
 	@Override
-	public String internalGetTypeRefAsString() {
-		String _internalGetTypeRefAsString = super.internalGetTypeRefAsString();
+	public String internalGetTypeRefAsString(final boolean resolveProxies) {
+		String _internalGetTypeRefAsString = super.internalGetTypeRefAsString(resolveProxies);
 		return ("union" + _internalGetTypeRefAsString);
 	}
 
@@ -68,13 +68,13 @@ public class UnionTypeExpressionImpl extends ComposedTypeRefImpl implements Unio
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.UNION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN: return TypeRefsPackage.UNION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
 		if (baseClass == ComposedTypeRef.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.COMPOSED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.UNION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.COMPOSED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN: return TypeRefsPackage.UNION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -89,8 +89,8 @@ public class UnionTypeExpressionImpl extends ComposedTypeRefImpl implements Unio
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypeRefsPackage.UNION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING:
-				return internalGetTypeRefAsString();
+			case TypeRefsPackage.UNION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN:
+				return internalGetTypeRefAsString((Boolean)arguments.get(0));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

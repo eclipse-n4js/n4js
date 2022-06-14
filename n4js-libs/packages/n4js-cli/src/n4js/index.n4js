@@ -332,7 +332,7 @@ async function ensureCustomN4jscJar(customN4jscValue: string, log: {function(str
 }
 
 
-function splitCustomN4jscURLValue(nodeURL: url.NodeURL) : ~Object with {dirName:string, fileName:string} {
+function splitCustomN4jscURLValue(nodeURL: url.Url) : ~Object with {dirName:string, fileName:string} {
     const fileName = removeReservedCharacters(path.basename(nodeURL.pathname));
     const dirName = getDirName(nodeURL);
     return {dirName:dirName, fileName:fileName};
@@ -340,7 +340,7 @@ function splitCustomN4jscURLValue(nodeURL: url.NodeURL) : ~Object with {dirName:
 
 
 
-function getDirName(nodeURL: url.NodeURL) : string {
+function getDirName(nodeURL: url.Url) : string {
     let dirName = nodeURL.hostname + path.dirname(nodeURL.pathname);
     dirName = dirName.replace(/\/|\\/g, "."); // replace separators by '.'
     dirName = removeReservedCharacters(dirName);

@@ -51,7 +51,7 @@ let x2 = NS1;
 // XPECT type of 'x2c' --> int
 // XPECT noerrors -->
 let x2c = x2.c1;
-// XPECT type of 'xt2' --> null
+// XPECT type of 'xt2' --> C1«proxy»
 /* XPECT errors ---
    "Couldn't resolve reference to Type 'C1'." at "C1"
    "Couldn't resolve reference to Type 'x2'." at "x2"   

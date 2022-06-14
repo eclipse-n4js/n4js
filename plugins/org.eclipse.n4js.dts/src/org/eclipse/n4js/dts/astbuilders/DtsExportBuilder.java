@@ -14,6 +14,7 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_exportStatement;
 
 import java.util.Set;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.eclipse.n4js.dts.TypeScriptParser.ExportAsNamespaceContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ExportElementAsDefaultContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ExportElementDirectlyContext;
@@ -25,19 +26,16 @@ import org.eclipse.n4js.dts.TypeScriptParser.ExportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportedElementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.MultipleExportElementsContext;
-import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
-import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
 import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.NamedExportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceExportSpecifier;
-import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.utils.UtilN4;
 
 /**
- * Builder to create {@link TypeReferenceNode} from parse tree elements
+ * Builder to create {@link ExportDeclaration}s.
  */
 public class DtsExportBuilder extends AbstractDtsModuleRefBuilder<ExportStatementContext, ExportDeclaration> {
 
@@ -50,20 +48,6 @@ public class DtsExportBuilder extends AbstractDtsModuleRefBuilder<ExportStatemen
 	protected Set<Integer> getVisitChildrenOfRules() {
 		return java.util.Set.of(
 				RULE_exportStatement);
-	}
-
-	static String findExportEqualsIdentifier(ProgramContext ctx) {
-		if (ctx.statementList() != null) {
-			for (StatementContext stmtCtx : ctx.statementList().statement()) {
-				if (stmtCtx.exportStatement() != null
-						&& stmtCtx.exportStatement().exportStatementTail() instanceof ExportEqualsContext) {
-
-					ExportEqualsContext eeCtx = (ExportEqualsContext) stmtCtx.exportStatement().exportStatementTail();
-					return eeCtx.namespaceName().getText().toString();
-				}
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -217,7 +201,20 @@ public class DtsExportBuilder extends AbstractDtsModuleRefBuilder<ExportStatemen
 	 */
 	@Override
 	public void enterExportEquals(ExportEqualsContext ctx) {
-		// done via #isExportedEquals()
+		DtsScriptBuilder scriptBuilder = getScriptBuilder();
+		TerminalNode msoiemee = scriptBuilder.getModuleSpecifierOfImportEqualsMatchingExportEquals();
+		if (msoiemee != null) {
+			// special case:
+			// import id = require('someModule');
+			// export = id;
+			result = N4JSFactory.eINSTANCE.createExportDeclaration();
+			NamespaceExportSpecifier namespaceExportSpecifier = N4JSFactory.eINSTANCE.createNamespaceExportSpecifier();
+			result.setNamespaceExport(namespaceExportSpecifier);
+			setModuleSpecifier(result, msoiemee);
+		} else {
+			// in DtsScriptBuilder#enterProgram(ProgramContext) annotation @@ExportEquals was added to the script
+			// to represent this export, so it can be ignored here
+		}
 	}
 
 	@Override

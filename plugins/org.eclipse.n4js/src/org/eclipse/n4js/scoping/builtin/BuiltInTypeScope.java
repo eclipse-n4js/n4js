@@ -32,6 +32,7 @@ import org.eclipse.n4js.ts.types.NullType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
@@ -46,6 +47,7 @@ import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 
 /**
  * This scope provides access to the built in JS types. It is recommended to use {@link BuiltInTypeScopeAccess} directly
@@ -693,9 +695,9 @@ public final class BuiltInTypeScope extends EnumerableScope {
 
 		beforeRegistration(fileName, module);
 
-		// register types
-		for (Type type : module.getTypesAndFunctions()) {
-			IEObjectDescription description = EObjectDescription.create(type.getName(), type);
+		// register exported elements
+		for (TExportableElement elem : Iterables.concat(module.getTypesAndFunctions(), module.getExportedVariables())) {
+			IEObjectDescription description = EObjectDescription.create(elem.getName(), elem);
 			elements.put(description.getName(), description);
 		}
 

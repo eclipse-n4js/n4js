@@ -116,7 +116,7 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator implements
 				}
 			} else if (extendedTypeRef !== null && extendedTypeRef.isAliasResolved) {
 				// not all aliases are illegal after "extends", but if we get to this point we have an illegal case:
-				val message = getMessageForCLF_WRONG_META_TYPE(n4Interface.description, "extend", extendedTypeRef.internalGetTypeRefAsString);
+				val message = getMessageForCLF_WRONG_META_TYPE(n4Interface.description, "extend", extendedTypeRef.typeRefAsStringWithAliasResolution);
 				addIssue(message, it, null, CLF_WRONG_META_TYPE);
 			}
 		]

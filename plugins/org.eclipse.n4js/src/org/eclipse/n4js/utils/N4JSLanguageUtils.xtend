@@ -17,6 +17,7 @@ import java.util.Properties
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSLanguageConstants
@@ -91,6 +92,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.AnyType
+import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.PrimitiveType
@@ -98,6 +100,7 @@ import org.eclipse.n4js.ts.types.TAnnotableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TEnum
+import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
@@ -112,6 +115,7 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable
+import org.eclipse.n4js.ts.types.util.SuperTypesMapper
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.types.utils.TypeCompareUtils
 import org.eclipse.n4js.types.utils.TypeUtils
@@ -546,6 +550,26 @@ public class N4JSLanguageUtils {
 	}
 
 	/**
+	 * Tells whether the given element is global. Works for AST nodes and TModule elements.
+	 */
+	def static boolean isGlobal(EObject elem) {
+		if (elem === null) {
+			return false;
+		}
+		if (BuiltInTypeScope.isPrimitivesResource(elem.eResource)) {
+			// primitives act like global types, but their module does not contain @@Global:
+			return true;
+		}
+		val root = EcoreUtil.getRootContainer(elem);
+		if (root instanceof TModule) {
+			return AnnotationDefinition.GLOBAL.hasAnnotation(root);
+		} else if (root instanceof Script) {
+			return AnnotationDefinition.GLOBAL.hasAnnotation(root);
+		}
+		return false;
+	}
+
+	/**
 	 * Tells if the given identifiable element is exported.
 	 */
 	def static boolean isDirectlyExported(IdentifiableElement elem) {
@@ -883,6 +907,17 @@ public class N4JSLanguageUtils {
 		return AnnotationDefinition.STATIC_POLYFILL_AWARE.hasAnnotation( tsElement ); // transitively inherited
 	}
 
+	/** Checks presence of {@link AnnotationDefinition#CONTAINS_INDEX_SIGNATURE} annotation on the declaredType of
+	 * the given type reference and all its direct and indirect super types. */
+	def static boolean hasIndexSignature(TypeRef typeRef) {
+		val declType = typeRef?.declaredType;
+		if (declType instanceof ContainerType<?>) {
+			return AnnotationDefinition.CONTAINS_INDEX_SIGNATURE.hasAnnotation(declType)
+				|| SuperTypesMapper.exists(declType, [AnnotationDefinition.CONTAINS_INDEX_SIGNATURE.hasAnnotation(it)])
+		}
+		return false;
+	}
+
 	/** checks if the qualifiedName has a last segment named 'default' {@link N4JSLanguageConstants#EXPORT_DEFAULT_NAME} */
 	def static boolean isDefaultExport(QualifiedName qualifiedName) {
 		return  ( qualifiedName !== null
@@ -1205,8 +1240,19 @@ public class N4JSLanguageUtils {
 			&& getEnumKind(element as TEnum) !== EnumKind.Normal;
 		return element !== null && !isNumberOrStringBasedEnum && !isHollowElement(element, javaScriptVariantHelper);
 	}
-	
-	
+
+	/**
+	 * Tells whether the given element should be included (usually in a scope), based on the given includeHollows /
+	 * includeValueOnlyElements configuration.
+	 */
+	def static boolean checkInclude(TExportableElement elem, boolean includeHollows, boolean includeValueOnlyElements,
+		JavaScriptVariantHelper variantHelper) {
+
+		val include = (includeHollows || !N4JSLanguageUtils.isHollowElement(elem, variantHelper))
+				&& (includeValueOnlyElements || !N4JSLanguageUtils.isValueOnlyElement(elem, variantHelper));
+		return include;
+	}
+
 	/**
 	 * Elements can have a type-only semantic (called 'hollow'), a value-only semantic, or can have both of them.
 	 * A typical example for a hollow element is a shape, a typical example for a value-only element is a

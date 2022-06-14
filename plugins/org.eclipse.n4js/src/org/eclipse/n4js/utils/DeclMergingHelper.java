@@ -20,12 +20,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.types.AbstractNamespace;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.Type;
@@ -174,6 +176,19 @@ public class DeclMergingHelper {
 		QualifiedName qn = qualifiedNameProvider.getFullyQualifiedName(type);
 		List<Type> result = globalScopeAccess.getTypesFromGlobalScope(context, qn);
 		cleanListOfMergedElements(type, result);
+		return result;
+	}
+
+	/**
+	 * Returns those elements merged with the given element.
+	 * <p>
+	 * The given element does not have to be the
+	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
+	 */
+	public List<EObject> getMergedElements(Resource context, IdentifiableElement elem) {
+		QualifiedName qn = qualifiedNameProvider.getFullyQualifiedName(elem);
+		List<EObject> result = globalScopeAccess.getElementsFromGlobalScope(context, EcorePackage.Literals.EOBJECT, qn);
+		cleanListOfMergedElements(elem, result);
 		return result;
 	}
 

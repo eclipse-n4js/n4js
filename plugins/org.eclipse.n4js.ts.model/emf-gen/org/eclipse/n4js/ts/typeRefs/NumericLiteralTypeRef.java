@@ -80,9 +80,9 @@ public interface NumericLiteralTypeRef extends LiteralTypeRef {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model unique="false"
+	 * @model unique="false" resolveProxiesUnique="false"
 	 * @generated
 	 */
-	String internalGetTypeRefAsString();
+	String internalGetTypeRefAsString(boolean resolveProxies);
 
 } // NumericLiteralTypeRef

@@ -137,7 +137,6 @@ pushd ${EXTENSION_DIR}
         this.version=\"$VERSION_EXTENSION\";\
         this.dependencies['n4js-cli']=\"$VERSION_LIBS\";\
         this.dependencies['n4js-runtime']=\"$VERSION_LIBS\";\
-        this.dependencies['n4js-runtime-node']=\"$VERSION_LIBS\";\
         this.dependencies['n4js-runtime-es2015']=\"$VERSION_LIBS\";"
 
     echo "==== STEP 5/8: Call npm install (use local verdaccio registry)"

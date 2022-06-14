@@ -27,6 +27,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.ClassHeritageContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassImplementsClauseContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ConstructorDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.GetAccessorContext;
+import org.eclipse.n4js.dts.TypeScriptParser.IndexSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterizedTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberBaseContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberContext;
@@ -76,7 +77,7 @@ public class DtsClassBuilder
 	@Override
 	public void enterClassDeclaration(ClassDeclarationContext ctx) {
 		result = N4JSFactory.eINSTANCE.createN4ClassDeclaration();
-		result.setName(ctx.identifierOrKeyWord().getText());
+		result.setName(ctx.identifierName().getText());
 		result.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
 		result.setTypingStrategy(TypingStrategy.STRUCTURAL);
 
@@ -131,6 +132,13 @@ public class DtsClassBuilder
 		md.getDeclaredModifiers().add(N4Modifier.PUBLIC);
 		addLocationInfo(md, ctx);
 		result.getOwnedMembersRaw().add(md);
+	}
+
+	@Override
+	public void enterIndexSignature(IndexSignatureContext ctx) {
+		if (!AnnotationDefinition.CONTAINS_INDEX_SIGNATURE.hasAnnotation(result)) {
+			ParserContextUtils.addAnnotationContainsIndexSignature(result);
+		}
 	}
 
 	@Override

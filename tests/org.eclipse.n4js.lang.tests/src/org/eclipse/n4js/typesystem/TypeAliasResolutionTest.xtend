@@ -123,7 +123,7 @@ class TypeAliasResolutionTest extends AbstractTypesystemTest {
 		assertNotNull(typeRefInModule);
 		assertFalse(typeRefInModule.isAliasUnresolved);
 		assertTrue (typeRefInModule.isAliasResolved);
-		assertEquals(expectedResolutionAsString, typeRefInModule.typeRefAsStringWithAliasResolution);
+		assertEquals(expectedResolutionAsString, typeRefInModule.typeRefAsStringWithAliasExpansion);
 	}
 
 	def private void assertResolutionInAST(String expectedResolutionAsString, TypeReferenceNode<?> astNode) {
@@ -132,6 +132,6 @@ class TypeAliasResolutionTest extends AbstractTypesystemTest {
 		assertFalse(astNode.typeRefInAST.isAliasResolved);
 		assertFalse(astNode.typeRef.isAliasUnresolved);
 		assertTrue (astNode.typeRef.isAliasResolved);
-		assertEquals(expectedResolutionAsString, astNode.typeRef.typeRefAsStringWithAliasResolution);
+		assertEquals(expectedResolutionAsString, astNode.typeRef.typeRefAsStringWithAliasExpansion);
 	}
 }

@@ -77,7 +77,7 @@ public abstract class TypeArgumentImpl extends ProxyResolvingEObjectImpl impleme
 	 */
 	@Override
 	public String getTypeRefAsString() {
-		return this.internalGetTypeRefAsString();
+		return this.getTypeRefAsString(true);
 	}
 
 	/**
@@ -86,10 +86,70 @@ public abstract class TypeArgumentImpl extends ProxyResolvingEObjectImpl impleme
 	 * @generated
 	 */
 	@Override
-	public String internalGetTypeRefAsString() {
+	public String getTypeRefAsString(final boolean resolveProxies) {
+		return this.internalGetTypeRefAsString(resolveProxies);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getTypeRefAsStringWithAliasResolution() {
+		return this.getTypeRefAsStringWithAliasResolution(true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getTypeRefAsStringWithAliasResolution(final boolean resolveProxies) {
+		return this.internalGetTypeRefAsString(resolveProxies);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getTypeRefAsStringWithAliasExpansion() {
+		return this.getTypeRefAsStringWithAliasExpansion(true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getTypeRefAsStringWithAliasExpansion(final boolean resolveProxies) {
+		return this.internalGetTypeRefAsString(resolveProxies);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String internalGetTypeRefAsString(boolean resolveProxies) {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		return this.getTypeRefAsStringWithAliasExpansion(false);
 	}
 
 	/**
@@ -106,8 +166,20 @@ public abstract class TypeArgumentImpl extends ProxyResolvingEObjectImpl impleme
 				return getDeclaredType();
 			case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING:
 				return getTypeRefAsString();
-			case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING:
-				return internalGetTypeRefAsString();
+			case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING__BOOLEAN:
+				return getTypeRefAsString((Boolean)arguments.get(0));
+			case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION:
+				return getTypeRefAsStringWithAliasResolution();
+			case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN:
+				return getTypeRefAsStringWithAliasResolution((Boolean)arguments.get(0));
+			case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION:
+				return getTypeRefAsStringWithAliasExpansion();
+			case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN:
+				return getTypeRefAsStringWithAliasExpansion((Boolean)arguments.get(0));
+			case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN:
+				return internalGetTypeRefAsString((Boolean)arguments.get(0));
+			case TypeRefsPackage.TYPE_ARGUMENT___TO_STRING:
+				return toString();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

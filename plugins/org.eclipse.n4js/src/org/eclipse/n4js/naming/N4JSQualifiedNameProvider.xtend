@@ -12,7 +12,6 @@ package org.eclipse.n4js.naming
 
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
@@ -20,7 +19,6 @@ import org.eclipse.n4js.json.JSON.JSONStringLiteral
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.packagejson.PackageJsonProperties
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
-import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
 import org.eclipse.n4js.ts.types.IdentifiableElement
@@ -35,6 +33,7 @@ import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypeVariable
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.IQualifiedNameProvider
@@ -97,10 +96,7 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 	}
 
 	private def QualifiedName fqnTModule(TModule module) {
-		val isGlobal = AnnotationDefinition.GLOBAL.hasAnnotation(module);
-		if (isGlobal
-			// primitives act like global types, but their module does not contain @@Global:
-			|| BuiltInTypeScope.isPrimitivesResource(module.eResource)) {
+		if (N4JSLanguageUtils.isGlobal(module)) {
 			return QualifiedName.create(GLOBAL_NAMESPACE_SEGMENT)
 		}
 		var plainQN = converter.toQualifiedName(module.qualifiedName);

@@ -41,7 +41,7 @@ class TypeAliasComputerTest extends AbstractTypesystemTest {
 
 		assertTrue(resolvedTypeRef.isAliasResolved);
 		assertTrue(resolvedTypeRef instanceof ParameterizedTypeRef);
-		assertEquals("A <=> string", resolvedTypeRef.typeRefAsStringWithAliasResolution);
+		assertEquals("A <=> string", resolvedTypeRef.typeRefAsStringWithAliasExpansion);
 	}
 
 	@Test
@@ -58,7 +58,7 @@ class TypeAliasComputerTest extends AbstractTypesystemTest {
 
 		assertTrue(resolvedTypeRef.isAliasResolved);
 		assertTrue(resolvedTypeRef instanceof UnionTypeExpression);
-		assertEquals("A <=> union{string,number}", resolvedTypeRef.typeRefAsStringWithAliasResolution);
+		assertEquals("A <=> union{string,number}", resolvedTypeRef.typeRefAsStringWithAliasExpansion);
 	}
 
 	@Test
@@ -83,7 +83,7 @@ class TypeAliasComputerTest extends AbstractTypesystemTest {
 		assertFalse(nestedTypeRef1.isAliasResolved);
 		val nestedTypeRef2 = (resolvedTypeRef as UnionTypeExpression).typeRefs.get(1);
 		assertTrue(nestedTypeRef2.isAliasResolved);
-		assertEquals("S <=> string", nestedTypeRef2.typeRefAsStringWithAliasResolution);
+		assertEquals("S <=> string", nestedTypeRef2.typeRefAsStringWithAliasExpansion);
 	}
 
 	@Test
@@ -105,10 +105,10 @@ class TypeAliasComputerTest extends AbstractTypesystemTest {
 
 		val nestedTypeRef1 = (resolvedTypeRef as FunctionTypeExpression).fpars.get(0).typeRef;
 		assertTrue(nestedTypeRef1.isAliasResolved);
-		assertEquals("S <=> string", nestedTypeRef1.typeRefAsStringWithAliasResolution);
+		assertEquals("S <=> string", nestedTypeRef1.typeRefAsStringWithAliasExpansion);
 		val nestedTypeRef2 = (resolvedTypeRef as FunctionTypeExpression).returnTypeRef;
 		assertTrue(nestedTypeRef2.isAliasResolved);
-		assertEquals("S <=> string", nestedTypeRef2.typeRefAsStringWithAliasResolution);
+		assertEquals("S <=> string", nestedTypeRef2.typeRefAsStringWithAliasExpansion);
 	}
 
 	def private TypeAlias findTypeAliasA(Script script) {

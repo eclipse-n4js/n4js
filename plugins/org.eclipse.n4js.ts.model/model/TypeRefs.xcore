@@ -26,6 +26,7 @@ package org.eclipse.n4js.ts.typeRefs
 
 import java.util.UUID
 import org.eclipse.emf.common.util.ECollections
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.TEnum
@@ -80,16 +81,48 @@ abstract class TypeArgument {
 	op Type getDeclaredType() {
 		return null;
 	}
+
 	/*
 	 * Returns this type argument/reference as a string, usually according to N4JS syntax.
-	 * <p>
-	 * Both unresolved and resolved references to a type alias will be represented as a
-	 * reference to a type alias (i.e. only the name of the type alias is included; the
-	 * aliased/actual type is ignored).
+	 * Both unresolved and resolved references to a type alias will be shown as a reference to the type alias
+	 * (i.e. only the name of the type alias is included; the aliased/actual type is ignored).
 	 */
 	op String getTypeRefAsString() {
-		return internalGetTypeRefAsString();
+		return getTypeRefAsString(true);
 	}
+	/* See {@link TypeArgument#getTypeRefAsString()}. */
+	op String getTypeRefAsString(boolean resolveProxies) {
+		// note: for the handling of resolved references to a type alias see the override in subclass TypeRef
+		return internalGetTypeRefAsString(resolveProxies);
+	}
+
+	/*
+	 * Same as {@link TypeArgument#getTypeRefAsString()}, except that resolved(!) references to
+	 * a type alias are handled differently: only the aliased/actual type will be shown (the type
+	 * alias will be ignored).
+	 */
+	op String getTypeRefAsStringWithAliasResolution() {
+		return getTypeRefAsStringWithAliasResolution(true);
+	}
+	/* See {@link TypeArgument#getTypeRefAsStringWithAliasResolution()}. */
+	op String getTypeRefAsStringWithAliasResolution(boolean resolveProxies) {
+		return internalGetTypeRefAsString(resolveProxies);
+	}
+
+	/*
+	 * Same as {@link TypeArgument#getTypeRefAsString()}, except that resolved(!) references to
+	 * a type alias are handled differently: both the name of the type alias and the aliased/actual
+	 * type are shown, separated by {@code <=>}.
+	 */
+	op String getTypeRefAsStringWithAliasExpansion() {
+		return getTypeRefAsStringWithAliasExpansion(true);
+	}
+	/* See {@link TypeArgument#getTypeRefAsStringWithAliasExpansion()}. */
+	op String getTypeRefAsStringWithAliasExpansion(boolean resolveProxies) {
+		// note: for the handling of resolved references to a type alias see the override in subclass TypeRef
+		return internalGetTypeRefAsString(resolveProxies);
+	}
+
 	/*
 	 * Actual computation of the string representation of this type argument/reference.
 	 * <p>
@@ -98,7 +131,11 @@ abstract class TypeArgument {
 	 * resolved references to a type alias will only include the aliased/actual type
 	 * (the fact that a type alias is involved is not shown at all).
 	 */
-	op String internalGetTypeRefAsString()
+	op String internalGetTypeRefAsString(boolean resolveProxies)
+
+	op String toString() {
+		return getTypeRefAsStringWithAliasExpansion(false);
+	}
 }
 
 /*
@@ -264,33 +301,19 @@ abstract class TypeRef extends TypeArgument {
 	op TypeArgument[] getTypeArgsWithDefaults() {
 		return emptyEList
 	}
-	/* See {@link TypeArgument#getTypeRefAsString()}. */
-	op String getTypeRefAsString() {
-		val oatr = originalAliasTypeRef;
-		if (oatr !== null) {
-			return oatr.getTypeRefAsString();
-		}
-		return this.internalGetTypeRefAsString();
-	}
-	/*
-	 * Returns this type reference as a string, usually according to N4JS syntax.
-	 * <p>
-	 * Regarding unresolved/resolved references to a type alias, this behaves as
-	 * {@link TypeArgument#getTypeRefAsString() #getTypeRefAsString()}, except that
-	 * in case of resolved references to a type alias the aliased/actual type is also
-	 * shown, appended with {@code <=>} as separator.
-	 */
-	op String getTypeRefAsStringWithAliasResolution() {
-		val result = getTypeRefAsString();
+	/* Overrides {@link TypeArgument#getTypeRefAsString(boolean)}. */
+	op String getTypeRefAsString(boolean resolveProxies) {
 		if (isAliasResolved()) {
-			return result + " <=> " + this.internalGetTypeRefAsString();
+			return getOriginalAliasTypeRef().getTypeRefAsString(resolveProxies);
 		}
-		return result;
+		return internalGetTypeRefAsString(resolveProxies);
 	}
-	/* See {@link TypeArgument#internalGetTypeRefAsString()}. */
-	op String internalGetTypeRefAsString()
-	op String toString() {
-		return getTypeRefAsStringWithAliasResolution();
+	/* Overrides {@link TypeArgument#getTypeRefAsStringWithAliasExpansion(boolean)}. */
+	op String getTypeRefAsStringWithAliasExpansion(boolean resolveProxies) {
+		if (isAliasResolved()) {
+			return getTypeRefAsString(resolveProxies) + " <=> " + internalGetTypeRefAsString(resolveProxies);
+		}
+		return getTypeRefAsString(resolveProxies);
 	}
 	/* Convenience method, returns only true for parameterized type refs if the declared type is any */
 	op boolean isTopType() {
@@ -380,10 +403,10 @@ abstract class ComposedTypeRef extends StaticBaseTypeRef {
 	}
 	contains TypeRef[] typeRefs
 	/*
-	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}, only returns list of composed members, to be called by subclass.
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString(boolean)}, only returns list of composed members, to be called by subclass.
 	 */
-	op String internalGetTypeRefAsString() {
-		return "{" + typeRefs.map[it.typeRefAsString].join(',') + "}" + getModifiersAsString();
+	op String internalGetTypeRefAsString(boolean resolveProxies) {
+		return "{" + typeRefs.map[it.getTypeRefAsString(resolveProxies)].join(',') + "}" + getModifiersAsString();
 	}
 }
 
@@ -392,10 +415,10 @@ abstract class ComposedTypeRef extends StaticBaseTypeRef {
  */
 class UnionTypeExpression extends ComposedTypeRef {
 	/*
-	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString(boolean)}
 	 */
-	op String internalGetTypeRefAsString() {
-		return "union" + super.internalGetTypeRefAsString();
+	op String internalGetTypeRefAsString(boolean resolveProxies) {
+		return "union" + super.internalGetTypeRefAsString(resolveProxies);
 	}
 }
 
@@ -405,10 +428,10 @@ class UnionTypeExpression extends ComposedTypeRef {
  */
 class IntersectionTypeExpression extends ComposedTypeRef {
 	/*
-	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString(boolean)}
 	 */
-	op String internalGetTypeRefAsString() {
-		return "intersection" + super.internalGetTypeRefAsString();
+	op String internalGetTypeRefAsString(boolean resolveProxies) {
+		return "intersection" + super.internalGetTypeRefAsString(resolveProxies);
 	}
 }
 
@@ -418,9 +441,9 @@ class IntersectionTypeExpression extends ComposedTypeRef {
 // TODO kick me!
 abstract class ThisTypeRef extends BaseTypeRef {
 	/*
-	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString(boolean)}
 	 */
-	op String internalGetTypeRefAsString() {
+	op String internalGetTypeRefAsString(boolean resolveProxies) {
 		return "this" + getModifiersAsString();
 	}
 	/**
@@ -481,9 +504,9 @@ class  ThisTypeRefStructural extends ThisTypeRef, StructuralTypeRef {
 			unmodifiableView;
 	}
 	/*
-	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString(boolean)}
 	 */
-	op String internalGetTypeRefAsString() {
+	op String internalGetTypeRefAsString(boolean resolveProxies) {
 		return typingStrategy + "this" + getModifiersAsString();
 	}
 }
@@ -514,10 +537,10 @@ class BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
 		definedTypingStrategy = typingStrategy;
 	}
 	/*
-	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString(boolean)}
 	 */
-	op String internalGetTypeRefAsString() {
-		return typingStrategy + "this[" + actualThisTypeRef.internalGetTypeRefAsString() + "]" + getModifiersAsString();
+	op String internalGetTypeRefAsString(boolean resolveProxies) {
+		return typingStrategy + "this[" + actualThisTypeRef.internalGetTypeRefAsString(resolveProxies) + "]" + getModifiersAsString();
 	}
 	op ParameterizedTypeRef getDeclaredUpperBound() {
 		return actualThisTypeRef;
@@ -654,16 +677,27 @@ class ParameterizedTypeRef extends BaseTypeRef {
 	}
 
 	/*
-	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString(boolean)}
 	 */
-	op String internalGetTypeRefAsString() {
-		return declaredType?.rawTypeAsString
+	op String internalGetTypeRefAsString(boolean resolveProxies) {
+		return internalGetDeclaredTypeAsString(resolveProxies)
 		+ (if (declaredTypeArgs.empty) {
 			""
 		} else {
-			"<" + declaredTypeArgs.map[typeRefAsString].join(",") + ">"
+			"<" + declaredTypeArgs.map[it.getTypeRefAsString(resolveProxies)].join(",") + ">"
 		})
 		+ getModifiersAsString();
+	}
+	op String internalGetDeclaredTypeAsString(boolean resolveProxies) {
+		val declType = this.eGet(TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, resolveProxies) as Type;
+		val declTypeStr = if (declType === null) {
+			"«null»"
+		} else if (declType.eIsProxy) {
+			(declaredTypeAsText ?: "") + "«proxy»"
+		} else {
+			declType.rawTypeAsString
+		};
+		return declTypeStr;
 	}
 	/*
 	 * Convenience method, returns true if type reference contains type arguments.
@@ -855,19 +889,19 @@ class ParameterizedTypeRefStructural extends ParameterizedTypeRef, StructuralTyp
 			unmodifiableView;
 	}
 	/*
-	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString(boolean)}
 	 */
-	op String internalGetTypeRefAsString() {
+	op String internalGetTypeRefAsString(boolean resolveProxies) {
 		val membersWithCallConstructSigs = getStructuralMembersWithCallConstructSignatures();
-		return typingStrategy + declaredType?.rawTypeAsString + (if (declaredTypeArgs.empty) {
+		return typingStrategy + internalGetDeclaredTypeAsString(resolveProxies) + (if (declaredTypeArgs.empty) {
 			""
 		} else {
-			"<" + declaredTypeArgs.map[typeRefAsString].join(",") + ">"
+			"<" + declaredTypeArgs.map[it.getTypeRefAsString(resolveProxies)].join(",") + ">"
 		}) + (if (membersWithCallConstructSigs.empty) {
 			""
 		} else {
 			" with { " + (#[] + membersWithCallConstructSigs).map[memberAsString].join("; ") + " }" +
-			(if (postponedSubstitutions.empty) "" else " [[" + postponedSubstitutions.map[it.typeVar.typeAsString + "->" + it.typeArg.typeRefAsString].join(", ") + "]]")
+			(if (postponedSubstitutions.empty) "" else " [[" + postponedSubstitutions.map[it.typeVar.typeAsString + "->" + it.typeArg.getTypeRefAsString(resolveProxies)].join(", ") + "]]")
 		});
 	}
 }
@@ -937,10 +971,18 @@ class ExistentialTypeRef extends TypeRef {
 		return true;
 	}
 	/*
-	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString(boolean)}
 	 */
-	op String internalGetTypeRefAsString() {
-		return getWildcard?.typeRefAsString
+	op String internalGetTypeRefAsString(boolean resolveProxies) {
+		val wc = this.eGet(TypeRefsPackage.Literals.EXISTENTIAL_TYPE_REF__WILDCARD, resolveProxies) as Wildcard;
+		val wcStr = if (wc === null) {
+			"«null»"
+		} else if (wc.eIsProxy) {
+			"?«proxy»"
+		} else {
+			wc.getTypeRefAsString(resolveProxies)
+		};
+		return wcStr;
 	}
 }
 
@@ -961,10 +1003,10 @@ class UnknownTypeRef extends TypeRef {
 		return true;
 	}
 	/*
-	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString(boolean)}
 	 */
-	op String internalGetTypeRefAsString() {
-		return "[unknown]";
+	op String internalGetTypeRefAsString(boolean resolveProxies) {
+		return "«unknown»";
 	}
 }
 
@@ -985,11 +1027,12 @@ class TypeTypeRef extends BaseTypeRef {
 	 */
 	boolean constructorRef
 	/*
-	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString(boolean)}
 	 */
-	op String internalGetTypeRefAsString() {
+	op String internalGetTypeRefAsString(boolean resolveProxies) {
 		val kwd = if (isConstructorRef) "constructor" else "type";
-		val refName = if (null === getTypeArg) '' else getTypeArg.typeRefAsString;
+		val _typeArg = getTypeArg();
+		val refName = if (_typeArg === null) '' else _typeArg.getTypeRefAsString(resolveProxies);
 		return kwd + "{" + refName + "}" + getModifiersAsString();
 	}
 
@@ -1084,10 +1127,10 @@ class Wildcard extends TypeArgument {
 	}
 	/*
 	 * Convenience method, returns the type expression, usually the type name, as a string. Basically used for testing.
-	 * See {@link TypeRef#internalGetTypeRefAsString()}
+	 * See {@link TypeRef#internalGetTypeRefAsString(boolean)}
 	 */
-	op String internalGetTypeRefAsString() {
-		return WildcardAsStringUtils.internalGetTypeRefAsString_workaround(this);
+	op String internalGetTypeRefAsString(boolean resolveProxies) {
+		return WildcardAsStringUtils.internalGetTypeRefAsString_workaround(this, resolveProxies);
 	}
 }
 
@@ -1162,16 +1205,28 @@ abstract class FunctionTypeExprOrRef extends StaticBaseTypeRef {
 		return null;
 	}
 	/*
-	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString(boolean)}
 	 */
-	op String internalGetTypeRefAsString() {
-		return "{" + (if (declaredThisType !== null) "@This(" + declaredThisType.typeRefAsString + ") " else "")
+	op String internalGetTypeRefAsString(boolean resolveProxies) {
+		if (!resolveProxies) {
+			val _this = this;
+			if (_this instanceof FunctionTypeRef) {
+				val declType = _this.eGet(TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, false) as EObject;
+				if (declType !== null && declType.eIsProxy) {
+					if (_this.declaredTypeAsText !== null) {
+						return _this.declaredTypeAsText + "«proxy»";
+					}
+					return "{function(???):???}«proxy»";
+				}
+			}
+		}
+		return "{" + (if (declaredThisType !== null) "@This(" + declaredThisType.getTypeRefAsString(resolveProxies) + ") " else "")
 			+ "function"
 			+ (if (generic) {
 				"<" + typeVars.map[it.getTypeVariableAsString(getTypeVarUpperBound(it))].join(",") + ">"
 			} else "")
 			+ "(" + fpars.map[it.getFormalParameterAsTypesString].join(",") + ")"
-			+ (if (returnTypeRef !== null) ":" + returnTypeRef.typeRefAsString else "")
+			+ (if (returnTypeRef !== null) ":" + returnTypeRef.getTypeRefAsString(resolveProxies) else "")
 			+ (if (returnValueOptional) "?" else "")
 			+ "}" + getModifiersAsString();
 	}
@@ -1361,11 +1416,12 @@ class FunctionTypeExpression extends FunctionTypeExprOrRef {
 
 /**
  * A TypeRef used by the types builder to denote that some other part of the implementation is responsible
- * for creating a certain type reference. FIXME more info
+ * for creating a certain type reference. Usually created by the {@code N4JSTypesBuilder} and replaced by
+ * a correct type reference during post-processing by {@code TypeDeferredProcessor}.
  */
 class DeferredTypeRef extends TypeRef {
-	op String internalGetTypeRefAsString() {
-		return "*deferred*";
+	op String internalGetTypeRefAsString(boolean resolveProxies) {
+		return "«deferred»";
 	}
 }
 
@@ -1387,8 +1443,8 @@ abstract class LiteralTypeRef extends TypeRef {
 class BooleanLiteralTypeRef extends LiteralTypeRef {
 	Boolean value
 
-	op String internalGetTypeRefAsString() {
-		return value?.toString ?: "null";
+	op String internalGetTypeRefAsString(boolean resolveProxies) {
+		return value?.toString ?: astValue?.toString ?: "«null»";
 	}
 }
 
@@ -1397,19 +1453,19 @@ class NumericLiteralTypeRef extends LiteralTypeRef {
 	boolean astNegated
 	BigDecimal value
 
-	op String internalGetTypeRefAsString() {
-		return value?.stripTrailingZeros?.toPlainString ?: "null";
+	op String internalGetTypeRefAsString(boolean resolveProxies) {
+		return value?.stripTrailingZeros?.toPlainString ?: astValue?.toString ?: "«null»";
 	}
 }
 
 class StringLiteralTypeRef extends LiteralTypeRef {
 	String value
 
-	op String internalGetTypeRefAsString() {
-		if (value === null) {
-			return "null";
+	op String internalGetTypeRefAsString(boolean resolveProxies) {
+		if (value === null && astValue === null) {
+			return "«null»";
 		}
-		return '"' + Strings.escapeNonPrintable(value) + '"';
+		return '"' + (if (value !== null) Strings.escapeNonPrintable(value) else astValue.toString) + '"';
 	}
 }
 
@@ -1423,7 +1479,10 @@ class EnumLiteralTypeRef extends LiteralTypeRef {
 		return value?.eContainer as TEnum;
 	}
 
-	op String internalGetTypeRefAsString() {
-		return enumType?.name + "." + value?.name
+	op String internalGetTypeRefAsString(boolean resolveProxies) {
+		if (value === null && astValue !== null) {
+			return astValue.toString;
+		}
+		return (enumType?.name ?: "«null»") + "." + (value?.name ?: "«null»");
 	}
 }

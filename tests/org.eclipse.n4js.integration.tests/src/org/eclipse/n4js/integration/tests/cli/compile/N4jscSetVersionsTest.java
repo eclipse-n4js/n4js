@@ -72,8 +72,6 @@ public class N4jscSetVersionsTest extends AbstractCliCompileTest {
 						+ " - n4js-runtime-es2015\n"
 						+ " - n4js-runtime-esnext\n"
 						+ " - n4js-runtime-html5\n"
-						+ " - n4js-runtime-node\n"
-						+ " - n4js-runtime-node-tests\n"
 						+ " - n4js-runtime-v8\n"
 						+ " - org.eclipse.n4js.mangelhaft\n"
 						+ " - org.eclipse.n4js.mangelhaft.assert\n"

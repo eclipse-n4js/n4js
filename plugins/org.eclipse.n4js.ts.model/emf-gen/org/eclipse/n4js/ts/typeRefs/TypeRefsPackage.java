@@ -124,13 +124,67 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING = 2;
 
 	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING__BOOLEAN = 3;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = 4;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = 5;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = 6;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = 7;
+
+	/**
 	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING = 3;
+	int TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = 8;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ARGUMENT___TO_STRING = 9;
 
 	/**
 	 * The number of operations of the '<em>Type Argument</em>' class.
@@ -139,7 +193,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ARGUMENT_OPERATION_COUNT = 4;
+	int TYPE_ARGUMENT_OPERATION_COUNT = 10;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.TypeRefImpl <em>Type Ref</em>}' class.
@@ -186,6 +240,60 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_REF___GET_DECLARED_TYPE = TYPE_ARGUMENT___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REF___TO_STRING = TYPE_ARGUMENT___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -338,34 +446,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 16;
+	int TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = TYPE_ARGUMENT_OPERATION_COUNT + 16;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TYPE_ARGUMENT_OPERATION_COUNT + 17;
-
-	/**
-	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 18;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_REF___TO_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 19;
+	int TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = TYPE_ARGUMENT_OPERATION_COUNT + 17;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -374,7 +464,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_TOP_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 20;
+	int TYPE_REF___IS_TOP_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 18;
 
 	/**
 	 * The operation id for the '<em>Is Bottom Type</em>' operation.
@@ -383,7 +473,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_BOTTOM_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 21;
+	int TYPE_REF___IS_BOTTOM_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 19;
 
 	/**
 	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
@@ -392,7 +482,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_TYPING_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 22;
+	int TYPE_REF___GET_TYPING_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 20;
 
 	/**
 	 * The operation id for the '<em>Get Structural Members</em>' operation.
@@ -401,7 +491,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_STRUCTURAL_MEMBERS = TYPE_ARGUMENT_OPERATION_COUNT + 23;
+	int TYPE_REF___GET_STRUCTURAL_MEMBERS = TYPE_ARGUMENT_OPERATION_COUNT + 21;
 
 	/**
 	 * The operation id for the '<em>Is Structural Typing</em>' operation.
@@ -410,7 +500,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 24;
+	int TYPE_REF___IS_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 22;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -419,7 +509,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 25;
+	int TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 23;
 
 	/**
 	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
@@ -428,7 +518,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 26;
+	int TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 24;
 
 	/**
 	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
@@ -437,7 +527,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 27;
+	int TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 25;
 
 	/**
 	 * The number of operations of the '<em>Type Ref</em>' class.
@@ -446,7 +536,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF_OPERATION_COUNT = TYPE_ARGUMENT_OPERATION_COUNT + 28;
+	int TYPE_REF_OPERATION_COUNT = TYPE_ARGUMENT_OPERATION_COUNT + 26;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StaticBaseTypeRefImpl <em>Static Base Type Ref</em>}' class.
@@ -493,6 +583,60 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE = TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STATIC_BASE_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STATIC_BASE_TYPE_REF___TO_STRING = TYPE_REF___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -645,34 +789,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STATIC_BASE_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STATIC_BASE_TYPE_REF___TO_STRING = TYPE_REF___TO_STRING;
+	int STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -809,6 +935,60 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int BASE_TYPE_REF___GET_DECLARED_TYPE = STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_TYPE_REF___GET_TYPE_REF_AS_STRING = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = STATIC_BASE_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_TYPE_REF___TO_STRING = STATIC_BASE_TYPE_REF___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Is Type Ref</em>' operation.
@@ -952,34 +1132,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASE_TYPE_REF___GET_TYPE_REF_AS_STRING = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int BASE_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = STATIC_BASE_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_TYPE_REF___TO_STRING = STATIC_BASE_TYPE_REF___TO_STRING;
+	int BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -1127,6 +1289,51 @@ public interface TypeRefsPackage extends EPackage {
 	int COMPOSED_TYPE_REF___GET_DECLARED_TYPE = STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPOSED_TYPE_REF___TO_STRING = STATIC_BASE_TYPE_REF___TO_STRING;
+
+	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1268,25 +1475,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COMPOSED_TYPE_REF___TO_STRING = STATIC_BASE_TYPE_REF___TO_STRING;
+	int COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -1376,7 +1574,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int COMPOSED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = STATIC_BASE_TYPE_REF_OPERATION_COUNT + 1;
+	int COMPOSED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = STATIC_BASE_TYPE_REF_OPERATION_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Composed Type Ref</em>' class.
@@ -1441,6 +1639,51 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int UNION_TYPE_EXPRESSION___GET_DECLARED_TYPE = COMPOSED_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING = COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_TYPE_EXPRESSION___TO_STRING = COMPOSED_TYPE_REF___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -1584,25 +1827,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int UNION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING = COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int UNION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING__BOOLEAN = COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UNION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNION_TYPE_EXPRESSION___TO_STRING = COMPOSED_TYPE_REF___TO_STRING;
+	int UNION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -1692,7 +1926,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int UNION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING = COMPOSED_TYPE_REF_OPERATION_COUNT + 0;
+	int UNION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = COMPOSED_TYPE_REF_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Union Type Expression</em>' class.
@@ -1757,6 +1991,51 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int INTERSECTION_TYPE_EXPRESSION___GET_DECLARED_TYPE = COMPOSED_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERSECTION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING = COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERSECTION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERSECTION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERSECTION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERSECTION_TYPE_EXPRESSION___TO_STRING = COMPOSED_TYPE_REF___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -1900,25 +2179,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int INTERSECTION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING = COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int INTERSECTION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING__BOOLEAN = COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INTERSECTION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERSECTION_TYPE_EXPRESSION___TO_STRING = COMPOSED_TYPE_REF___TO_STRING;
+	int INTERSECTION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -2008,7 +2278,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int INTERSECTION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING = COMPOSED_TYPE_REF_OPERATION_COUNT + 0;
+	int INTERSECTION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = COMPOSED_TYPE_REF_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Intersection Type Expression</em>' class.
@@ -2073,6 +2343,51 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int THIS_TYPE_REF___GET_DECLARED_TYPE = BASE_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF___GET_TYPE_REF_AS_STRING = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF___TO_STRING = BASE_TYPE_REF___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Is Type Ref</em>' operation.
@@ -2216,25 +2531,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF___GET_TYPE_REF_AS_STRING = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int THIS_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THIS_TYPE_REF___TO_STRING = BASE_TYPE_REF___TO_STRING;
+	int THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -2297,7 +2603,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = BASE_TYPE_REF_OPERATION_COUNT + 0;
+	int THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = BASE_TYPE_REF_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
@@ -2389,6 +2695,51 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int THIS_TYPE_REF_NOMINAL___GET_DECLARED_TYPE = THIS_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_NOMINAL___GET_TYPE_REF_AS_STRING = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_NOMINAL___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_NOMINAL___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_NOMINAL___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_NOMINAL___TO_STRING = THIS_TYPE_REF___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Is Type Ref</em>' operation.
@@ -2532,25 +2883,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_NOMINAL___GET_TYPE_REF_AS_STRING = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int THIS_TYPE_REF_NOMINAL___GET_TYPE_REF_AS_STRING__BOOLEAN = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_NOMINAL___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THIS_TYPE_REF_NOMINAL___TO_STRING = THIS_TYPE_REF___TO_STRING;
+	int THIS_TYPE_REF_NOMINAL___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -2613,7 +2955,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_NOMINAL___INTERNAL_GET_TYPE_REF_AS_STRING = THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
+	int THIS_TYPE_REF_NOMINAL___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
@@ -2750,6 +3092,51 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int THIS_TYPE_REF_STRUCTURAL___GET_DECLARED_TYPE = THIS_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_STRUCTURAL___TO_STRING = THIS_TYPE_REF___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Is Type Ref</em>' operation.
@@ -2893,25 +3280,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int THIS_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING__BOOLEAN = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THIS_TYPE_REF_STRUCTURAL___TO_STRING = THIS_TYPE_REF___TO_STRING;
+	int THIS_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -3028,7 +3406,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING = THIS_TYPE_REF_OPERATION_COUNT + 9;
+	int THIS_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = THIS_TYPE_REF_OPERATION_COUNT + 9;
 
 	/**
 	 * The number of operations of the '<em>This Type Ref Structural</em>' class.
@@ -3147,6 +3525,51 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int BOUND_THIS_TYPE_REF___GET_DECLARED_TYPE = THIS_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOUND_THIS_TYPE_REF___GET_TYPE_REF_AS_STRING = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOUND_THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOUND_THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOUND_THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOUND_THIS_TYPE_REF___TO_STRING = THIS_TYPE_REF___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Is Type Ref</em>' operation.
@@ -3281,25 +3704,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___GET_TYPE_REF_AS_STRING = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int BOUND_THIS_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BOUND_THIS_TYPE_REF___TO_STRING = THIS_TYPE_REF___TO_STRING;
+	int BOUND_THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = THIS_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -3389,7 +3803,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = THIS_TYPE_REF_OPERATION_COUNT + 7;
+	int BOUND_THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = THIS_TYPE_REF_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
@@ -3564,6 +3978,51 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE = BASE_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF___TO_STRING = BASE_TYPE_REF___TO_STRING;
+
+	/**
 	 * The operation id for the '<em>Is Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3669,25 +4128,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF___TO_STRING = BASE_TYPE_REF___TO_STRING;
+	int PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -3777,7 +4227,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = BASE_TYPE_REF_OPERATION_COUNT + 3;
+	int PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = BASE_TYPE_REF_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Internal Get Declared Type As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF___INTERNAL_GET_DECLARED_TYPE_AS_STRING__BOOLEAN = BASE_TYPE_REF_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
@@ -3786,7 +4245,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED = BASE_TYPE_REF_OPERATION_COUNT + 4;
+	int PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED = BASE_TYPE_REF_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -3795,7 +4254,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_GENERIC = BASE_TYPE_REF_OPERATION_COUNT + 5;
+	int PARAMETERIZED_TYPE_REF___IS_GENERIC = BASE_TYPE_REF_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Raw</em>' operation.
@@ -3804,7 +4263,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_RAW = BASE_TYPE_REF_OPERATION_COUNT + 6;
+	int PARAMETERIZED_TYPE_REF___IS_RAW = BASE_TYPE_REF_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -3813,7 +4272,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 7;
+	int PARAMETERIZED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
@@ -3822,7 +4281,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 8;
+	int PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 9;
 
 	/**
 	 * The number of operations of the '<em>Parameterized Type Ref</em>' class.
@@ -3831,7 +4290,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_OPERATION_COUNT = BASE_TYPE_REF_OPERATION_COUNT + 9;
+	int PARAMETERIZED_TYPE_REF_OPERATION_COUNT = BASE_TYPE_REF_OPERATION_COUNT + 10;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StructuralTypeRefImpl <em>Structural Type Ref</em>}' class.
@@ -4106,6 +4565,51 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_DECLARED_TYPE = PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___TO_STRING = PARAMETERIZED_TYPE_REF___TO_STRING;
+
+	/**
 	 * The operation id for the '<em>Is Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4211,25 +4715,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING__BOOLEAN = PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___TO_STRING = PARAMETERIZED_TYPE_REF___TO_STRING;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -4293,6 +4788,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_ARGS_WITH_DEFAULTS = PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
+
+	/**
+	 * The operation id for the '<em>Internal Get Declared Type As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_DECLARED_TYPE_AS_STRING__BOOLEAN = PARAMETERIZED_TYPE_REF___INTERNAL_GET_DECLARED_TYPE_AS_STRING__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
@@ -4391,7 +4895,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 8;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 8;
 
 	/**
 	 * The number of operations of the '<em>Parameterized Type Ref Structural</em>' class.
@@ -4474,6 +4978,51 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int EXISTENTIAL_TYPE_REF___GET_DECLARED_TYPE = TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTENTIAL_TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTENTIAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTENTIAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTENTIAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTENTIAL_TYPE_REF___TO_STRING = TYPE_REF___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -4599,25 +5148,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTENTIAL_TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int EXISTENTIAL_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTENTIAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXISTENTIAL_TYPE_REF___TO_STRING = TYPE_REF___TO_STRING;
+	int EXISTENTIAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -4725,7 +5265,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTENTIAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = TYPE_REF_OPERATION_COUNT + 3;
+	int EXISTENTIAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = TYPE_REF_OPERATION_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Existential Type Ref</em>' class.
@@ -4781,6 +5321,51 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int UNKNOWN_TYPE_REF___GET_DECLARED_TYPE = TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNKNOWN_TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNKNOWN_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNKNOWN_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNKNOWN_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNKNOWN_TYPE_REF___TO_STRING = TYPE_REF___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -4924,25 +5509,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int UNKNOWN_TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int UNKNOWN_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UNKNOWN_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNKNOWN_TYPE_REF___TO_STRING = TYPE_REF___TO_STRING;
+	int UNKNOWN_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -5032,7 +5608,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int UNKNOWN_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = TYPE_REF_OPERATION_COUNT + 1;
+	int UNKNOWN_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = TYPE_REF_OPERATION_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Unknown Type Ref</em>' class.
@@ -5115,6 +5691,51 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_TYPE_REF___GET_DECLARED_TYPE = BASE_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_TYPE_REF___GET_TYPE_REF_AS_STRING = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_TYPE_REF___TO_STRING = BASE_TYPE_REF___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Is Type Ref</em>' operation.
@@ -5258,25 +5879,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_TYPE_REF___GET_TYPE_REF_AS_STRING = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int TYPE_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_TYPE_REF___TO_STRING = BASE_TYPE_REF___TO_STRING;
+	int TYPE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -5366,7 +5978,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = BASE_TYPE_REF_OPERATION_COUNT + 0;
+	int TYPE_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = BASE_TYPE_REF_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Type Type Ref</em>' class.
@@ -5506,6 +6118,60 @@ public interface TypeRefsPackage extends EPackage {
 	int WILDCARD___GET_TYPE_REF_AS_STRING = TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WILDCARD___GET_TYPE_REF_AS_STRING__BOOLEAN = TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WILDCARD___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WILDCARD___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WILDCARD___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WILDCARD___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WILDCARD___TO_STRING = TYPE_ARGUMENT___TO_STRING;
+
+	/**
 	 * The operation id for the '<em>Get Declared Or Implicit Upper Bound</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5530,7 +6196,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WILDCARD___INTERNAL_GET_TYPE_REF_AS_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 2;
+	int WILDCARD___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = TYPE_ARGUMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>Wildcard</em>' class.
@@ -5586,6 +6252,51 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int FUNCTION_TYPE_EXPR_OR_REF___GET_DECLARED_TYPE = STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_REF_AS_STRING = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPR_OR_REF___TO_STRING = STATIC_BASE_TYPE_REF___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -5720,25 +6431,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_REF_AS_STRING = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_EXPR_OR_REF___TO_STRING = STATIC_BASE_TYPE_REF___TO_STRING;
+	int FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = STATIC_BASE_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -5909,7 +6611,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPR_OR_REF___INTERNAL_GET_TYPE_REF_AS_STRING = STATIC_BASE_TYPE_REF_OPERATION_COUNT + 10;
+	int FUNCTION_TYPE_EXPR_OR_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = STATIC_BASE_TYPE_REF_OPERATION_COUNT + 10;
 
 	/**
 	 * The number of operations of the '<em>Function Type Expr Or Ref</em>' class.
@@ -6048,6 +6750,51 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF___GET_DECLARED_TYPE = PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_REF___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_REF___TO_STRING = PARAMETERIZED_TYPE_REF___TO_STRING;
+
+	/**
 	 * The operation id for the '<em>Is Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6153,25 +6900,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int FUNCTION_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_REF___TO_STRING = PARAMETERIZED_TYPE_REF___TO_STRING;
+	int FUNCTION_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -6255,6 +6993,15 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
+	 * The operation id for the '<em>Internal Get Declared Type As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_REF___INTERNAL_GET_DECLARED_TYPE_AS_STRING__BOOLEAN = PARAMETERIZED_TYPE_REF___INTERNAL_GET_DECLARED_TYPE_AS_STRING__BOOLEAN;
+
+	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6333,7 +7080,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 10;
+	int FUNCTION_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Get Declared This Type</em>' operation.
@@ -6517,6 +7264,51 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_EXPRESSION___GET_DECLARED_TYPE = FUNCTION_TYPE_EXPR_OR_REF___GET_DECLARED_TYPE;
 
 	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING = FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPRESSION___TO_STRING = FUNCTION_TYPE_EXPR_OR_REF___TO_STRING;
+
+	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6649,25 +7441,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING = FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_REF_AS_STRING;
+	int FUNCTION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING__BOOLEAN = FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_EXPRESSION___TO_STRING = FUNCTION_TYPE_EXPR_OR_REF___TO_STRING;
+	int FUNCTION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -6811,7 +7594,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING = FUNCTION_TYPE_EXPR_OR_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
+	int FUNCTION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = FUNCTION_TYPE_EXPR_OR_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Get Type Vars</em>' operation.
@@ -6894,6 +7677,51 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DEFERRED_TYPE_REF___GET_DECLARED_TYPE = TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEFERRED_TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEFERRED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEFERRED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEFERRED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEFERRED_TYPE_REF___TO_STRING = TYPE_REF___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -7046,25 +7874,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DEFERRED_TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int DEFERRED_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DEFERRED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DEFERRED_TYPE_REF___TO_STRING = TYPE_REF___TO_STRING;
+	int DEFERRED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -7145,7 +7964,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DEFERRED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = TYPE_REF_OPERATION_COUNT + 0;
+	int DEFERRED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = TYPE_REF_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Deferred Type Ref</em>' class.
@@ -7256,6 +8075,60 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int LITERAL_TYPE_REF___GET_DECLARED_TYPE = TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___TO_STRING = TYPE_REF___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -7408,34 +8281,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LITERAL_TYPE_REF___TO_STRING = TYPE_REF___TO_STRING;
+	int LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -7592,6 +8447,51 @@ public interface TypeRefsPackage extends EPackage {
 	int BOOLEAN_LITERAL_TYPE_REF___GET_DECLARED_TYPE = LITERAL_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___TO_STRING = LITERAL_TYPE_REF___TO_STRING;
+
+	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7742,25 +8642,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOOLEAN_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int BOOLEAN_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BOOLEAN_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BOOLEAN_LITERAL_TYPE_REF___TO_STRING = LITERAL_TYPE_REF___TO_STRING;
+	int BOOLEAN_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -7850,7 +8741,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOOLEAN_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF_OPERATION_COUNT + 0;
+	int BOOLEAN_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = LITERAL_TYPE_REF_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Boolean Literal Type Ref</em>' class.
@@ -7933,6 +8824,51 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int NUMERIC_LITERAL_TYPE_REF___GET_DECLARED_TYPE = LITERAL_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___TO_STRING = LITERAL_TYPE_REF___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -8085,25 +9021,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMERIC_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int NUMERIC_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NUMERIC_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int NUMERIC_LITERAL_TYPE_REF___TO_STRING = LITERAL_TYPE_REF___TO_STRING;
+	int NUMERIC_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -8193,7 +9120,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMERIC_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF_OPERATION_COUNT + 0;
+	int NUMERIC_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = LITERAL_TYPE_REF_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Numeric Literal Type Ref</em>' class.
@@ -8267,6 +9194,51 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int STRING_LITERAL_TYPE_REF___GET_DECLARED_TYPE = LITERAL_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___TO_STRING = LITERAL_TYPE_REF___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -8419,25 +9391,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STRING_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int STRING_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STRING_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STRING_LITERAL_TYPE_REF___TO_STRING = LITERAL_TYPE_REF___TO_STRING;
+	int STRING_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -8527,7 +9490,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STRING_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF_OPERATION_COUNT + 0;
+	int STRING_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = LITERAL_TYPE_REF_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>String Literal Type Ref</em>' class.
@@ -8601,6 +9564,51 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int ENUM_LITERAL_TYPE_REF___GET_DECLARED_TYPE = LITERAL_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___TO_STRING = LITERAL_TYPE_REF___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -8753,25 +9761,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ENUM_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int ENUM_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ENUM_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUM_LITERAL_TYPE_REF___TO_STRING = LITERAL_TYPE_REF___TO_STRING;
+	int ENUM_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -8870,7 +9869,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ENUM_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF_OPERATION_COUNT + 1;
+	int ENUM_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = LITERAL_TYPE_REF_OPERATION_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Enum Literal Type Ref</em>' class.
@@ -8943,14 +9942,74 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getTypeArgument__GetTypeRefAsString();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument#getTypeRefAsString(boolean) <em>Get Type Ref As String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Type Ref As String</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument#getTypeRefAsString(boolean)
+	 * @generated
+	 */
+	EOperation getTypeArgument__GetTypeRefAsString__boolean();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument#getTypeRefAsStringWithAliasResolution() <em>Get Type Ref As String With Alias Resolution</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument#getTypeRefAsStringWithAliasResolution()
+	 * @generated
+	 */
+	EOperation getTypeArgument__GetTypeRefAsStringWithAliasResolution();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument#getTypeRefAsStringWithAliasResolution(boolean) <em>Get Type Ref As String With Alias Resolution</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument#getTypeRefAsStringWithAliasResolution(boolean)
+	 * @generated
+	 */
+	EOperation getTypeArgument__GetTypeRefAsStringWithAliasResolution__boolean();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument#getTypeRefAsStringWithAliasExpansion() <em>Get Type Ref As String With Alias Expansion</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument#getTypeRefAsStringWithAliasExpansion()
+	 * @generated
+	 */
+	EOperation getTypeArgument__GetTypeRefAsStringWithAliasExpansion();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument#getTypeRefAsStringWithAliasExpansion(boolean) <em>Get Type Ref As String With Alias Expansion</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument#getTypeRefAsStringWithAliasExpansion(boolean)
+	 * @generated
+	 */
+	EOperation getTypeArgument__GetTypeRefAsStringWithAliasExpansion__boolean();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getTypeArgument__InternalGetTypeRefAsString();
+	EOperation getTypeArgument__InternalGetTypeRefAsString__boolean();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument#toString() <em>To String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>To String</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument#toString()
+	 * @generated
+	 */
+	EOperation getTypeArgument__ToString();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.TypeRef <em>Type Ref</em>}'.
@@ -9145,44 +10204,24 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getTypeRef__GetTypeArgsWithDefaults();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#getTypeRefAsString() <em>Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#getTypeRefAsString(boolean) <em>Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#getTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#getTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getTypeRef__GetTypeRefAsString();
+	EOperation getTypeRef__GetTypeRefAsString__boolean();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#getTypeRefAsStringWithAliasResolution() <em>Get Type Ref As String With Alias Resolution</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#getTypeRefAsStringWithAliasExpansion(boolean) <em>Get Type Ref As String With Alias Expansion</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#getTypeRefAsStringWithAliasResolution()
+	 * @return the meta object for the '<em>Get Type Ref As String With Alias Expansion</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#getTypeRefAsStringWithAliasExpansion(boolean)
 	 * @generated
 	 */
-	EOperation getTypeRef__GetTypeRefAsStringWithAliasResolution();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#internalGetTypeRefAsString()
-	 * @generated
-	 */
-	EOperation getTypeRef__InternalGetTypeRefAsString();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#toString() <em>To String</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>To String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#toString()
-	 * @generated
-	 */
-	EOperation getTypeRef__ToString();
+	EOperation getTypeRef__GetTypeRefAsStringWithAliasExpansion__boolean();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#isTopType() <em>Is Top Type</em>}' operation.
@@ -9337,14 +10376,14 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getComposedTypeRef__IsDynamic();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getComposedTypeRef__InternalGetTypeRefAsString();
+	EOperation getComposedTypeRef__InternalGetTypeRefAsString__boolean();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.UnionTypeExpression <em>Union Type Expression</em>}'.
@@ -9357,14 +10396,14 @@ public interface TypeRefsPackage extends EPackage {
 	EClass getUnionTypeExpression();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.UnionTypeExpression#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.UnionTypeExpression#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.UnionTypeExpression#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.UnionTypeExpression#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getUnionTypeExpression__InternalGetTypeRefAsString();
+	EOperation getUnionTypeExpression__InternalGetTypeRefAsString__boolean();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression <em>Intersection Type Expression</em>}'.
@@ -9377,14 +10416,14 @@ public interface TypeRefsPackage extends EPackage {
 	EClass getIntersectionTypeExpression();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getIntersectionTypeExpression__InternalGetTypeRefAsString();
+	EOperation getIntersectionTypeExpression__InternalGetTypeRefAsString__boolean();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.ThisTypeRef <em>This Type Ref</em>}'.
@@ -9397,14 +10436,14 @@ public interface TypeRefsPackage extends EPackage {
 	EClass getThisTypeRef();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ThisTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ThisTypeRef#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.ThisTypeRef#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.ThisTypeRef#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getThisTypeRef__InternalGetTypeRefAsString();
+	EOperation getThisTypeRef__InternalGetTypeRefAsString__boolean();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ThisTypeRef#getTypingStrategy() <em>Get Typing Strategy</em>}' operation.
@@ -9508,14 +10547,14 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getThisTypeRefStructural__GetStructuralMembers();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getThisTypeRefStructural__InternalGetTypeRefAsString();
+	EOperation getThisTypeRefStructural__InternalGetTypeRefAsString__boolean();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef <em>Bound This Type Ref</em>}'.
@@ -9570,14 +10609,14 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getBoundThisTypeRef__SetTypingStrategy__TypingStrategy();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getBoundThisTypeRef__InternalGetTypeRefAsString();
+	EOperation getBoundThisTypeRef__InternalGetTypeRefAsString__boolean();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef#getDeclaredUpperBound() <em>Get Declared Upper Bound</em>}' operation.
@@ -9748,14 +10787,24 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getParameterizedTypeRef__GetTypeArgsWithDefaults();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getParameterizedTypeRef__InternalGetTypeRefAsString();
+	EOperation getParameterizedTypeRef__InternalGetTypeRefAsString__boolean();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#internalGetDeclaredTypeAsString(boolean) <em>Internal Get Declared Type As String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Internal Get Declared Type As String</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#internalGetDeclaredTypeAsString(boolean)
+	 * @generated
+	 */
+	EOperation getParameterizedTypeRef__InternalGetDeclaredTypeAsString__boolean();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isParameterized() <em>Is Parameterized</em>}' operation.
@@ -9952,14 +11001,14 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getParameterizedTypeRefStructural__GetStructuralMembers();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getParameterizedTypeRefStructural__InternalGetTypeRefAsString();
+	EOperation getParameterizedTypeRefStructural__InternalGetTypeRefAsString__boolean();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef <em>Existential Type Ref</em>}'.
@@ -10035,14 +11084,14 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getExistentialTypeRef__IsParameterized();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getExistentialTypeRef__InternalGetTypeRefAsString();
+	EOperation getExistentialTypeRef__InternalGetTypeRefAsString__boolean();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.UnknownTypeRef <em>Unknown Type Ref</em>}'.
@@ -10065,14 +11114,14 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getUnknownTypeRef__IsUnknown();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.UnknownTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.UnknownTypeRef#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.UnknownTypeRef#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.UnknownTypeRef#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getUnknownTypeRef__InternalGetTypeRefAsString();
+	EOperation getUnknownTypeRef__InternalGetTypeRefAsString__boolean();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.TypeTypeRef <em>Type Type Ref</em>}'.
@@ -10107,14 +11156,14 @@ public interface TypeRefsPackage extends EPackage {
 	EAttribute getTypeTypeRef_ConstructorRef();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeTypeRef#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeTypeRef#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeTypeRef#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getTypeTypeRef__InternalGetTypeRefAsString();
+	EOperation getTypeTypeRef__InternalGetTypeRefAsString__boolean();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef <em>Namespace Like Ref</em>}'.
@@ -10222,14 +11271,14 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getWildcard__IsImplicitUpperBoundInEffect();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.Wildcard#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.Wildcard#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.Wildcard#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.Wildcard#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getWildcard__InternalGetTypeRefAsString();
+	EOperation getWildcard__InternalGetTypeRefAsString__boolean();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef <em>Function Type Expr Or Ref</em>}'.
@@ -10342,14 +11391,14 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getFunctionTypeExprOrRef__GetFparForArgIdx__int();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getFunctionTypeExprOrRef__InternalGetTypeRefAsString();
+	EOperation getFunctionTypeExprOrRef__InternalGetTypeRefAsString__boolean();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeRef <em>Function Type Ref</em>}'.
@@ -10561,14 +11610,14 @@ public interface TypeRefsPackage extends EPackage {
 	EClass getDeferredTypeRef();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.DeferredTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.DeferredTypeRef#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.DeferredTypeRef#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.DeferredTypeRef#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getDeferredTypeRef__InternalGetTypeRefAsString();
+	EOperation getDeferredTypeRef__InternalGetTypeRefAsString__boolean();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.TypeVariableMapping <em>Type Variable Mapping</em>}'.
@@ -10655,14 +11704,14 @@ public interface TypeRefsPackage extends EPackage {
 	EAttribute getBooleanLiteralTypeRef_Value();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getBooleanLiteralTypeRef__InternalGetTypeRefAsString();
+	EOperation getBooleanLiteralTypeRef__InternalGetTypeRefAsString__boolean();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef <em>Numeric Literal Type Ref</em>}'.
@@ -10697,14 +11746,14 @@ public interface TypeRefsPackage extends EPackage {
 	EAttribute getNumericLiteralTypeRef_Value();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getNumericLiteralTypeRef__InternalGetTypeRefAsString();
+	EOperation getNumericLiteralTypeRef__InternalGetTypeRefAsString__boolean();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef <em>String Literal Type Ref</em>}'.
@@ -10728,14 +11777,14 @@ public interface TypeRefsPackage extends EPackage {
 	EAttribute getStringLiteralTypeRef_Value();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getStringLiteralTypeRef__InternalGetTypeRefAsString();
+	EOperation getStringLiteralTypeRef__InternalGetTypeRefAsString__boolean();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef <em>Enum Literal Type Ref</em>}'.
@@ -10769,14 +11818,14 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getEnumLiteralTypeRef__GetEnumType();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef#internalGetTypeRefAsString(boolean) <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef#internalGetTypeRefAsString(boolean)
 	 * @generated
 	 */
-	EOperation getEnumLiteralTypeRef__InternalGetTypeRefAsString();
+	EOperation getEnumLiteralTypeRef__InternalGetTypeRefAsString__boolean();
 
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy <em>Optional Field Strategy</em>}'.
@@ -10857,12 +11906,60 @@ public interface TypeRefsPackage extends EPackage {
 		EOperation TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING = eINSTANCE.getTypeArgument__GetTypeRefAsString();
 
 		/**
+		 * The meta object literal for the '<em><b>Get Type Ref As String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getTypeArgument__GetTypeRefAsString__boolean();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Type Ref As String With Alias Resolution</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = eINSTANCE.getTypeArgument__GetTypeRefAsStringWithAliasResolution();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Type Ref As String With Alias Resolution</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION__BOOLEAN = eINSTANCE.getTypeArgument__GetTypeRefAsStringWithAliasResolution__boolean();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Type Ref As String With Alias Expansion</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION = eINSTANCE.getTypeArgument__GetTypeRefAsStringWithAliasExpansion();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Type Ref As String With Alias Expansion</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = eINSTANCE.getTypeArgument__GetTypeRefAsStringWithAliasExpansion__boolean();
+
+		/**
 		 * The meta object literal for the '<em><b>Internal Get Type Ref As String</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getTypeArgument__InternalGetTypeRefAsString();
+		EOperation TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getTypeArgument__InternalGetTypeRefAsString__boolean();
+
+		/**
+		 * The meta object literal for the '<em><b>To String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_ARGUMENT___TO_STRING = eINSTANCE.getTypeArgument__ToString();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.TypeRefImpl <em>Type Ref</em>}' class.
@@ -11024,31 +12121,15 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TYPE_REF___GET_TYPE_REF_AS_STRING = eINSTANCE.getTypeRef__GetTypeRefAsString();
+		EOperation TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getTypeRef__GetTypeRefAsString__boolean();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Type Ref As String With Alias Resolution</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Type Ref As String With Alias Expansion</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = eINSTANCE.getTypeRef__GetTypeRefAsStringWithAliasResolution();
-
-		/**
-		 * The meta object literal for the '<em><b>Internal Get Type Ref As String</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getTypeRef__InternalGetTypeRefAsString();
-
-		/**
-		 * The meta object literal for the '<em><b>To String</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TYPE_REF___TO_STRING = eINSTANCE.getTypeRef__ToString();
+		EOperation TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN = eINSTANCE.getTypeRef__GetTypeRefAsStringWithAliasExpansion__boolean();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Top Type</b></em>' operation.
@@ -11182,7 +12263,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation COMPOSED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getComposedTypeRef__InternalGetTypeRefAsString();
+		EOperation COMPOSED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getComposedTypeRef__InternalGetTypeRefAsString__boolean();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.UnionTypeExpressionImpl <em>Union Type Expression</em>}' class.
@@ -11200,7 +12281,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation UNION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getUnionTypeExpression__InternalGetTypeRefAsString();
+		EOperation UNION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getUnionTypeExpression__InternalGetTypeRefAsString__boolean();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.IntersectionTypeExpressionImpl <em>Intersection Type Expression</em>}' class.
@@ -11218,7 +12299,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation INTERSECTION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getIntersectionTypeExpression__InternalGetTypeRefAsString();
+		EOperation INTERSECTION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getIntersectionTypeExpression__InternalGetTypeRefAsString__boolean();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.ThisTypeRefImpl <em>This Type Ref</em>}' class.
@@ -11236,7 +12317,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getThisTypeRef__InternalGetTypeRefAsString();
+		EOperation THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getThisTypeRef__InternalGetTypeRefAsString__boolean();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Typing Strategy</b></em>' operation.
@@ -11328,7 +12409,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation THIS_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getThisTypeRefStructural__InternalGetTypeRefAsString();
+		EOperation THIS_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getThisTypeRefStructural__InternalGetTypeRefAsString__boolean();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.BoundThisTypeRefImpl <em>Bound This Type Ref</em>}' class.
@@ -11378,7 +12459,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation BOUND_THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getBoundThisTypeRef__InternalGetTypeRefAsString();
+		EOperation BOUND_THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getBoundThisTypeRef__InternalGetTypeRefAsString__boolean();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Declared Upper Bound</b></em>' operation.
@@ -11516,7 +12597,15 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getParameterizedTypeRef__InternalGetTypeRefAsString();
+		EOperation PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getParameterizedTypeRef__InternalGetTypeRefAsString__boolean();
+
+		/**
+		 * The meta object literal for the '<em><b>Internal Get Declared Type As String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation PARAMETERIZED_TYPE_REF___INTERNAL_GET_DECLARED_TYPE_AS_STRING__BOOLEAN = eINSTANCE.getParameterizedTypeRef__InternalGetDeclaredTypeAsString__boolean();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Parameterized</b></em>' operation.
@@ -11680,7 +12769,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getParameterizedTypeRefStructural__InternalGetTypeRefAsString();
+		EOperation PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getParameterizedTypeRefStructural__InternalGetTypeRefAsString__boolean();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.ExistentialTypeRefImpl <em>Existential Type Ref</em>}' class.
@@ -11746,7 +12835,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation EXISTENTIAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getExistentialTypeRef__InternalGetTypeRefAsString();
+		EOperation EXISTENTIAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getExistentialTypeRef__InternalGetTypeRefAsString__boolean();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.UnknownTypeRefImpl <em>Unknown Type Ref</em>}' class.
@@ -11772,7 +12861,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation UNKNOWN_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getUnknownTypeRef__InternalGetTypeRefAsString();
+		EOperation UNKNOWN_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getUnknownTypeRef__InternalGetTypeRefAsString__boolean();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.TypeTypeRefImpl <em>Type Type Ref</em>}' class.
@@ -11806,7 +12895,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TYPE_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getTypeTypeRef__InternalGetTypeRefAsString();
+		EOperation TYPE_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getTypeTypeRef__InternalGetTypeRefAsString__boolean();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.NamespaceLikeRefImpl <em>Namespace Like Ref</em>}' class.
@@ -11898,7 +12987,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation WILDCARD___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getWildcard__InternalGetTypeRefAsString();
+		EOperation WILDCARD___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getWildcard__InternalGetTypeRefAsString__boolean();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExprOrRefImpl <em>Function Type Expr Or Ref</em>}' class.
@@ -11996,7 +13085,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation FUNCTION_TYPE_EXPR_OR_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getFunctionTypeExprOrRef__InternalGetTypeRefAsString();
+		EOperation FUNCTION_TYPE_EXPR_OR_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getFunctionTypeExprOrRef__InternalGetTypeRefAsString__boolean();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeRefImpl <em>Function Type Ref</em>}' class.
@@ -12170,7 +13259,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation DEFERRED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getDeferredTypeRef__InternalGetTypeRefAsString();
+		EOperation DEFERRED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getDeferredTypeRef__InternalGetTypeRefAsString__boolean();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.TypeVariableMappingImpl <em>Type Variable Mapping</em>}' class.
@@ -12248,7 +13337,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation BOOLEAN_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getBooleanLiteralTypeRef__InternalGetTypeRefAsString();
+		EOperation BOOLEAN_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getBooleanLiteralTypeRef__InternalGetTypeRefAsString__boolean();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.NumericLiteralTypeRefImpl <em>Numeric Literal Type Ref</em>}' class.
@@ -12282,7 +13371,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation NUMERIC_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getNumericLiteralTypeRef__InternalGetTypeRefAsString();
+		EOperation NUMERIC_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getNumericLiteralTypeRef__InternalGetTypeRefAsString__boolean();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StringLiteralTypeRefImpl <em>String Literal Type Ref</em>}' class.
@@ -12308,7 +13397,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation STRING_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getStringLiteralTypeRef__InternalGetTypeRefAsString();
+		EOperation STRING_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getStringLiteralTypeRef__InternalGetTypeRefAsString__boolean();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.EnumLiteralTypeRefImpl <em>Enum Literal Type Ref</em>}' class.
@@ -12342,7 +13431,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation ENUM_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getEnumLiteralTypeRef__InternalGetTypeRefAsString();
+		EOperation ENUM_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getEnumLiteralTypeRef__InternalGetTypeRefAsString__boolean();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy <em>Optional Field Strategy</em>}' enum.

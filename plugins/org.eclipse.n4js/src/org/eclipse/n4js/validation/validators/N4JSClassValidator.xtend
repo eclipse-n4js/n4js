@@ -301,7 +301,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 			}
 		} else if (superTypeRef !== null && superTypeRef.isAliasResolved) {
 			// not all aliases are illegal after "extends", but if we get to this point we have an illegal case:
-			val message = getMessageForCLF_WRONG_META_TYPE(n4Class.description, "extend", superTypeRef.internalGetTypeRefAsString);
+			val message = getMessageForCLF_WRONG_META_TYPE(n4Class.description, "extend", superTypeRef.typeRefAsStringWithAliasResolution);
 			addIssue(message, n4Class.superClassRef, null, CLF_WRONG_META_TYPE);
 			return false;
 		}
@@ -349,7 +349,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 				}
 			} else if (consumedTypeRef !== null && consumedTypeRef.isAliasResolved) {
 				// not all aliases are illegal after "implements", but if we get to this point we have an illegal case:
-				val message = getMessageForCLF_WRONG_META_TYPE(n4Class.description, "implement", consumedTypeRef.internalGetTypeRefAsString);
+				val message = getMessageForCLF_WRONG_META_TYPE(n4Class.description, "implement", consumedTypeRef.typeRefAsStringWithAliasResolution);
 				addIssue(message, it, null, CLF_WRONG_META_TYPE);
 			}
 		]

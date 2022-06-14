@@ -14,7 +14,7 @@
  * Optionally the event loop can be kept active while the promise hasn't resolved.
  */
 export public function waitAndExitProcess(proc: Function, keepEventLoop = false): void {
-    let timerHandle: Timeout;
+    let timerHandle: NodeJS.Timer;
     if (keepEventLoop) {
         // dummy interval to avoid termination on open main/exec promise:
         timerHandle = setInterval(function() {}, 0x7fffffff /* max 32bit signed int */);
@@ -34,7 +34,8 @@ export public function waitAndExitProcess(proc: Function, keepEventLoop = false)
         .then(res => {
             clearInterval(timerHandle);
             // flush stdout:
-            return new Promise<any, any>(resolve => process.stdout.write("", "utf-8", () => resolve(res)));
+            // FIXME avoid cast to any+
+            return new Promise<any, any>(resolve => (process.stdout as any+).write("", "utf-8", () => resolve(res)));
         })
         // exit:
         .then(res => process.exit(res as number));

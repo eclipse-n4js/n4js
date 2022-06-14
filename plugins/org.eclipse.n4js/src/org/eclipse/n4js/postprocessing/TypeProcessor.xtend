@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.NewExpression
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableDeclaration
@@ -135,7 +136,7 @@ public class TypeProcessor extends AbstractProcessor {
 				log(indentLevel, "asking Xsemantics ...");
 				val result = invokeTypeJudgmentToInferType(G, node);
 
-				val resultAdjusted = adjustResultForLocationInAST(G, result, N4JSASTUtils.skipParenExpressionDownward(node));
+				val resultAdjusted = adjustResultForLocationInAST(G, result, node);
 
 				// in this case, we are responsible for storing the type in the cache
 				// (Xsemantics does not know of the cache)
@@ -152,6 +153,35 @@ public class TypeProcessor extends AbstractProcessor {
 		log(indentLevel, cache.getTypeFailSafe(node));
 	}
 
+	def private <T extends TypeRef> T adjustResultForLocationInAST(RuleEnvironment G, T typeRef, TypableElement astNode) {
+		var result = typeRef;
+		result = adjustForIndexSignatures(G, result, astNode);
+		result = adjustForLocationDependentSpecialProperties(G, result, astNode);
+		return result;
+	}
+
+	/**
+	 * Poor man's support for index signatures (intended only for .d.ts but must also be checked in N4JS,
+	 * because N4JS may contain classifiers that extend a classifier from .d.ts containing an index signature).
+	 * <p>
+	 * TODO IDE-3620 remove this method once index signatures are properly supported
+	 */
+	def private <T extends TypeRef> T adjustForIndexSignatures(RuleEnvironment G, T typeRef, TypableElement astNode) {
+		val parent = astNode?.eContainer;
+		if (parent instanceof ParameterizedPropertyAccessExpression) {
+			if (astNode === parent.target && !typeRef.dynamic) {
+				if (typeRef instanceof ParameterizedTypeRef) {
+					if (N4JSLanguageUtils.hasIndexSignature(typeRef)) {
+						val typeRefCpy = TypeUtils.copy(typeRef);
+						typeRefCpy.dynamic = true;
+						return typeRefCpy;
+					}
+				}
+			}
+		}
+		return typeRef;
+	}
+
 	/**
 	 * Make sure that the value of the two location-dependent special properties <code>typeOfObjectLiteral</code> and
 	 * <code>typeOfNewExpressionOrFinalNominal</code> in {@link ParameterizedTypeRef} correctly reflect the current
@@ -160,11 +190,11 @@ public class TypeProcessor extends AbstractProcessor {
 	 * <p>
 	 * For more details see {@link TypeRef#isTypeOfObjectLiteral()}.
 	 */
-	def private <T extends TypeRef> T adjustResultForLocationInAST(RuleEnvironment G, T result, TypableElement astNode) {
+	def private <T extends TypeRef> T adjustForLocationDependentSpecialProperties(RuleEnvironment G, T result, TypableElement astNode) {
 		val typeRef = result;
 		if (typeRef instanceof ParameterizedTypeRef) {
-			val optionalFieldStrategy = N4JSLanguageUtils.
-				calculateOptionalFieldStrategy(astNode, typeRef);
+			val astNodeSkipParen = N4JSASTUtils.skipParenExpressionDownward(astNode);
+			val optionalFieldStrategy = N4JSLanguageUtils.calculateOptionalFieldStrategy(astNodeSkipParen, typeRef);
 			if (typeRef.ASTNodeOptionalFieldStrategy !== optionalFieldStrategy) {
 				val typeRefCpy = TypeUtils.copy(typeRef);
 				typeRefCpy.ASTNodeOptionalFieldStrategy = optionalFieldStrategy;

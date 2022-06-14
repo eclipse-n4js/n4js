@@ -27,6 +27,9 @@ import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
+
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage.Literals;
+
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 
 /**
@@ -236,13 +239,26 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	 * @generated
 	 */
 	@Override
-	public String internalGetTypeRefAsString() {
-		Wildcard _wildcard = this.getWildcard();
-		String _typeRefAsString = null;
-		if (_wildcard!=null) {
-			_typeRefAsString=_wildcard.getTypeRefAsString();
+	public String internalGetTypeRefAsString(final boolean resolveProxies) {
+		Object _eGet = this.eGet(Literals.EXISTENTIAL_TYPE_REF__WILDCARD, resolveProxies);
+		final Wildcard wc = ((Wildcard) _eGet);
+		String _xifexpression = null;
+		if ((wc == null)) {
+			_xifexpression = "\u00ABnull\u00BB";
 		}
-		return _typeRefAsString;
+		else {
+			String _xifexpression_1 = null;
+			boolean _eIsProxy = wc.eIsProxy();
+			if (_eIsProxy) {
+				_xifexpression_1 = "?\u00ABproxy\u00BB";
+			}
+			else {
+				_xifexpression_1 = wc.getTypeRefAsString(resolveProxies);
+			}
+			_xifexpression = _xifexpression_1;
+		}
+		final String wcStr = _xifexpression;
+		return wcStr;
 	}
 
 	/**
@@ -333,7 +349,7 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.EXISTENTIAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN: return TypeRefsPackage.EXISTENTIAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -362,8 +378,8 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 				return isGeneric();
 			case TypeRefsPackage.EXISTENTIAL_TYPE_REF___IS_PARAMETERIZED:
 				return isParameterized();
-			case TypeRefsPackage.EXISTENTIAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
-				return internalGetTypeRefAsString();
+			case TypeRefsPackage.EXISTENTIAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN:
+				return internalGetTypeRefAsString((Boolean)arguments.get(0));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

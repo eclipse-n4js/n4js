@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
@@ -49,6 +50,13 @@ public abstract class EnumerableScope extends AbstractScope {
 	protected EnumerableScope(ExecutionEnvironmentDescriptor descriptor) {
 		super(IScope.NULLSCOPE, false);
 		this.descriptor = descriptor;
+	}
+
+	/**
+	 * Returns the names of all elements contained in this scope.
+	 */
+	public final Set<QualifiedName> getAllElementNames() {
+		return Collections.unmodifiableSet(getElements().keySet());
 	}
 
 	/**

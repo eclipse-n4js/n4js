@@ -16,6 +16,7 @@ import java.util.Collections
 import java.util.List
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.IdentifierRef
@@ -41,6 +42,7 @@ import org.eclipse.xtext.EcoreUtil2
 
 import static extension org.eclipse.n4js.tooling.organizeImports.InjectedTypesResolverUtility.*
 import static extension org.eclipse.n4js.tooling.organizeImports.RefNameUtil.*
+import org.eclipse.n4js.utils.ResourceType
 
 /**
  * Static analysis for {@link Script} dependencies. Analyzes all identifiers in the {@link Script},
@@ -135,6 +137,14 @@ class ScriptDependencyResolver {
 		if (eo instanceof ModuleNamespaceVirtualType
 			|| eo instanceof TDynamicElement) {
 			return true;
+		}
+
+		val containingModule = EcoreUtil.getRootContainer(eo);
+		if (containingModule instanceof TModule) {
+			if (AnnotationDefinition.PROVIDED_BY_RUNTIME.hasAnnotation(containingModule)
+				|| (ResourceType.getResourceType(containingModule) === ResourceType.DTS && AnnotationDefinition.GLOBAL.hasAnnotation(containingModule))) {
+				return false;
+			}
 		}
 
 		if (eo instanceof AnnotableElement) {

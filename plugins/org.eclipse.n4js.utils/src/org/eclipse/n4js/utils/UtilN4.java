@@ -43,6 +43,27 @@ import com.google.common.collect.Iterables;
  */
 public class UtilN4 {
 
+	/** Files extension of JS source files (<b>not</b> including the separator dot). */
+	public static final String JS_FILE_EXTENSION = "js";
+	/** File extension of JS source files that contain ES6 modules (<b>not</b> including the separator dot). */
+	public static final String MJS_FILE_EXTENSION = "mjs";
+	/** File extension of JS source files that contain CommonJS modules (<b>not</b> including the separator dot). */
+	public static final String CJS_FILE_EXTENSION = "cjs";
+	/** Files extension of N4JS source files (<b>not</b> including the separator dot). */
+	public static final String N4JS_FILE_EXTENSION = "n4js";
+	/** Files extension of JSX source files (<b>not</b> including the separator dot). */
+	public static final String JSX_FILE_EXTENSION = "jsx";
+	/** Files extension of N4JSX source files (<b>not</b> including the separator dot). */
+	public static final String N4JSX_FILE_EXTENSION = "n4jsx";
+	/** Files extension of N4JS definition files (<b>not</b> including the separator dot). */
+	public static final String N4JSD_FILE_EXTENSION = "n4jsd";
+	/** Files extension of TS files (<b>not</b> including the separator dot). */
+	public static final String TS_FILE_EXTENSION = "ts";
+	/** Files extension of TS definition files (<b>not</b> including the separator dot). */
+	public static final String DTS_FILE_EXTENSION = "d.ts";
+	/** Files extension of XT source files (<b>not</b> including the separator dot). */
+	public static final String XT_FILE_EXTENSION = "xt";
+
 	/** Name of the N4JS Git repository, i.e. "n4js". */
 	public static final String N4JS_GIT_REPOSITORY_NAME = "n4js";
 

@@ -10,8 +10,7 @@
  */
 
 import {fsSafeAccessSync} from "org/eclipse/n4js/mangelhaft/util/fs";
-import {dirname} from "path";
-import {join} from "path";
+import * as lib_path from "path";
 
 export public const PACKAGE_JSON = "package.json";
 export public const PACKAGE_JSON_N4JS_SECTION_KEY = "n4js";
@@ -20,9 +19,9 @@ export public const PACKAGE_JSON_N4JS_SECTION_KEY = "n4js";
  * Scans filesystem upwards to find a package.json file.
  */
 export public function findPackageJson(dir: string): string {
-    const file = join(dir, PACKAGE_JSON);
+    const file = lib_path.join(dir, PACKAGE_JSON);
     if (!fsSafeAccessSync(file)) {
-        const parent = dirname(dir);
+        const parent = lib_path.dirname(dir);
         if (parent === dir) {
             return null;
         }

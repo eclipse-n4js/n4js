@@ -156,11 +156,11 @@ public interface Wildcard extends TypeArgument {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * Convenience method, returns the type expression, usually the type name, as a string. Basically used for testing.
-	 * See {@link TypeRef#internalGetTypeRefAsString()}
+	 * See {@link TypeRef#internalGetTypeRefAsString(boolean)}
 	 * <!-- end-model-doc -->
-	 * @model unique="false"
+	 * @model unique="false" resolveProxiesUnique="false"
 	 * @generated
 	 */
-	String internalGetTypeRefAsString();
+	String internalGetTypeRefAsString(boolean resolveProxies);
 
 } // Wildcard

@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -31,15 +32,15 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.n4js.AnnotationDefinition;
-import org.eclipse.n4js.dts.DtsParseTreeNodeInfo;
-import org.eclipse.n4js.dts.TypeScriptParser;
 import org.eclipse.n4js.dts.TypeScriptParser.BlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.DeclarationStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.DeclareStatementContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ExportEqualsContext;
 import org.eclipse.n4js.dts.TypeScriptParser.GlobalScopeAugmentationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ImportAliasDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ImportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
-import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ReservedWordContext;
@@ -49,20 +50,26 @@ import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentListContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentsContext;
 import org.eclipse.n4js.n4JS.AnnotableElement;
+import org.eclipse.n4js.n4JS.AnnotableScriptElement;
 import org.eclipse.n4js.n4JS.Annotation;
+import org.eclipse.n4js.n4JS.AnnotationList;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
+import org.eclipse.n4js.n4JS.LiteralAnnotationArgument;
 import org.eclipse.n4js.n4JS.ModifiableElement;
+import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -72,14 +79,16 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TAnnotationTypeRefArgument;
+import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils;
 import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils.StringConverterResult;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import com.google.common.primitives.Ints;
 
 /**
@@ -131,6 +140,17 @@ public class ParserContextUtils {
 		return result;
 	}
 
+	/**
+	 * @return the {@link BlockContext block} if the given context contains one (functions, methods, namespace/module
+	 *         declarations, etc.); the given context if it is itself a block; <code>null</code> otherwise.
+	 */
+	public static BlockContext getBlock(ParserRuleContext ctx) {
+		if (ctx instanceof BlockContext) {
+			return (BlockContext) ctx;
+		}
+		return ctx != null ? ctx.getRuleContext(BlockContext.class, 0) : null;
+	}
+
 	/** @return the statements in the given block or an empty list if not available. */
 	public static List<StatementContext> getStatements(BlockContext block) {
 		if (block != null) {
@@ -143,6 +163,38 @@ public class ParserContextUtils {
 			}
 		}
 		return Collections.emptyList();
+	}
+
+	/** @return first ancestor context of 'ctx' that is a subtype of 'expectedType' or <code>null</code>. */
+	public static <T extends ParserRuleContext> T getContainerOfType(ParserRuleContext ctx, Class<T> expectedType) {
+		if (ctx == null) {
+			return null;
+		}
+		ctx = ctx.getParent();
+		while (ctx != null) {
+			if (expectedType.isInstance(ctx)) {
+				return expectedType.cast(ctx);
+			}
+			ctx = ctx.getParent();
+		}
+		return null;
+	}
+
+	/** @return all ancestor contexts of 'ctx' that are a subtype of 'expectedType' or <code>null</code>. */
+	public static <T extends ParserRuleContext> List<T> getContainersOfType(ParserRuleContext ctx,
+			Class<T> expectedType) {
+		if (ctx == null) {
+			return null;
+		}
+		LinkedList<T> result = new LinkedList<>();
+		ctx = ctx.getParent();
+		while (ctx != null) {
+			if (expectedType.isInstance(ctx)) {
+				result.addFirst(expectedType.cast(ctx));
+			}
+			ctx = ctx.getParent();
+		}
+		return result;
 	}
 
 	/** Sets the given accessibility, avoiding duplicate modifiers. */
@@ -163,6 +215,36 @@ public class ParserContextUtils {
 		Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
 		ann.setName(AnnotationDefinition.GLOBAL.name);
 		script.getAnnotations().add(0, ann);
+	}
+
+	/** Add an <code>@ExportEquals()</code> annotation to the given script. */
+	public static void addAnnotationExportEquals(Script script, String elementName) {
+		Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
+		ann.setName(AnnotationDefinition.EXPORT_EQUALS.name);
+		LiteralAnnotationArgument arg = N4JSFactory.eINSTANCE.createLiteralAnnotationArgument();
+		arg.setLiteral(createStringLiteral(elementName, elementName));
+		ann.getArgs().add(arg);
+		script.getAnnotations().add(ann);
+	}
+
+	/** Add a <code>@ContainsIndexSignature</code> annotation to the given classifier. */
+	public static void addAnnotationContainsIndexSignature(N4ClassifierDeclaration classifierDecl) {
+		Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
+		ann.setName(AnnotationDefinition.CONTAINS_INDEX_SIGNATURE.name);
+		addAnnotation(classifierDecl, ann);
+	}
+
+	/** Add the given annotation to the given element. */
+	public static void addAnnotation(AnnotableScriptElement elem, Annotation ann) {
+		if (elem == null || ann == null) {
+			return;
+		}
+		AnnotationList al = elem.getAnnotationList();
+		if (al == null) {
+			al = N4JSFactory.eINSTANCE.createAnnotationList();
+			elem.setAnnotationList(al);
+		}
+		al.getAnnotations().add(ann);
 	}
 
 	/** Sets the given element's "declared this type" by adding a {@code @This()} annotation. */
@@ -313,6 +395,48 @@ public class ParserContextUtils {
 		return false;
 	}
 
+	/**
+	 * @return identifier used in the first {@code export = <identifier>;} of the script or <code>null</code>.
+	 */
+	public static String findExportEqualsIdentifier(ProgramContext ctx) {
+		if (ctx.statementList() != null) {
+			for (StatementContext stmtCtx : ctx.statementList().statement()) {
+				if (stmtCtx.exportStatement() != null
+						&& stmtCtx.exportStatement().exportStatementTail() instanceof ExportEqualsContext) {
+
+					ExportEqualsContext eeCtx = (ExportEqualsContext) stmtCtx.exportStatement().exportStatementTail();
+					return eeCtx.namespaceName().getText().toString();
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @return module specifier of the first {@code import <identifier> = require('<moduleSpecifier>');} of the script
+	 *         or <code>null</code>.
+	 */
+	public static TerminalNode findImportEqualsModuleSpecifier(ProgramContext ctx, String identifier) {
+		if (ctx.statementList() == null) {
+			return null;
+		}
+		for (StatementContext stmtCtx : ctx.statementList().statement()) {
+			ImportStatementContext impStmtCtx = stmtCtx != null ? stmtCtx.importStatement() : null;
+			ImportAliasDeclarationContext impAliasDeclCtx = impStmtCtx != null ? impStmtCtx.importAliasDeclaration()
+					: null;
+			if (impAliasDeclCtx != null && impAliasDeclCtx.Require() != null) {
+				String impIdentifier = getIdentifierName(impAliasDeclCtx.identifierName());
+				if (identifier.equals(impIdentifier)) {
+					TerminalNode strLit = impAliasDeclCtx.StringLiteral();
+					if (strLit != null) {
+						return strLit;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 	/** @return the actual value of the given numeric literal. */
 	public static BigDecimal parseNumericLiteral(NumericLiteralContext numLitCtx, boolean ignoreNegation) {
 		if (numLitCtx == null) {
@@ -377,9 +501,17 @@ public class ParserContextUtils {
 		if (stringLiteral == null) {
 			return null;
 		}
+		return createStringLiteral(stringLiteral.getText(), trimAndUnescapeStringLiteral(stringLiteral));
+	}
+
+	/** @return the newly created string literal. Null safe. */
+	public static StringLiteral createStringLiteral(String rawValue, String value) {
+		if (rawValue == null || value == null) {
+			return null;
+		}
 		StringLiteral sl = N4JSFactory.eINSTANCE.createStringLiteral();
-		sl.setRawValue(stringLiteral.getText());
-		sl.setValue(trimAndUnescapeStringLiteral(stringLiteral));
+		sl.setRawValue(rawValue);
+		sl.setValue(value);
 		return sl;
 	}
 
@@ -462,6 +594,11 @@ public class ParserContextUtils {
 		return createParameterizedTypeRef(resource, "any", true);
 	}
 
+	/** @return a new {@code void} type reference. */
+	public static ParameterizedTypeRef createVoidTypeRef(LazyLinkingResource resource) {
+		return createParameterizedTypeRef(resource, "void", false);
+	}
+
 	/** @return a new {@link ParameterizedTypeRef} pointing to the given declared type. */
 	public static ParameterizedTypeRef createParameterizedTypeRef(LazyLinkingResource resource, String declTypeName,
 			boolean dynamic) {
@@ -502,7 +639,8 @@ public class ParserContextUtils {
 	public static void removeOverloadingFunctionDefs(LazyLinkingResource resource,
 			Collection<? extends EObject> elements) {
 
-		Multimap<String, FunctionDefinition> functionsByName = HashMultimap.create();
+		Multimap<String, FunctionDefinition> functionsByName = MultimapBuilder.linkedHashKeys().linkedHashSetValues()
+				.build();
 		for (EObject elem : elements) {
 			if (elem instanceof ExportDeclaration) {
 				ExportDeclaration expDecl = (ExportDeclaration) elem;
@@ -528,10 +666,10 @@ public class ParserContextUtils {
 					FormalParameter fPar = survivor.getFpars().get(i);
 					fparNames.put(i, fPar.getName());
 					fparTypes.put(i, fPar.getDeclaredTypeRefInAST() == null ? null
-							: fPar.getDeclaredTypeRefInAST().getTypeRefAsString());
+							: fPar.getDeclaredTypeRefInAST().getTypeRefAsString(false));
 				}
 				returnTypeName = survivor.getDeclaredReturnTypeRefInAST() == null ? null
-						: survivor.getDeclaredReturnTypeRefInAST().getTypeRefAsString();
+						: survivor.getDeclaredReturnTypeRefInAST().getTypeRefAsString(false);
 
 				for (FunctionDefinition fd = iter.next(); fd != null; fd = iter.hasNext() ? iter.next() : null) {
 					int survFPars = survivor.getFpars().size();
@@ -545,17 +683,17 @@ public class ParserContextUtils {
 							}
 							String oldTypeRef = fparTypes.get(i);
 							if (!Objects.equals(oldTypeRef, fPar.getDeclaredTypeRefInAST() == null ? null
-									: fPar.getDeclaredTypeRefInAST().getTypeRefAsString())) {
+									: fPar.getDeclaredTypeRefInAST().getTypeRefAsString(false))) {
 								fparTypes.put(i, null);
 							}
 						} else {
 							fparNames.put(i, fPar.getName());
 							fparTypes.put(i, fPar.getDeclaredTypeRefInAST() == null ? null
-									: fPar.getDeclaredTypeRefInAST().getTypeRefAsString());
+									: fPar.getDeclaredTypeRefInAST().getTypeRefAsString(false));
 						}
 
 						if (!Objects.equals(returnTypeName, fd.getDeclaredReturnTypeRefInAST() == null ? null
-								: fd.getDeclaredReturnTypeRefInAST().getTypeRefAsString())) {
+								: fd.getDeclaredReturnTypeRefInAST().getTypeRefAsString(false))) {
 							returnTypeName = null;
 						}
 					}
@@ -593,14 +731,40 @@ public class ParserContextUtils {
 						fPar.setDeclaredTypeRefNode(wrapInTypeRefNode(createAnyPlusTypeRef(resource)));
 					}
 				}
+
+				// for @Promisifiable functions, ensure we have a valid callback type
+				// (preliminary implementation: always assumes an event handler of type (err: Error, succ: any+)=>void;
+				// however, deriving a better type would require logic very similar to the handling of overloading
+				// above, but for TModule elements instead of AST nodes, so doing this without duplication would
+				// require a non-trivial refactoring)
+				// TODO IDE-3621 improve this
+				if (AnnotationDefinition.PROMISIFIABLE.hasAnnotation(survivor)) {
+					FormalParameter fParLast = IterableExtensions.last(survivor.getFpars());
+					TypeRef typeRef = fParLast != null ? fParLast.getDeclaredTypeRefInAST() : null;
+					if (fParLast != null && !(typeRef instanceof FunctionTypeExpression)) {
+						FunctionTypeExpression callbackTypeRef = TypeRefsFactory.eINSTANCE
+								.createFunctionTypeExpression();
+						TFormalParameter paramError = TypesFactory.eINSTANCE.createTFormalParameter();
+						paramError.setName("error");
+						paramError.setTypeRef(createParameterizedTypeRef(resource, "Error", true));
+						callbackTypeRef.getFpars().add(paramError);
+						TFormalParameter paramSuccess = TypesFactory.eINSTANCE.createTFormalParameter();
+						paramSuccess.setName("success");
+						paramSuccess.setTypeRef(createAnyPlusTypeRef(resource));
+						callbackTypeRef.getFpars().add(paramSuccess);
+						callbackTypeRef.setReturnTypeRef(createVoidTypeRef(resource));
+						fParLast.setDeclaredTypeRefNode(wrapInTypeRefNode(callbackTypeRef));
+					}
+				}
 			}
 		}
 	}
 
 	/**  */
-	public static void transformPromisifiables(EList<ScriptElement> scriptElements) {
-		Map<String, FunctionDefinition> functionsTop = new HashMap<>();
-		List<FunctionDefinition> functionsPrms = new ArrayList<>();
+	public static void transformPromisifiables(List<? extends ScriptElement> scriptElements) {
+		List<N4NamespaceDeclaration> namespaces = new ArrayList<>();
+		Multimap<String, FunctionDefinition> functionsTop = MultimapBuilder.hashKeys().arrayListValues().build();
+		Set<String> namesOfPromisifiedFunctions = new HashSet<>();
 		for (EObject elem : scriptElements) {
 			if (elem instanceof ExportDeclaration) {
 				elem = ((ExportDeclaration) elem).getExportedElement();
@@ -608,44 +772,46 @@ public class ParserContextUtils {
 			if (elem instanceof FunctionDefinition) {
 				FunctionDefinition fd = (FunctionDefinition) elem;
 				if (Objects.equals("__promisify__", fd.getName())) {
-					// fd.remove();
-					functionsPrms.add(fd);
+					// ignore here
 				} else {
 					functionsTop.put(fd.getName(), fd);
+				}
+			} else if (elem instanceof N4NamespaceDeclaration) {
+				N4NamespaceDeclaration ns = (N4NamespaceDeclaration) elem;
+				String nsName = ns.getName();
+				if (nsName == null || nsName.isBlank()) {
+					continue;
+				}
+
+				namespaces.add(ns);
+
+				for (EObject childElem : ns.getOwnedElementsRaw()) {
+					if (childElem instanceof ExportDeclaration) {
+						childElem = ((ExportDeclaration) childElem).getExportedElement();
+					}
+					if (childElem instanceof FunctionDefinition) {
+						FunctionDefinition fd = (FunctionDefinition) childElem;
+						if (Objects.equals("__promisify__", fd.getName())) {
+							namesOfPromisifiedFunctions.add(nsName);
+							break;
+						}
+					}
 				}
 			}
 		}
 
-		for (FunctionDefinition promFd : functionsPrms) {
-			DtsParseTreeNodeInfo dtsParseTreeNodeInfo = DtsParseTreeNodeInfo.get(promFd);
-			if (dtsParseTreeNodeInfo != null) {
-				ParserRuleContext ctx = dtsParseTreeNodeInfo.getParserRuleContext();
-				if (ctx != null) {
-					NamespaceDeclarationContext nsDeclCtx = (NamespaceDeclarationContext) findParentContext(ctx,
-							TypeScriptParser.RULE_namespaceDeclaration);
-					String nsName = null;
-					if (nsDeclCtx != null) {
-						nsName = nsDeclCtx.namespaceName() != null
-								? nsDeclCtx.namespaceName().getText()
-								: null;
-					} else {
-						ModuleDeclarationContext mDeclCtx = (ModuleDeclarationContext) findParentContext(ctx,
-								TypeScriptParser.RULE_moduleDeclaration);
-
-						if (mDeclCtx != null) {
-							nsName = mDeclCtx.moduleName() != null && mDeclCtx.moduleName().Identifier() != null
-									? mDeclCtx.moduleName().Identifier().getText()
-									: null;
-						}
-					}
-					if (nsName != null && functionsTop.containsKey(nsName)) {
-						FunctionDefinition fd = functionsTop.get(nsName);
-						Annotation promisifiable = N4JSFactory.eINSTANCE.createAnnotation();
-						promisifiable.setName(AnnotationDefinition.PROMISIFIABLE.name);
-						N4JSASTUtils.addAnnotation(fd, promisifiable);
-					}
-				}
+		for (String nameOfPromisifiedFunction : namesOfPromisifiedFunctions) {
+			for (FunctionDefinition fd : functionsTop.get(nameOfPromisifiedFunction)) {
+				// add annotation @Promisifiable to 'fd'
+				Annotation promisifiable = N4JSFactory.eINSTANCE.createAnnotation();
+				promisifiable.setName(AnnotationDefinition.PROMISIFIABLE.name);
+				N4JSASTUtils.addAnnotation(fd, promisifiable);
 			}
+		}
+
+		// continue with nested namespaces
+		for (N4NamespaceDeclaration ns : namespaces) {
+			transformPromisifiables(ns.getOwnedElementsRaw());
 		}
 	}
 }

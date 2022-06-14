@@ -33,6 +33,7 @@ import org.antlr.v4.runtime.atn.PredictionMode;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
+import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 import org.eclipse.n4js.dts.astbuilders.DtsScriptBuilder;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
@@ -164,7 +165,7 @@ public class DtsParser {
 
 	private DtsParseResult parseNestedScript(LazyLinkingResource resource, NestedResourceAdapter adapter) {
 		ParserRuleContext ctx = adapter.getContext();
-		StatementListContext statements = adapter.getStatements();
+		List<StatementContext> statements = adapter.getStatements();
 		DtsTokenStream tokens = adapter.getTokenStream();
 
 		ProgramContext prgCtx = new ProgramContext(null, 0) {
@@ -175,7 +176,17 @@ public class DtsParser {
 
 			@Override
 			public StatementListContext statementList() {
-				return statements;
+				return new StatementListContext(this, 0) {
+					{
+						this.start = ctx.start;
+						this.stop = ctx.stop;
+					}
+
+					@Override
+					public List<StatementContext> statement() {
+						return statements;
+					}
+				};
 			}
 		};
 

@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.dts;
 
+import java.util.List;
+
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.TokenStream;
@@ -18,7 +20,8 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
-import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * This adapter is installed on nested/virtual resources and holds the {@link TokenStream} and {@link RuleContext} that
@@ -60,9 +63,9 @@ public class NestedResourceAdapter implements Adapter {
 		return adapter;
 	}
 
-	final DtsTokenStream tokenStream;
-	final ParserRuleContext ctx;
-	final StatementListContext statements;
+	private final DtsTokenStream tokenStream;
+	private final ParserRuleContext ctx;
+	private final List<StatementContext> statements;
 
 	/**
 	 * Constructor
@@ -72,10 +75,11 @@ public class NestedResourceAdapter implements Adapter {
 	 * @param statements
 	 *            see {@link #getStatements()}.
 	 */
-	public NestedResourceAdapter(DtsTokenStream tokenStream, ParserRuleContext ctx, StatementListContext statements) {
+	public NestedResourceAdapter(DtsTokenStream tokenStream, ParserRuleContext ctx,
+			Iterable<StatementContext> statements) {
 		this.tokenStream = tokenStream;
 		this.ctx = ctx;
-		this.statements = statements;
+		this.statements = ImmutableList.copyOf(statements);
 	}
 
 	@Override
@@ -102,10 +106,10 @@ public class NestedResourceAdapter implements Adapter {
 	}
 
 	/**
-	 * Returns the context containing the {@link StatementContext statements} to be treated as the top-level elements of
-	 * the nested virtual resource.
+	 * Returns the {@link StatementContext statements} to be treated as the top-level elements of the nested virtual
+	 * resource.
 	 */
-	public StatementListContext getStatements() {
+	public List<StatementContext> getStatements() {
 		return statements;
 	}
 

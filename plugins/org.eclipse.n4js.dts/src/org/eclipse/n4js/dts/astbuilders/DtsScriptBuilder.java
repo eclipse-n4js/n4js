@@ -18,11 +18,11 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_exportStatementTail;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statementList;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
@@ -51,7 +51,6 @@ import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
-import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.VariableStatement;
@@ -64,6 +63,7 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 
 	private NestedResourceAdapter nestedResourceAdapter;
 	private String exportEqualsIdentifier;
+	private TerminalNode moduleSpecifierOfImportEqualsMatchingExportEquals;
 	private int globalScopeAugmentationCounter = 0;
 
 	/** Constructor */
@@ -103,6 +103,20 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 		return exportEqualsIdentifier;
 	}
 
+	/**
+	 * Iff {@link #isExportedEquals()}, then this returns the module specifier of the first import of the form
+	 *
+	 * <pre>
+	 * import id = require('./some/module');
+	 * </pre>
+	 *
+	 * with id == {@link #getExportEqualsIdentifier()} or <code>null</code> if no such import exists. Otherwise, i.e.
+	 * not {@link #isExportedEquals()}, this always returns <code>null</code>.
+	 */
+	public TerminalNode getModuleSpecifierOfImportEqualsMatchingExportEquals() {
+		return moduleSpecifierOfImportEqualsMatchingExportEquals;
+	}
+
 	/** Increments and returns the counter for <code>global { ... }</code> declarations in this script. */
 	public int incrementAndGetGlobalScopeAugmentationCounter() {
 		return ++globalScopeAugmentationCounter;
@@ -137,7 +151,10 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 		result = N4JSFactory.eINSTANCE.createScript();
 
 		nestedResourceAdapter = NestedResourceAdapter.get(resource);
-		exportEqualsIdentifier = DtsExportBuilder.findExportEqualsIdentifier(ctx);
+		exportEqualsIdentifier = ParserContextUtils.findExportEqualsIdentifier(ctx);
+		moduleSpecifierOfImportEqualsMatchingExportEquals = exportEqualsIdentifier != null
+				? ParserContextUtils.findImportEqualsModuleSpecifier(ctx, exportEqualsIdentifier)
+				: null;
 
 		// add @@Global (if necessary)
 		if (isNested()) {
@@ -148,6 +165,15 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 			DtsMode dtsMode = ParserContextUtils.getDtsMode(ctx);
 			if (dtsMode == DtsMode.SCRIPT) {
 				ParserContextUtils.makeGlobal(result);
+			}
+		}
+
+		// add @@ExportEquals (if necessary)
+		if (isExportedEquals()) {
+			if (getModuleSpecifierOfImportEqualsMatchingExportEquals() != null) {
+				// a re-export will be created in DtsExportBuilder#enterExportEquals()
+			} else {
+				ParserContextUtils.addAnnotationExportEquals(result, getExportEqualsIdentifier());
 			}
 		}
 
@@ -162,8 +188,8 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 
 	@Override
 	public void exitProgram(ProgramContext ctx) {
-		ParserContextUtils.removeOverloadingFunctionDefs(resource, result.getScriptElements());
 		ParserContextUtils.transformPromisifiables(result.getScriptElements());
+		ParserContextUtils.removeOverloadingFunctionDefs(resource, result.getScriptElements());
 	}
 
 	@Override
@@ -232,36 +258,7 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 	}
 
 	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
-		if (isExportedEquals()) {
-			// TODO check for name
-			transformExportEquals(elem);
-		} else {
-			ParserContextUtils.addAndHandleExported(result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS,
-					elem, false, ctx);
-		}
+		ParserContextUtils.addAndHandleExported(result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS,
+				elem, false, ctx);
 	}
-
-	/** Ignore namespace and map all its contents to the script. Also export every element directly. */
-	private void transformExportEquals(ExportableElement elem) {
-		if (elem instanceof N4NamespaceDeclaration) {
-			N4NamespaceDeclaration nsDecl = (N4NamespaceDeclaration) elem;
-
-			for (NamespaceElement nsElem : new LinkedList<>(nsDecl.getOwnedElementsRaw())) {
-				ExportableElement exportableElem = null;
-				if (nsElem instanceof ExportableElement) {
-					exportableElem = (ExportableElement) nsElem;
-				} else if (nsElem instanceof ExportDeclaration) {
-					exportableElem = ((ExportDeclaration) nsElem).getExportedElement();
-				}
-				if (exportableElem != null) {
-					ParserContextUtils.addAndHandleExported(result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS,
-							exportableElem, false, true, false);
-				}
-			}
-		} else {
-			ParserContextUtils.addAndHandleExported(result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS,
-					elem, false, true, true);
-		}
-	}
-
 }

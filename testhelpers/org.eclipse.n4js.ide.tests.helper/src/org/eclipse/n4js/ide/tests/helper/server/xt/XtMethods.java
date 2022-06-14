@@ -341,7 +341,7 @@ public class XtMethods {
 			result = ts.type(G, (TypableElement) eobject);
 		}
 		final String calculatedString = withAliasResolution
-				? result.getTypeRefAsStringWithAliasResolution()
+				? result.getTypeRefAsStringWithAliasExpansion()
 				: result.getTypeRefAsString();
 		return calculatedString;
 	}

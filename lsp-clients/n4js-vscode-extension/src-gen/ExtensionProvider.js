@@ -2,7 +2,7 @@
 
 import 'n4js-runtime'
 import * as n4jscli from 'n4js-cli'
-import * as jreProvider from 'n4js-cli/src-gen/JreProvider'
+import * as jreProvider from 'n4js-cli/src-gen/JreProvider.js'
 import * as net from 'net'
 import * as fs from 'fs'
 
@@ -70,7 +70,7 @@ export function getActivate(vscode, vscodeLC) {
 				}
 			],
 			synchronize: {
-				fileEvents: vscode.workspace.createFileSystemWatcher('**/{*.n4js,*.n4jsd,*.n4jsx,*.d.ts,*.js,package.json}')
+				fileEvents: vscode.workspace.createFileSystemWatcher('**/{*.n4js,*.n4jsd,*.n4jsx,*.d.ts,*.js,*.cjs,*.mjs,package.json}')
 			},
 			outputChannel: outputChannel
 		};

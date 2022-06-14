@@ -311,47 +311,23 @@ public interface TypeRef extends TypeArgument {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 *  See {@link TypeArgument#getTypeRefAsString()}.
+	 *  Overrides {@link TypeArgument#getTypeRefAsString(boolean)}.
 	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
+	 * @model unique="false" resolveProxiesUnique="false"
 	 * @generated
 	 */
-	String getTypeRefAsString();
+	String getTypeRefAsString(boolean resolveProxies);
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Returns this type reference as a string, usually according to N4JS syntax.
-	 * <p>
-	 * Regarding unresolved/resolved references to a type alias, this behaves as
-	 * {@link TypeArgument#getTypeRefAsString() #getTypeRefAsString()}, except that
-	 * in case of resolved references to a type alias the aliased/actual type is also
-	 * shown, appended with {@code <=>} as separator.
+	 *  Overrides {@link TypeArgument#getTypeRefAsStringWithAliasExpansion(boolean)}.
 	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
+	 * @model unique="false" resolveProxiesUnique="false"
 	 * @generated
 	 */
-	String getTypeRefAsStringWithAliasResolution();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 *  See {@link TypeArgument#internalGetTypeRefAsString()}.
-	 * <!-- end-model-doc -->
-	 * @model unique="false"
-	 * @generated
-	 */
-	String internalGetTypeRefAsString();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model unique="false"
-	 * @generated
-	 */
-	String toString();
+	String getTypeRefAsStringWithAliasExpansion(boolean resolveProxies);
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -19,7 +19,8 @@ package org.eclipse.n4js.ts.typeRefs;
  * <!-- begin-model-doc -->
  * *
  * A TypeRef used by the types builder to denote that some other part of the implementation is responsible
- * for creating a certain type reference. FIXME more info
+ * for creating a certain type reference. Usually created by the {@code N4JSTypesBuilder} and replaced by
+ * a correct type reference during post-processing by {@code TypeDeferredProcessor}.
  * <!-- end-model-doc -->
  *
  *
@@ -31,9 +32,9 @@ public interface DeferredTypeRef extends TypeRef {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model unique="false"
+	 * @model unique="false" resolveProxiesUnique="false"
 	 * @generated
 	 */
-	String internalGetTypeRefAsString();
+	String internalGetTypeRefAsString(boolean resolveProxies);
 
 } // DeferredTypeRef

@@ -23,10 +23,10 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.N4JSLanguageHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.ResourceNameComputer
+import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.n4js.workspace.utils.N4JSPackageName
-import org.eclipse.n4js.resource.N4JSResource
 
 /**
  * Converts the module specifiers of import statements from N4JS to ES6.
@@ -104,7 +104,7 @@ class ModuleSpecifierTransformation extends Transformation {
 	def private String computeModuleSpecifierForOutputCode(ImportDeclaration importDeclIM) {
 		val targetModule = state.info.getImportedModule(importDeclIM);
 
-		if ((targetModule.eResource as N4JSResource).isNested) {
+		if (URIUtils.isVirtualResourceURI(targetModule.eResource.URI)) {
 			// SPECIAL CASE #1a
 			// pointing to a module explicitly declared in a .d.ts file, such as a node built-in library:
 			// import * as path_lib from "path"

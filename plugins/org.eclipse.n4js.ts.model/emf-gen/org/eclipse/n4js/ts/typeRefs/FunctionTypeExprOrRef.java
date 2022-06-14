@@ -147,11 +147,11 @@ public interface FunctionTypeExprOrRef extends StaticBaseTypeRef {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString(boolean)}
 	 * <!-- end-model-doc -->
-	 * @model unique="false"
+	 * @model unique="false" resolveProxiesUnique="false"
 	 * @generated
 	 */
-	String internalGetTypeRefAsString();
+	String internalGetTypeRefAsString(boolean resolveProxies);
 
 } // FunctionTypeExprOrRef

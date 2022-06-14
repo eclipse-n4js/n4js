@@ -61,11 +61,11 @@ public interface ComposedTypeRef extends StaticBaseTypeRef {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}, only returns list of composed members, to be called by subclass.
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString(boolean)}, only returns list of composed members, to be called by subclass.
 	 * <!-- end-model-doc -->
-	 * @model unique="false"
+	 * @model unique="false" resolveProxiesUnique="false"
 	 * @generated
 	 */
-	String internalGetTypeRefAsString();
+	String internalGetTypeRefAsString(boolean resolveProxies);
 
 } // ComposedTypeRef

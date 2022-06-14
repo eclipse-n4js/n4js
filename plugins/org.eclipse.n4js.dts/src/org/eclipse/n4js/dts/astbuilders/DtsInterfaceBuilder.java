@@ -17,9 +17,11 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_interfaceMemberList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.dts.TypeScriptParser.CallSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ConstructSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.GetAccessorContext;
+import org.eclipse.n4js.dts.TypeScriptParser.IndexSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceExtendsClauseContext;
 import org.eclipse.n4js.dts.TypeScriptParser.MethodSignatureContext;
@@ -95,6 +97,13 @@ public class DtsInterfaceBuilder
 	public void exitInterfaceDeclaration(InterfaceDeclarationContext ctx) {
 		if (result != null) {
 			ParserContextUtils.removeOverloadingFunctionDefs(resource, result.getOwnedMembersRaw());
+		}
+	}
+
+	@Override
+	public void enterIndexSignature(IndexSignatureContext ctx) {
+		if (!AnnotationDefinition.CONTAINS_INDEX_SIGNATURE.hasAnnotation(result)) {
+			ParserContextUtils.addAnnotationContainsIndexSignature(result);
 		}
 	}
 

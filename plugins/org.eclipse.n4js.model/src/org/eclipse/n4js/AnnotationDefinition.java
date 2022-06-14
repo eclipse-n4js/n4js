@@ -53,6 +53,8 @@ import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
+import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.utils.UtilN4;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -257,6 +259,31 @@ public final class AnnotationDefinition {
 	public final static AnnotationDefinition PROMISIFIABLE = define("Promisifiable")
 			.targets(FUNCTION_DECLARATION, N4_METHOD_DECLARATION)
 			.retention(RetentionPolicy.TYPE).end();
+
+	/**
+	 * Represents {@code export = x;} in .d.ts files.
+	 * <p>
+	 * Only to be used in .d.ts.
+	 */
+	public final static AnnotationDefinition EXPORT_EQUALS = define("ExportEquals")
+			.javaScriptVariants(UtilN4.DTS_FILE_EXTENSION)
+			.targets(SCRIPT)
+			.args(STRING_LITERAL)
+			.transitive()
+			.retention(RetentionPolicy.TYPE)
+			.end();
+
+	/**
+	 * States that the annotated {@link TClassifier classifier} owns an index signature on the .d.ts side.
+	 * <p>
+	 * Only to be used in .d.ts.
+	 */
+	public final static AnnotationDefinition CONTAINS_INDEX_SIGNATURE = define("ContainsIndexSignature")
+			.javaScriptVariants(UtilN4.DTS_FILE_EXTENSION)
+			.targets(N4_CLASSIFIER_DECLARATION)
+			.transitive()
+			.retention(RetentionPolicy.TYPE)
+			.end();
 
 	// <---- TEST support annotations (at some point should be moved to concrete test plugin) ---->
 

@@ -19,19 +19,32 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.utils.DeclMergingHelper;
+import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.resource.ISelectable;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.impl.ImportNormalizer;
 import org.eclipse.xtext.scoping.impl.ImportScope;
 import org.eclipse.xtext.scoping.impl.ImportedNamespaceAwareLocalScopeProvider;
 
+import com.google.common.base.Optional;
+import com.google.inject.Inject;
+
 /**
  * Adapts {@link ImportedNamespaceAwareLocalScopeProvider}.
  */
 public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamespaceAwareLocalScopeProvider {
+
+	@Inject
+	private DeclMergingHelper declMergingHelper;
+
+	@Inject
+	private JavaScriptVariantHelper jsVariantHelper;
 
 	/**
 	 * NOTE: for N4JS, 'context' is only used to retrieve the containing resource, and 'reference' will be one of:
@@ -81,7 +94,7 @@ public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamesp
 
 		if (!normalizers.isEmpty()) {
 			globalScope = createImportScope(globalScope, normalizers, null, reference.getEReferenceType(),
-					isIgnoreCase(reference));
+					isIgnoreCase(reference), res.getResourceSet());
 		}
 
 		IScope resScope = getResourceScope(globalScope, context, reference);
@@ -103,7 +116,19 @@ public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamesp
 	@Override
 	protected ImportScope createImportScope(IScope parent, List<ImportNormalizer> namespaceResolvers,
 			ISelectable importFrom, EClass type, boolean ignoreCase) {
-		return new NonResolvingImportScope(namespaceResolvers, parent, importFrom, type, ignoreCase);
+		return new NonResolvingImportScope(namespaceResolvers, parent, importFrom, type, ignoreCase,
+				declMergingHelper, jsVariantHelper, Optional.absent());
+	}
+
+	/**
+	 *
+	 */
+	protected ImportScope createImportScope(IScope parent, List<ImportNormalizer> namespaceResolvers,
+			ISelectable importFrom, EClass type, boolean ignoreCase, ResourceSet contextResourceSet) {
+		BuiltInTypeScope builtInTypeScope = contextResourceSet != null ? BuiltInTypeScope.get(contextResourceSet)
+				: null;
+		return new NonResolvingImportScope(namespaceResolvers, parent, importFrom, type, ignoreCase,
+				declMergingHelper, jsVariantHelper, Optional.fromNullable(builtInTypeScope));
 	}
 
 	@Override

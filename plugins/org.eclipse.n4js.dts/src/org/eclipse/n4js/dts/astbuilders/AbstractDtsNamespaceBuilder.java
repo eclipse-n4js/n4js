@@ -19,6 +19,8 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_namespaceDeclaration;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statementList;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -26,6 +28,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.dts.LoadResultInfoAdapter;
 import org.eclipse.n4js.dts.NestedResourceAdapter;
+import org.eclipse.n4js.dts.TypeScriptParser.BlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.FunctionDeclarationContext;
@@ -34,7 +37,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.InterfaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
-import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
+import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
 import org.eclipse.n4js.dts.utils.ParserContextUtils;
@@ -171,7 +174,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 
 						// nested modules inside namespaces or nested modules are unsupported by TypeScript
 						if (ctx.block() != null) {
-							createNestedModule(ctx, ctx.block().statementList(),
+							createNestedModule(ctx, ParserContextUtils.getStatements(ctx.block()),
 									ParserContextUtils.trimAndUnescapeStringLiteral(strLit));
 
 							// declared modules may contain global state augmentations
@@ -179,7 +182,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 							// we have to handle this ahead of time!)
 							for (GlobalScopeAugmentationContext gsaCtx : ParserContextUtils.getGlobalScopeAugmentations(
 									ctx)) {
-								enterGlobalScopeAugmentation(gsaCtx);
+								doHandleGlobalScopeAugmentation(gsaCtx);
 							}
 						}
 					}
@@ -204,7 +207,8 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 		// note: global scope augmentations may only appear on top-level of files with DtsMode MODULE or
 		// as direct children of declared modules
 		if (result != null) {
-			// nested inside a namespace or "legacy module" --> ignore
+			// nested inside a namespace or "legacy module" (this should be a compile error in .d.ts)
+			// -> ignore
 			return;
 		}
 		if (getScriptBuilder().isNested()) {
@@ -212,16 +216,35 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 			// -> ignore this ctx here, because it was handled ahead of time in #enterModuleDeclaration()
 			return;
 		}
+		doHandleGlobalScopeAugmentation(ctx);
+	}
+
+	/** Handles global scope augmentations, i.e. .d.ts code such as <code>global { ... }</code>. */
+	protected void doHandleGlobalScopeAugmentation(GlobalScopeAugmentationContext ctx) {
 		if (ctx.block() == null) {
 			return;
 		}
 		String resName = URIUtils.SPECIAL_SEGMENT_MARKER + "globalScopeAugmentation"
 				+ getScriptBuilder().incrementAndGetGlobalScopeAugmentationCounter();
-		createNestedModule(ctx, ctx.block().statementList(), resName);
+
+		List<StatementContext> statements = new ArrayList<>();
+		// add higher-level imports
+		for (BlockContext bCtx : ParserContextUtils.getContainersOfType(ctx, BlockContext.class)) {
+			for (StatementContext sCtx : ParserContextUtils.getStatements(bCtx)) {
+				boolean isImport = sCtx.importStatement() != null;
+				if (isImport) {
+					statements.add(sCtx);
+				}
+			}
+		}
+		// add statements of 'ctx' itself
+		statements.addAll(ParserContextUtils.getStatements(ctx.block()));
+
+		createNestedModule(ctx, statements, resName);
 	}
 
 	/** Triggers the creation of a nested/virtual resource. */
-	private void createNestedModule(ParserRuleContext ctx, StatementListContext statements, String name) {
+	private void createNestedModule(ParserRuleContext ctx, Iterable<StatementContext> statements, String name) {
 		URI virtualUri = URIUtils.createVirtualResourceURI(resource.getURI(), name + ".d.ts");
 
 		LoadResultInfoAdapter loadResultInfo = (LoadResultInfoAdapter) ILoadResultInfoAdapter.get(resource);

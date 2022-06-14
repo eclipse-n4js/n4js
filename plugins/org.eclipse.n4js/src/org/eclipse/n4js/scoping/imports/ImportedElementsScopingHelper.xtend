@@ -158,10 +158,10 @@ class ImportedElementsScopingHelper {
 		for (imp : imports) {
 			val module = imp?.module;
 			if (module !== null) {
-				
+
 				val topLevelElements = exportedElementsCollector.getExportedElements(module, contextResource, includeHollows, includeValueOnlyElements);
 				val tleScope = scopesHelper.scopeFor("scope_AllTopLevelElementsFromModule", module, IScope.NULLSCOPE, false, topLevelElements)
-			
+
 				for (specifier : imp.importSpecifiers) {
 					switch (specifier) {
 						NamedImportSpecifier: {
@@ -196,7 +196,7 @@ class ImportedElementsScopingHelper {
 			val name = if (specifier instanceof DefaultImportSpecifier)
 						"default" else specifier.importedElementAsText;
 			val qName = QualifiedName.create(name);
-						
+
 			val importedElem = tleScope.getSingleElement(qName);
 			if (importedElem !== null && importedElem.EObjectOrProxy instanceof TExportableElement) {
 				importedElem.EObjectOrProxy as TExportableElement

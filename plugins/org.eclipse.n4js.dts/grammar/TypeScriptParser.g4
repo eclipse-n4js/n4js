@@ -223,7 +223,8 @@ importTypeRef
 ;
 
 typePredicateWithOperatorTypeRef
-    : Asserts? (This | bindingIdentifier) Is unionTypeExpression
+    : Asserts? (This | bindingIdentifier) Is conditionalTypeRef
+    | Asserts bindingIdentifier
 ;
 
 bindingIdentifier
@@ -373,7 +374,7 @@ propertySignature
 // Enum
 
 enumDeclaration
-    : Const? Enum identifierOrKeyWord '{' enumBody? '}' SemiColon?
+    : Const? Enum identifierName '{' enumBody? '}' SemiColon?
     ;
 
 enumBody
@@ -401,7 +402,7 @@ functionDeclaration
 // Class Declaration
 
 classDeclaration
-    : Abstract? Class identifierOrKeyWord typeParameters? classHeritage classBody SemiColon?
+    : Abstract? Class identifierName typeParameters? classHeritage classBody SemiColon?
     ;
 
 classHeritage
@@ -627,7 +628,7 @@ importedElement
     ;
 
 importAliasDeclaration
-    : Identifier '=' 
+    : identifierName '=' 
     ( namespaceName
     | Require '(' StringLiteral ')'
     )
@@ -638,7 +639,7 @@ importAliasDeclaration
 // Export Statement
 
 exportStatement
-    : Export exportStatementTail
+    : Export Declare? exportStatementTail
     ;
 
 exportStatementTail
@@ -982,6 +983,7 @@ keywordAllowedInTypeReferences:
     | From
     | Function
     | Get
+    | Global
     | If
     | Implements
     | Import
