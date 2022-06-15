@@ -161,7 +161,7 @@ public final class UserDataMapper {
 				ret.put(N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY,
 						Boolean.toString(exportedModule.isMainModule()));
 			}
-			System.out.println("Unresolved Proxies in " + originalResource.getURI().toString());
+			LOGGER.warn("Unresolved Proxies in " + originalResource.getURI().toString());
 			return ret;
 		}
 
