@@ -1,0 +1,119 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+import {IInstrumentedTest} from "org/eclipse/n4js/mangelhaft/types/IInstrumentedTest";
+import {ITestReporter} from "org/eclipse/n4js/mangelhaft/types/ITestReporter";
+import {ResultGroups} from "org/eclipse/n4js/mangelhaft/types/ResultGroups";
+import {TestMethodDescriptor} from "org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor";
+import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult";
+import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy";
+import {TestStatus} from "org/eclipse/n4js/mangelhaft/types/TestStatus";
+import * as xmlbuilder+ from "xmlbuilder2";
+import * as lib_path from "path";
+import {outputTextFile} from "org/eclipse/n4js/mangelhaft/util/fs";
+import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
+
+export public class SonarReporter implements ITestReporter {
+    @Inject
+    @Override public spy: TestSpy;
+
+    public outputFile: string;
+    public baseDir?: string;
+    public disableSourceMap?: boolean;
+
+    private startTime: Date;
+    private endTime: Date;
+
+    private resultsMap = new Map<string, TestResult>(); // test ID -> result
+    private fileMap = new Map<string, string>(); // test ID -> filePath
+
+    private async createSonarTestExecutionReport(resultGroups: ResultGroups): string {
+        const baseDir = this.baseDir || process.cwd();
+        const fileElems = new Map<string, any+>();
+
+        const xml = xmlbuilder.create();
+        const testExecutionsElem = xml.ele("testExecutions", {
+            version: "1"
+        });
+
+        for (const k of Array.from(this.resultsMap.keys()).sort()) {
+            const result = this.resultsMap.get(k);
+            const {
+                testStatus, message,
+                elapsedTime: duration = 0,
+                trace
+            } = result;
+
+            let filePath = this.fileMap.get(k);
+            if (filePath && !this.disableSourceMap) {
+                try {
+                    const {dir, name} = lib_path.parse(filePath);
+                    const mapFile = readJsonFile(lib_path.join(dir, `${name}.map`));
+                    const [src] = mapFile.sources as string[] || [];
+                    if (src) {
+                        filePath = lib_path.resolve(dir, src);
+                    }
+                } catch (exc) {} // file not found etc.
+            }
+
+            const path = filePath ? lib_path.relative(baseDir, filePath) : k /* better than nothing */;
+            let fileElem = fileElems.get(path);
+            if (!fileElem) {
+                fileElem = testExecutionsElem.ele("file", {
+                    path
+                });
+                fileElems.set(path, fileElem);
+            }
+
+            const testCase = fileElem.ele("testCase", {
+                name: k.substring(k.lastIndexOf("#") + 1),
+                duration,
+            });
+
+            if (result.isOK()) {
+                if (testStatus.startsWith(TestStatus.skipped)) {
+                    testCase.ele("skipped", {
+                        message
+                    });
+                }
+            } else {
+                testCase.ele(testStatus === TestStatus.failed ? "failure" : "error", {
+                    message
+                }).dat((trace || []).join("\n"));
+            }
+        }
+
+        return xml.end({
+            prettyPrint: true
+        });
+    }
+
+    @Override public async register() {
+        this.spy.testingStarted.add((numAllGroups: number, sid: string, numAllTests: number) => {
+            this.startTime = new Date();
+        });
+
+        this.spy.testFinished.add((group: IInstrumentedTest, test: TestMethodDescriptor, testResult: TestResult) => {
+            let testIdentifier = `${group.name}#${test.name}`;
+            if (group.parameterizedName) {
+                testIdentifier += `!${group.parameterizedName}`;
+            }
+            this.fileMap.set(testIdentifier, group.filePath || group.parent?.filePath);
+            this.resultsMap.set(testIdentifier, testResult);
+        });
+
+        this.spy.testingFinished.add(async (resultGroups: ResultGroups) => {
+            this.endTime = new Date();
+            outputTextFile(this.outputFile, await this.createSonarTestExecutionReport(resultGroups));
+        });
+
+        return this;
+    }
+}

@@ -13,8 +13,11 @@ import {accessSync} from "fs";
 import {constants} from "fs";
 import {mkdtemp} from "fs";
 import {readFileSync} from "fs";
-import * as path from "path";
+import * as lib_path from "path";
 import * as os from "os";
+import {mkdirSync} from "fs";
+import {existsSync} from "fs";
+import {writeFileSync} from "fs";
 
 export public const n4jsFileExt_re = /\.n4js[xd]?$/;
 
@@ -30,12 +33,25 @@ export public function fsSafeAccessSync(path: string, mode = constants.R_OK): bo
     }
 }
 
+export public function mkdirp(path: string, mode: int=): void {
+    if (!existsSync(path)) {
+        mkdirp(path.substring(0, path.lastIndexOf(lib_path.sep)), mode);
+        mkdirSync(path, mode);
+    }
+}
+
 export public async function createTempDir(): string {
-    const prefix = path.join(os.tmpdir(), "n4js-mangelhaft-");
+    const prefix = lib_path.join(os.tmpdir(), "n4js-mangelhaft-");
     return await mkdtemp(prefix);
 }
 
 export public function readJsonFile(path: string): Object+ {
     const content = String(readFileSync(path, { encoding: "UTF-8" }));
     return JSON.parse(content) as Object+;
+}
+
+export public function outputTextFile(filePath: string, content: string): void {
+    const dir = lib_path.dirname(filePath);
+    mkdirp(dir);
+    writeFileSync(filePath, content, { encoding: "UTF-8" });
 }

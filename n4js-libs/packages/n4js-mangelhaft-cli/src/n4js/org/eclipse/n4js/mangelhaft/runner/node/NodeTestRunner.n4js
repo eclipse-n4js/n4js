@@ -30,7 +30,8 @@ import cli_color_+ from "cli-color";
 import * as lib_path from "path";
 import * as lib_fs from "fs";
 import * as lib_coverage+ from "istanbul-lib-coverage";
-import {mkdirp} from "org/eclipse/n4js/mangelhaft/reporter/xunit/XUnitReporter";
+import {SonarReporter} from "org/eclipse/n4js/mangelhaft/reporter/sonar/SonarReporter";
+import {mkdirp} from "org/eclipse/n4js/mangelhaft/util/fs";
 
 
 class NodeTestRunner  {
@@ -40,6 +41,8 @@ class NodeTestRunner  {
     consoleReporter: ConsoleReporter;
     @Inject
     xunitReporter: XUnitReporter;
+    @Inject
+    sonarReporter: SonarReporter;
 
     @Final public async run(): void {
         const options = NodeTestCLI.parseCommandLine();
@@ -101,11 +104,16 @@ class NodeTestRunner  {
 
         if (options.xunitReportFile) {
             if (!options.xunitReportPackage) {
-                options.testCatalog
                 options.xunitReportPackage = lib_path.dirname(options.testCatalog);
             }
             this.xunitReporter.spec = options;
             reporters.push(this.xunitReporter);
+        }
+        if (options.sonarTestExecutionReportFile) {
+            this.sonarReporter.outputFile = options.sonarTestExecutionReportFile;
+            this.sonarReporter.baseDir = options.sonarTestExecutionReportBaseDir;
+            this.sonarReporter.disableSourceMap = options.sonarDisableSourceMap;
+            reporters.push(this.sonarReporter);
         }
 
         this.controller.reporters = reporters;

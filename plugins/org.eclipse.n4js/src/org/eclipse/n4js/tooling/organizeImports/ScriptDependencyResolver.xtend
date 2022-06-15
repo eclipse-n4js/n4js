@@ -38,11 +38,11 @@ import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.xtext.EcoreUtil2
 
 import static extension org.eclipse.n4js.tooling.organizeImports.InjectedTypesResolverUtility.*
 import static extension org.eclipse.n4js.tooling.organizeImports.RefNameUtil.*
-import org.eclipse.n4js.utils.ResourceType
 
 /**
  * Static analysis for {@link Script} dependencies. Analyzes all identifiers in the {@link Script},
@@ -185,10 +185,10 @@ class ScriptDependencyResolver {
 	def private static createScriptDependency(Type type, Map<String, NamedImportSpecifier> nameToNamedImportSpecifiers,
 		Map<NamespaceImportSpecifier, Boolean> usedNamespaceSpecifiers) {
 		if (nameToNamedImportSpecifiers.containsKey(type.name)) {
-			val nis = nameToNamedImportSpecifiers.get(type.name)
-			val identifiableElement = nis.importedElement
-			new ScriptDependency(nis.alias ?: identifiableElement.name, identifiableElement.name, identifiableElement,
-				(identifiableElement.eContainer as TModule))
+			val nis = nameToNamedImportSpecifiers.get(type.name);
+			val identifiableElement = nis.importedElement;
+			val module = EcoreUtil2.getContainerOfType(identifiableElement, TModule);
+			new ScriptDependency(nis.alias ?: identifiableElement.name, identifiableElement.name, identifiableElement, module);
 		} else if (isNamespaceDependencyHandlingNeeded(usedNamespaceSpecifiers, type.containingModule)) {
 			createDependencyOnNamespace(usedNamespaceSpecifiers, type.containingModule)
 		} else {
@@ -270,9 +270,9 @@ class ScriptDependencyResolver {
 			compare.apply(eo.declaredType)) {
 			val typeName = eo.findTypeName
 			if (typeName !== null) { // null means not typed in script (e.g. TypesComputer)-> no import necessary
+				val module = EcoreUtil2.getContainerOfType(eo.declaredType, TModule);
 				return newArrayList(
-					new ScriptDependency(typeName, eo.declaredType.name, eo.declaredType,
-						(eo.declaredType.eContainer as TModule)))
+					new ScriptDependency(typeName, eo.declaredType.name, eo.declaredType, module))
 			}
 		}
 		return newArrayList()

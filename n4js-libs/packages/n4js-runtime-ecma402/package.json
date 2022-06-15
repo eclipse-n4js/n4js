@@ -16,7 +16,7 @@
     "ECMA402"
   ],
   "engines": {
-    "node": ">= 8.0.0"
+    "node": ">=14"
   },
   "type": "module",
   "n4js": {

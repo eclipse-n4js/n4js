@@ -41,6 +41,21 @@ const nomnomOptions: Object = {
     xunitReportPackage: {
         help: "jUnit/xUnit report package name. Default is the project name."
     },
+    sonarTestExecutionReportFile: {
+        metavar: "PATH",
+        transform: resolvePath,
+        help: "sonarqube test execution report output file."
+    },
+    sonarTestExecutionReportBaseDir: {
+        metavar: "PATH",
+        transform: resolvePath,
+        default: process.cwd(),
+        help: "sonarqube test execution report base directory."
+    },
+    sonarDisableSourceMap: {
+        flag: true,
+        help: "Don't map to N4JS source file."
+    },
     nycCoveragePath: {
         metavar: "PATH",
         transform: resolvePath,

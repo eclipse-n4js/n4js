@@ -38,6 +38,8 @@ export public class InstrumentedTest implements IInstrumentedTest {
     public afters: TestMethodDescriptor[] = [];
 
     @Override
+    public filePath: string;
+    @Override
     public fqn: string = "";
 
     /**
@@ -113,8 +115,9 @@ export public class InstrumentedTest implements IInstrumentedTest {
                         if (item === "index") {
                             return ii;
                         } else {
-                            let paramNumber = Number.parseInt(item);
-                            return pGroup[paramNumber] || "";
+                            const paramNumber = Number.parseInt(item);
+                            // Limit and stringify arbitrary output, but also workaround for encoding bug in xmlbuilder2:
+                            return String(pGroup[paramNumber] ?? "").replace(/[^\w]/mg, "").slice(0, 100);
                         }
                     });
                 tests.push(new InstrumentedTest(testClass, info, testObject as N4Object, parameterizedName));
@@ -241,6 +244,7 @@ export public class InstrumentedTest implements IInstrumentedTest {
         .TEST);
         if (info) {
             this.fqn = info.fqn;
+            this.filePath = info.filePath;
         }
         this.fqn = this.fqn || testClass.n4type.fqn;
         this.name = this.fqn;
