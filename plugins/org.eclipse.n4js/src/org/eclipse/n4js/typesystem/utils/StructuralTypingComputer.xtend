@@ -18,6 +18,7 @@ import java.util.List
 import org.eclipse.emf.ecore.util.EcoreUtil.EqualityHelper
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.FieldAccessor
@@ -81,9 +82,27 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 			&& left.typingStrategy === right.typingStrategy
 			&& STRUCTURAL_FIELD_INITIALIZER !== leftStrategy && STRUCTURAL_FIELD_INITIALIZER !== rightStrategy
 			&& left.declaredType === right.declaredType
-			&& left.structuralMembers.empty && right.structuralMembers.empty
-			&& !left.generic) {
-			return result(left, right, emptyList, emptyList);
+			&& left.structuralMembers.empty && right.structuralMembers.empty) {
+				
+			if (!left.generic) {
+				return result(left, right, emptyList, emptyList);
+			} else if (left instanceof ParameterizedTypeRef && right instanceof ParameterizedTypeRef) {
+				val leftTypeArgs = left.typeArgsWithDefaults;
+				val rightTypeArgs = right.typeArgsWithDefaults;
+				if (leftTypeArgs.size === rightTypeArgs.size) {
+					var typeArgsEqual = true;
+					for (var i = 0; typeArgsEqual && i < leftTypeArgs.size; i++) {
+						val leftTypeArg = leftTypeArgs.get(i);
+						val rightTypeArg = rightTypeArgs.get(i);
+						typeArgsEqual = typeArgsEqual
+							&& leftTypeArg.declaredType !== null
+							&& leftTypeArg.declaredType === rightTypeArg.declaredType;
+					}
+					if (typeArgsEqual) {
+						return result(left, right, emptyList, emptyList);
+					}
+				}
+			}
 		}
 
 		// 61, 2a)
