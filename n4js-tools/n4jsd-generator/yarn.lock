@@ -2,22 +2,69 @@
 # yarn lockfile v1
 
 
-"@n4jsd/debug@<=4.1.*":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@n4jsd/debug/-/debug-4.1.0.tgz#ac34f6d4171b9adfeb8b301b66f8cb86205b48b7"
-  integrity sha512-SwRCSvLLYMNd2r35uU/lXuu4B58k341lTs+cas6/XeTfVTCwrvMFIvTCNJ28JxqbNUevCZFtwiXnJHgzEYPK4Q==
-
-"@n4jsd/glob@<=7.1.*":
-  version "7.1.2"
-  resolved "https://registry.yarnpkg.com/@n4jsd/glob/-/glob-7.1.2.tgz#9529257fc9d6169a3994cccdac86c7918d2b98e7"
-  integrity sha512-IuPvFlEhdU6jXcW/dUGwiBF8aoqhAk0GhsAl9ZZq5J4xgpfPjJBcGPBrdzDqiWexTP2/jarCo5Gpn6EmkuLLMQ==
+"@oozcitak/dom@1.15.10":
+  version "1.15.10"
+  resolved "https://registry.yarnpkg.com/@oozcitak/dom/-/dom-1.15.10.tgz#dca7289f2b292cff2a901ea4fbbcc0a1ab0b05c2"
+  integrity sha512-0JT29/LaxVgRcGKvHmSrUTEvZ8BXvZhGl2LASRUgHqDTC1M5g1pLmVv56IYNyt3bG2CUjDkc67wnyZC14pbQrQ==
   dependencies:
-    n4js-runtime-node ""
+    "@oozcitak/infra" "1.0.8"
+    "@oozcitak/url" "1.0.4"
+    "@oozcitak/util" "8.3.8"
 
-"@types/node@~14.14.7":
-  version "14.14.45"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.45.tgz#ec2dfb5566ff814d061aef7e141575aedba245cf"
-  integrity sha512-DssMqTV9UnnoxDWu959sDLZzfvqCF0qDNRjaWeYSui9xkFe61kKo4l1TWNTQONpuXEm+gLMRvdlzvNHBamzmEw==
+"@oozcitak/infra@1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@oozcitak/infra/-/infra-1.0.8.tgz#b0b089421f7d0f6878687608301fbaba837a7d17"
+  integrity sha512-JRAUc9VR6IGHOL7OGF+yrvs0LO8SlqGnPAMqyzOuFZPSZSXI7Xf2O9+awQPSMXgIWGtgUf/dA6Hs6X6ySEaWTg==
+  dependencies:
+    "@oozcitak/util" "8.3.8"
+
+"@oozcitak/url@1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@oozcitak/url/-/url-1.0.4.tgz#ca8b1c876319cf5a648dfa1123600a6aa5cda6ba"
+  integrity sha512-kDcD8y+y3FCSOvnBI6HJgl00viO/nGbQoCINmQ0h98OhnGITrWR3bOGfwYCthgcrV8AnTJz8MzslTQbC3SOAmw==
+  dependencies:
+    "@oozcitak/infra" "1.0.8"
+    "@oozcitak/util" "8.3.8"
+
+"@oozcitak/util@8.3.8":
+  version "8.3.8"
+  resolved "https://registry.yarnpkg.com/@oozcitak/util/-/util-8.3.8.tgz#10f65fe1891fd8cde4957360835e78fd1936bfdd"
+  integrity sha512-T8TbSnGsxo6TDBJx/Sgv/BlVJL3tshxZP7Aq5R1mSnM5OcHY2dQaxLMu2+E8u3gN0MLOzdjurqN4ZRVuzQycOQ==
+
+"@types/debug@*":
+  version "4.1.7"
+  resolved "https://registry.yarnpkg.com/@types/debug/-/debug-4.1.7.tgz#7cc0ea761509124709b8b2d1090d8f6c17aadb82"
+  integrity sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==
+  dependencies:
+    "@types/ms" "*"
+
+"@types/glob@*":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@types/glob/-/glob-7.2.0.tgz#bc1b5bf3aa92f25bd5dd39f35c57361bdce5b2eb"
+  integrity sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==
+  dependencies:
+    "@types/minimatch" "*"
+    "@types/node" "*"
+
+"@types/minimatch@*":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.5.tgz#1001cc5e6a3704b83c236027e77f2f58ea010f40"
+  integrity sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==
+
+"@types/ms@*":
+  version "0.7.31"
+  resolved "https://registry.yarnpkg.com/@types/ms/-/ms-0.7.31.tgz#31b7ca6407128a3d2bbc27fe2d21b345397f6197"
+  integrity sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==
+
+"@types/node@*":
+  version "17.0.43"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.43.tgz#7f16898cdd791c9d64069000ad448b47b3ca8353"
+  integrity sha512-jnUpgw8fL9kP2iszfIDyBQtw5Mf4/XSqy0Loc1J9pI14ejL83XcCEvSf50Gs/4ET0I9VCCDoOfufQysj0S66xA==
+
+"@types/node@^16":
+  version "16.11.40"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.40.tgz#bcf85f3febe74436107aeb2d3fb5fd0d30818600"
+  integrity sha512-7bOWglXUO6f21NG3YDI7hIpeMX3M59GG+DzZuzX2EkFKYUnRoxq3EOg4R0KNv2hxryY9M3UUqG5akwwsifrukw==
 
 ansi-regex@^2.0.0, ansi-regex@^2.1.1:
   version "2.1.1"
@@ -46,6 +93,13 @@ are-we-there-yet@~1.1.2:
   dependencies:
     delegates "^1.0.0"
     readable-stream "^2.0.6"
+
+argparse@^1.0.7:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/argparse/-/argparse-1.0.10.tgz#bcd6791ea5ae09725e17e5ad988134cd40b3d911"
+  integrity sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==
+  dependencies:
+    sprintf-js "~1.0.2"
 
 balanced-match@^1.0.0:
   version "1.0.2"
@@ -157,13 +211,6 @@ d@1, d@^1.0.1:
   dependencies:
     es5-ext "^0.10.50"
     type "^1.0.1"
-
-debug@^3.0.0:
-  version "3.2.7"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-3.2.7.tgz#72580b7e9145fb39b6676f9c5e5fb100b934179a"
-  integrity sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==
-  dependencies:
-    ms "^2.1.1"
 
 debug@~4.3.1:
   version "4.3.2"
@@ -283,6 +330,11 @@ esm@3.2.25:
   resolved "https://registry.yarnpkg.com/esm/-/esm-3.2.25.tgz#342c18c29d56157688ba5ce31f8431fbb795cc10"
   integrity sha512-U1suiZ2oDVWv4zPO56S0NcR5QriEahGtdN2OR6FiOG4WJvcjBVFB0qI4+eKoWFH483PKGuLuu6V8Z4T5g63UVA==
 
+esprima@^4.0.0:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/esprima/-/esprima-4.0.1.tgz#13b04cdb3e6c5d19df91ab6987a8695619b0aa71"
+  integrity sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==
+
 event-emitter@^0.3.5:
   version "0.3.5"
   resolved "https://registry.yarnpkg.com/event-emitter/-/event-emitter-0.3.5.tgz#df8c69eef1647923c7157b9ce83840610b02cc39"
@@ -320,12 +372,10 @@ file-type@^6.1.0:
   resolved "https://registry.yarnpkg.com/file-type/-/file-type-6.2.0.tgz#e50cd75d356ffed4e306dc4f5bcf52a79903a919"
   integrity sha512-YPcTBDV+2Tm0VqjybVd32MHdlEGAtuxS3VAYsumFokDSMG+ROT5wawGlnHDoz7bfMcMDt9hxuXvXwoKUx2fkOg==
 
-follow-redirects@1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.9.0.tgz#8d5bcdc65b7108fe1508649c79c12d732dcedb4f"
-  integrity sha512-CRcPzsSIbXyVDl0QI01muNDu69S8trU4jArW9LpOt2WtC6LyUJetcIrmfHsRBx7/Jb6GHJUiuqyYxPooFfNt6A==
-  dependencies:
-    debug "^3.0.0"
+follow-redirects@1.14.9:
+  version "1.14.9"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.9.tgz#dd4ea157de7bfaf9ea9b3fbd85aa16951f78d8d7"
+  integrity sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==
 
 fs-constants@^1.0.0:
   version "1.0.0"
@@ -359,7 +409,19 @@ get-stream@^2.2.0:
     object-assign "^4.0.1"
     pinkie-promise "^2.0.0"
 
-glob@^7.1.2, glob@~7.2.0:
+glob@^7.1.6:
+  version "7.2.3"
+  resolved "https://registry.yarnpkg.com/glob/-/glob-7.2.3.tgz#b8df0fb802bbfa8e89bd1d938b4e16578ed44f2b"
+  integrity sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==
+  dependencies:
+    fs.realpath "^1.0.0"
+    inflight "^1.0.4"
+    inherits "2"
+    minimatch "^3.1.1"
+    once "^1.3.0"
+    path-is-absolute "^1.0.0"
+
+glob@~7.2.0:
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.2.0.tgz#d15535af7732e02e948f4c41628bd910293f6023"
   integrity sha512-lmLf6gtyrPq8tTjSmrO94wBeQbFR3HbLHbuyD69wuyQkImp2hWqMGB47OX65FBkPffO641IP9jWa1z4ivqG26Q==
@@ -436,6 +498,19 @@ isarray@~1.0.0:
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-1.0.0.tgz#bb935d48582cba168c06834957a54a3e07124f11"
   integrity sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE=
 
+istanbul-lib-coverage@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/istanbul-lib-coverage/-/istanbul-lib-coverage-3.2.0.tgz#189e7909d0a39fa5a3dfad5b03f71947770191d3"
+  integrity sha512-eOeJ5BHCmHYvQK7xt9GkdHuzuCGS1Y6g9Gvnx3Ym33fz/HpLRYxiS0wHNr+m/MBC8B647Xt608vCDEvhl9c6Mw==
+
+js-yaml@3.14.0:
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.14.0.tgz#a7a34170f26a21bb162424d8adacb4113a69e482"
+  integrity sha512-/4IbIeHcD9VMHFqDR/gQ7EdZdLimOvW2DdcxFjdyyZ9NsbS+ccrXqVWDtab/lRl5AlUqmpBx8EhPaWR+OtY17A==
+  dependencies:
+    argparse "^1.0.7"
+    esprima "^4.0.0"
+
 lru-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/lru-queue/-/lru-queue-0.1.0.tgz#2738bd9f0d3cf4f84490c5736c48699ac632cda3"
@@ -471,96 +546,82 @@ minimatch@3.0.4, minimatch@^3.0.4:
   dependencies:
     brace-expansion "^1.1.7"
 
+minimatch@^3.1.1:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.1.2.tgz#19cd194bfd3e428f049a70817c038d89ab4be35b"
+  integrity sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==
+  dependencies:
+    brace-expansion "^1.1.7"
+
 ms@2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-ms@^2.1.1:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
-  integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
-
-n4js-cli@~0.29.1:
-  version "0.29.1"
-  resolved "https://registry.yarnpkg.com/n4js-cli/-/n4js-cli-0.29.1.tgz#a654842afebea7db2961007da06cf0c0049a839a"
-  integrity sha512-gzA+rSU7M0WciFKvOyK/HIGkqZnNGjuMIOtZ2c6rpI9EM4XgO5l3b0aAbYGYG9XGhp0kGFlbdl66C5qSNJIgbg==
+n4js-cli@~0.32.2:
+  version "0.32.2"
+  resolved "https://registry.yarnpkg.com/n4js-cli/-/n4js-cli-0.32.2.tgz#661da6903b6fafba36c24c4f835511bcc2d1bab9"
+  integrity sha512-w7dJjgDDjzzVohSqyOqduyZdUaKnIoh+FYVmgWn77Z/zpAH5+UdT6EoD3fsKt2UP+PQXp0rvbzQ4jl280OV38Q==
   dependencies:
-    "@n4jsd/debug" "<=4.1.*"
+    "@types/debug" "*"
+    "@types/node" "^16"
     debug "~4.3.1"
     decompress "4.2.1"
     esm "3.2.25"
-    follow-redirects "1.9.0"
-    n4js-runtime "0.29.1"
-    n4js-runtime-es2015 "0.29.1"
-    n4js-runtime-esnext "0.29.1"
-    n4js-runtime-node "0.29.1"
+    follow-redirects "1.14.9"
+    n4js-runtime "0.32.2"
+    n4js-runtime-es2015 "0.32.2"
+    n4js-runtime-esnext "0.32.2"
     npmlog "4.1.2"
 
-n4js-mangelhaft-cli@~0.29.1:
-  version "0.29.1"
-  resolved "https://registry.yarnpkg.com/n4js-mangelhaft-cli/-/n4js-mangelhaft-cli-0.29.1.tgz#7831252116b8ac7709aee56b45dff2cad5763291"
-  integrity sha512-iiRvENCx/gNHVLc7i0mHcCbYmaRU5wi4QRCIueuSQf8FqWrNISzk8MQfCBbE6l/mmdZvBcKUQil+JO5Nb1K1Dw==
+n4js-mangelhaft-cli@~0.32.2:
+  version "0.32.2"
+  resolved "https://registry.yarnpkg.com/n4js-mangelhaft-cli/-/n4js-mangelhaft-cli-0.32.2.tgz#6fdbd03bf7d2b80ab03d115196da2f4d345ccb98"
+  integrity sha512-VmrBjBrHweN1D95SRlCjjOL4/emxGktSUHbyD9aj5uZony+g8dpNbPFsxTSpagQSmLJIATxy13dR95FG2CjEcw==
   dependencies:
-    "@n4jsd/debug" "<=4.1.*"
-    "@n4jsd/glob" "<=7.1.*"
+    "@types/debug" "*"
+    "@types/glob" "*"
+    "@types/minimatch" "*"
+    "@types/node" "^16"
     cli-color "~1.2.0"
     debug "~4.3.1"
-    esm "3.2.25"
-    glob "^7.1.2"
+    glob "^7.1.6"
+    istanbul-lib-coverage "^3.2.0"
     minimatch "3.0.4"
-    n4js-runtime "0.29.1"
-    n4js-runtime-es2015 "0.29.1"
-    n4js-runtime-esnext "0.29.1"
-    n4js-runtime-fetch "0.29.1"
-    n4js-runtime-node "0.29.1"
+    n4js-runtime "0.32.2"
+    n4js-runtime-es2015 "0.32.2"
+    n4js-runtime-esnext "0.32.2"
     node-fetch "~2.6.1"
     nomnom-patched "~1.8.2"
-    org.eclipse.n4js.mangelhaft "0.29.1"
-    org.eclipse.n4js.mangelhaft.reporter.console "0.29.1"
-    org.eclipse.n4js.mangelhaft.reporter.ide "0.29.1"
-    org.eclipse.n4js.mangelhaft.reporter.xunit "0.29.1"
+    org.eclipse.n4js.mangelhaft "0.32.2"
+    org.eclipse.n4js.mangelhaft.reporter.console "0.32.2"
+    org.eclipse.n4js.mangelhaft.reporter.sonar "0.32.2"
+    org.eclipse.n4js.mangelhaft.reporter.xunit "0.32.2"
 
-n4js-runtime-es2015@0.29.1, n4js-runtime-es2015@~0.29.1:
-  version "0.29.1"
-  resolved "https://registry.yarnpkg.com/n4js-runtime-es2015/-/n4js-runtime-es2015-0.29.1.tgz#a63ea089c41e0d84f91e739ced0256a35bada52b"
-  integrity sha512-CLOHTIB4SSqHY0zhvAKzEtVK2t8RQqthp19PKn2MN6yBjo89KMFb7zCh1mXLsBVYLEPKu69aNXXViNm2aRZlog==
+n4js-runtime-es2015@0.32.2, n4js-runtime-es2015@~0.32.2:
+  version "0.32.2"
+  resolved "https://registry.yarnpkg.com/n4js-runtime-es2015/-/n4js-runtime-es2015-0.32.2.tgz#957ed87d40e45c48244239007781f6557deddbde"
+  integrity sha512-tv1zNX17+kRkMRx7ZtqLn9hXymJufUZTyQEN8XfgzLsvVOF3GbyYVdsa2N9J5EXy082rByrFyc0OvboUxMmpgA==
 
-n4js-runtime-esnext@0.29.1, n4js-runtime-esnext@~0.29.1:
-  version "0.29.1"
-  resolved "https://registry.yarnpkg.com/n4js-runtime-esnext/-/n4js-runtime-esnext-0.29.1.tgz#191dd69dbdfd83095b904d17005ded1fc53d13c3"
-  integrity sha512-PS+ezWA4HcQjdfPW9vL6fDWE91HhcRSLxoTek/2MCJqGq+ba/5XqL1OOyBuRECo1RDDktznPRt88mZMF83SAng==
+n4js-runtime-esnext@0.32.2, n4js-runtime-esnext@~0.32.2:
+  version "0.32.2"
+  resolved "https://registry.yarnpkg.com/n4js-runtime-esnext/-/n4js-runtime-esnext-0.32.2.tgz#96a184bd29de8dc44c0564010084e06184da62a3"
+  integrity sha512-NWLAA6dfUprOTGr3bGvamz/piFuMUpCylRHHcwf5S4bMHWYS/+DdMI4Xuj6JCWhQMHBTATAhw+5X1AfsICqoKQ==
   dependencies:
-    n4js-runtime-es2015 "0.29.1"
+    n4js-runtime-es2015 "0.32.2"
 
-n4js-runtime-fetch@0.29.1:
-  version "0.29.1"
-  resolved "https://registry.yarnpkg.com/n4js-runtime-fetch/-/n4js-runtime-fetch-0.29.1.tgz#d47d1ee58a495ca28cfe324e9ce2781b1ae256fa"
-  integrity sha512-I08k386by34NIFEbmFk5Ghz3pkPponiPHxLFdwyXQVYQOgiZFABxEuaBrviIMJ3PTdrZaUDMC4DGZck1/BFQJQ==
+n4js-runtime-v8@0.32.2:
+  version "0.32.2"
+  resolved "https://registry.yarnpkg.com/n4js-runtime-v8/-/n4js-runtime-v8-0.32.2.tgz#3c9c5482555a2c04d8c78ee7b07a370b2e2e7c65"
+  integrity sha512-r2snFpfuyZGLL+NuOT1INq3oKJMbI2oqclQpytLXGi5vEwTr97UL29E1jenZZD0ZBcBGqyKhONeRRnKsMMa7bw==
+
+n4js-runtime@0.32.2, n4js-runtime@~0.32.2:
+  version "0.32.2"
+  resolved "https://registry.yarnpkg.com/n4js-runtime/-/n4js-runtime-0.32.2.tgz#d4843e81b9cdb8f06db68e746f3474bb6aa7beda"
+  integrity sha512-+VgFZ1et+7pLLitpYYxoc1vf2bgJaJI8Id+mD1swMXjhdcsC4agmEmuZNdNVl7mCnwOMq6NFCdPhsDLSuIvyAA==
   dependencies:
-    n4js-runtime-es2015 "0.29.1"
-
-n4js-runtime-node@, n4js-runtime-node@0.29.1, n4js-runtime-node@~0.29.1:
-  version "0.29.1"
-  resolved "https://registry.yarnpkg.com/n4js-runtime-node/-/n4js-runtime-node-0.29.1.tgz#4101598334771b4b0437e5565a25dfa2bcade9aa"
-  integrity sha512-ww39jP0zRanulvwQtbmmXHEQ54yX7GsD6rM7IrGive/1x1fXJ27CPuqByQzszssnvsxBLAEmge0XSAzIiZPJbA==
-  dependencies:
-    n4js-runtime-es2015 "0.29.1"
-    n4js-runtime-esnext "0.29.1"
-
-n4js-runtime-v8@0.29.1:
-  version "0.29.1"
-  resolved "https://registry.yarnpkg.com/n4js-runtime-v8/-/n4js-runtime-v8-0.29.1.tgz#70b0577db9e32c224a29c038e612d2f0b49fe2dc"
-  integrity sha512-KD5/buu+UNJeR4qC23qLklfSWyORdktMfGeaB377VV61EfUfzaMJEDhKCvnhEpiJXEsPosS8jYwkKGo7wt36zw==
-
-n4js-runtime@0.29.1, n4js-runtime@~0.29.1:
-  version "0.29.1"
-  resolved "https://registry.yarnpkg.com/n4js-runtime/-/n4js-runtime-0.29.1.tgz#591c46e28b275c5949d214102c17522477516885"
-  integrity sha512-NUQYpP1/d4lQFdfjhM+ZMEXzY4yP7uV7Kc/huqn6JbvgRLtH0bdmM49mWBqLg+JIa83k7dF/oXvdqUEGKgxfcg==
-  dependencies:
-    esm "3.2.25"
-    n4js-runtime-es2015 "0.29.1"
-    n4js-runtime-esnext "0.29.1"
+    n4js-runtime-es2015 "0.32.2"
+    n4js-runtime-esnext "0.32.2"
 
 next-tick@1, next-tick@^1.1.0:
   version "1.1.0"
@@ -614,58 +675,59 @@ once@^1.3.0, once@^1.4.0:
   dependencies:
     wrappy "1"
 
-org.eclipse.n4js.mangelhaft.assert@0.29.1, org.eclipse.n4js.mangelhaft.assert@~0.29.1:
-  version "0.29.1"
-  resolved "https://registry.yarnpkg.com/org.eclipse.n4js.mangelhaft.assert/-/org.eclipse.n4js.mangelhaft.assert-0.29.1.tgz#4ac73eb58a85d0b34ba44c5dde9dc27524ee5d7a"
-  integrity sha512-P4sW3tE4fvdZr+P4FU7m2UYGTpXpvGClmBrLN1NThnML8r15Wq2ITz5NW49uzA8hZHIpjulCqZKaYuuM8kyNpA==
+org.eclipse.n4js.mangelhaft.assert@0.32.2, org.eclipse.n4js.mangelhaft.assert@~0.32.2:
+  version "0.32.2"
+  resolved "https://registry.yarnpkg.com/org.eclipse.n4js.mangelhaft.assert/-/org.eclipse.n4js.mangelhaft.assert-0.32.2.tgz#d9b3363a14b2e823db735d6e88c037deef0e03f6"
+  integrity sha512-wkhlTV2QQibPzsGHEpjnXZjyE5fK1vFug4uP06tYHb7wfKSXyMrnjmgxwo9DZEkVRlTfm2Jh20oJQnXitz+RUA==
   dependencies:
-    n4js-runtime "0.29.1"
-    n4js-runtime-es2015 "0.29.1"
-    n4js-runtime-node "0.29.1"
-    n4js-runtime-v8 "0.29.1"
+    "@types/node" "^16"
+    n4js-runtime "0.32.2"
+    n4js-runtime-es2015 "0.32.2"
+    n4js-runtime-v8 "0.32.2"
 
-org.eclipse.n4js.mangelhaft.reporter.console@0.29.1:
-  version "0.29.1"
-  resolved "https://registry.yarnpkg.com/org.eclipse.n4js.mangelhaft.reporter.console/-/org.eclipse.n4js.mangelhaft.reporter.console-0.29.1.tgz#3eccf20218b35a8242fd97718e25d9362520eca9"
-  integrity sha512-Lnq6IMjLmYEAruBk27i1eaNeZ2nIPvuFOoicr5k7WF49OkKjyQxgsc9f9kP0JoQ0dOjcEmmwczR+YfJ0KMVADg==
+org.eclipse.n4js.mangelhaft.reporter.console@0.32.2:
+  version "0.32.2"
+  resolved "https://registry.yarnpkg.com/org.eclipse.n4js.mangelhaft.reporter.console/-/org.eclipse.n4js.mangelhaft.reporter.console-0.32.2.tgz#1ace42619ea868f676406e44e2d90714c4541b23"
+  integrity sha512-5FykVpXTwM30PZwFb4QfiBfxJB1WAAJZCnaDKJpJZ06ph2kHyFFWbFaIm+GRAR0dHPoHySiYpyjqe97mdeNm6A==
   dependencies:
-    n4js-runtime "0.29.1"
-    n4js-runtime-es2015 "0.29.1"
-    n4js-runtime-v8 "0.29.1"
-    org.eclipse.n4js.mangelhaft "0.29.1"
+    n4js-runtime "0.32.2"
+    n4js-runtime-es2015 "0.32.2"
+    n4js-runtime-v8 "0.32.2"
+    org.eclipse.n4js.mangelhaft "0.32.2"
 
-org.eclipse.n4js.mangelhaft.reporter.ide@0.29.1:
-  version "0.29.1"
-  resolved "https://registry.yarnpkg.com/org.eclipse.n4js.mangelhaft.reporter.ide/-/org.eclipse.n4js.mangelhaft.reporter.ide-0.29.1.tgz#78bdd0be354761742264296add68e876f959d416"
-  integrity sha512-DaIwTJKIuMjl935iuKMhlTgMVILMIs3OvrpcFZNG4v29XMf4PMfKHv3k//i+92pfo6paFQfUch2LanIH4pE+aQ==
+org.eclipse.n4js.mangelhaft.reporter.sonar@0.32.2:
+  version "0.32.2"
+  resolved "https://registry.yarnpkg.com/org.eclipse.n4js.mangelhaft.reporter.sonar/-/org.eclipse.n4js.mangelhaft.reporter.sonar-0.32.2.tgz#98accb9f84c1e52b97f0d580686dbf8e20a3dadd"
+  integrity sha512-tvk1W4tYcf1vzc2bYSGdNf0H9A1mH6JgQQ/fzcQpdXT1ZJLXf2crJn9uOHto3Rw43i/V9AAZNKwY0NNwGghQvg==
   dependencies:
-    n4js-runtime "0.29.1"
-    n4js-runtime-fetch "0.29.1"
-    org.eclipse.n4js.mangelhaft "0.29.1"
+    "@types/node" "^16"
+    n4js-runtime "0.32.2"
+    n4js-runtime-es2015 "0.32.2"
+    org.eclipse.n4js.mangelhaft "0.32.2"
+    xmlbuilder2 "^3.0.2"
 
-org.eclipse.n4js.mangelhaft.reporter.xunit@0.29.1:
-  version "0.29.1"
-  resolved "https://registry.yarnpkg.com/org.eclipse.n4js.mangelhaft.reporter.xunit/-/org.eclipse.n4js.mangelhaft.reporter.xunit-0.29.1.tgz#c823d3073379062067ba223de25517ac59189c52"
-  integrity sha512-cGki6GaEInO1W1dDixgL+fnMt+Pg/7JJQLn1+LWetx4cGLpIaYacIVKKNOEfDeowlzIvhfzmQSSPU0mpumLfNA==
+org.eclipse.n4js.mangelhaft.reporter.xunit@0.32.2:
+  version "0.32.2"
+  resolved "https://registry.yarnpkg.com/org.eclipse.n4js.mangelhaft.reporter.xunit/-/org.eclipse.n4js.mangelhaft.reporter.xunit-0.32.2.tgz#5a56cd6bec3bab1013e57f107587511bb4792e37"
+  integrity sha512-PveNZGY3RgQ51J8Exu2OLVCqzGgrn8Q79jy8n9Imsss0wUMM3ZCL58gfifSp+v7+Zl2XP4x6JSpkk4o4Z7U91Q==
   dependencies:
-    n4js-runtime "0.29.1"
-    n4js-runtime-es2015 "0.29.1"
-    n4js-runtime-node "0.29.1"
-    org.eclipse.n4js.mangelhaft "0.29.1"
-    xmlbuilder "^10.0.0"
+    "@types/node" "^16"
+    n4js-runtime "0.32.2"
+    n4js-runtime-es2015 "0.32.2"
+    org.eclipse.n4js.mangelhaft "0.32.2"
+    xmlbuilder2 "^3.0.2"
 
-org.eclipse.n4js.mangelhaft@0.29.1, org.eclipse.n4js.mangelhaft@~0.29.1:
-  version "0.29.1"
-  resolved "https://registry.yarnpkg.com/org.eclipse.n4js.mangelhaft/-/org.eclipse.n4js.mangelhaft-0.29.1.tgz#ded13847472153b805a27abf6edd943d25db1811"
-  integrity sha512-+tl6foolFB0CzIYPYUAm6+ezqMT3yE1cdhy4/wiBGJLMaUjobh9U3jPp8FGYvAUTfHFA6FfitpMbpqkZJcH7BA==
+org.eclipse.n4js.mangelhaft@0.32.2, org.eclipse.n4js.mangelhaft@~0.32.2:
+  version "0.32.2"
+  resolved "https://registry.yarnpkg.com/org.eclipse.n4js.mangelhaft/-/org.eclipse.n4js.mangelhaft-0.32.2.tgz#44c58a78213c38314f7bf9d2e9e87c08a8d48635"
+  integrity sha512-k+6XVOVcDhSvy5dShzgvL/PL8vD4sGWCtdTQ1ihmgfLeWD5+z4noIMC8Lu9Wurg45U5f0jKD8ZQj3K/tlIgqZQ==
   dependencies:
-    n4js-runtime "0.29.1"
-    n4js-runtime-es2015 "0.29.1"
-    n4js-runtime-esnext "0.29.1"
-    n4js-runtime-fetch "0.29.1"
-    n4js-runtime-node "0.29.1"
-    n4js-runtime-v8 "0.29.1"
-    org.eclipse.n4js.mangelhaft.assert "0.29.1"
+    "@types/node" "^16"
+    n4js-runtime "0.32.2"
+    n4js-runtime-es2015 "0.32.2"
+    n4js-runtime-esnext "0.32.2"
+    n4js-runtime-v8 "0.32.2"
+    org.eclipse.n4js.mangelhaft.assert "0.32.2"
 
 path-is-absolute@^1.0.0:
   version "1.0.1"
@@ -743,6 +805,11 @@ signal-exit@^3.0.0:
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.6.tgz#24e630c4b0f03fea446a2bd299e62b4a6ca8d0af"
   integrity sha512-sDl4qMFpijcGw22U5w63KmD3cZJfBuFlVNbVMKje2keoKML7X2UzWbc4XrmEbDwg0NXJc3yv4/ox7b+JWb57kQ==
+
+sprintf-js@~1.0.2:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
+  integrity sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==
 
 string-width@^1.0.1:
   version "1.0.2"
@@ -889,10 +956,16 @@ wrappy@1:
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
 
-xmlbuilder@^10.0.0:
-  version "10.1.1"
-  resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-10.1.1.tgz#8cae6688cc9b38d850b7c8d3c0a4161dcaf475b0"
-  integrity sha512-OyzrcFLL/nb6fMGHbiRDuPup9ljBycsdCypwuyg5AAHvyWzGfChJpCXMG88AGTIMFhGZ9RccFN1e6lhg3hkwKg==
+xmlbuilder2@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/xmlbuilder2/-/xmlbuilder2-3.0.2.tgz#fc499688b35a916f269e7b459c2fa02bb5c0822a"
+  integrity sha512-h4MUawGY21CTdhV4xm3DG9dgsqyhDkZvVJBx88beqX8wJs3VgyGQgAn5VreHuae6unTQxh115aMK5InCVmOIKw==
+  dependencies:
+    "@oozcitak/dom" "1.15.10"
+    "@oozcitak/infra" "1.0.8"
+    "@oozcitak/util" "8.3.8"
+    "@types/node" "*"
+    js-yaml "3.14.0"
 
 xtend@^4.0.0:
   version "4.0.2"
