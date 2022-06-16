@@ -149,7 +149,7 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	public Boolean caseTClass(TClass object) {
 		if (guard.tryNext(object)) {
 			if (!suppressTraversal && !object.isPolyfill()) {
-				List<ParameterizedTypeRef> polyfills = getPolyfills(object);
+				List<ParameterizedTypeRef> polyfills = getPolyfillsOrMergedTypes(object);
 				try {
 					suppressTraversal = true;
 					if (doSwitchTypeRefs(polyfills)) {
@@ -192,7 +192,7 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	public Boolean caseTInterface(TInterface object) {
 		if (guard.tryNext(object)) {
 			if (!suppressTraversal && !object.isPolyfill()) {
-				List<ParameterizedTypeRef> polyfills = getPolyfills(object);
+				List<ParameterizedTypeRef> polyfills = getPolyfillsOrMergedTypes(object);
 				try {
 					suppressTraversal = true;
 					if (doSwitchTypeRefs(polyfills)) {
@@ -282,12 +282,12 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	}
 
 	/**
-	 * Override this method to support polyfills.
+	 * Override this method to support polyfills and declaration merging.
 	 *
 	 * @param filledType
-	 *            the type for which the polyfills are to be retrieved
+	 *            the type for which the polyfills / merged types are to be retrieved
 	 */
-	protected List<ParameterizedTypeRef> getPolyfills(Type filledType) {
-		return Collections.emptyList(); // polyfills not supported by default
+	protected List<ParameterizedTypeRef> getPolyfillsOrMergedTypes(Type filledType) {
+		return Collections.emptyList(); // polyfills / declaration merging not supported by default
 	}
 }
