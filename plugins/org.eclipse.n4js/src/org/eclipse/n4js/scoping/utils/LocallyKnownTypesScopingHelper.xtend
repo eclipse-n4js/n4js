@@ -52,8 +52,10 @@ class LocallyKnownTypesScopingHelper {
 		if (type !== null) {
 
 			// add the type itself
-			if (type.name !== null)
+			if (type.name !== null && type instanceof TClassifier) {
+				// note that functions cannot be used as type references
 				result = new SingletonScope(EObjectDescription.create(type.name, type), result)
+			}
 
 			// add the type variables
 			if (type.generic) {
