@@ -1,0 +1,96 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	Workspace {
+		Project "Main" {
+			Folder "src" {
+				ThisFile {}
+				File "lib1.d.ts" {}
+				File "lib2a.d.ts" {}
+				File "lib2b.d.ts" {}
+			}
+			Folder "src-ext" {
+				File "lib1.js" {}
+				File "lib2a.js" {}
+				File "lib2b.js" {}
+			}
+			File "package.json" { from="main__package.json" }
+		}
+	}
+
+	File "lib1.d.ts" {
+		export class Cls {}
+	}
+
+	File "lib1.js" {
+		export class Cls {
+			constructor() {
+				console.log("Hello from Cls#constructor in lib1.js!");
+			}
+		}
+	}
+
+	File "lib2a.d.ts" {
+		export { Cls as Cls2 } from "./lib1.js"
+	}
+
+	File "lib2a.js" {
+		export { Cls as Cls2 } from "./lib1.js"
+	}
+
+	File "lib2b.d.ts" {
+		export { Cls as default } from "./lib1.js"
+	}
+
+	File "lib2b.js" {
+		export { Cls as default } from "./lib1.js"
+	}
+
+	File "main__package.json" {
+		{
+			"name": "Main",
+			"version": "0.0.1",
+			"type": "module",
+			"n4js": {
+				"vendorId": "eclipseN4js",
+				"vendorName": "Eclipse N4JS Project",
+				"projectType": "library",
+				"output": "src-gen",
+				"sources": {
+					"source": [
+						"src"
+					],
+					"external": [
+						"src-ext"
+					]
+				}
+			}
+		}
+	}
+
+	END_SETUP
+ */
+
+
+import * as l2a from "lib2a"
+import * as l2b from "lib2b"
+
+new l2a.Cls2();
+new l2b.default();
+
+
+/* XPECT output ---
+Hello from Cls#constructor in lib1.js!
+Hello from Cls#constructor in lib1.js!
+--- */
