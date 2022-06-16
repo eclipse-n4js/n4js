@@ -1,0 +1,35 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   
+
+	File "DTS.d.ts" {
+		declare namespace Immutable2 {
+		    function Set<T>(): Set<T>;
+		    interface Set<T> { 
+		        add(value: T): this;
+		    }
+		}
+		export = Immutable2;
+	}
+   
+   
+   END_SETUP
+ */
+
+
+
+import {Set as ImmutableSet} from "DTS";
+
+// XPECT noerrors --> "Set<string> is not a structural subtype of Set<string>: missing method add." at "<string>ImmutableSet()"
+const K : ImmutableSet<string> = <string>ImmutableSet();
+K;
