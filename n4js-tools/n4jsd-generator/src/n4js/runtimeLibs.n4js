@@ -13,7 +13,7 @@
 // Additional tweaks may be found also in other places; see usage of Options#runtimeLibs in
 // file 'cmdLineOpts.n4js' for finding those.
 
-import * as path_lib from "n4js-runtime-node/path";
+import * as path_lib from "path";
 import * as model from "model";
 import * as utils from "utils";
 import { parseObject, PropertyTypeInfo } from "utilsObjectParsing";
