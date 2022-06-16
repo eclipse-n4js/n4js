@@ -137,3 +137,5 @@ There are some things to keep in mind when using dependency injection in the con
 * Resource load states: when an N4JS/N4JSD file is loaded, a certain sequence of processing is triggered (parsing,
   linking, validation, etc.) and thus an `N4JSResource` transitions through a sequence of "load states". For details,
   see <<sec:N4JS_Resource_Load_States>>.
+* Generated type definitions in built-in types and runtime libraries: for info on how to (re-)generate those files,
+  see the following read-me file: `n4js/n4js-tools/n4jsd-generator/README.md`
