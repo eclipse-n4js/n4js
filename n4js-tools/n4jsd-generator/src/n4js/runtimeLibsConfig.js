@@ -656,7 +656,11 @@ export default {
 				// read-only types:
 				"ReadonlyArray"
 			],
-			convertAllCtorInstanceTypes: true
+			convertAllCtorInstanceTypes: true,
+			patchMembers: {
+				// required due to stricter type checking in N4JS (type of searchElement must be 'any' instead of 'T' on N4JS side)
+				"Array#includes": { replaceBy: "public includes(searchElement: any, fromIndex: number = ): boolean;" }
+			}
 		},
 		"es2017.string.d.ts": {
 			convertAllCtorInstanceTypes: true
