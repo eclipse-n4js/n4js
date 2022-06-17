@@ -23,7 +23,7 @@ external function <T>Set(): Set<T>;
 "Function Collection duplicates namespace Collection (line 15)." at "Collection"
 "Function Collection duplicates namespace Collection (line 15)." at "Indexed"
 -- */
-external interface ~Set<T> extends Collection.Indexed<T> { 
+external interface ~Set<T> extends Collection.Indexed<T> { // no errors regarding scoping here!
     add(value: T): this;
 }
 
