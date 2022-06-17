@@ -1,4 +1,4 @@
-// Generated from /Users/mark-oliver.reiser/Home/Prog/Java/n4js-main/git-repo/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
+// Generated from /Users/marcusmews/Eclipses/ECL2/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -628,11 +628,33 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitRestParameterInObject(TypeScriptParser.RestParameterInObjectContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#propertyName}.
+	 * Visit a parse tree produced by the {@code StringProperty}
+	 * labeled alternative in {@link TypeScriptParser#propertyName}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPropertyName(TypeScriptParser.PropertyNameContext ctx);
+	T visitStringProperty(TypeScriptParser.StringPropertyContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code NumericProperty}
+	 * labeled alternative in {@link TypeScriptParser#propertyName}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNumericProperty(TypeScriptParser.NumericPropertyContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ComputedProperty}
+	 * labeled alternative in {@link TypeScriptParser#propertyName}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitComputedProperty(TypeScriptParser.ComputedPropertyContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code IdentifierProperty}
+	 * labeled alternative in {@link TypeScriptParser#propertyName}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdentifierProperty(TypeScriptParser.IdentifierPropertyContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#computedPropertyName}.
 	 * @param ctx the parse tree
