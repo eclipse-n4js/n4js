@@ -250,7 +250,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				val parentContainer = parentNamespace === null ? script : parentNamespace;
 				// also check for eIsProxy in case of broken AST
 				val namespace = namespaceLikeType === null || namespaceLikeType.eIsProxy ? parentContainer : namespaceLikeType;
-				return new FilteringScope(getTypeScope(namespace, false), [
+				return new FilteringScope(getTypeScope(namespace, false, true), [
 					TypesPackage.Literals.MODULE_NAMESPACE_VIRTUAL_TYPE.isSuperTypeOf(it.getEClass)
 					|| TypesPackage.Literals.TCLASS.isSuperTypeOf(it.getEClass) // only included, because classes might have a namespace merged onto them!
 					|| TypesPackage.Literals.TENUM.isSuperTypeOf(it.getEClass)
@@ -271,7 +271,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 						return scope_AllTopLevelElementsFromAbstractNamespace(namespaceLikeType, context, true, false)
 				}
 			}
-			return getTypeScope(context, false);
+			return getTypeScope(context, false, false);
 		} else if (reference.EReferenceType == N4JSPackage.Literals.LABELLED_STATEMENT) {
 			return scope_LabelledStatement(context);
 		}
@@ -740,8 +740,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	/**
 	 * Is entered to initially bind "T" in <pre>var x : T;</pre> or other parameterized type references.
 	 */
-	def public IScope getTypeScope(EObject context, boolean fromStaticContext) {
-		val internal = getTypeScopeInternal(context, fromStaticContext);
+	def public IScope getTypeScope(EObject context, boolean fromStaticContext, boolean onlyNamespaces) {
+		val internal = getTypeScopeInternal(context, fromStaticContext, onlyNamespaces);
 		
 		val legacy = new ContextAwareTypeScope(internal, context);
 		val scopeInfo = new ScopeInfo(internal, legacy, new ContextAwareTypeScopeValidator(context));
@@ -749,53 +749,53 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return scopeInfo;
 	}
 
-	def private IScope getTypeScopeInternal(EObject context, boolean fromStaticContext) {
+	def private IScope getTypeScopeInternal(EObject context, boolean fromStaticContext, boolean onlyNamespaces) {
 		switch context {
 			Script: {
-				return locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context, [
+				return locallyKnownTypesScopingHelper.scopeWithLocallyDeclaredElems(context, [
 					delegateGetScope(context, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE); // provide any reference that expects instances of Type as target objects
-				]);
+				], onlyNamespaces);
 			}
 			N4NamespaceDeclaration: {
-				var parent = getTypeScopeInternal(context.eContainer, fromStaticContext);
+				var parent = getTypeScopeInternal(context.eContainer, fromStaticContext, onlyNamespaces);
 				val ns = context.definedNamespace;
 				if (ns !== null && DeclMergingUtils.mayBeMerged(ns)) {
 					parent = createScopeForMergedNamespaces(context, ns, parent);
 				}
-				return locallyKnownTypesScopingHelper.scopeWithLocallyDeclaredTypes(context, parent);
+				return locallyKnownTypesScopingHelper.scopeWithLocallyDeclaredElems(context, parent, onlyNamespaces);
 			}
 			TNamespace: {
-				var parent = getTypeScopeInternal(context.eContainer, fromStaticContext);
+				var parent = getTypeScopeInternal(context.eContainer, fromStaticContext, onlyNamespaces);
 				if (DeclMergingUtils.mayBeMerged(context)) {
 					parent = createScopeForMergedNamespaces(context, context, parent);
 				}
-				return locallyKnownTypesScopingHelper.scopeWithLocallyDeclaredTypes(context, parent);
+				return locallyKnownTypesScopingHelper.scopeWithLocallyDeclaredElems(context, parent, onlyNamespaces);
 			}
 			TModule: {
 				val script = context.astElement as Script;
-				return getTypeScopeInternal(script, fromStaticContext);
+				return getTypeScopeInternal(script, fromStaticContext, onlyNamespaces);
 			}
 			N4FieldDeclaration: {
 				val isStaticContext = context.static;
-				return getTypeScopeInternal(context.eContainer, isStaticContext); // use new static access status for parent scope
+				return getTypeScopeInternal(context.eContainer, isStaticContext, onlyNamespaces); // use new static access status for parent scope
 			}
 			N4FieldAccessor: {
 				val isStaticContext = context.static;
-				return getTypeScopeInternal(context.eContainer, isStaticContext); // use new static access status for parent scope
+				return getTypeScopeInternal(context.eContainer, isStaticContext, onlyNamespaces); // use new static access status for parent scope
 			}
 			TypeDefiningElement: {
 				val isStaticContext = context instanceof N4MemberDeclaration && (context as N4MemberDeclaration).static;
-				val IScope parent = getTypeScopeInternal(context.eContainer, isStaticContext); // use new static access status for parent scope
+				val IScope parent = getTypeScopeInternal(context.eContainer, isStaticContext, onlyNamespaces); // use new static access status for parent scope
 				val polyfilledOrOriginalType = sourceElementExtensions.getTypeOrPolyfilledType(context);
 
 				return locallyKnownTypesScopingHelper.scopeWithTypeAndItsTypeVariables(parent, polyfilledOrOriginalType, fromStaticContext); // use old static access status for current scope
 			}
 			TStructMethod: {
-				val parent = getTypeScopeInternal(context.eContainer, fromStaticContext);
+				val parent = getTypeScopeInternal(context.eContainer, fromStaticContext, onlyNamespaces);
 				return locallyKnownTypesScopingHelper.scopeWithTypeVarsOfTStructMethod(parent, context);
 			}
 			FunctionTypeExpression: {
-				val parent = getTypeScopeInternal(context.eContainer, fromStaticContext);
+				val parent = getTypeScopeInternal(context.eContainer, fromStaticContext, onlyNamespaces);
 				return locallyKnownTypesScopingHelper.scopeWithTypeVarsOfFunctionTypeExpression(parent, context);
 			}
 			default: {
@@ -809,7 +809,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 							// area #1: upper/lower bound of type parameter of polyfill, e.g. the 2nd 'T' in:
 							// @@StaticPolyfillModule
 							// @StaticPolyfill export public class ToBeFilled<T,S extends T> extends ToBeFilled<T,S> {}
-							val IScope parent = getTypeScopeInternal(context.eContainer, false);
+							val IScope parent = getTypeScopeInternal(context.eContainer, false, onlyNamespaces);
 							return locallyKnownTypesScopingHelper.scopeWithTypeAndItsTypeVariables(parent, container.definedType, fromStaticContext);
 						} else if (container.superClassifierRefs.contains(context)) {
 							// area #2: super type reference of polyfill, e.g. everything after 'extends' in:
@@ -824,7 +824,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 					}
 				}
 
-				return getTypeScopeInternal(container, fromStaticContext);
+				return getTypeScopeInternal(container, fromStaticContext, onlyNamespaces);
 			}
 		}
 	}

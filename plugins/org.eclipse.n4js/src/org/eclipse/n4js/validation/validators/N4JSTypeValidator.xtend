@@ -329,7 +329,8 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			val staticAccess = genDecl instanceof N4MemberDeclaration && (genDecl as N4MemberDeclaration).static;
 			val scope = n4jsScopeProvider.getTypeScope( // note: calling #getTypeScope() here, NOT #getScope()!
 				genDecl.eContainer, // use container, because we do not want to see type variables we are currently validating
-				staticAccess);
+				staticAccess,
+				false);
 			genDecl.typeVars.forEach [
 				if (!it.name.nullOrEmpty) {
 					val hiddenTypeDscr = scope.getSingleElement(QualifiedName.create(it.name));
