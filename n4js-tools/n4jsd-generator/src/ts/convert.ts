@@ -9,11 +9,11 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import * as ts from "typescript";
+import ts from "typescript";
 import * as path_lib from "path";
-import * as model from "./model";
-import * as utils from "./utils";
-import * as utils_ts from "./utils_ts";
+import * as model from "./model.js";
+import * as utils from "./utils.js";
+import * as utils_ts from "./utils_ts.js";
 
 export type IgnorePredicate = (filePath: string, elementName?: string, memberName?: string, signatureIndex?: number) => boolean;
 

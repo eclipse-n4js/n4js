@@ -854,7 +854,12 @@ import com.google.common.base.Strings;
 	@Override
 	public Boolean caseParameterizedPropertyAccessExpression(ParameterizedPropertyAccessExpression original) {
 		final ParameterizedPropertyAccessExpression_IM original_IM = (ParameterizedPropertyAccessExpression_IM) original;
-		final String propName = original_IM.getPropertyName();
+		final String propName;
+		if (original.getPropertyAsText() != null) {
+			propName = original.getPropertyAsText();
+		} else {
+			propName = original_IM.getPropertyName();
+		}
 		process(original_IM.getTarget());
 		if (isLegalIdentifier(propName)) {
 			if (original.isOptionalChaining()) {

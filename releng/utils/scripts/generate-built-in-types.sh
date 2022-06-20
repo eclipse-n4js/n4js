@@ -100,7 +100,7 @@ rm -rf "out"
 mkdir "out"
 pushd "${GENERATOR_DIR}" > /dev/null
 echo "Generating .n4jsd files ..."
-node -r esm "${GENERATOR_DIR}/bin/dts2n4jsd.js" --runtime-libs --copy-type-refs --no-doc --force --output "${BUILD_DIR}/out" "${BUILD_DIR}/src-dts"
+node "${GENERATOR_DIR}/src-gen/dts2n4jsd.js" --runtime-libs --copy-type-refs --no-doc --force --output "${BUILD_DIR}/out" "${BUILD_DIR}/src-dts"
 popd > /dev/null
 
 sed -i bak "s/<<COMMIT_ID>>/${TS_COMMIT_ID}/g" "${BUILD_DIR}"/out/\@n4jsd/src-dts/*.n4jsd

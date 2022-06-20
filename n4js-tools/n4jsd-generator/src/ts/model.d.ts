@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import * as utils from "./utils";
+import * as utils from "./utils.js";
 
 export enum DTSMode {
 	NONE,
