@@ -9,8 +9,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import * as fs_lib from "n4js-runtime-node/fs";
-import * as glob_lib+ from "glob"
+import * as fs_lib from "fs";
+import glob from "glob";
 
 export const PACKAGE_JSON = "package.json";
 
@@ -74,12 +74,12 @@ function doLog(kind: LogKind, msg: string) {
 
 
 export function resolveGlobPattern(pathWithGlob: string): string[] {
-	return glob_lib.sync(pathWithGlob, {}) as string[];
+	return glob.sync(pathWithGlob, {});
 }
 
 
 export function mkdirs(path: string) {
-	fs_lib.mkdirSync(path, <string>cast({ recursive: true })); // incorrect signature in n4jsd for fs!
+	fs_lib.mkdirSync(path, { recursive: true });
 }
 
 
@@ -131,11 +131,6 @@ export function testFlagsAND(value: number, ...flags: number): boolean {
 
 export function testFlag(value: number, flag: number): boolean {
 	return (value & flag) === flag;
-}
-
-/** Work-around because the built-in cast of N4JS sometimes shows undesirable errors/warnings. */
-export function <T> cast(value: any): T {
-	return value as T;
 }
 
 const charCode_a = "a".charCodeAt(0);

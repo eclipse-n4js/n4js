@@ -106,7 +106,7 @@ class NonResolvingImportScope extends ImportScope {
 					if (!checkInclude(resolvedElement)) {
 						continue;
 					}
-					// change is here
+					// change is above
 
 					if (resolvedQualifiedName == null)
 						resolvedQualifiedName = resolvedName;

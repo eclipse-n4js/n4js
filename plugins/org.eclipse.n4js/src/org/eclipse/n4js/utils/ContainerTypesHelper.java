@@ -757,7 +757,7 @@ public class ContainerTypesHelper {
 			}
 
 			@Override
-			protected List<ParameterizedTypeRef> getPolyfills(Type filledType) {
+			protected List<ParameterizedTypeRef> getPolyfillsOrMergedTypes(Type filledType) {
 				if (includePolyfills && filledType instanceof TClassifier) {
 					TClassifier tClassifier = (TClassifier) filledType;
 					if (filledType.isProvidedByRuntime() // only runtime types can be polyfilled, but
@@ -786,9 +786,9 @@ public class ContainerTypesHelper {
 						}
 					}
 					if (ResourceType.getResourceType(filledType) == ResourceType.DTS) {
-						List<Type> polyfills = declMergingHelper.getMergedElements(contextResource, tClassifier);
-						return polyfills.stream().map(
-								polyFill -> TypeUtils.createTypeRef(polyFill)).collect(Collectors.toList());
+						List<Type> mergedTypes = declMergingHelper.getMergedElements(contextResource, tClassifier);
+						return mergedTypes.stream().map(
+								mergedType -> TypeUtils.createTypeRef(mergedType)).collect(Collectors.toList());
 					}
 				}
 				return Collections.emptyList();

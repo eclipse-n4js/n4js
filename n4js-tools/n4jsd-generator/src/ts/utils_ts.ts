@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import * as ts from "typescript";
-import * as model from "./model";
-import * as utils from "./utils";
+import ts from "typescript";
+import * as model from "./model.js";
+import * as utils from "./utils.js";
 
 // utilities related to TypeScript
 
