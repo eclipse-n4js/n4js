@@ -249,8 +249,8 @@ public class ExportedElementsCollector {
 							haveDefaultExport = true;
 						}
 
-						if (isVariable && info.memberAccess.isPresent()) {
-							doCollectMembersOfVariableAsElements(info.memberAccess.get(), (TVariable) elem, info);
+						if (isVariable) {
+							doCollectMembersOfVariableAsElements((TVariable) elem, info);
 						}
 					}
 				}
@@ -258,17 +258,19 @@ public class ExportedElementsCollector {
 		}
 	}
 
-	private void doCollectMembersOfVariableAsElements(MemberAccess context, TVariable variable,
-			CollectionInfo info) {
+	private void doCollectMembersOfVariableAsElements(TVariable variable, CollectionInfo info) {
+		if (!info.memberAccess.isPresent()) {
+			return; // support for this case is turned off
+		}
 		if (!info.includeValueOnlyElements) {
-			// fields/accessors are like variables and methods are like declared functions, so we are about to add
-			// value-only elements
-			// -> abort if value-only elements are not desired
+			// fields/accessors are like variables and methods are like declared functions,
+			// so we are about to add value-only elements
+			// -> bail out if value-only elements are not desired
 			return;
 		}
 		TypeRef typeRef = variable.getTypeRef();
 		if (typeRef != null) {
-			IScope scope = memberScopingHelper.createMemberScope(typeRef, context, false, false, false);
+			IScope scope = memberScopingHelper.createMemberScope(typeRef, info.memberAccess.get(), false, false, false);
 			if (scope != null) {
 				Iterables.addAll(info.visible, scope.getAllElements());
 			}
