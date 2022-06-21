@@ -91,7 +91,7 @@ Contributors:
 		<memoryArgsSmokeTests>-Xms256M -Xmx1536M -XX:+HeapDumpOnOutOfMemoryError</memoryArgsSmokeTests>
 		<encodingArgs>-Dfile.encoding=${file.encoding}</encodingArgs>
 
-		<!-- Test related dependency path tragets. -->
+		<!-- Test related dependency path targets. -->
 		<classes-unpacked>classes-unpacked</classes-unpacked>
 		<cu_org.eclipse.n4js.runner>${classes-unpacked}/org.eclipse.n4js.runner</cu_org.eclipse.n4js.runner>
 
@@ -490,16 +490,16 @@ Contributors:
 				<xtext.version>2.18.0</xtext.version>
 			</properties>
 			<repositories>
-					<repository>
-							<id>sonatype-staging</id>
-							<url>https://oss.sonatype.org/content/repositories/staging/</url>
-					</repository>
+				<repository>
+						<id>sonatype-staging</id>
+						<url>https://oss.sonatype.org/content/repositories/staging/</url>
+				</repository>
 			</repositories>
 			<pluginRepositories>
-					<pluginRepository>
-							<id>sonatype-staging</id>
-							<url>https://oss.sonatype.org/content/repositories/staging/</url>
-					</pluginRepository>
+				<pluginRepository>
+						<id>sonatype-staging</id>
+						<url>https://oss.sonatype.org/content/repositories/staging/</url>
+				</pluginRepository>
 			</pluginRepositories>
 		</profile>
 
