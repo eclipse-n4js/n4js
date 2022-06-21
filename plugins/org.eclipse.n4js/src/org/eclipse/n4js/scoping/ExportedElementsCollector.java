@@ -250,7 +250,7 @@ public class ExportedElementsCollector {
 						}
 
 						if (isVariable && info.memberAccess.isPresent()) {
-							doCollectVariableMembersAsElements(info.memberAccess.get(), (TVariable) elem, info);
+							doCollectMembersOfVariableAsElements(info.memberAccess.get(), (TVariable) elem, info);
 						}
 					}
 				}
@@ -258,8 +258,14 @@ public class ExportedElementsCollector {
 		}
 	}
 
-	private void doCollectVariableMembersAsElements(MemberAccess context, TVariable variable,
+	private void doCollectMembersOfVariableAsElements(MemberAccess context, TVariable variable,
 			CollectionInfo info) {
+		if (!info.includeValueOnlyElements) {
+			// fields/accessors are like variables and methods are like declared functions, so we are about to add
+			// value-only elements
+			// -> abort if value-only elements are not desired
+			return;
+		}
 		TypeRef typeRef = variable.getTypeRef();
 		if (typeRef != null) {
 			IScope scope = memberScopingHelper.createMemberScope(typeRef, context, false, false, false);
