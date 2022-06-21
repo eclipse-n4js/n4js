@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.tests.scoping
 
+import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.Provider
 import org.eclipse.n4js.AbstractN4JSTest
@@ -51,7 +52,7 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 		assertEquals(1, cls.exportingExportDefinitions.size);
 		assertSame(ed, cls.exportingExportDefinitions.get(0));
 
-		val elems = exportedElementsCollector.getExportedElements(res.module, res, true, true).toList;
+		val elems = exportedElementsCollector.getExportedElements(res.module, res, Optional.absent, true, true).toList;
 		assertEquals(1, elems.size);
 		assertEquals("Cls", elems.head.name.toString);
 		assertSame(cls, elems.head.EObjectOrProxy);
@@ -75,7 +76,7 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 		assertEquals(1, cls.exportingExportDefinitions.size);
 		assertSame(ed, cls.exportingExportDefinitions.get(0));
 
-		val elems = exportedElementsCollector.getExportedElements(res.module, res, true, true).toList;
+		val elems = exportedElementsCollector.getExportedElements(res.module, res, Optional.absent, true, true).toList;
 		assertEquals(2, elems.size);
 		assertEquals("Cls", elems.head.name.toString);
 		assertSame(cls, elems.head.EObjectOrProxy);
@@ -106,7 +107,7 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 		assertSame(ed1, cls.exportingExportDefinitions.get(0));
 		assertSame(ed2, cls.exportingExportDefinitions.get(1));
 
-		val elems = exportedElementsCollector.getExportedElements(res.module, res, true, true).toList;
+		val elems = exportedElementsCollector.getExportedElements(res.module, res, Optional.absent, true, true).toList;
 		assertEquals(2, elems.size);
 		assertEquals("Cls1", elems.head.name.toString);
 		assertSame(cls, elems.head.EObjectOrProxy);
@@ -139,7 +140,7 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 
 		assertSame(cls, ed.exportedElement);
 
-		val elems = exportedElementsCollector.getExportedElements(moduleMain, moduleMain.eResource, true, true).toList;
+		val elems = exportedElementsCollector.getExportedElements(moduleMain, moduleMain.eResource, Optional.absent, true, true).toList;
 		assertEquals(1, elems.size);
 		assertEquals("Cls", elems.head.name.toString);
 		assertSame(cls, elems.head.EObjectOrProxy);
@@ -168,7 +169,7 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 
 		assertSame(cls, ed.exportedElement);
 
-		val elems = exportedElementsCollector.getExportedElements(moduleMain, moduleMain.eResource, true, true).toList;
+		val elems = exportedElementsCollector.getExportedElements(moduleMain, moduleMain.eResource, Optional.absent, true, true).toList;
 		assertEquals(1, elems.size);
 		assertEquals("Cls", elems.head.name.toString);
 		assertSame(cls, elems.head.EObjectOrProxy);
@@ -197,7 +198,7 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 
 		assertSame(cls, ed.exportedElement);
 
-		val elems = exportedElementsCollector.getExportedElements(moduleMain, moduleMain.eResource, true, true).toList;
+		val elems = exportedElementsCollector.getExportedElements(moduleMain, moduleMain.eResource, Optional.absent, true, true).toList;
 		assertEquals(1, elems.size);
 		assertEquals("ClsAlias", elems.head.name.toString);
 		assertSame(cls, elems.head.EObjectOrProxy);
@@ -225,7 +226,7 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 		assertEquals(1, v.exportingExportDefinitions.size);
 		assertSame(ed, v.exportingExportDefinitions.get(0));
 
-		val elems = exportedElementsCollector.getExportedElements(res.module, res, true, true).toList;
+		val elems = exportedElementsCollector.getExportedElements(res.module, res, Optional.absent, true, true).toList;
 		assertEquals(1, elems.size);
 		assertEquals("v", elems.head.name.toString);
 		assertSame(v, elems.head.EObjectOrProxy);
@@ -262,7 +263,7 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 		assertEquals(1, v.exportingExportDefinitions.size);
 		assertSame(ed, v.exportingExportDefinitions.get(0));
 
-		val elems = exportedElementsCollector.getExportedElements(res.module, res, true, true).toList;
+		val elems = exportedElementsCollector.getExportedElements(res.module, res, Optional.absent, true, true).toList;
 		assertEquals(2, elems.size);
 		assertEquals("v", elems.head.name.toString);
 		assertSame(v, elems.head.EObjectOrProxy);
