@@ -13,7 +13,6 @@ package org.eclipse.n4js.scoping;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker.TypeVisibility;
@@ -78,7 +77,7 @@ public class ExportedElementsCollector {
 
 		final AbstractNamespace start;
 		final Resource contextResource;
-		final Optional<EObject> contextObject;
+		final Optional<MemberAccess> memberAccess;
 		final boolean includeHollows;
 		final boolean includeValueOnlyElements;
 
@@ -87,11 +86,11 @@ public class ExportedElementsCollector {
 
 		private RecursionGuard<AbstractNamespace> guard;
 
-		public CollectionInfo(AbstractNamespace start, Resource contextResource, Optional<EObject> contextObject,
+		public CollectionInfo(AbstractNamespace start, Resource contextResource, Optional<MemberAccess> memberAccess,
 				boolean includeHollows, boolean includeVariables) {
 			this.start = start;
 			this.contextResource = contextResource;
-			this.contextObject = contextObject;
+			this.memberAccess = memberAccess;
 			this.includeHollows = includeHollows;
 			this.includeValueOnlyElements = includeVariables;
 		}
@@ -117,12 +116,17 @@ public class ExportedElementsCollector {
 	 * @param namespace
 	 *            The namespace.
 	 * @param contextResource
-	 *            The context resource for visibility checks.
+	 *            The context resource, i.e. the resource importing the exported elements returned from this method.
+	 *            Used for visibility checks, among other things.
+	 * @param memberAccess
+	 *            The {@link MemberAccess} AST node as provided in scoping requests as context (optional). Used only as
+	 *            argument to {@link MemberScopingHelper} to support a special case of "export =" in .d.ts; if absent,
+	 *            support for this special case will be turned off.
 	 */
 	public Iterable<IEObjectDescription> getExportedElements(AbstractNamespace namespace, Resource contextResource,
-			Optional<EObject> contextObject, boolean includeHollows, boolean includeValueOnlyElements) {
+			Optional<MemberAccess> memberAccess, boolean includeHollows, boolean includeValueOnlyElements) {
 
-		CollectionInfo info = new CollectionInfo(namespace, contextResource, contextObject, includeHollows,
+		CollectionInfo info = new CollectionInfo(namespace, contextResource, memberAccess, includeHollows,
 				includeValueOnlyElements);
 
 		doCollectElements(namespace, info);
@@ -227,11 +231,6 @@ public class ExportedElementsCollector {
 				.getElementsExportedViaExportEquals(module);
 		if (exportEqualsElems.isPresent()) {
 
-			final MemberAccess memberAccess = info.contextObject.isPresent()
-					&& info.contextObject.get() instanceof MemberAccess
-							? (MemberAccess) info.contextObject.get()
-							: null;
-
 			boolean haveDefaultExport = false;
 
 			for (IdentifiableElement elem : exportEqualsElems.get()) {
@@ -250,8 +249,8 @@ public class ExportedElementsCollector {
 							haveDefaultExport = true;
 						}
 
-						if (isVariable && memberAccess != null) {
-							doCollectVariableMembersAsElements(memberAccess, (TVariable) elem, info);
+						if (isVariable && info.memberAccess.isPresent()) {
+							doCollectVariableMembersAsElements(info.memberAccess.get(), (TVariable) elem, info);
 						}
 					}
 				}

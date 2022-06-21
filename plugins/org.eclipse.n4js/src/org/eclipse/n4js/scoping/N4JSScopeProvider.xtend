@@ -602,7 +602,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 		try {
 			// get regular top-level elements scope
-			val tlElems = exportedElementCollector.getExportedElements(ns, context.eResource, Optional.of(context), includeHollows, includeValueOnlyElements);
+			val memberAccess = if (context instanceof MemberAccess) Optional.of(context) else Optional.absent();
+			val tlElems = exportedElementCollector.getExportedElements(ns, context.eResource, memberAccess, includeHollows, includeValueOnlyElements);
 			val topLevelElementsScope = scopeSnapshotHelper.scopeFor("scope_AllTopLevelElementsFromAbstractNamespace", ns, parentOrNull ?: IScope.NULLSCOPE, false, tlElems);
 			return topLevelElementsScope;
 		} finally {
