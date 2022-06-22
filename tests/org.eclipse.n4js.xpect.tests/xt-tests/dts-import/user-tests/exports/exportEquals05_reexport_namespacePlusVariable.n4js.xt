@@ -1,0 +1,60 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "tslib1.d.ts" {
+	    declare namespace value {
+	        interface Ifc {
+	        	m(p: string): number;
+	        }
+	        interface Ifc2 {
+	        	direct(p: string): number;
+	        }
+	    }
+	    declare let value: value.Ifc2;
+	    export = value;
+	}
+
+	File "tslib2.d.ts" {
+		import x = require('./tslib1.js');
+		export = x;
+	}
+
+	END_SETUP
+ */
+
+// XPECT noerrors -->
+import * as lib from "tslib2";
+// XPECT noerrors -->
+import { Ifc } from "tslib2";
+
+
+// XPECT noerrors -->
+let ifc01: lib.Ifc;
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "ifc01.m()"
+ifc01.m();
+// XPECT type of 'result01' --> number
+let result01 = ifc01.m("");
+
+// XPECT noerrors -->
+let ifc02: Ifc;
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "ifc02.m()"
+ifc02.m();
+// XPECT type of 'result02' --> number
+let result02 = ifc02.m("");
+
+
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "lib.direct()"
+lib.direct();
+// XPECT type of 'result03' --> number
+let result03 = lib.direct("");
