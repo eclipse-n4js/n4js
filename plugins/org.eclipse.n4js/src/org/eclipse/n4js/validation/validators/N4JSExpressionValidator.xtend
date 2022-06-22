@@ -754,8 +754,9 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	def checkPostfixExpression(PostfixExpression postfixExpression) {
 
 		val expression = postfixExpression.expression;
-		holdsWritabelePropertyAccess(expression) && holdsWritableIdentifier(expression) &&
-			holdsLefthandsideNotConst(expression);
+		return holdsWritabelePropertyAccess(expression)
+			&& holdsLefthandsideNotConst(expression)
+			&& holdsWritableIdentifier(expression);
 	}
 
 	/** IDE-731 / IDE-768 unary expressions of type ++ or -- need both of getter/setter.
@@ -764,9 +765,9 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkUnaryExpressionWithWriteAccess(UnaryExpression unaryExpression) {
 		if (UnaryOperator.DEC === unaryExpression.op || UnaryOperator.INC === unaryExpression.op) {
-			holdsWritabelePropertyAccess(unaryExpression.expression) &&
-				holdsWritableIdentifier(unaryExpression.expression) &&
-				holdsLefthandsideNotConst(unaryExpression.expression);
+			return holdsWritabelePropertyAccess(unaryExpression.expression)
+				&& holdsLefthandsideNotConst(unaryExpression.expression)
+				&& holdsWritableIdentifier(unaryExpression.expression);
 		}
 	}
 
@@ -1670,7 +1671,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	def checkAssignmentExpression(AssignmentExpression assExpr) {
 		val lhs = assExpr.lhs;
 		// GHOLD-119 imported elements
-		holdsWritableIdentifier(lhs) && holdsLefthandsideNotConst(lhs);
+		holdsLefthandsideNotConst(lhs) && holdsWritableIdentifier(lhs);
 	}
 
 	/** @return true if nothing was issued  */

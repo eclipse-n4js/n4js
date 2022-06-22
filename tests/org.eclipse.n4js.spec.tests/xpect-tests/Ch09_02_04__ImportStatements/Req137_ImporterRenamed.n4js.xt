@@ -45,7 +45,7 @@ rnLet1 = 17;
 // XPECT errors --> "Imported element let2asDefault is read-only." at "let2asDefault"
 let2asDefault = 14;
 /* XPECT errors ---
-	"Imported element rnCnst8 is read-only." at "rnCnst8"
+	"Const variable cnst8 is read-only." at "rnCnst8"
 --- */
 rnCnst8 = 18; // const read only
 
