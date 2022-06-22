@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ide.tests.buildorder
 
 import org.junit.Test
+import org.junit.Ignore
 
 /**
  * Test for build order
@@ -84,6 +85,7 @@ class ImplicitRuntimeDependenciesTest extends AbstractBuildOrderTest {
 	}
 	
 	@Test
+	@Ignore // TODO GH-2380
 	def void testDepOrderReverse() {
 		test("yarn-test-project, " +
 				"yarn-test-project/node_modules/n4js-runtime, " +
