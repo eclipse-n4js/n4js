@@ -135,7 +135,7 @@ Contributors:
 			</properties>
 		</profile>		
 
-		<!-- This profile is active by default; can be deactivated on command line with "-P-execute-basic-tests" -->
+		<!-- This profile is active by default; can be deactivated on command line with "-DdoNotExecuteBasicTests" -->
 		<profile>
 			<id>execute-basic-tests</id>
 			<activation>

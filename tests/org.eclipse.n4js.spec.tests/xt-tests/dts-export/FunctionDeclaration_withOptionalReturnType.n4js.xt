@@ -20,14 +20,28 @@ function foo03(): ()=>boolean? { return ()=>{}; }  // see also unsupported case 
 function foo04(): type{Object}? {}
 
 // not supported by N4JS, so we cannot test these:
-// function foo21(): (()=>boolean)? {}
-// function foo22(): string|number? {}
-// function foo23(): (string|number)? {}
+// function foo05(): (()=>boolean)? {}
+// function foo06(): string|number? {}
+// function foo07(): (string|number)? {}
+
+class Cls {
+	m11(): any? {}
+	m12(): string? {}
+	m13(): ()=>boolean? { return ()=>{}; }
+	m14(): type{Object}? {}
+}
+
 
 
 /* XPECT generated_dts ---
-declare function foo01(): any|void;
-declare function foo02(): string|void;
+declare function foo01(): any|undefined;
+declare function foo02(): string|undefined;
 declare function foo03(): ()=>boolean|void;
-declare function foo04(): any|void;
+declare function foo04(): any|undefined;
+declare class Cls {
+	m11(): any|undefined;
+	m12(): string|undefined;
+	m13(): ()=>boolean|void;
+	m14(): any|undefined;
+}
 --- */

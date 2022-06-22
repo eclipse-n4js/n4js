@@ -21,13 +21,13 @@ let v02: ()=>string?;
 let v03: ()=>()=>boolean?; // see also unsupported case below!
 let v04: ()=>type{Object}?;
 
+// not supported by N4JS, so we cannot test these:
+// let v05: ()=>(()=>boolean)?;
+// let v06: ()=>string|number?;
+// let v07: ()=>(string|number)?;
+
 let v11: Ifc | ()=>string?;
 let v12: Ifc & ()=>string?;
-
-// not supported by N4JS, so we cannot test these:
-// let v21: ()=>(()=>boolean)?;
-// let v22: ()=>string|number?;
-// let v23: ()=>(string|number)?;
 
 
 

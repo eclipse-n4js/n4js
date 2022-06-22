@@ -156,7 +156,7 @@ class TypeReferenceTransformation extends Transformation {
 			val funDefInAST = state.tracer.getOriginalASTNodeOfSameType(funDef, false);
 			if (funDefInAST !== null) {
 				if (funDefInAST.isReturnValueOptional) {
-					writeSuffixForReturnTypeOfFunctionWithOptionalReturnValue();
+					writeSuffixForReturnTypeOfFunctionWithOptionalReturnValue(true);
 				}
 			}
 		}
@@ -242,7 +242,7 @@ class TypeReferenceTransformation extends Transformation {
 		if (returnTypeRef !== null) {
 			convertTypeRef(returnTypeRef);
 			if (typeRef.isReturnValueOptional) {
-				writeSuffixForReturnTypeOfFunctionWithOptionalReturnValue();
+				writeSuffixForReturnTypeOfFunctionWithOptionalReturnValue(false);
 			}
 		} else {
 			// TypeScript's default return type is 'any', so we need to emit 'void' in this case!
@@ -464,10 +464,19 @@ class TypeReferenceTransformation extends Transformation {
 		}
 	}
 
-	def private void writeSuffixForReturnTypeOfFunctionWithOptionalReturnValue() {
+	/**
+	 * @param isReturnTypeOfActualFunction the caller should pass in {@code true} iff the return type to emit is for an "actual function",
+	 * i.e. a declared function, a method, or a function expression (as opposed to the return type of a pure function type expression inside
+	 * a type annotation).
+	 */
+	def private void writeSuffixForReturnTypeOfFunctionWithOptionalReturnValue(boolean isReturnTypeOfActualFunction) {
 		// note: due to limitations in N4JS, the return type of a function with an optional return value cannot be a ComposedTypeRef,
 		// so we do not need to bother with parentheses around the actual return type reference
-		write("|void");
+		if (isReturnTypeOfActualFunction) {
+			write("|undefined");
+		} else {
+			write("|void");
+		}
 	}
 
 	def private <T extends EObject> void write(Iterable<? extends T> nodesInIM, Consumer<? super T> processor, String separator) {
