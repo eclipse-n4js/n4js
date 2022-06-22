@@ -147,7 +147,7 @@ class NamespaceExportSpecifier extends TypeDefiningElement {
 	String alias
 }
 
-class NamedExportSpecifier {
+class NamedExportSpecifier extends MemberAccess {
 	contains IdentifierRef exportedElement
 	String alias
 }
@@ -308,7 +308,7 @@ abstract class ImportSpecifier {
 	boolean declaredDynamic
 }
 
-class NamedImportSpecifier extends ImportSpecifier {
+class NamedImportSpecifier extends ImportSpecifier, MemberAccess {
 
 	refers transient TDynamicElement definedDynamicElement
 
