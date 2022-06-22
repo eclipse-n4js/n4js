@@ -512,9 +512,11 @@ public class ResourceTaskManager {
 			return;
 		}
 		WorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
-		for (URI currURI : uri2RTCsOnQueue.keySet()) {
-			runInExistingContextVoid(currURI, "updatePersistedState of existing context", (rtc, ci) -> {
+		for (Entry<URI, ResourceTaskContext> currEntry : uri2RTCsOnQueue.entrySet()) {
+			ResourceTaskContext currRTC = currEntry.getValue();
+			doSubmitTask(currRTC, "updatePersistedState of existing context", (rtc, ci) -> {
 				rtc.onPersistedStateChanged(changed, removed, capturedWorkspaceConfig, ci);
+				return null;
 			});
 		}
 	}
