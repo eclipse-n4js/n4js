@@ -14,12 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker.TypeVisibility;
 import org.eclipse.n4js.scoping.accessModifiers.HollowTypeOrValueDescription;
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription;
 import org.eclipse.n4js.scoping.accessModifiers.NonExportedElementDescription;
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker;
+import org.eclipse.n4js.scoping.members.MemberScopingHelper;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.ElementExportDefinition;
 import org.eclipse.n4js.ts.types.ExportDefinition;
@@ -39,6 +42,7 @@ import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.scoping.IScope;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
@@ -64,12 +68,16 @@ public class ExportedElementsCollector {
 	private JavaScriptVariantHelper variantHelper;
 
 	@Inject
+	private MemberScopingHelper memberScopingHelper;
+
+	@Inject
 	private DeclMergingHelper declMergingHelper;
 
 	private static final class CollectionInfo {
 
 		final AbstractNamespace start;
-		final Resource context;
+		final Resource contextResource;
+		final Optional<MemberAccess> memberAccess;
 		final boolean includeHollows;
 		final boolean includeValueOnlyElements;
 
@@ -78,10 +86,11 @@ public class ExportedElementsCollector {
 
 		private RecursionGuard<AbstractNamespace> guard;
 
-		public CollectionInfo(AbstractNamespace start, Resource context, boolean includeHollows,
-				boolean includeVariables) {
+		public CollectionInfo(AbstractNamespace start, Resource contextResource, Optional<MemberAccess> memberAccess,
+				boolean includeHollows, boolean includeVariables) {
 			this.start = start;
-			this.context = context;
+			this.contextResource = contextResource;
+			this.memberAccess = memberAccess;
 			this.includeHollows = includeHollows;
 			this.includeValueOnlyElements = includeVariables;
 		}
@@ -106,18 +115,25 @@ public class ExportedElementsCollector {
 	 *
 	 * @param namespace
 	 *            The namespace.
-	 * @param context
-	 *            The context resource for visibility checks.
+	 * @param contextResource
+	 *            The context resource, i.e. the resource importing the exported elements returned from this method.
+	 *            Used for visibility checks, among other things.
+	 * @param memberAccess
+	 *            The {@link MemberAccess} AST node as provided in scoping requests as context (optional). Used only as
+	 *            argument to {@link MemberScopingHelper} to support a special case of "export =" in .d.ts; if absent,
+	 *            support for this special case will be turned off.
 	 */
-	public Iterable<IEObjectDescription> getExportedElements(AbstractNamespace namespace, Resource context,
-			boolean includeHollows, boolean includeValueOnlyElements) {
+	public Iterable<IEObjectDescription> getExportedElements(AbstractNamespace namespace, Resource contextResource,
+			Optional<MemberAccess> memberAccess, boolean includeHollows, boolean includeValueOnlyElements) {
 
-		CollectionInfo info = new CollectionInfo(namespace, context, includeHollows, includeValueOnlyElements);
+		CollectionInfo info = new CollectionInfo(namespace, contextResource, memberAccess, includeHollows,
+				includeValueOnlyElements);
 
 		doCollectElements(namespace, info);
 
 		if (DeclMergingUtils.mayBeMerged(namespace)) {
-			List<AbstractNamespace> mergedNamespaces = declMergingHelper.getMergedElements(info.context, namespace);
+			List<AbstractNamespace> mergedNamespaces = declMergingHelper.getMergedElements(info.contextResource,
+					namespace);
 			for (AbstractNamespace mergedNamespace : mergedNamespaces) {
 				doCollectElements(mergedNamespace, info);
 			}
@@ -163,7 +179,7 @@ public class ExportedElementsCollector {
 		}
 
 		// special handling of non-exported elements
-		if (namespace instanceof TNamespace && namespace.eResource() == info.context) {
+		if (namespace instanceof TNamespace && namespace.eResource() == info.contextResource) {
 			// non-exported elements of namespaces are accessible from everywhere within the containing file
 			// (even outside their containing namespace)
 			for (TExportableElement elem : namespace.getExportableElements()) {
@@ -188,7 +204,7 @@ public class ExportedElementsCollector {
 				info.includeHollows, info.includeValueOnlyElements, variantHelper);
 
 		if (include) {
-			TypeVisibility visibility = isVisible(info.context, exportedElem);
+			TypeVisibility visibility = isVisible(info.contextResource, exportedElem);
 			if (visibility.visibility) {
 				info.visible.add(createObjectDescription(exportedName, exportedElem));
 			} else {
@@ -214,16 +230,49 @@ public class ExportedElementsCollector {
 		Optional<List<IdentifiableElement>> exportEqualsElems = ExportedElementsUtils
 				.getElementsExportedViaExportEquals(module);
 		if (exportEqualsElems.isPresent()) {
+
 			boolean haveDefaultExport = false;
+
 			for (IdentifiableElement elem : exportEqualsElems.get()) {
 				if (elem instanceof TNamespace) {
+
 					doCollectElements((TNamespace) elem, info);
-				} else if (elem instanceof TFunction || elem instanceof TVariable) {
-					if (!haveDefaultExport) {
-						doCollectElement("default", (TExportableElement) elem, info);
-						haveDefaultExport = true;
+
+				} else {
+
+					boolean isFunction = elem instanceof TFunction;
+					boolean isVariable = !isFunction && elem instanceof TVariable;
+					if (isFunction || isVariable) {
+
+						if (!haveDefaultExport) {
+							doCollectElement("default", (TExportableElement) elem, info);
+							haveDefaultExport = true;
+						}
+
+						if (isVariable) {
+							doCollectMembersOfVariableAsElements((TVariable) elem, info);
+						}
 					}
 				}
+			}
+		}
+	}
+
+	private void doCollectMembersOfVariableAsElements(TVariable variable, CollectionInfo info) {
+		if (!info.memberAccess.isPresent()) {
+			return; // support for this case is turned off
+		}
+		if (!info.includeValueOnlyElements) {
+			// fields/accessors are like variables and methods are like declared functions,
+			// so we are about to add value-only elements
+			// -> bail out if value-only elements are not desired
+			return;
+		}
+		TypeRef typeRef = variable.getTypeRef();
+		if (typeRef != null) {
+			IScope scope = memberScopingHelper.createMemberScope(typeRef, info.memberAccess.get(), false, false, false);
+			if (scope != null) {
+				Iterables.addAll(info.visible, scope.getAllElements());
 			}
 		}
 	}

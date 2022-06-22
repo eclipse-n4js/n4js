@@ -85,7 +85,6 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TNamespace
 import org.eclipse.n4js.ts.types.TStructMethod
-import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
@@ -603,7 +602,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 		try {
 			// get regular top-level elements scope
-			val tlElems = exportedElementCollector.getExportedElements(ns, context.eResource, includeHollows, includeValueOnlyElements);
+			val memberAccess = if (context instanceof MemberAccess) Optional.of(context) else Optional.absent();
+			val tlElems = exportedElementCollector.getExportedElements(ns, context.eResource, memberAccess, includeHollows, includeValueOnlyElements);
 			val topLevelElementsScope = scopeSnapshotHelper.scopeFor("scope_AllTopLevelElementsFromAbstractNamespace", ns, parentOrNull ?: IScope.NULLSCOPE, false, tlElems);
 			return topLevelElementsScope;
 		} finally {
@@ -645,7 +645,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val module = namespace.module;
 
 		val result = if (module !== null && !module.eIsProxy) {
-				doCreateScopeForNamespaceAccess(module, context, includeHollows, includeValueOnlyElements);
+				scope_AllTopLevelElementsFromAbstractNamespace(module, context, includeHollows, includeValueOnlyElements);
 			} else {
 				// error cases
 				if (namespace.eIsProxy) {
@@ -660,26 +660,6 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		if (namespace.declaredDynamic && !(result instanceof DynamicPseudoScope)) {
 			return new DynamicPseudoScope(result);
 		}
-		return result;
-	}
-
-	private def IScope doCreateScopeForNamespaceAccess(TModule targetModule, EObject context,
-		boolean includeHollows, boolean includeValueOnlyElements
-	) {
-		var result = scope_AllTopLevelElementsFromAbstractNamespace(targetModule, context, includeHollows, includeValueOnlyElements);
-
-		if (context instanceof MemberAccess) {
-			val exportEqualsElems = ExportedElementsUtils.getElementsExportedViaExportEquals(targetModule);
-			if (exportEqualsElems.present) {
-				val variable = exportEqualsElems.get.filter(TVariable).head;
-				val typeRef = variable?.typeRef;
-				val scopeVariable = if (typeRef !== null) createScopeForMemberAccess(typeRef, context);
-				if (scopeVariable !== null) {
-					result = new MergedScope(scopeVariable, result);
-				}
-			}
-		}
-
 		return result;
 	}
 

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.scoping.imports
 
+import com.google.common.base.Optional
 import com.google.common.base.Throwables
 import com.google.inject.Inject
 import com.google.inject.Singleton
@@ -159,7 +160,7 @@ class ImportedElementsScopingHelper {
 			val module = imp?.module;
 			if (module !== null) {
 
-				val topLevelElements = exportedElementsCollector.getExportedElements(module, contextResource, includeHollows, includeValueOnlyElements);
+				val topLevelElements = exportedElementsCollector.getExportedElements(module, contextResource, Optional.absent(), includeHollows, includeValueOnlyElements);
 				val tleScope = scopesHelper.scopeFor("scope_AllTopLevelElementsFromModule", module, IScope.NULLSCOPE, false, topLevelElements)
 
 				for (specifier : imp.importSpecifiers) {
