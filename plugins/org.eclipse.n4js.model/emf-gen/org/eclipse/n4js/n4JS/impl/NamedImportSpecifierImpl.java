@@ -21,9 +21,11 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 
+import org.eclipse.n4js.ts.types.ComposedMemberCache;
 import org.eclipse.n4js.ts.types.TDynamicElement;
 import org.eclipse.n4js.ts.types.TExportableElement;
 
@@ -35,6 +37,7 @@ import org.eclipse.n4js.ts.types.TExportableElement;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.NamedImportSpecifierImpl#getComposedMemberCache <em>Composed Member Cache</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.NamedImportSpecifierImpl#getDefinedDynamicElement <em>Defined Dynamic Element</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.NamedImportSpecifierImpl#getImportedElement <em>Imported Element</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.NamedImportSpecifierImpl#getImportedElementAsText <em>Imported Element As Text</em>}</li>
@@ -44,6 +47,16 @@ import org.eclipse.n4js.ts.types.TExportableElement;
  * @generated
  */
 public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements NamedImportSpecifier {
+	/**
+	 * The cached value of the '{@link #getComposedMemberCache() <em>Composed Member Cache</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getComposedMemberCache()
+	 * @generated
+	 * @ordered
+	 */
+	protected ComposedMemberCache composedMemberCache;
+
 	/**
 	 * The cached value of the '{@link #getDefinedDynamicElement() <em>Defined Dynamic Element</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -121,6 +134,46 @@ public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements Nam
 	@Override
 	protected EClass eStaticClass() {
 		return N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ComposedMemberCache getComposedMemberCache() {
+		if (composedMemberCache != null && composedMemberCache.eIsProxy()) {
+			InternalEObject oldComposedMemberCache = (InternalEObject)composedMemberCache;
+			composedMemberCache = (ComposedMemberCache)eResolveProxy(oldComposedMemberCache);
+			if (composedMemberCache != oldComposedMemberCache) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.NAMED_IMPORT_SPECIFIER__COMPOSED_MEMBER_CACHE, oldComposedMemberCache, composedMemberCache));
+			}
+		}
+		return composedMemberCache;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ComposedMemberCache basicGetComposedMemberCache() {
+		return composedMemberCache;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setComposedMemberCache(ComposedMemberCache newComposedMemberCache) {
+		ComposedMemberCache oldComposedMemberCache = composedMemberCache;
+		composedMemberCache = newComposedMemberCache;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.NAMED_IMPORT_SPECIFIER__COMPOSED_MEMBER_CACHE, oldComposedMemberCache, composedMemberCache));
 	}
 
 	/**
@@ -267,6 +320,9 @@ public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements Nam
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case N4JSPackage.NAMED_IMPORT_SPECIFIER__COMPOSED_MEMBER_CACHE:
+				if (resolve) return getComposedMemberCache();
+				return basicGetComposedMemberCache();
 			case N4JSPackage.NAMED_IMPORT_SPECIFIER__DEFINED_DYNAMIC_ELEMENT:
 				if (resolve) return getDefinedDynamicElement();
 				return basicGetDefinedDynamicElement();
@@ -289,6 +345,9 @@ public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements Nam
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case N4JSPackage.NAMED_IMPORT_SPECIFIER__COMPOSED_MEMBER_CACHE:
+				setComposedMemberCache((ComposedMemberCache)newValue);
+				return;
 			case N4JSPackage.NAMED_IMPORT_SPECIFIER__DEFINED_DYNAMIC_ELEMENT:
 				setDefinedDynamicElement((TDynamicElement)newValue);
 				return;
@@ -313,6 +372,9 @@ public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements Nam
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.NAMED_IMPORT_SPECIFIER__COMPOSED_MEMBER_CACHE:
+				setComposedMemberCache((ComposedMemberCache)null);
+				return;
 			case N4JSPackage.NAMED_IMPORT_SPECIFIER__DEFINED_DYNAMIC_ELEMENT:
 				setDefinedDynamicElement((TDynamicElement)null);
 				return;
@@ -337,6 +399,8 @@ public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements Nam
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.NAMED_IMPORT_SPECIFIER__COMPOSED_MEMBER_CACHE:
+				return composedMemberCache != null;
 			case N4JSPackage.NAMED_IMPORT_SPECIFIER__DEFINED_DYNAMIC_ELEMENT:
 				return definedDynamicElement != null;
 			case N4JSPackage.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT:
@@ -347,6 +411,38 @@ public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements Nam
 				return ALIAS_EDEFAULT == null ? alias != null : !ALIAS_EDEFAULT.equals(alias);
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == MemberAccess.class) {
+			switch (derivedFeatureID) {
+				case N4JSPackage.NAMED_IMPORT_SPECIFIER__COMPOSED_MEMBER_CACHE: return N4JSPackage.MEMBER_ACCESS__COMPOSED_MEMBER_CACHE;
+				default: return -1;
+			}
+		}
+		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == MemberAccess.class) {
+			switch (baseFeatureID) {
+				case N4JSPackage.MEMBER_ACCESS__COMPOSED_MEMBER_CACHE: return N4JSPackage.NAMED_IMPORT_SPECIFIER__COMPOSED_MEMBER_CACHE;
+				default: return -1;
+			}
+		}
+		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
 	/**

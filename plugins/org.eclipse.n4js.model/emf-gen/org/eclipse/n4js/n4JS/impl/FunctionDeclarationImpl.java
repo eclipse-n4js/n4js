@@ -56,6 +56,7 @@ import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.TypableElement;
@@ -762,7 +763,7 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				_switchResult = ((FieldAccessor)_this).getDefinedAccessor();
 			}
 		}
-		return ((IdentifiableElement)_switchResult);
+		return ((TExportableElement)_switchResult);
 	}
 
 	/**

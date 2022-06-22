@@ -53,6 +53,7 @@ import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TStructMethod;
@@ -623,7 +624,7 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 				_switchResult = ((FieldAccessor)_this).getDefinedAccessor();
 			}
 		}
-		return ((IdentifiableElement)_switchResult);
+		return ((TExportableElement)_switchResult);
 	}
 
 	/**

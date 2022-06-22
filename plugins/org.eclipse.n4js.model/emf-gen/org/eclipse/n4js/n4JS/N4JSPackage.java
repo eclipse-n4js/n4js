@@ -675,6 +675,43 @@ public interface N4JSPackage extends EPackage {
 	int NAMESPACE_EXPORT_SPECIFIER_OPERATION_COUNT = TYPE_DEFINING_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.MemberAccessImpl <em>Member Access</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.n4JS.impl.MemberAccessImpl
+	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getMemberAccess()
+	 * @generated
+	 */
+	int MEMBER_ACCESS = 102;
+
+	/**
+	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_ACCESS__COMPOSED_MEMBER_CACHE = 0;
+
+	/**
+	 * The number of structural features of the '<em>Member Access</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_ACCESS_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>Member Access</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_ACCESS_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.NamedExportSpecifierImpl <em>Named Export Specifier</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -685,13 +722,22 @@ public interface N4JSPackage extends EPackage {
 	int NAMED_EXPORT_SPECIFIER = 6;
 
 	/**
+	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMED_EXPORT_SPECIFIER__COMPOSED_MEMBER_CACHE = MEMBER_ACCESS__COMPOSED_MEMBER_CACHE;
+
+	/**
 	 * The feature id for the '<em><b>Exported Element</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT = 0;
+	int NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT = MEMBER_ACCESS_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Alias</b></em>' attribute.
@@ -700,7 +746,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NAMED_EXPORT_SPECIFIER__ALIAS = 1;
+	int NAMED_EXPORT_SPECIFIER__ALIAS = MEMBER_ACCESS_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Named Export Specifier</em>' class.
@@ -709,7 +755,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NAMED_EXPORT_SPECIFIER_FEATURE_COUNT = 2;
+	int NAMED_EXPORT_SPECIFIER_FEATURE_COUNT = MEMBER_ACCESS_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>Named Export Specifier</em>' class.
@@ -718,7 +764,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NAMED_EXPORT_SPECIFIER_OPERATION_COUNT = 0;
+	int NAMED_EXPORT_SPECIFIER_OPERATION_COUNT = MEMBER_ACCESS_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.NamespaceElementImpl <em>Namespace Element</em>}' class.
@@ -1177,13 +1223,22 @@ public interface N4JSPackage extends EPackage {
 	int NAMED_IMPORT_SPECIFIER__DECLARED_DYNAMIC = IMPORT_SPECIFIER__DECLARED_DYNAMIC;
 
 	/**
+	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMED_IMPORT_SPECIFIER__COMPOSED_MEMBER_CACHE = IMPORT_SPECIFIER_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Defined Dynamic Element</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NAMED_IMPORT_SPECIFIER__DEFINED_DYNAMIC_ELEMENT = IMPORT_SPECIFIER_FEATURE_COUNT + 0;
+	int NAMED_IMPORT_SPECIFIER__DEFINED_DYNAMIC_ELEMENT = IMPORT_SPECIFIER_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Imported Element</b></em>' reference.
@@ -1192,7 +1247,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT = IMPORT_SPECIFIER_FEATURE_COUNT + 1;
+	int NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT = IMPORT_SPECIFIER_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Imported Element As Text</b></em>' attribute.
@@ -1201,7 +1256,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT_AS_TEXT = IMPORT_SPECIFIER_FEATURE_COUNT + 2;
+	int NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT_AS_TEXT = IMPORT_SPECIFIER_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Alias</b></em>' attribute.
@@ -1210,7 +1265,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NAMED_IMPORT_SPECIFIER__ALIAS = IMPORT_SPECIFIER_FEATURE_COUNT + 3;
+	int NAMED_IMPORT_SPECIFIER__ALIAS = IMPORT_SPECIFIER_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>Named Import Specifier</em>' class.
@@ -1219,7 +1274,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NAMED_IMPORT_SPECIFIER_FEATURE_COUNT = IMPORT_SPECIFIER_FEATURE_COUNT + 4;
+	int NAMED_IMPORT_SPECIFIER_FEATURE_COUNT = IMPORT_SPECIFIER_FEATURE_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Default Import</em>' operation.
@@ -1275,6 +1330,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int DEFAULT_IMPORT_SPECIFIER__DECLARED_DYNAMIC = NAMED_IMPORT_SPECIFIER__DECLARED_DYNAMIC;
+
+	/**
+	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEFAULT_IMPORT_SPECIFIER__COMPOSED_MEMBER_CACHE = NAMED_IMPORT_SPECIFIER__COMPOSED_MEMBER_CACHE;
 
 	/**
 	 * The feature id for the '<em><b>Defined Dynamic Element</b></em>' reference.
@@ -8885,43 +8949,6 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int TAGGED_TEMPLATE_STRING_OPERATION_COUNT = EXPRESSION_WITH_TARGET_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.MemberAccessImpl <em>Member Access</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4JS.impl.MemberAccessImpl
-	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getMemberAccess()
-	 * @generated
-	 */
-	int MEMBER_ACCESS = 102;
-
-	/**
-	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MEMBER_ACCESS__COMPOSED_MEMBER_CACHE = 0;
-
-	/**
-	 * The number of structural features of the '<em>Member Access</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MEMBER_ACCESS_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Member Access</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MEMBER_ACCESS_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ParameterizedPropertyAccessExpressionImpl <em>Parameterized Property Access Expression</em>}' class.

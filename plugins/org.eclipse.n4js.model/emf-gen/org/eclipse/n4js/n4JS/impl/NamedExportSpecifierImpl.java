@@ -22,8 +22,6 @@ import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedExportSpecifier;
 
-import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
-
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Named Export Specifier</b></em>'.
@@ -38,7 +36,7 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
  *
  * @generated
  */
-public class NamedExportSpecifierImpl extends ProxyResolvingEObjectImpl implements NamedExportSpecifier {
+public class NamedExportSpecifierImpl extends MemberAccessImpl implements NamedExportSpecifier {
 	/**
 	 * The cached value of the '{@link #getExportedElement() <em>Exported Element</em>}' containment reference.
 	 * <!-- begin-user-doc -->
