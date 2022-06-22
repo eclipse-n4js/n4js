@@ -82,7 +82,7 @@ public class SemanticDependencySupplier {
 				&& projectDescription.getWorkspaces().isEmpty()) {
 			// add since contained d.ts files could rely on the global elements of runtime libs
 			for (String rtlibProject : rtlibProjects) {
-				implicitDependencies.add(rtlibProject);
+				// implicitDependencies.add(rtlibProject); // TODO in GH-2380
 			}
 		}
 
