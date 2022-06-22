@@ -87,7 +87,6 @@ import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils.StringConver
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.common.primitives.Ints;
@@ -498,6 +497,30 @@ public class ParserContextUtils {
 	}
 
 	/** @return the newly created string literal. Null safe. */
+	public static String createStringLiteral(List<IdentifierNameContext> identifierNames) {
+		if (identifierNames == null) {
+			return null;
+		}
+		Iterator<IdentifierNameContext> iter = identifierNames.iterator();
+		String str = "";
+		if (iter.hasNext()) {
+			TerminalNode identifier = iter.next().Identifier();
+			if (identifier != null) {
+				str = trimAndNormalize(identifier.getText());
+			}
+		}
+		while (iter.hasNext()) {
+			TerminalNode identifier = iter.next().Identifier();
+			if (identifier != null) {
+				str += "." + trimAndNormalize(identifier.getText());
+			}
+		}
+
+		StringConverterResult converted = ValueConverterUtils.convertFromEscapedString(str, true, false, false, null);
+		return converted.getValue();
+	}
+
+	/** @return the newly created string literal. Null safe. */
 	public static StringLiteral createStringLiteral(TerminalNode stringLiteral) {
 		if (stringLiteral == null) {
 			return null;
@@ -649,9 +672,7 @@ public class ParserContextUtils {
 			}
 			if (elem instanceof FunctionDefinition) {
 				FunctionDefinition fd = (FunctionDefinition) elem;
-				if (!Strings.isNullOrEmpty(fd.getName())) {
-					functionsByName.put(fd.getName(), fd);
-				}
+				functionsByName.put(fd.getName(), fd);
 			}
 		}
 

@@ -27,6 +27,7 @@ import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.PropertyNameKind;
+import org.eclipse.n4js.n4JS.StringLiteral;
 
 /**
  * Builder to create {@link LiteralOrComputedPropertyName} from parse tree elements
@@ -82,9 +83,14 @@ public class DtsPropertyNameBuilder
 			for (int idx = 1; idx < identifierName.size(); idx++) {
 				expr = createParameterizedPropertyAccessExpression(expr, identifierName.get(idx));
 			}
+			// setComputedName will be overwritten later, but set here for overloading collapsing
+			result.setComputedName(ParserContextUtils.createStringLiteral(identifierName));
 			result.setExpression(expr);
 		} else if (cpn.StringLiteral() != null) {
-			result.setExpression(ParserContextUtils.createStringLiteral(cpn.StringLiteral()));
+			StringLiteral stringLiteral = ParserContextUtils.createStringLiteral(cpn.StringLiteral());
+			result.setExpression(stringLiteral);
+			// setComputedName will be overwritten later, but set here for overloading collapsing
+			result.setComputedName(stringLiteral.getValueAsString());
 		}
 	}
 

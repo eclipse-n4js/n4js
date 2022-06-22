@@ -1,0 +1,115 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	Workspace {
+		Folder "node_modules" {
+			Project "immutable" {
+				File "immutable.d.ts" { }
+				File "package.json" { from="immutable__package.json" }
+			}
+			Project "n4js-runtime-es2015" {
+				File "es2015.iterable.n4jsd" { }
+				File "package.json" { from="n4js-runtime-es2015__package.json" }
+			}
+		}
+		Project "Main" {
+			Folder "src" {
+				ThisFile {}
+			}
+			File "package.json" { from="main__package.json" }
+		}
+	}
+
+	// Cannot inline index.d.ts, because comments are omitted from inlined files,
+	// so we would lose the triple-slash directives.
+
+	File "immutable.d.ts" {
+		declare namespace Immutable {
+			namespace List {
+				function List<T>(collection?: Iterable<T> | ArrayLike<T>): List<T>;
+				interface List<T> {
+					readonly size: number;
+					entries(): IterableIterator<[K, V]>;
+					[Symbol.iterator](): IterableIterator<unknown>;
+				}
+			}
+		}
+		export = Immutable;
+	}
+
+	File "immutable__package.json" {
+		{
+		  "name": "immutable",
+		  "main": "dist/immutable.js",
+		  "module": "dist/immutable.es.js",
+		  "types": "dist/immutable.d.ts"
+		}
+	}
+
+	File "es2015.iterable.n4jsd" {
+		export external public interface ~IterableIterator<out T> extends Iterator<T>, Iterable<T> {
+			@Override
+			[Symbol.iterator](): IterableIterator<T>;
+		}
+	}
+
+	File "n4js-runtime-es2015__package.json" {
+		{
+		  "name": "n4js-runtime-es2015",
+		  "type": "module",
+		  "n4js": {
+		    "projectType": "runtimeLibrary",
+		    "output": "src-gen",
+		    "sources": {
+		      "source": [
+		        "src"
+		      ]
+		    }
+		  }
+		}
+	}
+
+	File "main__package.json" {
+		{
+		  "name": "Main",
+		  "dependencies": {
+		    "n4js-runtime": "",
+		    "immutable": "",           // HERE: on purpose above of es2015
+		    "n4js-runtime-es2015": ""
+		  },
+		  "n4js": {
+		    "projectType": "library",
+		    "output": "src-gen",
+		    "sources": {
+		      "source": [
+		        "src"
+		      ]
+		    },
+		    "requiredRuntimeLibraries": [
+		      "n4js-runtime-es2015"
+		    ]
+		  }
+		}
+	}
+
+	END_SETUP
+ */
+
+// XPECT noerrors -->
+import {Set} from "immutable"
+
+const K : Set<string>;
+// XPECT type of 'T' --> 
+const T =  K.entries();
+T;
