@@ -21,7 +21,7 @@ export interface IE {
     optionalMethod?(): string;
     get getter() : string;
     set setter(v: string);
-	[Symbol.iterator](): Iterator<string>;
+    [Symbol.iterator](): Iterator<string>;
 }
 
 declare interface ID {
