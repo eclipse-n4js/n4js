@@ -13,6 +13,7 @@ package org.eclipse.n4js.workspace;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +73,8 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	protected final HashMultimap<String, N4JSProjectConfig> packageName2ProjectConfigs = HashMultimap.create();
 	/** Map between definition projects and their defined projects. */
 	protected final DefinitionProjectMap definitionProjects = new DefinitionProjectMap();
+	/** Set of all runtime-library project ids in the workspace. */
+	protected final Set<String> rtlibProjects = new HashSet<>();
 
 	/**
 	 * Creates a new, empty {@link N4JSWorkspaceConfig}. It will not contain any projects until
@@ -136,6 +139,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		projectID2ProjectConfig.clear();
 		packageName2ProjectConfigs.clear();
 		definitionProjects.clear();
+		rtlibProjects.clear();
 	}
 
 	/**
@@ -151,6 +155,10 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		String packageName = pd.getPackageName();
 		if (packageName != null) { // e.g. yarn projects do not have a package name
 			packageName2ProjectConfigs.put(packageName, newProject);
+		}
+		ProjectType pType = pd.getProjectType();
+		if (pType == ProjectType.RUNTIME_LIBRARY) {
+			rtlibProjects.add(packageName);
 		}
 		updateDefinitionProjects(null, pd);
 		return newProject;

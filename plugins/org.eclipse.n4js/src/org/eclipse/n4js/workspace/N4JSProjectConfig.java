@@ -246,9 +246,8 @@ public class N4JSProjectConfig implements XIProjectConfig {
 
 	/** Initializes {@link #packageNameToProjectIds} and {@link #semanticDependencies}. */
 	protected void init() {
-		List<ProjectDependency> deps = projectDescription.getProjectDependencies();
 		List<ProjectDependency> semanticDeps = semanticDependencySupplier
-				.computeSemanticDependencies(workspace.definitionProjects, deps);
+				.computeSemanticDependencies(workspace.definitionProjects, workspace.rtlibProjects, projectDescription);
 
 		Path relatedRootLocation = getRelatedRootLocation();
 
@@ -335,6 +334,11 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		}
 
 		return computeChanges(oldProjectConfig, newProjectConfig);
+	}
+
+	@Override
+	public String toString() {
+		return this.getName();
 	}
 
 	/** @return true iff this project is located inside a node_modules folder */
