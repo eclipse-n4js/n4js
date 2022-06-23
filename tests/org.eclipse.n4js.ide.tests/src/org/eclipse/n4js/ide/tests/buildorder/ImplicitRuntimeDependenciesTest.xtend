@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ide.tests.buildorder
 
 import org.junit.Test
-import org.junit.Ignore
 
 /**
  * Test for build order
@@ -32,12 +31,12 @@ class ImplicitRuntimeDependenciesTest extends AbstractBuildOrderTest {
 				#["immutable.d.ts" -> '''
 					declare namespace Immutable {
 						namespace List {
-							function List<T>(collection?: Iterable<T> | ArrayLike<T>): List<T>;
-							interface List<T> {
-								readonly size: number;
-								entries(): IterableIterator<[K, V]>;
-								[Symbol.iterator](): IterableIterator<unknown>;
-							}
+						}
+						function List<T>(collection?: Iterable<T> | ArrayLike<T>): List<T>;
+						interface List<T> {
+							readonly size: number;
+							entries(): IterableIterator<[K, V]>;
+							[Symbol.iterator](): IterableIterator<unknown>;
 						}
 					}
 					export = Immutable;
@@ -85,7 +84,6 @@ class ImplicitRuntimeDependenciesTest extends AbstractBuildOrderTest {
 	}
 	
 	@Test
-	@Ignore // TODO GH-2380
 	def void testDepOrderReverse() {
 		test("yarn-test-project, " +
 				"yarn-test-project/node_modules/n4js-runtime, " +
