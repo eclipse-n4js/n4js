@@ -43,10 +43,26 @@ class Workspace {
 	def Iterable<Project> getAllProjects() {
 		return this.projects.flatMap[p|
 			if (p instanceof YarnWorkspaceProject)
-				#[p] + p.memberProjects
+				#[p] + p.memberProjects + p.nodeModuleProjects
 			else
 				#[p]
 		];
+	}
+	
+	def void simplifyIfPossible() {
+		if (isYarnToSingleProjectConvertable()) {
+			val YarnWorkspaceProject yarnWorkspaceProject = getProjects().get(0) as YarnWorkspaceProject;
+			val Project project = yarnWorkspaceProject.getMemberProjects().iterator().next();
+			clearProjects();
+			addProject(project);
+		}
+	}
+	
+	def boolean isYarnToSingleProjectConvertable() {
+		return getProjects().size() == 1
+				&& getAllProjects().size() == 1
+				&& getProjects().get(0) instanceof YarnWorkspaceProject
+				&& (getProjects().get(0) as YarnWorkspaceProject).getMemberProjects().size() == 1;
 	}
 
 	public def File create(Path parentDirectoryPath) {
