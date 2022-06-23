@@ -13,11 +13,11 @@
 	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
 
 	Workspace {
-		Project "node_modules/immutable" {
+		NodeModuleProject "immutable" {
 			File "immutable.d.ts" { }
 			File "package.json" { from="immutable__package.json" }
 		}
-		Project "node_modules/n4js-runtime-es2015" {
+		NodeModuleProject "n4js-runtime-es2015" {
 			File "es2015.iterable.n4jsd" { }
 			File "package.json" { from="n4js-runtime-es2015__package.json" }
 		}
