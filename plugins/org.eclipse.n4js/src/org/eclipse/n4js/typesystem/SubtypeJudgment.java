@@ -274,6 +274,19 @@ import com.google.common.collect.Iterables;
 								|| isFunction(G, right));
 			}
 		}
+		if (right instanceof FunctionTypeExprOrRef) {
+			if (left instanceof ParameterizedTypeRef) {
+				if (left.getDeclaredType() instanceof TInterface) {
+					// callable interface
+					TInterface tInt = (TInterface) left.getDeclaredType();
+					TMethod callSignature = tInt.getCallSignature();
+					if (callSignature != null) {
+						FunctionTypeRef callSigRef = (FunctionTypeRef) TypeUtils.createTypeRef(callSignature);
+						return applyFunctionTypeExprOrRef(G, callSigRef, (FunctionTypeExprOrRef) right);
+					}
+				}
+			}
+		}
 		if (right.getDeclaredType() == functionType(G)) {
 			final TMethod callSig = tsh.getCallSignature(G, left);
 			if (callSig != null) {

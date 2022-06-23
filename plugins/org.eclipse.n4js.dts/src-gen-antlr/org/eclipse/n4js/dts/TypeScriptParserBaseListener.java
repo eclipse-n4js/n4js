@@ -1,4 +1,4 @@
-// Generated from /Users/mark-oliver.reiser/Home/Prog/Java/n4js-main/git-repo/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
+// Generated from /Users/marcusmews/Eclipses/ECL2/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -1240,13 +1240,49 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPropertyName(TypeScriptParser.PropertyNameContext ctx) { }
+	@Override public void enterStringProperty(TypeScriptParser.StringPropertyContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPropertyName(TypeScriptParser.PropertyNameContext ctx) { }
+	@Override public void exitStringProperty(TypeScriptParser.StringPropertyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNumericProperty(TypeScriptParser.NumericPropertyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNumericProperty(TypeScriptParser.NumericPropertyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterComputedProperty(TypeScriptParser.ComputedPropertyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitComputedProperty(TypeScriptParser.ComputedPropertyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIdentifierProperty(TypeScriptParser.IdentifierPropertyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIdentifierProperty(TypeScriptParser.IdentifierPropertyContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

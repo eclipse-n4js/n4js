@@ -29,6 +29,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.projectDescription.DependencyType;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDependency;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
@@ -49,8 +50,10 @@ public class SemanticDependencySupplier {
 	/**
 	 * Actually computes the semantic dependencies, see {@link N4JSProjectConfig#getSemanticDependencies()}.
 	 */
-	public List<ProjectDependency> computeSemanticDependencies(
-			DefinitionProjectMap definitionProjects, List<ProjectDependency> dependencies) {
+	public List<ProjectDependency> computeSemanticDependencies(DefinitionProjectMap definitionProjects,
+			Set<String> rtlibProjects, ProjectDescription projectDescription) {
+
+		List<ProjectDependency> dependencies = projectDescription.getProjectDependencies();
 
 		Set<String> implicitDependencies = new LinkedHashSet<>();
 		Set<String> existingDependencies = new LinkedHashSet<>();
@@ -74,6 +77,15 @@ public class SemanticDependencySupplier {
 				keepAtPosition.add(dependency);
 			}
 		}
+
+		if (projectDescription.getProjectType() == ProjectType.PLAINJS
+				&& projectDescription.getWorkspaces().isEmpty()) {
+			// add since contained d.ts files could rely on the global elements of runtime libs
+			for (String rtlibProject : rtlibProjects) {
+				// implicitDependencies.add(rtlibProject); // TODO in GH-2380
+			}
+		}
+
 		implicitDependencies.removeAll(existingDependencies);
 
 		if (implicitDependencies.isEmpty() && (sawDefinitionsOnly || moveToTop.isEmpty())) {

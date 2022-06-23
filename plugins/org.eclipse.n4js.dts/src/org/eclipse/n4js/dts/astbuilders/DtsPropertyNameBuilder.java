@@ -10,23 +10,24 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_computedPropertyName;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_identifierName;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_numericLiteral;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_propertyName;
 
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.n4js.dts.TypeScriptParser.ComputedPropertyContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ComputedPropertyNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
-import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
+import org.eclipse.n4js.dts.TypeScriptParser.IdentifierPropertyContext;
+import org.eclipse.n4js.dts.TypeScriptParser.NumericPropertyContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyNameContext;
+import org.eclipse.n4js.dts.TypeScriptParser.StringPropertyContext;
 import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.PropertyNameKind;
+import org.eclipse.n4js.n4JS.StringLiteral;
 
 /**
  * Builder to create {@link LiteralOrComputedPropertyName} from parse tree elements
@@ -42,51 +43,70 @@ public class DtsPropertyNameBuilder
 	@Override
 	protected Set<Integer> getVisitChildrenOfRules() {
 		return java.util.Set.of(
-				RULE_propertyName,
-				RULE_numericLiteral,
-				RULE_computedPropertyName,
-				RULE_identifierName);
+				RULE_propertyName);
 	}
 
 	@Override
-	public void enterPropertyName(PropertyNameContext ctx) {
+	public void enterStringProperty(StringPropertyContext ctx) {
 		if (ctx == null) {
 			return;
 		}
 		result = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
-		if (ctx.StringLiteral() != null) {
-			result.setKind(PropertyNameKind.STRING);
-			result.setLiteralName(ParserContextUtils.trimAndUnescapeStringLiteral(ctx.StringLiteral()));
-		}
+
+		result.setKind(PropertyNameKind.STRING);
+		result.setLiteralName(ParserContextUtils.trimAndUnescapeStringLiteral(ctx.StringLiteral()));
 	}
 
 	@Override
-	public void enterComputedPropertyName(ComputedPropertyNameContext ctx) {
-		List<IdentifierNameContext> identifierName = ctx.identifierName();
+	public void enterNumericProperty(NumericPropertyContext ctx) {
+		if (ctx == null) {
+			return;
+		}
+		result = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
+
+		result.setKind(PropertyNameKind.NUMBER);
+		result.setLiteralName(ctx.getText());
+	}
+
+	@Override
+	public void enterComputedProperty(ComputedPropertyContext ctx) {
+		if (ctx == null) {
+			return;
+		}
+		result = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
+
+		ComputedPropertyNameContext cpn = ctx.computedPropertyName();
+		List<IdentifierNameContext> identifierName = cpn.identifierName();
 		result.setKind(PropertyNameKind.COMPUTED);
 		if (identifierName != null && !identifierName.isEmpty()) {
 			Expression expr = newExpressionBuilder().consume(identifierName.get(0));
 			for (int idx = 1; idx < identifierName.size(); idx++) {
 				expr = createParameterizedPropertyAccessExpression(expr, identifierName.get(idx));
 			}
-		} else if (ctx.StringLiteral() != null) {
-			result.setExpression(ParserContextUtils.createStringLiteral(ctx.StringLiteral()));
+			// setComputedName will be overwritten later, but set here for overloading collapsing
+			result.setComputedName(ParserContextUtils.createStringLiteral(identifierName));
+			result.setExpression(expr);
+		} else if (cpn.StringLiteral() != null) {
+			StringLiteral stringLiteral = ParserContextUtils.createStringLiteral(cpn.StringLiteral());
+			result.setExpression(stringLiteral);
+			// setComputedName will be overwritten later, but set here for overloading collapsing
+			result.setComputedName(stringLiteral.getValueAsString());
 		}
 	}
 
 	@Override
-	public void enterNumericLiteral(NumericLiteralContext ctx) {
-		result.setKind(PropertyNameKind.NUMBER);
-		result.setLiteralName(ctx.getText());
-	}
+	public void enterIdentifierProperty(IdentifierPropertyContext ctx) {
+		if (ctx == null) {
+			return;
+		}
+		result = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
 
-	@Override
-	public void enterIdentifierName(IdentifierNameContext ctx) {
+		IdentifierNameContext identifierName = ctx.identifierName();
 		result.setKind(PropertyNameKind.IDENTIFIER);
-		if (ctx.Identifier() != null) {
-			result.setLiteralName(ctx.Identifier().getText());
-		} else if (ctx.reservedWord() != null) {
-			result.setLiteralName(ctx.reservedWord().getText());
+		if (identifierName.Identifier() != null) {
+			result.setLiteralName(identifierName.Identifier().getText());
+		} else if (identifierName.reservedWord() != null) {
+			result.setLiteralName(identifierName.reservedWord().getText());
 		}
 	}
 }

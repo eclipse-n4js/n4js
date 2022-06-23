@@ -497,6 +497,30 @@ public class ParserContextUtils {
 	}
 
 	/** @return the newly created string literal. Null safe. */
+	public static String createStringLiteral(List<IdentifierNameContext> identifierNames) {
+		if (identifierNames == null) {
+			return null;
+		}
+		Iterator<IdentifierNameContext> iter = identifierNames.iterator();
+		String str = "";
+		if (iter.hasNext()) {
+			TerminalNode identifier = iter.next().Identifier();
+			if (identifier != null) {
+				str = trimAndNormalize(identifier.getText());
+			}
+		}
+		while (iter.hasNext()) {
+			TerminalNode identifier = iter.next().Identifier();
+			if (identifier != null) {
+				str += "." + trimAndNormalize(identifier.getText());
+			}
+		}
+
+		StringConverterResult converted = ValueConverterUtils.convertFromEscapedString(str, true, false, false, null);
+		return converted.getValue();
+	}
+
+	/** @return the newly created string literal. Null safe. */
 	public static StringLiteral createStringLiteral(TerminalNode stringLiteral) {
 		if (stringLiteral == null) {
 			return null;

@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.scoping.utils
 
-import com.google.common.collect.Iterables
 import com.google.inject.Inject
 import java.util.function.Supplier
 import org.eclipse.emf.ecore.EObject
@@ -21,12 +20,14 @@ import org.eclipse.n4js.scoping.imports.ImportedElementsScopingHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.xtext.resource.EObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.impl.SingletonScope
 import org.eclipse.xtext.util.IResourceScopeCache
+import com.google.common.collect.Iterables
 
 /**
  * Helper for {@link N4JSScopeProvider N4JSScopeProvider} using
@@ -101,43 +102,47 @@ class LocallyKnownTypesScopingHelper {
 	/**
 	 * Returns scope with locally known types and (as parent) import scope; the result is cached.
 	 */
-	def IScope scopeWithLocallyKnownTypes(Script script, Supplier<IScope> parentSupplier) {
-		return cache.get(script -> 'locallyKnownTypes', script.eResource) [|
+	def IScope scopeWithLocallyDeclaredElems(Script script, Supplier<IScope> parentSupplier, boolean onlyNamespacelikes) {
+		return cache.get(script -> 'locallyKnownTypes_'+String.valueOf(onlyNamespacelikes), script.eResource) [|
 			// all types in the index:
 			val parent = parentSupplier.get();
 			// but imported types are preferred (or maybe renamed with aliases):
 			val IScope importScope = importedElementsScopingHelper.getImportedTypes(parent, script);
 			// finally, add locally declared types as the outer scope
-			val localTypes = scopeWithLocallyDeclaredTypes(script, importScope);
+			val localTypes = scopeWithLocallyDeclaredElems(script, importScope, onlyNamespacelikes);
 			
 			return localTypes;
 		];
 	}
 	
 	/** Returns scope with locally declared types (without import scope). */
-	def IScope scopeWithLocallyDeclaredTypes(Script script, IScope parent) {
-		return scopeWithLocallyDeclaredTypes(script.module, script, parent);
+	def IScope scopeWithLocallyDeclaredElems(Script script, IScope parent, boolean onlyNamespacelikes) {
+		return scopeWithLocallyDeclaredElems(script.module, script, parent, onlyNamespacelikes);
 	}
 	
 	/** Returns scope with locally declared types (without import scope). */
-	def IScope scopeWithLocallyDeclaredTypes(N4NamespaceDeclaration namespace, IScope parent) {
-		return scopeWithLocallyDeclaredTypes(namespace.definedType as AbstractNamespace, namespace, parent);
+	def IScope scopeWithLocallyDeclaredElems(N4NamespaceDeclaration namespace, IScope parent, boolean onlyNamespacelikes) {
+		return scopeWithLocallyDeclaredElems(namespace.definedType as AbstractNamespace, namespace, parent, onlyNamespacelikes);
 	}
 	
 	/** Returns scope with locally declared types (without import scope). */
-	def IScope scopeWithLocallyDeclaredTypes(AbstractNamespace namespace, IScope parent) {
-		return scopeWithLocallyDeclaredTypes(namespace, namespace, parent);
+	def IScope scopeWithLocallyDeclaredElems(AbstractNamespace namespace, IScope parent, boolean onlyNamespacelikes) {
+		return scopeWithLocallyDeclaredElems(namespace, namespace, parent, onlyNamespacelikes);
 	}
 	
 	/**
 	 * Returns scope with locally declared types (without import scope).
 	 */
-	def private IScope scopeWithLocallyDeclaredTypes(AbstractNamespace ans, EObject context, IScope parent) {
+	def private IScope scopeWithLocallyDeclaredElems(AbstractNamespace ans, EObject context, IScope parent, boolean onlyNamespacelikes) {
 		if (ans === null || ans.eIsProxy) {
 			return parent;
 		}
-		val tleAndNamespaces = Iterables.concat(ans.types, ans.namespaces);
-		val eoDescrs = tleAndNamespaces.filter[t | !t.polyfill ].map[ topLevelType |
+		val tlElems = if (onlyNamespacelikes) {
+				Iterables.concat(ans.namespaces, ans.types.filter[t | t instanceof TEnum ])
+			} else {
+				ans.types.filter[t | !t.polyfill ];
+			};
+		val eoDescrs = tlElems.map[ topLevelType |
 			return EObjectDescription.create(topLevelType.name, topLevelType);
 		];
 		return scopeSnapshotHelper.scopeFor("scopeWithLocallyDeclaredTypes", context, parent, eoDescrs);
