@@ -18,7 +18,9 @@
 			File "package.json" { from="immutable__package.json" }
 		}
 		NodeModuleProject "n4js-runtime-es2015" {
-			File "es2015.iterable.n4jsd" { }
+			Folder "src" {
+				File "es2015.iterable.n4jsd" { }
+			}
 			File "package.json" { from="n4js-runtime-es2015__package.json" }
 		}
 		Project "Main" {
@@ -35,12 +37,12 @@
 	File "immutable.d.ts" {
 		declare namespace Immutable {
 			namespace List {
-				function List<T>(collection?: Iterable<T> | ArrayLike<T>): List<T>;
-				interface List<T> {
-					readonly size: number;
-					entries(): IterableIterator<[K, V]>;
-					[Symbol.iterator](): IterableIterator<unknown>;
-				}
+			}
+			function List<T>(collection?: Iterable<T> | ArrayLike<T>): List<T>;
+			interface List<T> {
+				readonly size: number;
+				entries(): IterableIterator<[K, V]>;
+				[Symbol.iterator](): IterableIterator<unknown>;
 			}
 		}
 		export = Immutable;
@@ -49,13 +51,14 @@
 	File "immutable__package.json" {
 		{
 		  "name": "immutable",
-		  "main": "dist/immutable.js",
-		  "module": "dist/immutable.es.js",
-		  "types": "dist/immutable.d.ts"
+		  "main": "immutable.js",
+		  "module": "immutable.es.js",
+		  "types": "immutable.d.ts"
 		}
 	}
 
 	File "es2015.iterable.n4jsd" {
+		@@Global
 		export external public interface ~IterableIterator<out T> extends Iterator<T>, Iterable<T> {
 			@Override
 			[Symbol.iterator](): IterableIterator<T>;
@@ -105,9 +108,11 @@
  */
 
 // XPECT noerrors -->
-import {Set} from "immutable"
+import {List} from "immutable";
 
-const K : Set<string>;
-// XPECT type of 'T' --> 
+const I : IterableIterator<string> = null;
+
+const K : List<string> = null;
+// XPECT type of 'T' --> IterableIterator<Array2<any,any>>
 const T =  K.entries();
 T;
