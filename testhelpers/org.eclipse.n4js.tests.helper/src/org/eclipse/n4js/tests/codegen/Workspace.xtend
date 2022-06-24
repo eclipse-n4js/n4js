@@ -60,7 +60,7 @@ class Workspace {
 	
 	def boolean isYarnToSingleProjectConvertable() {
 		return getProjects().size() == 1
-				&& getAllProjects().size() == 1
+				&& getAllProjects().size() == 2 // this includes the yarn project and the single project in packages
 				&& getProjects().get(0) instanceof YarnWorkspaceProject
 				&& (getProjects().get(0) as YarnWorkspaceProject).getMemberProjects().size() == 1;
 	}
