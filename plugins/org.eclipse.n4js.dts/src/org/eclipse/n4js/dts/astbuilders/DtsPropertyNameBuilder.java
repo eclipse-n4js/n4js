@@ -83,14 +83,10 @@ public class DtsPropertyNameBuilder
 			for (int idx = 1; idx < identifierName.size(); idx++) {
 				expr = createParameterizedPropertyAccessExpression(expr, identifierName.get(idx));
 			}
-			// setComputedName will be overwritten later, but set here for overloading collapsing
-			result.setComputedName(ParserContextUtils.createStringLiteral(identifierName));
 			result.setExpression(expr);
 		} else if (cpn.StringLiteral() != null) {
 			StringLiteral stringLiteral = ParserContextUtils.createStringLiteral(cpn.StringLiteral());
 			result.setExpression(stringLiteral);
-			// setComputedName will be overwritten later, but set here for overloading collapsing
-			result.setComputedName(stringLiteral.getValueAsString());
 		}
 	}
 
