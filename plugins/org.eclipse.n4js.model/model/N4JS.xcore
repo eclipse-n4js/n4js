@@ -147,7 +147,7 @@ class NamespaceExportSpecifier extends TypeDefiningElement {
 	String alias
 }
 
-class NamedExportSpecifier extends MemberAccess {
+class NamedExportSpecifier {
 	contains IdentifierRef exportedElement
 	String alias
 }
@@ -219,7 +219,7 @@ abstract class ExportableElement extends NamespaceElement {
  * Abstract base for elements that may refer to another module, i.e. {@link ImportDeclaration}s (always)
  * and {@link ExportDeclaration}s (in case of re-exports).
  */
-abstract class ModuleRef {
+abstract class ModuleRef extends MemberAccess {
 
 	refers TModule module
 	transient String moduleSpecifierAsText
@@ -308,7 +308,7 @@ abstract class ImportSpecifier {
 	boolean declaredDynamic
 }
 
-class NamedImportSpecifier extends ImportSpecifier, MemberAccess {
+class NamedImportSpecifier extends ImportSpecifier {
 
 	refers transient TDynamicElement definedDynamicElement
 

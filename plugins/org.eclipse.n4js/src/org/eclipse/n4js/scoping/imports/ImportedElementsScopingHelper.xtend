@@ -45,6 +45,7 @@ import org.eclipse.n4js.ts.types.TDynamicElement
 import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
@@ -53,8 +54,6 @@ import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.impl.AliasedEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.util.IResourceScopeCache
-import org.eclipse.n4js.n4JS.MemberAccess
-import org.eclipse.n4js.utils.ResourceType
 
 /** internal helper collection type */
 class IEODesc2ISpec extends HashMap<IEObjectDescription, ImportSpecifier> {}
@@ -162,8 +161,7 @@ class ImportedElementsScopingHelper {
 			val module = imp?.module;
 			if (module !== null) {
 
-				val memberAccess = Optional.fromNullable(imp.importSpecifiers.filter(MemberAccess).head);
-				val topLevelElements = exportedElementsCollector.getExportedElements(module, contextResource, memberAccess, includeHollows, includeValueOnlyElements);
+				val topLevelElements = exportedElementsCollector.getExportedElements(module, contextResource, Optional.of(imp), includeHollows, includeValueOnlyElements);
 				val tleScope = scopesHelper.scopeFor("scope_AllTopLevelElementsFromModule", module, IScope.NULLSCOPE, false, topLevelElements)
 
 				for (specifier : imp.importSpecifiers) {

@@ -423,7 +423,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	protected def IScope scope_ImportedElement(NamedImportSpecifier specifier, EReference reference) {
 		val impDecl = EcoreUtil2.getContainerOfType(specifier, ImportDeclaration);
 		val targetModule = impDecl.module; // may trigger reentrant scoping for module specifier (cf. #scope_ImportedModule())
-		return scope_AllTopLevelElementsFromAbstractNamespace(targetModule, specifier, true, true);
+		return scope_AllTopLevelElementsFromAbstractNamespace(targetModule, impDecl, true, true);
 	}
 
 	/**
@@ -434,7 +434,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	protected def IScope scope_ImportedElement(NamedExportSpecifier specifier, EReference reference) {
 		val expDecl = EcoreUtil2.getContainerOfType(specifier, ExportDeclaration);
 		val targetModule = expDecl.module; // may trigger reentrant scoping for module specifier (cf. #scope_ImportedModule())
-		return scope_AllTopLevelElementsFromAbstractNamespace(targetModule, specifier, true, true);
+		return scope_AllTopLevelElementsFromAbstractNamespace(targetModule, expDecl, true, true);
 	}
 
 	/**
@@ -503,7 +503,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			}
 		}
 	}
-	
+
 	/**
 	 * Builds a lexical environment scope with the given parameters.
 	 * Filters out primitive types.
