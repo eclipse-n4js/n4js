@@ -119,9 +119,22 @@ public class ExportedElementsCollector {
 	 *            The context resource, i.e. the resource importing the exported elements returned from this method.
 	 *            Used for visibility checks, among other things.
 	 * @param memberAccess
-	 *            The {@link MemberAccess} AST node as provided in scoping requests as context (optional). Used only as
-	 *            argument to {@link MemberScopingHelper} to support a special case of "export =" in .d.ts; if absent,
-	 *            support for this special case will be turned off.
+	 *            The {@link MemberAccess} AST node as provided in scoping requests as context (optional). Used only to
+	 *            support the rare special case of exporting variables with "export =" from .d.ts files:
+	 *
+	 *            <pre>
+	 *            // lib.d.ts
+	 *            declare interface Ifc {
+	 *                m(): void;
+	 *            }
+	 *            declare const c: Ifc;
+	 *            export = c;
+	 *            </pre>
+	 *
+	 *            In such a case, the members of the type of variable {@code c} are directly available as exported
+	 *            elements and computing those members requires an instance of {@link MemberAccess} to be passed to
+	 *            {@link MemberScopingHelper#createMemberScope(TypeRef, MemberAccess, boolean, boolean, boolean)
+	 *            MemberScopingHelper}. If this argument is absent, support for this special case will be turned off.
 	 */
 	public Iterable<IEObjectDescription> getExportedElements(AbstractNamespace namespace, Resource contextResource,
 			Optional<MemberAccess> memberAccess, boolean includeHollows, boolean includeValueOnlyElements) {
@@ -258,6 +271,10 @@ public class ExportedElementsCollector {
 		}
 	}
 
+	/**
+	 * See the documentation of parameter {@code memberAccess} in
+	 * {@link #getExportedElements(AbstractNamespace, Resource, Optional, boolean, boolean) #getExportedElements()}.
+	 */
 	private void doCollectMembersOfVariableAsElements(TVariable variable, CollectionInfo info) {
 		if (!info.memberAccess.isPresent()) {
 			return; // support for this case is turned off
