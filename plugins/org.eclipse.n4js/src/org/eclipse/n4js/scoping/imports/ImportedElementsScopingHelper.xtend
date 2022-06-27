@@ -43,6 +43,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TDynamicElement
 import org.eclipse.n4js.ts.types.TExportableElement
+import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.utils.ResourceType
@@ -388,7 +389,7 @@ class ImportedElementsScopingHelper {
 
 	private def AbstractTypeVisibilityChecker.TypeVisibility isVisible(Resource contextResource,
 		IdentifiableElement element) {
-		if (ResourceType.getResourceType(element) == ResourceType.DTS)
+		if (element instanceof TMember && ResourceType.getResourceType(element) == ResourceType.DTS)
 			new AbstractTypeVisibilityChecker.TypeVisibility(true)
 		else if (element instanceof Type)
 			typeVisibilityChecker.isVisible(contextResource, element)

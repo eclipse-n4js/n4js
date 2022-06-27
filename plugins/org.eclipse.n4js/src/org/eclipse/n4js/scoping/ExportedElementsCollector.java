@@ -30,6 +30,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.ModuleExportDefinition;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TFunction;
+import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TVariable;
@@ -295,7 +296,9 @@ public class ExportedElementsCollector {
 	}
 
 	private TypeVisibility isVisible(Resource contextResource, TExportableElement elem) {
-		if (elem instanceof Type) {
+		if (elem instanceof TMember && ResourceType.getResourceType(elem) == ResourceType.DTS) {
+			return new TypeVisibility(true);
+		} else if (elem instanceof Type) {
 			return typeVisibilityChecker.isVisible(contextResource, (Type) elem);
 		} else if (elem instanceof TVariable) {
 			return variableVisibilityChecker.isVisible(contextResource, (TVariable) elem);
