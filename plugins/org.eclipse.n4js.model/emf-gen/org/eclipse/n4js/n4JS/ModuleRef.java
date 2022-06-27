@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.n4JS;
 
-import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.n4js.ts.types.TModule;
 
 /**
@@ -37,7 +35,7 @@ import org.eclipse.n4js.ts.types.TModule;
  * @model abstract="true"
  * @generated
  */
-public interface ModuleRef extends EObject {
+public interface ModuleRef extends MemberAccess {
 	/**
 	 * Returns the value of the '<em><b>Module</b></em>' reference.
 	 * <!-- begin-user-doc -->

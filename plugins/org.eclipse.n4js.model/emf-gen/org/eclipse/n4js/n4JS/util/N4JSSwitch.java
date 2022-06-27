@@ -114,6 +114,7 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseModuleRef(exportDeclaration);
 				if (result == null) result = caseAnnotableElement(exportDeclaration);
 				if (result == null) result = caseScriptElement(exportDeclaration);
+				if (result == null) result = caseMemberAccess(exportDeclaration);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -128,7 +129,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 			case N4JSPackage.NAMED_EXPORT_SPECIFIER: {
 				NamedExportSpecifier namedExportSpecifier = (NamedExportSpecifier)theEObject;
 				T1 result = caseNamedExportSpecifier(namedExportSpecifier);
-				if (result == null) result = caseMemberAccess(namedExportSpecifier);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -143,6 +143,7 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 			case N4JSPackage.MODULE_REF: {
 				ModuleRef moduleRef = (ModuleRef)theEObject;
 				T1 result = caseModuleRef(moduleRef);
+				if (result == null) result = caseMemberAccess(moduleRef);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -153,6 +154,7 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseModuleRef(importDeclaration);
 				if (result == null) result = caseAnnotableElement(importDeclaration);
 				if (result == null) result = caseScriptElement(importDeclaration);
+				if (result == null) result = caseMemberAccess(importDeclaration);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -166,7 +168,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				NamedImportSpecifier namedImportSpecifier = (NamedImportSpecifier)theEObject;
 				T1 result = caseNamedImportSpecifier(namedImportSpecifier);
 				if (result == null) result = caseImportSpecifier(namedImportSpecifier);
-				if (result == null) result = caseMemberAccess(namedImportSpecifier);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -175,7 +176,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				T1 result = caseDefaultImportSpecifier(defaultImportSpecifier);
 				if (result == null) result = caseNamedImportSpecifier(defaultImportSpecifier);
 				if (result == null) result = caseImportSpecifier(defaultImportSpecifier);
-				if (result == null) result = caseMemberAccess(defaultImportSpecifier);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

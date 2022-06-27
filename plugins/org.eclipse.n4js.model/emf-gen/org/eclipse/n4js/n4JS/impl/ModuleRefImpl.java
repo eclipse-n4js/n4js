@@ -29,8 +29,6 @@ import org.eclipse.n4js.n4JS.N4JSPackage.Literals;
 
 import org.eclipse.n4js.ts.types.TModule;
 
-import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
-
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Module Ref</b></em>'.
@@ -46,7 +44,7 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
  *
  * @generated
  */
-public abstract class ModuleRefImpl extends ProxyResolvingEObjectImpl implements ModuleRef {
+public abstract class ModuleRefImpl extends MemberAccessImpl implements ModuleRef {
 	/**
 	 * The cached value of the '{@link #getModule() <em>Module</em>}' reference.
 	 * <!-- begin-user-doc -->

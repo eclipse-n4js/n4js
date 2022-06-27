@@ -8765,12 +8765,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		exportDeclarationEClass.getESuperTypes().add(this.getNamespaceElement());
 		exportDeclarationEClass.getESuperTypes().add(this.getModuleRef());
 		namespaceExportSpecifierEClass.getESuperTypes().add(this.getTypeDefiningElement());
-		namedExportSpecifierEClass.getESuperTypes().add(this.getMemberAccess());
 		exportableElementEClass.getESuperTypes().add(this.getNamespaceElement());
+		moduleRefEClass.getESuperTypes().add(this.getMemberAccess());
 		importDeclarationEClass.getESuperTypes().add(this.getAnnotableScriptElement());
 		importDeclarationEClass.getESuperTypes().add(this.getModuleRef());
 		namedImportSpecifierEClass.getESuperTypes().add(this.getImportSpecifier());
-		namedImportSpecifierEClass.getESuperTypes().add(this.getMemberAccess());
 		defaultImportSpecifierEClass.getESuperTypes().add(this.getNamedImportSpecifier());
 		namespaceImportSpecifierEClass.getESuperTypes().add(this.getImportSpecifier());
 		namespaceImportSpecifierEClass.getESuperTypes().add(this.getTypeDefiningElement());

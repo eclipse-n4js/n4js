@@ -32,7 +32,7 @@ import org.eclipse.n4js.ts.types.TExportableElement;
  * @model
  * @generated
  */
-public interface NamedImportSpecifier extends ImportSpecifier, MemberAccess {
+public interface NamedImportSpecifier extends ImportSpecifier {
 	/**
 	 * Returns the value of the '<em><b>Defined Dynamic Element</b></em>' reference.
 	 * <!-- begin-user-doc -->

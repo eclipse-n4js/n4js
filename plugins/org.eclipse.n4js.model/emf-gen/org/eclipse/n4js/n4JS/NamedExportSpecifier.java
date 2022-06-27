@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.n4JS;
 
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -28,7 +29,7 @@ package org.eclipse.n4js.n4JS;
  * @model
  * @generated
  */
-public interface NamedExportSpecifier extends MemberAccess {
+public interface NamedExportSpecifier extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Exported Element</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
