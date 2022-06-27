@@ -10,13 +10,14 @@
  */
 package org.eclipse.n4js.ide.server.build;
 
-import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+
+import com.google.common.collect.Sets;
 
 /**
  * Customized in order to ignore dependencies of {@link ProjectType#PLAINJS plain-JS} projects.
@@ -25,13 +26,15 @@ public class N4JSBuildOrderInfoComputer extends BuildOrderFactory.BuildOrderInfo
 
 	@Override
 	protected Set<String> getDependencies(ProjectConfigSnapshot pc) {
+		Set<String> dependencies = super.getDependencies(pc);
 		ProjectType type = pc instanceof N4JSProjectConfigSnapshot ? ((N4JSProjectConfigSnapshot) pc).getType() : null;
 		if (type == ProjectType.PLAINJS) {
-			// ignore dependencies of plain-JS projects, because
+			// ignore dependencies of plain-JS projects to non-n4js-lib projects, because
 			// (1) they are irrelevant for the build order of N4JS code,
 			// (2) npm packages sometimes declare cyclic dependencies (and we must not show errors for those cycles)
-			return Collections.emptySet();
+			Set<String> n4jsDeps = Sets.filter(dependencies, dep -> dep.contains("n4js")); // poor-man's heuristic
+			return n4jsDeps;
 		}
-		return super.getDependencies(pc);
+		return dependencies;
 	}
 }

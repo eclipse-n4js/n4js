@@ -1,4 +1,4 @@
-// Generated from /Users/mark-oliver.reiser/Home/Prog/Java/n4js-main/git-repo/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
+// Generated from /Users/marcusmews/Eclipses/ECL2/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -8030,31 +8030,87 @@ public class TypeScriptParser extends TypeScriptParserBase {
 	}
 
 	public static class PropertyNameContext extends ParserRuleContext {
-		public TerminalNode StringLiteral() { return getToken(TypeScriptParser.StringLiteral, 0); }
-		public NumericLiteralContext numericLiteral() {
-			return getRuleContext(NumericLiteralContext.class,0);
-		}
-		public ComputedPropertyNameContext computedPropertyName() {
-			return getRuleContext(ComputedPropertyNameContext.class,0);
-		}
-		public IdentifierNameContext identifierName() {
-			return getRuleContext(IdentifierNameContext.class,0);
-		}
 		public PropertyNameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_propertyName; }
+	 
+		public PropertyNameContext() { }
+		public void copyFrom(PropertyNameContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class ComputedPropertyContext extends PropertyNameContext {
+		public ComputedPropertyNameContext computedPropertyName() {
+			return getRuleContext(ComputedPropertyNameContext.class,0);
+		}
+		public ComputedPropertyContext(PropertyNameContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).enterPropertyName(this);
+			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).enterComputedProperty(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitPropertyName(this);
+			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitComputedProperty(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitPropertyName(this);
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitComputedProperty(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class StringPropertyContext extends PropertyNameContext {
+		public TerminalNode StringLiteral() { return getToken(TypeScriptParser.StringLiteral, 0); }
+		public StringPropertyContext(PropertyNameContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).enterStringProperty(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitStringProperty(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitStringProperty(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class IdentifierPropertyContext extends PropertyNameContext {
+		public IdentifierNameContext identifierName() {
+			return getRuleContext(IdentifierNameContext.class,0);
+		}
+		public IdentifierPropertyContext(PropertyNameContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).enterIdentifierProperty(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitIdentifierProperty(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitIdentifierProperty(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class NumericPropertyContext extends PropertyNameContext {
+		public NumericLiteralContext numericLiteral() {
+			return getRuleContext(NumericLiteralContext.class,0);
+		}
+		public NumericPropertyContext(PropertyNameContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).enterNumericProperty(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitNumericProperty(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitNumericProperty(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -8067,6 +8123,7 @@ public class TypeScriptParser extends TypeScriptParserBase {
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case StringLiteral:
+				_localctx = new StringPropertyContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(1094);
@@ -8079,6 +8136,7 @@ public class TypeScriptParser extends TypeScriptParserBase {
 			case OctalIntegerLiteral:
 			case OctalIntegerLiteral2:
 			case BinaryIntegerLiteral:
+				_localctx = new NumericPropertyContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(1095);
@@ -8086,6 +8144,7 @@ public class TypeScriptParser extends TypeScriptParserBase {
 				}
 				break;
 			case OpenBracket:
+				_localctx = new ComputedPropertyContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(1096);
@@ -8165,6 +8224,7 @@ public class TypeScriptParser extends TypeScriptParserBase {
 			case Unknown:
 			case Asserts:
 			case Identifier:
+				_localctx = new IdentifierPropertyContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(1097);

@@ -55,15 +55,19 @@ import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.AnnotationList;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
+import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.LiteralAnnotationArgument;
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
+import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.StringLiteral;
@@ -497,6 +501,30 @@ public class ParserContextUtils {
 	}
 
 	/** @return the newly created string literal. Null safe. */
+	public static String createStringLiteral(List<IdentifierNameContext> identifierNames) {
+		if (identifierNames == null) {
+			return null;
+		}
+		Iterator<IdentifierNameContext> iter = identifierNames.iterator();
+		String str = "";
+		if (iter.hasNext()) {
+			TerminalNode identifier = iter.next().Identifier();
+			if (identifier != null) {
+				str = trimAndNormalize(identifier.getText());
+			}
+		}
+		while (iter.hasNext()) {
+			TerminalNode identifier = iter.next().Identifier();
+			if (identifier != null) {
+				str += "." + trimAndNormalize(identifier.getText());
+			}
+		}
+
+		StringConverterResult converted = ValueConverterUtils.convertFromEscapedString(str, true, false, false, null);
+		return converted.getValue();
+	}
+
+	/** @return the newly created string literal. Null safe. */
 	public static StringLiteral createStringLiteral(TerminalNode stringLiteral) {
 		if (stringLiteral == null) {
 			return null;
@@ -648,7 +676,7 @@ public class ParserContextUtils {
 			}
 			if (elem instanceof FunctionDefinition) {
 				FunctionDefinition fd = (FunctionDefinition) elem;
-				functionsByName.put(fd.getName(), fd);
+				functionsByName.put(getNameOrCreateName(fd), fd);
 			}
 		}
 
@@ -758,6 +786,42 @@ public class ParserContextUtils {
 				}
 			}
 		}
+	}
+
+	private static String getNameOrCreateName(FunctionDefinition fd) {
+		if (fd.getName() != null) {
+			return fd.getName();
+		}
+		// try fallback
+		if (fd instanceof PropertyNameOwner && ((PropertyNameOwner) fd).getDeclaredName() != null) {
+			LiteralOrComputedPropertyName declaredName = ((PropertyNameOwner) fd).getDeclaredName();
+			if (declaredName.getName() != null) {
+				return declaredName.getName();
+			}
+			if (declaredName.getLiteralName() != null) {
+				return declaredName.getLiteralName();
+			}
+			if (declaredName.getComputedName() != null) {
+				return declaredName.getComputedName();
+			}
+			if (declaredName.getExpression() != null) {
+				Expression expression = declaredName.getExpression();
+				if (expression instanceof StringLiteral) {
+					StringLiteral sl = (StringLiteral) expression;
+					return sl.getValueAsString();
+				}
+				if (expression instanceof ParameterizedPropertyAccessExpression) {
+					ParameterizedPropertyAccessExpression ppae = (ParameterizedPropertyAccessExpression) expression;
+					String name = "";
+					if (ppae.getTarget() != null) {
+						name += ppae.getTarget() + ".";
+					}
+					name += ppae.getPropertyAsText();
+					return name;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**  */

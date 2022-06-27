@@ -560,10 +560,10 @@ propertyAssignment
     ;
 
 propertyName
-    : StringLiteral
-    | numericLiteral
-    | computedPropertyName
-    | identifierName
+    : StringLiteral                                               # StringProperty
+    | numericLiteral                                              # NumericProperty
+    | computedPropertyName                                        # ComputedProperty
+    | identifierName                                              # IdentifierProperty
     ;
 
 computedPropertyName

@@ -13,7 +13,7 @@
 	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
 
 	File "tslib.d.ts" {
-		export interface Ifc extends Iterable<string> {
+		export interface Ifc {
 			42(): string;
 			"hello world"(): string;
 			["computed world"](): string;

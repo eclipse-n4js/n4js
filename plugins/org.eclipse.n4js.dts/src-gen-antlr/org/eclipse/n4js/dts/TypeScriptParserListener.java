@@ -1,4 +1,4 @@
-// Generated from /Users/mark-oliver.reiser/Home/Prog/Java/n4js-main/git-repo/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
+// Generated from /Users/marcusmews/Eclipses/ECL2/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -1038,15 +1038,53 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 */
 	void exitRestParameterInObject(TypeScriptParser.RestParameterInObjectContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#propertyName}.
+	 * Enter a parse tree produced by the {@code StringProperty}
+	 * labeled alternative in {@link TypeScriptParser#propertyName}.
 	 * @param ctx the parse tree
 	 */
-	void enterPropertyName(TypeScriptParser.PropertyNameContext ctx);
+	void enterStringProperty(TypeScriptParser.StringPropertyContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#propertyName}.
+	 * Exit a parse tree produced by the {@code StringProperty}
+	 * labeled alternative in {@link TypeScriptParser#propertyName}.
 	 * @param ctx the parse tree
 	 */
-	void exitPropertyName(TypeScriptParser.PropertyNameContext ctx);
+	void exitStringProperty(TypeScriptParser.StringPropertyContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code NumericProperty}
+	 * labeled alternative in {@link TypeScriptParser#propertyName}.
+	 * @param ctx the parse tree
+	 */
+	void enterNumericProperty(TypeScriptParser.NumericPropertyContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code NumericProperty}
+	 * labeled alternative in {@link TypeScriptParser#propertyName}.
+	 * @param ctx the parse tree
+	 */
+	void exitNumericProperty(TypeScriptParser.NumericPropertyContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ComputedProperty}
+	 * labeled alternative in {@link TypeScriptParser#propertyName}.
+	 * @param ctx the parse tree
+	 */
+	void enterComputedProperty(TypeScriptParser.ComputedPropertyContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ComputedProperty}
+	 * labeled alternative in {@link TypeScriptParser#propertyName}.
+	 * @param ctx the parse tree
+	 */
+	void exitComputedProperty(TypeScriptParser.ComputedPropertyContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code IdentifierProperty}
+	 * labeled alternative in {@link TypeScriptParser#propertyName}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdentifierProperty(TypeScriptParser.IdentifierPropertyContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code IdentifierProperty}
+	 * labeled alternative in {@link TypeScriptParser#propertyName}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdentifierProperty(TypeScriptParser.IdentifierPropertyContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#computedPropertyName}.
 	 * @param ctx the parse tree
