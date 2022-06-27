@@ -32,6 +32,7 @@ import org.eclipse.n4js.n4JS.ThisArgProvider;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.TypableElement;
 
@@ -226,7 +227,7 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 				_switchResult = ((FieldAccessor)_this).getDefinedAccessor();
 			}
 		}
-		return ((IdentifiableElement)_switchResult);
+		return ((TExportableElement)_switchResult);
 	}
 
 	/**

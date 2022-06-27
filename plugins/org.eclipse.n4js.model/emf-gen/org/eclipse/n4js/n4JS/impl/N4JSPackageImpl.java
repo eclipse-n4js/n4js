@@ -8766,6 +8766,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		exportDeclarationEClass.getESuperTypes().add(this.getModuleRef());
 		namespaceExportSpecifierEClass.getESuperTypes().add(this.getTypeDefiningElement());
 		exportableElementEClass.getESuperTypes().add(this.getNamespaceElement());
+		moduleRefEClass.getESuperTypes().add(this.getMemberAccess());
 		importDeclarationEClass.getESuperTypes().add(this.getAnnotableScriptElement());
 		importDeclarationEClass.getESuperTypes().add(this.getModuleRef());
 		namedImportSpecifierEClass.getESuperTypes().add(this.getImportSpecifier());

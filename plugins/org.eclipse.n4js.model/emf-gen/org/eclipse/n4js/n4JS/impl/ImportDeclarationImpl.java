@@ -29,12 +29,14 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
+import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.ModuleRef;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 
 import org.eclipse.n4js.n4JS.N4JSPackage.Literals;
 
+import org.eclipse.n4js.ts.types.ComposedMemberCache;
 import org.eclipse.n4js.ts.types.TModule;
 
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
@@ -49,6 +51,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getComposedMemberCache <em>Composed Member Cache</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getModule <em>Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getModuleSpecifierAsText <em>Module Specifier As Text</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getModuleSpecifierForm <em>Module Specifier Form</em>}</li>
@@ -59,6 +62,16 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * @generated
  */
 public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements ImportDeclaration {
+	/**
+	 * The cached value of the '{@link #getComposedMemberCache() <em>Composed Member Cache</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getComposedMemberCache()
+	 * @generated
+	 * @ordered
+	 */
+	protected ComposedMemberCache composedMemberCache;
+
 	/**
 	 * The cached value of the '{@link #getModule() <em>Module</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -156,6 +169,46 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	protected EClass eStaticClass() {
 		return N4JSPackage.Literals.IMPORT_DECLARATION;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ComposedMemberCache getComposedMemberCache() {
+		if (composedMemberCache != null && composedMemberCache.eIsProxy()) {
+			InternalEObject oldComposedMemberCache = (InternalEObject)composedMemberCache;
+			composedMemberCache = (ComposedMemberCache)eResolveProxy(oldComposedMemberCache);
+			if (composedMemberCache != oldComposedMemberCache) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.IMPORT_DECLARATION__COMPOSED_MEMBER_CACHE, oldComposedMemberCache, composedMemberCache));
+			}
+		}
+		return composedMemberCache;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ComposedMemberCache basicGetComposedMemberCache() {
+		return composedMemberCache;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setComposedMemberCache(ComposedMemberCache newComposedMemberCache) {
+		ComposedMemberCache oldComposedMemberCache = composedMemberCache;
+		composedMemberCache = newComposedMemberCache;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.IMPORT_DECLARATION__COMPOSED_MEMBER_CACHE, oldComposedMemberCache, composedMemberCache));
 	}
 
 	/**
@@ -337,6 +390,9 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case N4JSPackage.IMPORT_DECLARATION__COMPOSED_MEMBER_CACHE:
+				if (resolve) return getComposedMemberCache();
+				return basicGetComposedMemberCache();
 			case N4JSPackage.IMPORT_DECLARATION__MODULE:
 				if (resolve) return getModule();
 				return basicGetModule();
@@ -361,6 +417,9 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case N4JSPackage.IMPORT_DECLARATION__COMPOSED_MEMBER_CACHE:
+				setComposedMemberCache((ComposedMemberCache)newValue);
+				return;
 			case N4JSPackage.IMPORT_DECLARATION__MODULE:
 				setModule((TModule)newValue);
 				return;
@@ -389,6 +448,9 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.IMPORT_DECLARATION__COMPOSED_MEMBER_CACHE:
+				setComposedMemberCache((ComposedMemberCache)null);
+				return;
 			case N4JSPackage.IMPORT_DECLARATION__MODULE:
 				setModule((TModule)null);
 				return;
@@ -416,6 +478,8 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.IMPORT_DECLARATION__COMPOSED_MEMBER_CACHE:
+				return composedMemberCache != null;
 			case N4JSPackage.IMPORT_DECLARATION__MODULE:
 				return module != null;
 			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT:
@@ -437,6 +501,12 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == MemberAccess.class) {
+			switch (derivedFeatureID) {
+				case N4JSPackage.IMPORT_DECLARATION__COMPOSED_MEMBER_CACHE: return N4JSPackage.MEMBER_ACCESS__COMPOSED_MEMBER_CACHE;
+				default: return -1;
+			}
+		}
 		if (baseClass == ModuleRef.class) {
 			switch (derivedFeatureID) {
 				case N4JSPackage.IMPORT_DECLARATION__MODULE: return N4JSPackage.MODULE_REF__MODULE;
@@ -455,6 +525,12 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == MemberAccess.class) {
+			switch (baseFeatureID) {
+				case N4JSPackage.MEMBER_ACCESS__COMPOSED_MEMBER_CACHE: return N4JSPackage.IMPORT_DECLARATION__COMPOSED_MEMBER_CACHE;
+				default: return -1;
+			}
+		}
 		if (baseClass == ModuleRef.class) {
 			switch (baseFeatureID) {
 				case N4JSPackage.MODULE_REF__MODULE: return N4JSPackage.IMPORT_DECLARATION__MODULE;
@@ -473,6 +549,11 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == MemberAccess.class) {
+			switch (baseOperationID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == ModuleRef.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.MODULE_REF___IS_REFERRING_TO_OTHER_MODULE: return N4JSPackage.IMPORT_DECLARATION___IS_REFERRING_TO_OTHER_MODULE;

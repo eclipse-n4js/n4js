@@ -503,7 +503,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			}
 		}
 	}
-	
+
 	/**
 	 * Builds a lexical environment scope with the given parameters.
 	 * Filters out primitive types.

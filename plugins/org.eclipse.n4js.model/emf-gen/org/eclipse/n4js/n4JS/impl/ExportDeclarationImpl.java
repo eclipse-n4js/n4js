@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.ModuleRef;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -42,6 +43,7 @@ import org.eclipse.n4js.n4JS.NamedExportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.n4JS.NamespaceExportSpecifier;
 
+import org.eclipse.n4js.ts.types.ComposedMemberCache;
 import org.eclipse.n4js.ts.types.TModule;
 
 /**
@@ -52,6 +54,7 @@ import org.eclipse.n4js.ts.types.TModule;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#getComposedMemberCache <em>Composed Member Cache</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#getModule <em>Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#getModuleSpecifierAsText <em>Module Specifier As Text</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#getModuleSpecifierForm <em>Module Specifier Form</em>}</li>
@@ -65,6 +68,16 @@ import org.eclipse.n4js.ts.types.TModule;
  * @generated
  */
 public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements ExportDeclaration {
+	/**
+	 * The cached value of the '{@link #getComposedMemberCache() <em>Composed Member Cache</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getComposedMemberCache()
+	 * @generated
+	 * @ordered
+	 */
+	protected ComposedMemberCache composedMemberCache;
+
 	/**
 	 * The cached value of the '{@link #getModule() <em>Module</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -192,6 +205,46 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	protected EClass eStaticClass() {
 		return N4JSPackage.Literals.EXPORT_DECLARATION;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ComposedMemberCache getComposedMemberCache() {
+		if (composedMemberCache != null && composedMemberCache.eIsProxy()) {
+			InternalEObject oldComposedMemberCache = (InternalEObject)composedMemberCache;
+			composedMemberCache = (ComposedMemberCache)eResolveProxy(oldComposedMemberCache);
+			if (composedMemberCache != oldComposedMemberCache) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.EXPORT_DECLARATION__COMPOSED_MEMBER_CACHE, oldComposedMemberCache, composedMemberCache));
+			}
+		}
+		return composedMemberCache;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ComposedMemberCache basicGetComposedMemberCache() {
+		return composedMemberCache;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setComposedMemberCache(ComposedMemberCache newComposedMemberCache) {
+		ComposedMemberCache oldComposedMemberCache = composedMemberCache;
+		composedMemberCache = newComposedMemberCache;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORT_DECLARATION__COMPOSED_MEMBER_CACHE, oldComposedMemberCache, composedMemberCache));
 	}
 
 	/**
@@ -548,6 +601,9 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case N4JSPackage.EXPORT_DECLARATION__COMPOSED_MEMBER_CACHE:
+				if (resolve) return getComposedMemberCache();
+				return basicGetComposedMemberCache();
 			case N4JSPackage.EXPORT_DECLARATION__MODULE:
 				if (resolve) return getModule();
 				return basicGetModule();
@@ -578,6 +634,9 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case N4JSPackage.EXPORT_DECLARATION__COMPOSED_MEMBER_CACHE:
+				setComposedMemberCache((ComposedMemberCache)newValue);
+				return;
 			case N4JSPackage.EXPORT_DECLARATION__MODULE:
 				setModule((TModule)newValue);
 				return;
@@ -615,6 +674,9 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.EXPORT_DECLARATION__COMPOSED_MEMBER_CACHE:
+				setComposedMemberCache((ComposedMemberCache)null);
+				return;
 			case N4JSPackage.EXPORT_DECLARATION__MODULE:
 				setModule((TModule)null);
 				return;
@@ -651,6 +713,8 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.EXPORT_DECLARATION__COMPOSED_MEMBER_CACHE:
+				return composedMemberCache != null;
 			case N4JSPackage.EXPORT_DECLARATION__MODULE:
 				return module != null;
 			case N4JSPackage.EXPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT:
@@ -683,6 +747,12 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 				default: return -1;
 			}
 		}
+		if (baseClass == MemberAccess.class) {
+			switch (derivedFeatureID) {
+				case N4JSPackage.EXPORT_DECLARATION__COMPOSED_MEMBER_CACHE: return N4JSPackage.MEMBER_ACCESS__COMPOSED_MEMBER_CACHE;
+				default: return -1;
+			}
+		}
 		if (baseClass == ModuleRef.class) {
 			switch (derivedFeatureID) {
 				case N4JSPackage.EXPORT_DECLARATION__MODULE: return N4JSPackage.MODULE_REF__MODULE;
@@ -703,6 +773,12 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
 		if (baseClass == NamespaceElement.class) {
 			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == MemberAccess.class) {
+			switch (baseFeatureID) {
+				case N4JSPackage.MEMBER_ACCESS__COMPOSED_MEMBER_CACHE: return N4JSPackage.EXPORT_DECLARATION__COMPOSED_MEMBER_CACHE;
 				default: return -1;
 			}
 		}
@@ -729,6 +805,11 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 				case N4JSPackage.NAMESPACE_ELEMENT___GET_NAMESPACE: return N4JSPackage.EXPORT_DECLARATION___GET_NAMESPACE;
 				case N4JSPackage.NAMESPACE_ELEMENT___IS_IN_NAMESPACE: return N4JSPackage.EXPORT_DECLARATION___IS_IN_NAMESPACE;
 				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.EXPORT_DECLARATION___IS_HOLLOW;
+				default: return -1;
+			}
+		}
+		if (baseClass == MemberAccess.class) {
+			switch (baseOperationID) {
 				default: return -1;
 			}
 		}

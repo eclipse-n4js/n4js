@@ -1282,7 +1282,7 @@ enum MemberType {
 	METHOD = 3
 }
 
-abstract class TMember extends IdentifiableElement, TAnnotableElement, SyntaxRelatedTElement {
+abstract class TMember extends IdentifiableElement, TAnnotableElement, SyntaxRelatedTElement, TExportableElement {
 	boolean declaredFinal
 	boolean declaredStatic
 	boolean declaredOverride
@@ -1427,7 +1427,7 @@ abstract class TMemberWithAccessModifier extends TMember {
 		}
 		return declaredMemberAccessModifier
 	}
-	
+
 	/**
 	 * Returns the default access modifier derived from the type access modifier of the containing type.
 	 * <p>

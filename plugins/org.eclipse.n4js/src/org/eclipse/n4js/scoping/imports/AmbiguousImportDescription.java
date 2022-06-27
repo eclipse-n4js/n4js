@@ -24,6 +24,7 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.common.collect.Lists;
@@ -63,7 +64,7 @@ public class AmbiguousImportDescription extends AbstractDescriptionWithError {
 		} else {
 			typeIdent = "element";
 		}
-		TModule module = (TModule) first.eContainer();
+		TModule module = EcoreUtil2.getContainerOfType(first, TModule.class);
 		typeListStr.append(module.getQualifiedName());
 		Set<IdentifiableElement> uniqueTypes = Sets.newLinkedHashSet(elements);
 		uniqueTypes.remove(first);

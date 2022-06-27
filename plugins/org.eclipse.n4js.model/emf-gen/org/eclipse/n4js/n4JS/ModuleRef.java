@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.n4JS;
 
-import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.n4js.ts.types.TModule;
 
 /**
@@ -22,6 +20,11 @@ import org.eclipse.n4js.ts.types.TModule;
  * <!-- begin-model-doc -->
  * Abstract base for elements that may refer to another module, i.e. {@link ImportDeclaration}s (always)
  * and {@link ExportDeclaration}s (in case of re-exports).
+ *  * <h2>Motivation for Extending MemberAccess</h2>
+ * {@link ImportDeclaration}s, and in case of re-exporting a single named element also {@link ExportDeclaration}s,
+ * must inherit from {@link MemberAccess} only to support the rare special case of exporting variables with
+ * "export =" from .d.ts files. For details, see the documentation for parameter {@code memberAccess} of
+ * {@code ExportedElementsCollector#getExportedElements()}.
  * <!-- end-model-doc -->
  *
  * <p>
@@ -37,7 +40,7 @@ import org.eclipse.n4js.ts.types.TModule;
  * @model abstract="true"
  * @generated
  */
-public interface ModuleRef extends EObject {
+public interface ModuleRef extends MemberAccess {
 	/**
 	 * Returns the value of the '<em><b>Module</b></em>' reference.
 	 * <!-- begin-user-doc -->

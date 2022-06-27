@@ -7868,13 +7868,40 @@ public interface TypesPackage extends EPackage {
 	int TMEMBER__AST_ELEMENT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER__DIRECTLY_EXPORTED = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER__DIRECTLY_EXPORTED_AS_DEFAULT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER__EXPORTING_EXPORT_DEFINITIONS = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 4;
+
+	/**
 	 * The feature id for the '<em><b>Declared Final</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER__DECLARED_FINAL = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 2;
+	int TMEMBER__DECLARED_FINAL = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Declared Static</b></em>' attribute.
@@ -7883,7 +7910,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER__DECLARED_STATIC = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 3;
+	int TMEMBER__DECLARED_STATIC = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Declared Override</b></em>' attribute.
@@ -7892,7 +7919,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER__DECLARED_OVERRIDE = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 4;
+	int TMEMBER__DECLARED_OVERRIDE = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Has Computed Name</b></em>' attribute.
@@ -7901,7 +7928,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER__HAS_COMPUTED_NAME = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 5;
+	int TMEMBER__HAS_COMPUTED_NAME = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
@@ -7910,7 +7937,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER__CONSTITUENT_MEMBERS = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 6;
+	int TMEMBER__CONSTITUENT_MEMBERS = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Composed</b></em>' attribute.
@@ -7919,7 +7946,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER__COMPOSED = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 7;
+	int TMEMBER__COMPOSED = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 10;
 
 	/**
 	 * The number of structural features of the '<em>TMember</em>' class.
@@ -7928,7 +7955,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER_FEATURE_COUNT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 8;
+	int TMEMBER_FEATURE_COUNT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -7949,13 +7976,40 @@ public interface TypesPackage extends EPackage {
 	int TMEMBER___GET_AST_ELEMENT_NO_RESOLVE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER___IS_EXPORTED = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER___IS_INDIRECTLY_EXPORTED = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 2;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER___GET_DIRECTLY_EXPORTED_NAME = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 3;
+
+	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___GET_CONTAINING_TYPE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 1;
+	int TMEMBER___GET_CONTAINING_TYPE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Member Access Modifier</em>' operation.
@@ -7964,7 +8018,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___GET_MEMBER_ACCESS_MODIFIER = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 2;
+	int TMEMBER___GET_MEMBER_ACCESS_MODIFIER = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Member Type</em>' operation.
@@ -7973,7 +8027,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___GET_MEMBER_TYPE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 3;
+	int TMEMBER___GET_MEMBER_TYPE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Field</em>' operation.
@@ -7982,7 +8036,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_FIELD = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 4;
+	int TMEMBER___IS_FIELD = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Getter</em>' operation.
@@ -7991,7 +8045,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_GETTER = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 5;
+	int TMEMBER___IS_GETTER = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Setter</em>' operation.
@@ -8000,7 +8054,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_SETTER = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 6;
+	int TMEMBER___IS_SETTER = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Accessor</em>' operation.
@@ -8009,7 +8063,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_ACCESSOR = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 7;
+	int TMEMBER___IS_ACCESSOR = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Method</em>' operation.
@@ -8018,7 +8072,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_METHOD = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 8;
+	int TMEMBER___IS_METHOD = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is Constructor</em>' operation.
@@ -8027,7 +8081,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_CONSTRUCTOR = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 9;
+	int TMEMBER___IS_CONSTRUCTOR = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Is Optional</em>' operation.
@@ -8036,7 +8090,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_OPTIONAL = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 10;
+	int TMEMBER___IS_OPTIONAL = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -8045,7 +8099,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_ABSTRACT = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 11;
+	int TMEMBER___IS_ABSTRACT = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 14;
 
 	/**
 	 * The operation id for the '<em>Is Readable</em>' operation.
@@ -8054,7 +8108,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_READABLE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 12;
+	int TMEMBER___IS_READABLE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 15;
 
 	/**
 	 * The operation id for the '<em>Is Writeable</em>' operation.
@@ -8063,7 +8117,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_WRITEABLE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 13;
+	int TMEMBER___IS_WRITEABLE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 16;
 
 	/**
 	 * The operation id for the '<em>Get Member As String</em>' operation.
@@ -8072,7 +8126,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___GET_MEMBER_AS_STRING = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 14;
+	int TMEMBER___GET_MEMBER_AS_STRING = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 17;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -8081,7 +8135,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_FINAL = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 15;
+	int TMEMBER___IS_FINAL = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 18;
 
 	/**
 	 * The operation id for the '<em>Is Static</em>' operation.
@@ -8090,7 +8144,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_STATIC = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 16;
+	int TMEMBER___IS_STATIC = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 19;
 
 	/**
 	 * The operation id for the '<em>Is Const</em>' operation.
@@ -8099,7 +8153,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_CONST = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 17;
+	int TMEMBER___IS_CONST = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 20;
 
 	/**
 	 * The operation id for the '<em>Is Polyfilled</em>' operation.
@@ -8108,7 +8162,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_POLYFILLED = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 18;
+	int TMEMBER___IS_POLYFILLED = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 21;
 
 	/**
 	 * The number of operations of the '<em>TMember</em>' class.
@@ -8117,7 +8171,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER_OPERATION_COUNT = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 19;
+	int TMEMBER_OPERATION_COUNT = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 22;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TMemberWithAccessModifierImpl <em>TMember With Access Modifier</em>}' class.
@@ -8155,6 +8209,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMEMBER_WITH_ACCESS_MODIFIER__AST_ELEMENT = TMEMBER__AST_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER_WITH_ACCESS_MODIFIER__DIRECTLY_EXPORTED = TMEMBER__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER_WITH_ACCESS_MODIFIER__DIRECTLY_EXPORTED_AS_DEFAULT = TMEMBER__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER_WITH_ACCESS_MODIFIER__EXPORTING_EXPORT_DEFINITIONS = TMEMBER__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Declared Final</b></em>' attribute.
@@ -8254,6 +8335,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMEMBER_WITH_ACCESS_MODIFIER___GET_AST_ELEMENT_NO_RESOLVE = TMEMBER___GET_AST_ELEMENT_NO_RESOLVE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER_WITH_ACCESS_MODIFIER___IS_EXPORTED = TMEMBER___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER_WITH_ACCESS_MODIFIER___IS_INDIRECTLY_EXPORTED = TMEMBER___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER_WITH_ACCESS_MODIFIER___GET_DIRECTLY_EXPORTED_NAME = TMEMBER___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
@@ -8473,6 +8581,33 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_MEMBER__AST_ELEMENT = TMEMBER__AST_ELEMENT;
 
 	/**
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_MEMBER__DIRECTLY_EXPORTED = TMEMBER__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_MEMBER__DIRECTLY_EXPORTED_AS_DEFAULT = TMEMBER__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_MEMBER__EXPORTING_EXPORT_DEFINITIONS = TMEMBER__EXPORTING_EXPORT_DEFINITIONS;
+
+	/**
 	 * The feature id for the '<em><b>Declared Final</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8561,6 +8696,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_MEMBER___GET_AST_ELEMENT_NO_RESOLVE = TMEMBER___GET_AST_ELEMENT_NO_RESOLVE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_MEMBER___IS_EXPORTED = TMEMBER___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_MEMBER___IS_INDIRECTLY_EXPORTED = TMEMBER___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_MEMBER___GET_DIRECTLY_EXPORTED_NAME = TMEMBER___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
@@ -10585,6 +10747,33 @@ public interface TypesPackage extends EPackage {
 	int TFIELD__AST_ELEMENT = TMEMBER_WITH_ACCESS_MODIFIER__AST_ELEMENT;
 
 	/**
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFIELD__DIRECTLY_EXPORTED = TMEMBER_WITH_ACCESS_MODIFIER__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFIELD__DIRECTLY_EXPORTED_AS_DEFAULT = TMEMBER_WITH_ACCESS_MODIFIER__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFIELD__EXPORTING_EXPORT_DEFINITIONS = TMEMBER_WITH_ACCESS_MODIFIER__EXPORTING_EXPORT_DEFINITIONS;
+
+	/**
 	 * The feature id for the '<em><b>Declared Final</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10727,6 +10916,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TFIELD___GET_AST_ELEMENT_NO_RESOLVE = TMEMBER_WITH_ACCESS_MODIFIER___GET_AST_ELEMENT_NO_RESOLVE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFIELD___IS_EXPORTED = TMEMBER_WITH_ACCESS_MODIFIER___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFIELD___IS_INDIRECTLY_EXPORTED = TMEMBER_WITH_ACCESS_MODIFIER___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFIELD___GET_DIRECTLY_EXPORTED_NAME = TMEMBER_WITH_ACCESS_MODIFIER___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
@@ -10946,6 +11162,33 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_FIELD__AST_ELEMENT = TFIELD__AST_ELEMENT;
 
 	/**
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_FIELD__DIRECTLY_EXPORTED = TFIELD__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_FIELD__DIRECTLY_EXPORTED_AS_DEFAULT = TFIELD__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_FIELD__EXPORTING_EXPORT_DEFINITIONS = TFIELD__EXPORTING_EXPORT_DEFINITIONS;
+
+	/**
 	 * The feature id for the '<em><b>Declared Final</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11097,6 +11340,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_FIELD___GET_AST_ELEMENT_NO_RESOLVE = TFIELD___GET_AST_ELEMENT_NO_RESOLVE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_FIELD___IS_EXPORTED = TFIELD___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_FIELD___IS_INDIRECTLY_EXPORTED = TFIELD___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_FIELD___GET_DIRECTLY_EXPORTED_NAME = TFIELD___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
@@ -11334,6 +11604,33 @@ public interface TypesPackage extends EPackage {
 	int FIELD_ACCESSOR__AST_ELEMENT = TMEMBER_WITH_ACCESS_MODIFIER__AST_ELEMENT;
 
 	/**
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD_ACCESSOR__DIRECTLY_EXPORTED = TMEMBER_WITH_ACCESS_MODIFIER__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD_ACCESSOR__DIRECTLY_EXPORTED_AS_DEFAULT = TMEMBER_WITH_ACCESS_MODIFIER__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD_ACCESSOR__EXPORTING_EXPORT_DEFINITIONS = TMEMBER_WITH_ACCESS_MODIFIER__EXPORTING_EXPORT_DEFINITIONS;
+
+	/**
 	 * The feature id for the '<em><b>Declared Final</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11458,6 +11755,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int FIELD_ACCESSOR___GET_AST_ELEMENT_NO_RESOLVE = TMEMBER_WITH_ACCESS_MODIFIER___GET_AST_ELEMENT_NO_RESOLVE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD_ACCESSOR___IS_EXPORTED = TMEMBER_WITH_ACCESS_MODIFIER___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD_ACCESSOR___IS_INDIRECTLY_EXPORTED = TMEMBER_WITH_ACCESS_MODIFIER___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD_ACCESSOR___GET_DIRECTLY_EXPORTED_NAME = TMEMBER_WITH_ACCESS_MODIFIER___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
@@ -11686,6 +12010,33 @@ public interface TypesPackage extends EPackage {
 	int TGETTER__AST_ELEMENT = FIELD_ACCESSOR__AST_ELEMENT;
 
 	/**
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TGETTER__DIRECTLY_EXPORTED = FIELD_ACCESSOR__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TGETTER__DIRECTLY_EXPORTED_AS_DEFAULT = FIELD_ACCESSOR__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TGETTER__EXPORTING_EXPORT_DEFINITIONS = FIELD_ACCESSOR__EXPORTING_EXPORT_DEFINITIONS;
+
+	/**
 	 * The feature id for the '<em><b>Declared Final</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11819,6 +12170,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TGETTER___GET_AST_ELEMENT_NO_RESOLVE = FIELD_ACCESSOR___GET_AST_ELEMENT_NO_RESOLVE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TGETTER___IS_EXPORTED = FIELD_ACCESSOR___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TGETTER___IS_INDIRECTLY_EXPORTED = FIELD_ACCESSOR___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TGETTER___GET_DIRECTLY_EXPORTED_NAME = FIELD_ACCESSOR___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
@@ -12047,6 +12425,33 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_GETTER__AST_ELEMENT = TGETTER__AST_ELEMENT;
 
 	/**
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_GETTER__DIRECTLY_EXPORTED = TGETTER__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_GETTER__DIRECTLY_EXPORTED_AS_DEFAULT = TGETTER__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_GETTER__EXPORTING_EXPORT_DEFINITIONS = TGETTER__EXPORTING_EXPORT_DEFINITIONS;
+
+	/**
 	 * The feature id for the '<em><b>Declared Final</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12189,6 +12594,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_GETTER___GET_AST_ELEMENT_NO_RESOLVE = TGETTER___GET_AST_ELEMENT_NO_RESOLVE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_GETTER___IS_EXPORTED = TGETTER___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_GETTER___IS_INDIRECTLY_EXPORTED = TGETTER___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_GETTER___GET_DIRECTLY_EXPORTED_NAME = TGETTER___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
@@ -12435,6 +12867,33 @@ public interface TypesPackage extends EPackage {
 	int TSETTER__AST_ELEMENT = FIELD_ACCESSOR__AST_ELEMENT;
 
 	/**
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSETTER__DIRECTLY_EXPORTED = FIELD_ACCESSOR__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSETTER__DIRECTLY_EXPORTED_AS_DEFAULT = FIELD_ACCESSOR__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSETTER__EXPORTING_EXPORT_DEFINITIONS = FIELD_ACCESSOR__EXPORTING_EXPORT_DEFINITIONS;
+
+	/**
 	 * The feature id for the '<em><b>Declared Final</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12568,6 +13027,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSETTER___GET_AST_ELEMENT_NO_RESOLVE = FIELD_ACCESSOR___GET_AST_ELEMENT_NO_RESOLVE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSETTER___IS_EXPORTED = FIELD_ACCESSOR___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSETTER___IS_INDIRECTLY_EXPORTED = FIELD_ACCESSOR___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSETTER___GET_DIRECTLY_EXPORTED_NAME = FIELD_ACCESSOR___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
@@ -12796,6 +13282,33 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_SETTER__AST_ELEMENT = TSETTER__AST_ELEMENT;
 
 	/**
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_SETTER__DIRECTLY_EXPORTED = TSETTER__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_SETTER__DIRECTLY_EXPORTED_AS_DEFAULT = TSETTER__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_SETTER__EXPORTING_EXPORT_DEFINITIONS = TSETTER__EXPORTING_EXPORT_DEFINITIONS;
+
+	/**
 	 * The feature id for the '<em><b>Declared Final</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12938,6 +13451,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_SETTER___GET_AST_ELEMENT_NO_RESOLVE = TSETTER___GET_AST_ELEMENT_NO_RESOLVE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_SETTER___IS_EXPORTED = TSETTER___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_SETTER___IS_INDIRECTLY_EXPORTED = TSETTER___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_SETTER___GET_DIRECTLY_EXPORTED_NAME = TSETTER___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.

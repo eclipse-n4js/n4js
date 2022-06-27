@@ -46,6 +46,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.FieldAccessor;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TVariable;
 
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
@@ -463,7 +464,7 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 				_switchResult = ((org.eclipse.n4js.n4JS.FieldAccessor)_this).getDefinedAccessor();
 			}
 		}
-		return ((IdentifiableElement)_switchResult);
+		return ((TExportableElement)_switchResult);
 	}
 
 	/**

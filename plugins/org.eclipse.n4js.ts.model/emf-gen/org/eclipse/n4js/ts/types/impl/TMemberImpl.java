@@ -32,15 +32,19 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.ts.types.ContainerType;
+import org.eclipse.n4js.ts.types.ElementExportDefinition;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.MemberType;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 import org.eclipse.n4js.ts.types.TypesPackage.Literals;
+
+import org.eclipse.n4js.utils.UtilN4;
 
 /**
  * <!-- begin-user-doc -->
@@ -52,6 +56,9 @@ import org.eclipse.n4js.ts.types.TypesPackage.Literals;
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMemberImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMemberImpl#getAstElement <em>Ast Element</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TMemberImpl#isDirectlyExported <em>Directly Exported</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TMemberImpl#isDirectlyExportedAsDefault <em>Directly Exported As Default</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TMemberImpl#getExportingExportDefinitions <em>Exporting Export Definitions</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMemberImpl#isDeclaredFinal <em>Declared Final</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMemberImpl#isDeclaredStatic <em>Declared Static</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMemberImpl#isDeclaredOverride <em>Declared Override</em>}</li>
@@ -82,6 +89,56 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * @ordered
 	 */
 	protected EObject astElement;
+
+	/**
+	 * The default value of the '{@link #isDirectlyExported() <em>Directly Exported</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDirectlyExported()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DIRECTLY_EXPORTED_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDirectlyExported() <em>Directly Exported</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDirectlyExported()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean directlyExported = DIRECTLY_EXPORTED_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isDirectlyExportedAsDefault() <em>Directly Exported As Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDirectlyExportedAsDefault()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDirectlyExportedAsDefault() <em>Directly Exported As Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDirectlyExportedAsDefault()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean directlyExportedAsDefault = DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getExportingExportDefinitions() <em>Exporting Export Definitions</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getExportingExportDefinitions()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ElementExportDefinition> exportingExportDefinitions;
 
 	/**
 	 * The default value of the '{@link #isDeclaredFinal() <em>Declared Final</em>}' attribute.
@@ -263,6 +320,65 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 		astElement = newAstElement;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMEMBER__AST_ELEMENT, oldAstElement, astElement));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDirectlyExported() {
+		return directlyExported;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDirectlyExported(boolean newDirectlyExported) {
+		boolean oldDirectlyExported = directlyExported;
+		directlyExported = newDirectlyExported;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMEMBER__DIRECTLY_EXPORTED, oldDirectlyExported, directlyExported));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDirectlyExportedAsDefault() {
+		return directlyExportedAsDefault;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDirectlyExportedAsDefault(boolean newDirectlyExportedAsDefault) {
+		boolean oldDirectlyExportedAsDefault = directlyExportedAsDefault;
+		directlyExportedAsDefault = newDirectlyExportedAsDefault;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMEMBER__DIRECTLY_EXPORTED_AS_DEFAULT, oldDirectlyExportedAsDefault, directlyExportedAsDefault));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<ElementExportDefinition> getExportingExportDefinitions() {
+		if (exportingExportDefinitions == null) {
+			exportingExportDefinitions = new EObjectResolvingEList<ElementExportDefinition>(ElementExportDefinition.class, this, TypesPackage.TMEMBER__EXPORTING_EXPORT_DEFINITIONS);
+		}
+		return exportingExportDefinitions;
 	}
 
 	/**
@@ -599,6 +715,53 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * @generated
 	 */
 	@Override
+	public boolean isExported() {
+		return (this.isDirectlyExported() || this.isIndirectlyExported());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isIndirectlyExported() {
+		int _size = this.getExportingExportDefinitions().size();
+		int _xifexpression = (int) 0;
+		boolean _isDirectlyExported = this.isDirectlyExported();
+		if (_isDirectlyExported) {
+			_xifexpression = 1;
+		}
+		else {
+			_xifexpression = 0;
+		}
+		return (_size > _xifexpression);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getDirectlyExportedName() {
+		boolean _isDirectlyExported = this.isDirectlyExported();
+		if (_isDirectlyExported) {
+			boolean _isDirectlyExportedAsDefault = this.isDirectlyExportedAsDefault();
+			if (_isDirectlyExportedAsDefault) {
+				return UtilN4.EXPORT_DEFAULT_NAME;
+			}
+			return this.getName();
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EObject getAstElementNoResolve() {
 		Object _eGet = this.eGet(Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT, false);
 		final EObject astElem = ((EObject) _eGet);
@@ -635,6 +798,12 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 			case TypesPackage.TMEMBER__AST_ELEMENT:
 				if (resolve) return getAstElement();
 				return basicGetAstElement();
+			case TypesPackage.TMEMBER__DIRECTLY_EXPORTED:
+				return isDirectlyExported();
+			case TypesPackage.TMEMBER__DIRECTLY_EXPORTED_AS_DEFAULT:
+				return isDirectlyExportedAsDefault();
+			case TypesPackage.TMEMBER__EXPORTING_EXPORT_DEFINITIONS:
+				return getExportingExportDefinitions();
 			case TypesPackage.TMEMBER__DECLARED_FINAL:
 				return isDeclaredFinal();
 			case TypesPackage.TMEMBER__DECLARED_STATIC:
@@ -666,6 +835,16 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 				return;
 			case TypesPackage.TMEMBER__AST_ELEMENT:
 				setAstElement((EObject)newValue);
+				return;
+			case TypesPackage.TMEMBER__DIRECTLY_EXPORTED:
+				setDirectlyExported((Boolean)newValue);
+				return;
+			case TypesPackage.TMEMBER__DIRECTLY_EXPORTED_AS_DEFAULT:
+				setDirectlyExportedAsDefault((Boolean)newValue);
+				return;
+			case TypesPackage.TMEMBER__EXPORTING_EXPORT_DEFINITIONS:
+				getExportingExportDefinitions().clear();
+				getExportingExportDefinitions().addAll((Collection<? extends ElementExportDefinition>)newValue);
 				return;
 			case TypesPackage.TMEMBER__DECLARED_FINAL:
 				setDeclaredFinal((Boolean)newValue);
@@ -704,6 +883,15 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 			case TypesPackage.TMEMBER__AST_ELEMENT:
 				setAstElement((EObject)null);
 				return;
+			case TypesPackage.TMEMBER__DIRECTLY_EXPORTED:
+				setDirectlyExported(DIRECTLY_EXPORTED_EDEFAULT);
+				return;
+			case TypesPackage.TMEMBER__DIRECTLY_EXPORTED_AS_DEFAULT:
+				setDirectlyExportedAsDefault(DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT);
+				return;
+			case TypesPackage.TMEMBER__EXPORTING_EXPORT_DEFINITIONS:
+				getExportingExportDefinitions().clear();
+				return;
 			case TypesPackage.TMEMBER__DECLARED_FINAL:
 				setDeclaredFinal(DECLARED_FINAL_EDEFAULT);
 				return;
@@ -738,6 +926,12 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 				return annotations != null && !annotations.isEmpty();
 			case TypesPackage.TMEMBER__AST_ELEMENT:
 				return astElement != null;
+			case TypesPackage.TMEMBER__DIRECTLY_EXPORTED:
+				return directlyExported != DIRECTLY_EXPORTED_EDEFAULT;
+			case TypesPackage.TMEMBER__DIRECTLY_EXPORTED_AS_DEFAULT:
+				return directlyExportedAsDefault != DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT;
+			case TypesPackage.TMEMBER__EXPORTING_EXPORT_DEFINITIONS:
+				return exportingExportDefinitions != null && !exportingExportDefinitions.isEmpty();
 			case TypesPackage.TMEMBER__DECLARED_FINAL:
 				return declaredFinal != DECLARED_FINAL_EDEFAULT;
 			case TypesPackage.TMEMBER__DECLARED_STATIC:
@@ -773,6 +967,14 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 				default: return -1;
 			}
 		}
+		if (baseClass == TExportableElement.class) {
+			switch (derivedFeatureID) {
+				case TypesPackage.TMEMBER__DIRECTLY_EXPORTED: return TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED;
+				case TypesPackage.TMEMBER__DIRECTLY_EXPORTED_AS_DEFAULT: return TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT;
+				case TypesPackage.TMEMBER__EXPORTING_EXPORT_DEFINITIONS: return TypesPackage.TEXPORTABLE_ELEMENT__EXPORTING_EXPORT_DEFINITIONS;
+				default: return -1;
+			}
+		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -795,6 +997,14 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 				default: return -1;
 			}
 		}
+		if (baseClass == TExportableElement.class) {
+			switch (baseFeatureID) {
+				case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED: return TypesPackage.TMEMBER__DIRECTLY_EXPORTED;
+				case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT: return TypesPackage.TMEMBER__DIRECTLY_EXPORTED_AS_DEFAULT;
+				case TypesPackage.TEXPORTABLE_ELEMENT__EXPORTING_EXPORT_DEFINITIONS: return TypesPackage.TMEMBER__EXPORTING_EXPORT_DEFINITIONS;
+				default: return -1;
+			}
+		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
@@ -813,6 +1023,14 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 		if (baseClass == SyntaxRelatedTElement.class) {
 			switch (baseOperationID) {
 				case TypesPackage.SYNTAX_RELATED_TELEMENT___GET_AST_ELEMENT_NO_RESOLVE: return TypesPackage.TMEMBER___GET_AST_ELEMENT_NO_RESOLVE;
+				default: return -1;
+			}
+		}
+		if (baseClass == TExportableElement.class) {
+			switch (baseOperationID) {
+				case TypesPackage.TEXPORTABLE_ELEMENT___IS_EXPORTED: return TypesPackage.TMEMBER___IS_EXPORTED;
+				case TypesPackage.TEXPORTABLE_ELEMENT___IS_INDIRECTLY_EXPORTED: return TypesPackage.TMEMBER___IS_INDIRECTLY_EXPORTED;
+				case TypesPackage.TEXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME: return TypesPackage.TMEMBER___GET_DIRECTLY_EXPORTED_NAME;
 				default: return -1;
 			}
 		}
@@ -863,6 +1081,12 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 				return isConst();
 			case TypesPackage.TMEMBER___IS_POLYFILLED:
 				return isPolyfilled();
+			case TypesPackage.TMEMBER___IS_EXPORTED:
+				return isExported();
+			case TypesPackage.TMEMBER___IS_INDIRECTLY_EXPORTED:
+				return isIndirectlyExported();
+			case TypesPackage.TMEMBER___GET_DIRECTLY_EXPORTED_NAME:
+				return getDirectlyExportedName();
 			case TypesPackage.TMEMBER___GET_AST_ELEMENT_NO_RESOLVE:
 				return getAstElementNoResolve();
 		}
@@ -879,7 +1103,11 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (declaredFinal: ");
+		result.append(" (directlyExported: ");
+		result.append(directlyExported);
+		result.append(", directlyExportedAsDefault: ");
+		result.append(directlyExportedAsDefault);
+		result.append(", declaredFinal: ");
 		result.append(declaredFinal);
 		result.append(", declaredStatic: ");
 		result.append(declaredStatic);
