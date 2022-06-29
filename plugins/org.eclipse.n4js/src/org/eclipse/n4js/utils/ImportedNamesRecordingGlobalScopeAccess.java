@@ -112,8 +112,7 @@ public class ImportedNamesRecordingGlobalScopeAccess {
 	 */
 	public IScope getRecordingGlobalScope(Resource context, EClass expectedElementType) {
 		ImportedNamesAdapter importedNamesAdapter = getImportedNamesAdapter(context);
-		IScope scope = ((N4JSGlobalScopeProvider) globalScopeProvider).getScope(context, false, expectedElementType,
-				null);
+		IScope scope = ((N4JSGlobalScopeProvider) globalScopeProvider).getScope(context, expectedElementType, null);
 		return importedNamesAdapter.wrap(scope);
 	}
 

@@ -12,6 +12,7 @@ package org.eclipse.n4js.scoping;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker;
@@ -27,13 +28,12 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
-import org.eclipse.xtext.resource.IContainer;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.IResourceDescriptionsProvider;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
+import org.eclipse.xtext.scoping.IGlobalScopeProvider;
 import org.eclipse.xtext.scoping.IScope;
-import org.eclipse.xtext.scoping.impl.DefaultGlobalScopeProvider;
 
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
@@ -41,7 +41,7 @@ import com.google.inject.Inject;
 /**
  * Global scope which allows access to types stored in user data of {@link IEObjectDescription}s.
  */
-public class N4JSGlobalScopeProvider extends DefaultGlobalScopeProvider {
+public class N4JSGlobalScopeProvider implements IGlobalScopeProvider {
 
 	private static final Logger LOGGER = Logger.getLogger(N4JSGlobalScopeProvider.class);
 
@@ -60,30 +60,44 @@ public class N4JSGlobalScopeProvider extends DefaultGlobalScopeProvider {
 	@Inject
 	private WorkspaceAccess workspaceAccess;
 
-	/**
-	 * If the type is a {@link Type} a new {@link BuiltInTypeScope} is created.
-	 */
-	@Override
-	// visibility increased from 'protected' to 'public' to allow access from ImportedNamesRecordingGlobalScopeAccess
-	public IScope getScope(Resource context, boolean ignoreCase, EClass type,
-			Predicate<IEObjectDescription> filter) {
-		if (isSubtypeOfType(type)) {
-			return getScope(getBuiltInTypeScope(context), context, ignoreCase, type, filter);
-		}
-		return super.getScope(context, ignoreCase, type, filter);
+	/** Like {@link #getScope(Resource, EReference, Predicate)}, but without using a filter. */
+	public IScope getScope(Resource resource, final EReference reference) {
+		return getScope(resource, reference, null);
 	}
 
 	@Override
-	protected IScope getScope(IScope parent, Resource context, boolean ignoreCase, EClass type,
-			Predicate<IEObjectDescription> filter) {
+	public IScope getScope(Resource context, EReference reference, Predicate<IEObjectDescription> filter) {
+		return getScope(context, reference.getEReferenceType(), filter);
+	}
 
-		IScope result = null;
-		try {
-			result = createGlobalScope(parent, context, type, filter);
-		} catch (IllegalStateException ise) {
-			LOGGER.error("exception while creating global scope for: " + context.getURI(), ise);
-			return IScope.NULLSCOPE;
+	/**
+	 * If the type is a {@link Type} a new {@link BuiltInTypeScope} is created.
+	 */
+	// visibility increased from 'protected' to 'public' to allow access from ImportedNamesRecordingGlobalScopeAccess
+	public IScope getScope(Resource context, EClass type, Predicate<IEObjectDescription> filter) {
+		IScope parent = IScope.NULLSCOPE;
+		if (isSubtypeOfType(type)) {
+			parent = getBuiltInTypeScope(context);
 		}
+		return getScope(parent, context, type, filter);
+	}
+
+	private IScope getScope(IScope parent, Resource context, EClass type, Predicate<IEObjectDescription> filter) {
+		IScope result;
+		if (N4Scheme.isResourceWithN4Scheme(context)) {
+			// built-in types do not have access to any other global elements of the workspace
+			// -> do not add a global scope
+			result = parent;
+		} else {
+			// actually create a global scope
+			try {
+				result = createGlobalScope(parent, context, type, filter);
+			} catch (IllegalStateException ise) {
+				LOGGER.error("exception while creating global scope for: " + context.getURI(), ise);
+				return IScope.NULLSCOPE;
+			}
+		}
+
 		if (isSubtypeOfType(type)) {
 			result = new VisibilityAwareTypeScope(result, typeVisibilityChecker, context);
 			return result;
@@ -95,13 +109,9 @@ public class N4JSGlobalScopeProvider extends DefaultGlobalScopeProvider {
 		return result;
 	}
 
-	/** Create the actual global scope. */
-	protected IScope createGlobalScope(IScope parent, Resource context, EClass type,
+	private IScope createGlobalScope(IScope parent, Resource context, EClass type,
 			Predicate<IEObjectDescription> filter) {
-		if (N4Scheme.isResourceWithN4Scheme(context)) {
-			// built-in types do not have access to any other global elements of the workspace
-			return parent;
-		}
+
 		N4JSProjectConfigSnapshot currProject = workspaceAccess.findProjectContaining(context);
 		IResourceDescriptions resDescs = resourceDescriptionsProvider.getResourceDescriptions(context.getResourceSet());
 		if (resDescs instanceof ChunkedResourceDescriptions) {
@@ -118,14 +128,14 @@ public class N4JSGlobalScopeProvider extends DefaultGlobalScopeProvider {
 			} else {
 				LOGGER.error("no " + IResourceDescriptions.class.getSimpleName() + " found for: " + context.getURI());
 			}
+			return parent;
 		}
-		return parent;
 	}
 
 	/**
 	 * Returns <code>true</code> if the given {@code type} is a subtype of {@link Type}.
 	 */
-	protected boolean isSubtypeOfType(EClass type) {
+	private boolean isSubtypeOfType(EClass type) {
 		return type == TypesPackage.Literals.TYPE || type.getEPackage() == TypesPackage.eINSTANCE
 				&& TypesPackage.Literals.TYPE.isSuperTypeOf(type);
 	}
@@ -133,21 +143,9 @@ public class N4JSGlobalScopeProvider extends DefaultGlobalScopeProvider {
 	/**
 	 * Returns <code>true</code> if the given {@code type} is a subtype of {@link IdentifiableElement}.
 	 */
-	protected boolean isSubtypeOfIdentifiable(EClass type) {
+	private boolean isSubtypeOfIdentifiable(EClass type) {
 		return type == TypesPackage.Literals.IDENTIFIABLE_ELEMENT || type.getEPackage() == TypesPackage.eINSTANCE
 				&& TypesPackage.Literals.IDENTIFIABLE_ELEMENT.isSuperTypeOf(type);
-	}
-
-	@Override
-	protected IScope createContainerScopeWithContext(Resource resource, IScope parent, IContainer container,
-			Predicate<IEObjectDescription> filter, EClass type, boolean ignoreCase) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	protected IScope createContainerScope(IScope parent, IContainer container, Predicate<IEObjectDescription> filter,
-			EClass type, boolean ignoreCase) {
-		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -157,7 +155,7 @@ public class N4JSGlobalScopeProvider extends DefaultGlobalScopeProvider {
 	 *            the resource that is currently linked
 	 * @return an instance of the {@link BuiltInTypeScope}
 	 */
-	protected BuiltInTypeScope getBuiltInTypeScope(Resource resource) {
+	private BuiltInTypeScope getBuiltInTypeScope(Resource resource) {
 		ResourceSet resourceSet = resource.getResourceSet();
 		return BuiltInTypeScope.get(resourceSet);
 	}
