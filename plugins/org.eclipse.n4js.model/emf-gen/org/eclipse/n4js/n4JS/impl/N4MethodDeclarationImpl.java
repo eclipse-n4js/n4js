@@ -63,6 +63,7 @@ import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TVariable;
@@ -781,7 +782,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				_switchResult = ((FieldAccessor)_this).getDefinedAccessor();
 			}
 		}
-		return ((IdentifiableElement)_switchResult);
+		return ((TExportableElement)_switchResult);
 	}
 
 	/**

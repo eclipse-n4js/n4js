@@ -430,13 +430,22 @@ public interface N4JSPackage extends EPackage {
 	int EXPORT_DECLARATION__ANNOTATION_LIST = ANNOTABLE_SCRIPT_ELEMENT__ANNOTATION_LIST;
 
 	/**
+	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORT_DECLARATION__COMPOSED_MEMBER_CACHE = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Module</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_DECLARATION__MODULE = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 0;
+	int EXPORT_DECLARATION__MODULE = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier As Text</b></em>' attribute.
@@ -445,7 +454,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 1;
+	int EXPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier Form</b></em>' attribute.
@@ -454,7 +463,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_DECLARATION__MODULE_SPECIFIER_FORM = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 2;
+	int EXPORT_DECLARATION__MODULE_SPECIFIER_FORM = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Exported Element</b></em>' containment reference.
@@ -463,7 +472,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_DECLARATION__EXPORTED_ELEMENT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 3;
+	int EXPORT_DECLARATION__EXPORTED_ELEMENT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Default Exported Expression</b></em>' containment reference.
@@ -472,7 +481,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_DECLARATION__DEFAULT_EXPORTED_EXPRESSION = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 4;
+	int EXPORT_DECLARATION__DEFAULT_EXPORTED_EXPRESSION = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Namespace Export</b></em>' containment reference.
@@ -481,7 +490,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_DECLARATION__NAMESPACE_EXPORT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 5;
+	int EXPORT_DECLARATION__NAMESPACE_EXPORT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Named Exports</b></em>' containment reference list.
@@ -490,7 +499,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_DECLARATION__NAMED_EXPORTS = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 6;
+	int EXPORT_DECLARATION__NAMED_EXPORTS = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Default Export</b></em>' attribute.
@@ -499,7 +508,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_DECLARATION__DEFAULT_EXPORT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 7;
+	int EXPORT_DECLARATION__DEFAULT_EXPORT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 8;
 
 	/**
 	 * The number of structural features of the '<em>Export Declaration</em>' class.
@@ -508,7 +517,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_DECLARATION_FEATURE_COUNT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 8;
+	int EXPORT_DECLARATION_FEATURE_COUNT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -885,6 +894,43 @@ public interface N4JSPackage extends EPackage {
 	int EXPORTABLE_ELEMENT_OPERATION_COUNT = NAMESPACE_ELEMENT_OPERATION_COUNT + 7;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.MemberAccessImpl <em>Member Access</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.n4JS.impl.MemberAccessImpl
+	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getMemberAccess()
+	 * @generated
+	 */
+	int MEMBER_ACCESS = 102;
+
+	/**
+	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_ACCESS__COMPOSED_MEMBER_CACHE = 0;
+
+	/**
+	 * The number of structural features of the '<em>Member Access</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_ACCESS_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>Member Access</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_ACCESS_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ModuleRefImpl <em>Module Ref</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -895,13 +941,22 @@ public interface N4JSPackage extends EPackage {
 	int MODULE_REF = 8;
 
 	/**
+	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_REF__COMPOSED_MEMBER_CACHE = MEMBER_ACCESS__COMPOSED_MEMBER_CACHE;
+
+	/**
 	 * The feature id for the '<em><b>Module</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MODULE_REF__MODULE = 0;
+	int MODULE_REF__MODULE = MEMBER_ACCESS_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier As Text</b></em>' attribute.
@@ -910,7 +965,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODULE_REF__MODULE_SPECIFIER_AS_TEXT = 1;
+	int MODULE_REF__MODULE_SPECIFIER_AS_TEXT = MEMBER_ACCESS_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier Form</b></em>' attribute.
@@ -919,7 +974,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODULE_REF__MODULE_SPECIFIER_FORM = 2;
+	int MODULE_REF__MODULE_SPECIFIER_FORM = MEMBER_ACCESS_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Module Ref</em>' class.
@@ -928,7 +983,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODULE_REF_FEATURE_COUNT = 3;
+	int MODULE_REF_FEATURE_COUNT = MEMBER_ACCESS_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Referring To Other Module</em>' operation.
@@ -937,7 +992,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODULE_REF___IS_REFERRING_TO_OTHER_MODULE = 0;
+	int MODULE_REF___IS_REFERRING_TO_OTHER_MODULE = MEMBER_ACCESS_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Is Retained At Runtime</em>' operation.
@@ -946,7 +1001,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODULE_REF___IS_RETAINED_AT_RUNTIME = 1;
+	int MODULE_REF___IS_RETAINED_AT_RUNTIME = MEMBER_ACCESS_OPERATION_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Module Ref</em>' class.
@@ -955,7 +1010,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODULE_REF_OPERATION_COUNT = 2;
+	int MODULE_REF_OPERATION_COUNT = MEMBER_ACCESS_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl <em>Import Declaration</em>}' class.
@@ -977,13 +1032,22 @@ public interface N4JSPackage extends EPackage {
 	int IMPORT_DECLARATION__ANNOTATION_LIST = ANNOTABLE_SCRIPT_ELEMENT__ANNOTATION_LIST;
 
 	/**
+	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_DECLARATION__COMPOSED_MEMBER_CACHE = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Module</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION__MODULE = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 0;
+	int IMPORT_DECLARATION__MODULE = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier As Text</b></em>' attribute.
@@ -992,7 +1056,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 1;
+	int IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier Form</b></em>' attribute.
@@ -1001,7 +1065,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION__MODULE_SPECIFIER_FORM = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 2;
+	int IMPORT_DECLARATION__MODULE_SPECIFIER_FORM = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Import Specifiers</b></em>' containment reference list.
@@ -1010,7 +1074,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION__IMPORT_SPECIFIERS = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 3;
+	int IMPORT_DECLARATION__IMPORT_SPECIFIERS = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Import From</b></em>' attribute.
@@ -1019,7 +1083,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION__IMPORT_FROM = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 4;
+	int IMPORT_DECLARATION__IMPORT_FROM = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of structural features of the '<em>Import Declaration</em>' class.
@@ -1028,7 +1092,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION_FEATURE_COUNT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 5;
+	int IMPORT_DECLARATION_FEATURE_COUNT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -8885,43 +8949,6 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int TAGGED_TEMPLATE_STRING_OPERATION_COUNT = EXPRESSION_WITH_TARGET_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.MemberAccessImpl <em>Member Access</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4JS.impl.MemberAccessImpl
-	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getMemberAccess()
-	 * @generated
-	 */
-	int MEMBER_ACCESS = 102;
-
-	/**
-	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MEMBER_ACCESS__COMPOSED_MEMBER_CACHE = 0;
-
-	/**
-	 * The number of structural features of the '<em>Member Access</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MEMBER_ACCESS_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Member Access</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MEMBER_ACCESS_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ParameterizedPropertyAccessExpressionImpl <em>Parameterized Property Access Expression</em>}' class.

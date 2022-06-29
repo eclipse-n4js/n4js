@@ -33,7 +33,7 @@ import org.eclipse.emf.common.util.EList;
  * @model abstract="true"
  * @generated
  */
-public interface TMember extends IdentifiableElement, TAnnotableElement, SyntaxRelatedTElement {
+public interface TMember extends IdentifiableElement, TAnnotableElement, SyntaxRelatedTElement, TExportableElement {
 	/**
 	 * Returns the value of the '<em><b>Declared Final</b></em>' attribute.
 	 * <!-- begin-user-doc -->

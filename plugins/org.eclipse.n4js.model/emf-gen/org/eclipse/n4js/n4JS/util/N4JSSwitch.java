@@ -114,6 +114,7 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseModuleRef(exportDeclaration);
 				if (result == null) result = caseAnnotableElement(exportDeclaration);
 				if (result == null) result = caseScriptElement(exportDeclaration);
+				if (result == null) result = caseMemberAccess(exportDeclaration);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -142,6 +143,7 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 			case N4JSPackage.MODULE_REF: {
 				ModuleRef moduleRef = (ModuleRef)theEObject;
 				T1 result = caseModuleRef(moduleRef);
+				if (result == null) result = caseMemberAccess(moduleRef);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -152,6 +154,7 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseModuleRef(importDeclaration);
 				if (result == null) result = caseAnnotableElement(importDeclaration);
 				if (result == null) result = caseScriptElement(importDeclaration);
+				if (result == null) result = caseMemberAccess(importDeclaration);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

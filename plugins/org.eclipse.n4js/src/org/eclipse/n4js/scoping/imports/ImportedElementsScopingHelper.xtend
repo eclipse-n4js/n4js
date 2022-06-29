@@ -43,8 +43,10 @@ import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TDynamicElement
 import org.eclipse.n4js.ts.types.TExportableElement
+import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
@@ -160,7 +162,7 @@ class ImportedElementsScopingHelper {
 			val module = imp?.module;
 			if (module !== null) {
 
-				val topLevelElements = exportedElementsCollector.getExportedElements(module, contextResource, Optional.absent(), includeHollows, includeValueOnlyElements);
+				val topLevelElements = exportedElementsCollector.getExportedElements(module, contextResource, Optional.of(imp), includeHollows, includeValueOnlyElements);
 				val tleScope = scopesHelper.scopeFor("scope_AllTopLevelElementsFromModule", module, IScope.NULLSCOPE, false, topLevelElements)
 
 				for (specifier : imp.importSpecifiers) {
@@ -387,7 +389,9 @@ class ImportedElementsScopingHelper {
 
 	private def AbstractTypeVisibilityChecker.TypeVisibility isVisible(Resource contextResource,
 		IdentifiableElement element) {
-		if (element instanceof Type)
+		if (element instanceof TMember && ResourceType.getResourceType(element) == ResourceType.DTS)
+			new AbstractTypeVisibilityChecker.TypeVisibility(true)
+		else if (element instanceof Type)
 			typeVisibilityChecker.isVisible(contextResource, element)
 		else if (element instanceof TVariable)
 			variableVisibilityChecker.isVisible(contextResource, element)
