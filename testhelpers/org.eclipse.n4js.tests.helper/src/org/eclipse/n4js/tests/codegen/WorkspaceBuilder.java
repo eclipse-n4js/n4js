@@ -43,6 +43,7 @@ public class WorkspaceBuilder {
 	/** Builder for {@link YarnWorkspaceProject} */
 	public class YarnProjectBuilder extends ProjectBuilder {
 		Map<String, ProjectBuilder> yarnProjectBuilders = new LinkedHashMap<>();
+		Map<String, ProjectBuilder> yarnNodeModulesProjectBuilders = new LinkedHashMap<>();
 
 		YarnProjectBuilder(String name) {
 			super(name);
@@ -55,6 +56,13 @@ public class WorkspaceBuilder {
 			return prjBuilder;
 		}
 
+		/** Adds a project to the yarn workspace */
+		public ProjectBuilder addNodeModulesProject(String projectName) {
+			ProjectBuilder prjBuilder = new ProjectBuilder(projectName);
+			yarnNodeModulesProjectBuilders.put(projectName, prjBuilder);
+			return prjBuilder;
+		}
+
 		/** Builds the {@link YarnWorkspaceProject} */
 		@Override
 		public Project build() {
@@ -64,6 +72,9 @@ public class WorkspaceBuilder {
 			}
 			for (ProjectBuilder prjBuilder : yarnProjectBuilders.values()) {
 				project.addMemberProject(prjBuilder.build());
+			}
+			for (ProjectBuilder prjBuilder : yarnNodeModulesProjectBuilders.values()) {
+				project.addNodeModuleProject(prjBuilder.build());
 			}
 			return project;
 		}
@@ -291,6 +302,7 @@ public class WorkspaceBuilder {
 		for (ProjectBuilder projectBuilder : projectBuilders.values()) {
 			workspace.addProject(projectBuilder.build());
 		}
+		workspace.simplifyIfPossible();
 		return workspace;
 	}
 

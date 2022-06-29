@@ -14,6 +14,7 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import java.nio.file.Path
+import java.util.Collection
 import java.util.LinkedHashSet
 import java.util.Map
 import java.util.Objects
@@ -258,6 +259,12 @@ public class Project {
 
 	public def Project getNodeModuleProject(String projectName) {
 		return this.nodeModuleProjects.get(projectName);
+	}
+
+	public def Collection<Project> getNodeModuleProjects() {
+		val projects = newArrayList();
+		projects.addAll(nodeModuleProjects.values);
+		return projects;
 	}
 
 	/**

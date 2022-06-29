@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ide.server;
 
+import java.util.Iterator;
+
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.ide.server.XDefaultProjectDescriptionFactory;
@@ -24,13 +26,18 @@ public class N4JSProjectDescriptionFactory extends XDefaultProjectDescriptionFac
 	@Override
 	public ProjectDescription getProjectDescription(ProjectConfigSnapshot config) {
 		ProjectDescription projectDescription = super.getProjectDescription(config);
-		projectDescription.getDependencies().clear();
 		N4JSProjectConfigSnapshot casted = (N4JSProjectConfigSnapshot) config;
 		if (casted.getType() == ProjectType.PLAINJS) {
 			// see N4JSProjectBuildOrderInfo for why we ignore dependencies of PLAINJS projects:
+			Iterator<String> depIter = projectDescription.getDependencies().iterator();
+			while (depIter.hasNext()) {
+				String depName = depIter.next();
+				if (depName != null && !depName.contains("n4js")) {
+					depIter.remove();
+				}
+			}
 			return projectDescription;
 		}
-		projectDescription.getDependencies().addAll(casted.getDependencies());
 		return projectDescription;
 	}
 

@@ -238,7 +238,10 @@ public class XtSetupParser {
 			switch (tokens.next()) {
 			case "Project":
 			case "JavaProject":
-				parseProject(tokens, xtFile, xtFileContent, yarnProjectBuilder);
+				parseProject(tokens, xtFile, xtFileContent, yarnProjectBuilder, false);
+				break;
+			case "NodeModuleProject":
+				parseProject(tokens, xtFile, xtFileContent, yarnProjectBuilder, true);
 				break;
 			case "}":
 				break LOOP;
@@ -249,25 +252,17 @@ public class XtSetupParser {
 		}
 
 		XtWorkspace xtWorkspace = builder.build(new XtWorkspace());
-		if (xtWorkspace.getProjects().size() == 1 && xtWorkspace.getProjects().get(0) instanceof YarnWorkspaceProject &&
-				((YarnWorkspaceProject) xtWorkspace.getProjects().get(0)).getMemberProjects().size() == 1) {
-
-			YarnWorkspaceProject yarnWorkspaceProject = (YarnWorkspaceProject) xtWorkspace.getProjects().get(0);
-			if (yarnWorkspaceProject.getMemberProjects().size() == 1) {
-				Project project = yarnWorkspaceProject.getMemberProjects().iterator().next();
-				xtWorkspace.clearProjects();
-				xtWorkspace.addProject(project);
-			}
-		}
 		xtWorkspace.moduleNameOfXtFile = ((BuilderInfo) builder.builderInfo).moduleNameOfXtFile;
 		return xtWorkspace;
 	}
 
 	private static void parseProject(TokenStream tokens, File xtFile, String xtFileContent,
-			YarnProjectBuilder yarnProjectBuilder) {
+			YarnProjectBuilder yarnProjectBuilder, boolean inNodeModules) {
 
 		String projectName = tokens.expectNameInQuotes();
-		ProjectBuilder prjBuilder = yarnProjectBuilder.addProject(projectName);
+		ProjectBuilder prjBuilder = inNodeModules
+				? yarnProjectBuilder.addNodeModulesProject(projectName)
+				: yarnProjectBuilder.addProject(projectName);
 		parseContainerRest(tokens, xtFile, xtFileContent, prjBuilder, ".", "Project");
 	}
 
