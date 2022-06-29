@@ -11,10 +11,12 @@
 package org.eclipse.n4js.scoping;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareIdentifiableScope;
@@ -34,6 +36,7 @@ import org.eclipse.xtext.resource.IResourceDescriptionsProvider;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.scoping.IGlobalScopeProvider;
 import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.util.UriUtil;
 
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
@@ -116,7 +119,22 @@ public class N4JSGlobalScopeProvider implements IGlobalScopeProvider {
 		IResourceDescriptions resDescs = resourceDescriptionsProvider.getResourceDescriptions(context.getResourceSet());
 		if (resDescs instanceof ChunkedResourceDescriptions) {
 			ChunkedResourceDescriptions chunkedResDescs = (ChunkedResourceDescriptions) resDescs;
-			IScope result = new N4JSGlobalScope(parent, currProject, chunkedResDescs, type, filter);
+
+			// prepare a filter to filter out global objects of the context resource
+			// FIXME can we get rid of this? (seems to be required only by a single validation when compiling n4js-libs)
+			final Predicate<IEObjectDescription> actualFilter;
+			if (isStaticPolyFiller(context)) {
+				// ... except for resources marked with @@StaticPolyfillModule
+				actualFilter = filter;
+			} else {
+				URI contextURI = UriUtil.toFolderURI(context.getURI());
+				actualFilter = desc -> {
+					return (filter == null || filter.apply(desc))
+							&& !UriUtil.isPrefixOf(contextURI, desc.getEObjectURI());
+				};
+			}
+
+			IScope result = new N4JSGlobalScope(parent, currProject, chunkedResDescs, type, actualFilter);
 			result = UserDataAwareScope.createScope(result, context.getResourceSet(), resDescs::getResourceDescription,
 					canLoadFromDescriptionHelper);
 			return result;
@@ -158,5 +176,19 @@ public class N4JSGlobalScopeProvider implements IGlobalScopeProvider {
 	private BuiltInTypeScope getBuiltInTypeScope(Resource resource) {
 		ResourceSet resourceSet = resource.getResourceSet();
 		return BuiltInTypeScope.get(resourceSet);
+	}
+
+	/**
+	 * Local ckeck if the resource at hand is a static polyfill-module (tagged with @@StaticPolyfillModule)
+	 *
+	 * @param resource
+	 *            to check
+	 * @return true if static polyfill.
+	 */
+	private static final boolean isStaticPolyFiller(Resource resource) {
+		if (resource instanceof N4JSResource) {
+			return ((N4JSResource) resource).getModule().isStaticPolyfillModule();
+		}
+		return false;
 	}
 }
