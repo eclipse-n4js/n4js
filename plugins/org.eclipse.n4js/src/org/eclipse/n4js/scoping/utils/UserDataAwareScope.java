@@ -26,6 +26,7 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.ISelectable;
 import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.scoping.impl.SelectableBasedScope;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -34,7 +35,7 @@ import com.google.common.collect.Iterables;
 /**
  * A scope that provides access to types stored in user data of {@link EObjectDescription} of JS resources.
  */
-public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
+public class UserDataAwareScope extends SelectableBasedScope {
 
 	/**
 	 * A resolved description wraps an existing description but returns the explicitly resolved instance rather than the
