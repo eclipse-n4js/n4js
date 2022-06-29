@@ -10,37 +10,40 @@
  */
 package org.eclipse.n4js.scoping;
 
-import org.eclipse.emf.common.util.URI;
+import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
-import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareIdentifiableScope;
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareTypeScope;
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
+import org.eclipse.n4js.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
-import org.eclipse.n4js.scoping.utils.NonShadowingSelectableBasedScope;
 import org.eclipse.n4js.scoping.utils.UserDataAwareScope;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.resource.IContainer;
 import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.resource.containers.FilterUriContainer;
+import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.IResourceDescriptionsProvider;
+import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.impl.DefaultGlobalScopeProvider;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Throwables;
 import com.google.inject.Inject;
 
 /**
  * Global scope which allows access to types stored in user data of {@link IEObjectDescription}s.
  */
 public class N4JSGlobalScopeProvider extends DefaultGlobalScopeProvider {
+
+	private static final Logger LOGGER = Logger.getLogger(N4JSGlobalScopeProvider.class);
 
 	@Inject
 	private TypeVisibilityChecker typeVisibilityChecker;
@@ -50,6 +53,12 @@ public class N4JSGlobalScopeProvider extends DefaultGlobalScopeProvider {
 
 	@Inject
 	private CanLoadFromDescriptionHelper canLoadFromDescriptionHelper;
+
+	@Inject
+	private IResourceDescriptionsProvider resourceDescriptionsProvider;
+
+	@Inject
+	private WorkspaceAccess workspaceAccess;
 
 	/**
 	 * If the type is a {@link Type} a new {@link BuiltInTypeScope} is created.
@@ -70,10 +79,9 @@ public class N4JSGlobalScopeProvider extends DefaultGlobalScopeProvider {
 
 		IScope result = null;
 		try {
-			result = super.getScope(parent, context, ignoreCase, type, filter);
+			result = createGlobalScope(parent, context, type, filter);
 		} catch (IllegalStateException ise) {
-			String msg = "ERROR for " + context.getURI() + " ::\n" + Throwables.getStackTraceAsString(ise);
-			System.err.println(msg);
+			LOGGER.error("exception while creating global scope for: " + context.getURI(), ise);
 			return IScope.NULLSCOPE;
 		}
 		if (isSubtypeOfType(type)) {
@@ -85,6 +93,33 @@ public class N4JSGlobalScopeProvider extends DefaultGlobalScopeProvider {
 			return result;
 		}
 		return result;
+	}
+
+	/** Create the actual global scope. */
+	protected IScope createGlobalScope(IScope parent, Resource context, EClass type,
+			Predicate<IEObjectDescription> filter) {
+		if (N4Scheme.isResourceWithN4Scheme(context)) {
+			// built-in types do not have access to any other global elements of the workspace
+			return parent;
+		}
+		N4JSProjectConfigSnapshot currProject = workspaceAccess.findProjectContaining(context);
+		IResourceDescriptions resDescs = resourceDescriptionsProvider.getResourceDescriptions(context.getResourceSet());
+		if (resDescs instanceof ChunkedResourceDescriptions) {
+			ChunkedResourceDescriptions chunkedResDescs = (ChunkedResourceDescriptions) resDescs;
+			IScope result = new N4JSGlobalScope(parent, currProject, chunkedResDescs, type, filter);
+			result = UserDataAwareScope.createScope(result, context.getResourceSet(), resDescs::getResourceDescription,
+					canLoadFromDescriptionHelper);
+			return result;
+		} else {
+			if (resDescs != null) {
+				LOGGER.error("expected " + IResourceDescriptions.class.getSimpleName() + " of type "
+						+ ChunkedResourceDescriptions.class.getSimpleName() + " but got "
+						+ resDescs.getClass().getSimpleName() + " for: " + context.getURI());
+			} else {
+				LOGGER.error("no " + IResourceDescriptions.class.getSimpleName() + " found for: " + context.getURI());
+			}
+		}
+		return parent;
 	}
 
 	/**
@@ -103,29 +138,10 @@ public class N4JSGlobalScopeProvider extends DefaultGlobalScopeProvider {
 				&& TypesPackage.Literals.IDENTIFIABLE_ELEMENT.isSuperTypeOf(type);
 	}
 
-	/**
-	 * Creates a new container scope containing only resource descriptions of the current project. With this container a
-	 * {@link UserDataAwareScope} is created.
-	 * <p>
-	 * This method is called for every container the current project depends on according to the settings in the project
-	 * description file. This information has been indirectly retrieved via
-	 * {@link ProjectDescription#getProjectDependencies()}.
-	 */
 	@Override
 	protected IScope createContainerScopeWithContext(Resource resource, IScope parent, IContainer container,
 			Predicate<IEObjectDescription> filter, EClass type, boolean ignoreCase) {
-		if (resource != null) {
-			URI uriToFilter = resource.getURI();
-			// do filter context-resource from scope except in case of static polyfills.
-			if (container.hasResourceDescription(uriToFilter) && !isStaticPolyFiller(resource)) {
-				container = new FilterUriContainer(uriToFilter, container);
-			}
-			IScope result = NonShadowingSelectableBasedScope.createScope(parent, container, filter, type, ignoreCase);
-			result = UserDataAwareScope.createScope(result, resource.getResourceSet(),
-					container::getResourceDescription, canLoadFromDescriptionHelper);
-			return result;
-		}
-		return IScope.NULLSCOPE;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -144,19 +160,5 @@ public class N4JSGlobalScopeProvider extends DefaultGlobalScopeProvider {
 	protected BuiltInTypeScope getBuiltInTypeScope(Resource resource) {
 		ResourceSet resourceSet = resource.getResourceSet();
 		return BuiltInTypeScope.get(resourceSet);
-	}
-
-	/**
-	 * Local check if the resource at hand is a static polyfill-module (tagged with @@StaticPolyfillModule)
-	 *
-	 * @param resource
-	 *            to check
-	 * @return true if static polyfill.
-	 */
-	private static final boolean isStaticPolyFiller(Resource resource) {
-		if (resource instanceof N4JSResource) {
-			return ((N4JSResource) resource).getModule().isStaticPolyfillModule();
-		}
-		return false;
 	}
 }
