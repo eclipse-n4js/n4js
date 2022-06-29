@@ -11,31 +11,25 @@
 package org.eclipse.n4js.scoping.utils;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.xtext.scoping.ForwardingEObjectDescription;
-import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
-import org.eclipse.xtext.resource.IContainer;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.ISelectable;
 import org.eclipse.xtext.scoping.IScope;
-import org.eclipse.xtext.scoping.impl.SelectableBasedScope;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
 /**
  * A scope that provides access to types stored in user data of {@link EObjectDescription} of JS resources.
  */
-public class UserDataAwareScope extends SelectableBasedScope {
+public class UserDataAwareScope extends DelegatingScope {
 
 	/**
 	 * A resolved description wraps an existing description but returns the explicitly resolved instance rather than the
@@ -90,38 +84,29 @@ public class UserDataAwareScope extends SelectableBasedScope {
 	 *            utility to decide if a resource must be loaded from source or may be loaded from the index.
 	 */
 	public static IScope createScope(
-			IScope outer,
-			ISelectable selectable,
-			Predicate<IEObjectDescription> filter,
-			EClass type, boolean ignoreCase,
+			IScope delegate,
 			ResourceSet resourceSet,
-			CanLoadFromDescriptionHelper canLoadFromDescriptionHelper,
-			IContainer container) {
-		if (selectable == null || selectable.isEmpty())
-			return outer;
-		IScope scope = new UserDataAwareScope(outer, selectable, filter, type, ignoreCase, resourceSet,
-				canLoadFromDescriptionHelper,
-				container);
+			Function<URI, IResourceDescription> resourceDescriptionProvider,
+			CanLoadFromDescriptionHelper canLoadFromDescriptionHelper) {
+		IScope scope = new UserDataAwareScope(delegate, resourceSet, resourceDescriptionProvider,
+				canLoadFromDescriptionHelper);
 		return scope;
 	}
 
 	private final ResourceSet resourceSet;
+	private final Function<URI, IResourceDescription> resourceDescriptionProvider;
 	/**
-	 * @see #createScope(IScope, ISelectable, Predicate, EClass, boolean, ResourceSet, CanLoadFromDescriptionHelper,
-	 *      IContainer)
+	 * @see #createScope(IScope, ResourceSet, Function, CanLoadFromDescriptionHelper)
 	 */
 	private final CanLoadFromDescriptionHelper canLoadFromDescriptionHelper;
-	private final IContainer container;
-	private final EClass type;
 
-	UserDataAwareScope(IScope outer, ISelectable selectable, Predicate<IEObjectDescription> filter, EClass type,
-			boolean ignoreCase, ResourceSet resourceSet, CanLoadFromDescriptionHelper canLoadFromDescriptionHelper,
-			IContainer container) {
-		super(outer, selectable, filter, type, ignoreCase);
+	UserDataAwareScope(IScope delegate, ResourceSet resourceSet,
+			Function<URI, IResourceDescription> resourceDescriptionProvider,
+			CanLoadFromDescriptionHelper canLoadFromDescriptionHelper) {
+		super(delegate);
 		this.resourceSet = resourceSet;
+		this.resourceDescriptionProvider = resourceDescriptionProvider;
 		this.canLoadFromDescriptionHelper = canLoadFromDescriptionHelper;
-		this.container = container;
-		this.type = type;
 	}
 
 	/**
@@ -153,8 +138,7 @@ public class UserDataAwareScope extends SelectableBasedScope {
 		if (original instanceof ResolvedDescription) {
 			return original;
 		}
-		if (original != null && original.getEObjectOrProxy().eIsProxy()
-				&& EcoreUtil2.isAssignableFrom(type, original.getEClass())) {
+		if (original != null && original.getEObjectOrProxy().eIsProxy()) {
 			final URI objectURI = original.getEObjectURI();
 			final URI resourceURI = objectURI.trimFragment();
 			Resource resource = resourceSet.getResource(resourceURI, false);
@@ -178,7 +162,7 @@ public class UserDataAwareScope extends SelectableBasedScope {
 			if (resource instanceof N4JSResource) {
 				if (resource.getContents().isEmpty()) {
 					N4JSResource casted = (N4JSResource) resource;
-					IResourceDescription resourceDescription = container.getResourceDescription(resourceURI);
+					IResourceDescription resourceDescription = resourceDescriptionProvider.apply(resourceURI);
 					if (resourceDescription != null) {
 						if (casted.isLoaded()) {
 							// LiveShadowingResourceDescriptions (part of Xtext's rename refactoring)
@@ -230,11 +214,6 @@ public class UserDataAwareScope extends SelectableBasedScope {
 				return lazyResolve(input);
 			}
 		});
-	}
-
-	@Override
-	protected boolean isShadowed(IEObjectDescription input) {
-		return false;
 	}
 
 	/**

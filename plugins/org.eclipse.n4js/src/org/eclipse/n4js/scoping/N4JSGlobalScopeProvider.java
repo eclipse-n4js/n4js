@@ -22,6 +22,7 @@ import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareIdentifiableScope
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareTypeScope;
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
+import org.eclipse.n4js.scoping.utils.NonShadowingSelectableBasedScope;
 import org.eclipse.n4js.scoping.utils.UserDataAwareScope;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.Type;
@@ -116,10 +117,12 @@ public class N4JSGlobalScopeProvider extends DefaultGlobalScopeProvider {
 		if (resource != null) {
 			URI uriToFilter = resource.getURI();
 			// do filter context-resource from scope except in case of static polyfills.
-			if (container.hasResourceDescription(uriToFilter) && !isStaticPolyFiller(resource))
+			if (container.hasResourceDescription(uriToFilter) && !isStaticPolyFiller(resource)) {
 				container = new FilterUriContainer(uriToFilter, container);
-			IScope result = UserDataAwareScope.createScope(parent, container, filter, type, ignoreCase,
-					resource.getResourceSet(), canLoadFromDescriptionHelper, container);
+			}
+			IScope result = NonShadowingSelectableBasedScope.createScope(parent, container, filter, type, ignoreCase);
+			result = UserDataAwareScope.createScope(result, resource.getResourceSet(),
+					container::getResourceDescription, canLoadFromDescriptionHelper);
 			return result;
 		}
 		return IScope.NULLSCOPE;
