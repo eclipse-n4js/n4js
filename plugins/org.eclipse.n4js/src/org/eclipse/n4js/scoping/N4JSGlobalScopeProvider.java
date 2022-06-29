@@ -144,7 +144,7 @@ public class N4JSGlobalScopeProvider extends DefaultGlobalScopeProvider {
 	}
 
 	/**
-	 * Local ckeck if the resource at hand is a static polyfill-module (tagged with @@StaticPolyfillModule)
+	 * Local check if the resource at hand is a static polyfill-module (tagged with @@StaticPolyfillModule)
 	 *
 	 * @param resource
 	 *            to check
