@@ -33,7 +33,6 @@ import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.IResourceDescriptionsProvider;
-import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.scoping.IGlobalScopeProvider;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.util.UriUtil;
@@ -115,10 +114,8 @@ public class N4JSGlobalScopeProvider implements IGlobalScopeProvider {
 	private IScope createGlobalScope(IScope parent, Resource context, EClass type,
 			Predicate<IEObjectDescription> filter) {
 
-		N4JSProjectConfigSnapshot currProject = workspaceAccess.findProjectContaining(context);
 		IResourceDescriptions resDescs = resourceDescriptionsProvider.getResourceDescriptions(context.getResourceSet());
-		if (resDescs instanceof ChunkedResourceDescriptions) {
-			ChunkedResourceDescriptions chunkedResDescs = (ChunkedResourceDescriptions) resDescs;
+		if (resDescs != null) {
 
 			// prepare a filter to filter out global objects of the context resource
 			// FIXME can we get rid of this? (seems to be required only by a single validation when compiling n4js-libs)
@@ -134,18 +131,13 @@ public class N4JSGlobalScopeProvider implements IGlobalScopeProvider {
 				};
 			}
 
-			IScope result = new N4JSGlobalScope(parent, currProject, chunkedResDescs, type, actualFilter);
+			N4JSProjectConfigSnapshot currProject = workspaceAccess.findProjectContaining(context);
+			IScope result = new N4JSGlobalScope(parent, currProject, resDescs, type, actualFilter);
 			result = UserDataAwareScope.createScope(result, context.getResourceSet(), resDescs::getResourceDescription,
 					canLoadFromDescriptionHelper);
 			return result;
 		} else {
-			if (resDescs != null) {
-				LOGGER.error("expected " + IResourceDescriptions.class.getSimpleName() + " of type "
-						+ ChunkedResourceDescriptions.class.getSimpleName() + " but got "
-						+ resDescs.getClass().getSimpleName() + " for: " + context.getURI());
-			} else {
-				LOGGER.error("no " + IResourceDescriptions.class.getSimpleName() + " found for: " + context.getURI());
-			}
+			LOGGER.error("no " + IResourceDescriptions.class.getSimpleName() + " found for: " + context.getURI());
 			return parent;
 		}
 	}
