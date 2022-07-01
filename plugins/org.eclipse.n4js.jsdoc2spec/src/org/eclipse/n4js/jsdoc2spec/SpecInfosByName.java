@@ -146,8 +146,7 @@ public class SpecInfosByName {
 
 	private RepoRelativePath computeRRP(FullMemberReference ref, TMember testMember) {
 		Resource resource = testMember.eResource();
-		IScope scope = globalScopeProvider.getScope(resource,
-				N4JSPackage.Literals.MODULE_REF__MODULE);
+		IScope scope = globalScopeProvider.getScope(resource, N4JSPackage.Literals.MODULE_REF__MODULE);
 		QualifiedName qn = QualifiedName.create(ref.getModuleName().split("/"));
 		IEObjectDescription eod = scope.getSingleElement(qn);
 		if (eod != null) {
