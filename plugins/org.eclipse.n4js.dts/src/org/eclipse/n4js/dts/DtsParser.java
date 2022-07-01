@@ -95,9 +95,7 @@ public class DtsParser {
 		if (URIUtils.isVirtualResourceURI(uri)) {
 			NestedResourceAdapter adapter = NestedResourceAdapter.get(resource);
 			if (adapter == null) {
-				URI host = URIUtils.getBaseOfVirtualResourceURI(uri);
-				resource.getResourceSet().getResource(host, true);
-				adapter = NestedResourceAdapter.get(resource);
+				// should not happen, taken care of in caller
 			}
 
 			return parseNestedScript(resource, adapter);
