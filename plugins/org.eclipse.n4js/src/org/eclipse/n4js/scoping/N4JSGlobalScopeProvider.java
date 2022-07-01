@@ -10,33 +10,42 @@
  */
 package org.eclipse.n4js.scoping;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareIdentifiableScope;
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareTypeScope;
-import org.eclipse.n4js.scoping.builtin.DefaultN4GlobalScopeProvider;
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
+import org.eclipse.n4js.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.scoping.utils.UserDataAwareScope;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
-import org.eclipse.xtext.resource.IContainer;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.resource.containers.FilterUriContainer;
+import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.IResourceDescriptionsProvider;
+import org.eclipse.xtext.scoping.IGlobalScopeProvider;
 import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.util.UriUtil;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Throwables;
 import com.google.inject.Inject;
 
 /**
  * Global scope which allows access to types stored in user data of {@link IEObjectDescription}s.
  */
-public class N4JSGlobalScopeProvider extends DefaultN4GlobalScopeProvider {
+public class N4JSGlobalScopeProvider implements IGlobalScopeProvider {
+
+	private static final Logger LOGGER = Logger.getLogger(N4JSGlobalScopeProvider.class);
 
 	@Inject
 	private TypeVisibilityChecker typeVisibilityChecker;
@@ -47,24 +56,50 @@ public class N4JSGlobalScopeProvider extends DefaultN4GlobalScopeProvider {
 	@Inject
 	private CanLoadFromDescriptionHelper canLoadFromDescriptionHelper;
 
-	@Override
-	protected IScope createContainerScope(IScope parent, IContainer container, Predicate<IEObjectDescription> filter,
-			EClass type, boolean ignoreCase) {
-		throw new UnsupportedOperationException();
+	@Inject
+	private IResourceDescriptionsProvider resourceDescriptionsProvider;
+
+	@Inject
+	private WorkspaceAccess workspaceAccess;
+
+	/** Like {@link #getScope(Resource, EReference, Predicate)}, but without using a filter. */
+	public IScope getScope(Resource resource, final EReference reference) {
+		return getScope(resource, reference, null);
 	}
 
 	@Override
-	protected IScope getScope(IScope parent, Resource context, boolean ignoreCase, EClass type,
-			Predicate<IEObjectDescription> filter) {
+	public IScope getScope(Resource context, EReference reference, Predicate<IEObjectDescription> filter) {
+		return getScope(context, reference.getEReferenceType(), filter);
+	}
 
-		IScope result = null;
-		try {
-			result = super.getScope(parent, context, ignoreCase, type, filter);
-		} catch (IllegalStateException ise) {
-			String msg = "ERROR for " + context.getURI() + " ::\n" + Throwables.getStackTraceAsString(ise);
-			System.err.println(msg);
-			return IScope.NULLSCOPE;
+	/**
+	 * If the type is a {@link Type} a new {@link BuiltInTypeScope} is created.
+	 */
+	// visibility increased from 'protected' to 'public' to allow access from ImportedNamesRecordingGlobalScopeAccess
+	public IScope getScope(Resource context, EClass type, Predicate<IEObjectDescription> filter) {
+		IScope parent = IScope.NULLSCOPE;
+		if (isSubtypeOfType(type)) {
+			parent = getBuiltInTypeScope(context);
 		}
+		return getScope(parent, context, type, filter);
+	}
+
+	private IScope getScope(IScope parent, Resource context, EClass type, Predicate<IEObjectDescription> filter) {
+		IScope result;
+		if (N4Scheme.isResourceWithN4Scheme(context)) {
+			// built-in types do not have access to any other global elements of the workspace
+			// -> do not add a global scope
+			result = parent;
+		} else {
+			// actually create a global scope
+			try {
+				result = createGlobalScope(parent, context, type, filter);
+			} catch (IllegalStateException ise) {
+				LOGGER.error("exception while creating global scope for: " + context.getURI(), ise);
+				return IScope.NULLSCOPE;
+			}
+		}
+
 		if (isSubtypeOfType(type)) {
 			result = new VisibilityAwareTypeScope(result, typeVisibilityChecker, context);
 			return result;
@@ -76,35 +111,63 @@ public class N4JSGlobalScopeProvider extends DefaultN4GlobalScopeProvider {
 		return result;
 	}
 
+	private IScope createGlobalScope(IScope parent, Resource context, EClass type,
+			Predicate<IEObjectDescription> filter) {
+
+		IResourceDescriptions resDescs = resourceDescriptionsProvider.getResourceDescriptions(context.getResourceSet());
+		if (resDescs != null) {
+
+			// prepare a filter to filter out global objects of the context resource
+			// FIXME can we get rid of this? (seems to be required only by a single validation when compiling n4js-libs)
+			final Predicate<IEObjectDescription> actualFilter;
+			if (isStaticPolyFiller(context)) {
+				// ... except for resources marked with @@StaticPolyfillModule
+				actualFilter = filter;
+			} else {
+				URI contextURI = UriUtil.toFolderURI(context.getURI());
+				actualFilter = desc -> {
+					return (filter == null || filter.apply(desc))
+							&& !UriUtil.isPrefixOf(contextURI, desc.getEObjectURI());
+				};
+			}
+
+			N4JSProjectConfigSnapshot currProject = workspaceAccess.findProjectContaining(context);
+			IScope result = new N4JSGlobalScope(parent, currProject, resDescs, type, actualFilter);
+			result = UserDataAwareScope.createScope(result, context.getResourceSet(), resDescs::getResourceDescription,
+					canLoadFromDescriptionHelper);
+			return result;
+		} else {
+			LOGGER.error("no " + IResourceDescriptions.class.getSimpleName() + " found for: " + context.getURI());
+			return parent;
+		}
+	}
+
+	/**
+	 * Returns <code>true</code> if the given {@code type} is a subtype of {@link Type}.
+	 */
+	private boolean isSubtypeOfType(EClass type) {
+		return type == TypesPackage.Literals.TYPE || type.getEPackage() == TypesPackage.eINSTANCE
+				&& TypesPackage.Literals.TYPE.isSuperTypeOf(type);
+	}
+
 	/**
 	 * Returns <code>true</code> if the given {@code type} is a subtype of {@link IdentifiableElement}.
 	 */
-	protected boolean isSubtypeOfIdentifiable(EClass type) {
+	private boolean isSubtypeOfIdentifiable(EClass type) {
 		return type == TypesPackage.Literals.IDENTIFIABLE_ELEMENT || type.getEPackage() == TypesPackage.eINSTANCE
 				&& TypesPackage.Literals.IDENTIFIABLE_ELEMENT.isSuperTypeOf(type);
 	}
 
 	/**
-	 * Creates a new container scope containing only resource descriptions of the current project. With this container a
-	 * {@link UserDataAwareScope} is created.
-	 * <p>
-	 * This method is called for every container the current project depends on according to the settings in the project
-	 * description file. This information has been indirectly retrieved via
-	 * {@link ProjectDescription#getProjectDependencies()}.
+	 * Finds the built in type scope for the given resource and its applicable context.
+	 *
+	 * @param resource
+	 *            the resource that is currently linked
+	 * @return an instance of the {@link BuiltInTypeScope}
 	 */
-	@Override
-	protected IScope createContainerScopeWithContext(Resource resource, IScope parent, IContainer container,
-			Predicate<IEObjectDescription> filter, EClass type, boolean ignoreCase) {
-		if (resource != null) {
-			URI uriToFilter = resource.getURI();
-			// do filter context-resource from scope except in case of static polyfills.
-			if (container.hasResourceDescription(uriToFilter) && !isStaticPolyFiller(resource))
-				container = new FilterUriContainer(uriToFilter, container);
-			IScope result = UserDataAwareScope.createScope(parent, container, filter, type, ignoreCase,
-					resource.getResourceSet(), canLoadFromDescriptionHelper, container);
-			return result;
-		}
-		return IScope.NULLSCOPE;
+	private BuiltInTypeScope getBuiltInTypeScope(Resource resource) {
+		ResourceSet resourceSet = resource.getResourceSet();
+		return BuiltInTypeScope.get(resourceSet);
 	}
 
 	/**
