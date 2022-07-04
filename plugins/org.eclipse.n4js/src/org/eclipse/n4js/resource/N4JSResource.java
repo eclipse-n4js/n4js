@@ -790,6 +790,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			if (URIUtils.isVirtualResourceURI(uri)) {
 				NestedResourceAdapter adapter = NestedResourceAdapter.get(this);
 				if (adapter == null) {
+					// enforce the host to be reloaded including all adapters
 					URI host = URIUtils.getBaseOfVirtualResourceURI(uri);
 					N4JSResource hostRes = (N4JSResource) getResourceSet().getResource(host, true);
 					hostRes.demandLoadResource(null);
