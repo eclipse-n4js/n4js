@@ -73,6 +73,7 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final ImmutableList<String> tsFiles;
 	private final ImmutableList<String> tsInclude;
 	private final ImmutableList<String> tsExclude;
+	private final boolean containingDtsFiles;
 
 	/** Better use a {@link ProjectDescriptionBuilder builder}. */
 	public ProjectDescription(FileURI location, FileURI relatedRootlocation,
@@ -88,7 +89,7 @@ public class ProjectDescription extends ImmutableDataClass {
 			boolean isGeneratorEnabledSourceMaps, boolean isGeneratorEnabledDts,
 			Map<String, String> generatorRewriteModuleSpecifiers, boolean isGeneratorEnabledRewriteCjsImports,
 			Iterable<String> workspaces, Iterable<String> tsFiles, Iterable<String> tsInclude,
-			Iterable<String> tsExclude) {
+			Iterable<String> tsExclude, boolean containingDtsFiles) {
 
 		this.location = location;
 		this.relatedRootlocation = relatedRootlocation;
@@ -126,6 +127,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.tsFiles = ImmutableList.copyOf(tsFiles);
 		this.tsInclude = ImmutableList.copyOf(tsInclude);
 		this.tsExclude = ImmutableList.copyOf(tsExclude);
+		this.containingDtsFiles = containingDtsFiles;
 	}
 
 	public ProjectDescription(ProjectDescription template) {
@@ -165,6 +167,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.tsFiles = template.tsFiles;
 		this.tsInclude = template.tsInclude;
 		this.tsExclude = template.tsExclude;
+		this.containingDtsFiles = template.containingDtsFiles;
 	}
 
 	/** Builds a new {@link ProjectDescription project description}. */
@@ -425,6 +428,11 @@ public class ProjectDescription extends ImmutableDataClass {
 		return tsExclude;
 	}
 
+	/** Returns true iff this projects contains files with d.ts extension. */
+	public boolean isContainingDtsFiles() {
+		return containingDtsFiles;
+	}
+
 	@Override
 	protected int computeHashCode() {
 		return Objects.hash(
@@ -463,7 +471,8 @@ public class ProjectDescription extends ImmutableDataClass {
 				workspaces,
 				tsFiles,
 				tsInclude,
-				tsExclude);
+				tsExclude,
+				containingDtsFiles);
 	}
 
 	@Override
@@ -504,7 +513,8 @@ public class ProjectDescription extends ImmutableDataClass {
 				&& Objects.equals(workspaces, other.workspaces)
 				&& Objects.equals(tsFiles, other.tsFiles)
 				&& Objects.equals(tsInclude, other.tsInclude)
-				&& Objects.equals(tsExclude, other.tsExclude);
+				&& Objects.equals(tsExclude, other.tsExclude)
+				&& containingDtsFiles == other.containingDtsFiles;
 	}
 
 	@Override

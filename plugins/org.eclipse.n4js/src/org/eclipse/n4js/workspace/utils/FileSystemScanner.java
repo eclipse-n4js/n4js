@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
@@ -57,9 +58,13 @@ public class FileSystemScanner implements IFileSystemScanner {
 
 	static class N4JSFileVisitor implements FileVisitor<Path> {
 		final IAcceptor<URI> acceptor;
+		final FileSystemAcceptor<URI> fileSystemAcceptor;
 
 		N4JSFileVisitor(IAcceptor<URI> acceptor) {
 			this.acceptor = acceptor;
+			this.fileSystemAcceptor = (acceptor instanceof FileSystemAcceptor)
+					? (FileSystemAcceptor<URI>) acceptor
+					: null;
 		}
 
 		@Override
@@ -72,8 +77,9 @@ public class FileSystemScanner implements IFileSystemScanner {
 
 		@Override
 		public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-			acceptor.accept(new FileURI(file.toFile()).toURI());
-			return FileVisitResult.CONTINUE;
+			URI uri = new FileURI(file.toFile()).toURI();
+			acceptor.accept(uri);
+			return continueScanOr(uri, FileVisitResult.CONTINUE);
 		}
 
 		@Override
@@ -85,7 +91,40 @@ public class FileSystemScanner implements IFileSystemScanner {
 		public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
 			if (exc != null)
 				throw exc;
-			return FileVisitResult.CONTINUE;
+
+			return continueScanOr(new FileURI(dir.toFile()).toURI(), FileVisitResult.CONTINUE);
 		}
+
+		private FileVisitResult continueScanOr(URI uri, FileVisitResult defaultResult) {
+			if (fileSystemAcceptor != null) {
+				if (fileSystemAcceptor.continueScan(uri)) {
+					return FileVisitResult.CONTINUE;
+				} else {
+					return FileVisitResult.TERMINATE;
+				}
+			}
+			return defaultResult;
+		}
+	}
+
+	/** Returns true iff this source folder contains at least one file with the given extension. */
+	public static boolean containsFileWithExtension(IFileSystemScanner scanner, URI root, String extension) {
+		class CheckingFileSystemAcceptor implements FileSystemAcceptor<URI> {
+			public boolean containedExtension = false;
+
+			@Override
+			public void accept(URI t) {
+				// nothing to do
+			}
+
+			@Override
+			public boolean continueScan(URI uri) {
+				containedExtension |= Objects.equals(extension, URIUtils.fileExtension(uri));
+				return !containedExtension;
+			}
+		}
+		CheckingFileSystemAcceptor cfsa = new CheckingFileSystemAcceptor();
+		scanner.scan(root, cfsa);
+		return cfsa.containedExtension;
 	}
 }
