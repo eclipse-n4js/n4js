@@ -76,7 +76,8 @@
   			"type": "module",
   			"dependencies": {
   				"n4js-runtime": "*",
-  				"moment-timezone": "*"
+  				"moment-timezone": "*",
+  				"moment": "*"
   			},
   			"n4js": {
 				"projectType": "library",
@@ -94,6 +95,8 @@
 
 	END_SETUP
  */
+
+// NOTE: The dependency from 'myProject' to 'moment' is necessary for the re-export to work
 
 // XPECT noerrors -->
 import { ClsDts } from "moment-timezone";
