@@ -12,7 +12,9 @@ package org.eclipse.n4js.utils;
 
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.PACKAGES;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.WORKSPACES_ARRAY;
 
 import java.io.File;
@@ -47,14 +49,13 @@ import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescriptionBuilder;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
-import org.eclipse.n4js.packagejson.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.n4js.workspace.utils.FileSystemScanner;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.LazyStringInputStream;
+import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.RuntimeIOException;
 import org.eclipse.xtext.util.Strings;
+import org.eclipse.xtext.util.Tuples;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -77,9 +78,6 @@ public class ProjectDescriptionLoader {
 
 	@Inject
 	private PackageJsonHelper packageJsonHelper;
-
-	@Inject
-	private IFileSystemScanner scanner;
 
 	/**
 	 * Loads the project description of the N4JS project at the given {@code location}.
@@ -114,13 +112,28 @@ public class ProjectDescriptionLoader {
 			setInformationFromTSConfig(location, pdbFromPackageJSON);
 			pdbFromPackageJSON.setLocation(location);
 			pdbFromPackageJSON.setRelatedRootLocation(relatedRootLocation);
-			pdbFromPackageJSON.setContainingDtsFiles(computeContainingDtsFiles(pdbFromPackageJSON));
 
 			ProjectDescription result = pdbFromPackageJSON.build();
 			return result;
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * Loads the project description of the N4JS project at the given {@code location} and returns the version string or
+	 * <code>null</code> if undefined or in case of error.
+	 */
+	public Pair<String, Boolean> loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(FileURI location) {
+		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
+		JSONValue versionValue = null;
+		boolean hasN4JSNature = false;
+		if (packageJSON != null) {
+			versionValue = JSONModelUtils.getProperty(packageJSON, VERSION.name).orElse(null);
+			hasN4JSNature = JSONModelUtils.getProperty(packageJSON, N4JS.name).isPresent();
+		}
+		Pair<String, Boolean> result = Tuples.create(asNonEmptyStringOrNull(versionValue), hasN4JSNature);
+		return result;
 	}
 
 	/**
@@ -388,29 +401,5 @@ public class ProjectDescriptionLoader {
 
 	private boolean isFile(URIConverter uriConverter, URI uri) {
 		return exists(uriConverter, uri) && !isDirectory(uriConverter, uri);
-	}
-
-	private boolean computeContainingDtsFiles(ProjectDescriptionBuilder target) {
-		if (target.hasN4JSNature()) {
-			return false;
-		}
-		if (target.getPackageName().startsWith(N4JSGlobals.TYPES_SCOPE + "/")) {
-			return true;
-		}
-		if (!target.getTsFiles().isEmpty() || !target.getTsInclude().isEmpty() || !target.getTsExclude().isEmpty()) {
-			return true;
-		}
-		List<SourceContainerDescription> srcContainers = target.getSourceContainers();
-		for (SourceContainerDescription srcCont : srcContainers) {
-			for (String path : srcCont.getPaths()) {
-				FileURI completePath = target.getLocation().appendPath(path);
-				boolean result = FileSystemScanner.containsFileWithExtension(scanner, completePath.toURI(),
-						N4JSGlobals.DTS_FILE_EXTENSION);
-				if (result) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 }

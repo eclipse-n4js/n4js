@@ -66,8 +66,6 @@ public class ProjectDescriptionBuilder {
 	private final List<String> tsInclude = new ArrayList<>();
 	private final List<String> tsExclude = new ArrayList<>();
 
-	private boolean containingDtsFiles;
-
 	public ProjectDescriptionBuilder() {
 	}
 
@@ -86,7 +84,7 @@ public class ProjectDescriptionBuilder {
 				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage,
 				nestedNodeModulesFolder, esm, moduleProperty, n4jsNature, yarnWorkspaceRoot,
 				isGeneratorEnabledSourceMaps, isGeneratorEnabledDts, generatorRewriteModuleSpecifiers,
-				isGeneratorEnabledRewriteCjsImports, workspaces, tsFiles, tsInclude, tsExclude, containingDtsFiles);
+				isGeneratorEnabledRewriteCjsImports, workspaces, tsFiles, tsInclude, tsExclude);
 	}
 
 	public String computeProjectID() {
@@ -366,15 +364,6 @@ public class ProjectDescriptionBuilder {
 
 	public ProjectDescriptionBuilder setYarnWorkspaceRoot(boolean yarnWorkspaceRoot) {
 		this.yarnWorkspaceRoot = yarnWorkspaceRoot;
-		return this;
-	}
-
-	public boolean isContainingDtsFiles() {
-		return containingDtsFiles;
-	}
-
-	public ProjectDescriptionBuilder setContainingDtsFiles(boolean containingDtsFiles) {
-		this.containingDtsFiles = containingDtsFiles;
 		return this;
 	}
 

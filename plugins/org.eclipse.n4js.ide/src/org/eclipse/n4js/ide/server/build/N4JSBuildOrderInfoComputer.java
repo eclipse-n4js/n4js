@@ -33,7 +33,7 @@ public class N4JSBuildOrderInfoComputer extends BuildOrderFactory.BuildOrderInfo
 			// (1) they are irrelevant for the build order of N4JS code,
 			// (2) npm packages sometimes declare cyclic dependencies (and we must not show errors for those cycles)
 			Set<String> n4jsDeps = Sets.filter(dependencies, dep -> dep.contains("n4js")); // poor-man's heuristic
-			// return n4jsDeps;
+			return n4jsDeps;
 		}
 		return dependencies;
 	}

@@ -258,31 +258,14 @@ public class N4JSProjectConfig implements XIProjectConfig {
 				.unmodifiableMap(semanticDependencySupplier.computePackageName2ProjectIdMap(
 						workspace, projectDescription, relatedRootLocation, allNames));
 
-		List<ProjectDependency> depsAsProjectId = new ArrayList<>(semanticDeps.size());
+		List<ProjectDependency> result = new ArrayList<>(semanticDeps.size());
 		for (ProjectDependency sdep : semanticDeps) {
-			String depPackageName = sdep.getPackageName();
-			String depProjectId = getProjectIdForPackageName(depPackageName);
-			ProjectDependency newDep = new ProjectDependency(depProjectId, sdep.getType(),
+			String qualifiedName = getProjectIdForPackageName(sdep.getPackageName());
+			ProjectDependency newDep = new ProjectDependency(qualifiedName, sdep.getType(),
 					sdep.getVersionRequirementString(), sdep.getVersionRequirement());
-
-			if (getProjectDescription().getProjectType() == ProjectType.PLAINJS) {
-				// ignore dependencies of plain-JS projects to non-n4js-lib projects, because
-				// (1) they are irrelevant for the build order of N4JS code,
-				// (2) npm packages sometimes have cyclic dependencies (we must not show errors for those cycles)
-				if (depPackageName.contains("n4js")) { // poor-man's check for n4js-libs
-					// Set<String> n4jsDeps = Sets.filter(dependencies, dep -> dep.contains("n4js"));
-					depsAsProjectId.add(newDep);
-				} else {
-					N4JSProjectConfig depProjectConfig = workspace.projectID2ProjectConfig.get(depProjectId);
-					if (depProjectConfig != null && depProjectConfig.getProjectDescription().isContainingDtsFiles()) {
-						depsAsProjectId.add(newDep);
-					}
-				}
-			} else {
-				depsAsProjectId.add(newDep);
-			}
+			result.add(newDep);
 		}
-		semanticDependencies = Collections.unmodifiableList(depsAsProjectId);
+		semanticDependencies = Collections.unmodifiableList(result);
 	}
 
 	@Override
