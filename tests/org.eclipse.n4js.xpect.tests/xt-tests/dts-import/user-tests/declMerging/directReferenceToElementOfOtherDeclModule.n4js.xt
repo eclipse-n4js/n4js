@@ -45,7 +45,7 @@ import { I, IOther, IFinal } from "a/b/someModule"
 
 let test1: I;
 // XPECT noerrors -->
-// XPECT FIXME type of 'field' --> number
+// XPECT type of 'field' --> number
 test1.field;
 
 let test2: IOther;
@@ -53,12 +53,12 @@ let test2: IOther;
 // XPECT FIXME type of 'field' --> number
 test2.field;
 // XPECT noerrors -->
-// XPECT FIXME type of 'otherField' --> string
+// XPECT type of 'otherField' --> string
 test2.otherField;
 
 let test3: IFinal;
-// XPECT FIXME noerrors -->
-// XPECT FIXME type of 'field' --> number
+// XPECT noerrors -->
+// XPECT type of 'field' --> number
 test3.field;
 // XPECT FIXME noerrors -->
 // XPECT FIXME type of 'otherField' --> string

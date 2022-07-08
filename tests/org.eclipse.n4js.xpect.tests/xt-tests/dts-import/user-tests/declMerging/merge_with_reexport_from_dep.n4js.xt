@@ -115,10 +115,10 @@ import { Moment } from "moment";
 let m : Moment = null;
 
 // XPECT noerrors -->
-// XPECT FIXME type of 'res1' --> string
+// XPECT type of 'res1' --> string
 let res1 = m.format();
 
-// XPECT noerrors -->
+// XPECT FIXME noerrors -->
 // XPECT FIXME type of 'res2' --> moment.TimeUnit
 let res2 = m.tz();
 
