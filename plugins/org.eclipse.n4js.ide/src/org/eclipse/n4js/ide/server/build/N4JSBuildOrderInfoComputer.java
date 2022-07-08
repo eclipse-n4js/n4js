@@ -27,12 +27,14 @@ public class N4JSBuildOrderInfoComputer extends BuildOrderFactory.BuildOrderInfo
 	@Override
 	protected Set<String> getDependencies(ProjectConfigSnapshot pc) {
 		Set<String> dependencies = super.getDependencies(pc);
-		ProjectType type = pc instanceof N4JSProjectConfigSnapshot ? ((N4JSProjectConfigSnapshot) pc).getType() : null;
-		if (type == ProjectType.PLAINJS) {
+		N4JSProjectConfigSnapshot n4pcs = pc instanceof N4JSProjectConfigSnapshot
+				? (N4JSProjectConfigSnapshot) pc
+				: null;
+		if (n4pcs != null && n4pcs.getType() == ProjectType.PLAINJS) {
 			// ignore dependencies of plain-JS projects to non-n4js-lib projects, because
 			// (1) they are irrelevant for the build order of N4JS code,
 			// (2) npm packages sometimes declare cyclic dependencies (and we must not show errors for those cycles)
-			Set<String> n4jsDeps = Sets.filter(dependencies, dep -> dep.contains("n4js")); // poor-man's heuristic
+			Set<String> n4jsDeps = Sets.filter(dependencies, dep -> n4pcs.isKnownDependency(dep));
 			return n4jsDeps;
 		}
 		return dependencies;

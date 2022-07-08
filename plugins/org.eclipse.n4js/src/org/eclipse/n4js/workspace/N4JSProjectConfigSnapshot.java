@@ -161,6 +161,14 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return packageNameToProjectIds.getOrDefault(packageName, packageName);
 	}
 
+	/**
+	 * Returns true iff the given packageName can be resolved to a project id. Usually it cannot be resolved and hence
+	 * returns false for ignored dependencies of plain-js projects.
+	 */
+	public boolean isKnownDependency(String packageName) {
+		return !packageNameToProjectIds.containsKey(packageName);
+	}
+
 	// ==============================================================================================================
 	// Convenience and utility methods (do not introduce additional data)
 
