@@ -1,0 +1,66 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "def1.d.ts" {
+
+		declare module "a/b/someModule" {
+		    interface I {
+		        field: number;
+		    }
+		    interface IFinal extends I {
+		    }
+		}
+	}
+
+	File "def2.d.ts" {
+		declare module "a/b/someModule" {
+		    interface IOther extends I {				// <-- test #3: can directly access '
+			    otherField: string;
+			}
+		}
+	}
+
+	END_SETUP
+ */
+ 
+// TODO: GH-2407
+
+
+// XPECT noerrors -->
+import { I, IOther, IFinal } from "a/b/someModule"
+
+
+// NOTE: the point of all the following assertions is to ensure that the references "I" / "IOther"
+// were correctly resolved when building both "def1.d.ts" and "def2.d.ts".
+
+let test1: I;
+// XPECT noerrors -->
+// XPECT type of 'field' --> number
+test1.field;
+
+let test2: IOther;
+// XPECT FIXME noerrors -->
+// XPECT FIXME type of 'field' --> number
+test2.field;
+// XPECT noerrors -->
+// XPECT type of 'otherField' --> string
+test2.otherField;
+
+let test3: IFinal;
+// XPECT noerrors -->
+// XPECT type of 'field' --> number
+test3.field;
+// XPECT FIXME noerrors -->
+// XPECT FIXME type of 'otherField' --> string
+test3.otherField;
+

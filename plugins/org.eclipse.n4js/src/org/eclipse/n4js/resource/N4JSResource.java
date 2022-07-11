@@ -55,6 +55,7 @@ import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.dts.DtsParser;
+import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -787,6 +788,13 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			// setValidationDisabled(true); // disable validations to avoid Exceptions
 			IParseResult result = null;
 			if (URIUtils.isVirtualResourceURI(uri)) {
+				NestedResourceAdapter adapter = NestedResourceAdapter.get(this);
+				if (adapter == null) {
+					// enforce the host to be reloaded including all adapters
+					URI host = URIUtils.getBaseOfVirtualResourceURI(uri);
+					N4JSResource hostRes = (N4JSResource) getResourceSet().getResource(host, true);
+					hostRes.demandLoadResource(null);
+				}
 				result = new DtsParser().parse(null, this);
 			} else {
 				try (Reader reader = createReader(inputStream);) {

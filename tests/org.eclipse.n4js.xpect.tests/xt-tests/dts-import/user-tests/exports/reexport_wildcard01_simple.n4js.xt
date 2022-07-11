@@ -19,6 +19,9 @@
 	}
 
 	File "tslib2.d.ts" {
+		export class ClsDts2 {
+			field: number;
+		}
 		export * from "./tslib1.d.ts"
 	}
 
@@ -26,7 +29,10 @@
  */
 
 // XPECT noerrors -->
-import { ClsDts } from "tslib2";
+import { ClsDts, ClsDts2 } from "tslib2";
 
 // XPECT type of 'v01' --> string
 let v01 = new ClsDts().field;
+
+// XPECT type of 'v02' --> number
+let v02 = new ClsDts2().field;

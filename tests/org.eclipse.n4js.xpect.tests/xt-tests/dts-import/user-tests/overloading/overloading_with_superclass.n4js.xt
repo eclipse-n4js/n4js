@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "def.d.ts" {
+		export class Cls1 {
+			m(event: string): this;
+		}
+		export class Cls2 extends Cls1 {
+			m(event: number): this;
+		}
+	}
+
+	END_SETUP
+ */
+
+// TODO: GH-2406
+
+// XPECT noerrors -->
+import { Cls2 } from "def"
+
+let cls: Cls2;
+
+// XPECT FIXME noerrors -->
+cls.m("message");
+
+// XPECT noerrors -->
+cls.m(42);
+
+// XPECT FIXME type of 'fn' --> {function(any+=…):Cls}
+// XPECT warnings --> "A reference to method m is created detached from a (correct) this-instance." at "m"
+let fn = cls.m;

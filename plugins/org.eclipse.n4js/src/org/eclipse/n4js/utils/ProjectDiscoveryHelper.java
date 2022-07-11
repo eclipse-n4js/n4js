@@ -381,7 +381,9 @@ public class ProjectDiscoveryHelper {
 			FileURI relatedRootLocation = relatedRoot == null ? null : new FileURI(relatedRoot.toFile());
 			ProjectDescription pd = projectDescriptionLoader
 					.loadProjectDescriptionAtLocation(location, relatedRootLocation);
-			cache.put(path, pd);
+			if (pd != null) {
+				cache.put(path, pd);
+			}
 		}
 		ProjectDescription pd = cache.get(path);
 		if (pd != null && relatedRoot != null && pd.getRelatedRootLocation() != null
@@ -392,7 +394,9 @@ public class ProjectDiscoveryHelper {
 			pd = pdb.setRelatedRootLocation(new FileURI(relatedRoot.toFile()))
 					.setId(pdb.computeProjectID())
 					.build();
-			cache.put(path, pd);
+			if (pd != null) {
+				cache.put(path, pd);
+			}
 		}
 		return pd;
 	}
