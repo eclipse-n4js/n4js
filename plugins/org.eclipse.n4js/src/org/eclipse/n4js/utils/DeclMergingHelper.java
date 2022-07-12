@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
@@ -30,13 +31,16 @@ import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TFunction;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.Iterables;
@@ -189,6 +193,28 @@ public class DeclMergingHelper {
 		QualifiedName qn = qualifiedNameProvider.getFullyQualifiedName(elem);
 		List<EObject> result = globalScopeAccess.getElementsFromGlobalScope(context, EcorePackage.Literals.EOBJECT, qn);
 		cleanListOfMergedElements(elem, result);
+		return result;
+	}
+
+	/**
+	 * Returns those TModules of those scripts that are merged with the given script.
+	 * <p>
+	 * The given type does not have to be the
+	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
+	 */
+	public List<TModule> getMergedTModules(IScope moduleScope, Script script) {
+		QualifiedName qn = qualifiedNameProvider.getFullyQualifiedName(script.getModule());
+		List<TModule> result = new ArrayList<>();
+		Iterable<IEObjectDescription> elements = moduleScope.getElements(qn);
+		for (IEObjectDescription descr : elements) {
+			if (script.eResource().getURI() != descr.getEObjectURI().trimFragment()
+					&& descr.getEClass() == TypesPackage.eINSTANCE.getTModule()) {
+				TModule sElem = (TModule) descr.getEObjectOrProxy();
+				result.add(sElem);
+			}
+		}
+
+		// the given scope does not return the passed script in the result list, hence cleaning is unnecessary
 		return result;
 	}
 

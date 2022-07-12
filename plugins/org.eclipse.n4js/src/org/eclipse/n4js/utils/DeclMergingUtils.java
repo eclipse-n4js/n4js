@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSMetaModelUtils.N4JSMetaModelCache;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.TModule;
@@ -71,6 +72,10 @@ public class DeclMergingUtils {
 		if (elem instanceof TModule
 				&& !(isGlobal(elem) || isContainedInDeclaredModule(elem))) {
 			return false;
+		}
+		if (elem instanceof Script && URIUtils.isVirtualResourceURI(((Script) elem).eResource().getURI())) {
+			// FIXME: missing project imported script
+			return true;
 		}
 		return ResourceType.getResourceType(elem) == ResourceType.DTS;
 	}
