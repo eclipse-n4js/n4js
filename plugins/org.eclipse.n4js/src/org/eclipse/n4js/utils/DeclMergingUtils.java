@@ -69,15 +69,19 @@ public class DeclMergingUtils {
 	 * merging. Does <b>not</b> tell whether the element is actually merged with other elements.
 	 */
 	public static boolean mayBeMerged(EObject elem) {
-		if (elem instanceof TModule
-				&& !(isGlobal(elem) || isContainedInDeclaredModule(elem))) {
+		if (ResourceType.getResourceType(elem) != ResourceType.DTS) {
 			return false;
 		}
-		if (elem instanceof Script && URIUtils.isVirtualResourceURI(((Script) elem).eResource().getURI())) {
-			// FIXME: missing project imported script
-			return true;
+		if (elem instanceof Script) {
+			elem = ((Script) elem).getModule();
 		}
-		return ResourceType.getResourceType(elem) == ResourceType.DTS;
+		if (elem instanceof TModule) {
+			if (isGlobal(elem) || isContainedInDeclaredModule(elem) || isMainModule(elem)) {
+				return true;
+			}
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -104,6 +108,11 @@ public class DeclMergingUtils {
 	public static boolean isGlobal(EObject elem) {
 		EObject root = EcoreUtil.getRootContainer(elem);
 		return root instanceof TModule && AnnotationDefinition.GLOBAL.hasAnnotation((TModule) root);
+	}
+
+	/** Returns <code>true</code> iff the given element is the main module of a project. */
+	public static boolean isMainModule(EObject elem) {
+		return elem instanceof TModule && ((TModule) elem).isMainModule();
 	}
 
 	/** Returns <code>true</code> iff the element represented by the given description is from a declared module. */

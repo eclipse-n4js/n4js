@@ -1,0 +1,121 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   
+
+	Workspace {
+		NodeModuleProject "moment" {
+			File "index.d.ts" { from="moment_index.d.ts" }
+			File "index.js" { from="moment_index.js" }
+			File "package.json" { from="moment_package.json" }
+		}
+		NodeModuleProject "moment-timezone" {
+			File "index.d.ts" { from="moment_tz_index.d.ts" }
+			File "index.js" { from="moment_tz_index.js" }
+			File "package.json" { from="moment_tz_package.json" }
+		}
+		Project "myProject" {
+			Folder "src" {
+				ThisFile {}
+			}
+			File "package.json" { from="myProject_package.json" }
+		}
+	}
+
+	File "moment_index.d.ts" {
+	    export interface MomentIfc {
+	        fieldI: string;
+	    }
+	}
+	File "moment_index.js" {
+		// dummy
+	}
+	File "moment_package.json" {
+		{
+			"name": "moment",
+  			"main": "index.js",
+  			"type": "module"
+		}
+	}
+
+
+	File "moment_tz_index.d.ts" {
+		//import moment = require('moment');
+		//export = moment;
+		
+		declare module "moment" {
+			export interface MomentIfcX extends MomentIfc {
+				fieldC: number;
+			}
+		}
+	}
+	File "moment_tz_index.js" {
+		// dummy
+	}
+	File "moment_tz_package.json" {
+		{
+			"name": "moment-timezone",
+  			"main": "index.js",
+  			"type": "module",
+  			"dependencies": {
+  				"moment": "*"
+  			}
+		}
+	}
+
+
+	File "myProject_package.json" {
+		{
+			"name": "myProject",
+  			"main": "index.js",
+  			"type": "module",
+  			"dependencies": {
+  				"n4js-runtime": "*",
+  				"moment-timezone": "*",
+  				"moment": "*"
+  			},
+  			"n4js": {
+				"projectType": "library",
+				"vendorId": "org.eclipse.n4js",
+				"vendorName": "Eclipse N4JS Project",
+				"output": "src-gen",
+				"sources": {
+					"source": [
+						"src"
+					]
+				}
+  			}
+		}
+	}
+
+	END_SETUP
+ */
+ 
+
+
+// XPECT noerrors -->
+import { MomentIfc, MomentIfcX } from "moment"
+
+
+// NOTE: the point of all the following assertions is to ensure that the references to
+// "I" / "IOther" were correctly resolved when building both "def1.d.ts" and "def2.d.ts".
+
+let test1: MomentIfc;
+// XPECT noerrors -->
+// XPECT type of 'fieldI' --> string
+test1.fieldI;
+
+let test2: MomentIfcX;
+// XPECT noerrors -->
+// XPECT type of 'fieldC' --> number
+test2.fieldC;
+

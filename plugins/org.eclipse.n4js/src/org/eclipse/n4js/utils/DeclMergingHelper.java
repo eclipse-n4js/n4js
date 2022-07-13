@@ -19,12 +19,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
+import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.scoping.utils.MainModuleAwareSelectableBasedScope;
+import org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.types.AbstractNamespace;
@@ -37,12 +40,17 @@ import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
@@ -61,6 +69,12 @@ public class DeclMergingHelper {
 
 	@Inject
 	private TypeSystemHelper tsh;
+
+	@Inject
+	private WorkspaceAccess workspaceAccess;
+
+	@Inject
+	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 
 	/**
 	 * For each set of merged elements in the given list, this method will retain the
@@ -164,10 +178,44 @@ public class DeclMergingHelper {
 	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
 	 */
 	public List<AbstractNamespace> getMergedElements(Resource context, AbstractNamespace namespace) {
-		QualifiedName qn = qualifiedNameProvider.getFullyQualifiedName(namespace);
-		List<AbstractNamespace> result = globalScopeAccess.getNamespacesFromGlobalScope(context, qn);
+		boolean nsIsMainModule = (namespace instanceof TModule && ((TModule) namespace).isMainModule());
+		QualifiedName qn = nsIsMainModule
+				? QualifiedName.create(((TModule) namespace).getPackageName())
+				: qualifiedNameProvider.getFullyQualifiedName(namespace);
+
+		List<AbstractNamespace> result = new ArrayList<>();
+		if (nsIsMainModule) {
+			IScope scope = createScope((N4JSResource) context);
+			IEObjectDescription singleElement = scope.getSingleElement(qn);
+			if (singleElement != null) {
+				AbstractNamespace singleElemObj = (AbstractNamespace) singleElement.getEObjectOrProxy();
+				if (singleElemObj.eIsProxy()) {
+					singleElemObj = (AbstractNamespace) EcoreUtil.resolve(singleElemObj, context);
+					if (singleElemObj.eIsProxy()) {
+						throw new IllegalStateException("unexpected proxy");
+					}
+				}
+				result.add(namespace);
+			}
+		}
+
+		result.addAll(globalScopeAccess.getNamespacesFromGlobalScope(context, qn));
 		cleanListOfMergedElements(namespace, result);
 		return result;
+	}
+
+	private IScope createScope(N4JSResource resource) {
+		EClass reference = TypesPackage.Literals.ABSTRACT_NAMESPACE;
+		IScope initialScope = IScope.NULLSCOPE;
+		IResourceDescriptions resourceDescriptions = resourceDescriptionsProvider.getResourceDescriptions(resource);
+		IScope delegateMainModuleAwareScope = MainModuleAwareSelectableBasedScope.createMainModuleAwareScope(
+				initialScope, resourceDescriptions, reference);
+
+		N4JSWorkspaceConfigSnapshot ws = workspaceAccess.getWorkspaceConfig(resource);
+		IScope projectImportEnabledScope = ProjectImportEnablingScope.create(ws, resource, Optional.absent(),
+				initialScope, delegateMainModuleAwareScope, this);
+
+		return projectImportEnabledScope;
 	}
 
 	/**
@@ -197,28 +245,6 @@ public class DeclMergingHelper {
 	}
 
 	/**
-	 * Returns those TModules of those scripts that are merged with the given script.
-	 * <p>
-	 * The given type does not have to be the
-	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
-	 */
-	public List<TModule> getMergedTModules(IScope moduleScope, Script script) {
-		QualifiedName qn = qualifiedNameProvider.getFullyQualifiedName(script.getModule());
-		List<TModule> result = new ArrayList<>();
-		Iterable<IEObjectDescription> elements = moduleScope.getElements(qn);
-		for (IEObjectDescription descr : elements) {
-			if (script.eResource().getURI() != descr.getEObjectURI().trimFragment()
-					&& descr.getEClass() == TypesPackage.eINSTANCE.getTModule()) {
-				TModule sElem = (TModule) descr.getEObjectOrProxy();
-				result.add(sElem);
-			}
-		}
-
-		// the given scope does not return the passed script in the result list, hence cleaning is unnecessary
-		return result;
-	}
-
-	/**
 	 * Since package names are not included in qualified names, equality of qualified names is not a sufficient
 	 * requirement for finding merged elements. Therefore, the list of elements we obtain from the scoping contains
 	 * false positives. This method will remove them.
@@ -233,8 +259,7 @@ public class DeclMergingHelper {
 			// in all other cases, we have to require both elements to be contained in the same package/project
 			// (we here actually require them to be contained in the same module, because checking this is simpler and
 			// faster and leads to equivalent results)
-			EObject tModule = EcoreUtil.getRootContainer(targetElem);
-			mergedElemsFromScoping.removeIf(e -> e == targetElem || EcoreUtil.getRootContainer(e) != tModule);
+			mergedElemsFromScoping.removeIf(e -> e == targetElem || !DeclMergingUtils.mayBeMerged(e));
 		}
 	}
 }
