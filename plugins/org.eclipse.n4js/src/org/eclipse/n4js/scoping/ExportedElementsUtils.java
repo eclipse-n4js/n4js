@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TAnnotationArgument;
 import org.eclipse.n4js.ts.types.TModule;
@@ -46,9 +47,7 @@ public class ExportedElementsUtils {
 	 * This method will return only const variable "value", neither interface "Ifc" nor its members.
 	 */
 	public static Optional<List<IdentifiableElement>> getElementsExportedViaExportEquals(TModule module) {
-		TAnnotation ann = AnnotationDefinition.EXPORT_EQUALS.getAnnotation(module);
-		TAnnotationArgument arg = ann != null ? IterableExtensions.head(ann.getArgs()) : null;
-		String exportEqualsIdentifier = arg != null ? arg.getArgAsString() : null;
+		String exportEqualsIdentifier = getExportEqualsArg(module);
 		if (exportEqualsIdentifier == null || exportEqualsIdentifier.isEmpty()) {
 			return Optional.absent();
 		}
@@ -63,5 +62,19 @@ public class ExportedElementsUtils {
 			}
 		}
 		return Optional.of(result);
+	}
+
+	/** Returns the argument of annotation {@code @ExportEquals('arg')} */
+	public static String getExportEqualsArg(TAnnotableElement elem) {
+		TAnnotation ann = AnnotationDefinition.EXPORT_EQUALS.getAnnotation(elem);
+		if (ann == null) {
+			return null;
+		}
+		TAnnotationArgument arg = IterableExtensions.head(ann.getArgs());
+		String exportEqualsIdentifier = arg != null ? arg.getArgAsString() : null;
+		if (exportEqualsIdentifier == null || exportEqualsIdentifier.isEmpty()) {
+			return null;
+		}
+		return exportEqualsIdentifier;
 	}
 }

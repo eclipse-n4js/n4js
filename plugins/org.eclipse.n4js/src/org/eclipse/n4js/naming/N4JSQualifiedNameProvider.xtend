@@ -19,6 +19,7 @@ import org.eclipse.n4js.json.JSON.JSONStringLiteral
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.packagejson.PackageJsonProperties
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
+import org.eclipse.n4js.scoping.ExportedElementsUtils
 import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
 import org.eclipse.n4js.ts.types.IdentifiableElement
@@ -35,9 +36,12 @@ import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
+import org.eclipse.n4js.utils.URIUtils
+import org.eclipse.n4js.workspace.utils.N4JSPackageName
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
+import java.util.ArrayList
 
 /**
  * See {@link #getFullyQualifiedName(EObject)}.
@@ -64,31 +68,36 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 	 * Since project names are not included, these names are not globally unique. However, they are unique among
 	 * the elements of a single project.
 	 */
-	override QualifiedName getFullyQualifiedName(EObject it) {
-		switch (it) {
+	override QualifiedName getFullyQualifiedName(EObject eObj) {
+		val qn = computeQualifiedName(eObj);
+		return adjustIfExportedViaNamespaceEquals(qn, eObj);
+	}
+	
+	private def QualifiedName computeQualifiedName(EObject eObj) {
+		switch (eObj) {
 			TModule:
-				if (qualifiedName !== null) fqnTModule(it)
+				if (eObj.qualifiedName !== null) fqnTModule(eObj)
 			TNamespace:
-				if (name !== null) it.contextPrefix?.append(name)
+				if (eObj.name !== null) eObj.contextPrefix?.append(eObj.name)
 			TClass:
-				if (name !== null) it.contextPrefix?.adjustIfPolyfill(it)?.append(name)
+				if (eObj.name !== null) eObj.contextPrefix?.adjustIfPolyfill(eObj)?.append(eObj.name)
 			TInterface:
-				if (name !== null) it.contextPrefix?.adjustIfPolyfill(it)?.append(name)
+				if (eObj.name !== null) eObj.contextPrefix?.adjustIfPolyfill(eObj)?.append(eObj.name)
 			TEnum:
-				if (name !== null) it.contextPrefix?.append(name)
+				if (eObj.name !== null) eObj.contextPrefix?.append(eObj.name)
 			TypeAlias:
-				if (name !== null) it.contextPrefix?.append(name)
-			TFunction case !(it instanceof TMethod):
-				if (name !== null) it.contextPrefix?.append(name)
+				if (eObj.name !== null) eObj.contextPrefix?.append(eObj.name)
+			TFunction case !(eObj instanceof TMethod):
+				if (eObj.name !== null) eObj.contextPrefix?.append(eObj.name)
 			TVariable:
-				if (name !== null) it.contextPrefix?.append(name)
+				if (eObj.name !== null) eObj.contextPrefix?.append(eObj.name)
 			TypeVariable:
 				null
-			Type case !(it instanceof TMethod):
-				if (name !== null) it.contextPrefix?.append(name)
+			Type case !(eObj instanceof TMethod):
+				if (eObj.name !== null) eObj.contextPrefix?.append(eObj.name)
 
 			JSONDocument:
-				fqnJSONDocument(it)
+				fqnJSONDocument(eObj)
 
 			default: // including TMember, TFormalParameter
 				null
@@ -157,6 +166,41 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 		if (type.polyfill) {
 			return QualifiedNameUtils.append(qn, PolyfillUtils.POLYFILL_SEGMENT);
 		}
+		return qn;
+	}
+	
+	private def QualifiedName adjustIfExportedViaNamespaceEquals(QualifiedName qn, EObject elem) {
+		if (qn === null || elem === null) {
+			return null;
+		}
+		if (elem instanceof IdentifiableElement) {
+			val tmodule = elem.containingModule;
+			if (tmodule !== null && tmodule.isMainModule && URIUtils.fileExtension(tmodule.eResource.URI) == N4JSGlobals.DTS_FILE_EXTENSION) {
+				var EObject currElem = elem;
+				var TNamespace rootNS = null;
+				while (currElem !== null) {
+					if (currElem instanceof TNamespace) {
+						rootNS = currElem;
+					}
+					currElem = currElem.eContainer;
+				}
+				if (rootNS !== null) {
+					val exportEqualsArg = ExportedElementsUtils.getExportEqualsArg(tmodule);
+					if (exportEqualsArg == rootNS.name) {
+						val newSegments = new ArrayList(qn.segments);
+						val pckName = new N4JSPackageName(tmodule.packageName);
+						newSegments.remove(2); // removes the exported namespace name
+						newSegments.remove(0); // removes the module/file name
+						newSegments.add(0, pckName.plainName); // add the project plain name
+						if (newSegments.size <= 2) {
+							newSegments.remove(1); // removes the MODULE_CONTENT_SEGMENT
+						}
+						return QualifiedName.create(newSegments);
+					}
+				}
+			}
+		}
+		
 		return qn;
 	}
 }
