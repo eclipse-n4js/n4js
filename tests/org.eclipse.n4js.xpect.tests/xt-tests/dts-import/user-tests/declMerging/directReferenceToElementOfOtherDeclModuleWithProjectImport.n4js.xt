@@ -50,7 +50,7 @@
 
 	File "moment_tz_index.d.ts" {
 		//import moment = require('moment');
-		//export = moment;
+		//export = moment; // TODO: merge only if these two lines are present
 		
 		declare module "moment" {
 			export interface MomentIfcX extends MomentIfc {
