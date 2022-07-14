@@ -730,9 +730,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 		for (mergedTModule : mergedTModules.reverseView) {
 			if (mergedTModule !== null) {
-				// resolve here since the locallyKnownTypesScopingHelper won't do it
-				val resMergedTModule = EcoreUtil.resolve(mergedTModule, resource) as TModule;
-				result = locallyKnownTypesScopingHelper.scopeWithLocallyDeclaredElems(resMergedTModule, result, onlyNamespaces);
+				result = locallyKnownTypesScopingHelper.scopeWithLocallyDeclaredElems(mergedTModule, result, onlyNamespaces);
 			}
 		}
 		return result;

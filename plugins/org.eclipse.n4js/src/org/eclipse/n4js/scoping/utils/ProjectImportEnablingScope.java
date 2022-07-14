@@ -355,6 +355,9 @@ public class ProjectImportEnablingScope implements IScope {
 
 	@Override
 	public Iterable<IEObjectDescription> getElements(QualifiedName name) {
+		if (name == null) {
+			return Collections.emptyList();
+		}
 
 		ModuleSpecifierForm moduleSpecifierForm = computeImportType(name, this.contextProject);
 
