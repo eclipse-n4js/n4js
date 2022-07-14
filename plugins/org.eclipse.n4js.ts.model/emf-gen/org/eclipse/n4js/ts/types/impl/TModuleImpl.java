@@ -33,8 +33,6 @@ import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.ComposedMemberCache;
 import org.eclipse.n4js.ts.types.RuntimeDependency;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
-import org.eclipse.n4js.ts.types.TAnnotableElement;
-import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TDynamicElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
@@ -51,7 +49,6 @@ import org.eclipse.n4js.ts.types.TypesPackage.Literals;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getAstElement <em>Ast Element</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getSimpleName <em>Simple Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getQualifiedName <em>Qualified Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getPackageName <em>Package Name</em>}</li>
@@ -88,16 +85,6 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 	 * @ordered
 	 */
 	protected EObject astElement;
-
-	/**
-	 * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getAnnotations()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<TAnnotation> annotations;
 
 	/**
 	 * The default value of the '{@link #getSimpleName() <em>Simple Name</em>}' attribute.
@@ -496,19 +483,6 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 		astElement = newAstElement;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMODULE__AST_ELEMENT, oldAstElement, astElement));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EList<TAnnotation> getAnnotations() {
-		if (annotations == null) {
-			annotations = new EObjectContainmentEList<TAnnotation>(TAnnotation.class, this, TypesPackage.TMODULE__ANNOTATIONS);
-		}
-		return annotations;
 	}
 
 	/**
@@ -951,8 +925,6 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case TypesPackage.TMODULE__ANNOTATIONS:
-				return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TMODULE__DEPENDENCIES_RUNTIME:
 				return ((InternalEList<?>)getDependenciesRuntime()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TMODULE__INTERNAL_TYPES:
@@ -980,8 +952,6 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 			case TypesPackage.TMODULE__AST_ELEMENT:
 				if (resolve) return getAstElement();
 				return basicGetAstElement();
-			case TypesPackage.TMODULE__ANNOTATIONS:
-				return getAnnotations();
 			case TypesPackage.TMODULE__SIMPLE_NAME:
 				return getSimpleName();
 			case TypesPackage.TMODULE__QUALIFIED_NAME:
@@ -1041,10 +1011,6 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 		switch (featureID) {
 			case TypesPackage.TMODULE__AST_ELEMENT:
 				setAstElement((EObject)newValue);
-				return;
-			case TypesPackage.TMODULE__ANNOTATIONS:
-				getAnnotations().clear();
-				getAnnotations().addAll((Collection<? extends TAnnotation>)newValue);
 				return;
 			case TypesPackage.TMODULE__SIMPLE_NAME:
 				setSimpleName((String)newValue);
@@ -1133,9 +1099,6 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 			case TypesPackage.TMODULE__AST_ELEMENT:
 				setAstElement((EObject)null);
 				return;
-			case TypesPackage.TMODULE__ANNOTATIONS:
-				getAnnotations().clear();
-				return;
 			case TypesPackage.TMODULE__SIMPLE_NAME:
 				setSimpleName(SIMPLE_NAME_EDEFAULT);
 				return;
@@ -1213,8 +1176,6 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 		switch (featureID) {
 			case TypesPackage.TMODULE__AST_ELEMENT:
 				return astElement != null;
-			case TypesPackage.TMODULE__ANNOTATIONS:
-				return annotations != null && !annotations.isEmpty();
 			case TypesPackage.TMODULE__SIMPLE_NAME:
 				return SIMPLE_NAME_EDEFAULT == null ? simpleName != null : !SIMPLE_NAME_EDEFAULT.equals(simpleName);
 			case TypesPackage.TMODULE__QUALIFIED_NAME:
@@ -1276,12 +1237,6 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 				default: return -1;
 			}
 		}
-		if (baseClass == TAnnotableElement.class) {
-			switch (derivedFeatureID) {
-				case TypesPackage.TMODULE__ANNOTATIONS: return TypesPackage.TANNOTABLE_ELEMENT__ANNOTATIONS;
-				default: return -1;
-			}
-		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -1295,12 +1250,6 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 		if (baseClass == SyntaxRelatedTElement.class) {
 			switch (baseFeatureID) {
 				case TypesPackage.SYNTAX_RELATED_TELEMENT__AST_ELEMENT: return TypesPackage.TMODULE__AST_ELEMENT;
-				default: return -1;
-			}
-		}
-		if (baseClass == TAnnotableElement.class) {
-			switch (baseFeatureID) {
-				case TypesPackage.TANNOTABLE_ELEMENT__ANNOTATIONS: return TypesPackage.TMODULE__ANNOTATIONS;
 				default: return -1;
 			}
 		}
@@ -1323,11 +1272,6 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 		if (baseClass == SyntaxRelatedTElement.class) {
 			switch (baseOperationID) {
 				case TypesPackage.SYNTAX_RELATED_TELEMENT___GET_AST_ELEMENT_NO_RESOLVE: return TypesPackage.TMODULE___GET_AST_ELEMENT_NO_RESOLVE;
-				default: return -1;
-			}
-		}
-		if (baseClass == TAnnotableElement.class) {
-			switch (baseOperationID) {
 				default: return -1;
 			}
 		}
