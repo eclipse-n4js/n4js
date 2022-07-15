@@ -130,7 +130,7 @@ public class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractIm
 	private QualifiedName fqnJSONDocument(JSONDocument document) {
 		Resource res = document.eResource();
 		URI uri = res == null ? null : res.getURI();
-		if (uri == null || uri.lastSegment() != N4JSGlobals.PACKAGE_JSON) {
+		if (uri == null || !N4JSGlobals.PACKAGE_JSON.equals(uri.lastSegment())) {
 			return null; // not a package.json file -> no qualified name
 		}
 		// (1) try to get projectName from the given document

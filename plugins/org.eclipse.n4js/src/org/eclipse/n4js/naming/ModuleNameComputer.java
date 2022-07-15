@@ -22,6 +22,7 @@ import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.naming.QualifiedName;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -64,7 +65,7 @@ public class ModuleNameComputer {
 		URI relativeURI = getRelativeURI(context, uri);
 		if (relativeURI != null) {
 			if (ResourceType.xtHidesOtherExtension(uri)
-					|| (N4JSGlobals.XT_FILE_EXTENSION == fileExtension.toLowerCase())) {
+					|| (N4JSGlobals.XT_FILE_EXTENSION.equals(fileExtension.toLowerCase()))) {
 				relativeURI = URIUtils.trimFileExtension(URIUtils.trimFileExtension(relativeURI));
 			} else {
 				relativeURI = URIUtils.trimFileExtension(relativeURI);
@@ -78,7 +79,7 @@ public class ModuleNameComputer {
 			// Special case of synthesized test resources where we don't have a source container.
 			// In this case we deal with top-level test resources.
 			if (ResourceType.xtHidesOtherExtension(uri) ||
-					(N4JSGlobals.XT_FILE_EXTENSION == fileExtension.toLowerCase())) {
+					(N4JSGlobals.XT_FILE_EXTENSION.equals(fileExtension.toLowerCase()))) {
 				// if applicable, remove double-file-extension
 				return QualifiedName.create(URIUtils.trimFileExtension(URIUtils.trimFileExtension(uri)).segments());
 			}
@@ -126,7 +127,7 @@ public class ModuleNameComputer {
 			return false;
 		}
 		for (var i = 0; i < maxSegments; i++) {
-			if (resourceLocation.segment(i) != containerLocation.segment(i)) {
+			if (!Objects.equal(resourceLocation.segment(i), containerLocation.segment(i))) {
 				return false;
 			}
 		}
