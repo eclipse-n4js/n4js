@@ -9,9 +9,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/*
-	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
-
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   
 
 	Workspace {
 		NodeModuleProject "moment" {
@@ -20,8 +19,8 @@
 			File "package.json" { from="moment_package.json" }
 		}
 		NodeModuleProject "moment-timezone" {
-			File "moment.d.ts" { from="moment_tz_index.d.ts" }
-			File "moment.js" { from="moment_tz_index.js" }
+			File "index.d.ts" { from="moment_tz_index.d.ts" }
+			File "index.js" { from="moment_tz_index.js" }
 			File "package.json" { from="moment_tz_package.json" }
 		}
 		Project "myProject" {
@@ -32,15 +31,10 @@
 		}
 	}
 
-
 	File "moment_index.d.ts" {
-		declare namespace moment {
-		    interface Moment {
-    			format(format?: string): string;
-		    }
-		    interface TimeUnit {}
-		}
-		export = moment;
+	    export interface MomentIfc {
+	        fieldI: string;
+	    }
 	}
 	File "moment_index.js" {
 		// dummy
@@ -55,14 +49,14 @@
 
 
 	File "moment_tz_index.d.ts" {
-		import moment = require('moment');
-		declare module 'moment' {
-		    interface Moment {
-		        tz(): moment.TimeUnit;
-		    }
-    		function fff(): Moment;
+		//import moment = require('moment');
+		//export = moment; // TODO: merge only if these two lines are present
+		
+		declare module "moment" {
+			export interface MomentIfcX extends MomentIfc {
+				fieldC: number;
+			}
 		}
-		export = moment;
 	}
 	File "moment_tz_index.js" {
 		// dummy
@@ -70,7 +64,7 @@
 	File "moment_tz_package.json" {
 		{
 			"name": "moment-timezone",
-  			"main": "moment.js",
+  			"main": "index.js",
   			"type": "module",
   			"dependencies": {
   				"moment": "*"
@@ -86,8 +80,8 @@
   			"type": "module",
   			"dependencies": {
   				"n4js-runtime": "*",
-  				"moment": "*",
-  				"moment-timezone": "*"
+  				"moment-timezone": "*",
+  				"moment": "*"
   			},
   			"n4js": {
 				"projectType": "library",
@@ -105,27 +99,23 @@
 
 	END_SETUP
  */
+ 
 
 
 // XPECT noerrors -->
-import { Moment, fff } from "moment";
+import { MomentIfc, MomentIfcX } from "moment"
 
-let m : Moment = null;
 
-// XPECT noerrors -->
-// XPECT type of 'res1' --> string
-let res1 = m.format();
+// NOTE: the point of all the following assertions is to ensure that the references to
+// "I" / "IOther" were correctly resolved when building both "def1.d.ts" and "def2.d.ts".
 
+let test1: MomentIfc;
 // XPECT noerrors -->
-// XPECT type of 'res2' --> TimeUnit
-let res2 = m.tz();
+// XPECT type of 'fieldI' --> string
+test1.fieldI;
 
+let test2: MomentIfcX;
 // XPECT noerrors -->
-// XPECT type of 'res3' --> Moment
-let res3 = fff();
-// XPECT noerrors -->
-res3.format();
-// XPECT noerrors -->
-res3.tz();
-
+// XPECT type of 'fieldC' --> number
+test2.fieldC;
 

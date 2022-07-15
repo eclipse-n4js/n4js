@@ -717,6 +717,25 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return result;
 	}
 
+	/** Returns <code>parentOrNull</code> unchanged if no TModules are merged onto 'script'. */
+	private def IScope createScopeForMergedTModules(Script script, boolean onlyNamespaces, IScope parentOrNull) {
+		if (!DeclMergingUtils.mayBeMerged(script)) {
+			return parentOrNull;
+		}
+		var result = parentOrNull;
+		val resource = script.eResource as N4JSResource;
+		val mergedTModules = declMergingHelper.getMergedElements(resource, script.module); // can be empty
+		if (mergedTModules.size > 1) {
+			Collections.sort(mergedTModules, Comparator.comparing([(it as InternalEObject).eProxyURI], new URIUtils.URIComparator()));
+		}
+		for (mergedTModule : mergedTModules.reverseView) {
+			if (mergedTModule !== null) {
+				result = locallyKnownTypesScopingHelper.scopeWithLocallyDeclaredElems(mergedTModule, result, onlyNamespaces);
+			}
+		}
+		return result;
+	}
+
 	/**
 	 * Is entered to initially bind "T" in <pre>var x : T;</pre> or other parameterized type references.
 	 */
@@ -733,7 +752,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		switch context {
 			Script: {
 				return locallyKnownTypesScopingHelper.scopeWithLocallyDeclaredElems(context, [
-					delegateGetScope(context, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE); // provide any reference that expects instances of Type as target objects
+					var parent = delegateGetScope(context, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE); // provide any reference that expects instances of Type as target objects
+					parent = createScopeForMergedTModules(context, onlyNamespaces, parent);
+					return parent;
 				], onlyNamespaces);
 			}
 			N4NamespaceDeclaration: {

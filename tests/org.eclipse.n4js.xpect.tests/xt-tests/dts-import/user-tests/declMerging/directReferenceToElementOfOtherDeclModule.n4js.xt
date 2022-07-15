@@ -17,14 +17,14 @@
 		    interface I {
 		        field: number;
 		    }
-		    interface IFinal extends I {
+		    interface IFinal extends IOther {  // <-- test: can directly access 'IOther'
 		    }
 		}
 	}
 
 	File "def2.d.ts" {
 		declare module "a/b/someModule" {
-		    interface IOther extends I {				// <-- test #3: can directly access '
+		    interface IOther extends I {  // <-- test: can directly access 'I'
 			    otherField: string;
 			}
 		}
@@ -33,15 +33,14 @@
 	END_SETUP
  */
  
-// TODO: GH-2407
 
 
 // XPECT noerrors -->
 import { I, IOther, IFinal } from "a/b/someModule"
 
 
-// NOTE: the point of all the following assertions is to ensure that the references "I" / "IOther"
-// were correctly resolved when building both "def1.d.ts" and "def2.d.ts".
+// NOTE: the point of all the following assertions is to ensure that the references to
+// "I" / "IOther" were correctly resolved when building both "def1.d.ts" and "def2.d.ts".
 
 let test1: I;
 // XPECT noerrors -->
@@ -49,8 +48,8 @@ let test1: I;
 test1.field;
 
 let test2: IOther;
-// XPECT FIXME noerrors -->
-// XPECT FIXME type of 'field' --> number
+// XPECT noerrors -->
+// XPECT type of 'field' --> number
 test2.field;
 // XPECT noerrors -->
 // XPECT type of 'otherField' --> string
@@ -60,7 +59,7 @@ let test3: IFinal;
 // XPECT noerrors -->
 // XPECT type of 'field' --> number
 test3.field;
-// XPECT FIXME noerrors -->
-// XPECT FIXME type of 'otherField' --> string
+// XPECT noerrors -->
+// XPECT type of 'otherField' --> string
 test3.otherField;
 

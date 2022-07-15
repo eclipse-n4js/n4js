@@ -79,8 +79,8 @@ public class TypesSwitch<T> extends Switch<T> {
 				T result = caseTModule(tModule);
 				if (result == null) result = caseAbstractNamespace(tModule);
 				if (result == null) result = caseSyntaxRelatedTElement(tModule);
-				if (result == null) result = caseTAnnotableElement(tModule);
 				if (result == null) result = caseTExportingElement(tModule);
+				if (result == null) result = caseTAnnotableElement(tModule);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -278,6 +278,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				AbstractNamespace abstractNamespace = (AbstractNamespace)theEObject;
 				T result = caseAbstractNamespace(abstractNamespace);
 				if (result == null) result = caseTExportingElement(abstractNamespace);
+				if (result == null) result = caseTAnnotableElement(abstractNamespace);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

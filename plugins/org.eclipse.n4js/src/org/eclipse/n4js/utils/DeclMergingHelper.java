@@ -22,7 +22,6 @@ import java.util.Map.Entry;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
@@ -30,6 +29,7 @@ import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TFunction;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
@@ -160,8 +160,13 @@ public class DeclMergingHelper {
 	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
 	 */
 	public List<AbstractNamespace> getMergedElements(Resource context, AbstractNamespace namespace) {
-		QualifiedName qn = qualifiedNameProvider.getFullyQualifiedName(namespace);
-		List<AbstractNamespace> result = globalScopeAccess.getNamespacesFromGlobalScope(context, qn);
+		boolean nsIsMainModule = (namespace instanceof TModule && ((TModule) namespace).isMainModule());
+		QualifiedName qn = nsIsMainModule
+				? QualifiedName.create(((TModule) namespace).getPackageName())
+				: qualifiedNameProvider.getFullyQualifiedName(namespace);
+
+		List<AbstractNamespace> result = new ArrayList<>();
+		result.addAll(globalScopeAccess.getNamespacesFromGlobalScope(context, qn));
 		cleanListOfMergedElements(namespace, result);
 		return result;
 	}
@@ -207,8 +212,7 @@ public class DeclMergingHelper {
 			// in all other cases, we have to require both elements to be contained in the same package/project
 			// (we here actually require them to be contained in the same module, because checking this is simpler and
 			// faster and leads to equivalent results)
-			EObject tModule = EcoreUtil.getRootContainer(targetElem);
-			mergedElemsFromScoping.removeIf(e -> e == targetElem || EcoreUtil.getRootContainer(e) != tModule);
+			mergedElemsFromScoping.removeIf(e -> e == targetElem || !DeclMergingUtils.mayBeMerged(e));
 		}
 	}
 }

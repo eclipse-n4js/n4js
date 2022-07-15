@@ -50,7 +50,7 @@ type Variance wraps Variance
 /**
  * The TModule is the representation of the script on the type level.
  */
-class TModule extends AbstractNamespace, SyntaxRelatedTElement, TAnnotableElement {
+class TModule extends AbstractNamespace, SyntaxRelatedTElement {
 	/**
 	 * The module's simple name, i.e. the last segment of its qualified name.
 	 */
@@ -925,7 +925,7 @@ abstract class ContainerType<MT extends TMember> extends GenericType {
 	}
 }
 
-abstract class AbstractNamespace extends TExportingElement {
+abstract class AbstractNamespace extends TExportingElement, TAnnotableElement {
 	/*
 	 * A list of all types declarations of this namespace.
 	 * These include the exported classes, interfaces as well as the types

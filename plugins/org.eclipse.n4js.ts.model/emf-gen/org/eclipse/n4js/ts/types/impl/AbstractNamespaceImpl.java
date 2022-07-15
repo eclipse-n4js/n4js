@@ -29,6 +29,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
 
 import org.eclipse.n4js.ts.types.AbstractNamespace;
+import org.eclipse.n4js.ts.types.TAnnotableElement;
+import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TModule;
@@ -49,6 +51,7 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getTypes <em>Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getFunctions <em>Functions</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getExportedVariables <em>Exported Variables</em>}</li>
@@ -60,6 +63,16 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
  * @generated
  */
 public abstract class AbstractNamespaceImpl extends TExportingElementImpl implements AbstractNamespace {
+	/**
+	 * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAnnotations()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TAnnotation> annotations;
+
 	/**
 	 * The cached value of the '{@link #getTypes() <em>Types</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -137,6 +150,19 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 	@Override
 	protected EClass eStaticClass() {
 		return TypesPackage.Literals.ABSTRACT_NAMESPACE;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<TAnnotation> getAnnotations() {
+		if (annotations == null) {
+			annotations = new EObjectContainmentEList<TAnnotation>(TAnnotation.class, this, TypesPackage.ABSTRACT_NAMESPACE__ANNOTATIONS);
+		}
+		return annotations;
 	}
 
 	/**
@@ -289,6 +315,8 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+			case TypesPackage.ABSTRACT_NAMESPACE__ANNOTATIONS:
+				return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
 			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
 				return ((InternalEList<?>)getTypes()).basicRemove(otherEnd, msgs);
 			case TypesPackage.ABSTRACT_NAMESPACE__FUNCTIONS:
@@ -313,6 +341,8 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case TypesPackage.ABSTRACT_NAMESPACE__ANNOTATIONS:
+				return getAnnotations();
 			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
 				return getTypes();
 			case TypesPackage.ABSTRACT_NAMESPACE__FUNCTIONS:
@@ -338,6 +368,10 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case TypesPackage.ABSTRACT_NAMESPACE__ANNOTATIONS:
+				getAnnotations().clear();
+				getAnnotations().addAll((Collection<? extends TAnnotation>)newValue);
+				return;
 			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
 				getTypes().clear();
 				getTypes().addAll((Collection<? extends Type>)newValue);
@@ -374,6 +408,9 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case TypesPackage.ABSTRACT_NAMESPACE__ANNOTATIONS:
+				getAnnotations().clear();
+				return;
 			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
 				getTypes().clear();
 				return;
@@ -404,6 +441,8 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case TypesPackage.ABSTRACT_NAMESPACE__ANNOTATIONS:
+				return annotations != null && !annotations.isEmpty();
 			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
 				return types != null && !types.isEmpty();
 			case TypesPackage.ABSTRACT_NAMESPACE__FUNCTIONS:
@@ -418,6 +457,38 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 				return namespaces != null && !namespaces.isEmpty();
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == TAnnotableElement.class) {
+			switch (derivedFeatureID) {
+				case TypesPackage.ABSTRACT_NAMESPACE__ANNOTATIONS: return TypesPackage.TANNOTABLE_ELEMENT__ANNOTATIONS;
+				default: return -1;
+			}
+		}
+		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == TAnnotableElement.class) {
+			switch (baseFeatureID) {
+				case TypesPackage.TANNOTABLE_ELEMENT__ANNOTATIONS: return TypesPackage.ABSTRACT_NAMESPACE__ANNOTATIONS;
+				default: return -1;
+			}
+		}
+		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
 	/**
