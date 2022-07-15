@@ -82,39 +82,6 @@ public class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractIm
 		return adjustIfExportedViaNamespaceEquals(qn, eObj);
 	}
 
-//	@formatter:off
-//	private def QualifiedName computeQualifiedName(EObject eObj) {
-//		switch (eObj) {
-//			TModule:
-//				if (eObj.qualifiedName !== null) fqnTModule(eObj)
-//			TNamespace:
-//				if (eObj.name !== null) eObj.contextPrefix?.append(eObj.name)
-//			TClass:
-//				if (eObj.name !== null) eObj.contextPrefix?.adjustIfPolyfill(eObj)?.append(eObj.name)
-//			TInterface:
-//				if (eObj.name !== null) eObj.contextPrefix?.adjustIfPolyfill(eObj)?.append(eObj.name)
-//			TEnum:
-//				if (eObj.name !== null) eObj.contextPrefix?.append(eObj.name)
-//			TypeAlias:
-//				if (eObj.name !== null) eObj.contextPrefix?.append(eObj.name)
-//			TFunction case !(eObj instanceof TMethod):
-//				if (eObj.name !== null) eObj.contextPrefix?.append(eObj.name)
-//			TVariable:
-//				if (eObj.name !== null) eObj.contextPrefix?.append(eObj.name)
-//			TypeVariable:
-//				null
-//			Type case !(eObj instanceof TMethod):
-//				if (eObj.name !== null) eObj.contextPrefix?.append(eObj.name)
-//
-//			JSONDocument:
-//				fqnJSONDocument(eObj)
-//
-//			default: // including TMember, TFormalParameter
-//				null
-//		}
-//	}
-//	@formatter:on
-
 	private QualifiedName computeQualifiedName(EObject eObj) {
 		String name = (eObj instanceof IdentifiableElement) ? ((IdentifiableElement) eObj).getName() : null;
 		QualifiedName prefix = (eObj instanceof IdentifiableElement) ? contextPrefix((IdentifiableElement) eObj) : null;
