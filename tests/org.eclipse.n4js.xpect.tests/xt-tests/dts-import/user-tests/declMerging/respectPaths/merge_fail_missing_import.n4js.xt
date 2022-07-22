@@ -1,0 +1,65 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+
+	Workspace {
+		Project "P" {
+			Folder "src" {
+				Folder "lib" {
+					File "B.d.ts" { from="def2.d.ts" }
+				}
+				File "A.d.ts" { from="def1.d.ts" }
+				
+				ThisFile {}
+			}
+		}
+	}
+	
+	
+	File "def1.d.ts" {
+		export interface Ifc {
+			field1: string;
+		}
+	}
+
+	File "def2.d.ts" {
+		// import * as X from "../A"; // fail since this line was commented out
+		declare module "../A" {
+			export interface Ifc {
+				field2: number;
+			}
+		}
+	}
+
+	END_SETUP
+ */
+
+
+
+// XPECT noerrors -->
+import { Ifc } from "A"
+
+let ifc: Ifc;
+
+// XPECT noerrors -->
+ifc.field1;
+
+// XPECT noerrors -->
+ifc.field2;
+
+// XPECT type of 'v01' --> string
+let v01 = ifc.field1;
+
+// XPECT type of 'v02' --> number
+let v02 = ifc.field2;
