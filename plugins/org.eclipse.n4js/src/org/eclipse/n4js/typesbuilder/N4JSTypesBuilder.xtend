@@ -211,7 +211,7 @@ public class N4JSTypesBuilder {
 				// main module
 				val mainModuleSpec = project.mainModule;
 				if (mainModuleSpec !== null) {
-					result.mainModule = resource.qualifiedModuleName ==
+					result.mainModule = qualifiedModuleName ==
 						specifierConverter.toQualifiedName(mainModuleSpec);
 				}
 			}
