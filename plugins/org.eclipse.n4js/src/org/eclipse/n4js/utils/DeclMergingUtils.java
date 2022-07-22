@@ -17,6 +17,7 @@ import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSMetaModelUtils.N4JSMetaModelCache;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.TModule;
@@ -57,11 +58,16 @@ public class DeclMergingUtils {
 	 * with other elements.
 	 */
 	public static boolean mayBeMerged(IEObjectDescription desc) {
-		if (TypesPackage.Literals.TMODULE.isSuperTypeOf(desc.getEClass())
-				&& !(isGlobal(desc) || isContainedInDeclaredModule(desc))) {
+		if (ResourceType.getResourceType(desc.getEObjectURI()) != ResourceType.DTS) {
 			return false;
 		}
-		return ResourceType.getResourceType(desc.getEObjectURI()) == ResourceType.DTS;
+		if (TypesPackage.Literals.TMODULE.isSuperTypeOf(desc.getEClass())) {
+			if (isGlobal(desc) || isContainedInDeclaredModule(desc) || isMainModule(desc)) {
+				return true;
+			}
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -108,6 +114,11 @@ public class DeclMergingUtils {
 	public static boolean isGlobal(EObject elem) {
 		EObject root = EcoreUtil.getRootContainer(elem);
 		return root instanceof TModule && AnnotationDefinition.GLOBAL.hasAnnotation((TModule) root);
+	}
+
+	/** Returns <code>true</code> iff the given element is the main module of a project. */
+	public static boolean isMainModule(IEObjectDescription desc) {
+		return N4JSResourceDescriptionStrategy.getMainModule(desc);
 	}
 
 	/** Returns <code>true</code> iff the given element is the main module of a project. */
