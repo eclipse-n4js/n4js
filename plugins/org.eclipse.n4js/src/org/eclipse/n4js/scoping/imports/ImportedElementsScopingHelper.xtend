@@ -144,7 +144,7 @@ class ImportedElementsScopingHelper {
 	}
 
 	private def IScope findImportedElements(Script script, IScope parentScope, boolean includeHollows, boolean includeValueOnlyElements) {
-		val contextResource = script.eResource;
+		val contextResource = script.eResource as N4JSResource;
 		val imports = script.scriptElements.filter(ImportDeclaration)
 
 		if (imports.empty) return parentScope;
