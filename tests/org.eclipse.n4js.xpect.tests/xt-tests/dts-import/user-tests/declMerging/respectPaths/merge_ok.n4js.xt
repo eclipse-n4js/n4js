@@ -20,6 +20,7 @@
 					File "B.d.ts" { from="def2.d.ts" }
 				}
 				File "A.d.ts" { from="def1.d.ts" }
+				File "G.d.ts" { from="glo1.d.ts" }
 				
 				ThisFile {}
 			}
@@ -29,7 +30,15 @@
 	
 	File "def1.d.ts" {
 		export interface Ifc {
-			field1: string;
+		    fieldM: number;
+		    field1: string;
+		}
+		
+		declare module "A" {
+		    interface Ifc {
+		        fieldG: number;
+		        field1: number;
+		    }
 		}
 	}
 
@@ -41,23 +50,55 @@
 			}
 		}
 	}
+	
+	File "glo1.d.ts" {
+		declare module "A" {
+		    export interface Ifc {
+		        field2: number;
+		    }
+		}
+	}
 
 	END_SETUP
  */
 
 // XPECT noerrors -->
-import { Ifc } from "A"
+import { Ifc as IfcM } from "./A";
+// XPECT noerrors -->
+import { Ifc as IfcG } from "A";
 
-let ifc: Ifc;
+let ifcM: IfcM;
 
 // XPECT noerrors -->
-ifc.field1;
+ifcM.fieldM;
 
 // XPECT noerrors -->
-ifc.field2;
+ifcM.field1;
+
+// XPECT noerrors -->
+ifcM.field2;
 
 // XPECT type of 'v01' --> string
-let v01 = ifc.field1;
+let v01 = ifcM.field1;
 
 // XPECT type of 'v02' --> number
-let v02 = ifc.field2;
+let v02 = ifcM.field2;
+
+
+
+let ifcG: IfcG;
+
+// XPECT noerrors -->
+ifcG.fieldG;
+
+// XPECT noerrors -->
+ifcG.field1;
+
+// XPECT noerrors -->
+ifcG.field2;
+
+// XPECT type of 'v11' --> string
+let v11 = ifcG.field1;
+
+// XPECT type of 'v12' --> number
+let v12 = ifcG.field2;
