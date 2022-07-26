@@ -30,14 +30,12 @@
 	
 	File "def1.d.ts" {
 		export interface Ifc {
-		    fieldM: number;
-		    field1: string;
+		    fieldM1: number;
 		}
 		
 		declare module "A" {
 		    interface Ifc {
-		        fieldG: number;
-		        field1: number;
+		        fieldG1: number;
 		    }
 		}
 	}
@@ -46,7 +44,7 @@
 		import * as X from "../A";
 		declare module "../A" {
 			export interface Ifc {
-				field2: number;
+				fieldM2: number;
 			}
 		}
 	}
@@ -54,7 +52,7 @@
 	File "glo1.d.ts" {
 		declare module "A" {
 		    export interface Ifc {
-		        field2: number;
+		        fieldG2: number;
 		    }
 		}
 	}
@@ -63,42 +61,45 @@
  */
 
 // XPECT noerrors -->
-import { Ifc as IfcM } from "./A";
+import { Ifc as IfcM } from "A"; // same as './A' in TS
 // XPECT noerrors -->
-import { Ifc as IfcG } from "A";
+import { Ifc as IfcG } from "!/A"; // same as 'A' in TS
 
 let ifcM: IfcM;
 
 // XPECT noerrors -->
-ifcM.fieldM;
-
+ifcM.fieldM1;
 // XPECT noerrors -->
-ifcM.field1;
+ifcM.fieldM2;
 
-// XPECT noerrors -->
-ifcM.field2;
+// XPECT errors --> "" at "fieldG1"
+ifcM.fieldG1;
+// XPECT errors --> "" at "fieldG2"
+ifcM.fieldG2;
+
 
 // XPECT type of 'v01' --> string
-let v01 = ifcM.field1;
+let v01 = ifcM.fieldM1;
 
 // XPECT type of 'v02' --> number
-let v02 = ifcM.field2;
+let v02 = ifcM.fieldM2;
 
 
 
 let ifcG: IfcG;
 
 // XPECT noerrors -->
-ifcG.fieldG;
-
+ifcG.fieldG1;
 // XPECT noerrors -->
-ifcG.field1;
+ifcG.fieldG2;
 
-// XPECT noerrors -->
-ifcG.field2;
+// XPECT errors --> "" at "fieldM1"
+ifcM.fieldM1;
+// XPECT errors --> "" at "fieldM2"
+ifcM.fieldM2;
 
 // XPECT type of 'v11' --> string
-let v11 = ifcG.field1;
+let v11 = ifcG.fieldG1;
 
 // XPECT type of 'v12' --> number
-let v12 = ifcG.field2;
+let v12 = ifcG.fieldG2;
