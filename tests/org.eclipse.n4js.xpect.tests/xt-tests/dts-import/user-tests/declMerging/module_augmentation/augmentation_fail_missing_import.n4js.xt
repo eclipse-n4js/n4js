@@ -17,10 +17,10 @@
 		Project "P" {
 			Folder "src" {
 				Folder "lib" {
-					File "B.d.ts" { from="def2.d.ts" }
+					File "B.d.ts" { from="B.d.ts" }
 				}
-				File "A.d.ts" { from="def1.d.ts" }
-				File "G.d.ts" { from="glo1.d.ts" }
+				File "A.d.ts" { from="A.d.ts" }
+				File "G.d.ts" { from="G.d.ts" }
 				
 				ThisFile {}
 			}
@@ -28,7 +28,7 @@
 	}
 	
 	
-	File "def1.d.ts" {
+	File "A.d.ts" {
 		export interface Ifc {
 		    fieldM: number;
 		    field1: string;
@@ -42,7 +42,7 @@
 		}
 	}
 
-	File "def2.d.ts" {
+	File "B.d.ts" {
 		// import * as X from "../A"; // fail since def2 is ambient
 		declare module "../A" {
 			export interface Ifc {
@@ -51,7 +51,7 @@
 		}
 	}
 	
-	File "glo1.d.ts" {
+	File "G.d.ts" {
 		declare module "A" {
 		    export interface Ifc {
 		        field2: number;
