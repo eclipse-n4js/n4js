@@ -35,7 +35,7 @@
 		
 		declare module "A" {
 		    interface Ifc {
-		        fieldG1: number;
+		        fieldG1: string;
 		    }
 		}
 	}
@@ -44,7 +44,7 @@
 		import * as X from "../A";
 		declare module "../A" {
 			export interface Ifc {
-				fieldM2: number;
+				fieldM2: string;
 			}
 		}
 	}
@@ -63,7 +63,7 @@
 // XPECT noerrors -->
 import { Ifc as IfcM } from "A"; // same as './A' in TS
 // XPECT noerrors -->
-import { Ifc as IfcG } from "!/A"; // same as 'A' in TS
+import { Ifc as IfcG } from "$/A"; // same as 'A' in TS
 
 let ifcM: IfcM;
 
@@ -72,16 +72,16 @@ ifcM.fieldM1;
 // XPECT noerrors -->
 ifcM.fieldM2;
 
-// XPECT errors --> "" at "fieldG1"
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'fieldG1'." at "fieldG1"
 ifcM.fieldG1;
-// XPECT errors --> "" at "fieldG2"
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'fieldG2'." at "fieldG2"
 ifcM.fieldG2;
 
 
-// XPECT type of 'v01' --> string
+// XPECT type of 'v01' --> number
 let v01 = ifcM.fieldM1;
 
-// XPECT type of 'v02' --> number
+// XPECT type of 'v02' --> string
 let v02 = ifcM.fieldM2;
 
 
@@ -93,10 +93,10 @@ ifcG.fieldG1;
 // XPECT noerrors -->
 ifcG.fieldG2;
 
-// XPECT errors --> "" at "fieldM1"
-ifcM.fieldM1;
-// XPECT errors --> "" at "fieldM2"
-ifcM.fieldM2;
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'fieldM1'." at "fieldM1"
+ifcG.fieldM1;
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'fieldM2'." at "fieldM2"
+ifcG.fieldM2;
 
 // XPECT type of 'v11' --> string
 let v11 = ifcG.fieldG1;
