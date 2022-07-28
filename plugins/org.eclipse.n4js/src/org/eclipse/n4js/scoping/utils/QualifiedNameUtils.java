@@ -151,6 +151,12 @@ public class QualifiedNameUtils {
 				&& N4JSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(qn.getFirstSegment());
 	}
 
+	/** @return <code>true</code> iff the given qualified name denotes an ambient module. */
+	public static boolean isAmbient(QualifiedName name) {
+		return name != null && name.getSegmentCount() > 0
+				&& name.getFirstSegment().equals(N4JSQualifiedNameProvider.AMBIENT_MODULE_SEGMENT);
+	}
+
 	/**
 	 * Trims the {@link N4JSQualifiedNameProvider#MODULE_CONTENT_SEGMENT MODULE_CONTENT_SEGMENT} and all following
 	 * segments from the given name. Returns <code>null</code> if it does not contain a {@code MODULE_CONTENT_SEGMENT}.
