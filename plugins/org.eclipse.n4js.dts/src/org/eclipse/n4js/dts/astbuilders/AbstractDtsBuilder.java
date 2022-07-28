@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Set;
 
@@ -42,6 +43,8 @@ public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 	protected final AbstractDtsBuilder<?, ?> parent;
 	/** Token stream for access to other lexer channels */
 	protected final DtsTokenStream tokenStream;
+	/** Source folder root of the parsed file */
+	protected final Path srcFolder;
 	/** Current resource */
 	protected final LazyLinkingResource resource;
 	/** Rule IDs of parser rules to visit as default */
@@ -54,17 +57,18 @@ public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 
 	/** Creates a new child builder for the given parent. */
 	public AbstractDtsBuilder(AbstractDtsBuilder<?, ?> parent) {
-		this(parent, parent.tokenStream, parent.resource);
+		this(parent, parent.tokenStream, parent.srcFolder, parent.resource);
 	}
 
 	/** Creates a new root builder without parent. */
-	public AbstractDtsBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-		this(null, tokenStream, resource);
+	public AbstractDtsBuilder(DtsTokenStream tokenStream, Path srcFolder, LazyLinkingResource resource) {
+		this(null, tokenStream, srcFolder, resource);
 	}
 
-	private AbstractDtsBuilder(AbstractDtsBuilder<?, ?> parent, DtsTokenStream tokenStream,
+	private AbstractDtsBuilder(AbstractDtsBuilder<?, ?> parent, DtsTokenStream tokenStream, Path srcFolder,
 			LazyLinkingResource resource) {
 		this.parent = parent;
+		this.srcFolder = srcFolder;
 		this.tokenStream = tokenStream;
 		this.resource = resource;
 	}

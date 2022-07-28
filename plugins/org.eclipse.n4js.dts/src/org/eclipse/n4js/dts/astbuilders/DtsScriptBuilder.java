@@ -18,6 +18,7 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_exportStatementTail;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statementList;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
@@ -67,8 +68,8 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 	private int globalScopeAugmentationCounter = 0;
 
 	/** Constructor */
-	public DtsScriptBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-		super(tokenStream, resource);
+	public DtsScriptBuilder(DtsTokenStream tokenStream, Path srcFolder, LazyLinkingResource resource) {
+		super(tokenStream, srcFolder, resource);
 	}
 
 	/** Returns true iff this resource is nested/virtual */
@@ -160,6 +161,14 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 		if (isNested()) {
 			if (getNestedResourceAdapter().getContext() instanceof GlobalScopeAugmentationContext) {
 				ParserContextUtils.makeGlobal(result);
+			} else if (getNestedResourceAdapter().getContext() instanceof ModuleDeclarationContext) {
+				ModuleDeclarationContext mdCtx = (ModuleDeclarationContext) getNestedResourceAdapter().getContext();
+				if (mdCtx.moduleName() != null && mdCtx.moduleName().StringLiteral() != null) {
+					String name = ParserContextUtils.trimAndUnescapeStringLiteral(mdCtx.moduleName().StringLiteral());
+					if (ParserContextUtils.isModuleAugmentationName(name)) {
+						ParserContextUtils.addAnnotationModuleAugmentation(result);
+					}
+				}
 			}
 		} else {
 			DtsMode dtsMode = ParserContextUtils.getDtsMode(ctx);
