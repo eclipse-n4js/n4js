@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -86,6 +87,7 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.DiagnosticMessage;
@@ -786,6 +788,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		} else if (ResourceType.getResourceType(getURI()) == ResourceType.DTS) {
 			// load from dts but also mimic normal loading behavior/state transitions
 			// setValidationDisabled(true); // disable validations to avoid Exceptions
+
 			IParseResult result = null;
 			if (URIUtils.isVirtualResourceURI(uri)) {
 				NestedResourceAdapter adapter = NestedResourceAdapter.get(this);
@@ -795,10 +798,13 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 					N4JSResource hostRes = (N4JSResource) getResourceSet().getResource(host, true);
 					hostRes.demandLoadResource(null);
 				}
-				result = new DtsParser().parse(null, this);
+				result = new DtsParser().parse(null, null, this);
 			} else {
+				N4JSSourceFolderSnapshot srcFld = workspaceAccess.findSourceFolderContaining(this, uri);
+				Path srcRoot = URIUtils.toPath(srcFld.getPath());
+
 				try (Reader reader = createReader(inputStream);) {
-					result = new DtsParser().parse(reader, this);
+					result = new DtsParser().parse(srcRoot, reader, this);
 				}
 			}
 			if (fullyInitialized) {

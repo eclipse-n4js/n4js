@@ -28,7 +28,7 @@ public class DtsParseFileTest {
 	@Ignore // use for adhoc-testing
 	@Test
 	public void parseDtsFile() throws Exception {
-		DtsParsesDefinitelyTypedTest.parseFile(FILE.toPath(), (result) -> {
+		DtsParsesDefinitelyTypedTest.parseFile(null, FILE.toPath(), (result) -> {
 			assertFalse(result.hasSyntaxErrors());
 		});
 	}
