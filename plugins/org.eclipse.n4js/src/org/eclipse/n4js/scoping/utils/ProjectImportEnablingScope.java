@@ -15,6 +15,7 @@ import static org.eclipse.n4js.N4JSGlobals.DTS_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JSD_FILE_EXTENSION;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -38,6 +39,7 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.DeclMergingHelper;
+import org.eclipse.n4js.utils.DeclMergingUtils;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.validation.IssueCodes;
@@ -156,6 +158,30 @@ public class ProjectImportEnablingScope implements IScope {
 		// handle combination of .js / .cjs / .mjs files with same base name
 		if (size > 1) {
 			removeSuperfluousPlainJsFiles(result);
+			size = result.size();
+		}
+		// handle ambient module declarations vs. module augmentations
+		if (size > 1) {
+			if (QualifiedNameUtils.isAmbient(name)) {
+				// filter for ambient module declarations only
+				Iterator<IEObjectDescription> iter = result.iterator();
+				while (iter.hasNext()) {
+					IEObjectDescription next = iter.next();
+					if (DeclMergingUtils.isAugmentationModuleOrModule(next)) {
+						iter.remove();
+					}
+				}
+			} else {
+				// if mixed -> filter for module augmentations only
+				// else -> nothing
+				List<IEObjectDescription> modAugmentations = new ArrayList<>();
+				for (IEObjectDescription res : result) {
+					if (DeclMergingUtils.isAugmentationModuleOrModule(res)) {
+						modAugmentations.add(res);
+					}
+				}
+				result = modAugmentations.isEmpty() ? result : modAugmentations;
+			}
 			size = result.size();
 		}
 		// handle merged declared modules
@@ -358,6 +384,11 @@ public class ProjectImportEnablingScope implements IScope {
 		if (name == null) {
 			return Collections.emptyList();
 		}
+		if (QualifiedNameUtils.isAmbient(name)) {
+			List<String> segments = new ArrayList<>(name.getSegments());
+			segments.remove(0);
+			name = QualifiedName.create(segments);
+		}
 
 		ModuleSpecifierForm moduleSpecifierForm = computeImportType(name, this.contextProject);
 
@@ -393,6 +424,25 @@ public class ProjectImportEnablingScope implements IScope {
 	@Override
 	public Iterable<IEObjectDescription> getAllElements() {
 		return parent.getAllElements();
+	}
+
+	/**
+	 * Finds elements with the assumption that the given qualified name starts with a project identifier. If so, all
+	 * referring elements of that project are returned. Otherwise returns an empty list.
+	 */
+	public Collection<IEObjectDescription> findElementsInProject(QualifiedName projectQName) {
+		ModuleSpecifierForm moduleSpecifierForm = computeImportType(projectQName, this.contextProject);
+		if (moduleSpecifierForm == ModuleSpecifierForm.PROJECT || moduleSpecifierForm == ModuleSpecifierForm.COMPLETE) {
+			final N4JSPackageName projectName = new N4JSPackageName(projectQName.getFirstSegment());
+			N4JSProjectConfigSnapshot targetProject = findProject(projectName, contextProject, true);
+			QualifiedName mainModuleName = ImportSpecifierUtil.getMainModuleOfProject(targetProject);
+			ArrayList<String> newSegments = new ArrayList<>(projectQName.getSegments());
+			newSegments.remove(0);
+			newSegments.add(0, mainModuleName.toString());
+			QualifiedName transformedQN = QualifiedName.create(newSegments);
+			return getElementsWithDesiredProjectName(transformedQN, projectName);
+		}
+		return Collections.emptyList();
 	}
 
 	/**
@@ -494,7 +544,7 @@ public class ProjectImportEnablingScope implements IScope {
 	 * Convenience method over
 	 * {@link ImportSpecifierUtil#computeImportType(QualifiedName, boolean, N4JSProjectConfigSnapshot)}
 	 */
-	private ModuleSpecifierForm computeImportType(QualifiedName name, N4JSProjectConfigSnapshot project) {
+	public ModuleSpecifierForm computeImportType(QualifiedName name, N4JSProjectConfigSnapshot project) {
 		final String firstSegment = name.getFirstSegment();
 		final N4JSProjectConfigSnapshot targetProject = findProject(new N4JSPackageName(firstSegment), project, true);
 		final boolean firstSegmentIsProjectName = targetProject != null;

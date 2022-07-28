@@ -10,18 +10,19 @@
  */
 package org.eclipse.n4js.utils;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSMetaModelUtils.N4JSMetaModelCache;
-import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
@@ -53,41 +54,19 @@ public class DeclMergingUtils {
 	});
 
 	/**
-	 * Tells whether the element represented by the given {@link IEObjectDescription} <em>may potentially</em> be merged
-	 * with other elements by way of declaration merging. Does <b>not</b> tell whether the element is actually merged
-	 * with other elements.
+	 * Returns <code>true</code> iff the given element is allowed to be merged with other elements by way of declaration
+	 * merging.
 	 */
 	public static boolean mayBeMerged(IEObjectDescription desc) {
-		if (ResourceType.getResourceType(desc.getEObjectURI()) != ResourceType.DTS) {
-			return false;
-		}
-		if (TypesPackage.Literals.TMODULE.isSuperTypeOf(desc.getEClass())) {
-			if (isGlobal(desc) || isContainedInDeclaredModule(desc) || isMainModule(desc)) {
-				return true;
-			}
-			return false;
-		}
-		return true;
+		return (ResourceType.getResourceType(desc.getEObjectURI()) == ResourceType.DTS);
 	}
 
 	/**
-	 * Tells whether the given element <em>may potentially</em> be merged with other elements by way of declaration
-	 * merging. Does <b>not</b> tell whether the element is actually merged with other elements.
+	 * Returns <code>true</code> iff the given element is allowed to be merged with other elements by way of declaration
+	 * merging.
 	 */
 	public static boolean mayBeMerged(EObject elem) {
-		if (ResourceType.getResourceType(elem) != ResourceType.DTS) {
-			return false;
-		}
-		if (elem instanceof Script) {
-			elem = ((Script) elem).getModule();
-		}
-		if (elem instanceof TModule) {
-			if (isGlobal(elem) || isContainedInDeclaredModule(elem) || isMainModule(elem)) {
-				return true;
-			}
-			return false;
-		}
-		return true;
+		return ResourceType.getResourceType(elem) == ResourceType.DTS;
 	}
 
 	/**
@@ -135,5 +114,25 @@ public class DeclMergingUtils {
 	public static boolean isContainedInDeclaredModule(EObject elem) {
 		Resource resource = elem != null ? elem.eResource() : null;
 		return resource != null && URIUtils.isVirtualResourceURI(resource.getURI());
+	}
+
+	/** Returns <code>true</code> iff the given element is either a non-ambient module or module augmentation. */
+	public static boolean isAugmentationModuleOrModule(EObject eobj) {
+		TModule tModule = EcoreUtil2.getContainerOfType(eobj, TModule.class);
+		if (tModule == null) {
+			return false;
+		}
+		URI uri = EcoreUtil.getURI(eobj);
+		if (URIUtils.isVirtualResourceURI(uri)) {
+			return AnnotationDefinition.MODULE_AUGMENTATION.hasAnnotation(tModule);
+		} else {
+			return !tModule.isMainModule(); // treat main modules as declared modules
+		}
+	}
+
+	/** Returns <code>true</code> iff the given element is either a non-ambient module or module augmentation. */
+	public static boolean isAugmentationModuleOrModule(IEObjectDescription descr) {
+		EObject eobj = descr.getEObjectOrProxy();
+		return isAugmentationModuleOrModule(eobj);
 	}
 }
