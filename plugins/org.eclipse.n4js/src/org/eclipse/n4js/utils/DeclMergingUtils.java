@@ -105,6 +105,12 @@ public class DeclMergingUtils {
 		return elem instanceof TModule && ((TModule) elem).isMainModule();
 	}
 
+	/** Returns <code>true</code> iff the given element is the main module of a project or a (transitive) child. */
+	public static boolean isOrInMainModule(EObject elem) {
+		TModule tModule = EcoreUtil2.getContainerOfType(elem, TModule.class);
+		return tModule != null && tModule.isMainModule();
+	}
+
 	/** Returns <code>true</code> iff the element represented by the given description is from a declared module. */
 	public static boolean isContainedInDeclaredModule(IEObjectDescription desc) {
 		return desc != null && URIUtils.isVirtualResourceURI(desc.getEObjectURI());
@@ -126,7 +132,7 @@ public class DeclMergingUtils {
 		if (URIUtils.isVirtualResourceURI(uri)) {
 			return AnnotationDefinition.MODULE_AUGMENTATION.hasAnnotation(tModule);
 		} else {
-			return !tModule.isMainModule(); // treat main modules as declared modules
+			return true;
 		}
 	}
 
