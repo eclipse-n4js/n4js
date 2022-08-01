@@ -122,10 +122,23 @@ public class ParserContextUtils {
 		StatementListContext stmnts = ctx.statementList();
 		if (stmnts != null && stmnts.statement() != null) {
 			for (StatementContext stmnt : stmnts.statement()) {
-				if (stmnt.importStatement() != null && stmnt.importStatement().importFromBlock() != null) {
-					ImportFromBlockContext ifbCtx = stmnt.importStatement().importFromBlock();
+				ImportStatementContext impStmt = stmnt.importStatement();
+				if (impStmt == null) {
+					continue;
+				}
+				if (impStmt.importFromBlock() != null) {
+					ImportFromBlockContext ifbCtx = impStmt.importFromBlock();
 					if (ifbCtx.StringLiteral() != null) {
 						String strLit = ifbCtx.StringLiteral().getText();
+						String modSpec = strLit.substring(1, strLit.length() - 1);
+						return Objects.equals(moduleSpecifier, modSpec);
+					}
+				} else if (impStmt.importAliasDeclaration() != null
+						&& impStmt.importAliasDeclaration().Require() != null) {
+
+					ImportAliasDeclarationContext iadCtx = impStmt.importAliasDeclaration();
+					if (iadCtx.StringLiteral() != null) {
+						String strLit = iadCtx.StringLiteral().getText();
 						String modSpec = strLit.substring(1, strLit.length() - 1);
 						return Objects.equals(moduleSpecifier, modSpec);
 					}
@@ -140,9 +153,6 @@ public class ParserContextUtils {
 		// as it turns out, elements declared in a .d.ts file are always available from the outside, not matter whether
 		// they are preceded by keyword 'declared' or 'export' or none of the two; thus, we always return 'true':
 		return true;
-		// ParserRuleContext exportedParentCtx = findParentContext(ctx, TypeScriptParser.RULE_exportStatement,
-		// TypeScriptParser.RULE_statement);
-		// return exportedParentCtx != null;
 	}
 
 	/** @return the global scope augmentations directly contained in the given module declaration. */

@@ -433,7 +433,7 @@ public class ProjectImportEnablingScope implements IScope {
 	public Collection<IEObjectDescription> findElementsInProject(QualifiedName projectQName) {
 		ModuleSpecifierForm moduleSpecifierForm = computeImportType(projectQName, this.contextProject);
 		if (moduleSpecifierForm == ModuleSpecifierForm.PROJECT || moduleSpecifierForm == ModuleSpecifierForm.COMPLETE) {
-			final N4JSPackageName projectName = new N4JSPackageName(projectQName.getFirstSegment());
+			N4JSPackageName projectName = new N4JSPackageName(projectQName.getFirstSegment());
 			N4JSProjectConfigSnapshot targetProject = findProject(projectName, contextProject, true);
 			QualifiedName mainModuleName = ImportSpecifierUtil.getMainModuleOfProject(targetProject);
 			ArrayList<String> newSegments = new ArrayList<>(projectQName.getSegments());
@@ -493,7 +493,7 @@ public class ProjectImportEnablingScope implements IScope {
 	 * This method asks {@link #delegate} for elements matching provided <code>moduleSpecifier</code>. Returned results
 	 * are filtered by expected {@link N4JSPackageName}.
 	 */
-	private Collection<IEObjectDescription> getElementsWithDesiredProjectName(QualifiedName moduleSpecifier,
+	public Collection<IEObjectDescription> getElementsWithDesiredProjectName(QualifiedName moduleSpecifier,
 			N4JSPackageName projectName) {
 
 		final Iterable<IEObjectDescription> moduleSpecifierMatchesWithPossibleDuplicates = delegate
@@ -503,10 +503,15 @@ public class ProjectImportEnablingScope implements IScope {
 		// applied). We filter duplicates by uniqueness of target EObject URI.
 		final Map<String, IEObjectDescription> result = new HashMap<>();
 		for (IEObjectDescription desc : moduleSpecifierMatchesWithPossibleDuplicates) {
-			final N4JSProjectConfigSnapshot containingProject = workspaceConfigSnapshot
-					.findProjectContaining(desc.getEObjectURI());
-			if (containingProject != null && projectName.equals(containingProject.getN4JSPackageName())) {
-				result.put(desc.getEObjectURI().toString(), desc);
+			URI uri = desc.getEObjectURI();
+			if (projectName == null) {
+				result.put(uri.toString(), desc);
+
+			} else {
+				N4JSProjectConfigSnapshot containingProject = workspaceConfigSnapshot.findProjectContaining(uri);
+				if (containingProject != null && projectName.equals(containingProject.getN4JSPackageName())) {
+					result.put(uri.toString(), desc);
+				}
 			}
 		}
 		return result.values();
