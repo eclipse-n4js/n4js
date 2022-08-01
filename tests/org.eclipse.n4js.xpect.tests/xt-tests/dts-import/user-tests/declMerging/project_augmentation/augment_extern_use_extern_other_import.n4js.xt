@@ -108,7 +108,7 @@
 
 
 // XPECT noerrors -->
-import { Moment, fff } from "moment-timezone";
+import { Moment, fff } from "moment"; // other import here
 
 let m : Moment = null;
 

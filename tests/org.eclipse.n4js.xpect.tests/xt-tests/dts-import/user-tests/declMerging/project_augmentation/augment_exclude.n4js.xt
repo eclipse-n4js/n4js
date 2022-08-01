@@ -95,8 +95,10 @@
 
 // XPECT noerrors -->
 import { Moment, TimeUnit } from "moment";
-// XPECT errors --> "" at "OtherIfc"
+// XPECT errors --> "Import of OtherIfc cannot be resolved." at "OtherIfc"
 import { OtherIfc } from "moment";
+// XPECT errors --> "Import of Moment cannot be resolved." at "Moment"
+import { Moment } from "other";
 
 let tu : TimeUnit = null;
 let m : Moment = null;
