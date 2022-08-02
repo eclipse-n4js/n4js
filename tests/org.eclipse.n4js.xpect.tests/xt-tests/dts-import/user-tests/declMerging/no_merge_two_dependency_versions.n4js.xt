@@ -9,6 +9,13 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+
+
+//		NodeModuleProject "dep" {
+//			File "index.d.ts" { from="dep_v1_index.d.ts" }
+//			File "package.json" { from="dep_v1_package.json" }
+//		}
+
 /*
 	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
 
@@ -17,6 +24,10 @@
 		NodeModuleProject "dep" {
 			File "index.d.ts" { from="dep_v1_index.d.ts" }
 			File "package.json" { from="dep_v1_package.json" }
+		}
+		NodeModuleProject "dep-augmentation" {
+			File "dep.d.ts" { from="dep-augmentation_index.d.ts" }
+			File "package.json" { from="dep-augmentation_package.json" }
 		}
 		Project "myProject" {
 			Folder "node_modules" {
@@ -63,6 +74,27 @@
 	}
 
 
+	File "dep-augmentation_index.d.ts" {
+		import dep = require('dep');
+		declare module "dep" {
+			class DepClass {
+				field_augm: string;
+			}
+		}
+		export = dep;
+	}
+	File "dep-augmentation_package.json" {
+		{
+			"name": "dep-augmentation",
+  			"main": "index.js",
+  			"type": "module",
+  			"dependencies": {
+  				"dep": ""
+  			}
+		}
+	}
+
+
 
 	File "myProject_package.json" {
 		{
@@ -71,7 +103,8 @@
   			"type": "module",
   			"dependencies": {
   				"n4js-runtime": "*",
-  				"dep": "*"
+  				"dep": "*",
+  				"dep-augmentation": "*"
   			},
   			"n4js": {
 				"projectType": "library",
@@ -97,10 +130,13 @@ import { DepClass } from "dep";
 // XPECT noerrors -->
 let dc : DepClass = new DepClass();
 
-// XPECT noerrors -->
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'field1'." at "field1"
 dc.field1;
 
-// XPECT errors --> "" at "field2"
+// XPECT noerrors -->
 dc.field2;
+
+// XPECT noerrors -->
+dc.field_augm;
 
 
