@@ -1,0 +1,106 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+
+	Workspace {
+		NodeModuleProject "dep" {
+			File "index.d.ts" { from="dep_v1_index.d.ts" }
+			File "package.json" { from="dep_v1_package.json" }
+		}
+		Project "myProject" {
+			Folder "node_modules" {
+				Folder "dep" {
+					File "index.d.ts" { from="dep_v2_index.d.ts" }
+					File "package.json" { from="dep_v2_package.json" }
+				}
+			}
+			Folder "src" {
+				ThisFile {}
+			}
+			File "package.json" { from="myProject_package.json" }
+		}
+	}
+
+
+	File "dep_v1_index.d.ts" {
+		export class DepClass {
+			field1: string;
+		}
+	}
+	File "dep_v1_package.json" {
+		{
+			"name": "dep",
+			"version": "1.0.0",
+  			"main": "index.js",
+  			"type": "module"
+		}
+	}
+
+
+	File "dep_v2_index.d.ts" {
+		export class DepClass {
+			field2: number;
+		}
+	}
+	File "dep_v2_package.json" {
+		{
+			"name": "dep",
+			"version": "2.0.0",
+  			"main": "index.js",
+  			"type": "module"
+		}
+	}
+
+
+
+	File "myProject_package.json" {
+		{
+			"name": "myProject",
+  			"main": "index.js",
+  			"type": "module",
+  			"dependencies": {
+  				"n4js-runtime": "*",
+  				"dep": "*"
+  			},
+  			"n4js": {
+				"projectType": "library",
+				"vendorId": "org.eclipse.n4js",
+				"vendorName": "Eclipse N4JS Project",
+				"output": "src-gen",
+				"sources": {
+					"source": [
+						"src"
+					]
+				}
+  			}
+		}
+	}
+
+	END_SETUP
+ */
+
+
+// XPECT noerrors -->
+import { DepClass } from "dep";
+
+// XPECT noerrors -->
+let dc : DepClass = new DepClass();
+
+// XPECT noerrors -->
+dc.field1;
+
+// XPECT errors --> "" at "field2"
+dc.field2;
+
+
