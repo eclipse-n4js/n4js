@@ -440,7 +440,7 @@ public class ProjectImportEnablingScope implements IScope {
 			newSegments.remove(0);
 			newSegments.add(0, mainModuleName.toString());
 			QualifiedName transformedQN = QualifiedName.create(newSegments);
-			return getElementsWithDesiredProjectName(transformedQN, projectName);
+			return getElementsWithDesiredProjectName(transformedQN, targetProject);
 		}
 		return Collections.emptyList();
 	}
@@ -466,7 +466,7 @@ public class ProjectImportEnablingScope implements IScope {
 
 		Collection<IEObjectDescription> result;
 		result = moduleNameToSearch != null
-				? getElementsWithDesiredProjectName(moduleNameToSearch, targetProject.getN4JSPackageName())
+				? getElementsWithDesiredProjectName(moduleNameToSearch, targetProject)
 				: Collections.emptyList();
 
 		if (result.isEmpty()
@@ -482,7 +482,7 @@ public class ProjectImportEnablingScope implements IScope {
 				// leave 'moduleNameToSearch' unchanged
 			}
 			result = moduleNameToSearch != null
-					? getElementsWithDesiredProjectName(moduleNameToSearch, projectName)
+					? getElementsWithDesiredProjectName(moduleNameToSearch, targetProject)
 					: Collections.emptyList();
 		}
 
@@ -494,7 +494,7 @@ public class ProjectImportEnablingScope implements IScope {
 	 * are filtered by expected {@link N4JSPackageName}.
 	 */
 	public Collection<IEObjectDescription> getElementsWithDesiredProjectName(QualifiedName moduleSpecifier,
-			N4JSPackageName projectName) {
+			N4JSProjectConfigSnapshot targetProject) {
 
 		final Iterable<IEObjectDescription> moduleSpecifierMatchesWithPossibleDuplicates = delegate
 				.getElements(moduleSpecifier);
@@ -504,12 +504,12 @@ public class ProjectImportEnablingScope implements IScope {
 		final Map<String, IEObjectDescription> result = new HashMap<>();
 		for (IEObjectDescription desc : moduleSpecifierMatchesWithPossibleDuplicates) {
 			URI uri = desc.getEObjectURI();
-			if (projectName == null) {
+			if (targetProject == null) {
 				result.put(uri.toString(), desc);
 
 			} else {
 				N4JSProjectConfigSnapshot containingProject = workspaceConfigSnapshot.findProjectContaining(uri);
-				if (containingProject != null && projectName.equals(containingProject.getN4JSPackageName())) {
+				if (containingProject == targetProject) {
 					result.put(uri.toString(), desc);
 				}
 			}

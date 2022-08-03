@@ -185,6 +185,14 @@ public class SemanticDependencySupplier {
 					return absDepPath;
 				}
 			}
+
+			// Fallback: Happens when a yarn-root/node_modules/depA depends on a dependency
+			// located in yarn-root/packages/prj/node_modules/depB
+			if (!candidates.isEmpty()) {
+				N4JSProjectConfig fallbackPrj = candidates.iterator().next();
+				return fallbackPrj.getPathAsFileURI().toPath();
+			}
+
 		}
 		return null;
 	}

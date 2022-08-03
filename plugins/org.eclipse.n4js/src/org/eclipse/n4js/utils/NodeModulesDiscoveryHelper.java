@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.n4js.N4JSGlobals;
@@ -115,11 +116,19 @@ public class NodeModulesDiscoveryHelper {
 
 		final Optional<File> workspaceRoot = getYarnWorkspaceRoot(projectLocationAsFile, pdCache);
 		if (workspaceRoot.isPresent()) {
-			boolean isYarnWorkspaceDependency = isInNodeModulesFolder(projectLocationAsFile);
+			File containingNMF = getContainingNodeModulesFolder(projectLocationAsFile);
 			File workspaceNMF = new File(workspaceRoot.get(), N4JSGlobals.NODE_MODULES);
-			File localNMF = new File(projectLocationAsFile, N4JSGlobals.NODE_MODULES);
-			localNMF = !isYarnWorkspaceDependency && localNMF.exists() ? localNMF : null;
-			return new NodeModulesFolder(false, true, isYarnWorkspaceDependency, localNMF, workspaceNMF);
+			if (containingNMF == null) {
+				File localNMF = new File(projectLocationAsFile, N4JSGlobals.NODE_MODULES);
+				localNMF = localNMF.exists() ? localNMF : null;
+				return new NodeModulesFolder(false, true, false, localNMF, workspaceNMF);
+			} else {
+				if (Objects.equals(containingNMF, workspaceNMF)) {
+					return new NodeModulesFolder(false, true, true, null, workspaceNMF);
+				} else {
+					return new NodeModulesFolder(false, true, true, containingNMF, workspaceNMF);
+				}
+			}
 		}
 
 		final Path nodeModulesPath = projectLocation.resolve(N4JSGlobals.NODE_MODULES);
@@ -288,20 +297,24 @@ public class NodeModulesDiscoveryHelper {
 	}
 
 	private boolean isInNodeModulesFolder(File projectRoot) {
+		return getContainingNodeModulesFolder(projectRoot) != null;
+	}
+
+	private File getContainingNodeModulesFolder(File projectRoot) {
 		if (projectRoot == null) {
-			return false;
+			return null;
 		}
 		File parentFolder = projectRoot.getParentFile();
 		if (parentFolder == null) {
-			return false;
+			return null;
 		}
 		if (N4JSGlobals.NODE_MODULES.equals(parentFolder.getName())) {
-			return true;
+			return parentFolder;
 		}
 		if (parentFolder.getName().startsWith("@")
 				&& N4JSGlobals.NODE_MODULES.equals(parentFolder.getParentFile().getName())) {
-			return true;
+			return parentFolder.getParentFile();
 		}
-		return false;
+		return null;
 	}
 }

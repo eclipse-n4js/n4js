@@ -48,7 +48,6 @@ import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
-import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -210,9 +209,8 @@ public class DeclMergingHelper {
 		ProjectImportEnablingScope ctxPieScope = getProjectImportEnablingScope(context, eClass);
 		N4JSProjectConfigSnapshot elemPrj = workspaceAccess.findProjectContaining(element);
 		N4JSProjectConfigSnapshot ctxPrj = workspaceAccess.findProjectContaining(context);
-		N4JSPackageName elemProjectName = new N4JSPackageName(elemPrj.getPackageName());
 
-		resultSet.addAll(findAndResolve(ctxPieScope, context, elemQN, elemProjectName));
+		resultSet.addAll(findAndResolve(ctxPieScope, context, elemQN, elemPrj));
 
 		ModuleSpecifierForm importType = ctxPieScope.computeImportType(elemQN, elemPrj);
 		if (importType != ModuleSpecifierForm.PLAIN) {
@@ -290,8 +288,8 @@ public class DeclMergingHelper {
 	}
 
 	private List<EObject> findAndResolve(ProjectImportEnablingScope pieScope, N4JSResource resource, QualifiedName qn,
-			N4JSPackageName projectName) {
-		Collection<IEObjectDescription> elems = pieScope.getElementsWithDesiredProjectName(qn, projectName);
+			N4JSProjectConfigSnapshot targetProject) {
+		Collection<IEObjectDescription> elems = pieScope.getElementsWithDesiredProjectName(qn, targetProject);
 		List<EObject> result = new ArrayList<>();
 
 		// contextScope.getElements(fqn) returns all polyfills, since shadowing is handled differently
