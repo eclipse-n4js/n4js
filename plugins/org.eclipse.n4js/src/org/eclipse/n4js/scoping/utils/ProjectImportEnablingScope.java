@@ -475,8 +475,8 @@ public class ProjectImportEnablingScope implements IScope {
 			// no elements found AND #findProject() returned a different project than we asked for (happens if a
 			// type definition project is available)
 			// -> as a fall back, try again in project we asked for (i.e. the defined project)
+			targetProject = findProject(projectName, contextProject, false);
 			if (useMainModule) {
-				targetProject = findProject(projectName, contextProject, false);
 				moduleNameToSearch = ImportSpecifierUtil.getMainModuleOfProject(targetProject);
 			} else {
 				// leave 'moduleNameToSearch' unchanged
