@@ -140,8 +140,10 @@ public class DtsParsesDefinitelyTypedTest {
 				if (resolved.toFile().exists()) {
 					break;
 				}
-				srcRoot = file.getParent();
+				srcRoot = srcRoot.getParent();
 			}
+
+			System.out.println("Parsing: " + file);
 
 			try (BufferedReader buf = new BufferedReader(new InputStreamReader(new FileInputStream(file.toFile())))) {
 
