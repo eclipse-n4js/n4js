@@ -112,7 +112,7 @@ public class ContainerTypesHelper {
 		if (!(contextResource instanceof N4JSResource)) {
 			throw new IllegalArgumentException("polyfills etc are only supported by n4js");
 		}
-		return new MemberCollector(contextResource);
+		return new MemberCollector((N4JSResource) contextResource);
 	}
 
 	/**
@@ -132,9 +132,9 @@ public class ContainerTypesHelper {
 	 */
 	public class MemberCollector {
 
-		private final Resource contextResource;
+		private final N4JSResource contextResource;
 
-		private MemberCollector(Resource contextResource) {
+		private MemberCollector(N4JSResource contextResource) {
 			this.contextResource = contextResource;
 		}
 

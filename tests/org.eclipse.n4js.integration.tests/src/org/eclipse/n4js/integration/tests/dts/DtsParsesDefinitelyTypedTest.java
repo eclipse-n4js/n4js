@@ -134,9 +134,20 @@ public class DtsParsesDefinitelyTypedTest {
 		Stopwatch sw = Stopwatch.createStarted();
 
 		for (Path file : files) {
+			Path srcRoot = file.getParent();
+			while (srcRoot != null) {
+				Path resolved = srcRoot.resolve("tsconfig.json");
+				if (resolved.toFile().exists()) {
+					break;
+				}
+				srcRoot = srcRoot.getParent();
+			}
+
+			System.out.println("Parsing: " + file);
+
 			try (BufferedReader buf = new BufferedReader(new InputStreamReader(new FileInputStream(file.toFile())))) {
 
-				parseFile(file, (result) -> {
+				parseFile(srcRoot, file, (result) -> {
 					if (result.hasSyntaxErrors()) {
 						counts.fail++;
 						if (w != null) {
@@ -196,12 +207,12 @@ public class DtsParsesDefinitelyTypedTest {
 	/**
 	 * Parses the given file including all nested resources i.e. all declared modules
 	 */
-	static public void parseFile(Path file, Consumer<DtsParseResult> onResult) throws Exception {
+	static public void parseFile(Path root, Path file, Consumer<DtsParseResult> onResult) throws Exception {
 		try (BufferedReader buf = new BufferedReader(new InputStreamReader(new FileInputStream(file.toFile())))) {
 			N4JSResource resource = new N4JSResource();
 			URI fileUri = new FileURI(file).toURI();
 			resource.setURI(fileUri);
-			DtsParseResult parseResult = new DtsParser().parse(buf, resource);
+			DtsParseResult parseResult = new DtsParser().parse(root, buf, resource);
 
 			onResult.accept(parseResult);
 
@@ -213,7 +224,7 @@ public class DtsParsesDefinitelyTypedTest {
 				NestedResourceAdapter nestedResourceAdapter = resultInfoAdapter.getNestedResourceAdapter(uri);
 
 				NestedResourceAdapter.update(newResource, nestedResourceAdapter);
-				DtsParseResult newParseResult = new DtsParser().parse(null, newResource);
+				DtsParseResult newParseResult = new DtsParser().parse(null, null, newResource);
 
 				onResult.accept(newParseResult);
 			}

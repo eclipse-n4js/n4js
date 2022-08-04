@@ -54,6 +54,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.UtilN4;
 
 import com.google.common.base.Function;
@@ -284,6 +285,13 @@ public final class AnnotationDefinition {
 			.transitive()
 			.retention(RetentionPolicy.TYPE)
 			.end();
+
+	/**
+	 * States that the annotated {@link TModule} is a d.ts augmentation module
+	 */
+	public final static AnnotationDefinition MODULE_AUGMENTATION = define("ModuleAugmentation").targets(SCRIPT)
+			.transitive()
+			.retention(RetentionPolicy.TYPE).end();
 
 	// <---- TEST support annotations (at some point should be moved to concrete test plugin) ---->
 

@@ -39,6 +39,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.ExportEqualsContext;
 import org.eclipse.n4js.dts.TypeScriptParser.GlobalScopeAugmentationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportAliasDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ImportFromBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
@@ -116,14 +117,42 @@ public class ParserContextUtils {
 		return DtsMode.SCRIPT;
 	}
 
+	/** @return true iff the current module has an import with the given import specifier. */
+	public static boolean hasImport(ProgramContext ctx, String moduleSpecifier) {
+		StatementListContext stmnts = ctx.statementList();
+		if (stmnts != null && stmnts.statement() != null) {
+			for (StatementContext stmnt : stmnts.statement()) {
+				ImportStatementContext impStmt = stmnt.importStatement();
+				if (impStmt == null) {
+					continue;
+				}
+				if (impStmt.importFromBlock() != null) {
+					ImportFromBlockContext ifbCtx = impStmt.importFromBlock();
+					if (ifbCtx.StringLiteral() != null) {
+						String strLit = ifbCtx.StringLiteral().getText();
+						String modSpec = strLit.substring(1, strLit.length() - 1);
+						return Objects.equals(moduleSpecifier, modSpec);
+					}
+				} else if (impStmt.importAliasDeclaration() != null
+						&& impStmt.importAliasDeclaration().Require() != null) {
+
+					ImportAliasDeclarationContext iadCtx = impStmt.importAliasDeclaration();
+					if (iadCtx.StringLiteral() != null) {
+						String strLit = iadCtx.StringLiteral().getText();
+						String modSpec = strLit.substring(1, strLit.length() - 1);
+						return Objects.equals(moduleSpecifier, modSpec);
+					}
+				}
+			}
+		}
+		return false;
+	}
+
 	/** @return true iff the element represented by the given context should be exported on N4JS-side. */
 	public static boolean isExported(@SuppressWarnings("unused") ParserRuleContext ctx) {
 		// as it turns out, elements declared in a .d.ts file are always available from the outside, not matter whether
 		// they are preceded by keyword 'declared' or 'export' or none of the two; thus, we always return 'true':
 		return true;
-		// ParserRuleContext exportedParentCtx = findParentContext(ctx, TypeScriptParser.RULE_exportStatement,
-		// TypeScriptParser.RULE_statement);
-		// return exportedParentCtx != null;
 	}
 
 	/** @return the global scope augmentations directly contained in the given module declaration. */
@@ -238,6 +267,13 @@ public class ParserContextUtils {
 		addAnnotation(classifierDecl, ann);
 	}
 
+	/** Add an <code>@ModuleAugmentation()</code> annotation to the given script. */
+	public static void addAnnotationModuleAugmentation(Script script) {
+		Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
+		ann.setName(AnnotationDefinition.MODULE_AUGMENTATION.name);
+		script.getAnnotations().add(ann);
+	}
+
 	/** Add the given annotation to the given element. */
 	public static void addAnnotation(AnnotableScriptElement elem, Annotation ann) {
 		if (elem == null || ann == null) {
@@ -287,6 +323,11 @@ public class ParserContextUtils {
 
 		boolean isExported = ParserContextUtils.isExported(ctx);
 		addAndHandleExported(addHere, eRef, elem, makePrivateIfNotExported, isExported, false);
+	}
+
+	/** Returns true iff the given name refers to a module augmentation declaration */
+	public static boolean isModuleAugmentationName(String name) {
+		return name.startsWith(".") || name.startsWith("/");
 	}
 
 	/**
@@ -353,7 +394,7 @@ public class ParserContextUtils {
 		}
 		Set<Integer> stopAtIdsSet = stopAtIds == null ? Collections.emptySet() : Set.of(stopAtIds);
 
-		while (ctx.parent != null) {
+		while (ctx != null) {
 			if (ctx.getRuleIndex() == parentContextId) {
 				return ctx;
 			}

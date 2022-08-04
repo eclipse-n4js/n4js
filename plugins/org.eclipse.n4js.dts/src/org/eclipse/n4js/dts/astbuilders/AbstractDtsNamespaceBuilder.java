@@ -16,9 +16,11 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_exportStatement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_exportStatementTail;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_moduleDeclaration;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_namespaceDeclaration;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_program;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statementList;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +39,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.InterfaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
@@ -245,7 +248,25 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 
 	/** Triggers the creation of a nested/virtual resource. */
 	private void createNestedModule(ParserRuleContext ctx, Iterable<StatementContext> statements, String name) {
-		URI virtualUri = URIUtils.createVirtualResourceURI(resource.getURI(), name + ".d.ts");
+		URI resUri = resource.getURI();
+
+		if (ParserContextUtils.isModuleAugmentationName(name)) {
+			ProgramContext pgrCtx = (ProgramContext) ParserContextUtils.findParentContext(ctx, RULE_program);
+			if (pgrCtx == null || !ParserContextUtils.hasImport(pgrCtx, name)) {
+				// augmented modules need to be imported
+				return;
+			}
+
+			// module augmentation
+			Path resPath = Path.of(resUri.toFileString()).getParent();
+			Path nestedModulePath = Path.of(name);
+			Path resolvedPath = resPath.resolve(nestedModulePath).normalize();
+			name = srcFolder.relativize(resolvedPath).toString();
+		} else {
+			// ambient module
+		}
+
+		URI virtualUri = URIUtils.createVirtualResourceURI(resUri, name + ".d.ts");
 
 		LoadResultInfoAdapter loadResultInfo = (LoadResultInfoAdapter) ILoadResultInfoAdapter.get(resource);
 		if (loadResultInfo == null) {

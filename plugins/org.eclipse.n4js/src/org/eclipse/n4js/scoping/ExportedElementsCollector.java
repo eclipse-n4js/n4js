@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.MemberAccess;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker.TypeVisibility;
 import org.eclipse.n4js.scoping.accessModifiers.HollowTypeOrValueDescription;
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription;
@@ -77,7 +78,7 @@ public class ExportedElementsCollector {
 	private static final class CollectionInfo {
 
 		final AbstractNamespace start;
-		final Resource contextResource;
+		final N4JSResource contextResource;
 		final Optional<MemberAccess> memberAccess;
 		final boolean includeHollows;
 		final boolean includeValueOnlyElements;
@@ -87,8 +88,10 @@ public class ExportedElementsCollector {
 
 		private RecursionGuard<AbstractNamespace> guard;
 
-		public CollectionInfo(AbstractNamespace start, Resource contextResource, Optional<MemberAccess> memberAccess,
+		public CollectionInfo(AbstractNamespace start, N4JSResource contextResource,
+				Optional<MemberAccess> memberAccess,
 				boolean includeHollows, boolean includeVariables) {
+
 			this.start = start;
 			this.contextResource = contextResource;
 			this.memberAccess = memberAccess;
@@ -137,7 +140,7 @@ public class ExportedElementsCollector {
 	 *            {@link MemberScopingHelper#createMemberScope(TypeRef, MemberAccess, boolean, boolean, boolean)
 	 *            MemberScopingHelper}. If this argument is absent, support for this special case will be turned off.
 	 */
-	public Iterable<IEObjectDescription> getExportedElements(AbstractNamespace namespace, Resource contextResource,
+	public Iterable<IEObjectDescription> getExportedElements(AbstractNamespace namespace, N4JSResource contextResource,
 			Optional<MemberAccess> memberAccess, boolean includeHollows, boolean includeValueOnlyElements) {
 
 		CollectionInfo info = new CollectionInfo(namespace, contextResource, memberAccess, includeHollows,
@@ -274,7 +277,7 @@ public class ExportedElementsCollector {
 
 	/**
 	 * See the documentation of parameter {@code memberAccess} in
-	 * {@link #getExportedElements(AbstractNamespace, Resource, Optional, boolean, boolean) #getExportedElements()}.
+	 * {@link #getExportedElements(AbstractNamespace, N4JSResource, Optional, boolean, boolean) #getExportedElements()}.
 	 */
 	private void doCollectMembersOfVariableAsElements(TVariable variable, CollectionInfo info) {
 		if (!info.memberAccess.isPresent()) {

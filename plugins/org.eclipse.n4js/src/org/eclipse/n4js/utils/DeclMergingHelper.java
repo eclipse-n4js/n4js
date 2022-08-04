@@ -15,14 +15,24 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
+import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
+import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.scoping.utils.MainModuleAwareSelectableBasedScope;
+import org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.types.AbstractNamespace;
@@ -31,14 +41,23 @@ import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
+import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
@@ -57,6 +76,15 @@ public class DeclMergingHelper {
 
 	@Inject
 	private TypeSystemHelper tsh;
+
+	@Inject
+	private WorkspaceAccess workspaceAccess;
+
+	@Inject
+	private DeclMergingHelper declMergingHelper;
+
+	@Inject
+	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 
 	/**
 	 * For each set of merged elements in the given list, this method will retain the
@@ -137,7 +165,7 @@ public class DeclMergingHelper {
 		if (type != null && !type.eIsProxy()
 				&& type instanceof TClass
 				&& DeclMergingUtils.mayBeMerged(type)) {
-			List<Type> mergedElems = getMergedElements(type.eResource(), type);
+			List<Type> mergedElems = getMergedElements((N4JSResource) type.eResource(), type);
 			List<TypeRef> mergedTypeRefs = new ArrayList<>();
 			for (Type mergedElem : mergedElems) {
 				if (mergedElem instanceof TFunction) {
@@ -159,16 +187,8 @@ public class DeclMergingHelper {
 	 * The given namespace does not have to be the
 	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
 	 */
-	public List<AbstractNamespace> getMergedElements(Resource context, AbstractNamespace namespace) {
-		boolean nsIsMainModule = (namespace instanceof TModule && ((TModule) namespace).isMainModule());
-		QualifiedName qn = nsIsMainModule
-				? QualifiedName.create(((TModule) namespace).getPackageName())
-				: qualifiedNameProvider.getFullyQualifiedName(namespace);
-
-		List<AbstractNamespace> result = new ArrayList<>();
-		result.addAll(globalScopeAccess.getNamespacesFromGlobalScope(context, qn));
-		cleanListOfMergedElements(namespace, result);
-		return result;
+	public List<AbstractNamespace> getMergedElements(N4JSResource context, AbstractNamespace namespace) {
+		return internalGetMergedElements(context, namespace, TypesPackage.Literals.ABSTRACT_NAMESPACE);
 	}
 
 	/**
@@ -177,11 +197,40 @@ public class DeclMergingHelper {
 	 * The given type does not have to be the
 	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
 	 */
-	public List<Type> getMergedElements(Resource context, Type type) {
-		QualifiedName qn = qualifiedNameProvider.getFullyQualifiedName(type);
-		List<Type> result = globalScopeAccess.getTypesFromGlobalScope(context, qn);
-		cleanListOfMergedElements(type, result);
-		return result;
+	public List<Type> getMergedElements(N4JSResource context, Type type) {
+		return internalGetMergedElements(context, type, TypesPackage.Literals.TYPE);
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T extends EObject> List<T> internalGetMergedElements(N4JSResource context, T element, EClass eClass) {
+		Set<EObject> resultSet = new LinkedHashSet<>();
+
+		QualifiedName elemQN = qualifiedNameProvider.getFullyQualifiedName(element);
+		ProjectImportEnablingScope ctxPieScope = getProjectImportEnablingScope(context, eClass);
+		N4JSProjectConfigSnapshot elemPrj = workspaceAccess.findProjectContaining(element);
+		N4JSProjectConfigSnapshot ctxPrj = workspaceAccess.findProjectContaining(context);
+
+		resultSet.addAll(findAndResolve(ctxPieScope, context, elemQN, elemPrj));
+
+		ModuleSpecifierForm importType = ctxPieScope.computeImportType(elemQN, elemPrj);
+		if (importType != ModuleSpecifierForm.PLAIN) {
+			// means that the qn of element is shadowed by a project import
+			resultSet.addAll(findAndResolve(ctxPieScope, context, elemQN));
+		}
+		if (elemPrj != ctxPrj) {
+			TModule tModule = EcoreUtil2.getContainerOfType(element, TModule.class);
+			if (tModule != null && tModule.isMainModule()) {
+				List<String> segments = new ArrayList<>(elemQN.getSegments());
+				segments.remove(0);
+				segments.add(0, tModule.getPackageName());
+				QualifiedName projectFqn = QualifiedName.create(segments);
+				resultSet.addAll(findAndResolve(ctxPieScope, context, projectFqn, null));
+			}
+		}
+
+		List<EObject> result = new ArrayList<>(resultSet);
+		cleanListOfMergedElements(element, result);
+		return (List<T>) result;
 	}
 
 	/**
@@ -190,10 +239,74 @@ public class DeclMergingHelper {
 	 * The given element does not have to be the
 	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
 	 */
-	public List<EObject> getMergedElements(Resource context, IdentifiableElement elem) {
+	public List<EObject> getMergedElements(N4JSResource context, IdentifiableElement elem) {
 		QualifiedName qn = qualifiedNameProvider.getFullyQualifiedName(elem);
 		List<EObject> result = globalScopeAccess.getElementsFromGlobalScope(context, EcorePackage.Literals.EOBJECT, qn);
 		cleanListOfMergedElements(elem, result);
+		return result;
+	}
+
+	private ProjectImportEnablingScope getProjectImportEnablingScope(N4JSResource resource, EClass elementType) {
+		IScope initialScope = globalScopeAccess.getRecordingGlobalScope(resource, elementType);
+		EReference reference = N4JSPackage.eINSTANCE.getModuleRef_Module();
+
+		IResourceDescriptions resourceDescriptions = resourceDescriptionsProvider.getResourceDescriptions(resource);
+		IScope delegateMainModuleAwareScope = MainModuleAwareSelectableBasedScope.createMainModuleAwareScope(
+				initialScope, resourceDescriptions, reference.getEReferenceType());
+
+		N4JSWorkspaceConfigSnapshot ws = workspaceAccess.getWorkspaceConfig(resource);
+		IScope scope = ProjectImportEnablingScope
+				.create(ws, resource, Optional.absent(), initialScope, delegateMainModuleAwareScope, declMergingHelper);
+
+		if (scope instanceof ProjectImportEnablingScope) {
+			return (ProjectImportEnablingScope) scope;
+		}
+
+		return null;
+	}
+
+	private List<EObject> findAndResolve(ProjectImportEnablingScope pieScope, N4JSResource resource, QualifiedName qn) {
+		Collection<IEObjectDescription> elems = pieScope.findElementsInProject(qn);
+		List<EObject> result = new ArrayList<>();
+
+		// contextScope.getElements(fqn) returns all polyfills, since shadowing is handled differently
+		// for them!
+		for (IEObjectDescription descr : elems) {
+			EObject polyfillType = descr.getEObjectOrProxy();
+			if (polyfillType.eIsProxy()) {
+				// TODO review: this seems odd... is this a test setup problem (since we do not use the
+				// index
+				// there and load the resource separately)?
+				polyfillType = EcoreUtil.resolve(polyfillType, resource);
+				if (polyfillType.eIsProxy()) {
+					throw new IllegalStateException("unexpected proxy");
+				}
+			}
+			result.add(polyfillType);
+		}
+		return result;
+	}
+
+	private List<EObject> findAndResolve(ProjectImportEnablingScope pieScope, N4JSResource resource, QualifiedName qn,
+			N4JSProjectConfigSnapshot targetProject) {
+		Collection<IEObjectDescription> elems = pieScope.getElementsWithDesiredProjectName(qn, targetProject);
+		List<EObject> result = new ArrayList<>();
+
+		// contextScope.getElements(fqn) returns all polyfills, since shadowing is handled differently
+		// for them!
+		for (IEObjectDescription descr : elems) {
+			EObject polyfillType = descr.getEObjectOrProxy();
+			if (polyfillType.eIsProxy()) {
+				// TODO review: this seems odd... is this a test setup problem (since we do not use the
+				// index
+				// there and load the resource separately)?
+				polyfillType = EcoreUtil.resolve(polyfillType, resource);
+				if (polyfillType.eIsProxy()) {
+					throw new IllegalStateException("unexpected proxy");
+				}
+			}
+			result.add(polyfillType);
+		}
 		return result;
 	}
 
@@ -205,14 +318,32 @@ public class DeclMergingHelper {
 	 * In addition, this method removes the start element, because we do not want to include it in the result list.
 	 */
 	private void cleanListOfMergedElements(EObject targetElem, List<? extends EObject> mergedElemsFromScoping) {
-		if (DeclMergingUtils.isGlobal(targetElem) || DeclMergingUtils.isContainedInDeclaredModule(targetElem)) {
+		if (DeclMergingUtils.isGlobal(targetElem)) {
+			// TODO: check all are global
 			// for global elements and elements in declared modules, name equality is sufficient
 			mergedElemsFromScoping.removeIf(e -> e == targetElem || !DeclMergingUtils.mayBeMerged(e));
 		} else {
-			// in all other cases, we have to require both elements to be contained in the same package/project
-			// (we here actually require them to be contained in the same module, because checking this is simpler and
-			// faster and leads to equivalent results)
-			mergedElemsFromScoping.removeIf(e -> e == targetElem || !DeclMergingUtils.mayBeMerged(e));
+			boolean givenIsAugmentationOrModule = DeclMergingUtils.isAugmentationModuleOrModule(targetElem);
+			// in all other cases, we have to require both elements to be either a declared module or to be an
+			// augmentation / real module. In case there is a main module, declared and augmentation / real modules are
+			// allowed.
+
+			List<EObject> potRemove = new ArrayList<>();
+			boolean containsMainModule = DeclMergingUtils.isOrInMainModule(targetElem);
+			for (Iterator<? extends EObject> iter = mergedElemsFromScoping.iterator(); iter.hasNext();) {
+				EObject elem = iter.next();
+				containsMainModule |= DeclMergingUtils.isOrInMainModule(elem);
+				if (elem == targetElem || !DeclMergingUtils.mayBeMerged(elem)) {
+					iter.remove();
+				}
+				if (!containsMainModule
+						&& givenIsAugmentationOrModule != DeclMergingUtils.isAugmentationModuleOrModule(elem)) {
+					potRemove.add(elem);
+				}
+			}
+			if (!containsMainModule) {
+				mergedElemsFromScoping.removeAll(potRemove);
+			}
 		}
 	}
 }

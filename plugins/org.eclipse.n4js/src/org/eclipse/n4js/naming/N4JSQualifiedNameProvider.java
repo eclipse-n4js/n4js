@@ -41,7 +41,6 @@ import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -62,6 +61,9 @@ public class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractIm
 
 	/** Segment used for globally available elements. */
 	public static String GLOBAL_NAMESPACE_SEGMENT = "#";
+
+	/** Segment used for ambient modules (defined in d.ts module declarations). */
+	public static String AMBIENT_MODULE_SEGMENT = "$";
 
 	/** Segment used to separate the module specifier from the element name in a {@link QualifiedName}. */
 	public static String MODULE_CONTENT_SEGMENT = "!";
@@ -185,6 +187,20 @@ public class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractIm
 		return qn;
 	}
 
+	/**
+	 * Special handling for d.ts files which applies to these patterns: <br/>
+	 * File <b>Test.d.ts</b>
+	 *
+	 * <pre>
+	 * namespace N {
+	 *     class C {}
+	 * }
+	 * export = N;
+	 * </pre>
+	 *
+	 * Usually, class {@code C} would have the qualified name "Test.!.N.C" but the special handling here will change
+	 * that to "Test.!.C".
+	 */
 	private QualifiedName adjustIfExportedViaNamespaceEquals(QualifiedName qn, EObject elem) {
 		if (qn == null || elem == null) {
 			return null;
@@ -206,10 +222,7 @@ public class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractIm
 					String exportEqualsArg = ExportedElementsUtils.getExportEqualsArg(tmodule);
 					if (Objects.equal(exportEqualsArg, rootNS.getName())) {
 						ArrayList<String> newSegments = new ArrayList<>(qn.getSegments());
-						N4JSPackageName pckName = new N4JSPackageName(tmodule.getPackageName());
 						newSegments.remove(2); // removes the exported namespace name
-						newSegments.remove(0); // removes the module/file name
-						newSegments.add(0, pckName.getPlainName()); // add the project plain name
 						if (newSegments.size() <= 2) {
 							newSegments.remove(1); // removes the MODULE_CONTENT_SEGMENT
 						}

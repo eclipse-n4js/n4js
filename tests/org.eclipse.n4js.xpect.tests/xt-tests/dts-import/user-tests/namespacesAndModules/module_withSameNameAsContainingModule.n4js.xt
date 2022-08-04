@@ -17,7 +17,7 @@
 
 		export function foo(): number;
 
-		declare module "other" {
+		declare module "other2" {
 			class Cls {
 				field: number;
 			}
@@ -29,9 +29,16 @@
 
 // NOTE: in TypeScript, the above .d.ts file is accepted without error,
 // but it is not possible to import anything from "other", only from "./other"
+// However, when adding another module that contains: 
+// declare module "other2" {}
+// the import would work.
 
-// FIXME should work:
-// import { foo } from "other"
+// XPECT noerrors -->
+import { foo } from "other";
 
-// XPECT errors --> "Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: test-project/src/other.d.ts, test-project/src/other.d.ts/$VIRTUAL$/other.d.ts." at ""other""
-import { Cls } from "other"
+// XPECT FIXME errors --> "Import of Cls cannot be resolved." at "Cls"
+import { Cls } from "other2";
+
+
+foo; // avoid unused warning
+Cls; // avoid unused warning

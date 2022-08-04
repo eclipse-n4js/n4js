@@ -603,7 +603,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		try {
 			// get regular top-level elements scope
 			val memberAccess = if (context instanceof MemberAccess) Optional.of(context) else Optional.absent();
-			val tlElems = exportedElementCollector.getExportedElements(ns, context.eResource, memberAccess, includeHollows, includeValueOnlyElements);
+			val tlElems = exportedElementCollector.getExportedElements(ns, context.eResource as N4JSResource, memberAccess, includeHollows, includeValueOnlyElements);
 			val topLevelElementsScope = scopeSnapshotHelper.scopeFor("scope_AllTopLevelElementsFromAbstractNamespace", ns, parentOrNull ?: IScope.NULLSCOPE, false, tlElems);
 			return topLevelElementsScope;
 		} finally {
@@ -703,7 +703,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	private def IScope createScopeForMergedNamespaces(EObject context, Type elem, IScope parentOrNull) {
 		var result = parentOrNull;
 		if (DeclMergingUtils.mayBeMerged(elem)) {
-			val mergedElems = declMergingHelper.getMergedElements(context.eResource, elem);
+			val mergedElems = declMergingHelper.getMergedElements(context.eResource as N4JSResource, elem);
 			val mergedNamespaces = mergedElems.filter(TNamespace).toList;
 			if (mergedNamespaces.size > 1) {
 				Collections.sort(mergedNamespaces, Comparator.comparing([(it as InternalEObject).eProxyURI], new URIUtils.URIComparator()));

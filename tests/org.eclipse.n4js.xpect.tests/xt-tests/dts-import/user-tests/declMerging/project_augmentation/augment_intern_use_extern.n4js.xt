@@ -16,13 +16,8 @@
 	Workspace {
 		NodeModuleProject "moment" {
 			File "index.d.ts" { from="moment_index.d.ts" }
-			File "index.js" { from="moment_index.js" }
+			File "extension.d.ts" { from="moment_extension.d.ts" }
 			File "package.json" { from="moment_package.json" }
-		}
-		NodeModuleProject "moment-timezone" {
-			File "moment.d.ts" { from="moment_tz_index.d.ts" }
-			File "moment.js" { from="moment_tz_index.js" }
-			File "package.json" { from="moment_tz_package.json" }
 		}
 		Project "myProject" {
 			Folder "src" {
@@ -42,8 +37,15 @@
 		}
 		export = moment;
 	}
-	File "moment_index.js" {
-		// dummy
+	File "moment_extension.d.ts" {
+		import * as X from './index';
+		declare module './index' {
+		    interface Moment {
+		        tz(): moment.TimeUnit;
+		    }
+    		function fff(): Moment;
+		}
+		export = moment;
 	}
 	File "moment_package.json" {
 		{
@@ -54,29 +56,6 @@
 	}
 
 
-	File "moment_tz_index.d.ts" {
-		import moment = require('moment');
-		declare module 'moment' {
-		    interface Moment {
-		        tz(): moment.TimeUnit;
-		    }
-    		function fff(): Moment;
-		}
-		export = moment;
-	}
-	File "moment_tz_index.js" {
-		// dummy
-	}
-	File "moment_tz_package.json" {
-		{
-			"name": "moment-timezone",
-  			"main": "moment.js",
-  			"type": "module",
-  			"dependencies": {
-  				"moment": "*"
-  			}
-		}
-	}
 
 
 	File "myProject_package.json" {
@@ -86,8 +65,7 @@
   			"type": "module",
   			"dependencies": {
   				"n4js-runtime": "*",
-  				"moment": "*",
-  				"moment-timezone": "*"
+  				"moment": "*"
   			},
   			"n4js": {
 				"projectType": "library",

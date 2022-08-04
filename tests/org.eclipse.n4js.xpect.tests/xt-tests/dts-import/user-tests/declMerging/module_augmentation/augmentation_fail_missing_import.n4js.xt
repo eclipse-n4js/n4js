@@ -1,0 +1,102 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+
+	Workspace {
+		Project "P" {
+			Folder "src" {
+				Folder "lib" {
+					File "B.d.ts" { from="B.d.ts" }
+				}
+				File "A.d.ts" { from="A.d.ts" }
+				File "G.d.ts" { from="G.d.ts" }
+				
+				ThisFile {}
+			}
+		}
+	}
+	
+	File "A.d.ts" {
+		export interface Ifc {
+		    fieldM1: number;
+		}
+		
+		declare module "A" {
+		    interface Ifc {
+		        fieldG1: string;
+		    }
+		}
+	}
+
+	File "B.d.ts" {
+		// import * as X from "../A"; // augmentation incomplete
+		declare module "../A" {
+			export interface Ifc {
+				fieldM2: string;
+			}
+		}
+	}
+	
+	File "G.d.ts" {
+		declare module "A" {
+		    export interface Ifc {
+		        fieldG2: number;
+		    }
+		}
+	}
+
+	END_SETUP
+ */
+
+// XPECT noerrors -->
+import { Ifc as IfcM } from "A"; // same as './A' in TS
+// XPECT noerrors -->
+import { Ifc as IfcG } from "$/A"; // same as 'A' in TS
+
+let ifcM: IfcM;
+
+// XPECT noerrors -->
+ifcM.fieldM1;
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'fieldM2'." at "fieldM2"
+ifcM.fieldM2;
+
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'fieldG1'." at "fieldG1"
+ifcM.fieldG1;
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'fieldG2'." at "fieldG2"
+ifcM.fieldG2;
+
+
+// XPECT type of 'v01' --> number
+let v01 = ifcM.fieldM1;
+
+
+
+
+let ifcG: IfcG;
+
+// XPECT noerrors -->
+ifcG.fieldG1;
+// XPECT noerrors -->
+ifcG.fieldG2;
+
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'fieldM1'." at "fieldM1"
+ifcG.fieldM1;
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'fieldM2'." at "fieldM2"
+ifcG.fieldM2;
+
+// XPECT type of 'v11' --> string
+let v11 = ifcG.fieldG1;
+
+// XPECT type of 'v12' --> number
+let v12 = ifcG.fieldG2;

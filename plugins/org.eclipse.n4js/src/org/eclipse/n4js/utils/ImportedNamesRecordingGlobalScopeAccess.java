@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.N4JSGlobalScopeProvider;
 import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.Type;
@@ -33,7 +34,7 @@ import com.google.inject.Provider;
 
 /**
  * The scope obtained through this class will record all queried members into the imported-names list of the context
- * resource passed in: {@link #getRecordingGlobalScope(Resource, EReference)}.
+ * resource passed in: {@link #getRecordingGlobalScope(N4JSResource, EReference)}.
  *
  * By using this scope additional elements, e.g. polyfills or elements merged via declaration merging, can be recorded
  * as interest for the resource.
@@ -47,9 +48,9 @@ public class ImportedNamesRecordingGlobalScopeAccess {
 	private IGlobalScopeProvider globalScopeProvider;
 
 	/**
-	 * Like {@link #getElementsFromGlobalScope(Resource, EClass, QualifiedName)}, but for {@link Type}s.
+	 * Like {@link #getElementsFromGlobalScope(N4JSResource, EClass, QualifiedName)}, but for {@link Type}s.
 	 */
-	public List<Type> getTypesFromGlobalScope(Resource context, QualifiedName fqn) {
+	public List<Type> getTypesFromGlobalScope(N4JSResource context, QualifiedName fqn) {
 		List<EObject> result = getElementsFromGlobalScope(context, TypesPackage.Literals.TYPE, fqn);
 		@SuppressWarnings("unchecked")
 		List<Type> resultCasted = (List<Type>) ((List<?>) result);
@@ -58,9 +59,10 @@ public class ImportedNamesRecordingGlobalScopeAccess {
 	}
 
 	/**
-	 * Like {@link #getElementsFromGlobalScope(Resource, EClass, QualifiedName)}, but for {@link AbstractNamespace}s.
+	 * Like {@link #getElementsFromGlobalScope(N4JSResource, EClass, QualifiedName)}, but for
+	 * {@link AbstractNamespace}s.
 	 */
-	public List<AbstractNamespace> getNamespacesFromGlobalScope(Resource context, QualifiedName fqn) {
+	public List<AbstractNamespace> getNamespacesFromGlobalScope(N4JSResource context, QualifiedName fqn) {
 		List<EObject> result = getElementsFromGlobalScope(context, TypesPackage.Literals.ABSTRACT_NAMESPACE, fqn);
 		@SuppressWarnings("unchecked")
 		List<AbstractNamespace> resultCasted = (List<AbstractNamespace>) ((List<?>) result);
@@ -69,11 +71,11 @@ public class ImportedNamesRecordingGlobalScopeAccess {
 	}
 
 	/**
-	 * Like {@link #getRecordingGlobalScope(Resource, EClass)}, but immediately query the global scope for elements of
-	 * the given qualified name.
+	 * Like {@link #getRecordingGlobalScope(N4JSResource, EClass)}, but immediately query the global scope for elements
+	 * of the given qualified name.
 	 */
 	// moved here from ContainerTypesHelper.MemberCollector#getPolyfillTypesFromScope(QualifiedName)
-	public List<EObject> getElementsFromGlobalScope(Resource context, EClass elementType, QualifiedName fqn) {
+	public List<EObject> getElementsFromGlobalScope(N4JSResource context, EClass elementType, QualifiedName fqn) {
 
 		IScope contextScope = getRecordingGlobalScope(context, elementType);
 		List<EObject> result = new ArrayList<>();
@@ -102,15 +104,15 @@ public class ImportedNamesRecordingGlobalScopeAccess {
 	 * Obtain a global scope for global element lookup. Any request by name on the returned scope will record the name
 	 * in the list of imported names of the given context resource.
 	 */
-	public IScope getRecordingGlobalScope(Resource context, EReference eReference) {
+	public IScope getRecordingGlobalScope(N4JSResource context, EReference eReference) {
 		return getRecordingGlobalScope(context, eReference.getEReferenceType());
 	}
 
 	/**
-	 * Same as {@link #getRecordingGlobalScope(Resource, EReference)}, but accepts an expected element type instead of
-	 * an {@link EReference}.
+	 * Same as {@link #getRecordingGlobalScope(N4JSResource, EReference)}, but accepts an expected element type instead
+	 * of an {@link EReference}.
 	 */
-	public IScope getRecordingGlobalScope(Resource context, EClass expectedElementType) {
+	public IScope getRecordingGlobalScope(N4JSResource context, EClass expectedElementType) {
 		ImportedNamesAdapter importedNamesAdapter = getImportedNamesAdapter(context);
 		IScope scope = ((N4JSGlobalScopeProvider) globalScopeProvider).getScope(context, expectedElementType, null);
 		return importedNamesAdapter.wrap(scope);
