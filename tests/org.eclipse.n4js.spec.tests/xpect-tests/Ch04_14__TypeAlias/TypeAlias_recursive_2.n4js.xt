@@ -21,7 +21,7 @@ class Map<K, V> {
 type XMLSerializedAsMap = Map<string, string | XMLSerializedAsMap>;
 
 // XPECT noerrors -->
-let n: XMLSerializedAsMap = new Map<string, XMLSerializedAsMap>();
+let n : XMLSerializedAsMap = new Map<string, string | XMLSerializedAsMap>();
 
 // XPECT noerrors -->
 n.push("", n);
