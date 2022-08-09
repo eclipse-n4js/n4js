@@ -790,23 +790,27 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			// setValidationDisabled(true); // disable validations to avoid Exceptions
 
 			IParseResult result = null;
-			if (URIUtils.isVirtualResourceURI(uri)) {
-				NestedResourceAdapter adapter = NestedResourceAdapter.get(this);
-				if (adapter == null) {
-					// enforce the host to be reloaded including all adapters
-					URI host = URIUtils.getBaseOfVirtualResourceURI(uri);
-					N4JSResource hostRes = (N4JSResource) getResourceSet().getResource(host, true);
-					hostRes.demandLoadResource(null);
-				}
-				result = new DtsParser().parse(null, null, this);
-			} else {
-				N4JSSourceFolderSnapshot srcFld = workspaceAccess.findSourceFolderContaining(this, uri);
-				Path srcRoot = URIUtils.toPath(srcFld.getPath());
 
-				try (Reader reader = createReader(inputStream);) {
-					result = new DtsParser().parse(srcRoot, reader, this);
+			try (Measurement m = N4JSDataCollectors.dcDtsParser.getMeasurement()) {
+				if (URIUtils.isVirtualResourceURI(uri)) {
+					NestedResourceAdapter adapter = NestedResourceAdapter.get(this);
+					if (adapter == null) {
+						// enforce the host to be reloaded including all adapters
+						URI host = URIUtils.getBaseOfVirtualResourceURI(uri);
+						N4JSResource hostRes = (N4JSResource) getResourceSet().getResource(host, true);
+						hostRes.demandLoadResource(null);
+					}
+					result = new DtsParser().parse(null, null, this);
+				} else {
+					N4JSSourceFolderSnapshot srcFld = workspaceAccess.findSourceFolderContaining(this, uri);
+					Path srcRoot = URIUtils.toPath(srcFld.getPath());
+
+					try (Reader reader = createReader(inputStream);) {
+						result = new DtsParser().parse(srcRoot, reader, this);
+					}
 				}
 			}
+
 			if (fullyInitialized) {
 				discardDerivedState();
 			}

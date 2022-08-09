@@ -559,10 +559,22 @@ import com.google.common.collect.Iterables;
 	}
 
 	private Result checkSameDeclaredTypes(RuleEnvironment G, ParameterizedTypeRef left, ParameterizedTypeRef right,
-			final Type rightDeclType) {
+			Type rightDeclType) {
+
+		if (left.isAliasResolved() && right.isAliasResolved()) {
+			// shortcut to mitigate recursion, caused by e.g.: type AliasType = Map<string, string | AliasType>;
+			Type leftDeclTypeTmp = left.getOriginalAliasTypeRef().getDeclaredType();
+			Type rightDeclTypeTmp = right.getOriginalAliasTypeRef().getDeclaredType();
+			if (leftDeclTypeTmp == rightDeclTypeTmp) {
+				left = left.getOriginalAliasTypeRef();
+				right = right.getOriginalAliasTypeRef();
+				rightDeclType = rightDeclTypeTmp;
+			}
+		}
 
 		final List<TypeArgument> leftArgs = left.getTypeArgsWithDefaults();
 		final List<TypeArgument> rightArgs = right.getTypeArgsWithDefaults();
+
 		final int leftArgsCount = leftArgs.size();
 		final int rightArgsCount = rightArgs.size();
 		if (leftArgsCount > 0 && leftArgsCount <= rightArgsCount) { // ignore raw types

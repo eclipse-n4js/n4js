@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.typesystem.utils;
 
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_NESTED_TYPE_ALIASES_IN_TYPE_ARGS;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_TYPE_REFS_NESTED_MODIFICATION_SWITCH__MODIFY_BOUNDS_OF_WILDCARD;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 
@@ -489,6 +490,16 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 
 		// (a) without changing 'typeRef', perform modifications on all type arguments and remember if they changed
 		final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
+		if (typeRef.isAliasUnresolved() || typeRef.isAliasResolved()) {
+			Pair<String, Type> guardKey = Pair.of(GUARD_NESTED_TYPE_ALIASES_IN_TYPE_ARGS, declType);
+			boolean isGuarded = G.get(guardKey) != null;
+			if (isGuarded) {
+				return typeRef;
+			} else {
+				G2.put(guardKey, Boolean.TRUE);
+			}
+		}
+
 		final TypeArgument[] argsChanged = new TypeArgument[lenArgs];
 		boolean haveChange = false;
 		for (int i = 0; i < lenArgs; i++) {
