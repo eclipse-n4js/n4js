@@ -24,6 +24,8 @@ import org.eclipse.n4js.n4JS.ModuleRef;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.postprocessing.N4JSPostProcessor;
 import org.eclipse.n4js.scoping.builtin.N4Scheme;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
@@ -171,6 +173,7 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 				return new AdjustedBuildRequest(initialRequest, sortedUriClosure, null);
 			} else {
 				Set<URI> removedFromClosure = Sets.newLinkedHashSet(oldIndex.getAllURIs());
+				removedFromClosure.removeIf(URIUtils::isVirtualResourceURI);
 				removedFromClosure.removeAll(sortedUriClosure);
 				Set<URI> addedToClosure = Sets.newLinkedHashSet(sortedUriClosure);
 				addedToClosure.removeAll(oldIndex.getAllURIs());
@@ -230,40 +233,42 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 	}
 
 	private List<ModuleRef> getModuleRefsToOtherModules(WorkspaceAwareResourceSet resourceSet, URI uri) {
-		List<ModuleRef> result = new ArrayList<>();
-		Resource resource = null;
-		try {
-			resource = resourceSet.getResource(uri, true);
-		} catch (Exception e) {
-			// ignore error during load
-		}
-		if (resource == null) {
-			return result;
-		}
+		try (Measurement m = N4JSDataCollectors.dcModuleRefsToOtherModules.getMeasurement()) {
+			List<ModuleRef> result = new ArrayList<>();
+			Resource resource = null;
+			try {
+				resource = resourceSet.getResource(uri, true);
+			} catch (Exception e) {
+				// ignore error during load
+			}
+			if (resource == null) {
+				return result;
+			}
 
-		for (EObject eobj : resource.getContents()) {
-			if (eobj instanceof Script) {
-				Script script = (Script) eobj;
+			for (EObject eobj : resource.getContents()) {
+				if (eobj instanceof Script) {
+					Script script = (Script) eobj;
 
-				for (EObject topLevelStmt : script.getScriptElements()) {
-					if (topLevelStmt instanceof ModuleRef) {
-						ModuleRef impExpDecl = (ModuleRef) topLevelStmt;
-						if (!impExpDecl.isReferringToOtherModule()) {
-							continue;
+					for (EObject topLevelStmt : script.getScriptElements()) {
+						if (topLevelStmt instanceof ModuleRef) {
+							ModuleRef impExpDecl = (ModuleRef) topLevelStmt;
+							if (!impExpDecl.isReferringToOtherModule()) {
+								continue;
+							}
+							if (impExpDecl.getModuleSpecifierAsText() == null) {
+								continue;
+							}
+							result.add(impExpDecl);
+						} else {
+
+							// we know that all import statements are at the beginning of a file
+							break;
 						}
-						if (impExpDecl.getModuleSpecifierAsText() == null) {
-							continue;
-						}
-						result.add(impExpDecl);
-					} else {
-
-						// we know that all import statements are at the beginning of a file
-						break;
 					}
 				}
 			}
+			return result;
 		}
-		return result;
 	}
 
 	private String getAdjustedModuleSpecifierOrNull(String moduleSpecifier, String prjName,
