@@ -199,8 +199,9 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	 * 'toUri'.
 	 */
 	private boolean hasDependencyTo(URI fromUri, URI toUri, N4JSWorkspaceConfigSnapshot workspaceConfig) {
-		final N4JSProjectConfigSnapshot fromProject = workspaceConfig.findProjectContaining(fromUri);
-		final N4JSProjectConfigSnapshot toProject = workspaceConfig.findProjectContaining(toUri);
+		// use findProjectByNestedLocation() instead of findProjectContaining() to support changes is src folders
+		final N4JSProjectConfigSnapshot fromProject = workspaceConfig.findProjectByNestedLocation(fromUri);
+		final N4JSProjectConfigSnapshot toProject = workspaceConfig.findProjectByNestedLocation(toUri);
 
 		if (null != fromProject && null != toProject) { // Consider libraries. TODO: implement it at #findProject(URI)
 
