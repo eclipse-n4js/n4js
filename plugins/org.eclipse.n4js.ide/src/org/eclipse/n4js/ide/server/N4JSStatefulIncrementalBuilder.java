@@ -152,6 +152,11 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 	 */
 	@Override
 	protected XBuildRequest initializeBuildRequest(XBuildRequest initialRequest, XBuildContext context) {
+		if (workspaceManager.getWorkspaceConfig().isInDependencyCycle(initialRequest.getProjectName())) {
+			// see DefaultBuildRequestFactory#createBuildRequest(...)
+			return initialRequest;
+		}
+
 		ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(initialRequest.getProjectName());
 		N4JSProjectConfigSnapshot projectConfig = (N4JSProjectConfigSnapshot) projectBuilder.getProjectConfig();
 		ResourceDescriptionsData oldIndex = context.getOldIndex();
