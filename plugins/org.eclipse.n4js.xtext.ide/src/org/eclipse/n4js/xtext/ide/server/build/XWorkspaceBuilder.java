@@ -299,8 +299,8 @@ public class XWorkspaceBuilder {
 		UpdateResult updateResult = workspaceManager.update(newDirtyFiles, newDeletedFiles, newRefreshRequest);
 		WorkspaceChanges changes = updateResult.changes;
 
-		List<URI> actualDirtyFiles = UtilN4.concat(changes.getAddedURIs(), changes.getChangedURIs());
-		List<URI> actualDeletedFiles = new ArrayList<>(changes.getRemovedURIs());
+		List<URI> actualDirtyFiles;
+		List<URI> actualDeletedFiles;
 		if (newRefreshRequest) {
 			// scan all source folders of all projects for source file additions, changes, and deletions
 			// - including source files of added projects,
@@ -315,8 +315,11 @@ public class XWorkspaceBuilder {
 				actualDeletedFiles.addAll(sourceFileChanges.getDeleted());
 			}
 		} else {
+			actualDirtyFiles = UtilN4.concat(changes.getAddedURIs(), changes.getChangedURIs());
 			// scan only the added source folders (including those of added projects) for source files
 			actualDirtyFiles.addAll(scanAddedSourceFoldersForNewSourceFiles(changes, scanner));
+
+			actualDeletedFiles = new ArrayList<>(changes.getRemovedURIs());
 			// collect URIs from removed source folders (*not* including those of removed projects)
 			actualDeletedFiles.addAll(getURIsFromRemovedSourceFolders(changes));
 		}
