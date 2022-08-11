@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +33,8 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -191,14 +194,12 @@ public class XWorkspaceManager {
 		Collection<ImmutableList<String>> newCycles = workspaceConfigSnapshot.getBuildOrderInfo()
 				.getProjectCycles();
 
-		Set<String> cyclicProjectChanges = new HashSet<>();
-		for (List<String> cycle : Iterables.concat(oldCycles, newCycles)) {
-			for (String projectName : cycle) {
-				cyclicProjectChanges.add(projectName);
-			}
-		}
+		HashSet<String> oldCyclicProjectNames = Sets.newHashSet(IterableExtensions.flatten(oldCycles));
+		LinkedHashSet<String> newCyclicProjectNames = Sets.newLinkedHashSet(IterableExtensions.flatten(newCycles));
+		SetView<String> cyclicChangedProjectNames = Sets.symmetricDifference(oldCyclicProjectNames,
+				newCyclicProjectNames);
 
-		return new UpdateResult(oldWCS, changes, removedProjectsContents, cyclicProjectChanges);
+		return new UpdateResult(oldWCS, changes, removedProjectsContents, cyclicChangedProjectNames);
 	}
 
 	private List<IResourceDescription> collectAllResourceDescriptions(
