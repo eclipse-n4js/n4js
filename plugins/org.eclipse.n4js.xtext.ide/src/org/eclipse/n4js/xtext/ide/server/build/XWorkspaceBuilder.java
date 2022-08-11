@@ -142,7 +142,6 @@ public class XWorkspaceBuilder {
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		WorkspaceConfigSnapshot workspaceConfig = workspaceManager.getWorkspaceConfig();
-		boolean hasDependencyCycle = workspaceConfig.hasDependencyCycle();
 		try {
 			Collection<? extends ProjectConfigSnapshot> allProjects = workspaceManager.getProjectConfigs();
 			BuildOrderIterator pboIterator = buildOrderFactory.createBuildOrderIterator(workspaceConfig, allProjects);
@@ -158,7 +157,7 @@ public class XWorkspaceBuilder {
 				allDeltas.addAll(partialresult.getAffectedResources());
 			}
 
-			onBuildDone(true, false, hasDependencyCycle, Optional.absent());
+			onBuildDone(true, false, Optional.absent());
 
 			stopwatch.stop();
 			lspLogger.log("... initial build done (" + stopwatch.toString() + ").");
@@ -167,7 +166,7 @@ public class XWorkspaceBuilder {
 		} catch (Throwable th) {
 			boolean wasCanceled = operationCanceledManager.isOperationCanceledException(th);
 
-			onBuildDone(true, wasCanceled, hasDependencyCycle, Optional.of(th));
+			onBuildDone(true, wasCanceled, Optional.of(th));
 
 			if (wasCanceled) {
 				lspLogger.log("... initial build canceled.");
@@ -411,7 +410,6 @@ public class XWorkspaceBuilder {
 		lspLogger.log("Building ...");
 
 		WorkspaceConfigSnapshot workspaceConfig = workspaceManager.getWorkspaceConfig();
-		boolean hasDependencyCycle = workspaceConfig.hasDependencyCycle();
 		try {
 			Set<URI> dirtyFilesToBuild = new LinkedHashSet<>(this.dirtyFiles);
 			Set<URI> deletedFilesToBuild = new LinkedHashSet<>(this.deletedFiles);
@@ -457,7 +455,7 @@ public class XWorkspaceBuilder {
 
 			List<IResourceDescription.Delta> result = toBeConsideredDeltas;
 
-			onBuildDone(false, false, hasDependencyCycle, Optional.absent());
+			onBuildDone(false, false, Optional.absent());
 
 			lspLogger.log("... build done.");
 
@@ -465,7 +463,7 @@ public class XWorkspaceBuilder {
 		} catch (Throwable th) {
 			boolean wasCanceled = operationCanceledManager.isOperationCanceledException(th);
 
-			onBuildDone(false, wasCanceled, hasDependencyCycle, Optional.of(th));
+			onBuildDone(false, wasCanceled, Optional.of(th));
 
 			if (wasCanceled) {
 				lspLogger.log("... build canceled.");
@@ -559,17 +557,14 @@ public class XWorkspaceBuilder {
 	 *            incremental build.
 	 * @param wasCancelled
 	 *            <code>true</code> iff the build was cancelled.
-	 * @param wasCyclic
-	 *            <code>true</code> iff the workspace projects have cyclic dependencies.
 	 * @param throwable
 	 *            absent if the build completed normally, present if the build ended early due to cancellation or some
 	 *            other exception.
 	 */
-	protected void onBuildDone(boolean wasInitialBuild, boolean wasCancelled, boolean wasCyclic,
-			Optional<Throwable> throwable) {
+	protected void onBuildDone(boolean wasInitialBuild, boolean wasCancelled, Optional<Throwable> throwable) {
 
 		workspaceManager.clearResourceSets();
-		if (!wasCancelled && !wasCyclic) {
+		if (!wasCancelled) {
 			discardIncrementalBuildQueue();
 		}
 	}
