@@ -264,8 +264,13 @@ public class ProjectBuilder {
 	 * Like {@link #scanForSourceFileChanges()}, but allows for more control over what source files are assumed to exist
 	 * at the moment.
 	 */
-	protected ResourceChangeSet scanForSourceFileChanges(Set<URI> currSourceFileURIsToConsider,
-			Set<URI> currSourceFileURIsOnDisk) {
+	protected ResourceChangeSet scanForSourceFileChanges(
+			Set<URI> currSourceFileURIsToConsider, Set<URI> currSourceFileURIsOnDisk) {
+
+		if (workspaceManager.getWorkspaceConfig().isInDependencyCycle(getProjectID())) {
+			// see DefaultBuildRequestFactory#createBuildRequest(...)
+			currSourceFileURIsOnDisk.retainAll(getProjectConfig().getProjectDescriptionUris());
+		}
 
 		ResourceChangeSet result = new ResourceChangeSet();
 		ImmutableProjectState oldProjectState = this.projectStateSnapshot.get();
