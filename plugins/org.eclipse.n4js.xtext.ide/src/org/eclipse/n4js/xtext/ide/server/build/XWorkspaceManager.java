@@ -90,20 +90,26 @@ public class XWorkspaceManager {
 		/** Former contents of the projects that were removed. */
 		public final List<IResourceDescription> removedProjectsContents;
 		/**
-		 * Names of projects that have been or are now inside a dependency cycle before or after this update. Note that
+		 * Names of projects that have been inside a dependency cycle before but are not so anymore. Note that
 		 * {@link BuildOrderInfo#getProjectCycles()} of {@link WorkspaceConfigSnapshot} represents the new state only.
 		 */
-		public final List<String> cyclicProjectChanges;
+		public final List<String> cyclicProjectsRemoved;
+		/**
+		 * Names of projects that have not been inside a dependency cycle before but are so after this update. Note that
+		 * {@link BuildOrderInfo#getProjectCycles()} of {@link WorkspaceConfigSnapshot} represents the new state only.
+		 */
+		public final List<String> cyclicProjectsAdded;
 
 		/** Creates a new {@link UpdateResult}. */
 		public UpdateResult(WorkspaceConfigSnapshot oldWorkspaceConfigSnapshot, WorkspaceChanges changes,
 				Iterable<? extends IResourceDescription> removedProjectsContents,
-				Iterable<String> cyclicProjectChanges) {
+				Iterable<String> cyclicProjectsRemoved, Iterable<String> cyclicProjectsAdded) {
 
 			this.oldWorkspaceConfigSnapshot = oldWorkspaceConfigSnapshot;
 			this.changes = changes;
 			this.removedProjectsContents = ImmutableList.copyOf(removedProjectsContents);
-			this.cyclicProjectChanges = ImmutableList.copyOf(cyclicProjectChanges);
+			this.cyclicProjectsRemoved = ImmutableList.copyOf(cyclicProjectsRemoved);
+			this.cyclicProjectsAdded = ImmutableList.copyOf(cyclicProjectsAdded);
 		}
 	}
 
@@ -164,7 +170,7 @@ public class XWorkspaceManager {
 	public UpdateResult update(Set<URI> dirtyFiles, Set<URI> deletedFiles, boolean refresh) {
 		if (workspaceConfig == null) {
 			return new UpdateResult(null, WorkspaceChanges.NO_CHANGES, Collections.emptyList(),
-					Collections.emptyList());
+					Collections.emptyList(), Collections.emptyList());
 		}
 
 		WorkspaceChanges changes = workspaceConfig.update(workspaceConfigSnapshot, dirtyFiles, deletedFiles, refresh);
@@ -196,10 +202,10 @@ public class XWorkspaceManager {
 
 		HashSet<String> oldCyclicProjectNames = Sets.newHashSet(IterableExtensions.flatten(oldCycles));
 		LinkedHashSet<String> newCyclicProjectNames = Sets.newLinkedHashSet(IterableExtensions.flatten(newCycles));
-		SetView<String> cyclicChangedProjectNames = Sets.symmetricDifference(oldCyclicProjectNames,
-				newCyclicProjectNames);
+		SetView<String> cyclicProjectsRemoved = Sets.difference(oldCyclicProjectNames, newCyclicProjectNames);
+		SetView<String> cyclicProjectsAdded = Sets.difference(newCyclicProjectNames, oldCyclicProjectNames);
 
-		return new UpdateResult(oldWCS, changes, removedProjectsContents, cyclicChangedProjectNames);
+		return new UpdateResult(oldWCS, changes, removedProjectsContents, cyclicProjectsRemoved, cyclicProjectsAdded);
 	}
 
 	private List<IResourceDescription> collectAllResourceDescriptions(

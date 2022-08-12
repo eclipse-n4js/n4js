@@ -87,7 +87,8 @@ public class CyclicDependenciesBuilderNoRebuildTest extends AbstractIncrementalB
 		@Override
 		public UpdateResult update(Set<URI> dirtyFiles, Set<URI> deletedFiles, boolean refresh) {
 			UpdateResult update = super.update(dirtyFiles, deletedFiles, refresh);
-			assertEquals("Expect no changes in cycles", 0, update.cyclicProjectChanges.size());
+			assertEquals("Expect no changes in cycles", 0, update.cyclicProjectsRemoved.size());
+			assertEquals("Expect no changes in cycles", 0, update.cyclicProjectsAdded.size());
 			return update;
 		}
 	}

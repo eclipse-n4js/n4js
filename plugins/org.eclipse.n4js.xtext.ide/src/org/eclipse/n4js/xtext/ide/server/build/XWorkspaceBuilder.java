@@ -349,12 +349,17 @@ public class XWorkspaceBuilder {
 					+ "files dirty/deleted: " + dirtyFiles.size() + "/" + deletedFiles.size() + ").");
 		}
 
-		for (String cyclicProject : updateResult.cyclicProjectChanges) {
-			ProjectConfigSnapshot projectConfig = workspaceManager.getWorkspaceConfig()
-					.findProjectByID(cyclicProject);
+		for (String cyclicProject : updateResult.cyclicProjectsAdded) {
+			ProjectConfigSnapshot projectConfig = workspaceManager.getWorkspaceConfig().findProjectByID(cyclicProject);
+			dirtyFiles.addAll(projectConfig.getProjectDescriptionUris());
+		}
 
-			Collection<URI> projectDescriptionUris = projectConfig.getProjectDescriptionUris();
-			dirtyFiles.addAll(projectDescriptionUris);
+		for (String cyclicProject : updateResult.cyclicProjectsRemoved) {
+			// source files of cyclic projects are ignored. Since the cycle is removed now, build these sources.
+			ProjectConfigSnapshot projectConfig = workspaceManager.getWorkspaceConfig().findProjectByID(cyclicProject);
+			for (SourceFolderSnapshot srcFld : projectConfig.getSourceFolders()) {
+				dirtyFiles.addAll(srcFld.getAllResources(scanner)); // includes project description
+			}
 		}
 
 		if (dirtyFiles.isEmpty() && deletedFiles.isEmpty() && affectedByDeletedProjects.isEmpty()) {
