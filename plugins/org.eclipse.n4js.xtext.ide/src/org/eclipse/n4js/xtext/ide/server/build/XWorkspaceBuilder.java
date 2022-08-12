@@ -142,7 +142,6 @@ public class XWorkspaceBuilder {
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		WorkspaceConfigSnapshot workspaceConfig = workspaceManager.getWorkspaceConfig();
-		boolean hasDependencyCycle = workspaceConfig.hasDependencyCycle();
 		try {
 			Collection<? extends ProjectConfigSnapshot> allProjects = workspaceManager.getProjectConfigs();
 			BuildOrderIterator pboIterator = buildOrderFactory.createBuildOrderIterator(workspaceConfig, allProjects);
@@ -158,7 +157,7 @@ public class XWorkspaceBuilder {
 				allDeltas.addAll(partialresult.getAffectedResources());
 			}
 
-			onBuildDone(true, false, hasDependencyCycle, Optional.absent());
+			onBuildDone(true, false, Optional.absent());
 
 			stopwatch.stop();
 			lspLogger.log("... initial build done (" + stopwatch.toString() + ").");
@@ -167,7 +166,7 @@ public class XWorkspaceBuilder {
 		} catch (Throwable th) {
 			boolean wasCanceled = operationCanceledManager.isOperationCanceledException(th);
 
-			onBuildDone(true, wasCanceled, hasDependencyCycle, Optional.of(th));
+			onBuildDone(true, wasCanceled, Optional.of(th));
 
 			if (wasCanceled) {
 				lspLogger.log("... initial build canceled.");
@@ -299,8 +298,8 @@ public class XWorkspaceBuilder {
 		UpdateResult updateResult = workspaceManager.update(newDirtyFiles, newDeletedFiles, newRefreshRequest);
 		WorkspaceChanges changes = updateResult.changes;
 
-		List<URI> actualDirtyFiles = UtilN4.concat(changes.getAddedURIs(), changes.getChangedURIs());
-		List<URI> actualDeletedFiles = new ArrayList<>(changes.getRemovedURIs());
+		List<URI> actualDirtyFiles;
+		List<URI> actualDeletedFiles;
 		if (newRefreshRequest) {
 			// scan all source folders of all projects for source file additions, changes, and deletions
 			// - including source files of added projects,
@@ -315,8 +314,11 @@ public class XWorkspaceBuilder {
 				actualDeletedFiles.addAll(sourceFileChanges.getDeleted());
 			}
 		} else {
+			actualDirtyFiles = UtilN4.concat(changes.getAddedURIs(), changes.getChangedURIs());
 			// scan only the added source folders (including those of added projects) for source files
 			actualDirtyFiles.addAll(scanAddedSourceFoldersForNewSourceFiles(changes, scanner));
+
+			actualDeletedFiles = new ArrayList<>(changes.getRemovedURIs());
 			// collect URIs from removed source folders (*not* including those of removed projects)
 			actualDeletedFiles.addAll(getURIsFromRemovedSourceFolders(changes));
 		}
@@ -347,12 +349,17 @@ public class XWorkspaceBuilder {
 					+ "files dirty/deleted: " + dirtyFiles.size() + "/" + deletedFiles.size() + ").");
 		}
 
-		for (String cyclicProject : updateResult.cyclicProjectChanges) {
-			ProjectConfigSnapshot projectConfig = workspaceManager.getWorkspaceConfig()
-					.findProjectByID(cyclicProject);
+		for (String cyclicProject : updateResult.cyclicProjectsAdded) {
+			ProjectConfigSnapshot projectConfig = workspaceManager.getWorkspaceConfig().findProjectByID(cyclicProject);
+			dirtyFiles.addAll(projectConfig.getProjectDescriptionUris());
+		}
 
-			Collection<URI> projectDescriptionUris = projectConfig.getProjectDescriptionUris();
-			dirtyFiles.addAll(projectDescriptionUris);
+		for (String cyclicProject : updateResult.cyclicProjectsRemoved) {
+			// source files of cyclic projects are ignored. Since the cycle is removed now, build these sources.
+			ProjectConfigSnapshot projectConfig = workspaceManager.getWorkspaceConfig().findProjectByID(cyclicProject);
+			for (SourceFolderSnapshot srcFld : projectConfig.getSourceFolders()) {
+				dirtyFiles.addAll(srcFld.getAllResources(scanner)); // includes project description
+			}
 		}
 
 		if (dirtyFiles.isEmpty() && deletedFiles.isEmpty() && affectedByDeletedProjects.isEmpty()) {
@@ -408,7 +415,6 @@ public class XWorkspaceBuilder {
 		lspLogger.log("Building ...");
 
 		WorkspaceConfigSnapshot workspaceConfig = workspaceManager.getWorkspaceConfig();
-		boolean hasDependencyCycle = workspaceConfig.hasDependencyCycle();
 		try {
 			Set<URI> dirtyFilesToBuild = new LinkedHashSet<>(this.dirtyFiles);
 			Set<URI> deletedFilesToBuild = new LinkedHashSet<>(this.deletedFiles);
@@ -454,7 +460,7 @@ public class XWorkspaceBuilder {
 
 			List<IResourceDescription.Delta> result = toBeConsideredDeltas;
 
-			onBuildDone(false, false, hasDependencyCycle, Optional.absent());
+			onBuildDone(false, false, Optional.absent());
 
 			lspLogger.log("... build done.");
 
@@ -462,7 +468,7 @@ public class XWorkspaceBuilder {
 		} catch (Throwable th) {
 			boolean wasCanceled = operationCanceledManager.isOperationCanceledException(th);
 
-			onBuildDone(false, wasCanceled, hasDependencyCycle, Optional.of(th));
+			onBuildDone(false, wasCanceled, Optional.of(th));
 
 			if (wasCanceled) {
 				lspLogger.log("... build canceled.");
@@ -556,17 +562,14 @@ public class XWorkspaceBuilder {
 	 *            incremental build.
 	 * @param wasCancelled
 	 *            <code>true</code> iff the build was cancelled.
-	 * @param wasCyclic
-	 *            <code>true</code> iff the workspace projects have cyclic dependencies.
 	 * @param throwable
 	 *            absent if the build completed normally, present if the build ended early due to cancellation or some
 	 *            other exception.
 	 */
-	protected void onBuildDone(boolean wasInitialBuild, boolean wasCancelled, boolean wasCyclic,
-			Optional<Throwable> throwable) {
+	protected void onBuildDone(boolean wasInitialBuild, boolean wasCancelled, Optional<Throwable> throwable) {
 
 		workspaceManager.clearResourceSets();
-		if (!wasCancelled && !wasCyclic) {
+		if (!wasCancelled) {
 			discardIncrementalBuildQueue();
 		}
 	}

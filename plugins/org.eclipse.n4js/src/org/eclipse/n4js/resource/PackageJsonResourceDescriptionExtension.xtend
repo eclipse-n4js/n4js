@@ -40,6 +40,7 @@ import org.eclipse.xtext.resource.IResourceDescriptions
 import org.eclipse.xtext.util.IAcceptor
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 
 /**
  * {@link IJSONResourceDescriptionExtension} implementation that provides custom resource descriptions of
@@ -131,7 +132,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 		}
 		
 		val changedProjectNames = deltas
-			.filter[it.uri.isPackageJSON]
+			.filter[(it.getNew === null || it.getOld === null || it.haveEObjectDescriptionsChanged) && it.uri.isPackageJSON]
 			.map[(if (it.getNew === null) it.old else it.getNew).exportedObjects]
 			.filter[!it.empty]
 			.map[it.get(0).getProjectName]
@@ -141,7 +142,11 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 
 		// Collect all referenced project IDs of the candidate.
 		val referencedProjectNames = newLinkedList;
-		candidate.getExportedObjectsByType(JSONPackage.Literals.JSON_DOCUMENT).forEach[
+		for (it : candidate.getExportedObjectsByType(JSONPackage.Literals.JSON_DOCUMENT)) {
+			if (getProjectType === ProjectType.PLAINJS) {
+				// never rebuild plain-js projects on incremental builds
+				// return false;
+			}
 			referencedProjectNames.addAll(testedProjectNames);
 			referencedProjectNames.addAll(implementedProjectNames);
 			referencedProjectNames.addAll(projectDependencyNames);
@@ -151,8 +156,8 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 			if (!extRuntimeEnvironmentId.nullOrEmpty) {
 				referencedProjectNames.add(extRuntimeEnvironmentId);
 			}
-		];
-
+		}
+		
 		// Here we consider only direct project dependencies because this implementation is aligned to the
 		// N4JS based resource description manager's #isAffected logic. In the N4JS implementation we consider
 		// only direct project dependencies when checking whether a candidate is affected or not.

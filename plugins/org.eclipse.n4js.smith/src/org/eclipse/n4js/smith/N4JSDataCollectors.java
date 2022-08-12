@@ -26,6 +26,8 @@ public final class N4JSDataCollectors {
 
 	public static final DataCollector dcDtsParser = create("DTS-Parser", dcBuild);
 
+	public static final DataCollector dcModuleRefsToOtherModules = create("ModuleRefsToOtherModules", dcBuild);
+
 	public static final DataCollector dcPreProcess = create("Pre-Processing (Lazy Linking, etc.)", dcBuild);
 
 	public static final DataCollector dcTypesBuilder = create("Types Builder", dcBuild);
