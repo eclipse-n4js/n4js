@@ -84,7 +84,8 @@ class ImportCallsParserTest extends AbstractParserTest {
 			AwaitExpression {
 				expression: ParameterizedCallExpression {
 					target: ParameterizedPropertyAccessExpression {
-						target: ImportCallExpression {
+						target: ParameterizedCallExpression {
+							target: IdentifierRef,
 							arguments: Argument {
 								expression: StringLiteral
 							}
@@ -98,7 +99,8 @@ class ImportCallsParserTest extends AbstractParserTest {
 			AwaitExpression {
 				expression: ParameterizedCallExpression {
 					target: IndexedAccessExpression {
-						target: ImportCallExpression {
+						target: ParameterizedCallExpression {
+							target: IdentifierRef,
 							arguments: Argument {
 								expression: StringLiteral
 							}
@@ -112,7 +114,8 @@ class ImportCallsParserTest extends AbstractParserTest {
 		assertStructureOfAST('''
 			AwaitExpression {
 				expression: ParameterizedCallExpression {
-					target: ImportCallExpression {
+					target: ParameterizedCallExpression {
+						target: IdentifierRef,
 						arguments: Argument {
 							expression: StringLiteral
 						}
