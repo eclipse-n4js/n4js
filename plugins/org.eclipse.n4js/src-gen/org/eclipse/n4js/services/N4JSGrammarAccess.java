@@ -16516,6 +16516,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    IDENTIFIER
 	//    // yield as identifier as of [ECM15] (11.6.2, pp. 165)
 	//    | <!Yield> 'yield'
+	//    | 'import'
 	//    | N4Keyword
 	//;
 	public TypeExpressionsGrammarAccess.BindingIdentifierElements getBindingIdentifierAccess() {
@@ -16540,7 +16541,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//ReservedWord:
 	//    // Keywords as of [ECM15] (11.6.2, pp. 165)
 	//    'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete'
-	//    | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if'
+	//    | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import'
 	//    | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try'
 	//    | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield'
 	//    // null literal
@@ -16578,8 +16579,6 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    | 'out'
 	//    // namespace keyword
 	//    | 'namespace'
-	//    // import keyword
-	//    | 'import'
 	//;
 	public TypeExpressionsGrammarAccess.N4KeywordElements getN4KeywordAccess() {
 		return gaTypeExpressions.getN4KeywordAccess();

@@ -92,7 +92,7 @@ public abstract class N4JSLanguageConstants {
 	 */
 	public static final Set<String> RESERVED_WORDS = ImmutableSet.of(
 			"break", "case", "catch", "class", "const", "continue", "debugger", "default", "delete", "do", "else",
-			"export", "extends", "finally", "for", "function", "if", "in", "instanceof", "new", "return",
+			"export", "extends", "finally", "for", "function", "if", "import", "in", "instanceof", "new", "return",
 			"super", "switch", "this", "throw", "try", "typeof", "var", "void", "while", "with", "yield",
 			// null literal
 			"null",
@@ -123,9 +123,7 @@ public abstract class N4JSLanguageConstants {
 			// definition-site variance
 			"out",
 			// namespace
-			"namespace",
-			// import
-			"import");
+			"namespace");
 
 	/** Access modifiers for the N4JS language. */
 	public static final Collection<String> ACCESS_MODIFIERS = unmodifiableCollection(newHashSet(

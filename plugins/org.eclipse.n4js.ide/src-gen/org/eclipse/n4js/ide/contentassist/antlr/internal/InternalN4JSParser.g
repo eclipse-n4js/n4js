@@ -15084,9 +15084,15 @@ rule__BindingIdentifier__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getBindingIdentifierAccess().getN4KeywordParserRuleCall_2()); }
+		{ before(grammarAccess.getBindingIdentifierAccess().getImportKeyword_2()); }
+		Import
+		{ after(grammarAccess.getBindingIdentifierAccess().getImportKeyword_2()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getBindingIdentifierAccess().getN4KeywordParserRuleCall_3()); }
 		ruleN4Keyword
-		{ after(grammarAccess.getBindingIdentifierAccess().getN4KeywordParserRuleCall_2()); }
+		{ after(grammarAccess.getBindingIdentifierAccess().getN4KeywordParserRuleCall_3()); }
 	)
 ;
 finally {
@@ -15105,9 +15111,15 @@ norm1_BindingIdentifier__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getBindingIdentifierAccess().getN4KeywordParserRuleCall_2()); }
+		{ before(grammarAccess.getBindingIdentifierAccess().getImportKeyword_2()); }
+		Import
+		{ after(grammarAccess.getBindingIdentifierAccess().getImportKeyword_2()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getBindingIdentifierAccess().getN4KeywordParserRuleCall_3()); }
 		ruleN4Keyword
-		{ after(grammarAccess.getBindingIdentifierAccess().getN4KeywordParserRuleCall_2()); }
+		{ after(grammarAccess.getBindingIdentifierAccess().getN4KeywordParserRuleCall_3()); }
 	)
 ;
 finally {
@@ -15249,117 +15261,123 @@ rule__ReservedWord__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getInKeyword_17()); }
+		{ before(grammarAccess.getReservedWordAccess().getImportKeyword_17()); }
+		Import
+		{ after(grammarAccess.getReservedWordAccess().getImportKeyword_17()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getReservedWordAccess().getInKeyword_18()); }
 		In
-		{ after(grammarAccess.getReservedWordAccess().getInKeyword_17()); }
+		{ after(grammarAccess.getReservedWordAccess().getInKeyword_18()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getInstanceofKeyword_18()); }
+		{ before(grammarAccess.getReservedWordAccess().getInstanceofKeyword_19()); }
 		Instanceof
-		{ after(grammarAccess.getReservedWordAccess().getInstanceofKeyword_18()); }
+		{ after(grammarAccess.getReservedWordAccess().getInstanceofKeyword_19()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getNewKeyword_19()); }
+		{ before(grammarAccess.getReservedWordAccess().getNewKeyword_20()); }
 		New
-		{ after(grammarAccess.getReservedWordAccess().getNewKeyword_19()); }
+		{ after(grammarAccess.getReservedWordAccess().getNewKeyword_20()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getReturnKeyword_20()); }
+		{ before(grammarAccess.getReservedWordAccess().getReturnKeyword_21()); }
 		Return
-		{ after(grammarAccess.getReservedWordAccess().getReturnKeyword_20()); }
+		{ after(grammarAccess.getReservedWordAccess().getReturnKeyword_21()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getSuperKeyword_21()); }
+		{ before(grammarAccess.getReservedWordAccess().getSuperKeyword_22()); }
 		Super
-		{ after(grammarAccess.getReservedWordAccess().getSuperKeyword_21()); }
+		{ after(grammarAccess.getReservedWordAccess().getSuperKeyword_22()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getSwitchKeyword_22()); }
+		{ before(grammarAccess.getReservedWordAccess().getSwitchKeyword_23()); }
 		Switch
-		{ after(grammarAccess.getReservedWordAccess().getSwitchKeyword_22()); }
+		{ after(grammarAccess.getReservedWordAccess().getSwitchKeyword_23()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getThisKeyword_23()); }
+		{ before(grammarAccess.getReservedWordAccess().getThisKeyword_24()); }
 		This_1
-		{ after(grammarAccess.getReservedWordAccess().getThisKeyword_23()); }
+		{ after(grammarAccess.getReservedWordAccess().getThisKeyword_24()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getThrowKeyword_24()); }
+		{ before(grammarAccess.getReservedWordAccess().getThrowKeyword_25()); }
 		Throw
-		{ after(grammarAccess.getReservedWordAccess().getThrowKeyword_24()); }
+		{ after(grammarAccess.getReservedWordAccess().getThrowKeyword_25()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getTryKeyword_25()); }
+		{ before(grammarAccess.getReservedWordAccess().getTryKeyword_26()); }
 		Try
-		{ after(grammarAccess.getReservedWordAccess().getTryKeyword_25()); }
+		{ after(grammarAccess.getReservedWordAccess().getTryKeyword_26()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getTypeofKeyword_26()); }
+		{ before(grammarAccess.getReservedWordAccess().getTypeofKeyword_27()); }
 		Typeof
-		{ after(grammarAccess.getReservedWordAccess().getTypeofKeyword_26()); }
+		{ after(grammarAccess.getReservedWordAccess().getTypeofKeyword_27()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getVarKeyword_27()); }
+		{ before(grammarAccess.getReservedWordAccess().getVarKeyword_28()); }
 		Var
-		{ after(grammarAccess.getReservedWordAccess().getVarKeyword_27()); }
+		{ after(grammarAccess.getReservedWordAccess().getVarKeyword_28()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getVoidKeyword_28()); }
+		{ before(grammarAccess.getReservedWordAccess().getVoidKeyword_29()); }
 		Void
-		{ after(grammarAccess.getReservedWordAccess().getVoidKeyword_28()); }
+		{ after(grammarAccess.getReservedWordAccess().getVoidKeyword_29()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getWhileKeyword_29()); }
+		{ before(grammarAccess.getReservedWordAccess().getWhileKeyword_30()); }
 		While
-		{ after(grammarAccess.getReservedWordAccess().getWhileKeyword_29()); }
+		{ after(grammarAccess.getReservedWordAccess().getWhileKeyword_30()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getWithKeyword_30()); }
+		{ before(grammarAccess.getReservedWordAccess().getWithKeyword_31()); }
 		With
-		{ after(grammarAccess.getReservedWordAccess().getWithKeyword_30()); }
+		{ after(grammarAccess.getReservedWordAccess().getWithKeyword_31()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getYieldKeyword_31()); }
+		{ before(grammarAccess.getReservedWordAccess().getYieldKeyword_32()); }
 		Yield
-		{ after(grammarAccess.getReservedWordAccess().getYieldKeyword_31()); }
+		{ after(grammarAccess.getReservedWordAccess().getYieldKeyword_32()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getNullKeyword_32()); }
+		{ before(grammarAccess.getReservedWordAccess().getNullKeyword_33()); }
 		Null
-		{ after(grammarAccess.getReservedWordAccess().getNullKeyword_32()); }
+		{ after(grammarAccess.getReservedWordAccess().getNullKeyword_33()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getTrueKeyword_33()); }
+		{ before(grammarAccess.getReservedWordAccess().getTrueKeyword_34()); }
 		True
-		{ after(grammarAccess.getReservedWordAccess().getTrueKeyword_33()); }
+		{ after(grammarAccess.getReservedWordAccess().getTrueKeyword_34()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getFalseKeyword_34()); }
+		{ before(grammarAccess.getReservedWordAccess().getFalseKeyword_35()); }
 		False
-		{ after(grammarAccess.getReservedWordAccess().getFalseKeyword_34()); }
+		{ after(grammarAccess.getReservedWordAccess().getFalseKeyword_35()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getReservedWordAccess().getEnumKeyword_35()); }
+		{ before(grammarAccess.getReservedWordAccess().getEnumKeyword_36()); }
 		Enum
-		{ after(grammarAccess.getReservedWordAccess().getEnumKeyword_35()); }
+		{ after(grammarAccess.getReservedWordAccess().getEnumKeyword_36()); }
 	)
 ;
 finally {
@@ -15525,12 +15543,6 @@ rule__N4Keyword__Alternatives
 		{ before(grammarAccess.getN4KeywordAccess().getNamespaceKeyword_25()); }
 		Namespace
 		{ after(grammarAccess.getN4KeywordAccess().getNamespaceKeyword_25()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getN4KeywordAccess().getImportKeyword_26()); }
-		Import
-		{ after(grammarAccess.getN4KeywordAccess().getImportKeyword_26()); }
 	)
 ;
 finally {
