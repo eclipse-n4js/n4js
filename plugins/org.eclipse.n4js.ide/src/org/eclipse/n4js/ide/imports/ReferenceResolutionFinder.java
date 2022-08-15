@@ -23,7 +23,6 @@ import java.util.Set;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
-import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
@@ -645,9 +644,8 @@ public class ReferenceResolutionFinder {
 		private EObject getParentImportElement(INode parseTreeNode) {
 			while (parseTreeNode != null) {
 				EObject semanticElement = parseTreeNode.getSemanticElement();
-				if (semanticElement instanceof ImportCallExpression
-						|| semanticElement instanceof ImportDeclaration) {
-
+				if (semanticElement instanceof ImportDeclaration
+						|| N4JSLanguageUtils.isDynamicImportCall(semanticElement)) {
 					return semanticElement;
 				}
 				parseTreeNode = parseTreeNode.getParent();
@@ -656,10 +654,7 @@ public class ReferenceResolutionFinder {
 		}
 
 		private String getParentImportModuleName() {
-			if (parentImportElement instanceof ImportCallExpression) {
-				// how could that be done?
-				return null;
-			}
+			// TODO: Deal with dynamic imports: 'import("lib/myModule");'
 			if (parentImportElement instanceof ImportDeclaration) {
 				// TODO GH-1704: could also be done via scoping
 				ImportDeclaration impDecl = (ImportDeclaration) parentImportElement;

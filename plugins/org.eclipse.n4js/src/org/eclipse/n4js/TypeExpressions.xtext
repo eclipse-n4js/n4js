@@ -320,7 +320,7 @@ IdentifierName:
 ReservedWord:
 	// Keywords as of [ECM15] (11.6.2, pp. 165)
 	'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete'
-	| 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import'
+	| 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if'
 	| 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try'
 	| 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield'
 	// null literal
@@ -329,7 +329,8 @@ ReservedWord:
 	| 'true' | 'false'
 	// Future Reserved Word as of [ECM15] (11.6.2.2, pp. 166)
 	// | 'await' /* reserved word only if parse goal is module - compromise: allow as identifier and validate */
-	| 'enum';
+	| 'enum'
+;
 
 N4Keyword:
 	'get' | 'set'
@@ -350,6 +351,8 @@ N4Keyword:
 	| 'out'
 	// namespace keyword
 	| 'namespace'
+	// import keyword
+	| 'import'
 ;
 
 Arrow hidden(): // "hidden()" works due to LazyTokenStream#doSetHiddenTokens()

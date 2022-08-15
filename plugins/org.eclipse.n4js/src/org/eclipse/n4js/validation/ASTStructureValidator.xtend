@@ -43,7 +43,6 @@ import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.IfStatement
-import org.eclipse.n4js.n4JS.ImportCallExpression
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.IterationStatement
 import org.eclipse.n4js.n4JS.LabelRef
@@ -711,26 +710,20 @@ class ASTStructureValidator {
 	}
 
 	def private dispatch void validateASTStructure(
-		ImportCallExpression model,
+		ParameterizedCallExpression model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
 		Constraints constraints
 	) {
-		if (model.arguments.size !== 1) {
-			val target = NodeModelUtils.findActualNodeFor(model);
-			producer.node = target;
-			producer.addDiagnostic(
-				new DiagnosticMessage(IssueCodes.messageForAST_IMPORT_CALL_WRONG_NUM_OF_ARGS,
-					IssueCodes.getDefaultSeverity(IssueCodes.AST_IMPORT_CALL_WRONG_NUM_OF_ARGS), IssueCodes.AST_IMPORT_CALL_WRONG_NUM_OF_ARGS));
+		if (N4JSLanguageUtils.isDynamicImportCall(model)) {
+			if (!model.arguments.empty && model.arguments.get(0).isSpread) {
+				val target = NodeModelUtils.findActualNodeFor(model.arguments.get(0));
+				producer.node = target;
+				producer.addDiagnostic(
+					new DiagnosticMessage(IssueCodes.messageForAST_IMPORT_CALL_SPREAD,
+						IssueCodes.getDefaultSeverity(IssueCodes.AST_IMPORT_CALL_SPREAD), IssueCodes.AST_IMPORT_CALL_SPREAD));
+			}
 		}
-		if (!model.arguments.empty && model.argument.isSpread) {
-			val target = NodeModelUtils.findActualNodeFor(model.argument);
-			producer.node = target;
-			producer.addDiagnostic(
-				new DiagnosticMessage(IssueCodes.messageForAST_IMPORT_CALL_SPREAD,
-					IssueCodes.getDefaultSeverity(IssueCodes.AST_IMPORT_CALL_SPREAD), IssueCodes.AST_IMPORT_CALL_SPREAD));
-		}
-
 		recursiveValidateASTStructure(
 			model,
 			producer,
@@ -748,7 +741,11 @@ class ASTStructureValidator {
 		val name = model.idAsText
 		if (name !== null) {
 			if (constraints.isStrict && (RESERVED_WORDS_IN_STRICT_MODE.contains(name))) {
-				issueNameDiagnostic(model, producer, name, N4JSPackage.Literals.IDENTIFIER_REF__ID, Severity.ERROR)
+				if (name == IMPORT_KEYWORD && model.eContainingFeature === N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET) {
+					// allow use of 'import' here
+				} else {
+					issueNameDiagnostic(model, producer, name, N4JSPackage.Literals.IDENTIFIER_REF__ID, Severity.ERROR)
+				}
 			}
 			if (model.eContainingFeature === N4JSPackage.Literals.NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT
 				&& name == N4JSLanguageConstants.EXPORT_DEFAULT_NAME) {
@@ -794,6 +791,7 @@ class ASTStructureValidator {
 				} else if (constraints.isStrict) {
 					if (RESERVED_WORDS_IN_STRICT_MODE.contains(name) || name == EVAL_NAME) {
 						issueNameDiagnostic(model, producer, name)
+						model.name = null; // do not pollute scope
 					}
 				}
 			}
@@ -840,6 +838,7 @@ class ASTStructureValidator {
 		if (name !== null) {
 			if (constraints.isStrict && (RESERVED_WORDS_IN_STRICT_MODE.contains(name))) {
 				issueNameDiagnostic(model, producer, name)
+				model.name = null; // do not pollute scope
 			}
 		}
 		try {
@@ -1217,6 +1216,7 @@ class ASTStructureValidator {
 			} else if (constraints.isStrict()) {
 				if (RESERVED_WORDS_IN_STRICT_MODE.contains(name) || name == EVAL_NAME) {
 					issueNameDiagnostic(model, producer, name)
+					model.name = null; // do not pollute scope
 				}
 			}
 		}
@@ -1251,6 +1251,9 @@ class ASTStructureValidator {
 			} else if (constraints.isStrict()) {
 				if (RESERVED_WORDS_IN_STRICT_MODE.contains(name) || name == EVAL_NAME) {
 					issueNameDiagnostic(model, producer, name)
+					if (model instanceof FunctionDeclaration) {
+						model.name = null; // do not pollute scope
+					}
 				}
 			}
 		}

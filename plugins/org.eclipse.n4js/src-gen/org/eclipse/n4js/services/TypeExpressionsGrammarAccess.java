@@ -2358,31 +2358,30 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Keyword cForKeyword_14 = (Keyword)cAlternatives.eContents().get(14);
 		private final Keyword cFunctionKeyword_15 = (Keyword)cAlternatives.eContents().get(15);
 		private final Keyword cIfKeyword_16 = (Keyword)cAlternatives.eContents().get(16);
-		private final Keyword cImportKeyword_17 = (Keyword)cAlternatives.eContents().get(17);
-		private final Keyword cInKeyword_18 = (Keyword)cAlternatives.eContents().get(18);
-		private final Keyword cInstanceofKeyword_19 = (Keyword)cAlternatives.eContents().get(19);
-		private final Keyword cNewKeyword_20 = (Keyword)cAlternatives.eContents().get(20);
-		private final Keyword cReturnKeyword_21 = (Keyword)cAlternatives.eContents().get(21);
-		private final Keyword cSuperKeyword_22 = (Keyword)cAlternatives.eContents().get(22);
-		private final Keyword cSwitchKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
-		private final Keyword cThisKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
-		private final Keyword cThrowKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
-		private final Keyword cTryKeyword_26 = (Keyword)cAlternatives.eContents().get(26);
-		private final Keyword cTypeofKeyword_27 = (Keyword)cAlternatives.eContents().get(27);
-		private final Keyword cVarKeyword_28 = (Keyword)cAlternatives.eContents().get(28);
-		private final Keyword cVoidKeyword_29 = (Keyword)cAlternatives.eContents().get(29);
-		private final Keyword cWhileKeyword_30 = (Keyword)cAlternatives.eContents().get(30);
-		private final Keyword cWithKeyword_31 = (Keyword)cAlternatives.eContents().get(31);
-		private final Keyword cYieldKeyword_32 = (Keyword)cAlternatives.eContents().get(32);
-		private final Keyword cNullKeyword_33 = (Keyword)cAlternatives.eContents().get(33);
-		private final Keyword cTrueKeyword_34 = (Keyword)cAlternatives.eContents().get(34);
-		private final Keyword cFalseKeyword_35 = (Keyword)cAlternatives.eContents().get(35);
-		private final Keyword cEnumKeyword_36 = (Keyword)cAlternatives.eContents().get(36);
+		private final Keyword cInKeyword_17 = (Keyword)cAlternatives.eContents().get(17);
+		private final Keyword cInstanceofKeyword_18 = (Keyword)cAlternatives.eContents().get(18);
+		private final Keyword cNewKeyword_19 = (Keyword)cAlternatives.eContents().get(19);
+		private final Keyword cReturnKeyword_20 = (Keyword)cAlternatives.eContents().get(20);
+		private final Keyword cSuperKeyword_21 = (Keyword)cAlternatives.eContents().get(21);
+		private final Keyword cSwitchKeyword_22 = (Keyword)cAlternatives.eContents().get(22);
+		private final Keyword cThisKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
+		private final Keyword cThrowKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
+		private final Keyword cTryKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
+		private final Keyword cTypeofKeyword_26 = (Keyword)cAlternatives.eContents().get(26);
+		private final Keyword cVarKeyword_27 = (Keyword)cAlternatives.eContents().get(27);
+		private final Keyword cVoidKeyword_28 = (Keyword)cAlternatives.eContents().get(28);
+		private final Keyword cWhileKeyword_29 = (Keyword)cAlternatives.eContents().get(29);
+		private final Keyword cWithKeyword_30 = (Keyword)cAlternatives.eContents().get(30);
+		private final Keyword cYieldKeyword_31 = (Keyword)cAlternatives.eContents().get(31);
+		private final Keyword cNullKeyword_32 = (Keyword)cAlternatives.eContents().get(32);
+		private final Keyword cTrueKeyword_33 = (Keyword)cAlternatives.eContents().get(33);
+		private final Keyword cFalseKeyword_34 = (Keyword)cAlternatives.eContents().get(34);
+		private final Keyword cEnumKeyword_35 = (Keyword)cAlternatives.eContents().get(35);
 		
 		//ReservedWord:
 		//    // Keywords as of [ECM15] (11.6.2, pp. 165)
 		//    'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete'
-		//    | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import'
+		//    | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if'
 		//    | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try'
 		//    | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield'
 		//    // null literal
@@ -2391,12 +2390,13 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//    | 'true' | 'false'
 		//    // Future Reserved Word as of [ECM15] (11.6.2.2, pp. 166)
 		//    // | 'await' /* reserved word only if parse goal is module - compromise: allow as identifier and validate */
-		//    | 'enum';
+		//    | 'enum'
+		//;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//// Keywords as of [ECM15] (11.6.2, pp. 165)
 		//'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete'
-		//| 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import'
+		//| 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if'
 		//| 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try'
 		//| 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield'
 		//// null literal
@@ -2460,65 +2460,62 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//'if'
 		public Keyword getIfKeyword_16() { return cIfKeyword_16; }
 		
-		//'import'
-		public Keyword getImportKeyword_17() { return cImportKeyword_17; }
-		
 		//'in'
-		public Keyword getInKeyword_18() { return cInKeyword_18; }
+		public Keyword getInKeyword_17() { return cInKeyword_17; }
 		
 		//'instanceof'
-		public Keyword getInstanceofKeyword_19() { return cInstanceofKeyword_19; }
+		public Keyword getInstanceofKeyword_18() { return cInstanceofKeyword_18; }
 		
 		//'new'
-		public Keyword getNewKeyword_20() { return cNewKeyword_20; }
+		public Keyword getNewKeyword_19() { return cNewKeyword_19; }
 		
 		//'return'
-		public Keyword getReturnKeyword_21() { return cReturnKeyword_21; }
+		public Keyword getReturnKeyword_20() { return cReturnKeyword_20; }
 		
 		//'super'
-		public Keyword getSuperKeyword_22() { return cSuperKeyword_22; }
+		public Keyword getSuperKeyword_21() { return cSuperKeyword_21; }
 		
 		//'switch'
-		public Keyword getSwitchKeyword_23() { return cSwitchKeyword_23; }
+		public Keyword getSwitchKeyword_22() { return cSwitchKeyword_22; }
 		
 		//'this'
-		public Keyword getThisKeyword_24() { return cThisKeyword_24; }
+		public Keyword getThisKeyword_23() { return cThisKeyword_23; }
 		
 		//'throw'
-		public Keyword getThrowKeyword_25() { return cThrowKeyword_25; }
+		public Keyword getThrowKeyword_24() { return cThrowKeyword_24; }
 		
 		//'try'
-		public Keyword getTryKeyword_26() { return cTryKeyword_26; }
+		public Keyword getTryKeyword_25() { return cTryKeyword_25; }
 		
 		//'typeof'
-		public Keyword getTypeofKeyword_27() { return cTypeofKeyword_27; }
+		public Keyword getTypeofKeyword_26() { return cTypeofKeyword_26; }
 		
 		//'var'
-		public Keyword getVarKeyword_28() { return cVarKeyword_28; }
+		public Keyword getVarKeyword_27() { return cVarKeyword_27; }
 		
 		//'void'
-		public Keyword getVoidKeyword_29() { return cVoidKeyword_29; }
+		public Keyword getVoidKeyword_28() { return cVoidKeyword_28; }
 		
 		//'while'
-		public Keyword getWhileKeyword_30() { return cWhileKeyword_30; }
+		public Keyword getWhileKeyword_29() { return cWhileKeyword_29; }
 		
 		//'with'
-		public Keyword getWithKeyword_31() { return cWithKeyword_31; }
+		public Keyword getWithKeyword_30() { return cWithKeyword_30; }
 		
 		//'yield'
-		public Keyword getYieldKeyword_32() { return cYieldKeyword_32; }
+		public Keyword getYieldKeyword_31() { return cYieldKeyword_31; }
 		
 		//'null'
-		public Keyword getNullKeyword_33() { return cNullKeyword_33; }
+		public Keyword getNullKeyword_32() { return cNullKeyword_32; }
 		
 		//'true'
-		public Keyword getTrueKeyword_34() { return cTrueKeyword_34; }
+		public Keyword getTrueKeyword_33() { return cTrueKeyword_33; }
 		
 		//'false'
-		public Keyword getFalseKeyword_35() { return cFalseKeyword_35; }
+		public Keyword getFalseKeyword_34() { return cFalseKeyword_34; }
 		
 		//'enum'
-		public Keyword getEnumKeyword_36() { return cEnumKeyword_36; }
+		public Keyword getEnumKeyword_35() { return cEnumKeyword_35; }
 	}
 	public class N4KeywordElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.N4Keyword");
@@ -2549,6 +2546,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Keyword cPublicKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
 		private final Keyword cOutKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
 		private final Keyword cNamespaceKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
+		private final Keyword cImportKeyword_26 = (Keyword)cAlternatives.eContents().get(26);
 		
 		//N4Keyword:
 		//    'get' | 'set'
@@ -2569,6 +2567,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//    | 'out'
 		//    // namespace keyword
 		//    | 'namespace'
+		//    // import keyword
+		//    | 'import'
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -2590,6 +2590,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//| 'out'
 		//// namespace keyword
 		//| 'namespace'
+		//// import keyword
+		//| 'import'
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//'get'
@@ -2669,6 +2671,9 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		
 		//'namespace'
 		public Keyword getNamespaceKeyword_25() { return cNamespaceKeyword_25; }
+		
+		//'import'
+		public Keyword getImportKeyword_26() { return cImportKeyword_26; }
 	}
 	public class ArrowElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.Arrow");
@@ -3548,7 +3553,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//ReservedWord:
 	//    // Keywords as of [ECM15] (11.6.2, pp. 165)
 	//    'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete'
-	//    | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import'
+	//    | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if'
 	//    | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try'
 	//    | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield'
 	//    // null literal
@@ -3557,7 +3562,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//    | 'true' | 'false'
 	//    // Future Reserved Word as of [ECM15] (11.6.2.2, pp. 166)
 	//    // | 'await' /* reserved word only if parse goal is module - compromise: allow as identifier and validate */
-	//    | 'enum';
+	//    | 'enum'
+	//;
 	public ReservedWordElements getReservedWordAccess() {
 		return pReservedWord;
 	}
@@ -3585,6 +3591,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//    | 'out'
 	//    // namespace keyword
 	//    | 'namespace'
+	//    // import keyword
+	//    | 'import'
 	//;
 	public N4KeywordElements getN4KeywordAccess() {
 		return pN4Keyword;

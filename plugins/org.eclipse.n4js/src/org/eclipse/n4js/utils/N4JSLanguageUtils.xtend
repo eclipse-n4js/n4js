@@ -57,6 +57,7 @@ import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.NullLiteral
 import org.eclipse.n4js.n4JS.NumericLiteral
 import org.eclipse.n4js.n4JS.ObjectLiteral
+import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyAssignment
 import org.eclipse.n4js.n4JS.PropertyAssignmentAnnotationList
@@ -1383,5 +1384,30 @@ public class N4JSLanguageUtils {
 	/** Tells whether the given type may be referenced dynamically, i.e. with modifier '+'. */
 	def static boolean mayBeReferencedDynamically(Type type) {
 		return !(type instanceof PrimitiveType) || type instanceof AnyType;
+	}
+	
+	/** Returns the module of specifier of the given dynamic import AST element; otherwise null. */
+	def static Expression getDynamicImportModuleSpecifier(EObject astElement) {
+		if (!(astElement instanceof ParameterizedCallExpression)) {
+			return null;
+		}
+		val pce = astElement as ParameterizedCallExpression;
+		val Expression reveicer = pce.getReceiver();
+		if (!(reveicer instanceof IdentifiableElement)) {
+			return null;
+		}
+		val String receiverName = (reveicer as IdentifiableElement).name;
+		if (N4JSLanguageConstants.IMPORT_KEYWORD != receiverName) {
+			return null;
+		}
+		if (pce.arguments.empty) {
+			return null;
+		}
+		return pce.arguments.get(0).expression;
+	}
+	
+	/** Returns true iff the given AST element is a dynamic import */
+	def static boolean isDynamicImportCall(EObject astElement) {
+		return getDynamicImportModuleSpecifier(astElement) !== null;
 	}
 }
