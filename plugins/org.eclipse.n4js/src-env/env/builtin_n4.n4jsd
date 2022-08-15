@@ -480,7 +480,7 @@ export external public interface ~N4Provider<out T> {
 
 export external public const import : ~Object with {
         /** Import module of given path */
-        (path: string): Promise<Object, any>;
+        (path: string): Promise<any+,?>;
         /** Access meta information of runtime */
         meta : ImportMeta+;
     };
