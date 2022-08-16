@@ -134,6 +134,9 @@ import org.eclipse.xtext.scoping.IScope
 import static org.eclipse.n4js.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import com.google.common.base.Optional
+import org.eclipse.emf.common.util.EList
+import org.eclipse.n4js.n4JS.Argument
 
 /**
  * Intended for small, static utility methods that
@@ -1386,28 +1389,25 @@ public class N4JSLanguageUtils {
 		return !(type instanceof PrimitiveType) || type instanceof AnyType;
 	}
 	
-	/** Returns the module of specifier of the given dynamic import AST element; otherwise null. */
-	def static Expression getDynamicImportModuleSpecifier(EObject astElement) {
+	/** Returns the arguments of the given dynamic import AST element */
+	def static Optional<EList<Argument>> getDynamicImportArguments(EObject astElement) {
 		if (!(astElement instanceof ParameterizedCallExpression)) {
-			return null;
+			return Optional.absent;
 		}
 		val pce = astElement as ParameterizedCallExpression;
-		val Expression reveicer = pce.getReceiver();
-		if (!(reveicer instanceof IdentifiableElement)) {
-			return null;
+		val Expression target = pce.target;
+		if (!(target instanceof IdentifierRef)) {
+			return Optional.absent;
 		}
-		val String receiverName = (reveicer as IdentifiableElement).name;
-		if (N4JSLanguageConstants.IMPORT_KEYWORD != receiverName) {
-			return null;
+		val String targetName = (target as IdentifierRef).idAsText;
+		if (N4JSLanguageConstants.IMPORT_KEYWORD != targetName) {
+			return Optional.absent;
 		}
-		if (pce.arguments.empty) {
-			return null;
-		}
-		return pce.arguments.get(0).expression;
+		return Optional.of(pce.arguments);
 	}
 	
 	/** Returns true iff the given AST element is a dynamic import */
 	def static boolean isDynamicImportCall(EObject astElement) {
-		return getDynamicImportModuleSpecifier(astElement) !== null;
+		return getDynamicImportArguments(astElement).present;
 	}
 }

@@ -787,7 +787,12 @@ class ASTStructureValidator {
 				if (name != YIELD_KEYWORD && (languageHelper.getECMAKeywords.contains(name)
 					|| 'enum'.equals(name) || 'await'.equals(name)
 					|| 'true'.equals(name) || 'false'.equals(name) || 'null'.equals(name))) {
-					issueNameDiagnostic(model, producer, name)
+					
+					if (constraints.isBuiltInTypeDefinition() && 'import'.equals(name)) {
+						// ignore
+					} else {
+						issueNameDiagnostic(model, producer, name)
+					} 
 				} else if (constraints.isStrict) {
 					if (RESERVED_WORDS_IN_STRICT_MODE.contains(name) || name == EVAL_NAME) {
 						issueNameDiagnostic(model, producer, name)
@@ -1251,9 +1256,6 @@ class ASTStructureValidator {
 			} else if (constraints.isStrict()) {
 				if (RESERVED_WORDS_IN_STRICT_MODE.contains(name) || name == EVAL_NAME) {
 					issueNameDiagnostic(model, producer, name)
-					if (model instanceof FunctionDeclaration) {
-						model.name = null; // do not pollute scope
-					}
 				}
 			}
 		}
