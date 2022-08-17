@@ -13,9 +13,10 @@
 END_SETUP */
 
 
-console.log(import.meta);
+let url = import.meta.url;
+let urlTail = url.substring(url.length - 54);
+console.log(urlTail);
+
 /*  XPECT output  ---
-[Object: null prototype] {
-  url: 'file:///private.../src-gen/Ch09_02_04__ImportStatements/Import_meta_Transpiler.js'
-}
+Ch09_02_04__ImportStatements/Import_meta_Transpiler.js
 --- */
