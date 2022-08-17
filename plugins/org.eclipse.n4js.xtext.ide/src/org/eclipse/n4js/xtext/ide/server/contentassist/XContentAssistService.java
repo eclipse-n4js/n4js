@@ -24,7 +24,6 @@ import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.ReplaceRegion;
 import org.eclipse.xtext.util.TextRegion;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
@@ -74,11 +73,15 @@ public class XContentAssistService {
 			}
 		}
 		operationCanceledManager.checkCanceled(cancelIndicator);
-		IterableExtensions.forEach(acceptor.getEntries(), (it, idx) -> {
-			CompletionItem item = toCompletionItem(it, caretOffset, caretPosition, document);
-			item.setSortText(Strings.padStart(Integer.toString(idx.intValue()), 5, '0'));
-			result.getItems().add(item);
-		});
+		{
+			int idx = 0;
+			for (ContentAssistEntry cae : acceptor.getEntries()) {
+				CompletionItem item = toCompletionItem(cae, caretOffset, caretPosition, document);
+				item.setSortText(Strings.padStart(Integer.toString(idx), 5, '0'));
+				result.getItems().add(item);
+				idx++;
+			}
+		}
 		return result;
 	}
 
