@@ -549,7 +549,7 @@ class N4JSScopingTest {
 		val extension splitter = Splitter.on(',').trimResults
 
 		val defaults = ("__proto__, global, Infinity, NaN, constructor, decodeURI, decodeURIComponent, encodeURI, encodeURIComponent, eval, hasOwnProperty, " +
-			"isFinite, isNaN, isPrototypeOf, parseFloat, parseInt, propertyIsEnumerable, toLocaleString, toString, undefined, valueOf").
+			"import, isFinite, isNaN, isPrototypeOf, parseFloat, parseInt, propertyIsEnumerable, toLocaleString, toString, undefined, valueOf").
 				split().toList
 		val expectation = expectationAsString.split().toList
 		if (!allElements.containsAll(defaults)) {

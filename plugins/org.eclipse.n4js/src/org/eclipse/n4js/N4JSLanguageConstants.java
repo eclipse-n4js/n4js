@@ -51,6 +51,8 @@ public abstract class N4JSLanguageConstants {
 	public static final String EXTENDS_KEYWORD = "extends";
 	/** Direct access to the yield keyword */
 	public static final String IMPLEMENTS_KEYWORD = "implements";
+	/** Direct access to the import keyword */
+	public static final String IMPORT_KEYWORD = "import";
 
 	/**
 	 * Default issue codes to suppress while running tests which are configured for issue suppression.
@@ -141,6 +143,7 @@ public abstract class N4JSLanguageConstants {
 	 * Identifiers that are reserved words (only) in strict mode.
 	 */
 	public static final Set<String> RESERVED_WORDS_IN_STRICT_MODE = ImmutableSet.of(
+			"import",
 			"implements",
 			"interface",
 			"let",

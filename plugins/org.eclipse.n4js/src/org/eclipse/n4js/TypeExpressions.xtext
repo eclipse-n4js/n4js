@@ -310,6 +310,7 @@ BindingIdentifier <Yield>:
 	IDENTIFIER
 	// yield as identifier as of [ECM15] (11.6.2, pp. 165)
 	| <!Yield> 'yield'
+	| 'import'
 	| N4Keyword
 ;
 
@@ -329,7 +330,8 @@ ReservedWord:
 	| 'true' | 'false'
 	// Future Reserved Word as of [ECM15] (11.6.2.2, pp. 166)
 	// | 'await' /* reserved word only if parse goal is module - compromise: allow as identifier and validate */
-	| 'enum';
+	| 'enum'
+;
 
 N4Keyword:
 	'get' | 'set'

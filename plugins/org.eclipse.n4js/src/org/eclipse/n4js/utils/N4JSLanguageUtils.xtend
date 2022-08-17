@@ -57,6 +57,7 @@ import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.NullLiteral
 import org.eclipse.n4js.n4JS.NumericLiteral
 import org.eclipse.n4js.n4JS.ObjectLiteral
+import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyAssignment
 import org.eclipse.n4js.n4JS.PropertyAssignmentAnnotationList
@@ -133,6 +134,9 @@ import org.eclipse.xtext.scoping.IScope
 import static org.eclipse.n4js.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import com.google.common.base.Optional
+import org.eclipse.emf.common.util.EList
+import org.eclipse.n4js.n4JS.Argument
 
 /**
  * Intended for small, static utility methods that
@@ -1383,5 +1387,27 @@ public class N4JSLanguageUtils {
 	/** Tells whether the given type may be referenced dynamically, i.e. with modifier '+'. */
 	def static boolean mayBeReferencedDynamically(Type type) {
 		return !(type instanceof PrimitiveType) || type instanceof AnyType;
+	}
+	
+	/** Returns the arguments of the given dynamic import AST element */
+	def static Optional<EList<Argument>> getDynamicImportArguments(EObject astElement) {
+		if (!(astElement instanceof ParameterizedCallExpression)) {
+			return Optional.absent;
+		}
+		val pce = astElement as ParameterizedCallExpression;
+		val Expression target = pce.target;
+		if (!(target instanceof IdentifierRef)) {
+			return Optional.absent;
+		}
+		val String targetName = (target as IdentifierRef).idAsText;
+		if (N4JSLanguageConstants.IMPORT_KEYWORD != targetName) {
+			return Optional.absent;
+		}
+		return Optional.of(pce.arguments);
+	}
+	
+	/** Returns true iff the given AST element is a dynamic import */
+	def static boolean isDynamicImportCall(EObject astElement) {
+		return getDynamicImportArguments(astElement).present;
 	}
 }

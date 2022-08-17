@@ -2281,7 +2281,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final RuleCall cIDENTIFIERTerminalRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Keyword cYieldKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
-		private final RuleCall cN4KeywordParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final Keyword cImportKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
+		private final RuleCall cN4KeywordParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
 		
 		///*
 		// * [ECM11] (7.6, pp. 17)
@@ -2292,6 +2293,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//    IDENTIFIER
 		//    // yield as identifier as of [ECM15] (11.6.2, pp. 165)
 		//    | <!Yield> 'yield'
+		//    | 'import'
 		//    | N4Keyword
 		//;
 		@Override public ParserRule getRule() { return rule; }
@@ -2299,6 +2301,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//IDENTIFIER
 		//// yield as identifier as of [ECM15] (11.6.2, pp. 165)
 		//| <!Yield> 'yield'
+		//| 'import'
 		//| N4Keyword
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
@@ -2311,8 +2314,11 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//'yield'
 		public Keyword getYieldKeyword_1_0() { return cYieldKeyword_1_0; }
 		
+		//'import'
+		public Keyword getImportKeyword_2() { return cImportKeyword_2; }
+		
 		//N4Keyword
-		public RuleCall getN4KeywordParserRuleCall_2() { return cN4KeywordParserRuleCall_2; }
+		public RuleCall getN4KeywordParserRuleCall_3() { return cN4KeywordParserRuleCall_3; }
 	}
 	public class IdentifierNameElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.IdentifierName");
@@ -2391,7 +2397,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//    | 'true' | 'false'
 		//    // Future Reserved Word as of [ECM15] (11.6.2.2, pp. 166)
 		//    // | 'await' /* reserved word only if parse goal is module - compromise: allow as identifier and validate */
-		//    | 'enum';
+		//    | 'enum'
+		//;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//// Keywords as of [ECM15] (11.6.2, pp. 165)
@@ -3524,6 +3531,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//    IDENTIFIER
 	//    // yield as identifier as of [ECM15] (11.6.2, pp. 165)
 	//    | <!Yield> 'yield'
+	//    | 'import'
 	//    | N4Keyword
 	//;
 	public BindingIdentifierElements getBindingIdentifierAccess() {
@@ -3557,7 +3565,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//    | 'true' | 'false'
 	//    // Future Reserved Word as of [ECM15] (11.6.2.2, pp. 166)
 	//    // | 'await' /* reserved word only if parse goal is module - compromise: allow as identifier and validate */
-	//    | 'enum';
+	//    | 'enum'
+	//;
 	public ReservedWordElements getReservedWordAccess() {
 		return pReservedWord;
 	}

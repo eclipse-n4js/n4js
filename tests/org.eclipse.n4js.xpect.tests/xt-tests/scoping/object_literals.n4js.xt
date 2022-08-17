@@ -45,7 +45,7 @@ PropertyDescriptor, PropertyDescriptorMap, PropertyKey, RangeError, RangeErrorCo
 RegExp, RegExpConstructor, RegExpExecArray, RegExpMatchArray,
 String, StringConstructor, Symbol, SyntaxError, SyntaxErrorConstructor, ThisType, TypeError, TypeErrorConstructor, TypedPropertyDescriptor,
 URIError, URIErrorConstructor, Uint16Array, Uint16ArrayConstructor, Uint32Array, Uint32ArrayConstructor, Uint8Array, Uint8ArrayConstructor, Uint8ClampedArray, Uint8ClampedArrayConstructor,
-any, boolean, console, global, i18nKey, int, number, pathSelector, string, symbol, typeName, undefined
+any, boolean, console, global, i18nKey, import, int, number, pathSelector, string, symbol, typeName, undefined
 ---*/
 	any name: "o",
 	complex: function() {

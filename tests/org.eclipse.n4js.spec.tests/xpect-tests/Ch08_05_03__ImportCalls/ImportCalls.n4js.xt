@@ -23,10 +23,10 @@ function foo(): string {
 import("./M");
 // XPECT errors --> "42 is not a subtype of string." at "42"
 import(42);
-// XPECT errors --> "An import call must have exactly one argument." at "import()"
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "import()"
 import();
 // XPECT errors ---
-// "An import call must have exactly one argument." at "import(41,42,43)"
+// "Incorrect number of arguments: expected 1, got 3." at "import(41,42,43)"
 // "41 is not a subtype of string." at "41"
 // ---
 import(41,42,43);

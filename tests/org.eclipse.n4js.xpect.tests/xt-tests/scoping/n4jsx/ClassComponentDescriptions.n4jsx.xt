@@ -72,7 +72,7 @@ export public class MyComponent extends React.Component<~React.ComponentProps wi
 		__proto__, arguments, console, global, constText, constructor,
 		decodeURI, decodeURIComponent, encodeURI, encodeURIComponent, eval, hasOwnProperty,
 		index.Component, index.ComponentProps, index.Fragment, index.PropConstraint,
-		index.PropType, index.PropTypes, index.PureComponent, index.ReactElement, index.cloneElement, index.createElement,
+		index.PropType, index.PropTypes, import, index.PureComponent, index.ReactElement, index.cloneElement, index.createElement,
 		index.isValidElement, index.renderToStaticMarkup, index.renderToString, isFinite, isNaN,
 		isPrototypeOf, null, parseFloat, parseInt, propertyIsEnumerable,
 		toLocaleString, toString, undefined, valueOf, void

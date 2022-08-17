@@ -822,15 +822,6 @@ import com.google.common.base.Strings;
 	}
 
 	@Override
-	public Boolean caseImportCallExpression(ImportCallExpression original) {
-		write("import");
-		write('(');
-		process(original.getArgument());
-		write(')');
-		return DONE;
-	}
-
-	@Override
 	public Boolean caseArgument(Argument original) {
 		if (original.isSpread()) {
 			write("...");
