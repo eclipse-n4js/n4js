@@ -125,7 +125,8 @@ public class CamelCasePrefixMatcher extends IPrefixMatcher.IgnoreCase {
 				}
 
 				nameChar = name[iName];
-				if (Character.isJavaIdentifierPart(nameChar) && !Character.isUpperCase(nameChar)) {
+				if (Character.isJavaIdentifierPart(nameChar) && !Character.isUpperCase(nameChar)
+						&& !Character.isDigit(nameChar)) {
 					iName++;
 				} else if (Character.isDigit(nameChar)) {
 					if (patternChar == nameChar)
