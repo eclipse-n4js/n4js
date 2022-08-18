@@ -26,7 +26,8 @@ public class ImportSpecifierCompletionTest extends AbstractCompletionTest {
 				Pair.of("my-project*", List.of(
 						Pair.of(CFG_DEPENDENCIES, "other-project"),
 						Pair.of("CarFlyingAstronaut", ""),
-						Pair.of("utils/Vision3DUtil", ""))),
+						Pair.of("utils/Vision3DUtil", ""),
+						Pair.of("utils/files/FileReader", ""))),
 
 				Pair.of("other-project", List.of(
 						Pair.of("UberManagerTool", ""),
@@ -43,7 +44,8 @@ public class ImportSpecifierCompletionTest extends AbstractCompletionTest {
 				"(CarFlyingAstronaut, Module, yarn-test-project/packages/my-project, , , 00000, , , , ([0:15 - 0:15], CarFlyingAstronaut), [], [], , )\n"
 						+ "(otherUtils/TheUnbelievableMystery, Module, yarn-test-project/packages/other-project, , , 00001, , , , ([0:15 - 0:15], otherUtils/TheUnbelievableMystery), [], [], , )\n"
 						+ "(UberManagerTool, Module, yarn-test-project/packages/other-project, , , 00002, , , , ([0:15 - 0:15], UberManagerTool), [], [], , )\n"
-						+ "(utils/Vision3DUtil, Module, yarn-test-project/packages/my-project, , , 00003, , , , ([0:15 - 0:15], utils/Vision3DUtil), [], [], , )");
+						+ "(utils/files/FileReader, Module, yarn-test-project/packages/my-project, , , 00003, , , , ([0:15 - 0:15], utils/files/FileReader), [], [], , )\n"
+						+ "(utils/Vision3DUtil, Module, yarn-test-project/packages/my-project, , , 00004, , , , ([0:15 - 0:15], utils/Vision3DUtil), [], [], , )");
 	}
 
 	/***/
@@ -58,6 +60,34 @@ public class ImportSpecifierCompletionTest extends AbstractCompletionTest {
 	public void testModuleNamesInSubfolder() {
 		testAtCursor("import X from 'Visio<|>';",
 				"(utils/Vision3DUtil, Module, yarn-test-project/packages/my-project, , , 00000, , , , ([0:15 - 0:20], utils/Vision3DUtil), [], [], , )");
+	}
+
+	/***/
+	@Test
+	public void testModuleNamesInSubfolders() {
+		testAtCursor("import X from 'FileRea<|>';",
+				"(utils/files/FileReader, Module, yarn-test-project/packages/my-project, , , 00000, , , , ([0:15 - 0:22], utils/files/FileReader), [], [], , )");
+	}
+
+	/***/
+	@Test
+	public void testModuleNamesInSubfoldersCamelCaseSkipped() {
+		testAtCursor("import X from 'FR<|>';",
+				"(utils/files/FileReader, Module, yarn-test-project/packages/my-project, , , 00000, , , , ([0:15 - 0:17], utils/files/FileReader), [], [], , )");
+	}
+
+	/***/
+	@Test
+	public void testModuleNamesInSubfoldersCamelCaseIncluded1() {
+		testAtCursor("import X from 'FFR<|>';",
+				"(utils/files/FileReader, Module, yarn-test-project/packages/my-project, , , 00000, , , , ([0:15 - 0:18], utils/files/FileReader), [], [], , )");
+	}
+
+	/***/
+	@Test
+	public void testModuleNamesInSubfoldersCamelCaseIncluded2() {
+		testAtCursor("import X from 'uFFR<|>';",
+				"(utils/files/FileReader, Module, yarn-test-project/packages/my-project, , , 00000, , , , ([0:15 - 0:19], utils/files/FileReader), [], [], , )");
 	}
 
 	/***/
