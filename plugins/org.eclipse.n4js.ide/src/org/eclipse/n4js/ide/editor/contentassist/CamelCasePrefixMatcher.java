@@ -62,16 +62,21 @@ public class CamelCasePrefixMatcher extends IPrefixMatcher.IgnoreCase {
 		if (nameEnd <= nameStart)
 			return false;
 
-		char patternChar, nameChar;
 		int iPattern = patternStart;
 		int iName = nameStart;
+		char patternChar = pattern[iPattern];
+		char nameChar = name[iName];
 
-		// search for start
-		while (iName < nameEnd && name[iName] != pattern[iPattern]) {
-			iName++;
-		}
-		// check first pattern char
-		if (iName >= nameEnd) {
+		if (Character.isUpperCase(patternChar) || Character.isDigit(patternChar) || patternChar == '/') {
+			// search for start
+			while (iName < nameEnd && !equalsOrPromotedEquals(patternChar, name, iName)) {
+				iName++;
+			}
+			// check first pattern char
+			if (iName >= nameEnd) {
+				return false;
+			}
+		} else if (name[iName] != patternChar) {
 			return false;
 		}
 
@@ -125,20 +130,31 @@ public class CamelCasePrefixMatcher extends IPrefixMatcher.IgnoreCase {
 				}
 
 				nameChar = name[iName];
-				if (Character.isJavaIdentifierPart(nameChar) && !Character.isUpperCase(nameChar)
-						&& !Character.isDigit(nameChar)) {
-					iName++;
-				} else if (Character.isDigit(nameChar)) {
+				if (Character.isDigit(nameChar)) {
+					// optional digits
 					if (patternChar == nameChar)
 						break;
 					iName++;
+				} else if (nameChar == '/') {
+					// optional slashes
+					if (patternChar == nameChar)
+						break;
+					iName++;
+				} else if (promotedEquals(patternChar, name, iName)) {
+					// uppercase to indicate first letter after '/'
+					break;
 				} else if (Character.isJavaIdentifierPart(nameChar) && Character.isUpperCase(nameChar) && iName > 0
 						&& Character.isUpperCase(name[iName - 1])) {
+					// optional consecutive uppercase letters
 					if (patternChar == nameChar)
 						break;
 					iName++;
+				} else if (Character.isJavaIdentifierPart(nameChar) && !Character.isUpperCase(nameChar)) {
+					// skip lowercase letters
+					iName++;
 				} else if (patternChar != nameChar) {
-					return false;
+					// allow skipping uppercase letters
+					iName++;
 				} else {
 					break;
 				}
@@ -146,5 +162,22 @@ public class CamelCasePrefixMatcher extends IPrefixMatcher.IgnoreCase {
 			// At this point, either name has been exhausted, or it is at an uppercase letter.
 			// Since pattern is also at an uppercase letter
 		}
+	}
+
+	private static boolean equalsOrPromotedEquals(char c1, char[] chars, int charsIdx) {
+		if (c1 == chars[charsIdx]) {
+			return true;
+		}
+		if (charsIdx > 0 && chars[charsIdx - 1] == '/' && c1 == Character.toUpperCase(chars[charsIdx])) {
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean promotedEquals(char c1, char[] chars, int charsIdx) {
+		if (charsIdx > 0 && chars[charsIdx - 1] == '/' && c1 == Character.toUpperCase(chars[charsIdx])) {
+			return true;
+		}
+		return false;
 	}
 }

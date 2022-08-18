@@ -75,31 +75,13 @@ public class ModuleSpecifierProposalCreator {
 			for (IEObjectDescription elem : scope.getAllElements()) {
 				String fileExtension = URIUtils.fileExtension(elem.getEObjectURI());
 				String moduleSpecifier = elem.getQualifiedName() == null ? null : elem.getQualifiedName().toString("/");
-				String msForMatching = replaceQNSeparators(moduleSpecifier);
 				if (!N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(fileExtension) &&
-						moduleSpecifier != null && prefixMatcher.isCandidateMatchingPrefix(msForMatching, prefix)) {
+						moduleSpecifier != null && prefixMatcher.isCandidateMatchingPrefix(moduleSpecifier, prefix)) {
 					ContentAssistEntry cae = convertResolutionToContentAssistEntry(context, wc, elem, moduleSpecifier);
 					acceptor.accept(cae, 0);
 				}
 			}
 		}
-	}
-
-	private String replaceQNSeparators(String moduleSpecifier) {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < moduleSpecifier.length(); i++) {
-			char c = moduleSpecifier.charAt(i);
-			if (c == '/') {
-				if (i + 1 < moduleSpecifier.length()) {
-					i++;
-					char cn = moduleSpecifier.charAt(i);
-					sb.append(Character.toUpperCase(cn));
-				}
-			} else {
-				sb.append(c);
-			}
-		}
-		return sb.toString();
 	}
 
 	private ContentAssistEntry convertResolutionToContentAssistEntry(ContentAssistContext context,
