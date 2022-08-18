@@ -13,8 +13,10 @@ package org.eclipse.n4js.ide.editor.contentassist;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider.N4JSCandidateFilter;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
@@ -71,13 +73,33 @@ public class ModuleSpecifierProposalCreator {
 			String prefix = context.getPrefix();
 			prefix = prefix.startsWith("\"") ? prefix.substring(1) : prefix;
 			for (IEObjectDescription elem : scope.getAllElements()) {
+				String fileExtension = URIUtils.fileExtension(elem.getEObjectURI());
 				String moduleSpecifier = elem.getQualifiedName() == null ? null : elem.getQualifiedName().toString("/");
-				if (moduleSpecifier != null && prefixMatcher.isCandidateMatchingPrefix(moduleSpecifier, prefix)) {
+				String msForMatching = replaceQNSeparators(moduleSpecifier);
+				if (!N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(fileExtension) &&
+						moduleSpecifier != null && prefixMatcher.isCandidateMatchingPrefix(msForMatching, prefix)) {
 					ContentAssistEntry cae = convertResolutionToContentAssistEntry(context, wc, elem, moduleSpecifier);
 					acceptor.accept(cae, 0);
 				}
 			}
 		}
+	}
+
+	private String replaceQNSeparators(String moduleSpecifier) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < moduleSpecifier.length(); i++) {
+			char c = moduleSpecifier.charAt(i);
+			if (c == '/') {
+				if (i + 1 < moduleSpecifier.length()) {
+					i++;
+					char cn = moduleSpecifier.charAt(i);
+					sb.append(Character.toUpperCase(cn));
+				}
+			} else {
+				sb.append(c);
+			}
+		}
+		return sb.toString();
 	}
 
 	private ContentAssistEntry convertResolutionToContentAssistEntry(ContentAssistContext context,
@@ -101,7 +123,6 @@ public class ModuleSpecifierProposalCreator {
 		// cae.getTextReplacements().add(repl);
 		cae.setKind(ContentAssistEntry.KIND_MODULE);
 		cae.setDocumentation("docu");
-		cae.setEscapePosition(0);
 		return cae;
 	}
 }

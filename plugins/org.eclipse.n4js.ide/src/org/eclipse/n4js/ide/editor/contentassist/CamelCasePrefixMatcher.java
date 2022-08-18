@@ -61,15 +61,19 @@ public class CamelCasePrefixMatcher extends IPrefixMatcher.IgnoreCase {
 			return nameEnd <= nameStart;
 		if (nameEnd <= nameStart)
 			return false;
-		// check first pattern char
-		if (name[nameStart] != pattern[patternStart]) {
-			// first char must strictly match (upper/lower)
-			return false;
-		}
 
 		char patternChar, nameChar;
 		int iPattern = patternStart;
 		int iName = nameStart;
+
+		// search for start
+		while (iName < nameEnd && name[iName] != pattern[iPattern]) {
+			iName++;
+		}
+		// check first pattern char
+		if (iName >= nameEnd) {
+			return false;
+		}
 
 		// Main loop is on pattern characters
 		while (true) {
