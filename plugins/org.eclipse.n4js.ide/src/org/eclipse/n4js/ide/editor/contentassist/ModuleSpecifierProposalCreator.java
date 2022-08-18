@@ -71,7 +71,7 @@ public class ModuleSpecifierProposalCreator {
 		IScope scope = scopeProvider.getScope(model, reference);
 		if (scope != null) {
 			String prefix = context.getPrefix();
-			prefix = prefix.startsWith("\"") ? prefix.substring(1) : prefix;
+			prefix = prefix.startsWith("'") || prefix.startsWith("\"") ? prefix.substring(1) : prefix;
 			for (IEObjectDescription elem : scope.getAllElements()) {
 				String fileExtension = URIUtils.fileExtension(elem.getEObjectURI());
 				String moduleSpecifier = elem.getQualifiedName() == null ? null : elem.getQualifiedName().toString("/");
@@ -114,15 +114,7 @@ public class ModuleSpecifierProposalCreator {
 		cae.setProposal(moduleSpecifier);
 		cae.setLabel(moduleSpecifier);
 		cae.setDescription(prjName);
-		// if (resolution.importToBeAdded != null) {
-		// ReplaceRegion textReplacement = importHelper.getReplacementForImport(resource.getScript(),
-		// resolution.importToBeAdded);
-		// cae.getTextReplacements().add(textReplacement);
-		// }
-		// ReplaceRegion repl = new ReplaceRegion(context.getOffset(), context.getPrefix().length(), "replacement");
-		// cae.getTextReplacements().add(repl);
 		cae.setKind(ContentAssistEntry.KIND_MODULE);
-		cae.setDocumentation("docu");
 		return cae;
 	}
 }
