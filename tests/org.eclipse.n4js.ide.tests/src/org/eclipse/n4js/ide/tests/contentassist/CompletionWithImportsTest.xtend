@@ -49,6 +49,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			)], [], , )
 			(A2, Class, MBA, , , 00001, , , , ([0:12 - 0:14], A2), [([0:0 - 0:0], import {A2} from "MBA";
 			)], [], , )
+			(Array2, Class, Array2, , , 00002, , , , ([0:12 - 0:14], Array2), [], [], , )
 		''');
 	}
 
@@ -115,6 +116,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 		''', ''' 
 			(Alias1, Class, alias for MA.A2, , , 00000, , , , ([2:0 - 2:2], Alias1), [], [], , )
 			(Alias2, Class, alias for MBA.A2, , , 00001, , , , ([2:0 - 2:2], Alias2), [], [], , )
+			(Array2, Class, Array2, , , 00002, , , , ([2:0 - 2:2], Array2), [], [], , )
 		''');
 	}
 
@@ -139,6 +141,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			(A2, Class, MBA, , , 00000, , , , ([1:0 - 1:2], A2), [([0:34 - 0:34], 
 			import {A2} from "MBA";)], [], , )
 			(A2_Alias, Class, alias for MA.A2, , , 00001, , , , ([1:0 - 1:2], A2_Alias), [], [], , )
+			(Array2, Class, Array2, , , 00002, , , , ([1:0 - 1:2], Array2), [], [], , )
 		''');
 	}
 
@@ -151,6 +154,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 		''', ''' 
 			(A2, Class, MA, , , 00000, , , , ([2:0 - 2:2], A2), [], [], , )
 			(A2_Alias, Class, alias for MBA.A2, , , 00001, , , , ([2:0 - 2:2], A2_Alias), [], [], , )
+			(Array2, Class, Array2, , , 00002, , , , ([2:0 - 2:2], Array2), [], [], , )
 		''');
 	}
 
@@ -169,6 +173,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			
 			Introduces the new alias 'Alias_MBA_A2' for element MBA.A2, , , 00002, , , , ([1:0 - 1:2], Alias_MBA_A2), [([0:28 - 0:28], 
 			import {A2 as Alias_MBA_A2} from "MBA";)], [], , )
+			(Array2, Class, Array2, , , 00003, , , , ([1:0 - 1:2], Array2), [], [], , )
 		''');
 	}
 
@@ -183,6 +188,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			
 			Introduces the new alias 'Alias_MBA_A2' for element MBA.A2, , , 00001, , , , ([1:12 - 1:14], Alias_MBA_A2), [([0:22 - 0:22], 
 			import {A2 as Alias_MBA_A2} from "MBA";)], [], , )
+			(Array2, Class, Array2, , , 00002, , , , ([1:12 - 1:14], Array2), [], [], , )
 		''');
 	}
 
@@ -214,7 +220,8 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 		''', ''' 
 			(A2, Class, MBA, , , 00000, , , , ([1:0 - 1:2], A2), [([0:27 - 0:27], 
 			import {A2} from "MBA";)], [], , )
-			(NSMA.A2, Class, MA.A2, , , 00001, , , , ([1:0 - 1:2], NSMA.A2), [], [], , )
+			(Array2, Class, Array2, , , 00001, , , , ([1:0 - 1:2], Array2), [], [], , )
+			(NSMA.A2, Class, MA.A2, , , 00002, , , , ([1:0 - 1:2], NSMA.A2), [], [], , )
 		''');
 	}
 
@@ -230,6 +237,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			
 			Introduces the new alias 'Alias_MBA_A2' for element MBA.A2, , , 00002, , , , ([1:0 - 1:2], Alias_MBA_A2), [([0:25 - 0:25], 
 			import {A2 as Alias_MBA_A2} from "MBA";)], [], , )
+			(Array2, Class, Array2, , , 00003, , , , ([1:0 - 1:2], Array2), [], [], , )
 		''');
 	}
 
@@ -238,8 +246,9 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 		testAtCursor('''
 			Obj<|>
 		''', ''' 
-			(Object, Class, Object, , , 00000, , , , ([0:0 - 0:3], Object), [], [], , )
-			(ObjectConstructor, Text, ObjectConstructor, , , 00001, , , , ([0:0 - 0:3], ObjectConstructor), [], [], , )
+			(N4Object, Class, N4Object, , , 00000, , , , ([0:0 - 0:3], N4Object), [], [], , )
+			(Object, Class, Object, , , 00001, , , , ([0:0 - 0:3], Object), [], [], , )
+			(ObjectConstructor, Text, ObjectConstructor, , , 00002, , , , ([0:0 - 0:3], ObjectConstructor), [], [], , )
 		''');
 	}
 
@@ -250,6 +259,8 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 		''', ''' 
 			(N4Enum, Class, N4Enum, , , 00000, , , , ([0:0 - 0:4], N4Enum), [], [], , )
 			(N4EnumType, Class, N4EnumType, , , 00001, , , , ([0:0 - 0:4], N4EnumType), [], [], , )
+			(N4NumberBasedEnum, Class, N4NumberBasedEnum, , , 00002, , , , ([0:0 - 0:4], N4NumberBasedEnum), [], [], , )
+			(N4StringBasedEnum, Class, N4StringBasedEnum, , , 00003, , , , ([0:0 - 0:4], N4StringBasedEnum), [], [], , )
 		''');
 	}
 
