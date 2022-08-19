@@ -67,7 +67,7 @@ public class CamelCasePrefixMatcher extends IPrefixMatcher.IgnoreCase {
 		char patternChar = pattern[iPattern];
 		char nameChar = name[iName];
 
-		if (Character.isUpperCase(patternChar) || Character.isDigit(patternChar) || patternChar == '/') {
+		if (isUppercaseSlashOrDigit(patternChar)) {
 			// search for start
 			while (iName < nameEnd && !equalsOrPromotedEquals(patternChar, name, iName)) {
 				iName++;
@@ -119,7 +119,23 @@ public class CamelCasePrefixMatcher extends IPrefixMatcher.IgnoreCase {
 			// If characters are not equals, then it's not a match if patternChar is lowercase
 			if (Character.isJavaIdentifierPart(patternChar) && !Character.isUpperCase(patternChar)
 					&& !Character.isDigit(patternChar)) {
-				return false;
+
+				// rewind pattern chars, keep name chars
+				while (iPattern >= 0 && !isUppercaseSlashOrDigit(pattern[iPattern])) {
+					iPattern--;
+				}
+				if (iPattern < 0) {
+					return false;
+				}
+				// search for next start
+				while (iName < nameEnd && !equalsOrPromotedEquals(pattern[iPattern], name, iName)) {
+					iName++;
+				}
+				// check first pattern char
+				if (iName >= nameEnd) {
+					return false;
+				}
+				continue;
 			}
 
 			// patternChar is uppercase, so let's find the next uppercase in name
@@ -162,6 +178,10 @@ public class CamelCasePrefixMatcher extends IPrefixMatcher.IgnoreCase {
 			// At this point, either name has been exhausted, or it is at an uppercase letter.
 			// Since pattern is also at an uppercase letter
 		}
+	}
+
+	private static boolean isUppercaseSlashOrDigit(char c) {
+		return Character.isUpperCase(c) || Character.isDigit(c) || c == '/';
 	}
 
 	private static boolean equalsOrPromotedEquals(char c1, char[] chars, int charsIdx) {
