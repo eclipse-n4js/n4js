@@ -41,6 +41,7 @@ public class CamelCaseCompletionTest extends AbstractCompletionTest {
 	/***/
 	@Test
 	public void testCamelCasePrefix_04() {
-		testAtCursor("eC<|>", "");
+		testAtCursor("eC<|>",
+				"(encodeURIComponent, Method, encodeURIComponent, , , 00000, , , , ([0:0 - 0:2], encodeURIComponent), [], [], , )");
 	}
 }

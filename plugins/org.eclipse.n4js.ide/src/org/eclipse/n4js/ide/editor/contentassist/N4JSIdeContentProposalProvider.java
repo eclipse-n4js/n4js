@@ -85,6 +85,9 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 	private ImportsAwareReferenceProposalCreator importsAwareReferenceProposalCreator;
 
 	@Inject
+	private ModuleSpecifierProposalCreator moduleSpecifierProposalCreator;
+
+	@Inject
 	private ContentAssistDataCollectors dataCollectors;
 
 	@Override
@@ -177,6 +180,10 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 
 			EObject model = context.getCurrentModel();
 			importsAwareReferenceProposalCreator.lookupCrossReference(model, reference, context, acceptor, filter);
+		}
+		if (reference.getEReferenceType().isSuperTypeOf(TypesPackage.Literals.TMODULE)) {
+			EObject model = context.getCurrentModel();
+			moduleSpecifierProposalCreator.lookupCrossReference(model, reference, context, acceptor, filter);
 		}
 	}
 

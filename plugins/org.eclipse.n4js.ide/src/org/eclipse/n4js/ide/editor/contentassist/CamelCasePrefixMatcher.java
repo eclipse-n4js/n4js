@@ -10,12 +10,16 @@
  */
 package org.eclipse.n4js.ide.editor.contentassist;
 
+import java.util.Set;
+
 import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
 
 /**
  * Used the algorithm that is also used by the xtext.ui implementation of the CamelCase prefix matcher.
  */
 public class CamelCasePrefixMatcher extends IPrefixMatcher.IgnoreCase {
+
+	private static Set<Character> PRMOTING_CHARS = Set.of('/', '-');
 
 	@Override
 	public boolean isCandidateMatchingPrefix(String name, String prefix) {
@@ -61,15 +65,24 @@ public class CamelCasePrefixMatcher extends IPrefixMatcher.IgnoreCase {
 			return nameEnd <= nameStart;
 		if (nameEnd <= nameStart)
 			return false;
-		// check first pattern char
-		if (name[nameStart] != pattern[patternStart]) {
-			// first char must strictly match (upper/lower)
-			return false;
-		}
 
-		char patternChar, nameChar;
 		int iPattern = patternStart;
 		int iName = nameStart;
+		char patternChar = pattern[iPattern];
+		char nameChar = name[iName];
+
+		if (isUppercaseSlashOrDigit(patternChar)) {
+			// search for start
+			while (iName < nameEnd && !equalsOrPromotedEquals(patternChar, name, iName)) {
+				iName++;
+			}
+			// check first pattern char
+			if (iName >= nameEnd) {
+				return false;
+			}
+		} else if (name[iName] != patternChar) {
+			return false;
+		}
 
 		// Main loop is on pattern characters
 		while (true) {
@@ -110,7 +123,23 @@ public class CamelCasePrefixMatcher extends IPrefixMatcher.IgnoreCase {
 			// If characters are not equals, then it's not a match if patternChar is lowercase
 			if (Character.isJavaIdentifierPart(patternChar) && !Character.isUpperCase(patternChar)
 					&& !Character.isDigit(patternChar)) {
-				return false;
+
+				// rewind pattern chars, keep name chars
+				while (iPattern >= 0 && !isUppercaseSlashOrDigit(pattern[iPattern])) {
+					iPattern--;
+				}
+				if (iPattern < 0) {
+					return false;
+				}
+				// search for next start
+				while (iName < nameEnd && !equalsOrPromotedEquals(pattern[iPattern], name, iName)) {
+					iName++;
+				}
+				// check first pattern char
+				if (iName >= nameEnd) {
+					return false;
+				}
+				continue;
 			}
 
 			// patternChar is uppercase, so let's find the next uppercase in name
@@ -121,19 +150,31 @@ public class CamelCasePrefixMatcher extends IPrefixMatcher.IgnoreCase {
 				}
 
 				nameChar = name[iName];
-				if (Character.isJavaIdentifierPart(nameChar) && !Character.isUpperCase(nameChar)) {
-					iName++;
-				} else if (Character.isDigit(nameChar)) {
+				if (Character.isDigit(nameChar)) {
+					// optional digits
 					if (patternChar == nameChar)
 						break;
 					iName++;
+				} else if (PRMOTING_CHARS.contains(nameChar)) {
+					// optional slashes
+					if (patternChar == nameChar)
+						break;
+					iName++;
+				} else if (promotedEquals(patternChar, name, iName)) {
+					// uppercase to indicate first letter after '/'
+					break;
 				} else if (Character.isJavaIdentifierPart(nameChar) && Character.isUpperCase(nameChar) && iName > 0
 						&& Character.isUpperCase(name[iName - 1])) {
+					// optional consecutive uppercase letters
 					if (patternChar == nameChar)
 						break;
 					iName++;
+				} else if (Character.isJavaIdentifierPart(nameChar) && !Character.isUpperCase(nameChar)) {
+					// skip lowercase letters
+					iName++;
 				} else if (patternChar != nameChar) {
-					return false;
+					// allow skipping uppercase letters
+					iName++;
 				} else {
 					break;
 				}
@@ -141,5 +182,24 @@ public class CamelCasePrefixMatcher extends IPrefixMatcher.IgnoreCase {
 			// At this point, either name has been exhausted, or it is at an uppercase letter.
 			// Since pattern is also at an uppercase letter
 		}
+	}
+
+	private static boolean isUppercaseSlashOrDigit(char c) {
+		return Character.isUpperCase(c) || Character.isDigit(c) || PRMOTING_CHARS.contains(c);
+	}
+
+	private static boolean equalsOrPromotedEquals(char c1, char[] chars, int charsIdx) {
+		if (c1 == chars[charsIdx]) {
+			return true;
+		}
+		return promotedEquals(c1, chars, charsIdx);
+	}
+
+	private static boolean promotedEquals(char c1, char[] chars, int charsIdx) {
+		if (charsIdx > 0 && PRMOTING_CHARS.contains(chars[charsIdx - 1])
+				&& c1 == Character.toUpperCase(chars[charsIdx])) {
+			return true;
+		}
+		return false;
 	}
 }
