@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ide.editor.contentassist;
 
+import java.util.Objects;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -67,6 +69,7 @@ public class ModuleSpecifierProposalCreator {
 		}
 		N4JSResource resourceCasted = (N4JSResource) resource;
 		N4JSWorkspaceConfigSnapshot wc = workspaceAccess.getWorkspaceConfig(resourceCasted);
+		N4JSProjectConfigSnapshot ctxPrj = wc.findProjectContaining(model.eResource().getURI());
 
 		IScope scope = scopeProvider.getScope(model, reference);
 		if (scope != null) {
@@ -77,7 +80,8 @@ public class ModuleSpecifierProposalCreator {
 				String moduleSpecifier = elem.getQualifiedName() == null ? null : elem.getQualifiedName().toString("/");
 				if (!N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(fileExtension) &&
 						moduleSpecifier != null && prefixMatcher.isCandidateMatchingPrefix(moduleSpecifier, prefix)) {
-					ContentAssistEntry cae = convertResolutionToContentAssistEntry(context, wc, elem, moduleSpecifier);
+					ContentAssistEntry cae = convertResolutionToContentAssistEntry(context, wc, elem, moduleSpecifier,
+							ctxPrj);
 					acceptor.accept(cae, 0);
 				}
 			}
@@ -86,17 +90,22 @@ public class ModuleSpecifierProposalCreator {
 
 	private ContentAssistEntry convertResolutionToContentAssistEntry(ContentAssistContext context,
 			N4JSWorkspaceConfigSnapshot wc,
-			IEObjectDescription elem, String moduleSpecifier) {
+			IEObjectDescription elem, String moduleSpecifier, N4JSProjectConfigSnapshot ctxPrj) {
 
 		N4JSProjectConfigSnapshot prj = wc.findProjectContaining(elem.getEObjectURI());
 		String prjName = prj == null ? "" : prj.getName();
+		boolean projectImport = Objects.equals(moduleSpecifier, prjName);
+		boolean makeCompleteImport = ctxPrj != null && prj != null && ctxPrj != prj && !projectImport;
+		String proposal = (makeCompleteImport && prj != null ? prj.getPackageName() + "/" : "") + moduleSpecifier;
+		String docu = projectImport ? "Project Import" : "";
 
 		ContentAssistEntry cae = new ContentAssistEntry();
 		cae.setPrefix(context.getPrefix().substring(1));
-		cae.setProposal(moduleSpecifier);
+		cae.setProposal(proposal);
 		cae.setLabel(moduleSpecifier);
 		cae.setDescription(prjName);
 		cae.setKind(ContentAssistEntry.KIND_MODULE);
+		cae.setDocumentation(docu);
 		return cae;
 	}
 }

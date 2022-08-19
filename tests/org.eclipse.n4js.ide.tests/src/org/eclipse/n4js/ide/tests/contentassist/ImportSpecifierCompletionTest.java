@@ -42,8 +42,8 @@ public class ImportSpecifierCompletionTest extends AbstractCompletionTest {
 	public void testAllSuggestions() {
 		testAtCursor("import X from '<|>';",
 				"(CarFlyingAstronaut, Module, yarn-test-project/packages/my-project, , , 00000, , , , ([0:15 - 0:15], CarFlyingAstronaut), [], [], , )\n"
-						+ "(otherUtils/TheUnbelievableMystery, Module, yarn-test-project/packages/other-project, , , 00001, , , , ([0:15 - 0:15], otherUtils/TheUnbelievableMystery), [], [], , )\n"
-						+ "(UberManagerTool, Module, yarn-test-project/packages/other-project, , , 00002, , , , ([0:15 - 0:15], UberManagerTool), [], [], , )\n"
+						+ "(otherUtils/TheUnbelievableMystery, Module, yarn-test-project/packages/other-project, , , 00001, , , , ([0:15 - 0:15], other-project/otherUtils/TheUnbelievableMystery), [], [], , )\n"
+						+ "(UberManagerTool, Module, yarn-test-project/packages/other-project, , , 00002, , , , ([0:15 - 0:15], other-project/UberManagerTool), [], [], , )\n"
 						+ "(utils/files/FileReader, Module, yarn-test-project/packages/my-project, , , 00003, , , , ([0:15 - 0:15], utils/files/FileReader), [], [], , )\n"
 						+ "(utils/Vision3DUtil, Module, yarn-test-project/packages/my-project, , , 00004, , , , ([0:15 - 0:15], utils/Vision3DUtil), [], [], , )");
 	}
@@ -94,7 +94,7 @@ public class ImportSpecifierCompletionTest extends AbstractCompletionTest {
 	@Test
 	public void testModuleNamesOfOtherProject() {
 		testAtCursor("import X from 'UberMana<|>';",
-				"(UberManagerTool, Module, yarn-test-project/packages/other-project, , , 00000, , , , ([0:15 - 0:23], UberManagerTool), [], [], , )");
+				"(UberManagerTool, Module, yarn-test-project/packages/other-project, , , 00000, , , , ([0:15 - 0:23], other-project/UberManagerTool), [], [], , )");
 	}
 
 	/***/
