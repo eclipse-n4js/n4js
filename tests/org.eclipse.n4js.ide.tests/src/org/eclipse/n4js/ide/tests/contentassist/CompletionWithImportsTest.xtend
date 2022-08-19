@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.tests.contentassist;
 import java.util.List
 import org.eclipse.n4js.ide.tests.helper.server.AbstractCompletionTest
 import org.junit.Test
-import org.junit.Ignore
 
 /**
  * Code completion tests for scenarios that also might add an import statement 
@@ -273,7 +272,6 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 		''');
 	}
 
-	@Ignore // GH-2419
 	@Test
 	def void testInsideImportStatement1() {
 		testAtCursor('''
@@ -305,7 +303,6 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 		''');
 	}
 
-	@Ignore // GH-2419
 	@Test
 	def void testInsideImportStatement2() {
 		testAtCursor('''
@@ -337,8 +334,6 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 		''');
 	}
 
-
-	@Ignore // GH-2419
 	@Test
 	def void testInsideImportStatement3() {
 		testAtCursor('''
