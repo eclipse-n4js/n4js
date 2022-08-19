@@ -241,7 +241,14 @@ public class ReferenceResolutionFinder {
 	private IScope getScopeForContentAssist(ReferenceDescriptor reference) {
 		try (Measurement m = contentAssistDataCollectors.dcGetScope().getMeasurement()) {
 			IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
-			return contentAssistScopeProvider.getScopeForContentAssist(reference.astNode, reference.eReference);
+			EObject context = reference.astNode;
+			EObject semanticElement = reference.parseTreeNode.getSemanticElement();
+			if (semanticElement != null) {
+				// sometimes the context represented by reference.astNode is less accurate than that from the iNode
+				context = semanticElement;
+			}
+
+			return contentAssistScopeProvider.getScopeForContentAssist(context, reference.eReference);
 		}
 	}
 
