@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -243,7 +244,8 @@ public class ReferenceResolutionFinder {
 			IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
 			EObject context = reference.astNode;
 			EObject semanticElement = reference.parseTreeNode.getSemanticElement();
-			if (semanticElement != null) {
+
+			if (semanticElement != null && EcoreUtil.isAncestor(context, semanticElement)) {
 				// sometimes the context represented by reference.astNode is less accurate than that from the iNode
 				context = semanticElement;
 			}
