@@ -67,20 +67,32 @@ public class ModuleSpecifierProposalCreator {
 		if (!(resource instanceof N4JSResource)) {
 			return;
 		}
+		String prefix = context.getPrefix();
+		prefix = prefix.startsWith("'") || prefix.startsWith("\"") ? prefix.substring(1) : prefix;
+
 		N4JSResource resourceCasted = (N4JSResource) resource;
 		N4JSWorkspaceConfigSnapshot wc = workspaceAccess.getWorkspaceConfig(resourceCasted);
 		N4JSProjectConfigSnapshot ctxPrj = wc.findProjectContaining(model.eResource().getURI());
 
+		for (String depId : ctxPrj.getDependencies()) {
+			N4JSProjectConfigSnapshot depPrj = wc.findProjectByID(depId);
+			if (depPrj != null) {
+				String packageName = depPrj.getN4JSPackageName().toString();
+				if (prefixMatcher.isCandidateMatchingPrefix(packageName, prefix)) {
+					ContentAssistEntry cae = getProjectImportContentAssistEntry(context, depId, depPrj);
+					acceptor.accept(cae, 0);
+				}
+			}
+		}
+
 		IScope scope = scopeProvider.getScope(model, reference);
 		if (scope != null) {
-			String prefix = context.getPrefix();
-			prefix = prefix.startsWith("'") || prefix.startsWith("\"") ? prefix.substring(1) : prefix;
 			for (IEObjectDescription elem : scope.getAllElements()) {
 				String fileExtension = URIUtils.fileExtension(elem.getEObjectURI());
 				String moduleSpecifier = elem.getQualifiedName() == null ? null : elem.getQualifiedName().toString("/");
 				if (!N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(fileExtension) &&
 						moduleSpecifier != null && prefixMatcher.isCandidateMatchingPrefix(moduleSpecifier, prefix)) {
-					ContentAssistEntry cae = convertResolutionToContentAssistEntry(context, wc, elem, moduleSpecifier,
+					ContentAssistEntry cae = getModuleImportContentAssistEntry(context, wc, elem, moduleSpecifier,
 							ctxPrj);
 					acceptor.accept(cae, 0);
 				}
@@ -88,7 +100,22 @@ public class ModuleSpecifierProposalCreator {
 		}
 	}
 
-	private ContentAssistEntry convertResolutionToContentAssistEntry(ContentAssistContext context,
+	private ContentAssistEntry getProjectImportContentAssistEntry(ContentAssistContext context,
+			String depId, N4JSProjectConfigSnapshot depPrj) {
+
+		String packageName = depPrj.getN4JSPackageName().toString();
+
+		ContentAssistEntry cae = new ContentAssistEntry();
+		cae.setPrefix(context.getPrefix().substring(1));
+		cae.setProposal(packageName);
+		cae.setLabel(packageName);
+		cae.setDescription(depId);
+		cae.setKind(ContentAssistEntry.KIND_MODULE);
+		cae.setDocumentation("Project Import");
+		return cae;
+	}
+
+	private ContentAssistEntry getModuleImportContentAssistEntry(ContentAssistContext context,
 			N4JSWorkspaceConfigSnapshot wc,
 			IEObjectDescription elem, String moduleSpecifier, N4JSProjectConfigSnapshot ctxPrj) {
 
@@ -97,7 +124,6 @@ public class ModuleSpecifierProposalCreator {
 		boolean projectImport = Objects.equals(moduleSpecifier, prjName);
 		boolean makeCompleteImport = ctxPrj != null && prj != null && ctxPrj != prj && !projectImport;
 		String proposal = (makeCompleteImport && prj != null ? prj.getPackageName() + "/" : "") + moduleSpecifier;
-		String docu = projectImport ? "Project Import" : "";
 
 		ContentAssistEntry cae = new ContentAssistEntry();
 		cae.setPrefix(context.getPrefix().substring(1));
@@ -105,7 +131,7 @@ public class ModuleSpecifierProposalCreator {
 		cae.setLabel(moduleSpecifier);
 		cae.setDescription(prjName);
 		cae.setKind(ContentAssistEntry.KIND_MODULE);
-		cae.setDocumentation(docu);
+		cae.setDocumentation("Module Import");
 		return cae;
 	}
 }

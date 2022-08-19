@@ -10,12 +10,16 @@
  */
 package org.eclipse.n4js.ide.editor.contentassist;
 
+import java.util.Set;
+
 import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
 
 /**
  * Used the algorithm that is also used by the xtext.ui implementation of the CamelCase prefix matcher.
  */
 public class CamelCasePrefixMatcher extends IPrefixMatcher.IgnoreCase {
+
+	private static Set<Character> PRMOTING_CHARS = Set.of('/', '-');
 
 	@Override
 	public boolean isCandidateMatchingPrefix(String name, String prefix) {
@@ -151,7 +155,7 @@ public class CamelCasePrefixMatcher extends IPrefixMatcher.IgnoreCase {
 					if (patternChar == nameChar)
 						break;
 					iName++;
-				} else if (nameChar == '/') {
+				} else if (PRMOTING_CHARS.contains(nameChar)) {
 					// optional slashes
 					if (patternChar == nameChar)
 						break;
@@ -181,21 +185,19 @@ public class CamelCasePrefixMatcher extends IPrefixMatcher.IgnoreCase {
 	}
 
 	private static boolean isUppercaseSlashOrDigit(char c) {
-		return Character.isUpperCase(c) || Character.isDigit(c) || c == '/';
+		return Character.isUpperCase(c) || Character.isDigit(c) || PRMOTING_CHARS.contains(c);
 	}
 
 	private static boolean equalsOrPromotedEquals(char c1, char[] chars, int charsIdx) {
 		if (c1 == chars[charsIdx]) {
 			return true;
 		}
-		if (charsIdx > 0 && chars[charsIdx - 1] == '/' && c1 == Character.toUpperCase(chars[charsIdx])) {
-			return true;
-		}
-		return false;
+		return promotedEquals(c1, chars, charsIdx);
 	}
 
 	private static boolean promotedEquals(char c1, char[] chars, int charsIdx) {
-		if (charsIdx > 0 && chars[charsIdx - 1] == '/' && c1 == Character.toUpperCase(chars[charsIdx])) {
+		if (charsIdx > 0 && PRMOTING_CHARS.contains(chars[charsIdx - 1])
+				&& c1 == Character.toUpperCase(chars[charsIdx])) {
 			return true;
 		}
 		return false;
