@@ -758,40 +758,41 @@ public class ContainerTypesHelper {
 
 			@Override
 			protected List<ParameterizedTypeRef> getPolyfillsOrMergedTypes(Type filledType) {
-				if (includePolyfills && filledType instanceof TClassifier) {
-					TClassifier tClassifier = (TClassifier) filledType;
-					if (filledType.isProvidedByRuntime() // only runtime types can be polyfilled, but
-					) {
-						QualifiedName qn = PolyfillUtils.getNonStaticPolyfillFQN(tClassifier, qualifiedNameProvider);
-						if (qn != null) { // may be a class expression which has no name,
-							// if there is no name, there cannot be a polyfill
+				if (!(includePolyfills && filledType instanceof TClassifier)) {
+					return Collections.emptyList();
+				}
 
-							// no need for filtering, the special FQN for polyfills ensures only polyfills are returned:
-							List<Type> polyfills = getPolyfillTypesFromScope(qn);
-							return polyfills.stream().map(
-									polyFill -> TypeUtils.createTypeRef(polyFill)).collect(Collectors.toList());
-						}
-					}
-					if (filledType instanceof TClass // only classes can be statically polyfilled
-							&& isContainedInStaticPolyfillAware(filledType) // and only types in "aware" modules
-					) {
-						QualifiedName qn = PolyfillUtils.getStaticPolyfillFQN(tClassifier, qualifiedNameProvider);
-						if (qn != null) { // may be a class expression which has no name,
-							// if there is no name, there cannot be a polyfill
+				List<Type> polyfillsOrMergedTypes = new ArrayList<>();
 
-							// no need for filtering, the special FQN for polyfills ensures only polyfills are returned:
-							List<Type> polyfills = getPolyfillTypesFromScope(qn);
-							return polyfills.stream().map(
-									polyFill -> TypeUtils.createTypeRef(polyFill)).collect(Collectors.toList());
-						}
+				TClassifier tClassifier = (TClassifier) filledType;
+				if (filledType.isProvidedByRuntime() // only runtime types can be polyfilled, but
+				) {
+					QualifiedName qn = PolyfillUtils.getNonStaticPolyfillFQN(tClassifier, qualifiedNameProvider);
+					if (qn != null) { // may be a class expression which has no name,
+						// if there is no name, there cannot be a polyfill
+
+						// no need for filtering, the special FQN for polyfills ensures only polyfills are returned:
+						polyfillsOrMergedTypes.addAll(getPolyfillTypesFromScope(qn));
 					}
-					if (ResourceType.getResourceType(filledType) == ResourceType.DTS) {
-						List<Type> mergedTypes = declMergingHelper.getMergedElements(contextResource, tClassifier);
-						return mergedTypes.stream().map(
-								mergedType -> TypeUtils.createTypeRef(mergedType)).collect(Collectors.toList());
+				} else if (filledType instanceof TClass // only classes can be statically polyfilled
+						&& isContainedInStaticPolyfillAware(filledType) // and only types in "aware" modules
+				) {
+					QualifiedName qn = PolyfillUtils.getStaticPolyfillFQN(tClassifier, qualifiedNameProvider);
+					if (qn != null) { // may be a class expression which has no name,
+						// if there is no name, there cannot be a polyfill
+
+						// no need for filtering, the special FQN for polyfills ensures only polyfills are returned:
+						polyfillsOrMergedTypes.addAll(getPolyfillTypesFromScope(qn));
 					}
 				}
-				return Collections.emptyList();
+
+				if (DeclMergingUtils.mayBeMerged(filledType)) {
+					polyfillsOrMergedTypes.addAll(declMergingHelper.getMergedElements(contextResource, tClassifier));
+				}
+
+				return polyfillsOrMergedTypes.stream()
+						.map(type -> TypeUtils.createTypeRef(type))
+						.collect(Collectors.toList());
 			}
 		}
 
