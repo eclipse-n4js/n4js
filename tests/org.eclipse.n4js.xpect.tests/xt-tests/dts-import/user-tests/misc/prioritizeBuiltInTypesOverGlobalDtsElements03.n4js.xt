@@ -34,6 +34,5 @@ let v01 = arr.slice(2);
 // XPECT type of 'v02' --> boolean
 let v02 = Array.isArray([42]);
 
-// declaration merging with built-in types not supported yet
-// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'addedMethod'." at "addedMethod"
+// XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'addedMethod'." at "addedMethod"
 arr.addedMethod();

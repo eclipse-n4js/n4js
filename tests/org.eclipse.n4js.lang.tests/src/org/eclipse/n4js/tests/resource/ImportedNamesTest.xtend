@@ -88,10 +88,11 @@ class ImportedNamesTest {
 		EcoreUtil.resolveAll(rs)
 
 		val expectedImportedNames = #[
+			"#.!.!POLY.Object",
+			"#.!.Object",
 			"#.!.org.eclipse.n4js.tests.resource.MyVariableTwo",
 			"#.!.two",
 			"#.!.void",
-			"#.!.!POLY.Object",
 			"org.eclipse.n4js.tests.resource.MyClassOne",
 			"org.eclipse.n4js.tests.resource.MyClassTwo.!.MyClassTwo",
 			"org.eclipse.n4js.tests.resource.MyInterfaceFour.!.MyInterfaceFour",

@@ -58,7 +58,7 @@ public class DeclMergingUtils {
 	 * merging.
 	 */
 	public static boolean mayBeMerged(IEObjectDescription desc) {
-		return (ResourceType.getResourceType(desc.getEObjectURI()) == ResourceType.DTS);
+		return (ResourceType.getResourceType(desc.getEObjectURI()) == ResourceType.DTS) || isGlobal(desc);
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class DeclMergingUtils {
 	 * merging.
 	 */
 	public static boolean mayBeMerged(EObject elem) {
-		return ResourceType.getResourceType(elem) == ResourceType.DTS;
+		return ResourceType.getResourceType(elem) == ResourceType.DTS || isGlobal(elem);
 	}
 
 	/**

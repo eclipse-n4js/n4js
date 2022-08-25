@@ -33,6 +33,7 @@ import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.utils.MainModuleAwareSelectableBasedScope;
 import org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope;
+import org.eclipse.n4js.scoping.utils.QualifiedNameUtils;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.types.AbstractNamespace;
@@ -203,28 +204,40 @@ public class DeclMergingHelper {
 
 	@SuppressWarnings("unchecked")
 	private <T extends EObject> List<T> internalGetMergedElements(N4JSResource context, T element, EClass eClass) {
+		QualifiedName elemQN = qualifiedNameProvider.getFullyQualifiedName(element);
+		if (elemQN == null) {
+			return Collections.emptyList();
+		}
 		Set<EObject> resultSet = new LinkedHashSet<>();
 
-		QualifiedName elemQN = qualifiedNameProvider.getFullyQualifiedName(element);
 		ProjectImportEnablingScope ctxPieScope = getProjectImportEnablingScope(context, eClass);
-		N4JSProjectConfigSnapshot elemPrj = workspaceAccess.findProjectContaining(element);
-		N4JSProjectConfigSnapshot ctxPrj = workspaceAccess.findProjectContaining(context);
+		if (QualifiedNameUtils.isGlobal(elemQN)) {
+			if (ctxPieScope == null) {
+				return Collections.emptyList();
+			}
 
-		resultSet.addAll(findAndResolve(ctxPieScope, context, elemQN, elemPrj));
+			resultSet.addAll(resolve(ctxPieScope.getElements(elemQN), context));
+		} else {
 
-		ModuleSpecifierForm importType = ctxPieScope.computeImportType(elemQN, elemPrj);
-		if (importType != ModuleSpecifierForm.PLAIN) {
-			// means that the qn of element is shadowed by a project import
-			resultSet.addAll(findAndResolve(ctxPieScope, context, elemQN));
-		}
-		if (elemPrj != ctxPrj) {
-			TModule tModule = EcoreUtil2.getContainerOfType(element, TModule.class);
-			if (tModule != null && tModule.isMainModule()) {
-				List<String> segments = new ArrayList<>(elemQN.getSegments());
-				segments.remove(0);
-				segments.add(0, tModule.getPackageName());
-				QualifiedName projectFqn = QualifiedName.create(segments);
-				resultSet.addAll(findAndResolve(ctxPieScope, context, projectFqn, null));
+			N4JSProjectConfigSnapshot elemPrj = workspaceAccess.findProjectContaining(element);
+			N4JSProjectConfigSnapshot ctxPrj = workspaceAccess.findProjectContaining(context);
+
+			resultSet.addAll(findAndResolve(ctxPieScope, context, elemQN, elemPrj));
+
+			ModuleSpecifierForm importType = ctxPieScope.computeImportType(elemQN, elemPrj);
+			if (importType != ModuleSpecifierForm.PLAIN) {
+				// means that the qn of element is shadowed by a project import
+				resultSet.addAll(findAndResolve(ctxPieScope, context, elemQN));
+			}
+			if (elemPrj != ctxPrj) {
+				TModule tModule = EcoreUtil2.getContainerOfType(element, TModule.class);
+				if (tModule != null && tModule.isMainModule()) {
+					List<String> segments = new ArrayList<>(elemQN.getSegments());
+					segments.remove(0);
+					segments.add(0, tModule.getPackageName());
+					QualifiedName projectFqn = QualifiedName.create(segments);
+					resultSet.addAll(findAndResolve(ctxPieScope, context, projectFqn, null));
+				}
 			}
 		}
 
@@ -267,6 +280,10 @@ public class DeclMergingHelper {
 
 	private List<EObject> findAndResolve(ProjectImportEnablingScope pieScope, N4JSResource resource, QualifiedName qn) {
 		Collection<IEObjectDescription> elems = pieScope.findElementsInProject(qn);
+		return resolve(elems, resource);
+	}
+
+	private List<EObject> resolve(Iterable<IEObjectDescription> elems, N4JSResource resource) {
 		List<EObject> result = new ArrayList<>();
 
 		// contextScope.getElements(fqn) returns all polyfills, since shadowing is handled differently
