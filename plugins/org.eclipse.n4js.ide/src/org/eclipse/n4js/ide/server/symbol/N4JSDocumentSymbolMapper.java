@@ -13,6 +13,7 @@ package org.eclipse.n4js.ide.server.symbol;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.SymbolKind;
+import org.eclipse.n4js.ide.server.util.SymbolKindUtil;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper;
 
 import com.google.inject.Inject;
@@ -24,17 +25,19 @@ public class N4JSDocumentSymbolMapper extends DocumentSymbolMapper {
 
 	@Inject
 	LabelCalculationHelper labelHelper;
-	@Inject
-	SymbolKindCalculationHelper kindCalculationHelper;
 
 	@Override
 	public DocumentSymbol toDocumentSymbol(EObject object) {
-		SymbolKind symbolKind = kindCalculationHelper.getSymbolKind(object);
-		if (symbolKind == null) {
+		SymbolKind symbolKind = SymbolKindUtil.getSymbolKind(object);
+		if (symbolKind == SymbolKind.Key) {
 			return null;
 		}
 
 		DocumentSymbol documentSymbol = super.toDocumentSymbol(object);
+		if (documentSymbol.getRange() == null) {
+			return null;
+		}
+
 		documentSymbol.setKind(symbolKind);
 
 		String symbolLabel = labelHelper.getSymbolLabel(object);

@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ide.editor.contentassist;
 
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -20,9 +19,8 @@ import org.eclipse.n4js.ide.imports.ReferenceDescriptor;
 import org.eclipse.n4js.ide.imports.ReferenceResolution;
 import org.eclipse.n4js.ide.imports.ReferenceResolutionFinder;
 import org.eclipse.n4js.ide.imports.ReferenceResolutionFinder.IResolutionAcceptor;
-import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.ide.server.util.SymbolKindUtil;
 import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
@@ -130,63 +128,7 @@ public class ImportsAwareReferenceProposalCreator {
 			cae.getTextReplacements().add(textReplacement);
 		}
 		cae.setSource(resolution.referencedElement);
-		cae.setKind(getKind(resolution));
+		cae.setKind(SymbolKindUtil.getKind(resolution.referencedElement.getEClass()));
 		return cae;
-	}
-
-	private static String getKind(ReferenceResolution resolution) {
-		EClass eClass = resolution.referencedElement.getEClass();
-		if (TypesPackage.eINSTANCE.getTClass() == eClass) {
-			return ContentAssistEntry.KIND_CLASS;
-		}
-		if (TypesPackage.eINSTANCE.getBuiltInType() == eClass) {
-			return ContentAssistEntry.KIND_CLASS;
-		}
-		if (TypesPackage.eINSTANCE.getPrimitiveType() == eClass) {
-			return ContentAssistEntry.KIND_KEYWORD;
-		}
-		if (TypesPackage.eINSTANCE.getUndefinedType() == eClass) {
-			return ContentAssistEntry.KIND_KEYWORD;
-		}
-		if (TypesPackage.eINSTANCE.getAnyType() == eClass) {
-			return ContentAssistEntry.KIND_KEYWORD;
-		}
-		if (TypesPackage.eINSTANCE.getTInterface() == eClass) {
-			return ContentAssistEntry.KIND_INTERFACE;
-		}
-		if (TypesPackage.eINSTANCE.getTField() == eClass) {
-			return ContentAssistEntry.KIND_FIELD;
-		}
-		if (TypesPackage.eINSTANCE.getTMethod() == eClass) {
-			return ContentAssistEntry.KIND_METHOD;
-		}
-		if (TypesPackage.eINSTANCE.getTGetter() == eClass) {
-			return ContentAssistEntry.KIND_PROPERTY;
-		}
-		if (TypesPackage.eINSTANCE.getTSetter() == eClass) {
-			return ContentAssistEntry.KIND_PROPERTY;
-		}
-		if (TypesPackage.eINSTANCE.getTEnum() == eClass) {
-			return ContentAssistEntry.KIND_ENUM;
-		}
-		if (TypesPackage.eINSTANCE.getTEnumLiteral() == eClass) {
-			return ContentAssistEntry.KIND_VALUE;
-		}
-		if (TypesPackage.eINSTANCE.getTFunction() == eClass) {
-			return ContentAssistEntry.KIND_FUNCTION;
-		}
-		if (TypesPackage.eINSTANCE.getTVariable() == eClass) {
-			return ContentAssistEntry.KIND_VARIABLE;
-		}
-		if (N4JSPackage.eINSTANCE.getVariableDeclaration() == eClass) {
-			return ContentAssistEntry.KIND_VARIABLE;
-		}
-		if (TypesPackage.eINSTANCE.getModuleNamespaceVirtualType() == eClass) {
-			return ContentAssistEntry.KIND_COLOR;
-		}
-		if (TypesPackage.eINSTANCE.getTNamespace() == eClass) {
-			return ContentAssistEntry.KIND_COLOR;
-		}
-		return ContentAssistEntry.KIND_TEXT;
 	}
 }
