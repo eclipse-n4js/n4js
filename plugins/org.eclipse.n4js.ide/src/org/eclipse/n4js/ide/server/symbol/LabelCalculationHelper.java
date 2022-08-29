@@ -12,6 +12,7 @@ package org.eclipse.n4js.ide.server.symbol;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
@@ -19,7 +20,6 @@ import org.eclipse.n4js.n4JS.N4GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
-import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -47,12 +47,15 @@ public class LabelCalculationHelper {
 			String text = "imports from " + getModuleSpecifier(importDelaration.getModule());
 
 			EList<ImportSpecifier> importSpecifiers = importDelaration.getImportSpecifiers();
-			if (importSpecifiers.size() == 1 && !(importSpecifiers.get(0) instanceof NamespaceImportSpecifier)) {
-				NamespaceImportSpecifier namespaceImportSpecifier = (NamespaceImportSpecifier) importSpecifiers.get(0);
-				text += ": " + getSymbolLabel(namespaceImportSpecifier);
+			if (importSpecifiers.size() == 1) {
+				text += ": " + getSymbolLabel(importSpecifiers.get(0));
 			}
 
 			return text;
+		}
+		if (obj instanceof DefaultImportSpecifier) {
+			DefaultImportSpecifier defaultImportSpecifier = (DefaultImportSpecifier) obj;
+			return defaultImportSpecifier.getImportedElementAsText();
 		}
 		if (obj instanceof NamedImportSpecifier) {
 			NamedImportSpecifier namedImportSpecifier = (NamedImportSpecifier) obj;

@@ -10,10 +10,13 @@
  */
 package org.eclipse.n4js.ide.server.symbol;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.lsp4j.SymbolKind;
+import org.eclipse.n4js.ide.server.util.SymbolKindUtil;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.utils.PolyfillUtils;
@@ -132,5 +135,10 @@ public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 				: new Range(new Position(0, 0), new Position(0, 0));
 		Location locLSP = new Location(uriStr, rangeLSP);
 		return locLSP;
+	}
+
+	@Override
+	protected SymbolKind getSymbolKind(EClass type) {
+		return SymbolKindUtil.getSymbolKind(type);
 	}
 }

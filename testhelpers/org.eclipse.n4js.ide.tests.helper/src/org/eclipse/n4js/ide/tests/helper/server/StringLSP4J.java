@@ -35,6 +35,7 @@ import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ResourceOperation;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SignatureInformation;
+import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
@@ -183,6 +184,11 @@ public class StringLSP4J {
 		}
 
 		return operation.getKind();
+	}
+
+	/** @return string for given element */
+	public String toString(SymbolInformation si) {
+		return "(" + Strings.join(", ", si.getName(), si.getKind(), toString(si.getLocation())) + ")";
 	}
 
 	/** @return string for given element */
