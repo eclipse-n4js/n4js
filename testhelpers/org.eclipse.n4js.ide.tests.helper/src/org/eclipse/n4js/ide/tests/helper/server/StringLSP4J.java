@@ -23,6 +23,7 @@ import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticRelatedInformation;
+import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.Hover;
 import org.eclipse.lsp4j.InsertReplaceEdit;
 import org.eclipse.lsp4j.Location;
@@ -172,6 +173,18 @@ public class StringLSP4J {
 	}
 
 	/** @return string for given element */
+	public String toString10(Either<SymbolInformation, DocumentSymbol> documentation) {
+		if (documentation == null) {
+			return "";
+		}
+		if (documentation.isLeft()) {
+			return toString(documentation.getLeft());
+		} else {
+			return toString(documentation.getRight());
+		}
+	}
+
+	/** @return string for given element */
 	public String toString(InsertReplaceEdit irEdit) {
 		return "(" + irEdit.getNewText() + " at " + toString(irEdit.getInsert()) + "/" + toString(irEdit.getReplace())
 				+ ")";
@@ -189,6 +202,12 @@ public class StringLSP4J {
 	/** @return string for given element */
 	public String toString(SymbolInformation si) {
 		return "(" + Strings.join(", ", si.getName(), si.getKind(), toString(si.getLocation())) + ")";
+	}
+
+	/** @return string for given element */
+	public String toString(DocumentSymbol ds) {
+		String children = ds.getChildren().isEmpty() ? "" : "\n" + Strings.join("\n   -> ", ds.getChildren());
+		return "(" + Strings.join(", ", ds.getName(), ds.getKind(), toString(ds.getRange())) + children + ")";
 	}
 
 	/** @return string for given element */
