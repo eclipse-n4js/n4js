@@ -191,6 +191,13 @@ public class ExportedElementsCollector {
 				}
 				if (info.tryNext(exportedModule)) {
 					doCollectElements(exportedModule, info);
+					if (DeclMergingUtils.mayBeMerged(exportedModule)) {
+						List<AbstractNamespace> mergedNamespaces = declMergingHelper.getMergedElements(
+								info.contextResource, exportedModule);
+						for (AbstractNamespace mergedNamespace : mergedNamespaces) {
+							doCollectElements(mergedNamespace, info);
+						}
+					}
 				}
 			}
 		}
