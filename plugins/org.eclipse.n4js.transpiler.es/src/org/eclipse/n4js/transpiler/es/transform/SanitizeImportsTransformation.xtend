@@ -94,7 +94,7 @@ class SanitizeImportsTransformation extends Transformation {
 
 			// It turns out, that current scoping as of Dec'2015 doesn't bind to imports to globally available definitions.
 			// Assuming a) no + b) irrelevant for a==no
-			thingsToImportSTE.forEach[ ste |
+			for (ste : thingsToImportSTE) {
 				if( ste.importSpecifier === null ) {
 					val orig = ste.originalTarget;
 					// for an element to be globally available, there are two preconditions:
@@ -106,7 +106,7 @@ class SanitizeImportsTransformation extends Transformation {
 						}
 					}
 				}
-			]
+			}
 		}
 	}
 
