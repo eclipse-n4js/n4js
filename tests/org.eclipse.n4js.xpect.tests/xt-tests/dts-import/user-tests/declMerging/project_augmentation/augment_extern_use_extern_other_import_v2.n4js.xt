@@ -105,24 +105,43 @@
 
 
 // XPECT noerrors -->
-import { Moment, fff } from "moment"; // other import here
-
-let m : Moment = null;
-
+import {fff as F1, Moment as M1} from "moment"
 // XPECT noerrors -->
-// XPECT type of 'res1' --> string
-let res1 = m.format();
+import {fff as F2, Moment as M2} from "moment-timezone"
 
-// XPECT noerrors -->
-// XPECT type of 'res2' --> TimeUnit
-let res2 = m.tz();
+let m1 : M1 = null;
+let m2 : M2 = null;
 
 // XPECT noerrors -->
-// XPECT type of 'res3' --> Moment
-let res3 = fff();
+// XPECT type of 'resM1a' --> string
+let resM1a = m1.format();
+
 // XPECT noerrors -->
-res3.format();
+// XPECT type of 'resM2a' --> string
+let resM2a = m2.format();
+
 // XPECT noerrors -->
-res3.tz();
+// XPECT type of 'resM1b' --> TimeUnit
+let resM1b = m1.tz();
+
+// XPECT noerrors -->
+// XPECT type of 'resM2b' --> TimeUnit
+let resM2b = m2.tz();
+
+// XPECT noerrors -->
+// XPECT type of 'resF1' --> Moment
+let resF1 = F1();
+// XPECT noerrors -->
+resF1.format();
+// XPECT noerrors -->
+resF1.tz();
+
+// XPECT noerrors -->
+// XPECT type of 'resF2' --> Moment
+let resF2 = F2();
+// XPECT noerrors -->
+resF2.format();
+// XPECT noerrors -->
+resF2.tz();
 
 
