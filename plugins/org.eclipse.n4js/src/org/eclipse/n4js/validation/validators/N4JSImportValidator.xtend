@@ -40,6 +40,8 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.*
 import static extension org.eclipse.n4js.tooling.organizeImports.ImportSpecifiersUtil.*
+import org.eclipse.emf.common.notify.Notifier
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 
 /** Validations for the import statements. */
 @Log
@@ -114,7 +116,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 							val impModulePrj = workspaceAccess.findProjectContaining(impModule);
 							val impElemPrj = workspaceAccess.findProjectContaining(elemModule);
 							if (impModulePrj !== impElemPrj) {
-								if (impModulePrj.dependencies.contains(impElemPrj.name)) {
+								if (isDependingOn(importSpecifier, impModulePrj, impElemPrj)) {
 									// that's how it should be: re-export
 								} else {
 									val msg = getMessageForIMP_IMPORTED_ELEMENT_FROM_REEXPORTING_PROJECT(
@@ -130,6 +132,22 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 				}
 			}
 		}
+	}
+	
+	/** Poor man's project dependency predicate */
+	private def boolean isDependingOn(Notifier context, N4JSProjectConfigSnapshot p1, N4JSProjectConfigSnapshot p2) {
+		if (p1.dependencies.contains(p2.name)) {
+			return true;
+		}
+		
+		for (projectID : p1.dependencies) {
+			val depPrj = workspaceAccess.findProjectByName(context, projectID);
+			if (depPrj !== null && depPrj.dependencies.contains(p2.name)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	/**
