@@ -104,7 +104,7 @@
  */
 
 
-// XPECT noerrors -->
+// XPECT errors --> "The imported element fff is defined in the re-exporting project moment-timezone but project moment was imported. Import from moment-timezone instead." at "fff as F1"
 import {fff as F1, Moment as M1} from "moment"
 // XPECT noerrors -->
 import {fff as F2, Moment as M2} from "moment-timezone"

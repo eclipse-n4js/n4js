@@ -31,6 +31,7 @@ import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -52,6 +53,9 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject
 	protected XpectAwareFileExtensionCalculator fileExtensionCalculator;
+
+	@Inject
+	protected WorkspaceAccess workspaceAccess;
 
 	/**
 	 * NEEEDED
@@ -83,24 +87,45 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 	def checkStaticVsDynamicImport(ImportSpecifier importSpecifier) {
 		val parent = importSpecifier.eContainer;
 		if (parent instanceof ImportDeclaration) {
-			val module = parent.module;
-			if (module !== null && !module.eIsProxy()) {
+			val impModule = parent.module;
+			if (impModule !== null && !impModule.eIsProxy()) {
 				if (importSpecifier.declaredDynamic) {
-					if (jsVariantHelper.isN4JSMode(module)) {
+					if (jsVariantHelper.isN4JSMode(impModule)) {
 						addIssue(
-							getMessageForIMP_DYNAMIC_IMPORT_N4JS(module.moduleSpecifier),
+							getMessageForIMP_DYNAMIC_IMPORT_N4JS(impModule.moduleSpecifier),
 							importSpecifier, IMP_DYNAMIC_IMPORT_N4JS);
-					} else if (jsVariantHelper.isExternalMode(module)) {
-						val variant = fileExtensionCalculator.getXpectAwareFileExtension(module);
+					} else if (jsVariantHelper.isExternalMode(impModule)) {
+						val variant = fileExtensionCalculator.getXpectAwareFileExtension(impModule);
 						addIssue(
-							getMessageForIMP_DYNAMIC_IMPORT_N4JSD(variant, module.moduleSpecifier),
+							getMessageForIMP_DYNAMIC_IMPORT_N4JSD(variant, impModule.moduleSpecifier),
 							importSpecifier, IMP_DYNAMIC_IMPORT_N4JSD);
 					}
 				} else {
-					if (jsVariantHelper.isPlainJS(module)) {
+					if (jsVariantHelper.isPlainJS(impModule)) {
 						addIssue(
-							getMessageForIMP_STATIC_IMPORT_PLAIN_JS(module.moduleSpecifier),
+							getMessageForIMP_STATIC_IMPORT_PLAIN_JS(impModule.moduleSpecifier),
 							importSpecifier, IMP_STATIC_IMPORT_PLAIN_JS);
+					}
+				}
+				if (importSpecifier instanceof NamedImportSpecifier) {
+					if (importSpecifier.importedElement !== null && importSpecifier.importedElement.eContainer instanceof TModule) {
+						val elemModule = importSpecifier.importedElement.eContainer;
+						if (elemModule !== impModule) {
+							val impModulePrj = workspaceAccess.findProjectContaining(impModule);
+							val impElemPrj = workspaceAccess.findProjectContaining(elemModule);
+							if (impModulePrj !== impElemPrj) {
+								if (impModulePrj.dependencies.contains(impElemPrj.name)) {
+									// that's how it should be: re-export
+								} else {
+									val msg = getMessageForIMP_IMPORTED_ELEMENT_FROM_REEXPORTING_PROJECT(
+										importSpecifier.importedElementAsText,
+										impElemPrj.n4JSPackageName.toString,
+										impModulePrj.n4JSPackageName.toString
+									);
+									addIssue(msg, importSpecifier, IMP_IMPORTED_ELEMENT_FROM_REEXPORTING_PROJECT);
+								}
+							}
+						}
 					}
 				}
 			}
@@ -114,7 +139,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 		val reg = importStateCalculator.calculateImportstate(script);
 
 		reg.duplicatedImportDeclarations.forEach[handleDuplicatedImportDeclarations(eObjectToIssueCode)]
-
+		
 		handleNameCollisions(reg.localNameCollision, eObjectToIssueCode)
 
 		handleTypeCollisions(reg.duplicateImportsOfSameElement, eObjectToIssueCode)
