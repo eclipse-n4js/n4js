@@ -26,7 +26,7 @@
 			File "package.json" { from="dep_v1_package.json" }
 		}
 		NodeModuleProject "dep-augmentation" {
-			File "dep.d.ts" { from="dep-augmentation_index.d.ts" }
+			File "index.d.ts" { from="dep-augmentation_index.d.ts" }
 			File "package.json" { from="dep-augmentation_package.json" }
 		}
 		Project "myProject" {
@@ -125,7 +125,7 @@
 
 
 // XPECT noerrors -->
-import { DepClass } from "dep";
+import { DepClass } from "dep-augmentation";
 
 // XPECT noerrors -->
 let dc : DepClass = new DepClass();
