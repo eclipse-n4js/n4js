@@ -90,7 +90,7 @@
 
 
 // XPECT noerrors -->
-import { Moment, fff } from "moment";
+import { Moment, fff } from "myProject/moment";
 
 let m : Moment = null;
 

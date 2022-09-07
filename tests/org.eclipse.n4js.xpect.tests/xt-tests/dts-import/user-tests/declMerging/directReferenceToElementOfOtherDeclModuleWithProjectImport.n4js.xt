@@ -49,8 +49,8 @@
 
 
 	File "moment_tz_index.d.ts" {
-		//import moment = require('moment');
-		//export = moment; // TODO: merge only if these two lines are present
+		import moment = require('moment');
+		export = moment; // TODO: merge only if these two lines are present
 		
 		declare module "moment" {
 			export interface MomentIfcX extends MomentIfc {
@@ -103,7 +103,7 @@
 
 
 // XPECT noerrors -->
-import { MomentIfc, MomentIfcX } from "moment"
+import { MomentIfc, MomentIfcX } from "moment-timezone"
 
 
 // NOTE: the point of all the following assertions is to ensure that the references to
