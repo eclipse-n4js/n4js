@@ -30,10 +30,8 @@ import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
-import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.utils.StaticPolyfillHelper
-import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -151,16 +149,6 @@ class StaticPolyfillTransformation extends Transformation {
 		val importedElement = ste.originalTarget;
 		val isNamespace = importedElement instanceof ModuleNamespaceVirtualType;
 
-		// obtain module from which we import importedElement
-		val remoteModule = if(isNamespace) {
-			// warning: in case of namespaces, importedElement resides in the TModule of the fillingResource!
-			// -> so we cannot just get the containing TModule in this case
-			(importedElement as ModuleNamespaceVirtualType).module
-		} else {
-			// standard case: just find the containing TModule of importedElement
-			EcoreUtil2.getContainerOfType(importedElement, TModule)
-		};
-
 		// search original import specification (in original AST of fillingResource)
 		val impSpecs = fillingResource.script.scriptElements.filter(ImportDeclaration).map[importSpecifiers].flatten;
 		val impSpec_original = if(isNamespace) {
@@ -170,16 +158,28 @@ class StaticPolyfillTransformation extends Transformation {
 		};
 		val impDecl_original = impSpec_original?.eContainer;
 
+		
 		// if all this was successful, go ahead and add the import ...
-		if(impDecl_original instanceof ImportDeclaration && impSpec_original!==null) {
+		if(impDecl_original instanceof ImportDeclaration) {
 			val alias = chooseNewUniqueAlias(impSpec_original.alias ?: ste.exportedName ?: "unnamed");
 			val impSpec = if(isNamespace) {
 				_NamespaceImportSpecifier(alias, true)
 			} else {
 				_NamedImportSpecifier(ste.exportedName, alias, true)
 			};
+			
+			// obtain module from which we import importedElement
+			val remoteModule = if(isNamespace) {
+				// warning: in case of namespaces, importedElement resides in the TModule of the fillingResource!
+				// -> so we cannot just get the containing TModule in this case
+				(importedElement as ModuleNamespaceVirtualType).module
+			} else {
+				// standard case: just find the containing TModule of importedElement
+				impDecl_original.module
+			};
+			
 			val impDecl = _ImportDecl(impSpec);
-			impDecl.moduleSpecifierForm = (impDecl_original as ImportDeclaration).moduleSpecifierForm;
+			impDecl.moduleSpecifierForm = impDecl_original.moduleSpecifierForm;
 			state.im.scriptElements.add(0, impDecl);
 			ste.name = alias;
 			ste.importSpecifier = impSpec;
