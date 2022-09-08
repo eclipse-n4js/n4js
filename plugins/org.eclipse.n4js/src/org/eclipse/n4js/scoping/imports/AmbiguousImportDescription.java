@@ -21,6 +21,7 @@ import org.eclipse.n4js.resource.ErrorAwareLinkingService;
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.validation.IssueCodes;
@@ -76,7 +77,12 @@ public class AmbiguousImportDescription extends AbstractDescriptionWithError {
 			} else {
 				typeListStr.append(" and ");
 			}
-			typeListStr.append(((TModule) type.eContainer()).getQualifiedName());
+			EObject container = type.eContainer();
+			if (container instanceof TModule) {
+				typeListStr.append(((TModule) container).getQualifiedName());
+			} else if (container instanceof TNamespace) {
+				typeListStr.append(((TNamespace) container).getName());
+			}
 		}
 		if (this.issueCode == IssueCodes.IMP_AMBIGUOUS_WILDCARD) {
 			return IssueCodes.getMessageForIMP_AMBIGUOUS_WILDCARD(typeIdent, getName(), typeListStr.toString());
