@@ -1,0 +1,76 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+
+	Workspace {
+		Project "myProject" {
+			Folder "src" {
+				ThisFile {}
+				File "Defintion.d.ts" { from="Defintion.d.ts" }
+			}
+			File "package.json" { from="package.json" }
+		}
+	}
+
+
+	File "Defintion.d.ts" {
+		declare module 'Defintion' {
+		    namespace Defintion {
+		        interface Ifc {
+		            extname(p: string): string;
+		        }
+		    }
+		    const k: Defintion.Ifc
+		    export = k
+		}
+		declare module 'node:path' {
+		    import path = require('Defintion');
+		    export = path;
+		}
+	}
+
+	File "package.json" {
+		{
+		  "name": "test",
+		  "version": "0.0.1",
+		  "type": "module",
+		  "dependencies": {
+		    "n4js-runtime": ""
+		  },
+		  "n4js": {
+		    "projectType": "library",
+		    "output": "src-gen",
+		    "sources": {
+		      "source": [
+		        "src"
+		      ]
+		    }
+		  }
+		}
+	}
+
+
+	END_SETUP
+ */
+
+
+// XPECT noerrors -->
+import { extname } from 'node:path';
+console.log(extname("file.abc"));
+
+
+
+/* XPECT output ---
+.abc
+--- */
