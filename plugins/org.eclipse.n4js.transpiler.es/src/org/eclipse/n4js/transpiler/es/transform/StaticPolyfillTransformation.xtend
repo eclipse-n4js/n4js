@@ -171,7 +171,7 @@ class StaticPolyfillTransformation extends Transformation {
 		val impDecl_original = impSpec_original?.eContainer;
 
 		// if all this was successful, go ahead and add the import ...
-		if(impDecl_original!==null && impSpec_original!==null) {
+		if(impDecl_original instanceof ImportDeclaration && impSpec_original!==null) {
 			val alias = chooseNewUniqueAlias(impSpec_original.alias ?: ste.exportedName ?: "unnamed");
 			val impSpec = if(isNamespace) {
 				_NamespaceImportSpecifier(alias, true)
@@ -179,6 +179,7 @@ class StaticPolyfillTransformation extends Transformation {
 				_NamedImportSpecifier(ste.exportedName, alias, true)
 			};
 			val impDecl = _ImportDecl(impSpec);
+			impDecl.moduleSpecifierForm = (impDecl_original as ImportDeclaration).moduleSpecifierForm;
 			state.im.scriptElements.add(0, impDecl);
 			ste.name = alias;
 			ste.importSpecifier = impSpec;
