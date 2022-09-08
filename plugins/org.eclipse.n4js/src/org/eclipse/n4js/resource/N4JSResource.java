@@ -575,7 +575,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 			// manually send the notification
 			eSetDeliver(true);
-			EObject result = getParseResult().getRootASTElement();
+			IParseResult parseResult = getParseResult();
+			if (parseResult == null) {
+				return null;
+			}
+			EObject result = parseResult.getRootASTElement();
 			if (myContents.isEmpty()) {
 				myContents.sneakyAdd(0, result);
 				if (oldModule != null) {
@@ -799,6 +803,12 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 						URI host = URIUtils.getBaseOfVirtualResourceURI(uri);
 						N4JSResource hostRes = (N4JSResource) getResourceSet().getResource(host, true);
 						hostRes.demandLoadResource(null);
+
+						adapter = NestedResourceAdapter.get(this);
+						if (adapter == null) {
+							unload();
+							return;
+						}
 					}
 					result = new DtsParser().parse(null, null, this);
 				} else {
