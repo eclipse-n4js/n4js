@@ -95,6 +95,12 @@ public class DeclMergingUtils {
 		return root instanceof TModule && AnnotationDefinition.GLOBAL.hasAnnotation((TModule) root);
 	}
 
+	/** Returns <code>true</code> iff the given element is a module augmentation. */
+	public static boolean isModuleAugmentation(EObject elem) {
+		EObject root = EcoreUtil.getRootContainer(elem);
+		return root instanceof TModule && AnnotationDefinition.MODULE_AUGMENTATION.hasAnnotation((TModule) root);
+	}
+
 	/** Returns <code>true</code> iff the given element is the main module of a project. */
 	public static boolean isMainModule(IEObjectDescription desc) {
 		return N4JSResourceDescriptionStrategy.getMainModule(desc);

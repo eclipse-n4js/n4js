@@ -105,7 +105,7 @@ class ModuleSpecifierTransformation extends Transformation {
 	def private String computeModuleSpecifierForOutputCode(ImportDeclaration importDeclIM) {
 		val targetModule = state.info.getImportedModule(importDeclIM);
 
-		if (URIUtils.isVirtualResourceURI(targetModule.eResource.URI) && DeclMergingUtils.isGlobal(targetModule)) {
+		if (URIUtils.isVirtualResourceURI(targetModule.eResource.URI) && !DeclMergingUtils.isModuleAugmentation(targetModule)) {
 			// SPECIAL CASE #1a
 			// pointing to a module explicitly declared in a .d.ts file, such as a node built-in library:
 			// import * as path_lib from "path"
