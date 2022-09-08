@@ -162,12 +162,11 @@ class StaticPolyfillTransformation extends Transformation {
 		};
 
 		// search original import specification (in original AST of fillingResource)
-		val impSpecsForContainingModule = fillingResource.script.scriptElements.filter(ImportDeclaration)
-				.filter[module===remoteModule].map[importSpecifiers].flatten;
+		val impSpecs = fillingResource.script.scriptElements.filter(ImportDeclaration).map[importSpecifiers].flatten;
 		val impSpec_original = if(isNamespace) {
-			impSpecsForContainingModule.filter(NamespaceImportSpecifier).findFirst[definedType===importedElement]
+			impSpecs.filter(NamespaceImportSpecifier).findFirst[definedType===importedElement]
 		} else {
-			impSpecsForContainingModule.filter(NamedImportSpecifier).findFirst[it.importedElement===importedElement]
+			impSpecs.filter(NamedImportSpecifier).findFirst[it.importedElement===importedElement]
 		};
 		val impDecl_original = impSpec_original?.eContainer;
 
