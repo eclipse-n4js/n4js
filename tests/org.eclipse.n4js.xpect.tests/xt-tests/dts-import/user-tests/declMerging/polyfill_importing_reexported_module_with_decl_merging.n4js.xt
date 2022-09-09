@@ -21,6 +21,7 @@
 				File "Module.js"       { from="Module.js" }
 				File "Module.d.ts"     { from="Module.d.ts" }
 				File "ReExModule.d.ts" { from="ReExModule.d.ts" }
+				File "ReExModule.js"   { from="ReExModule.js" }
 			}
 			Folder "src2" {
 				File "Polyfill.n4js" { from="src2_Polyfill.n4js" }
@@ -67,6 +68,11 @@
 			function fff2(i? : I): string;
 		}
 		export = Module;
+	}
+
+
+	File "ReExModule.js" {
+		export * from "./Module.js";
 	}
 
 
