@@ -129,6 +129,14 @@ public class TranspilerBuilderBlocks
 		return result;
 	}
 
+	public static def NamedImportSpecifier _DefaultImportSpecifier(String importedElementName, boolean usedInCode) {
+		val result = N4JSFactory.eINSTANCE.createDefaultImportSpecifier;
+		result.importedElement = null; // must always be null, because we are in the intermediate model
+		result.importedElementAsText = importedElementName;
+		result.flaggedUsedInCode = usedInCode;
+		return result;
+	}
+
 	public static def NamespaceImportSpecifier _NamespaceImportSpecifier(String namespaceName, boolean usedInCode) {
 		val result = N4JSFactory.eINSTANCE.createNamespaceImportSpecifier;
 		result.alias = namespaceName;

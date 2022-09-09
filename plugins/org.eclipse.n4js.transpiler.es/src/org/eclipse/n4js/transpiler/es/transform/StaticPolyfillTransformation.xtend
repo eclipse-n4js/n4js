@@ -12,6 +12,8 @@ package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
 import java.util.Set
+import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.n4JS.DefaultImportSpecifier
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
@@ -32,6 +34,7 @@ import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.utils.StaticPolyfillHelper
+import org.eclipse.n4js.utils.URIUtils
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -133,7 +136,7 @@ class StaticPolyfillTransformation extends Transformation {
 		if(ste.importSpecifier===null) {
 			val originalTarget = ste.originalTarget;
 			val isNested = originalTarget instanceof TMember || originalTarget instanceof TEnumLiteral;
-			if(!isNested) {
+			if(!isNested || N4JSGlobals.DTS_FILE_EXTENSION == URIUtils.fileExtension(originalTarget.eResource.URI)) {
 				val isLocal = originalTarget.eResource === state.resource;
 				if(!isLocal && ScriptDependencyResolver.shouldBeImported(fillingResource.module, originalTarget)) {
 					addImport(ste, fillingResource);
@@ -164,6 +167,8 @@ class StaticPolyfillTransformation extends Transformation {
 			val alias = chooseNewUniqueAlias(impSpec_original.alias ?: ste.exportedName ?: "unnamed");
 			val impSpec = if(isNamespace) {
 				_NamespaceImportSpecifier(alias, true)
+			} else if (impSpec_original instanceof DefaultImportSpecifier) {
+				_DefaultImportSpecifier(alias, true)
 			} else {
 				_NamedImportSpecifier(ste.exportedName, alias, true)
 			};
