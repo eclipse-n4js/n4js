@@ -1,0 +1,111 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+
+	Workspace {
+		Project "myProject" {
+			Folder "src" {
+				ThisFile {}
+				File "Polyfill.n4js"          { from="src_Polyfill.n4js" }
+				File "PolyfillMergeDef.js"    { from="PolyfillMergeDef.js" }
+				File "PolyfillMergeDef.d.ts"  { from="PolyfillMergeDef.d.ts" }
+				File "PolyfillMergeDef2.d.ts" { from="PolyfillMergeDef2.d.ts" }
+			}
+			Folder "src2" {
+				File "Polyfill.n4js" { from="src2_Polyfill.n4js" }
+			}
+			File "package.json" { from="package.json" }
+		}
+	}
+
+
+	File "src_Polyfill.n4js" {
+		@@StaticPolyfillModule
+		
+		import snakeCase from 'PolyfillMergeDef'
+		
+		@StaticPolyfill
+		export public class C extends C {
+		    field = snakeCase();
+		}
+	}
+
+
+	File "PolyfillMergeDef.js" {
+		export default function fff() {
+		    return "Hello World";
+		}
+	}
+
+
+	File "PolyfillMergeDef.d.ts" {
+		import { snakeCase } from "./PolyfillMergeDef2";
+		export default snakeCase;
+	}
+
+
+	File "PolyfillMergeDef2.d.ts" {
+	    interface LoDashStatic {
+	        snakeCase(string?: string): string;
+	    }
+	    declare const k: LoDashStatic;
+	
+	    export = k;
+	}
+
+
+	File "src2_Polyfill.n4js" {
+		@@StaticPolyfillAware
+		
+		export public class C {}
+	}
+
+
+	File "package.json" {
+		{
+		  "name": "test",
+		  "version": "0.0.1",
+		  "type": "module",
+		  "dependencies": {
+		    "n4js-runtime": ""
+		  },
+		  "n4js": {
+		    "projectType": "library",
+		    "output": "src-gen",
+		    "sources": {
+		      "source": [
+		        "src",
+		        "src2"
+		      ]
+		    }
+		  }
+		}
+	}
+
+
+	END_SETUP
+ */
+
+
+// XPECT noerrors -->
+import { C } from 'Polyfill';
+
+console.log(new C().field);
+
+
+
+
+/* XPECT output ---
+Hello World
+--- */
