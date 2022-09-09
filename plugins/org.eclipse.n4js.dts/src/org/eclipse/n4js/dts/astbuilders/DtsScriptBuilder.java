@@ -159,10 +159,11 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 
 		// add @@Global (if necessary)
 		if (isNested()) {
-			if (getNestedResourceAdapter().getContext() instanceof GlobalScopeAugmentationContext) {
+			ParserRuleContext prCtx = getNestedResourceAdapter().getContext();
+			if (prCtx instanceof GlobalScopeAugmentationContext) {
 				ParserContextUtils.makeGlobal(result);
-			} else if (getNestedResourceAdapter().getContext() instanceof ModuleDeclarationContext) {
-				ModuleDeclarationContext mdCtx = (ModuleDeclarationContext) getNestedResourceAdapter().getContext();
+			} else if (prCtx instanceof ModuleDeclarationContext) {
+				ModuleDeclarationContext mdCtx = (ModuleDeclarationContext) prCtx;
 				if (mdCtx.moduleName() != null && mdCtx.moduleName().StringLiteral() != null) {
 					String name = ParserContextUtils.trimAndUnescapeStringLiteral(mdCtx.moduleName().StringLiteral());
 					if (ParserContextUtils.isModuleAugmentationName(name)) {

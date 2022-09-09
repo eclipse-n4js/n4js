@@ -296,7 +296,8 @@ public class DeclMergingHelper {
 				// there and load the resource separately)?
 				polyfillType = EcoreUtil.resolve(polyfillType, resource);
 				if (polyfillType.eIsProxy()) {
-					throw new IllegalStateException("unexpected proxy");
+					continue;
+					// throw new IllegalStateException("unexpected proxy");
 				}
 			}
 			result.add(polyfillType);
@@ -307,24 +308,7 @@ public class DeclMergingHelper {
 	private List<EObject> findAndResolve(ProjectImportEnablingScope pieScope, N4JSResource resource, QualifiedName qn,
 			N4JSProjectConfigSnapshot targetProject) {
 		Collection<IEObjectDescription> elems = pieScope.getElementsWithDesiredProjectName(qn, targetProject);
-		List<EObject> result = new ArrayList<>();
-
-		// contextScope.getElements(fqn) returns all polyfills, since shadowing is handled differently
-		// for them!
-		for (IEObjectDescription descr : elems) {
-			EObject polyfillType = descr.getEObjectOrProxy();
-			if (polyfillType.eIsProxy()) {
-				// TODO review: this seems odd... is this a test setup problem (since we do not use the
-				// index
-				// there and load the resource separately)?
-				polyfillType = EcoreUtil.resolve(polyfillType, resource);
-				if (polyfillType.eIsProxy()) {
-					throw new IllegalStateException("unexpected proxy");
-				}
-			}
-			result.add(polyfillType);
-		}
-		return result;
+		return resolve(elems, resource);
 	}
 
 	/**

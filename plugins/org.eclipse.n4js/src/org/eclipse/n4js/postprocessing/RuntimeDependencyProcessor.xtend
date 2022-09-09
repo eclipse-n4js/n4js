@@ -152,10 +152,12 @@ class RuntimeDependencyProcessor {
 		}
 
 		// step 3: store direct runtime dependencies in TModule
-		EcoreUtilN4.doWithDeliver(false, [
-			module.dependenciesRuntime.clear();
-			module.dependenciesRuntime += dependenciesRuntime;
-		], module);
+		if (module !== null) {
+			EcoreUtilN4.doWithDeliver(false, [
+				module.dependenciesRuntime.clear();
+				module.dependenciesRuntime += dependenciesRuntime;
+			], module);
+		}
 	}
 
 	/**

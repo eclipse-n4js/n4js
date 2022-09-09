@@ -427,7 +427,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		int offset = region.getOffset();
 		int length = region.getLength();
 		Resource resource = obj.eResource();
-		if (resource instanceof XtextResource) {
+		if (resource instanceof XtextResource && ((XtextResource) resource).getParseResult() != null) {
 			ICompositeNode rootNode = ((XtextResource) resource).getParseResult().getRootNode();
 			LineAndColumn start = NodeModelUtils.getLineAndColumn(rootNode, offset);
 			LineAndColumn end = length > 0 ? NodeModelUtils.getLineAndColumn(rootNode, offset + length) : start;
