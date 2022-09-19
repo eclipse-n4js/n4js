@@ -10,7 +10,10 @@
  */
 package org.eclipse.n4js.types.utils;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
@@ -39,6 +42,7 @@ import org.eclipse.n4js.ts.types.TStructSetter;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * Internal class containing the logic for comparing types. Should not be used by client code; instead, use
@@ -83,6 +87,54 @@ import org.eclipse.xtext.naming.QualifiedName;
 		if (iter2.hasNext()) {
 			return -1;
 		}
+		return 0;
+	}
+
+	/** Compares two sets each representing a composed type, respects commutativity. */
+	/* package */ static <T extends TypeArgument> int compareComposedTypes(IQualifiedNameProvider fqnProvider,
+			Iterable<T> tvs1, Iterable<T> tvs2) {
+
+		final List<T> tvs1s = new ArrayList<>(IterableExtensions.toList(tvs1));
+		final List<T> tvs2s = new ArrayList<>(IterableExtensions.toList(tvs2));
+		final List<T> tvs2sMatched = new ArrayList<>();
+		tvs1s.sort(Comparator.comparing(T::hashCode)); // sorted
+		tvs2s.sort(Comparator.comparing(T::hashCode)); // sorted
+
+		LOOP_X: for (int x = 0; x < tvs1s.size(); x++) {
+			int c = -1;
+			for (int y = 0; y < tvs2s.size(); y++) {
+				c = compare(fqnProvider, tvs1s.get(x), tvs2s.get(y));
+				if (c == 0) {
+					tvs2sMatched.add(tvs2s.remove(y));
+					continue LOOP_X;
+				}
+			}
+			if (c != 0) {
+				for (int y = 0; y < tvs2sMatched.size(); y++) {
+					c = compare(fqnProvider, tvs1s.get(x), tvs2sMatched.get(y));
+					if (c == 0) {
+						continue LOOP_X;
+					}
+				}
+				return c;
+			}
+		}
+
+		if (!tvs2s.isEmpty()) {
+			LOOP_Y: for (int y = 0; y < tvs2s.size(); y++) {
+				int c = -1;
+				for (int x = 0; x < tvs1s.size(); x++) {
+					c = compare(fqnProvider, tvs1s.get(x), tvs2s.get(y));
+					if (c == 0) {
+						continue LOOP_Y;
+					}
+				}
+				if (c != 0) {
+					return c;
+				}
+			}
+		}
+
 		return 0;
 	}
 
@@ -248,7 +300,7 @@ import org.eclipse.xtext.naming.QualifiedName;
 		} else if (ref1 instanceof ComposedTypeRef) {
 			final ComposedTypeRef cref1 = (ComposedTypeRef) ref1;
 			final ComposedTypeRef cref2 = (ComposedTypeRef) ref2;
-			c = compareTypeArguments(fqnProvider, cref1.getTypeRefs(), cref2.getTypeRefs());
+			c = compareComposedTypes(fqnProvider, cref1.getTypeRefs(), cref2.getTypeRefs());
 			if (c != 0) {
 				return c;
 			}
@@ -279,8 +331,9 @@ import org.eclipse.xtext.naming.QualifiedName;
 			if (c != 0) {
 				return c;
 			}
-			if (reopened1 && reopened2) {
-				return compare(fqnProvider, e1.getWildcard(), e2.getWildcard());
+			c = compare(fqnProvider, e1.getWildcard(), e2.getWildcard());
+			if (c != 0) {
+				return c;
 			}
 			return compareComparables(e1.getId(), e2.getId());
 		}

@@ -73,17 +73,15 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 	}
 
 	public def StructuralTypingResult isStructuralSubtype(RuleEnvironment G, TypeRef left, TypeRef right) {
-
-		val rightStrategy = right.typingStrategy;
 		val leftStrategy = left.typingStrategy;
+		val rightStrategy = right.typingStrategy;
 
-		// shortcut, handle with care!
-		if ((left.declaredType instanceof TN4Classifier || left.declaredType instanceof TypeVariable) // <-- IDEBUG-838
-			&& left.typingStrategy === right.typingStrategy
-			&& STRUCTURAL_FIELD_INITIALIZER !== leftStrategy && STRUCTURAL_FIELD_INITIALIZER !== rightStrategy
+		// shortcut: keep in sync with Reducer#reduceStructuralTypeRef()
+		if (leftStrategy === rightStrategy
 			&& left.declaredType === right.declaredType
+			&& (left.declaredType instanceof TN4Classifier || left.declaredType instanceof TypeVariable) // <-- IDEBUG-838
 			&& left.structuralMembers.empty && right.structuralMembers.empty) {
-				
+			
 			if (!left.generic) {
 				return result(left, right, emptyList, emptyList);
 			} else if (left instanceof ParameterizedTypeRef && right instanceof ParameterizedTypeRef) {
@@ -94,13 +92,15 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 					for (var i = 0; typeArgsEqual && i < leftTypeArgs.size; i++) {
 						val leftTypeArg = leftTypeArgs.get(i);
 						val rightTypeArg = rightTypeArgs.get(i);
-						typeArgsEqual = typeArgsEqual
-							&& leftTypeArg.declaredType !== null
-							&& leftTypeArg.declaredType === rightTypeArg.declaredType;
+						
+						val variance = right.declaredType.getVarianceOfTypeVar(i);
+						val tempResult = tsh.checkTypeArgumentCompatibility(G, leftTypeArg, rightTypeArg, Optional.of(variance), false);
+		
+						if (tempResult.failure) {
+							return failure(left.typeRefAsString + " is not a structural subtype of " + right.typeRefAsString + " due to type argument incompatibility: " + tempResult.failureMessage);
+						}
 					}
-					if (typeArgsEqual) {
-						return result(left, right, emptyList, emptyList);
-					}
+					return result(left, right, emptyList, emptyList);
 				}
 			}
 		}
@@ -137,6 +137,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 
 		return result(left, right, info.missingMembers, info.wrongMembers);
 	}
+	
 
 	/**
 	 * Special handling for primitive-structural types. 
@@ -203,7 +204,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		val leftOtherAccessor = triple.leftOtherAccessor;
 		val leftStrategy = info.leftStrategy;
 		val rightStrategy = info.rightStrategy;
-
+		
 		checkMembers(leftTypeRef, leftMember, rightMember, info);
 
 		switch (rightStrategy) {
@@ -338,7 +339,12 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 	 * checked outside this method.
 	 */
 	def private void checkMembers(TypeRef leftTypeRef, TMember left, TMember right, StructTypingInfo info) {
-		val G = info.G;
+//		if (info.G.isStructuralSubtypingInProgressFor(left, right)) {
+//			return;
+//		}
+		val G = info.G ;
+//		G.rememberStructuralSubtypingInProgressFor(left, right);
+
 
 		// !!! keep the following aligned with below method #reduceMembers() !!!
 		if (left === null) {

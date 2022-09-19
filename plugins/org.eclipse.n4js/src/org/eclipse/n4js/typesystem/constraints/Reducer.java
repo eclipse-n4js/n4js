@@ -39,8 +39,10 @@ import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
+import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector;
 import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.types.utils.TypeCompareUtils;
@@ -789,6 +791,37 @@ import com.google.common.collect.Sets;
 		final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
 		final StructTypingInfo infoFaked = new StructTypingInfo(G2, left, right, // <- G2 will be changed!
 				left.getTypingStrategy(), right.getTypingStrategy());
+
+		// shortcut: keep in sync with StructuralTypingComputer#isTypingStrategySubtype()
+		Type leftDT = left.getDeclaredType();
+		Type rightDT = right.getDeclaredType();
+		TypingStrategy leftStrategy = left.getTypingStrategy();
+		TypingStrategy rightStrategy = right.getTypingStrategy();
+		if (leftStrategy == rightStrategy && leftDT == rightDT
+				&& (leftDT instanceof TN4Classifier || leftDT instanceof TypeVariable) // <-- IDEBUG-838
+				&& left.getStructuralMembers().isEmpty() && right.getStructuralMembers().isEmpty()) {
+
+			if (!leftDT.isGeneric()) {
+				return true;
+			} else if (left instanceof ParameterizedTypeRef && right instanceof ParameterizedTypeRef) {
+				List<TypeArgument> leftTypeArgs = left.getTypeArgsWithDefaults();
+				List<TypeArgument> rightTypeArgs = right.getTypeArgsWithDefaults();
+				if (leftTypeArgs.size() == rightTypeArgs.size()) {
+					boolean wasAdded = false;
+					for (var i = 0; i < leftTypeArgs.size(); i++) {
+						TypeArgument leftTypeArg = leftTypeArgs.get(i);
+						TypeArgument rightTypeArg = rightTypeArgs.get(i);
+
+						List<TypeConstraint> constraints = new ArrayList<>();
+						constraints.addAll(tsh.reduceTypeArgumentCompatibilityCheck(G2, leftTypeArg, rightTypeArg,
+								Optional.of(variance), false));
+						wasAdded |= reduce(constraints);
+					}
+					return wasAdded;
+				}
+			}
+			return true;
+		}
 
 		boolean wasAdded = false;
 		final StructuralTypesHelper structTypesHelper = tsh.getStructuralTypesHelper();
