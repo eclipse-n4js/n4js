@@ -160,9 +160,11 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 		}
 
 		val List<TypeRef> typeRefsCleaned = new ArrayList<TypeRef>(set.size + 2);
-		for (e : set) {
-			val TypeRef cpy = TypeUtils.copyIfContained(e);
-			typeRefsCleaned.add(cpy);
+		for (e : typeRefs) {
+			if (set.contains(e)) { // keep original order
+				val TypeRef cpy = TypeUtils.copyIfContained(e);
+				typeRefsCleaned.add(cpy);
+			}
 		}
 		if (haveObject) {
 			typeRefsCleaned.add(objectTypeRef);
