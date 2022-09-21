@@ -48,7 +48,7 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 	 * The result may be contained in another container, so clients may have to use Ecore2.cloneIfNecessary(EObject).
 	 */
 	def TypeRef createUnionType(RuleEnvironment G, TypeRef... elements) {
-		simplify(G, TypeUtils.createNonSimplifiedUnionType(elements));
+		simplify(G, TypeUtils.createNonSimplifiedUnionType(elements), true);
 	}
 
 	/**
@@ -56,7 +56,7 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 	 * The result may be contained in another container, so clients may have to use Ecore2.cloneIfNecessary(EObject).
 	 */
 	def TypeRef createIntersectionType(RuleEnvironment G, TypeRef... elements) {
-		simplify(G, TypeUtils.createNonSimplifiedIntersectionType(elements));
+		simplify(G, TypeUtils.createNonSimplifiedIntersectionType(elements), true);
 	}
 
 	/**
@@ -65,8 +65,8 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 	 * So clients need to clone the result if necessary.
 	 * @see [N4JS Spec], 4.13 Intersection Type
 	 */
-	def <T extends ComposedTypeRef> TypeRef simplify(RuleEnvironment G, T composedType) {
-		val List<TypeRef> typeRefs = getSimplifiedTypeRefs(G, composedType);
+	def <T extends ComposedTypeRef> TypeRef simplify(RuleEnvironment G, T composedType, boolean checkSubtypes) {
+		val List<TypeRef> typeRefs = getSimplifiedTypeRefs(G, composedType, checkSubtypes);
 		switch (typeRefs.size()) {
 			case 0:
 				return G.undefinedTypeRef
@@ -81,12 +81,15 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 		}
 	}
 
-	def private <T extends ComposedTypeRef> List<TypeRef> getSimplifiedTypeRefs(RuleEnvironment G, T composedType) {
+	def private <T extends ComposedTypeRef> List<TypeRef> getSimplifiedTypeRefs(RuleEnvironment G, T composedType, boolean checkSubtypes) {
 		if (composedType === null) {
 			return null;
 		}
 		val typeRefsFlattened = flattenComposedTypes(composedType.eClass, composedType);
 		val typeRefsTrimmed = removeDuplicateAndTrivialTypes(G, typeRefsFlattened, composedType);
+		if (!checkSubtypes) {
+			return typeRefsTrimmed;
+		}
 		val typeRefsSimplified = simplifyBasedOnSubtypeRelations(G, typeRefsTrimmed, composedType);
 		return typeRefsSimplified;
 	}
@@ -190,17 +193,18 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 		if (typeRefs.size === 2) {
 			val fst = typeRefs.get(0);
 			val snd = typeRefs.get(1);
+
 			val isStructural = fst.isUseSiteStructuralTyping || fst.isDefSiteStructuralTyping
 				|| snd.isUseSiteStructuralTyping || snd.isDefSiteStructuralTyping;
 			if (!isStructural) {
-				if (ts.subtypeSucceeded(G, fst, snd)) {
+				if (G.isAnyDynamic(snd) || (!G.isAnyDynamic(fst) && ts.subtypeSucceeded(G, fst, snd))) {
 					if (composedType instanceof UnionTypeExpression) {
 						return Collections.singletonList(snd); // subtype can be thrown away
 					} else {
 						return Collections.singletonList(fst); // super type can be thrown away
 					}
 				}
-				if (ts.subtypeSucceeded(G, snd, fst)) {
+				if (G.isAnyDynamic(fst) || ts.subtypeSucceeded(G, snd, fst)) {
 					if (composedType instanceof UnionTypeExpression) {
 						return Collections.singletonList(fst); // subtype can be thrown away
 					} else {

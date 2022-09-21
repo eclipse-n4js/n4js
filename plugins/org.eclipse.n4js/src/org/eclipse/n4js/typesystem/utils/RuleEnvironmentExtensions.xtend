@@ -60,6 +60,7 @@ import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.util.CancelIndicator
 
 import static extension org.eclipse.n4js.types.utils.TypeUtils.*
+import org.eclipse.n4js.ts.typeRefs.BaseTypeRef
 
 /**
  * Extensions of class RuleEnvironment for handling substitutions and
@@ -807,6 +808,13 @@ class RuleEnvironmentExtensions {
 	 */
 	public def static boolean isAny(RuleEnvironment G, TypeArgument typeArg) {
 		return typeArg!==null && typeArg.declaredType == anyType(G) && isNominal(typeArg);
+	}
+
+	/**
+	 * Returns true if the given type is any+.
+	 */
+	public def static boolean isAnyDynamic(RuleEnvironment G, TypeArgument typeArg) {
+		return isAny(typeArg) && typeArg instanceof BaseTypeRef && (typeArg as BaseTypeRef).isDynamic;
 	}
 
 	/**

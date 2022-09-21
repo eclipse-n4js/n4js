@@ -153,7 +153,10 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		simplifyComputer.createIntersectionType(G,elements)
 	}
 	def <T extends ComposedTypeRef> TypeRef simplify(RuleEnvironment G, T composedType) {
-		simplifyComputer.simplify(G,composedType)
+		simplify(G,composedType, true)
+	}
+	def <T extends ComposedTypeRef> TypeRef simplify(RuleEnvironment G, T composedType, boolean checkSubtypes) {
+		simplifyComputer.simplify(G,composedType,checkSubtypes)
 	}
 
 	/**
