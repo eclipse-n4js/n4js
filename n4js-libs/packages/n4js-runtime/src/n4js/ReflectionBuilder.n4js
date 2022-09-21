@@ -225,7 +225,7 @@ function createMember(instanceProto: any+, staticProto: any+, memberInfo: Member
     
     member.name = memberInfo.name;
     member.isStatic = memberInfo.isStatic;
-    member.setAnnotations(annotations[memberInfo.memberString] || []);
+    member.setAnnotations(annotations[memberInfo.memberString] || []);
     return member;
 }
 
