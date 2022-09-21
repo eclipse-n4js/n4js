@@ -137,7 +137,6 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 
 		return result(left, right, info.missingMembers, info.wrongMembers);
 	}
-	
 
 	/**
 	 * Special handling for primitive-structural types. 
@@ -204,7 +203,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		val leftOtherAccessor = triple.leftOtherAccessor;
 		val leftStrategy = info.leftStrategy;
 		val rightStrategy = info.rightStrategy;
-		
+
 		checkMembers(leftTypeRef, leftMember, rightMember, info);
 
 		switch (rightStrategy) {
@@ -339,12 +338,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 	 * checked outside this method.
 	 */
 	def private void checkMembers(TypeRef leftTypeRef, TMember left, TMember right, StructTypingInfo info) {
-//		if (info.G.isStructuralSubtypingInProgressFor(left, right)) {
-//			return;
-//		}
-		val G = info.G ;
-//		G.rememberStructuralSubtypingInProgressFor(left, right);
-
+		val G = info.G;
 
 		// !!! keep the following aligned with below method #reduceMembers() !!!
 		if (left === null) {
