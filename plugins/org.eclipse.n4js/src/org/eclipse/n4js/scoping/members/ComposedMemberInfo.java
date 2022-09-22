@@ -12,10 +12,12 @@ package org.eclipse.n4js.scoping.members;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.BasicEList;
@@ -38,6 +40,8 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 
 /**
  * The purpose of the classes and methods in this file is twofold:
@@ -81,7 +85,7 @@ public class ComposedMemberInfo {
 	private final boolean hasValidationProblem = false;
 	private MemberAccessModifier accessibilityMin = MemberAccessModifier.PUBLIC;
 	private MemberAccessModifier accessibilityMax = MemberAccessModifier.PRIVATE;
-	private final Map<MemberType, List<TypeRef>> typeRefsMap = new HashMap<>();
+	private final Multimap<MemberType, TypeRef> typeRefsMap = LinkedHashMultimap.create();
 	private final List<TypeRef> typeRefs = new ArrayList<>();
 	private final List<TypeRef> methodTypeRefsVoid = new ArrayList<>();
 	private final List<TypeRef> methodTypeRefsNonVoid = new ArrayList<>();
@@ -277,11 +281,7 @@ public class ComposedMemberInfo {
 				}
 			}
 			MemberType currMType = member.getMemberType();
-			if (!typeRefsMap.containsKey(currMType)) {
-				typeRefsMap.put(currMType, new LinkedList<>());
-			}
-			List<TypeRef> typeRefsOfMemberType = typeRefsMap.get(currMType);
-			typeRefsOfMemberType.add(typeRefCopy);
+			typeRefsMap.put(currMType, typeRefCopy);
 		}
 	}
 
@@ -481,17 +481,25 @@ public class ComposedMemberInfo {
 		initMemberAggregate();
 		List<TypeRef> resultTypeRefs = new LinkedList<>();
 		if (memberTypes == null) {
-			for (List<TypeRef> franzLiszt : typeRefsMap.values()) {
-				resultTypeRefs.addAll(franzLiszt);
-			}
+			resultTypeRefs.addAll(typeRefsMap.values());
 			return resultTypeRefs;
 		}
 
-		for (MemberType memberType : memberTypes) {
-			if (typeRefsMap.containsKey(memberType)) {
-				resultTypeRefs.addAll(typeRefsMap.get(memberType));
+		if (memberTypes.length == 1) {
+			resultTypeRefs.addAll(typeRefsMap.get(memberTypes[0]));
+		} else {
+			// keep original order
+			Set<MemberType> reqMemberTypeSet = new HashSet<>();
+			for (MemberType memberType : memberTypes) {
+				reqMemberTypeSet.add(memberType);
+			}
+			for (Map.Entry<MemberType, TypeRef> entry : typeRefsMap.entries()) {
+				if (reqMemberTypeSet.contains(entry.getKey())) {
+					resultTypeRefs.add(entry.getValue());
+				}
 			}
 		}
+
 		return resultTypeRefs;
 	}
 
