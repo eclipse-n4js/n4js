@@ -34,7 +34,7 @@ function xy() : void {}
 
 // -VOID type in expression.
 // XPECT errors ---
-// "union{boolean,void} is not a subtype of any." at "xy() || xx()"
+// "union{void,boolean} is not a subtype of any." at "xy() || xx()"
 // "void is not a subtype of any." at "xy()"
 // ---
 var n6 = xy() || xx() ;

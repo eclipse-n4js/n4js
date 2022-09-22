@@ -34,9 +34,9 @@ result = new A() && new B();
 // OK
 result = new D() && new D();
 
-// XPECT errors --> "union{B,C} is not a subtype of union{A,IB}." at "new C() || new B()"
+// XPECT errors --> "union{C,B} is not a subtype of union{A,IB}." at "new C() || new B()"
 result = new C() || new B();
-// XPECT errors --> "union{B,C} is not a subtype of union{A,IB}." at "new C() && new B()"
+// XPECT errors --> "union{C,B} is not a subtype of union{A,IB}." at "new C() && new B()"
 result = new C() && new B();
 
 // XPECT errors --> "union{A,C} is not a subtype of union{A,IB}." at "new A() || new C()"

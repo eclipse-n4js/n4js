@@ -131,7 +131,7 @@ v.m1;
 // XPECT errors --> "The accessor m2 is write-only in S1, S3, S5." at "m2"
 v.m2;
 v.m2 = null;
-// XPECT expectedType at 'null' --> intersection{A,B,C,D}
+// XPECT expectedType at 'null' --> intersection{B,A,D,C}
 v.m2 = null;
 
 // XPECT errors --> "Member m3 not of same kind in all types of union: field in S4; getter in S2; setter in S1, S3, S5." at "m3"

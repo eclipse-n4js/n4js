@@ -32,7 +32,7 @@ var a4 : string, b4 : number;
 for([a4,b4] of [["",42],["",42]]) {}
 
 
-// XPECT type of 'a5' --> union{int,string}
+// XPECT type of 'a5' --> union{string,int}
 // XPECT type of 'b5' --> int
 for(var [a5,b5] of [["",42],["",42],[42,42]]) {}
 

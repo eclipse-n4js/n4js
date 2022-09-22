@@ -84,7 +84,12 @@ class N7_3_1_ConstTest extends AbstractTypesystemTest {
 	def void testTypeInferredVars() {
 		assertVarDeclarationType('''"Hello"''', '''s = "Hello"''');
 		assertVarDeclarationType('''42''', '''i = 42''');
-		assertVarDeclarationType('''union{42,"Hello"}''', '''u = (true)?"Hello":42''');
-		assertVarDeclarationType('''union{42,"Hello"}''', '''u = "Hello" || 42''');
+		assertVarDeclarationType('''union{"Hello",42}''', '''u = (true)?"Hello":42''');
+		assertVarDeclarationType('''union{"Hello",42}''', '''u = "Hello" || 42''');
+	}
+	
+	@Test
+	def void testTypeAnyDynamic() {
+		assertVarDeclarationType("any+", '''a = (([0] as any+) || [0])[0]''');
 	}
 }
