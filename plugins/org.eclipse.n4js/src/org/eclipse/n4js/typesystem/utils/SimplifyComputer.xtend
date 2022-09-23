@@ -116,6 +116,7 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 
 		// remove duplicates but keep original order
 		val noDups = new ArrayList();
+		val noDupsWithoutObject = new ArrayList();
 		{
 			val Set<TypeRef> set = new TreeSet<TypeRef>(typeCompareHelper.getTypeRefComparator);
 			for (typeRef : typeRefs) {
@@ -130,16 +131,19 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 					haveNull = haveNull || isNull;
 					haveUndefined = haveUndefined || isUndefined;
 					haveUnknown = haveUnknown || isUnknown;
-					if (isAny || isObject || isNull || isUndefined || isUnknown) {
+					if (isAny || isNull || isUndefined) {
 						// skip
 					} else {
 						set.add(typeRef);
 						noDups.add(typeRef);
+						if (!isObject) {
+							noDupsWithoutObject.add(typeRef);
+						}
 					}
 				}
 			}
 		}
-		val haveOthers = !noDups.isEmpty;
+		val haveOthers = !noDupsWithoutObject.isEmpty;
 
 		if (composedType instanceof UnionTypeExpression) {
 			// in a union, subtypes of other elements can be thrown away
@@ -176,19 +180,10 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 			}
 		}
 		
-		if (noDups.isEmpty) {
-			return Collections.emptyList();
-		} else if(noDups.size === 1) {
-			return Collections.singletonList(noDups.head);
-		}
-
 		val List<TypeRef> typeRefsCleaned = new ArrayList<TypeRef>(noDups.size + 2);
 		for (e : noDups) {
 			val TypeRef cpy = TypeUtils.copyIfContained(e);
 			typeRefsCleaned.add(cpy);
-		}
-		if (haveObject) {
-			typeRefsCleaned.add(objectTypeRef);
 		}
 		// NOTE: no need to add 'any' or 'null'/'undefined' here, because, if they were present,
 		// they have either rendered all other typeRefs obsolete (and we returned early above) OR
