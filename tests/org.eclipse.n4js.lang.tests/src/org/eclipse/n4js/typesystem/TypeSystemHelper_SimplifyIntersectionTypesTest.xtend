@@ -10,9 +10,11 @@
  */
 package org.eclipse.n4js.typesystem
 
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.types.utils.TypeUtils
+import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Before
@@ -20,7 +22,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 
 /*
  * Tests for {@link org.eclipse.n4js.typesystem.XsemanticsTypeSystemHelper.createIntersectionType(RuleEnvironment, TypeRef)} method with intersection types.
@@ -39,7 +40,11 @@ class TypeSystemHelper_SimplifyIntersectionTypesTest extends AbstractTypeSystemH
 	 * {@link TypeRef#getTypeRefAsString()} is used.
 	 */
 	def void assertSimplify(String expectedType, String typeExpressionsToBeSimplified) {
-		val G = assembler.prepareScriptAndCreateRuleEnvironment(typeExpressionsToBeSimplified)
+		assertSimplify(expectedType, typeExpressionsToBeSimplified, #[]);
+	}
+
+	def void assertSimplify(String expectedType, String typeExpressionsToBeSimplified, String[] expectedIssueMsg) {
+		val G = assembler.prepareScriptAndCreateRuleEnvironment(expectedIssueMsg, typeExpressionsToBeSimplified)
 		var typeRef = assembler.getTypeRef(typeExpressionsToBeSimplified)
 		assertTrue("Error in test setup, expected intersection type", typeRef instanceof IntersectionTypeExpression);
 		val simplified = TypeUtils.copy(tsh.simplify(G, typeRef as IntersectionTypeExpression));
@@ -68,6 +73,14 @@ class TypeSystemHelper_SimplifyIntersectionTypesTest extends AbstractTypeSystemH
 		assertSimplify("undefined", "intersection{A,undefined}");
 		assertSimplify("undefined", "intersection{undefined,A}");
 		assertSimplify("undefined", "intersection{undefined,undefined}");
+	}
+
+	@Test
+	def void testSimplifyObjectAndOther() {
+		assertSimplify("{function():void}", "intersection{Object,() => void}");
+		assertSimplify("Function", "intersection{Object,Function}", #[IssueCodes.INTER_REDUNDANT_SUPERTYPE]);
+		assertSimplify("{function():void}", "intersection{~Object,() => void}");
+		assertSimplify("Function", "intersection{~Object,Function}");
 	}
 
 }

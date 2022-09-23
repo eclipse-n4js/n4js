@@ -88,6 +88,14 @@ class TypeSystemHelper_SimplifyUnionTypesTest extends AbstractTypeSystemHelperTe
 	}
 
 	@Test
+	def void testSimplifyObjectAndOther() {
+		assertSimplify("Object", "union{Object,() => void}");
+		assertSimplify("Object", "union{Object,Function}");
+		assertSimplify("~Object", "union{~Object,() => void}");
+		assertSimplify("~Object", "union{~Object,Function}");
+	}
+
+	@Test
 	def void testDontSimplifyNonDuplicates() {
 		assertSimplify(
 			"union{Array<union{string,number}>,Array<union{A,D}>}", // must not be simplified to "Array<union{A,D}>"
