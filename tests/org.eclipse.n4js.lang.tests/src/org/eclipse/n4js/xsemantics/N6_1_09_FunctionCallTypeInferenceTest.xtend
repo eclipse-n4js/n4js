@@ -149,7 +149,7 @@ class N6_1_09_FunctionCallTypeInferenceTest extends AbstractTypesystemTest {
 		// }
 		// var a: A;
 		// var b: B;
-		"var x: B = a.fWithGenericAndUpperBound()".assertTypeNameOfFunctionCall("intersection{A,B}")
+		"var x: B = a.fWithGenericAndUpperBound()".assertTypeNameOfFunctionCall("intersection{B,A}")
 	}
 
 	@Test
