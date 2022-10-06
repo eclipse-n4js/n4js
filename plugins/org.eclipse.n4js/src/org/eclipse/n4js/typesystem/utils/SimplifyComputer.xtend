@@ -114,6 +114,10 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 		var haveUndefined = false;
 		var haveUnknown = false;
 
+		var haveNumeric = false;
+		var haveBoolean = false;
+		var haveString = false;
+
 		// remove duplicates but keep original order
 		val noDups = new ArrayList();
 		val noDupsWithoutObject = new ArrayList();
@@ -126,12 +130,16 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 					val isNull = typeCompareHelper.isEqual(nullTypeRef, typeRef);
 					val isUndefined = typeCompareHelper.isEqual(undefinedTypeRef, typeRef);
 					val isUnknown = typeCompareHelper.isEqual(UNKNOWN_TYPE_REF, typeRef);
-					haveAny = haveAny || isAny;
-					haveObject = haveObject || isObject;
-					haveNull = haveNull || isNull;
-					haveUndefined = haveUndefined || isUndefined;
-					haveUnknown = haveUnknown || isUnknown;
-					if (isAny || isNull || isUndefined) {
+					
+					val isNumeric = G.isNumeric(typeRef);
+					val isBoolean = G.isBoolean(typeRef);
+					val isString = G.isString(typeRef);
+					
+					if (isAny || isNull || isUndefined
+						|| (haveNumeric && isNumeric)
+						|| (haveBoolean && isBoolean)
+						|| (haveString && isString)
+					) {
 						// skip
 					} else {
 						set.add(typeRef);
@@ -140,6 +148,15 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 							noDupsWithoutObject.add(typeRef);
 						}
 					}
+					
+					haveAny = haveAny || isAny;
+					haveObject = haveObject || isObject;
+					haveNull = haveNull || isNull;
+					haveUndefined = haveUndefined || isUndefined;
+					haveUnknown = haveUnknown || isUnknown;
+					haveNumeric = haveNumeric || isNumeric;
+					haveBoolean = haveBoolean || isBoolean;
+					haveString = haveString || isString;
 				}
 			}
 		}

@@ -626,6 +626,20 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	}
 
 	/**
+	 * Returns true iff the given type is of String type, i.e {@link #getStringType() string}.
+	 */
+	public final boolean isString(Type type) {
+		return type == getStringType();
+	}
+
+	/**
+	 * Returns true iff the given type is of Boolean type, i.e {@link #getBooleanType() boolean}.
+	 */
+	public final boolean isBoolean(Type type) {
+		return type == getBooleanType();
+	}
+
+	/**
 	 * Returns true iff the given type is one of the two numeric types, i.e {@link #getNumberType() number}, or
 	 * {@link #getIntType() int}.
 	 */

@@ -854,6 +854,58 @@ class RuleEnvironmentExtensions {
 	}
 
 	/**
+	 * Returns true iff the given type is of Boolean type, i.e {@link #getBooleanType() boolean}.
+	 */
+	public def static boolean isBoolean(RuleEnvironment G, Type type) {
+		G.predefinedTypes.builtInTypeScope.isBoolean(type)
+	}
+
+	/**
+	 * Returns true iff the given type is of Boolean type, i.e {@link #getBooleanType() boolean}.
+	 */
+	public def static boolean isBoolean(RuleEnvironment G, TypeArgument typeArg) {
+		if (typeArg===null) {
+			return false;
+		}
+		if (G.predefinedTypes.builtInTypeScope.isBoolean(typeArg.declaredType)) {
+			return true;
+		}
+		if (typeArg instanceof UnionTypeExpression) {
+			return typeArg.typeRefs.forall[e|isBoolean(G, e)];
+		}
+		if (typeArg instanceof IntersectionTypeExpression) {
+			return typeArg.typeRefs.exists[e|isBoolean(G, e)];
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true iff the given type is of String type, i.e {@link #getStringType() string}.
+	 */
+	public def static boolean isString(RuleEnvironment G, Type type) {
+		G.predefinedTypes.builtInTypeScope.isString(type)
+	}
+
+	/**
+	 * Returns true iff the given type is of String type, i.e {@link #getStringType() string}.
+	 */
+	public def static boolean isString(RuleEnvironment G, TypeArgument typeArg) {
+		if (typeArg===null) {
+			return false;
+		}
+		if (G.predefinedTypes.builtInTypeScope.isString(typeArg.declaredType)) {
+			return true;
+		}
+		if (typeArg instanceof UnionTypeExpression) {
+			return typeArg.typeRefs.forall[e|isString(G, e)];
+		}
+		if (typeArg instanceof IntersectionTypeExpression) {
+			return typeArg.typeRefs.exists[e|isString(G, e)];
+		}
+		return false;
+	}
+
+	/**
 	 * Returns true if the given type is one of the {@link BuiltInTypeScope#isNumeric(Type) numeric} primitive
 	 * built-in types.
 	 */
