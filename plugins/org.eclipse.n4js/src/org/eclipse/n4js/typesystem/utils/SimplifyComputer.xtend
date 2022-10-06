@@ -207,9 +207,14 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 			val fst = typeRefs.get(0);
 			val snd = typeRefs.get(1);
 
-			val isStructural = fst.isUseSiteStructuralTyping || fst.isDefSiteStructuralTyping
-				|| snd.isUseSiteStructuralTyping || snd.isDefSiteStructuralTyping;
-			if (!isStructural) {
+			val isFstStructural = fst.isUseSiteStructuralTyping || fst.isDefSiteStructuralTyping;
+			val isSndStructural = snd.isUseSiteStructuralTyping || snd.isDefSiteStructuralTyping;
+			val isFstStrcRawObj = isFstStructural && G.isObjectStructural(fst) && fst.structuralMembers.empty
+			val isSndStrcRawObj = isSndStructural && G.isObjectStructural(snd) && snd.structuralMembers.empty
+			
+			val doSimplify = (!isFstStructural || isFstStrcRawObj) && (!isSndStructural || isSndStrcRawObj);
+			
+			if (doSimplify) {
 				if (G.isAnyDynamic(fst)) {
 					if (composedType instanceof UnionTypeExpression) {
 						return Collections.singletonList(fst); // chose any+

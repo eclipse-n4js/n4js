@@ -825,6 +825,13 @@ class RuleEnvironmentExtensions {
 	}
 
 	/**
+	 * Returns true if the given type reference refers to the built-in type {@link #objectType(RuleEnvironment) Object}.
+	 */
+	public def static boolean isObjectStructural(RuleEnvironment G, TypeArgument typeArg) {
+		return typeArg!==null && typeArg.declaredType == objectType(G) && isStructural(typeArg);
+	}
+
+	/**
 	 * Returns true if the given type reference refers to the built-in type {@link #functionType(RuleEnvironment) Function}.
 	 */
 	public def static boolean isFunction(RuleEnvironment G, TypeArgument typeArg) {
@@ -840,6 +847,10 @@ class RuleEnvironmentExtensions {
 
 	private def static boolean isNominal(TypeArgument typeArg) {
 		return typeArg.isTypeRef() && !TypeUtils.isStructural(typeArg as TypeRef);
+	}
+
+	private def static boolean isStructural(TypeArgument typeArg) {
+		return typeArg.isTypeRef() && TypeUtils.isStructural(typeArg as TypeRef);
 	}
 
 	/**
