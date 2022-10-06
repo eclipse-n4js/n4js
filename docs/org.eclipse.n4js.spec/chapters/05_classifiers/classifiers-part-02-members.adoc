@@ -1464,7 +1464,7 @@ That means, an optional data field, getter, or setter of $R$ needs not be presen
 * in cases 2, 3, 4b, and 4c, only *getters* are optional, setters are not optional.
 That means, an optional getter of $R$ needs not be present in $L$ and an optional field of $R$ requires only a setter in $L$. Note that these cases are more restricted than the cases 1 and 4a.
 
-Moreover, optionality has an effect in case of ternary expression $L <: R$ in which the left-hand side is a ternary expression, e.g. `l = b? trueExpr : falseExpr` whose `trueExpr` or `falseExpr` possibly recursively contains an expression of the kind mentioned above. In this case, the optionality effect is the more restricted optinality of `trueExpr` and `falseExpr`.
+Moreover, optionality has an effect in case of ternary expression $L <: R$ in which the left-hand side is a ternary expression, e.g. `l = b? trueExpr : falseExpr` whose `trueExpr` or `falseExpr` possibly recursively contains an expression of the kind mentioned above. In this case, the optionality effect is the more restricted optionality of `trueExpr` and `falseExpr`.
 
 If, according to these rules, a data field / getter / setter of $R$ need not be present in
 $L$ but a member with the same name and access is actually present in $L$, that member in $L$
@@ -1571,7 +1571,7 @@ c = finalNominal1;
 c = finalNominal2;
 ----
 
-The following example demonstrates how optionality behaves in ternay expressions.
+The following example demonstrates how optionality behaves in ternary expressions.
 
 
 .Optional fields in ternay expressions
@@ -1592,7 +1592,7 @@ let f1 = new F();
 let f2: ~F = {};
 
 // True expression is a const object literal, so both fields and accessors in I are optional.
-// False expression is a new expression, so only getters in I are optionals.
+// False expression is a new expression, so only getters in I are optional.
 // As a result, only getters in I are optional.
 // XPECT errors --> "C is not a structural subtype of I: missing field m." at "b? cc : new C()"
 var te1: I = b? cc : new C()
