@@ -91,8 +91,8 @@ class TypeSystemHelper_SimplifyUnionTypesTest extends AbstractTypeSystemHelperTe
 	def void testSimplifyObjectAndOther() {
 		assertSimplify("Object", "union{Object,() => void}");
 		assertSimplify("Object", "union{Object,Function}");
-		assertSimplify("~Object", "union{~Object,() => void}");
-		assertSimplify("~Object", "union{~Object,Function}");
+		assertSimplify("union{~Object,{function():void}}", "union{~Object,() => void}");
+		assertSimplify("union{~Object,Function}", "union{~Object,Function}");
 	}
 
 	@Test

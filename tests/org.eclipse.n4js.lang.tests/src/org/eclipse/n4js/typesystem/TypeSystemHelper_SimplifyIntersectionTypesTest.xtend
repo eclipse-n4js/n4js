@@ -79,8 +79,8 @@ class TypeSystemHelper_SimplifyIntersectionTypesTest extends AbstractTypeSystemH
 	def void testSimplifyObjectAndOther() {
 		assertSimplify("{function():void}", "intersection{Object,() => void}");
 		assertSimplify("Function", "intersection{Object,Function}", #[IssueCodes.INTER_REDUNDANT_SUPERTYPE]);
-		assertSimplify("{function():void}", "intersection{~Object,() => void}");
-		assertSimplify("Function", "intersection{~Object,Function}");
+		assertSimplify("intersection{~Object,{function():void}}", "intersection{~Object,() => void}");
+		assertSimplify("intersection{~Object,Function}", "intersection{~Object,Function}");
 	}
 
 }
