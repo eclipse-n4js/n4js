@@ -359,6 +359,13 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 						}
 					}
 				}
+				if (right instanceof TField) {
+					val leftOptionalStrategy = leftTypeRef.ASTNodeOptionalFieldStrategy;
+					if (leftOptionalStrategy === OptionalFieldStrategy.GETTERS_OPTIONAL) {
+						info.missingMembers.add("setter or field " + right.name);
+						return;
+					}
+				}
 
 				info.missingMembers.add(keywordProvider.keyword(right, info.rightStrategy) + " " + right.name);
 			}
