@@ -226,10 +226,7 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 
 			val isFstStructural = fst.isUseSiteStructuralTyping || fst.isDefSiteStructuralTyping;
 			val isSndStructural = snd.isUseSiteStructuralTyping || snd.isDefSiteStructuralTyping;
-			val isFstStrcRawObj = isFstStructural && G.isObjectStructural(fst) && fst.structuralMembers.empty
-			val isSndStrcRawObj = isSndStructural && G.isObjectStructural(snd) && snd.structuralMembers.empty
-			
-			val doSimplify = (!isFstStructural || isFstStrcRawObj) && (!isSndStructural || isSndStrcRawObj);
+			val doSimplify = !isFstStructural && !isSndStructural;
 			
 			if (doSimplify) {
 				if (G.isAnyDynamic(fst)) {
