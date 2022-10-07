@@ -10,10 +10,12 @@
  */
 package org.eclipse.n4js.utils
 
+import com.google.common.base.Optional
 import java.io.IOException
 import java.io.InputStream
 import java.math.BigDecimal
 import java.util.Properties
+import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
@@ -26,8 +28,11 @@ import org.eclipse.n4js.compileTime.CompileTimeValue
 import org.eclipse.n4js.n4JS.AbstractAnnotationList
 import org.eclipse.n4js.n4JS.AbstractVariable
 import org.eclipse.n4js.n4JS.AnnotableElement
+import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.AssignmentOperator
+import org.eclipse.n4js.n4JS.BinaryLogicalExpression
+import org.eclipse.n4js.n4JS.BinaryLogicalOperator
 import org.eclipse.n4js.n4JS.ConditionalExpression
 import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.Expression
@@ -120,6 +125,7 @@ import org.eclipse.n4js.ts.types.util.SuperTypesMapper
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.types.utils.TypeCompareUtils
 import org.eclipse.n4js.types.utils.TypeUtils
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
@@ -134,9 +140,6 @@ import org.eclipse.xtext.scoping.IScope
 import static org.eclipse.n4js.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import com.google.common.base.Optional
-import org.eclipse.emf.common.util.EList
-import org.eclipse.n4js.n4JS.Argument
 
 /**
  * Intended for small, static utility methods that
@@ -1131,13 +1134,13 @@ public class N4JSLanguageUtils {
 	 *			the expression to calculate.
 	 * @return the optional field strategy of the expression.
 	 */
-	def public static OptionalFieldStrategy calculateOptionalFieldStrategy(TypableElement expr, TypeRef typeRef) {
-		if (expr.constTransitiveObjectLiteral) {
+	def public static OptionalFieldStrategy calculateOptionalFieldStrategy(N4JSTypeSystem ts, RuleEnvironment G, TypableElement expr, TypeRef typeRef) {
+		if (isConstTransitiveObjectLiteral(expr)) {
 			// Req. IDE-240500, case 1, 4a
 			return OptionalFieldStrategy.FIELDS_AND_ACCESSORS_OPTIONAL;
 		}
 
-		if (expr.isConstTransitiveNewExpressionOrFinalNominalClassInstance(typeRef)) {
+		if (isConstTransitiveNewExpressionOrFinalNominalClassInstanceOrObjectLiteral(ts, G, expr, typeRef)) {
 			// Req. IDE-240500, case 2, 3, 4b, 4c
 			return OptionalFieldStrategy.GETTERS_OPTIONAL;
 		}
@@ -1145,8 +1148,8 @@ public class N4JSLanguageUtils {
 		if (expr instanceof ConditionalExpression) {
 			// GHOLD-411: Special handling of optionality in ternary expressions.
 			// e.g. const conditionalThing: Thing = true ? {something: 1} : null as Thing;
-			val optionalStrategyForTrueExpr = expr.trueExpression.calculateOptionalFieldStrategy(typeRef);
-			val optionalStrategyForFalseExpr = expr.falseExpression.calculateOptionalFieldStrategy(typeRef);
+			val optionalStrategyForTrueExpr = calculateOptionalFieldStrategy(ts, G, expr.trueExpression, typeRef);
+			val optionalStrategyForFalseExpr = calculateOptionalFieldStrategy(ts, G, expr.falseExpression, typeRef);
 			return minOptionalityFieldStrategy(optionalStrategyForTrueExpr, optionalStrategyForFalseExpr);
 		}
 
@@ -1168,16 +1171,32 @@ public class N4JSLanguageUtils {
 			return true;
 		}
 
-		if (expr instanceof ObjectLiteral)
+		if (expr instanceof ObjectLiteral) {
 			return true;
+		}
 
 		if (expr instanceof IdentifierRef) {
 			val idElem = expr.getId();
 			if (idElem instanceof TVariable) {
 				if (idElem.isConst()) {
-					return idElem.objectLiteral;
+					if (idElem.objectLiteral) {
+						return true;
+					}
+//					transitivity disabled
+//					if (idElem.astElement !== null && idElem.astElement instanceof VariableDeclaration) {
+//						return isConstTransitiveObjectLiteral((idElem.astElement as VariableDeclaration).expression);
+//					}
 				}
 			}
+		}
+		
+		if (expr instanceof ConditionalExpression) {
+			return isConstTransitiveObjectLiteral(expr.trueExpression) && isConstTransitiveObjectLiteral(expr.falseExpression);
+		}
+		
+		if (expr instanceof BinaryLogicalExpression) {
+			return expr.op === BinaryLogicalOperator.OR
+				&& isConstTransitiveObjectLiteral(expr.lhs) && isConstTransitiveObjectLiteral(expr.rhs);
 		}
 
 		return false;
@@ -1192,13 +1211,18 @@ public class N4JSLanguageUtils {
 	 * @return true if the expression is a new expression, an expression of a final and nominal type,
 	 * 			or references these expressions transitively through a const variable.
 	 */
-	def private static boolean isConstTransitiveNewExpressionOrFinalNominalClassInstance(TypableElement expr, TypeRef typeRef) {
+	def private static boolean isConstTransitiveNewExpressionOrFinalNominalClassInstanceOrObjectLiteral(N4JSTypeSystem ts, RuleEnvironment G, TypableElement expr, TypeRef typeRef) {
 		if (expr instanceof NullLiteral) {
 			return true;
 		}
 
-		if (expr instanceof NewExpression)
+		if (expr instanceof NewExpression) {
 			return true;
+		}
+
+		if (expr instanceof ObjectLiteral) {
+			return true;
+		}
 
 		if (typeRef !== null) {
 			val declType = typeRef.declaredType;
@@ -1211,9 +1235,29 @@ public class N4JSLanguageUtils {
 			val idElem = expr.getId();
 			if (idElem instanceof TVariable) {
 				if (idElem.isConst()) {
-					return idElem.newExpression;
+					if (idElem.objectLiteral) {
+						return true;
+					}
+					if (idElem.newExpression) {
+						return true;
+					}
+//					transitivity disabled
+//					if (idElem.astElement !== null && idElem.astElement instanceof VariableDeclaration) {
+//						return isConstTransitiveNewExpressionOrFinalNominalClassInstance((idElem.astElement as VariableDeclaration).expression, null);
+//					}
 				}
 			}
+		}
+		
+		if (expr instanceof ConditionalExpression) {
+			return isConstTransitiveNewExpressionOrFinalNominalClassInstanceOrObjectLiteral(ts, G, expr.trueExpression, ts.type(G, expr.trueExpression))
+				&& isConstTransitiveNewExpressionOrFinalNominalClassInstanceOrObjectLiteral(ts, G, expr.falseExpression, ts.type(G, expr.falseExpression));
+		}
+		
+		if (expr instanceof BinaryLogicalExpression) {
+			return expr.op === BinaryLogicalOperator.OR
+				&& isConstTransitiveNewExpressionOrFinalNominalClassInstanceOrObjectLiteral(ts, G, expr.lhs, ts.type(G, expr.lhs))
+				&& isConstTransitiveNewExpressionOrFinalNominalClassInstanceOrObjectLiteral(ts, G, expr.rhs, ts.type(G, expr.rhs));
 		}
 
 		return false;
