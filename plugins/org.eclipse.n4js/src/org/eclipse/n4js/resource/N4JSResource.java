@@ -556,7 +556,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	private EObject demandLoadResource(EObject object) {
 		TModule oldModule = null;
 		EObject oldScript = null;
-		ModuleAwareContentsList myContents = ((ModuleAwareContentsList) contents);
+		ModuleAwareContentsList myContents = ((ModuleAwareContentsList) getContents());
 		try {
 			oldModule = discardStateFromDescription(false);
 			if (!myContents.isEmpty()) {

@@ -51,9 +51,19 @@ public class TypeCompareHelper {
 		return TypeCompareLogic.compare(fqnProvider, t1, t2);
 	}
 
+	/** {@link Comparator#compare(Object, Object) Compares} two types. */
+	public boolean isEqual(Type t1, Type t2) {
+		return compare(t1, t2) == 0;
+	}
+
 	/** {@link Comparator#compare(Object, Object) Compares} two type arguments. */
 	public int compare(TypeArgument t1, TypeArgument t2) {
 		return TypeCompareLogic.compare(fqnProvider, t1, t2);
+	}
+
+	/** {@link Comparator#compare(Object, Object) Compares} two type arguments. */
+	public boolean isEqual(TypeArgument t1, TypeArgument t2) {
+		return compare(t1, t2) == 0;
 	}
 
 	private final class TypeComparator implements Comparator<Type> {

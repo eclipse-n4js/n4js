@@ -62,6 +62,8 @@ public class TypeProcessor extends AbstractProcessor {
 	@Inject
 	private DestructureProcessor destructureProcessor;
 	@Inject
+	private N4JSTypeSystem ts;
+	@Inject
 	private TypeSystemHelper tsh;
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
@@ -194,10 +196,10 @@ public class TypeProcessor extends AbstractProcessor {
 		val typeRef = result;
 		if (typeRef instanceof ParameterizedTypeRef) {
 			val astNodeSkipParen = N4JSASTUtils.skipParenExpressionDownward(astNode);
-			val optionalFieldStrategy = N4JSLanguageUtils.calculateOptionalFieldStrategy(astNodeSkipParen, typeRef);
+			val optionalFieldStrategy = N4JSLanguageUtils.calculateOptionalFieldStrategy(ts, G, astNodeSkipParen, typeRef);
 			if (typeRef.ASTNodeOptionalFieldStrategy !== optionalFieldStrategy) {
 				val typeRefCpy = TypeUtils.copy(typeRef);
-				typeRefCpy.ASTNodeOptionalFieldStrategy = optionalFieldStrategy;
+				typeRefCpy.ASTNodeOptionalFieldStrategy = optionalFieldStrategy; // TODO: also remember the cause for opt-field-strat!
 				return typeRefCpy;
 			}
 		}

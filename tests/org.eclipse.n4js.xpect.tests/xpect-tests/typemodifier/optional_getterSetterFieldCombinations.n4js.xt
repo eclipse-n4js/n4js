@@ -205,9 +205,9 @@ cgs = new DF();
 
 // XPECT noerrors -->
 cf = {};
-// XPECT errors --> "D0 is not a structural subtype of ~~CF: missing field f." at "d0"
+// XPECT errors --> "D0 is not a structural subtype of ~~CF: missing setter or field f." at "d0"
 cf = d0;
-// XPECT errors --> "D0 is not a structural subtype of ~~CF: missing field f." at "new D0()"
+// XPECT errors --> "D0 is not a structural subtype of ~~CF: missing setter or field f." at "new D0()"
 cf = new D0();
 
 
@@ -749,9 +749,9 @@ wcgs = new DF();
 
 // XPECT noerrors
 wcf = {}
-// XPECT errors --> "D0 is not a structural subtype of ~w~CF: missing field f; f failed: writable field requires a writable field or a setter in subtype." at "d0"
+// XPECT errors --> "D0 is not a structural subtype of ~w~CF: missing setter or field f; f failed: writable field requires a writable field or a setter in subtype." at "d0"
 wcf = d0;
-// XPECT errors --> "D0 is not a structural subtype of ~w~CF: missing field f; f failed: writable field requires a writable field or a setter in subtype." at "new D0()"
+// XPECT errors --> "D0 is not a structural subtype of ~w~CF: missing setter or field f; f failed: writable field requires a writable field or a setter in subtype." at "new D0()"
 wcf = new D0();
 
 

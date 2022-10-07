@@ -216,7 +216,7 @@ i12.varArgBoth(b, aub, aub);
 // XPECT noerrors
 i12.inBothInheritedAllDiffTypes(aub);
 
-// XPECT type of 'i12.inBothInheritedAllDiffTypes(aub)' --> intersection{A,B}
+// XPECT type of 'i12.inBothInheritedAllDiffTypes(aub)' --> intersection{B,A}
 i12.inBothInheritedAllDiffTypes(aub);
 
 
@@ -235,7 +235,7 @@ i12.defaultFparBoth(a);
 i12.complicated1(undefined, undefined, undefined);
 
 // complicated2(a:string=…, n:int|number=…, ...b:int);
-// XPECT type of 'complicated2' --> {function(string=…,number=…,...int):void}
+// XPECT type of 'complicated2' --> {function(string=…,int=…,...int):void}
 i12.complicated2();
 
 

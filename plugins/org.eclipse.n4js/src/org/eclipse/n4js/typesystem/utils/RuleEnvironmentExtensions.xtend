@@ -60,6 +60,7 @@ import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.util.CancelIndicator
 
 import static extension org.eclipse.n4js.types.utils.TypeUtils.*
+import org.eclipse.n4js.ts.typeRefs.BaseTypeRef
 
 /**
  * Extensions of class RuleEnvironment for handling substitutions and
@@ -810,10 +811,24 @@ class RuleEnvironmentExtensions {
 	}
 
 	/**
+	 * Returns true if the given type is any+.
+	 */
+	public def static boolean isAnyDynamic(RuleEnvironment G, TypeArgument typeArg) {
+		return isAny(typeArg) && typeArg instanceof BaseTypeRef && (typeArg as BaseTypeRef).isDynamic;
+	}
+
+	/**
 	 * Returns true if the given type reference refers to the built-in type {@link #objectType(RuleEnvironment) Object}.
 	 */
 	public def static boolean isObject(RuleEnvironment G, TypeArgument typeArg) {
 		return typeArg!==null && typeArg.declaredType == objectType(G) && isNominal(typeArg);
+	}
+
+	/**
+	 * Returns true if the given type reference refers to the built-in type {@link #objectType(RuleEnvironment) Object}.
+	 */
+	public def static boolean isObjectStructural(RuleEnvironment G, TypeArgument typeArg) {
+		return typeArg!==null && typeArg.declaredType == objectType(G) && isStructural(typeArg);
 	}
 
 	/**
@@ -832,6 +847,62 @@ class RuleEnvironmentExtensions {
 
 	private def static boolean isNominal(TypeArgument typeArg) {
 		return typeArg.isTypeRef() && !TypeUtils.isStructural(typeArg as TypeRef);
+	}
+
+	private def static boolean isStructural(TypeArgument typeArg) {
+		return typeArg.isTypeRef() && TypeUtils.isStructural(typeArg as TypeRef);
+	}
+
+	/**
+	 * Returns true iff the given type is of Boolean type, i.e {@link #getBooleanType() boolean}.
+	 */
+	public def static boolean isBoolean(RuleEnvironment G, Type type) {
+		G.predefinedTypes.builtInTypeScope.isBoolean(type)
+	}
+
+	/**
+	 * Returns true iff the given type is of Boolean type, i.e {@link #getBooleanType() boolean}.
+	 */
+	public def static boolean isBoolean(RuleEnvironment G, TypeArgument typeArg) {
+		if (typeArg===null) {
+			return false;
+		}
+		if (G.predefinedTypes.builtInTypeScope.isBoolean(typeArg.declaredType)) {
+			return true;
+		}
+		if (typeArg instanceof UnionTypeExpression) {
+			return typeArg.typeRefs.forall[e|isBoolean(G, e)];
+		}
+		if (typeArg instanceof IntersectionTypeExpression) {
+			return typeArg.typeRefs.exists[e|isBoolean(G, e)];
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true iff the given type is of String type, i.e {@link #getStringType() string}.
+	 */
+	public def static boolean isString(RuleEnvironment G, Type type) {
+		G.predefinedTypes.builtInTypeScope.isString(type)
+	}
+
+	/**
+	 * Returns true iff the given type is of String type, i.e {@link #getStringType() string}.
+	 */
+	public def static boolean isString(RuleEnvironment G, TypeArgument typeArg) {
+		if (typeArg===null) {
+			return false;
+		}
+		if (G.predefinedTypes.builtInTypeScope.isString(typeArg.declaredType)) {
+			return true;
+		}
+		if (typeArg instanceof UnionTypeExpression) {
+			return typeArg.typeRefs.forall[e|isString(G, e)];
+		}
+		if (typeArg instanceof IntersectionTypeExpression) {
+			return typeArg.typeRefs.exists[e|isString(G, e)];
+		}
+		return false;
 	}
 
 	/**

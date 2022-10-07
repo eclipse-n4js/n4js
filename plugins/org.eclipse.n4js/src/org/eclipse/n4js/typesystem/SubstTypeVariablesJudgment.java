@@ -17,6 +17,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 import java.util.List;
 
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
+import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -117,6 +118,11 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		@Override
 		public TypeArgument caseTypeArgument(TypeArgument typeArg) {
 			return typeArg;
+		}
+
+		@Override
+		public TypeRef caseComposedTypeRef(ComposedTypeRef typeRef) {
+			return caseComposedTypeRefWithTSH(typeRef, tsh);
 		}
 
 		@Override

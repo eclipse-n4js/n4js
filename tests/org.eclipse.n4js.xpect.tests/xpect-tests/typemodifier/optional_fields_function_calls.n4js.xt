@@ -38,7 +38,7 @@ let nr: ~r~N;
 let nw: ~w~N;
 let ni: ~i~N;
 
-// XPECT errors -->"F is not a structural subtype of ~N: missing field s." at "fn()"
+// XPECT errors -->"F is not a structural subtype of ~N: missing setter or field s." at "fn()"
 n = fn();
 // XPECT errors -->"FS is not a structural subtype of ~N: missing field s." at "fns()"
 n = fns();
@@ -48,7 +48,7 @@ n = fnc();
 n = fncs();
 // XPECT errors -->"~Object is not a structural subtype of ~N: missing field s." at "fnol()"
 n = fnol();
-// XPECT errors -->"F is not a structural subtype of ~N: missing field s." at "rfn"
+// XPECT errors -->"F is not a structural subtype of ~N: missing setter or field s." at "rfn"
 n = rfn;
 // XPECT errors -->"FS is not a structural subtype of ~N: missing field s." at "rfns"
 n = rfns;
@@ -59,7 +59,7 @@ n = rfncs;
 // XPECT errors -->"~Object is not a structural subtype of ~N: missing field s." at "rfnol"
 n = rfnol;
 
-// XPECT errors -->"F is not a structural subtype of ~~N: missing field s." at "fn()"
+// XPECT errors -->"F is not a structural subtype of ~~N: missing setter or field s." at "fn()"
 nn = fn();
 // XPECT errors -->"FS is not a structural subtype of ~~N: missing field s." at "fns()"
 nn = fns();
@@ -69,7 +69,7 @@ nn = fnc();
 nn = fncs();
 // XPECT errors -->"~Object is not a structural subtype of ~~N: missing field s." at "fnol()"
 nn = fnol();
-// XPECT errors -->"F is not a structural subtype of ~~N: missing field s." at "rfn"
+// XPECT errors -->"F is not a structural subtype of ~~N: missing setter or field s." at "rfn"
 nn = rfn;
 // XPECT errors -->"FS is not a structural subtype of ~~N: missing field s." at "rfns"
 nn = rfns;
@@ -101,7 +101,7 @@ nr = rfncs;
 // XPECT errors -->"~Object is not a structural subtype of ~r~N: missing field s; s failed: readable field requires a readable field or a getter in subtype." at "rfnol"
 nr = rfnol;
 
-// XPECT errors -->"F is not a structural subtype of ~w~N: missing field s; s failed: writable field requires a writable field or a setter in subtype." at "fn()"
+// XPECT errors -->"F is not a structural subtype of ~w~N: missing setter or field s; s failed: writable field requires a writable field or a setter in subtype." at "fn()"
 nw = fn();
 // XPECT errors -->"FS is not a structural subtype of ~w~N: missing field s; s failed: writable field requires a writable field or a setter in subtype." at "fns()"
 nw = fns();
@@ -111,7 +111,7 @@ nw = fnc();
 nw = fncs();
 // XPECT errors -->"~Object is not a structural subtype of ~w~N: missing field s; s failed: writable field requires a writable field or a setter in subtype." at "fnol()"
 nw = fnol();
-// XPECT errors -->"F is not a structural subtype of ~w~N: missing field s; s failed: writable field requires a writable field or a setter in subtype." at "rfn"
+// XPECT errors -->"F is not a structural subtype of ~w~N: missing setter or field s; s failed: writable field requires a writable field or a setter in subtype." at "rfn"
 nw = rfn;
 // XPECT errors -->"FS is not a structural subtype of ~w~N: missing field s; s failed: writable field requires a writable field or a setter in subtype." at "rfns"
 nw = rfns;

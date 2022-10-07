@@ -151,8 +151,12 @@ abstract class MethodFactory implements MemberFactory {
 		@Override
 		List<TypeRef> getTypeRefs() {
 			List<TypeRef> typeRefsToUse = new LinkedList<>();
-			typeRefsToUse.addAll(fpa.getTypeRefs());
 			typeRefsToUse.addAll(fpa.getTypeRefsVariadicAccumulated());
+			// remove those refs that will be added by: typeRefsToUse.addAll(fpa.getTypeRefs())
+			for (int i = 0; i < fpa.getTypeRefsVariadic().size(); i++) {
+				typeRefsToUse.remove(typeRefsToUse.size() - 1);
+			}
+			typeRefsToUse.addAll(fpa.getTypeRefs());
 			return typeRefsToUse;
 		}
 

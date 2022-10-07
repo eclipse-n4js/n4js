@@ -42,7 +42,7 @@ var c : C;
 
 // XPECT noerrors -->
 for(b of bIterable) {}
-// XPECT errors --> "Iterable<A> is not a structural subtype of Iterable<? extends B>: #iterator failed: {function():Iterator<A>} is not a subtype of {function():Iterator<? extends B>}." at "aIterable"
+// XPECT errors --> "Iterable<A> is not a structural subtype of Iterable<? extends B> due to type argument incompatibility: A is not a subtype of B." at "aIterable"
 for(b of aIterable) {}
 // XPECT noerrors -->
 for(b of cIterable) {}
@@ -51,7 +51,7 @@ for(b of cIterable) {}
 for(b of bIterable) {}
 // XPECT noerrors -->
 for(a of bIterable) {}
-// XPECT errors --> "Iterable<B> is not a structural subtype of Iterable<? extends C>: #iterator failed: {function():Iterator<B>} is not a subtype of {function():Iterator<? extends C>}." at "bIterable"
+// XPECT errors --> "Iterable<B> is not a structural subtype of Iterable<? extends C> due to type argument incompatibility: B is not a subtype of C." at "bIterable"
 for(c of bIterable) {}
 
 
@@ -60,7 +60,7 @@ for(c of bIterable) {}
 
 // XPECT noerrors -->
 for(var v1 : B of bIterable) {}
-// XPECT errors --> "Iterable<A> is not a structural subtype of Iterable<? extends B>: #iterator failed: {function():Iterator<A>} is not a subtype of {function():Iterator<? extends B>}." at "aIterable"
+// XPECT errors --> "Iterable<A> is not a structural subtype of Iterable<? extends B> due to type argument incompatibility: A is not a subtype of B." at "aIterable"
 for(var v2 : B of aIterable) {}
 // XPECT noerrors -->
 for(var v3 : B of cIterable) {}
@@ -69,7 +69,7 @@ for(var v3 : B of cIterable) {}
 for(var v4 : B of bIterable) {}
 // XPECT noerrors -->
 for(var v5 : A of bIterable) {}
-// XPECT errors --> "Iterable<B> is not a structural subtype of Iterable<? extends C>: #iterator failed: {function():Iterator<B>} is not a subtype of {function():Iterator<? extends C>}." at "bIterable"
+// XPECT errors --> "Iterable<B> is not a structural subtype of Iterable<? extends C> due to type argument incompatibility: B is not a subtype of C." at "bIterable"
 for(var v6 : C of bIterable) {}
 
 

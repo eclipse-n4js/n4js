@@ -10,7 +10,9 @@
  */
 package org.eclipse.n4js.types.utils;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
@@ -39,6 +41,7 @@ import org.eclipse.n4js.ts.types.TStructSetter;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * Internal class containing the logic for comparing types. Should not be used by client code; instead, use
@@ -86,6 +89,52 @@ import org.eclipse.xtext.naming.QualifiedName;
 		return 0;
 	}
 
+	/** Compares two sets each representing a composed type, respects commutativity. */
+	/* package */ static <T extends TypeArgument> int compareComposedTypes(IQualifiedNameProvider fqnProvider,
+			Iterable<T> tvs1, Iterable<T> tvs2) {
+
+		final List<T> tvs1s = new ArrayList<>(IterableExtensions.toList(tvs1));
+		final List<T> tvs2s = new ArrayList<>(IterableExtensions.toList(tvs2));
+		final List<T> tvs2sMatched = new ArrayList<>();
+
+		LOOP_X: for (int x = 0; x < tvs1s.size(); x++) {
+			int c = -1;
+			for (int y = 0; y < tvs2s.size(); y++) {
+				c = compare(fqnProvider, tvs1s.get(x), tvs2s.get(y));
+				if (c == 0) {
+					tvs2sMatched.add(tvs2s.remove(y));
+					continue LOOP_X;
+				}
+			}
+			if (c != 0) {
+				for (int y = 0; y < tvs2sMatched.size(); y++) {
+					c = compare(fqnProvider, tvs1s.get(x), tvs2sMatched.get(y));
+					if (c == 0) {
+						continue LOOP_X;
+					}
+				}
+				return c;
+			}
+		}
+
+		if (!tvs2s.isEmpty()) {
+			LOOP_Y: for (int y = 0; y < tvs2s.size(); y++) {
+				int c = -1;
+				for (int x = 0; x < tvs1s.size(); x++) {
+					c = compare(fqnProvider, tvs1s.get(x), tvs2s.get(y));
+					if (c == 0) {
+						continue LOOP_Y;
+					}
+				}
+				if (c != 0) {
+					return c;
+				}
+			}
+		}
+
+		return 0;
+	}
+
 	/** WARNING: fqnProvider may be <code>null</code>, but then the lower/greater info will be unreliable! */
 	/* package */ static int compare(IQualifiedNameProvider fqnProvider, Type t1, Type t2) {
 		if (t1 == t2) {
@@ -99,25 +148,38 @@ import org.eclipse.xtext.naming.QualifiedName;
 		}
 		if (fqnProvider != null) {
 			// standard behavior relying on a fqnProvider
-			final QualifiedName name1 = fqnProvider.getFullyQualifiedName(t1);
-			final QualifiedName name2 = fqnProvider.getFullyQualifiedName(t2);
-			if (name1 == null && name2 == null) {
+			final QualifiedName fqn1 = fqnProvider.getFullyQualifiedName(t1);
+			final QualifiedName fqn2 = fqnProvider.getFullyQualifiedName(t2);
+			if (fqn1 == null && fqn2 == null) {
 				// since we know t1!=null && t2!=null, this means t1 and t2 are types without a FQN (i.e. for which
 				// fqnProvider returns null), e.g. type variables, and since we know t1!=t2 (from above) we must
 				// report a difference here!
-				return 1;
+				final String name1 = t1.getName();
+				final String name2 = t2.getName();
+				if (name1 != null || name2 != null) {
+					if (name1 == null) {
+						return -1;
+					}
+					if (name2 == null) {
+						return 1;
+					}
+					int c = name1.compareTo(name2);
+					if (c != 0) {
+						return c;
+					}
+				}
+			} else {
+				if (fqn1 == null) {
+					return -1;
+				}
+				if (fqn2 == null) {
+					return 1;
+				}
+				return fqn1.compareTo(fqn2);
 			}
-			if (name1 == null) {
-				return -1;
-			}
-			if (name2 == null) {
-				return 1;
-			}
-			return name1.compareTo(name2);
-		} else {
-			// fall-back behavior if fqnProvider not available
-			return 1; // note: we already know t1!=t2
 		}
+		// fall-back behavior if fqnProvider not available
+		return t1.hashCode() - t2.hashCode(); // note: we already know t1!=t2
 	}
 
 	/** WARNING: fqnProvider may be <code>null</code>, but then the lower/greater info will be unreliable! */
@@ -248,7 +310,7 @@ import org.eclipse.xtext.naming.QualifiedName;
 		} else if (ref1 instanceof ComposedTypeRef) {
 			final ComposedTypeRef cref1 = (ComposedTypeRef) ref1;
 			final ComposedTypeRef cref2 = (ComposedTypeRef) ref2;
-			c = compareTypeArguments(fqnProvider, cref1.getTypeRefs(), cref2.getTypeRefs());
+			c = compareComposedTypes(fqnProvider, cref1.getTypeRefs(), cref2.getTypeRefs());
 			if (c != 0) {
 				return c;
 			}
@@ -279,8 +341,12 @@ import org.eclipse.xtext.naming.QualifiedName;
 			if (c != 0) {
 				return c;
 			}
-			if (reopened1 && reopened2) {
-				return compare(fqnProvider, e1.getWildcard(), e2.getWildcard());
+			// if (reopened1 && reopened2) {
+			// return compare(fqnProvider, e1.getWildcard(), e2.getWildcard());
+			// }
+			c = compare(fqnProvider, e1.getWildcard(), e2.getWildcard());
+			if (c != 0) {
+				return c;
 			}
 			return compareComparables(e1.getId(), e2.getId());
 		}

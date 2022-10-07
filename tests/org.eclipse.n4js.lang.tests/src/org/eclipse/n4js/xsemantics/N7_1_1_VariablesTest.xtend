@@ -85,7 +85,7 @@ class N7_1_1_VariablesTest extends AbstractTypesystemTest {
 	def void testTypeInferredVars() {
 		assertVarDeclarationType("string", '''s = "Hello"''');
 		assertVarDeclarationType("int", '''i = 42''');
-		assertVarDeclarationType("union{int,string}", '''u = (true)?"Hello":42''');
-		assertVarDeclarationType("union{int,string}", '''u = "Hello" || 42''');
+		assertVarDeclarationType("union{string,int}", '''u = (true)?"Hello":42''');
+		assertVarDeclarationType("union{string,int}", '''u = "Hello" || 42''');
 	}
 }

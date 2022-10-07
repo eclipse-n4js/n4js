@@ -413,6 +413,10 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 
 	@Override
 	public TypeRef caseComposedTypeRef(ComposedTypeRef typeRef) {
+		return caseComposedTypeRefWithTSH(typeRef, null);
+	}
+
+	public TypeRef caseComposedTypeRefWithTSH(ComposedTypeRef typeRef, TypeSystemHelper tsh) {
 		boolean haveReplacement = false;
 		final ArrayList<TypeRef> resultTypeRefs = CollectionLiterals.newArrayList();
 		for (TypeRef currTypeRef : typeRef.getTypeRefs()) {
@@ -425,6 +429,9 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 					TypeRefsPackage.Literals.COMPOSED_TYPE_REF__TYPE_REFS);
 			result.getTypeRefs().clear();
 			result.getTypeRefs().addAll(TypeUtils.copyAll(resultTypeRefs));
+			if (tsh != null) {
+				return tsh.simplify(G, result, false);
+			}
 			return result;
 		}
 		return typeRef;

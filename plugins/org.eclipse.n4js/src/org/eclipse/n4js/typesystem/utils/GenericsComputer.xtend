@@ -156,7 +156,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 		var Object actualTypeArg = typeArg;
 		// simplify to avoid recursion, see test GH-2344_Recursion_Bug_Type_Judgement.n4js.xt
 		actualTypeArg = if (actualTypeArg instanceof ComposedTypeRef)
-			simplifyComputer.simplify(G, actualTypeArg) else actualTypeArg;
+			simplifyComputer.simplify(G, actualTypeArg, true) else actualTypeArg;
 
 		while(G.hasSubstitutionFor(actualTypeArg)) {
 			val actualTypeArgCasted = actualTypeArg as TypeRef; // otherwise #hasSubstitutionFor() would not have returned true

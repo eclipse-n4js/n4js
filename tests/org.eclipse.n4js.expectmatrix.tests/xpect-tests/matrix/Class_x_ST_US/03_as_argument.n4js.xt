@@ -60,7 +60,7 @@ c1(new C2());
 // C1 <: ~C1a == false XPECT noerrors -->
 c1a(new C1());
 
-// C1 <: ~C1b == false XPECT errors -->"C1 is not a structural subtype of ~C1b: missing field j." at "new C1()"
+// C1 <: ~C1b == false XPECT errors -->"C1 is not a structural subtype of ~C1b: missing setter or field j." at "new C1()"
 c1b(new C1());
 
 // C1a <: ~~C1 XPECT noerrors -->
@@ -75,5 +75,5 @@ c2(new C2());
 // C1 <: ~~C1a == false XPECT noerrors -->
 c2a(new C1());
 
-// C1 <: ~~C1b == false XPECT errors -->"C1 is not a structural subtype of ~~C1b: missing field j." at "new C1()"
+// C1 <: ~~C1b == false XPECT errors -->"C1 is not a structural subtype of ~~C1b: missing setter or field j." at "new C1()"
 c2b(new C1());

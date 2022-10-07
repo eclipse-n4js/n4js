@@ -73,17 +73,15 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 	}
 
 	public def StructuralTypingResult isStructuralSubtype(RuleEnvironment G, TypeRef left, TypeRef right) {
-
-		val rightStrategy = right.typingStrategy;
 		val leftStrategy = left.typingStrategy;
+		val rightStrategy = right.typingStrategy;
 
-		// shortcut, handle with care!
-		if ((left.declaredType instanceof TN4Classifier || left.declaredType instanceof TypeVariable) // <-- IDEBUG-838
-			&& left.typingStrategy === right.typingStrategy
-			&& STRUCTURAL_FIELD_INITIALIZER !== leftStrategy && STRUCTURAL_FIELD_INITIALIZER !== rightStrategy
+		// shortcut: keep in sync with Reducer#reduceStructuralTypeRef()
+		if (leftStrategy === rightStrategy
 			&& left.declaredType === right.declaredType
+			&& (left.declaredType instanceof TN4Classifier || left.declaredType instanceof TypeVariable) // <-- IDEBUG-838
 			&& left.structuralMembers.empty && right.structuralMembers.empty) {
-				
+			
 			if (!left.generic) {
 				return result(left, right, emptyList, emptyList);
 			} else if (left instanceof ParameterizedTypeRef && right instanceof ParameterizedTypeRef) {
@@ -94,13 +92,15 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 					for (var i = 0; typeArgsEqual && i < leftTypeArgs.size; i++) {
 						val leftTypeArg = leftTypeArgs.get(i);
 						val rightTypeArg = rightTypeArgs.get(i);
-						typeArgsEqual = typeArgsEqual
-							&& leftTypeArg.declaredType !== null
-							&& leftTypeArg.declaredType === rightTypeArg.declaredType;
+						
+						val variance = right.declaredType.getVarianceOfTypeVar(i);
+						val tempResult = tsh.checkTypeArgumentCompatibility(G, leftTypeArg, rightTypeArg, Optional.of(variance), false);
+		
+						if (tempResult.failure) {
+							return failure(left.typeRefAsString + " is not a structural subtype of " + right.typeRefAsString + " due to type argument incompatibility: " + tempResult.failureMessage);
+						}
 					}
-					if (typeArgsEqual) {
-						return result(left, right, emptyList, emptyList);
-					}
+					return result(left, right, emptyList, emptyList);
 				}
 			}
 		}
@@ -357,6 +357,13 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 							info.wrongMembers.add(keywordProvider.keyword(right, info.rightStrategy) + " failed: " + result.failureMessage);
 							return;
 						}
+					}
+				}
+				if (right instanceof TField) {
+					val leftOptionalStrategy = leftTypeRef.ASTNodeOptionalFieldStrategy;
+					if (leftOptionalStrategy === OptionalFieldStrategy.GETTERS_OPTIONAL) {
+						info.missingMembers.add("setter or field " + right.name);
+						return;
 					}
 				}
 

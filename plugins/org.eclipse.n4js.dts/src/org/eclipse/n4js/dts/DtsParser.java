@@ -148,6 +148,9 @@ public class DtsParser {
 
 		stats.time = System.currentTimeMillis() - millis;
 
+		// clear proxies that will be (re-)created by the AST builder below
+		resource.clearLazyProxyInformation();
+
 		// convert parse tree to AST
 		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, srcFolder, resource);
 		Script root = astBuilder.consume(stats.tree);

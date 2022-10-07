@@ -519,7 +519,7 @@ class Class42 {
 class Sub42 {
 	public set m(p : B) {}
 }
-// XPECT errors --> "Sub42 is not a structural subtype of ~Class42: missing field m." at "new Sub42()"
+// XPECT errors --> "Sub42 is not a structural subtype of ~Class42: missing setter or field m." at "new Sub42()"
 var v42 : ~Class42 = new Sub42();
 
 

@@ -20,7 +20,7 @@ class D {}
 
 let c: ~C;
 
-// XPECT errors --> "D is not a structural subtype of ~C: missing field field." at "new D()"
+// XPECT errors --> "D is not a structural subtype of ~C: missing setter or field field." at "new D()"
 c = new D(); // error: new expression but D is missing setter
 
 c.field = "hello";

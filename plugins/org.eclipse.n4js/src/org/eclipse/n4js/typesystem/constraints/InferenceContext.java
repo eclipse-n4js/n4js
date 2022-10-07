@@ -331,13 +331,29 @@ public final class InferenceContext {
 	}
 
 	/**
+	 * Add a type constraint at the specified index to this inference context. When done adding constraints, call
+	 * {@link #solve()}.
+	 */
+	public void addConstraint(int idx, TypeArgument left, TypeArgument right, Variance variance) {
+		addConstraint(idx, new TypeConstraint(left, right, variance));
+	}
+
+	/**
 	 * Add a type constraint to this inference context. When done adding constraints, call {@link #solve()}.
 	 */
 	public void addConstraint(TypeConstraint constraint) {
+		addConstraint(constraints.size(), constraint);
+	}
+
+	/**
+	 * Add a type constraint at the specified index to this inference context. When done adding constraints, call
+	 * {@link #solve()}.
+	 */
+	public void addConstraint(int idx, TypeConstraint constraint) {
 		if (isSolved) {
 			throw new IllegalStateException("may not add constraints after #solve() has been invoked");
 		}
-		constraints.add(constraint);
+		constraints.add(idx, constraint);
 	}
 
 	/**

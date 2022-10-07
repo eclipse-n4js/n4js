@@ -48,7 +48,7 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 	 * The result may be contained in another container, so clients may have to use Ecore2.cloneIfNecessary(EObject).
 	 */
 	def TypeRef createUnionType(RuleEnvironment G, TypeRef... elements) {
-		simplify(G, TypeUtils.createNonSimplifiedUnionType(elements));
+		simplify(G, TypeUtils.createNonSimplifiedUnionType(elements), true);
 	}
 
 	/**
@@ -56,7 +56,7 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 	 * The result may be contained in another container, so clients may have to use Ecore2.cloneIfNecessary(EObject).
 	 */
 	def TypeRef createIntersectionType(RuleEnvironment G, TypeRef... elements) {
-		simplify(G, TypeUtils.createNonSimplifiedIntersectionType(elements));
+		simplify(G, TypeUtils.createNonSimplifiedIntersectionType(elements), true);
 	}
 
 	/**
@@ -65,8 +65,8 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 	 * So clients need to clone the result if necessary.
 	 * @see [N4JS Spec], 4.13 Intersection Type
 	 */
-	def <T extends ComposedTypeRef> TypeRef simplify(RuleEnvironment G, T composedType) {
-		val List<TypeRef> typeRefs = getSimplifiedTypeRefs(G, composedType);
+	def <T extends ComposedTypeRef> TypeRef simplify(RuleEnvironment G, T composedType, boolean checkSubtypes) {
+		val List<TypeRef> typeRefs = getSimplifiedTypeRefs(G, composedType, checkSubtypes);
 		switch (typeRefs.size()) {
 			case 0:
 				return G.undefinedTypeRef
@@ -81,12 +81,15 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 		}
 	}
 
-	def private <T extends ComposedTypeRef> List<TypeRef> getSimplifiedTypeRefs(RuleEnvironment G, T composedType) {
+	def private <T extends ComposedTypeRef> List<TypeRef> getSimplifiedTypeRefs(RuleEnvironment G, T composedType, boolean checkSubtypes) {
 		if (composedType === null) {
 			return null;
 		}
 		val typeRefsFlattened = flattenComposedTypes(composedType.eClass, composedType);
 		val typeRefsTrimmed = removeDuplicateAndTrivialTypes(G, typeRefsFlattened, composedType);
+		if (!checkSubtypes) {
+			return typeRefsTrimmed;
+		}
 		val typeRefsSimplified = simplifyBasedOnSubtypeRelations(G, typeRefsTrimmed, composedType);
 		return typeRefsSimplified;
 	}
@@ -100,72 +103,104 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 	}
 
 	private def List<TypeRef> removeDuplicateAndTrivialTypes(RuleEnvironment G, Iterable<TypeRef> typeRefs, ComposedTypeRef composedType) {
-		// remove duplicates
-		val Set<TypeRef> set = new TreeSet<TypeRef>(typeCompareHelper.getTypeRefComparator);
-		set.addAll(typeRefs);
-
-		if (set.isEmpty) {
-			return Collections.emptyList();
-		} else if(set.size === 1) {
-			return Collections.singletonList(set.head);
-		}
-
-		set.remove(UNKNOWN_TYPE_REF);
-		if(set.size === 1) {
-			return Collections.singletonList(set.head);
-		}
-
 		// simplify cases related to the trivial types: any, Object, null, undefined
 		val anyTypeRef = G.anyTypeRef;
 		val objectTypeRef = G.objectTypeRef;
 		val nullTypeRef = G.nullTypeRef;
 		val undefinedTypeRef = G.undefinedTypeRef;
+		var haveAny = false;
+		var haveObject = false;
+		var haveNull = false;
+		var haveUndefined = false;
+		var haveUnknown = false;
 
-		val haveAny = set.remove(anyTypeRef);
-		val haveObject = set.remove(objectTypeRef);
-		val haveNull = set.remove(nullTypeRef);
-		val haveUndefined = set.remove(undefinedTypeRef);
-		val haveOthers = !set.isEmpty;
+		var haveNumeric = false;
+		var haveBoolean = false;
+		var haveString = false;
+
+		// remove duplicates but keep original order
+		val noDups = new ArrayList();
+		val noDupsWithoutObject = new ArrayList();
+		{
+			val Set<TypeRef> set = new TreeSet<TypeRef>(typeCompareHelper.getTypeRefComparator);
+			for (typeRef : typeRefs) {
+				if (!set.contains(typeRef)) {
+					val isAny = typeCompareHelper.isEqual(anyTypeRef, typeRef);
+					val isObject = typeCompareHelper.isEqual(objectTypeRef, typeRef);
+					val isNull = typeCompareHelper.isEqual(nullTypeRef, typeRef);
+					val isUndefined = typeCompareHelper.isEqual(undefinedTypeRef, typeRef);
+					val isUnknown = typeCompareHelper.isEqual(UNKNOWN_TYPE_REF, typeRef);
+					
+					val isNumeric = G.isNumeric(typeRef);
+					val isBoolean = G.isBoolean(typeRef);
+					val isString = G.isString(typeRef);
+					
+					if (isAny || isNull || isUndefined
+						|| (haveNumeric && isNumeric)
+						|| (haveBoolean && isBoolean)
+						|| (haveString && isString)
+					) {
+						// skip
+					} else {
+						set.add(typeRef);
+						noDups.add(typeRef);
+						if (!isObject) {
+							noDupsWithoutObject.add(typeRef);
+						}
+					}
+					
+					haveAny = haveAny || isAny;
+					haveObject = haveObject || isObject;
+					haveNull = haveNull || isNull;
+					haveUndefined = haveUndefined || isUndefined;
+					haveUnknown = haveUnknown || isUnknown;
+					haveNumeric = haveNumeric || isNumeric;
+					haveBoolean = haveBoolean || isBoolean;
+					haveString = haveString || isString;
+				}
+			}
+		}
+		val haveOthers = !noDupsWithoutObject.isEmpty;
 
 		if (composedType instanceof UnionTypeExpression) {
 			// in a union, subtypes of other elements can be thrown away
+//			if (haveUnknown) {
+//				return Collections.singletonList(UNKNOWN_TYPE_REF);
+//			} else
 			if (haveAny) {
 				return Collections.singletonList(anyTypeRef);
-			} else if (haveObject && !haveOthers) {
-				return Collections.singletonList(objectTypeRef);
 			} else if (haveOthers) {
 				// proceed with others below ...
+			} else if (haveObject) {
+				return Collections.singletonList(objectTypeRef);
 			} else if (haveNull) {
 				return Collections.singletonList(nullTypeRef);
 			} else if (haveUndefined) {
 				return Collections.singletonList(undefinedTypeRef);
 			} else {
-				throw new IllegalStateException(); // never get here because we returned early for set.isEmpty above
+				return Collections.emptyList();
 			}
 		} else {
 			// in an intersection, super types of other elements can be thrown away
 			if (haveUndefined) {
 				return Collections.singletonList(undefinedTypeRef);
-			} else if (haveNull && !haveOthers) {
-				return Collections.singletonList(nullTypeRef);
 			} else if (haveOthers) {
 				// proceed with others below ...
+			} else if (haveNull) {
+				return Collections.singletonList(nullTypeRef);
 			} else if (haveObject) {
 				return Collections.singletonList(objectTypeRef);
 			} else if (haveAny) {
 				return Collections.singletonList(anyTypeRef);
 			} else {
-				throw new IllegalStateException(); // never get here because we returned early for set.isEmpty above
+				return Collections.emptyList();
 			}
 		}
-
-		val List<TypeRef> typeRefsCleaned = new ArrayList<TypeRef>(set.size + 2);
-		for (e : set) {
+		
+		val List<TypeRef> typeRefsCleaned = new ArrayList<TypeRef>(noDups.size + 2);
+		for (e : noDups) {
 			val TypeRef cpy = TypeUtils.copyIfContained(e);
 			typeRefsCleaned.add(cpy);
-		}
-		if (haveObject) {
-			typeRefsCleaned.add(objectTypeRef);
 		}
 		// NOTE: no need to add 'any' or 'null'/'undefined' here, because, if they were present,
 		// they have either rendered all other typeRefs obsolete (and we returned early above) OR
@@ -188,17 +223,41 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 		if (typeRefs.size === 2) {
 			val fst = typeRefs.get(0);
 			val snd = typeRefs.get(1);
-			val isStructural = fst.isUseSiteStructuralTyping || fst.isDefSiteStructuralTyping
-				|| snd.isUseSiteStructuralTyping || snd.isDefSiteStructuralTyping;
-			if (!isStructural) {
-				if (ts.subtypeSucceeded(G, fst, snd)) {
+
+			val isFstStructural = fst.isUseSiteStructuralTyping || fst.isDefSiteStructuralTyping;
+			val isSndStructural = snd.isUseSiteStructuralTyping || snd.isDefSiteStructuralTyping;
+			val doSimplify = !isFstStructural && !isSndStructural;
+			
+			if (doSimplify) {
+				if (G.isAnyDynamic(fst)) {
+					if (composedType instanceof UnionTypeExpression) {
+						return Collections.singletonList(fst); // chose any+
+					} else {
+						return Collections.singletonList(snd); // chose more concrete type
+					}
+				}
+				if (G.isAnyDynamic(snd)) {
+					if (composedType instanceof UnionTypeExpression) {
+						return Collections.singletonList(snd); // chose any+
+					} else {
+						return Collections.singletonList(fst); // chose more concrete type
+					}
+				}
+				
+				val fstIsSubtype = ts.subtypeSucceeded(G, fst, snd);
+				val sndIsSubtype = ts.subtypeSucceeded(G, snd, fst);
+				if (fstIsSubtype && sndIsSubtype) {
+					// int/number, and others?
+					return Collections.singletonList(fst);
+				}
+				if (fstIsSubtype) {
 					if (composedType instanceof UnionTypeExpression) {
 						return Collections.singletonList(snd); // subtype can be thrown away
 					} else {
 						return Collections.singletonList(fst); // super type can be thrown away
 					}
 				}
-				if (ts.subtypeSucceeded(G, snd, fst)) {
+				if (sndIsSubtype) {
 					if (composedType instanceof UnionTypeExpression) {
 						return Collections.singletonList(fst); // subtype can be thrown away
 					} else {
