@@ -35,7 +35,7 @@ let result0: Ref<?> = refC;
 
 let ref1: RefObject<C>;
 let ref2: Ref<?>;
-// XPECT errors ---
+// GH-2437 XPECT FIXME errors ---
 // "RefObject<C> is not a subtype of Ref<TF>." at "ref1"
 // "Ref<?> is not a subtype of Ref<TF>." at "ref2"
 // ---
@@ -46,7 +46,7 @@ combineRef(ref1, ref2 as Ref<C>); // a cast should fix it
 
 // XPECT noerrors -->
 let result1 = combineRef(ref1, ref2 as Ref<C>);
-// XPECT typeWithAliasResolution of 'result1' --> Ref<C> <=> union{{function(C):void},RefObject<C>}
+// GH-2437 XPECT FIXME typeWithAliasResolution of 'result1' --> Ref<C> <=> union{{function(C):void},RefObject<C>}
 result1;
 
 let result2: Ref<?>;
