@@ -245,11 +245,11 @@ class ~SA { public f : string}
 		let o : ~Object with { f : string } = 3
 	}
 	{
-		// Object !<: ~Object with additional members XPECT issues --> "Object is not a structural subtype of ~Object with { f: string }: missing structural field f." at "new Object()"
+		// Object !<: ~Object with additional members XPECT issues --> "Object is not a structural subtype of ~Object with { f: string }: missing setter or field f." at "new Object()"
 		let o : ~Object with { f : string } = new Object();
 	}
 	{
-		// N4Object !<: ~Object with additional members XPECT issues --> "N4Object is not a structural subtype of ~Object with { f: string }: missing structural field f." at "new N4Object()"
+		// N4Object !<: ~Object with additional members XPECT issues --> "N4Object is not a structural subtype of ~Object with { f: string }: missing setter or field f." at "new N4Object()"
 		let o : ~Object with { f : string } = new N4Object();
 	}
 	{

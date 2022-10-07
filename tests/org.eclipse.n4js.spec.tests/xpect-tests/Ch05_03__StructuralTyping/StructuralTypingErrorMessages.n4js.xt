@@ -49,7 +49,7 @@ function fun(param : ~~A) {}
 // XPECT errors --> "B is not a structural subtype of ~~A: missing field age." at "b"
 fun(b);
 
-// XPECT errors --> "B is not a structural subtype of ~~A: missing field age." at "new B()"
+// XPECT errors --> "B is not a structural subtype of ~~A: missing setter or field age." at "new B()"
 fun(new B());
 
 

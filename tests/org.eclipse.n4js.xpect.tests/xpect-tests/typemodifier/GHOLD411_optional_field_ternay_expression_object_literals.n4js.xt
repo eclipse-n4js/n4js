@@ -46,6 +46,10 @@ var condExprVar = b? jvar : jvar;
 // XPECT errors --> "J is not a structural subtype of I: missing field optional." at "b ? condExprVar : condExprVar"
 i = b ? condExprVar : condExprVar;
 
+
+// works but actually: no transitivity desired via several const variables in use case "object literal":
+
 const condExprConst = b? {} : {};
 // XPECT noerrors
 i = b ? condExprConst : condExprConst;
+
