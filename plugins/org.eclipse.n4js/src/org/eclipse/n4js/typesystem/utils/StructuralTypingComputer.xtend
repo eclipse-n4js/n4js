@@ -87,7 +87,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 			} else if (left instanceof ParameterizedTypeRef && right instanceof ParameterizedTypeRef) {
 				val leftTypeArgs = left.typeArgsWithDefaults;
 				val rightTypeArgs = right.typeArgsWithDefaults;
-				if (leftTypeArgs.size === rightTypeArgs.size) {
+				if (leftTypeArgs.size === rightTypeArgs.size && leftTypeArgs.size === right.declaredType.typeVars.size) {
 					var typeArgsEqual = true;
 					for (var i = 0; typeArgsEqual && i < leftTypeArgs.size; i++) {
 						val leftTypeArg = leftTypeArgs.get(i);
