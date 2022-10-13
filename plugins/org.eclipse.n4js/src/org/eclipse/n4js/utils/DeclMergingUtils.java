@@ -134,7 +134,7 @@ public class DeclMergingUtils {
 		if (tModule == null) {
 			return false;
 		}
-		URI uri = EcoreUtil.getURI(eobj);
+		URI uri = URIUtils.getURI(eobj);
 		if (URIUtils.isVirtualResourceURI(uri)) {
 			return AnnotationDefinition.MODULE_AUGMENTATION.hasAnnotation(tModule);
 		} else {
