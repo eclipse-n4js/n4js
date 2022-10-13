@@ -266,7 +266,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	private ASTMetaInfoCache astMetaInfoCache;
 
 	/**
-	 * Tells whether an error/exception occurred during the last loading attempt.
+	 * True iff an error/exception occurred during the last loading attempt.
 	 */
 	private boolean isLoadedWithFailure;
 
