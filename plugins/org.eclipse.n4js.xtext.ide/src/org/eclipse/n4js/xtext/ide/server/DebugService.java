@@ -249,8 +249,12 @@ public interface DebugService extends DebugEndpointDefinition {
 					return new MessageConsumer() {
 						@Override
 						public void consume(Message msg) throws MessageIssueException, JsonRpcException {
-							onLspMessage(msg);
-							consumer.consume(msg);
+							try {
+								onLspMessage(msg);
+								consumer.consume(msg);
+							} catch (Throwable t) {
+								// ignore. Can happen after restart.
+							}
 						}
 					};
 				};
