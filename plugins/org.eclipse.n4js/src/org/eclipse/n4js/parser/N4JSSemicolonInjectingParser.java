@@ -22,12 +22,15 @@ import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.parser.antlr.XtextTokenStream;
 
+import com.google.inject.Singleton;
+
 /**
  * <p>
  * This specialization of the {@link N4JSParser} changes the handling of hidden tokens. Effectively the changeable
  * hidden tokens are disabled in favor of automatic semicolon injection.
  * </p>
  */
+@Singleton
 public class N4JSSemicolonInjectingParser extends N4JSParser {
 
 	/**
