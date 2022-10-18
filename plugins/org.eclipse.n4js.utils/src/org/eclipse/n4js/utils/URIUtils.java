@@ -101,7 +101,7 @@ public class URIUtils {
 		String ext1 = lastSegment.substring(firstIdx);
 		if (extensionPrefixes.containsKey(ext1)) {
 			int scndIdx = firstIdx - 2;
-			for (int idx = scndIdx; idx > 1; idx--) {
+			for (int idx = scndIdx; idx > 0; idx--) {
 				if (lastSegment.charAt(idx) == '.') {
 					if (extensionPrefixes.get(ext1).contains(lastSegment.substring(idx + 1, firstIdx - 1))) {
 						firstIdx = idx + 1;
