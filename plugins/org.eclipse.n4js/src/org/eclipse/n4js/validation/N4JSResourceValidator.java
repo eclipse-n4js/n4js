@@ -50,6 +50,7 @@ import org.eclipse.xtext.validation.Issue.IssueImpl;
 import org.eclipse.xtext.validation.ResourceValidatorImpl;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * A resource validator that will only validate the first element directly contained in the resource if the resource is
@@ -60,6 +61,7 @@ import com.google.inject.Inject;
  * It will not create issues for resources which are contained in folders that are filtered by module filters in the
  * manifest.
  */
+@Singleton
 public class N4JSResourceValidator extends ResourceValidatorImpl {
 
 	@Inject
