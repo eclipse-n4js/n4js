@@ -85,7 +85,13 @@ public class URIUtils {
 
 	static private int fileExtensionIndex(URI uri) {
 		String lastSegment = uri.lastSegment();
+		if (lastSegment == null) {
+			return -1;
+		}
 		int firstIdx = lastSegment.length() - 2;
+		if (firstIdx < 0) {
+			return -1;
+		}
 		for (int idx = firstIdx; idx > 0; idx--) {
 			if (lastSegment.charAt(idx) == '.') {
 				firstIdx = idx + 1;
