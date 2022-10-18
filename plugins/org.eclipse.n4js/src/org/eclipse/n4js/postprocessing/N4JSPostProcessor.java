@@ -25,7 +25,7 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.PostProcessingAwareResource;
 import org.eclipse.n4js.resource.PostProcessingAwareResource.PostProcessor;
-import org.eclipse.n4js.scoping.N4JSScopeProvider;
+import org.eclipse.n4js.scoping.N4JSScopeProviderLocalOnly;
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef;
 import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.ElementExportDefinition;
@@ -70,7 +70,7 @@ public class N4JSPostProcessor implements PostProcessor {
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
 	@Inject
-	private N4JSScopeProvider n4jsScopeProvider;
+	private N4JSScopeProviderLocalOnly n4jsScopeProviderLocalOnly;
 
 	@Override
 	public boolean expectsLazyLinkResolution() {
@@ -125,7 +125,7 @@ public class N4JSPostProcessor implements PostProcessor {
 		// Deactivate cross file resolution (of IdentifierRefs since no other proxies are resolved here).
 		// Reason is that flow analysis shall not trigger resolution of other resources.
 		// Note that flow analysis is intra-procedural only and does not rely on information of other resources.
-		try (TameAutoClosable tac = n4jsScopeProvider.newCrossFileResolutionSuppressor()) {
+		try (TameAutoClosable tac = n4jsScopeProviderLocalOnly.newCrossFileResolutionSuppressor()) {
 			// step 1: eager resolution of selected proxies (iff they are local, i.e. point to a target in 'resource')
 			resolveLocalIdentifierRefs(resource);
 			resolveExportableElementOfExportDefinitions(resource);
@@ -235,6 +235,9 @@ public class N4JSPostProcessor implements PostProcessor {
 			if (!toExpose.isEmpty()) {
 				EcoreUtilN4.doWithDeliver(false, () -> {
 					namespace.getExposedLocalVariables().addAll(toExpose);
+					for (TVariable tVar : toExpose) {
+						((N4JSResource) module.eResource()).clearUriFragmentCacheFor(tVar);
+					}
 				}, namespace, module);
 				toExpose.clear();
 			}
@@ -295,6 +298,11 @@ public class N4JSPostProcessor implements PostProcessor {
 			final TModule module = (TModule) root.eContainer();
 			EcoreUtilN4.doWithDeliver(false, () -> {
 				module.getExposedInternalTypes().add((Type) root);
+				((N4JSResource) module.eResource()).clearUriFragmentCacheFor(root);
+
+				for (EObject internType : module.getInternalTypes()) {
+					((N4JSResource) module.eResource()).clearUriFragmentCacheFor(internType);
+				}
 			}, module, root); // note: root already contained in resource, so suppress notifications also in root!
 
 			// everything referenced by the type we just moved to 'exposedInternalTypes' has to be exposed as well
