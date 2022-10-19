@@ -58,7 +58,7 @@ public class URIUtils {
 	 *
 	 * Better performance than {@link EcoreUtil#getURI(EObject)}
 	 */
-	static public URI getURI(EObject obj) {
+	static public URI getResourceURI(EObject obj) {
 		URI proxyURI = ((InternalEObject) obj).eProxyURI();
 		if (proxyURI != null) {
 			return proxyURI;
