@@ -266,7 +266,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	private ASTMetaInfoCache astMetaInfoCache;
 
 	/**
-	 * Tells whether an error/exception occurred during the last loading attempt.
+	 * True iff an error/exception occurred during the last loading attempt.
 	 */
 	private boolean isLoadedWithFailure;
 
@@ -302,6 +302,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	@Inject
 	private N4JSLanguageHelper langHelper;
+
+	@Inject
+	private N4JSResourceDescriptionManager resourceDescriptionManager;
 
 	/*
 	 * Even though the constructor is empty, it simplifies debugging (allows to set a breakpoint) thus we keep it here.
@@ -1008,7 +1011,20 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			setModified(false);
 			fullyInitialized = contents.size() > 1;
 		} else {
-			superLoad(options);
+
+			boolean canLoadFromDescription = canLoadFromDescriptionHelper.canLoadFromDescription(uri,
+					getResourceSet());
+			ResourceSet resSet = getResourceSet();
+			IResourceDescriptions index = workspaceAccess.getXtextIndex(resSet).get();
+			if (canLoadFromDescription && resourceDescriptionManager.hasResourceDescription(this)) {
+				IResourceDescription resDesc = index.getResourceDescription(uri);
+				workspaceAccess.loadModuleFromIndex(resSet, resDesc, false);
+				if (!isLoaded) {
+					superLoad(options);
+				}
+			} else {
+				superLoad(options);
+			}
 		}
 	}
 
@@ -1187,14 +1203,18 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 */
 	@Override
 	public String getURIFragment(EObject eObject) {
+		String uriFragment;
 		if (eDeliver()) {
 			if (contents != null && !contents.isEmpty() && isASTProxy(contents.basicGet(0))) {
-				return defaultGetURIFragment(eObject);
+				uriFragment = defaultGetURIFragment(eObject);
+			} else {
+				uriFragment = super.getURIFragment(eObject);
 			}
-			return super.getURIFragment(eObject);
 		} else {
-			return defaultGetURIFragment(eObject);
+			uriFragment = defaultGetURIFragment(eObject);
 		}
+
+		return uriFragment;
 	}
 
 	/**
@@ -1303,6 +1323,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		return EcoreUtil.resolve(proxy, this);
 	}
 
+	static int unresolvedProxies = 0;
+
 	@Override
 	public synchronized EObject getEObject(String uriFragment) {
 		if (isLoaded && isLoadedWithFailure) {
@@ -1323,6 +1345,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				}
 			}
 		}
+
 		EObject result;
 		try {
 			result = super.getEObject(uriFragment);
@@ -1346,6 +1369,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			performPostProcessing();
 			result = super.getEObject(uriFragment);
 		}
+
 		return result;
 	}
 

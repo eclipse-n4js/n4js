@@ -24,7 +24,10 @@ import java.util.regex.Pattern;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * Utilities for different URI types
@@ -50,20 +53,64 @@ public class URIUtils {
 		}
 	}
 
+	/**
+	 * Returns the {@link URI} for the given {@link EObject}. Also works for proxies. Can have a fragment.
+	 *
+	 * Better performance than {@link EcoreUtil#getURI(EObject)}
+	 */
+	static public URI getResourceURI(EObject obj) {
+		URI proxyURI = ((InternalEObject) obj).eProxyURI();
+		if (proxyURI != null) {
+			return proxyURI;
+		}
+		Resource resource = obj.eResource();
+		if (resource != null) {
+			return resource.getURI();
+		}
+		return null;
+	}
+
 	/** Fix {@link URI#fileExtension()} w.r.t. unsupported d.ts file extension that includes dots */
 	static public String fileExtension(URI uri) {
 		if (uri == null) {
 			return null;
 		}
-		String fileExtension = uri.fileExtension();
-		if (fileExtension != null && extensionPrefixes.containsKey(fileExtension)) {
-			URI trimmedUri = uri.trimFileExtension();
-			String fileExtensionPrefix = trimmedUri.fileExtension();
-			if (fileExtensionPrefix != null && extensionPrefixes.get(fileExtension).contains(fileExtensionPrefix)) {
-				return fileExtensionPrefix + "." + fileExtension;
+		int firstIdx = fileExtensionIndex(uri);
+		if (firstIdx < 0) {
+			return "";
+		}
+		String ext = uri.lastSegment().substring(firstIdx);
+		return ext;
+	}
+
+	static private int fileExtensionIndex(URI uri) {
+		String lastSegment = uri.lastSegment();
+		if (lastSegment == null) {
+			return -1;
+		}
+		int firstIdx = lastSegment.length() - 2;
+		if (firstIdx < 0) {
+			return -1;
+		}
+		for (int idx = firstIdx; idx > 0; idx--) {
+			if (lastSegment.charAt(idx) == '.') {
+				firstIdx = idx + 1;
+				break;
 			}
 		}
-		return fileExtension;
+		String ext1 = lastSegment.substring(firstIdx);
+		if (extensionPrefixes.containsKey(ext1)) {
+			int scndIdx = firstIdx - 2;
+			for (int idx = scndIdx; idx > 0; idx--) {
+				if (lastSegment.charAt(idx) == '.') {
+					if (extensionPrefixes.get(ext1).contains(lastSegment.substring(idx + 1, firstIdx - 1))) {
+						firstIdx = idx + 1;
+					}
+					break;
+				}
+			}
+		}
+		return firstIdx;
 	}
 
 	/** Fix {@link URI#trimFileExtension()} w.r.t. unsupported d.ts file extension that includes dots */

@@ -37,8 +37,10 @@ import org.eclipse.xtext.validation.impl.ConcreteSyntaxEValidator;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /** Customized validator class to validate Semver objects */
+@Singleton
 public class SemverResourceValidator extends ResourceValidatorImpl {
 	@Inject
 	private Diagnostician diagnostician;

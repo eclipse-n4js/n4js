@@ -36,6 +36,7 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionManager;
 import org.eclipse.xtext.resource.impl.EObjectDescriptionLookUp;
 
 import com.google.inject.Inject;
@@ -64,6 +65,18 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 
 	@Inject
 	private FileExtensionTypeHelper fileExtensionTypeHelper;
+
+	@Inject
+	private N4JSCache cache;
+
+	// copied from superclass
+	private static final String CACHE_KEY = DefaultResourceDescriptionManager.class.getName()
+			+ "#getResourceDescription";
+
+	/** Returns true iff a resource descriptions exists already for the given resource */
+	public boolean hasResourceDescription(final Resource resource) {
+		return cache.contains(CACHE_KEY, resource);
+	}
 
 	@Override
 	protected IResourceDescription createResourceDescription(final Resource resource,

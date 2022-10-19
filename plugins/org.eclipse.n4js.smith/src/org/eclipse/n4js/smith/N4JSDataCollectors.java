@@ -64,6 +64,8 @@ public final class N4JSDataCollectors {
 
 	public static final DataCollector dcCliClean = create("n4jsc clean");
 
+	public static final DataCollector dcTemp = create("TEMP");
+
 	public static DataCollector createDataCollectorForCheckMethod(String methodName) {
 		final DataCollector parent;
 		if (N4JSDataCollectors.dcValidationsPackageJson.hasActiveMeasurement()) {

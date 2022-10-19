@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.ModuleRef;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.postprocessing.N4JSPostProcessor;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
@@ -138,7 +139,9 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 	 */
 	@Override
 	protected void unloadResource(URI uri) {
-		if (!N4Scheme.isN4Scheme(uri)) {
+		if (N4Scheme.isN4Scheme(uri)) {
+			// ignore
+		} else {
 			super.unloadResource(uri);
 		}
 	}
@@ -250,10 +253,10 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 				return result;
 			}
 
-			for (EObject eobj : resource.getContents()) {
-				if (eobj instanceof Script) {
-					Script script = (Script) eobj;
-
+			if (resource instanceof N4JSResource) {
+				N4JSResource n4res = (N4JSResource) resource;
+				Script script = n4res.getScript();
+				if (script != null && !script.eIsProxy()) {
 					for (EObject topLevelStmt : script.getScriptElements()) {
 						if (topLevelStmt instanceof ModuleRef) {
 							ModuleRef impExpDecl = (ModuleRef) topLevelStmt;

@@ -12,6 +12,7 @@ package org.eclipse.n4js.scoping
 
 import com.google.common.base.Optional
 import com.google.inject.Inject
+import com.google.inject.Singleton
 import com.google.inject.name.Named
 import java.util.Collections
 import java.util.Comparator
@@ -97,7 +98,6 @@ import org.eclipse.n4js.utils.DeclMergingUtils
 import org.eclipse.n4js.utils.EObjectDescriptionHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.ResourceType
-import org.eclipse.n4js.utils.TameAutoClosable
 import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.workspace.WorkspaceAccess
@@ -121,6 +121,7 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
  * see : http://www.eclipse.org/Xtext/documentation/latest/xtext.html#scoping
  * on how and when to use it
  */
+@Singleton
 class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScopeProvider, IContentAssistScopeProvider {
 
 	public final static String NAMED_DELEGATE = "org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider.delegate";
@@ -169,25 +170,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject DeclMergingHelper declMergingHelper;
 
 
-	/** True: Proxies of IdentifierRefs are only resolved within the resource. Otherwise, the proxy is returned. */
-	private boolean suppressCrossFileResolutionOfIdentifierRef = false;
-
-
-	public def TameAutoClosable newCrossFileResolutionSuppressor() {
-		val TameAutoClosable tac = new TameAutoClosable() {
-			private boolean tmpSuppressCrossFileResolutionOfIdentifierRef = init();
-			private def boolean init() {
-				this.tmpSuppressCrossFileResolutionOfIdentifierRef = suppressCrossFileResolutionOfIdentifierRef;
-				suppressCrossFileResolutionOfIdentifierRef = true;
-				return tmpSuppressCrossFileResolutionOfIdentifierRef;
-			}	
-			override close() {
-				suppressCrossFileResolutionOfIdentifierRef = tmpSuppressCrossFileResolutionOfIdentifierRef;
-			}
-		};
-		return tac;
+	protected def boolean isSuppressCrossFileResolutionOfIdentifierRefs() {
+		return false;
 	}
-
 
 	/**
 	 * Delegates to {@link N4JSImportedNamespaceAwareLocalScopeProvider#getScope(EObject, EReference)}, which in turn
@@ -447,7 +432,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			val grandParent = parent.eContainer;
 			if (grandParent instanceof ExportDeclaration) {
 				if (grandParent.isReexport()) {
-					if (suppressCrossFileResolutionOfIdentifierRef) {
+					if (suppressCrossFileResolutionOfIdentifierRefs) {
 						return IScope.NULLSCOPE;
 					}
 					return scope_ImportedElement(parent, ref);
@@ -514,7 +499,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		collectLexialEnvironmentsScopeLists(vee, scopeLists);
 
 		var IScope scope;
-		if (suppressCrossFileResolutionOfIdentifierRef) {
+		if (suppressCrossFileResolutionOfIdentifierRefs) {
 			// Suppressing cross-file resolution is necessary for the CFG/DFG analysis
 			// triggered in N4JSPostProcessor#postProcessN4JSResource(...).
 			scope = IScope.NULLSCOPE;

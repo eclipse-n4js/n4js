@@ -27,7 +27,10 @@ import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.util.ReplaceRegion;
 import org.eclipse.xtext.util.Strings;
 
+import com.google.inject.Singleton;
+
 /** Serializes Semver elements */
+@Singleton
 public class SemverSerializer implements ISerializer {
 
 	/** @return string representation of {@link URLVersionRequirement} */

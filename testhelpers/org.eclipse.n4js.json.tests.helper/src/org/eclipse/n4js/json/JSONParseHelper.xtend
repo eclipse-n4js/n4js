@@ -10,14 +10,17 @@
  */
 package org.eclipse.n4js.json
 
+import com.google.inject.Singleton
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.xtext.resource.XtextSyntaxDiagnostic
 import org.eclipse.xtext.testing.util.ParseHelper
+
 import static org.junit.Assert.*
 
 /**
  * A parse helper for JSON parsing tests.
  */
+ @Singleton
 class JSONParseHelper extends ParseHelper<JSONDocument> {
 	/** 
 	 * Asserts that the given {@code json} character sequence can be parsed correctly. Returns the

@@ -92,10 +92,6 @@ public class XStatefulIncrementalBuilder {
 		List<IResourceDescription.Delta> allProcessedDeltas = new ArrayList<>();
 
 		try {
-			this.request = initializeBuildRequest(this.request, context);
-
-			XSource2GeneratedMapping newSource2GeneratedMapping = request.getFileMappings();
-
 			Set<URI> unloaded = new HashSet<>();
 			for (URI deleted : request.getDeletedFiles()) {
 				if (unloaded.add(deleted)) {
@@ -107,6 +103,14 @@ public class XStatefulIncrementalBuilder {
 					unloadResource(dirty);
 				}
 			}
+			this.request = initializeBuildRequest(this.request, context);
+			for (URI dirty : request.getDirtyFiles()) {
+				if (unloaded.add(dirty)) {
+					unloadResource(dirty);
+				}
+			}
+
+			XSource2GeneratedMapping newSource2GeneratedMapping = request.getFileMappings();
 
 			List<Delta> allProcessedAndExternalDeltas = new ArrayList<>(request.getExternalDeltas());
 

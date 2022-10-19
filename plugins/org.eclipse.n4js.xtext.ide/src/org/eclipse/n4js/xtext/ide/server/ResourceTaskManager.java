@@ -315,12 +315,15 @@ public class ResourceTaskManager {
 			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
 		Object queueId = getQueueIdForContext(rtc.getURI(), rtc.isTemporary());
+		if (LOG_RESOURCE_TASK_EXECUTION) {
+			System.out.println("===> queuing: " + description + " " + rtc.getURI().toFileString());
+		}
 		return queuedExecutorService.submit(queueId, description, ci -> {
 
 			final long start;
 			if (LOG_RESOURCE_TASK_EXECUTION) {
 				start = System.currentTimeMillis();
-				System.out.println("===> starting: " + description);
+				System.out.println("===> starting: " + description + " " + rtc.getURI().toFileString());
 			}
 
 			try {
@@ -333,7 +336,8 @@ public class ResourceTaskManager {
 
 				if (LOG_RESOURCE_TASK_EXECUTION) {
 					long elapsed = System.currentTimeMillis() - start;
-					System.out.println("===> done: " + description + " (after " + elapsed + " ms)");
+					System.out.println(
+							"===> done: " + description + " (after " + elapsed + " ms) " + rtc.getURI().toFileString());
 				}
 
 				return result;
@@ -342,7 +346,7 @@ public class ResourceTaskManager {
 				if (LOG_RESOURCE_TASK_EXECUTION) {
 					long elapsed = System.currentTimeMillis() - start;
 					System.out.println("===> ABORTED with " + th.getClass().getSimpleName() + ": " + description
-							+ " (after " + elapsed + " ms)");
+							+ " (after " + elapsed + " ms) " + rtc.getURI().toFileString());
 				}
 				throw th;
 			} finally {

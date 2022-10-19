@@ -45,9 +45,7 @@ class LocallyKnownTypesScopingHelper {
 	@Inject
 	ScopeSnapshotHelper scopeSnapshotHelper
 
-	/**
-	 * Returns the type itself and type variables in case the type is generic.
-	 */
+	/** Returns the type itself and type variables in case the type is generic. */
 	def IScope scopeWithTypeAndItsTypeVariables(IScope parent, Type type, boolean staticAccess) {
 		var IScope result = parent;
 		if (type !== null) {
@@ -76,9 +74,7 @@ class LocallyKnownTypesScopingHelper {
 		return result;
 	}
 
-	/**
-	 * Returns the type variables if the TStructMethod is generic.
-	 */
+	/** Returns the type variables if the TStructMethod is generic. */
 	def IScope scopeWithTypeVarsOfTStructMethod(IScope parent, TStructMethod m) {
 		val mDef = m.definedMember
 		if (mDef instanceof TStructMethod) {
@@ -89,9 +85,7 @@ class LocallyKnownTypesScopingHelper {
 		return parent;
 	}
 
-	/**
-	 * Returns the type variables if the function type expression is generic.
-	 */
+	/** Returns the type variables if the function type expression is generic. */
 	def IScope scopeWithTypeVarsOfFunctionTypeExpression(IScope parent, FunctionTypeExpression funTypeExpr) {
 		if (funTypeExpr !== null && funTypeExpr.generic) {
 			return scopeSnapshotHelper.scopeForEObjects("scopeWithTypeVarsOfFunctionTypeExpression", funTypeExpr, parent, funTypeExpr.typeVars);
@@ -99,9 +93,7 @@ class LocallyKnownTypesScopingHelper {
 		return parent;
 	}
 
-	/**
-	 * Returns scope with locally known types and (as parent) import scope; the result is cached.
-	 */
+	/** Returns scope with locally known types and (as parent) import scope; the result is cached. */
 	def IScope scopeWithLocallyDeclaredElems(Script script, Supplier<IScope> parentSupplier, boolean onlyNamespacelikes) {
 		return cache.get(script -> 'locallyKnownTypes_'+String.valueOf(onlyNamespacelikes), script.eResource) [|
 			// all types in the index:
@@ -122,7 +114,9 @@ class LocallyKnownTypesScopingHelper {
 	
 	/** Returns scope with locally declared types (without import scope). */
 	def IScope scopeWithLocallyDeclaredElems(N4NamespaceDeclaration namespace, IScope parent, boolean onlyNamespacelikes) {
-		return scopeWithLocallyDeclaredElems(namespace.definedType as AbstractNamespace, namespace, parent, onlyNamespacelikes);
+		return cache.get(namespace -> 'scopeWithLocallyDeclaredElems_'+String.valueOf(onlyNamespacelikes), namespace.eResource) [|
+			return scopeWithLocallyDeclaredElems(namespace.definedType as AbstractNamespace, namespace, parent, onlyNamespacelikes);
+		];
 	}
 	
 	/** Returns scope with locally declared types (without import scope). */
@@ -130,9 +124,7 @@ class LocallyKnownTypesScopingHelper {
 		return scopeWithLocallyDeclaredElems(namespace, namespace, parent, onlyNamespacelikes);
 	}
 	
-	/**
-	 * Returns scope with locally declared types (without import scope).
-	 */
+	/** Returns scope with locally declared types (without import scope). */
 	def private IScope scopeWithLocallyDeclaredElems(AbstractNamespace ans, EObject context, IScope parent, boolean onlyNamespacelikes) {
 		if (ans === null || ans.eIsProxy) {
 			return parent;
