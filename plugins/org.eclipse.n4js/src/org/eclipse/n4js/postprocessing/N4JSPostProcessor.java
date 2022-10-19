@@ -235,9 +235,6 @@ public class N4JSPostProcessor implements PostProcessor {
 			if (!toExpose.isEmpty()) {
 				EcoreUtilN4.doWithDeliver(false, () -> {
 					namespace.getExposedLocalVariables().addAll(toExpose);
-					for (TVariable tVar : toExpose) {
-						((N4JSResource) module.eResource()).clearUriFragmentCacheFor(tVar);
-					}
 				}, namespace, module);
 				toExpose.clear();
 			}
@@ -298,11 +295,6 @@ public class N4JSPostProcessor implements PostProcessor {
 			final TModule module = (TModule) root.eContainer();
 			EcoreUtilN4.doWithDeliver(false, () -> {
 				module.getExposedInternalTypes().add((Type) root);
-				((N4JSResource) module.eResource()).clearUriFragmentCacheFor(root);
-
-				for (EObject internType : module.getInternalTypes()) {
-					((N4JSResource) module.eResource()).clearUriFragmentCacheFor(internType);
-				}
 			}, module, root); // note: root already contained in resource, so suppress notifications also in root!
 
 			// everything referenced by the type we just moved to 'exposedInternalTypes' has to be exposed as well

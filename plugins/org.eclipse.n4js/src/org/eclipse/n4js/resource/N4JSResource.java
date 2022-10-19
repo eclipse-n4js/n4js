@@ -114,8 +114,6 @@ import org.eclipse.xtext.util.Triple;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.google.common.io.CharStreams;
 import com.google.inject.Inject;
 
@@ -1199,20 +1197,12 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		}
 	}
 
-	BiMap<EObject, String> allEObjects = HashBiMap.create();
-	long count1 = 0;
-
 	/**
 	 * If this resource contains an AST proxy a custom URI fragment calculation is provided. This prevents registering
 	 * an adapter that later would trigger loading the resource, which we do not want.
 	 */
 	@Override
 	public String getURIFragment(EObject eObject) {
-		String cached = allEObjects.get(eObject);
-		if (cached != null) {
-			return cached;
-		}
-
 		String uriFragment;
 		if (eDeliver()) {
 			if (contents != null && !contents.isEmpty() && isASTProxy(contents.basicGet(0))) {
@@ -1224,27 +1214,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			uriFragment = defaultGetURIFragment(eObject);
 		}
 
-		if (allEObjects.containsValue(uriFragment)) {
-			allEObjects.inverse().remove(uriFragment);
-		}
-
-		if (allEObjects.containsKey(eObject)) {
-			if (!Objects.equals(allEObjects.get(eObject), uriFragment)) {
-				System.out.println("change from " + allEObjects.get(eObject) + " to " + uriFragment);
-				allEObjects.put(eObject, uriFragment);
-			}
-		} else {
-			allEObjects.put(eObject, uriFragment);
-		}
-		// count1++;
-		// float ratio = ((float) count1) / ((float) allEObjects.size());
-		// System.out.println(ratio);
-
 		return uriFragment;
-	}
-
-	public void clearUriFragmentCacheFor(EObject eObject) {
-		allEObjects.remove(eObject);
 	}
 
 	/**
@@ -1357,11 +1327,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	@Override
 	public synchronized EObject getEObject(String uriFragment) {
-		EObject cached = allEObjects.inverse().get(uriFragment);
-		if (cached != null && !cached.eIsProxy()) {
-			return cached;
-		}
-
 		if (isLoaded && isLoadedWithFailure) {
 			// an exception did occur while this resource was loaded, e.g. file not found (such a resource is in an
 			// invalid state and trying to look-up an EObject might make us run into an arbitrary exception due to some
@@ -1381,17 +1346,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			}
 		}
 
-		boolean doMeasurement = uriFragment.startsWith("|");
 		EObject result;
 		try {
-			Measurement m = null;
-			if (doMeasurement) {
-				m = N4JSDataCollectors.dcTemp.getMeasurementIfInactive();
-			}
 			result = super.getEObject(uriFragment);
-			if (doMeasurement) {
-				m.close();
-			}
 		} catch (Throwable th) {
 			// GH-2002: TEMPORARY DEBUG LOGGING
 			// The logging in LazyLinkingResource#getEObject(String) does not emit the stack trace of the caught
@@ -1412,19 +1369,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			performPostProcessing();
 			result = super.getEObject(uriFragment);
 		}
-		if (cached != null && !cached.eIsProxy() && result != cached) {
-			System.out.println("!");
-		}
-		if (cached == null && result != null && !result.eIsProxy() && uriFragment.startsWith("/")) {
-			allEObjects.put(result, uriFragment);
-		}
-		if (result != null && !uriFragment.startsWith("/")) {
-			String uriFragment2 = getURIFragment(result);
-			// System.out.println();
-		}
-		if (result != null && result.eIsProxy()) {
-			// System.out.println(++unresolvedProxies);
-		}
+
 		return result;
 	}
 
