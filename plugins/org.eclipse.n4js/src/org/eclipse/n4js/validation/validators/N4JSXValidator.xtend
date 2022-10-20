@@ -25,6 +25,7 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.tooling.react.ReactHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
@@ -147,10 +148,11 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 	def public void checkReactElementBinding(JSXElement jsxElem) {
 		val expr = jsxElem.jsxElementName.expression;
 		val TypeRef exprTypeRef = reactHelper.getJsxElementBindingType(jsxElem);
+		val isParTypeRefToExoticComponent = exprTypeRef instanceof ParameterizedTypeRef && exprTypeRef.declaredType.name == "ExoticComponent";
 		val isFunction = exprTypeRef instanceof FunctionTypeExprOrRef;
 		val isClass = exprTypeRef instanceof TypeTypeRef && (exprTypeRef as TypeTypeRef).constructorRef;
 
-		if (!isFunction && !isClass) {
+		if (!isFunction && !isClass && !isParTypeRefToExoticComponent) {
 			val String refName = expr.refName
 			if ((refName !== null) && Character::isLowerCase(refName.charAt(0))) {
 				// See Req. IDE-241118

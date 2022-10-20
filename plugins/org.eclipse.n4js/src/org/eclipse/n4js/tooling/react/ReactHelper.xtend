@@ -36,6 +36,12 @@ import org.eclipse.xtext.scoping.IScopeProvider
 import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.ts.types.ExportDefinition
+import org.eclipse.n4js.ts.types.ElementExportDefinition
+import org.eclipse.n4js.ts.types.TNamespace
+import org.eclipse.n4js.ts.types.TVariable
+import org.eclipse.n4js.ts.types.IdentifiableElement
+import org.eclipse.n4js.ts.types.TInterface
 
 /**
  * This helper provides utilities for looking up React definitions such as React.Component or React.ReactElement or
@@ -123,7 +129,7 @@ class ReactHelper {
 	 * Returns the fragment factory function for JSX elements which can be extracted
 	 * from the given {@link Resource}.
 	 */
-	def public TClass getJsxBackendFragmentComponent(Resource resource) {
+	def public IdentifiableElement getJsxBackendFragmentComponent(Resource resource) {
 		val module = this.getJsxBackendModule(resource);
 		if (module !== null) {
 			return lookUpReactFragmentComponent(module);
@@ -136,8 +142,8 @@ class ReactHelper {
 	 * 
 	 * @param context the EObject serving the context to look for React.Element.
 	 */
-	def public TClassifier lookUpReactElement(EObject context) {
-		val reactElement = lookUpReactClassifier(context, REACT_ELEMENT)
+	def public TInterface lookUpReactElement(EObject context) {
+		val reactElement = lookUpReactClassifier(context, REACT_ELEMENT, TInterface)
 		return reactElement;
 	}
 
@@ -146,8 +152,8 @@ class ReactHelper {
 	 * 
 	 * @param context the EObject serving the context to look for React.Component.
 	 */
-	def public TClassifier lookUpReactComponent(EObject context) {
-		val reactComponent = lookUpReactClassifier(context, REACT_COMPONENT)
+	def public TClass lookUpReactComponent(EObject context) {
+		val reactComponent = lookUpReactClassifier(context, REACT_COMPONENT, TClass)
 		return reactComponent;
 	}
 
@@ -167,11 +173,11 @@ class ReactHelper {
 		if (exprTypeRef instanceof TypeTypeRef && (exprTypeRef as TypeTypeRef).constructorRef) {
 			// The JSX element refers to a class
 			val tclass = tsh.getStaticType(G, exprTypeRef as TypeTypeRef);
-			val tComponentClassifier = lookUpReactClassifier(jsxElem, ReactHelper.REACT_COMPONENT);
-			if (tComponentClassifier === null || tComponentClassifier.typeVars.isEmpty) {
+			val tComponentClass = lookUpReactComponent(jsxElem);
+			if (tComponentClass === null || tComponentClass.typeVars.isEmpty) {
 				return null;
 			}
-			val reactComponentProps = tComponentClassifier.typeVars.get(0);
+			val reactComponentProps = tComponentClass.typeVars.get(0);
 			// Add type variable -> type argument mappings from the current and all super types
 			tsh.addSubstitutions(G, TypeUtils.createTypeRef(tclass));
 			// Substitute type variables in the 'props' and return the result
@@ -208,21 +214,48 @@ class ReactHelper {
 	 * @param context the EObject serving the context to look for React classifiers.
 	 * @param reactClassifierName the name of React classifier.
 	 */
-	def private TClassifier lookUpReactClassifier(EObject context, String reactClassifierName) {
+	def private <T extends TClassifier> T lookUpReactClassifier(EObject context, String reactClassifierName, Class<T> clazz) {
 		val resource = context.eResource;
-		val String key = REACT_KEY + "." + reactClassifierName;
-		return resourceScopeCacheHelper.get(key, resource, [
-			val tModule = getJsxBackendModule(resource);
-			if (tModule === null)
-				return null;
+		val tModule = getJsxBackendModule(resource);
+		if (tModule === null || tModule.eResource === null)
+			return null;
 
-			val tClassifier = tModule.types.filter(TClassifier).findFirst[name == reactClassifierName];
+		val String key = REACT_KEY + "." + reactClassifierName;
+		return resourceScopeCacheHelper.get(key, tModule.eResource, [
+			// used for @types/react
+			for (ExportDefinition expDef : tModule.exportDefinitions) {
+				if (expDef instanceof ElementExportDefinition) {
+					if (expDef.exportedName == "React" && expDef.exportedElement instanceof TNamespace) {
+						for (Type type : (expDef.exportedElement as TNamespace).types) {
+							if (clazz.isAssignableFrom(type.class) && reactClassifierName.equals(type.getName())) {
+								return type as T;
+							}
+						}
+					}
+				}
+			}
+
+			// used for @n4jsd/react
+			val tClassifier = tModule.types.filter(clazz).findFirst[name == reactClassifierName];
 			return tClassifier;
 		]);
 	}
 
-	def private TClass lookUpReactFragmentComponent(TModule module) {
+	def private IdentifiableElement lookUpReactFragmentComponent(TModule module) {
 		if (module !== null) {
+			// used for @types/react
+			for (ExportDefinition expDef : module.exportDefinitions) {
+				if (expDef instanceof ElementExportDefinition) {
+					if (expDef.exportedName == "React" && expDef.exportedElement instanceof TNamespace) {
+						for (TVariable currTopLevelVar : (expDef.exportedElement as TNamespace).exportedVariables) {
+							if (REACT_FRAGMENT_NAME.equals(currTopLevelVar.getName())) {
+								return currTopLevelVar;
+							}
+						}
+					}
+				}
+			}
+			// used for @n4jsd/react
 			for (Type currTopLevelType : module.getTypes()) {
 				if (currTopLevelType instanceof TClass
 						&& REACT_FRAGMENT_NAME.equals(currTopLevelType.getName())) {
@@ -240,6 +273,19 @@ class ReactHelper {
 	 */
 	def private TFunction lookUpReactElementFactoryFunction(TModule module) {
 		if (module !== null) {
+			// used for @types/react
+			for (ExportDefinition expDef : module.exportDefinitions) {
+				if (expDef instanceof ElementExportDefinition) {
+					if (expDef.exportedName == "React" && expDef.exportedElement instanceof TNamespace) {
+						for (TFunction currTopLevelType : (expDef.exportedElement as TNamespace).getFunctions()) {
+							if (REACT_ELEMENT_FACTORY_FUNCTION_NAME.equals(currTopLevelType.getName())) {
+								return currTopLevelType;
+							}
+						}
+					}
+				}
+			}
+			// used for @n4jsd/react
 			for (TFunction currTopLevelType : module.getFunctions()) {
 				if (REACT_ELEMENT_FACTORY_FUNCTION_NAME.equals(currTopLevelType.getName())) {
 					return currTopLevelType;
