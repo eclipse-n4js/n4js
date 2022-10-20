@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.URIHandlerImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
@@ -38,6 +39,7 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.utils.EcoreUtilN4;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 
@@ -147,7 +149,9 @@ public final class UserDataMapper {
 
 		// resolve resource (i.e. resolve lazy cross-references, resolve DeferredTypeRefs, etc.)
 		originalResource.performPostProcessing();
-		if (EcoreUtilN4.hasUnresolvedProxies(exportedModule) || TypeUtils.containsDeferredTypeRefs(exportedModule)) {
+		if ((EcoreUtilN4.hasUnresolvedProxies(exportedModule) || TypeUtils.containsDeferredTypeRefs(exportedModule))
+				&& !N4JSGlobals.DTS_FILE_EXTENSION
+						.equals(URIUtils.fileExtension(exportedModule.eResource().getURI()))) {
 			// don't write invalid TModule to index
 			// TODO GHOLD-193 reconsider handling of this error case
 			// 2016-05-11: keeping fail-safe behavior for now (in place at least since end of 2014).
