@@ -317,7 +317,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 	@Override
 	public void enterParameterizedTypeRef(ParameterizedTypeRefContext ctx) {
 		String declTypeName = ctx.typeName() != null ? ctx.typeName().getText() : null;
-		ParameterizedTypeRef ptr = createParameterizedTypeRef(declTypeName, ctx.typeArguments(), false);
+		TypeRef ptr = createParameterizedTypeRef(declTypeName, ctx.typeArguments(), false);
 		result = ptr;
 	}
 
@@ -331,7 +331,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 		result = ptr;
 	}
 
-	private ParameterizedTypeRef createParameterizedTypeRef(String declTypeName, TypeArgumentsContext typeArgsCtx,
+	private TypeRef createParameterizedTypeRef(String declTypeName, TypeArgumentsContext typeArgsCtx,
 			boolean structural) {
 		return createParameterizedTypeRef(declTypeName, ParserContextUtils.getTypeArgsFromTypeArgCtx(typeArgsCtx),
 				structural);
@@ -342,7 +342,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 	 *            name of the declared type; may contain '.' when accessing types in namespaces (of namespace imports or
 	 *            namespace declarations).
 	 */
-	private ParameterizedTypeRef createParameterizedTypeRef(String declTypeName, Iterable<TypeArgumentContext> typeArgs,
+	private TypeRef createParameterizedTypeRef(String declTypeName, Iterable<TypeArgumentContext> typeArgs,
 			boolean structural) {
 
 		if (declTypeName == null) {
@@ -353,34 +353,39 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 			return createAnyPlusTypeRef();
 		}
 
-		ParameterizedTypeRef ptr = structural
-				? TypeRefsFactory.eINSTANCE.createParameterizedTypeRefStructural()
-				: TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
+		if ("Readonly".equals(declTypeName) && typeArgs.iterator().hasNext()) {
+			// special case for Readonly
+			return newTypeRefBuilder().consume(typeArgs.iterator().next().typeRef());
+		} else {
+			ParameterizedTypeRef ptr = structural
+					? TypeRefsFactory.eINSTANCE.createParameterizedTypeRefStructural()
+					: TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
 
-		String[] segs = declTypeName.split(Pattern.quote(ParserContextUtils.NAMESPACE_ACCESS_DELIMITER));
-		for (int i = 0; i < segs.length - 1; i++) {
-			String currSeg = segs[i];
-			NamespaceLikeRef nslRef = TypeRefsFactory.eINSTANCE.createNamespaceLikeRef();
-			nslRef.setDeclaredTypeAsText(currSeg);
+			String[] segs = declTypeName.split(Pattern.quote(ParserContextUtils.NAMESPACE_ACCESS_DELIMITER));
+			for (int i = 0; i < segs.length - 1; i++) {
+				String currSeg = segs[i];
+				NamespaceLikeRef nslRef = TypeRefsFactory.eINSTANCE.createNamespaceLikeRef();
+				nslRef.setDeclaredTypeAsText(currSeg);
 
-			Type nsProxy = TypesFactory.eINSTANCE.createType();
-			EReference eRef = TypeRefsPackage.eINSTANCE.getNamespaceLikeRef_DeclaredType();
-			ParserContextUtils.installProxy(resource, nslRef, eRef, nsProxy, currSeg);
-			nslRef.setDeclaredType(nsProxy);
+				Type nsProxy = TypesFactory.eINSTANCE.createType();
+				EReference eRef = TypeRefsPackage.eINSTANCE.getNamespaceLikeRef_DeclaredType();
+				ParserContextUtils.installProxy(resource, nslRef, eRef, nsProxy, currSeg);
+				nslRef.setDeclaredType(nsProxy);
 
-			ptr.getAstNamespaceLikeRefs().add(nslRef);
+				ptr.getAstNamespaceLikeRefs().add(nslRef);
+			}
+			String lastSeg = segs[segs.length - 1];
+			ptr.setDeclaredTypeAsText(lastSeg);
+
+			Type typeProxy = TypesFactory.eINSTANCE.createType();
+			EReference eRef = TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType();
+			ParserContextUtils.installProxy(resource, ptr, eRef, typeProxy, lastSeg);
+			ptr.setDeclaredType(typeProxy);
+
+			ptr.getDeclaredTypeArgs().addAll(newTypeRefBuilder().consumeManyTypeArgs(typeArgs));
+
+			return ptr;
 		}
-		String lastSeg = segs[segs.length - 1];
-		ptr.setDeclaredTypeAsText(lastSeg);
-
-		Type typeProxy = TypesFactory.eINSTANCE.createType();
-		EReference eRef = TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType();
-		ParserContextUtils.installProxy(resource, ptr, eRef, typeProxy, lastSeg);
-		ptr.setDeclaredType(typeProxy);
-
-		ptr.getDeclaredTypeArgs().addAll(newTypeRefBuilder().consumeManyTypeArgs(typeArgs));
-
-		return ptr;
 	}
 
 }
