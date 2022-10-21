@@ -81,6 +81,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#isReturnValueMarkedOptional <em>Return Value Marked Optional</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getReturnTypeRef <em>Return Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getFunctionTypeExpression()
@@ -294,6 +295,34 @@ public interface FunctionTypeExpression extends FunctionTypeExprOrRef {
 	 * @generated
 	 */
 	void setReturnTypeRef(TypeRef value);
+
+	/**
+	 * Returns the value of the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
+	 * The literals are from the enumeration {@link org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  @see TypeRef#getASTOptionalFieldStrategy()
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>AST Node Optional Field Strategy</em>' attribute.
+	 * @see org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
+	 * @see #setASTNodeOptionalFieldStrategy(OptionalFieldStrategy)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getFunctionTypeExpression_ASTNodeOptionalFieldStrategy()
+	 * @model unique="false" transient="true"
+	 * @generated
+	 */
+	OptionalFieldStrategy getASTNodeOptionalFieldStrategy();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>AST Node Optional Field Strategy</em>' attribute.
+	 * @see org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
+	 * @see #getASTNodeOptionalFieldStrategy()
+	 * @generated
+	 */
+	void setASTNodeOptionalFieldStrategy(OptionalFieldStrategy value);
 
 	/**
 	 * <!-- begin-user-doc -->
