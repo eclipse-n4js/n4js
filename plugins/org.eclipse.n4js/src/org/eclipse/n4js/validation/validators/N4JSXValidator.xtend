@@ -25,7 +25,6 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.tooling.react.ReactHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
@@ -146,13 +145,14 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def public void checkReactElementBinding(JSXElement jsxElem) {
+		val G = jsxElem.newRuleEnvironment;
 		val expr = jsxElem.jsxElementName.expression;
 		val TypeRef exprTypeRef = reactHelper.getJsxElementBindingType(jsxElem);
-		val isParTypeRefToExoticComponent = exprTypeRef instanceof ParameterizedTypeRef && exprTypeRef.declaredType.name == "ExoticComponent";
-		val isFunction = exprTypeRef instanceof FunctionTypeExprOrRef;
+		val callable = tsh.getFunctionTypeExprOrRef(G, exprTypeRef);
+		val isFunction = callable !== null;
 		val isClass = exprTypeRef instanceof TypeTypeRef && (exprTypeRef as TypeTypeRef).constructorRef;
 
-		if (!isFunction && !isClass && !isParTypeRefToExoticComponent) {
+		if (!isFunction && !isClass) {
 			val String refName = expr.refName
 			if ((refName !== null) && Character::isLowerCase(refName.charAt(0))) {
 				// See Req. IDE-241118
@@ -177,7 +177,7 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		if (isFunction) {
-			checkFunctionTypeExprOrRef(jsxElem, exprTypeRef as FunctionTypeExprOrRef);
+			checkFunctionTypeExprOrRef(jsxElem, callable);
 			checkReactComponentShouldStartWithUppercase(jsxElem, true);
 		}
 
@@ -187,7 +187,7 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		// Furthermore, check that all non-optional fields of the properties type are used
-		checkAllNonOptionalFieldsAreSpecified(jsxElem, exprTypeRef);
+		checkAllNonOptionalFieldsAreSpecified(jsxElem);
 	}
 
 	/**
@@ -368,7 +368,7 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 	 * Check that non-optional fields of "props" should be specified in JSX element
 	 * See Req. IDE-241117
 	 */
-	def private void checkAllNonOptionalFieldsAreSpecified(JSXElement jsxElem, TypeRef exprTypeRef) {
+	def private void checkAllNonOptionalFieldsAreSpecified(JSXElement jsxElem) {
 		val jsxPropertyAttributes = jsxElem.jsxAttributes;
 		// First, collect all normal properties in JSX element
 		val allAttributesInJSXElement = Lists.newArrayList(jsxPropertyAttributes.filter(typeof(JSXPropertyAttribute)).map[a | a.property]);

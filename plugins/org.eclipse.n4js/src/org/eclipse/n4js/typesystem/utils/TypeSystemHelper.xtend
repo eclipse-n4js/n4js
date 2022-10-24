@@ -378,7 +378,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 
 	/**
 	 * Checks if a value of the given type is "callable" (i.e. can be invoked with a call expression).
-	 * If so, returns an instance of class {@link Callable) with further information; if not, returns
+	 * If so, returns an instance of class {@link Callable} with further information; if not, returns
 	 * <code>null</code>.
 	 */
 	def public Callable getCallableTypeRef(RuleEnvironment G, TypeRef typeRef) {
@@ -606,6 +606,17 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 					structType.callSignature
 				};
 			}
+		}
+		return null;
+	}
+	
+	def public FunctionTypeExprOrRef getFunctionTypeExprOrRef(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef instanceof FunctionTypeExprOrRef) {
+			return typeRef;
+		}
+		val callable = getCallableTypeRef(G, typeRef);
+		if (callable !== null) {
+			return callable.signatureTypeRef.orNull;
 		}
 		return null;
 	}
