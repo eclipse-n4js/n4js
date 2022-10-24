@@ -1412,6 +1412,9 @@ class FunctionTypeExpression extends FunctionTypeExprOrRef {
 	 * a copy of the return type of the 'declaredType' or original FunctionTypeExpression.
 	 */
 	contains TypeRef returnTypeRef
+	
+	/* @see TypeRef#getASTOptionalFieldStrategy() */
+	transient OptionalFieldStrategy aSTNodeOptionalFieldStrategy
 }
 
 /**

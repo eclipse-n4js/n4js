@@ -24,6 +24,7 @@ import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.ContainerType
@@ -268,7 +269,12 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 		val resolveLiteralTypes = false; // if we resolved here, we might break constraints (it's the responsibility of the constraint solver to avoid literal types as far as possible)
 		solution3.replaceAll[k, v | if (k !== returnTypeInfVar) tsh.sanitizeTypeOfVariableFieldPropertyParameter(G2, v, resolveLiteralTypes) else v];
 		// apply solution to resultTypeRef
-		val resultSolved = resultTypeRef.applySolution(G, solution3) as FunctionTypeExprOrRef;
+		var resultSolved0 = resultTypeRef.applySolution(G, solution3) as FunctionTypeExprOrRef;
+		if (resultSolved0 instanceof FunctionTypeExpression) {
+			resultSolved0 = TypeUtils.copy(resultSolved0);
+			(resultSolved0 as FunctionTypeExpression).ASTNodeOptionalFieldStrategy = OptionalFieldStrategy.FIELDS_AND_ACCESSORS_OPTIONAL;
+		}
+		val resultSolved = resultSolved0;
 		// store type of funExpr in cache ...
 		cache.storeType(funExpr, resultSolved);
 		// update the defined function in the TModule

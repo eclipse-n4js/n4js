@@ -7246,13 +7246,22 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 8;
 
 	/**
+	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPRESSION__AST_NODE_OPTIONAL_FIELD_STRATEGY = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 9;
+
+	/**
 	 * The number of structural features of the '<em>Function Type Expression</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION_FEATURE_COUNT = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 9;
+	int FUNCTION_TYPE_EXPRESSION_FEATURE_COUNT = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
@@ -11570,6 +11579,17 @@ public interface TypeRefsPackage extends EPackage {
 	EReference getFunctionTypeExpression_ReturnTypeRef();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>AST Node Optional Field Strategy</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getASTNodeOptionalFieldStrategy()
+	 * @see #getFunctionTypeExpression()
+	 * @generated
+	 */
+	EAttribute getFunctionTypeExpression_ASTNodeOptionalFieldStrategy();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getTypeVars() <em>Get Type Vars</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13218,6 +13238,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF = eINSTANCE.getFunctionTypeExpression_ReturnTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FUNCTION_TYPE_EXPRESSION__AST_NODE_OPTIONAL_FIELD_STRATEGY = eINSTANCE.getFunctionTypeExpression_ASTNodeOptionalFieldStrategy();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Type Vars</b></em>' operation.

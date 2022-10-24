@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
+import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 
@@ -54,6 +55,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#isReturnValueMarkedOptional <em>Return Value Marked Optional</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getReturnTypeRef <em>Return Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}</li>
  * </ul>
  *
  * @generated
@@ -168,6 +170,26 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * @ordered
 	 */
 	protected TypeRef returnTypeRef;
+
+	/**
+	 * The default value of the '{@link #getASTNodeOptionalFieldStrategy() <em>AST Node Optional Field Strategy</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getASTNodeOptionalFieldStrategy()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final OptionalFieldStrategy AST_NODE_OPTIONAL_FIELD_STRATEGY_EDEFAULT = OptionalFieldStrategy.OFF;
+
+	/**
+	 * The cached value of the '{@link #getASTNodeOptionalFieldStrategy() <em>AST Node Optional Field Strategy</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getASTNodeOptionalFieldStrategy()
+	 * @generated
+	 * @ordered
+	 */
+	protected OptionalFieldStrategy aSTNodeOptionalFieldStrategy = AST_NODE_OPTIONAL_FIELD_STRATEGY_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -422,6 +444,29 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * @generated
 	 */
 	@Override
+	public OptionalFieldStrategy getASTNodeOptionalFieldStrategy() {
+		return aSTNodeOptionalFieldStrategy;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setASTNodeOptionalFieldStrategy(OptionalFieldStrategy newASTNodeOptionalFieldStrategy) {
+		OptionalFieldStrategy oldASTNodeOptionalFieldStrategy = aSTNodeOptionalFieldStrategy;
+		aSTNodeOptionalFieldStrategy = newASTNodeOptionalFieldStrategy == null ? AST_NODE_OPTIONAL_FIELD_STRATEGY_EDEFAULT : newASTNodeOptionalFieldStrategy;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__AST_NODE_OPTIONAL_FIELD_STRATEGY, oldASTNodeOptionalFieldStrategy, aSTNodeOptionalFieldStrategy));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EList<TypeVariable> getTypeVars() {
 		EList<TypeVariable> _xifexpression = null;
 		boolean _isBinding = this.isBinding();
@@ -524,6 +569,8 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 				return isReturnValueMarkedOptional();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF:
 				return getReturnTypeRef();
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__AST_NODE_OPTIONAL_FIELD_STRATEGY:
+				return getASTNodeOptionalFieldStrategy();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -568,6 +615,9 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF:
 				setReturnTypeRef((TypeRef)newValue);
 				return;
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__AST_NODE_OPTIONAL_FIELD_STRATEGY:
+				setASTNodeOptionalFieldStrategy((OptionalFieldStrategy)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -607,6 +657,9 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF:
 				setReturnTypeRef((TypeRef)null);
 				return;
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__AST_NODE_OPTIONAL_FIELD_STRATEGY:
+				setASTNodeOptionalFieldStrategy(AST_NODE_OPTIONAL_FIELD_STRATEGY_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -637,6 +690,8 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 				return returnValueMarkedOptional != RETURN_VALUE_MARKED_OPTIONAL_EDEFAULT;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF:
 				return returnTypeRef != null;
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__AST_NODE_OPTIONAL_FIELD_STRATEGY:
+				return aSTNodeOptionalFieldStrategy != AST_NODE_OPTIONAL_FIELD_STRATEGY_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -691,6 +746,8 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 		result.append(binding);
 		result.append(", returnValueMarkedOptional: ");
 		result.append(returnValueMarkedOptional);
+		result.append(", aSTNodeOptionalFieldStrategy: ");
+		result.append(aSTNodeOptionalFieldStrategy);
 		result.append(')');
 		return result.toString();
 	}
