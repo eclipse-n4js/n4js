@@ -25,6 +25,10 @@ i1 = {};
 // XPECT noerrors -->
 i1 = (input:number) => {return "hello";};
 
+const c1 = (input:number) => {return "hello";};
+// XPECT noerrors -->
+i1 = c1;
+
 
 // Following cases are forbidden. Otherwise the optional fields could be added during runtime accidentally.
 
