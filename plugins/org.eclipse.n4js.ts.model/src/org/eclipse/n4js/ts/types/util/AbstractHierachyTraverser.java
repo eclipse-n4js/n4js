@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ts.types.util;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -267,10 +268,34 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	 * Returns collection of all super types except consumed roles, i.e. super class.
 	 */
 	protected List<ParameterizedTypeRef> getSuperTypes(Type t) {
-		if (t instanceof TClass && ((TClass) t).getSuperClassRef() != null)
-			return Collections.singletonList(((TClass) t).getSuperClassRef());
-		else if (t instanceof TInterface && !((TInterface) t).getSuperInterfaceRefs().isEmpty())
-			return ((TInterface) t).getSuperInterfaceRefs();
+		if (t instanceof TClass) {
+			if (((TClass) t).getSuperClassRef() != null) {
+				return Collections.singletonList(((TClass) t).getSuperClassRef());
+			}
+			List<ParameterizedTypeRef> mergedTypes = getMergedTypes(t);
+			for (ParameterizedTypeRef mT : mergedTypes) {
+				if (mT instanceof TClass && ((TClass) mT).getSuperClassRef() != null) {
+					return Collections.singletonList(((TClass) t).getSuperClassRef());
+				}
+			}
+
+		} else if (t instanceof TInterface) {
+			TInterface ti = (TInterface) t;
+			List<ParameterizedTypeRef> mergedTypes = getMergedTypes(t);
+			if (mergedTypes.isEmpty() && !ti.getSuperInterfaceRefs().isEmpty()) {
+				return ti.getSuperInterfaceRefs();
+			}
+			List<ParameterizedTypeRef> superInterfaces = new ArrayList<>();
+			superInterfaces.addAll(ti.getSuperInterfaceRefs());
+			for (ParameterizedTypeRef mT : mergedTypes) {
+				if (mT.getDeclaredType() instanceof TInterface) {
+					superInterfaces.addAll(((TInterface) mT.getDeclaredType()).getSuperInterfaceRefs());
+				}
+			}
+			if (!superInterfaces.isEmpty()) {
+				return superInterfaces;
+			}
+		}
 		return getImplicitSuperTypes(t);
 	}
 
@@ -288,6 +313,10 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	 *            the type for which the polyfills / merged types are to be retrieved
 	 */
 	protected List<ParameterizedTypeRef> getPolyfillsOrMergedTypes(Type filledType) {
+		return Collections.emptyList(); // polyfills / declaration merging not supported by default
+	}
+
+	protected List<ParameterizedTypeRef> getMergedTypes(Type filledType) {
 		return Collections.emptyList(); // polyfills / declaration merging not supported by default
 	}
 }

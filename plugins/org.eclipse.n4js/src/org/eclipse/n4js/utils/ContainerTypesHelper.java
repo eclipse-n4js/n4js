@@ -794,6 +794,23 @@ public class ContainerTypesHelper {
 						.map(type -> TypeUtils.createTypeRef(type))
 						.collect(Collectors.toList());
 			}
+
+			@Override
+			protected List<ParameterizedTypeRef> getMergedTypes(Type filledType) {
+				if (!(includePolyfills && filledType instanceof TClassifier)) {
+					return Collections.emptyList();
+				}
+				TClassifier tClassifier = (TClassifier) filledType;
+
+				List<Type> polyfillsOrMergedTypes = new ArrayList<>();
+				if (DeclMergingUtils.mayBeMerged(filledType)) {
+					polyfillsOrMergedTypes.addAll(declMergingHelper.getMergedElements(contextResource, tClassifier));
+				}
+
+				return polyfillsOrMergedTypes.stream()
+						.map(type -> TypeUtils.createTypeRef(type))
+						.collect(Collectors.toList());
+			}
 		}
 
 		private class AllMembersCollector extends AbstractMemberCollector<MemberList<TMember>> {
