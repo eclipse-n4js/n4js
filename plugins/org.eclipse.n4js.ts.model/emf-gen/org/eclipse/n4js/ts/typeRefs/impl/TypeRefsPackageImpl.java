@@ -1988,6 +1988,16 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
+	public EAttribute getFunctionTypeExpression_ASTNodeOptionalFieldStrategy() {
+		return (EAttribute)functionTypeExpressionEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EOperation getFunctionTypeExpression__GetTypeVars() {
 		return functionTypeExpressionEClass.getEOperations().get(0);
 	}
@@ -2465,6 +2475,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEReference(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__FPARS);
 		createEAttribute(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__RETURN_VALUE_MARKED_OPTIONAL);
 		createEReference(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF);
+		createEAttribute(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__AST_NODE_OPTIONAL_FIELD_STRATEGY);
 		createEOperation(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION___GET_TYPE_VARS);
 		createEOperation(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION___GET_TYPE_VAR_UPPER_BOUND__TYPEVARIABLE);
 		createEOperation(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION___IS_RETURN_VALUE_OPTIONAL);
@@ -2884,6 +2895,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEReference(getFunctionTypeExpression_Fpars(), theTypesPackage.getTFormalParameter(), null, "fpars", null, 0, -1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFunctionTypeExpression_ReturnValueMarkedOptional(), theEcorePackage.getEBoolean(), "returnValueMarkedOptional", null, 0, 1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunctionTypeExpression_ReturnTypeRef(), this.getTypeRef(), null, "returnTypeRef", null, 0, 1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFunctionTypeExpression_ASTNodeOptionalFieldStrategy(), this.getOptionalFieldStrategy(), "aSTNodeOptionalFieldStrategy", null, 0, 1, FunctionTypeExpression.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getFunctionTypeExpression__GetTypeVars(), theTypesPackage.getTypeVariable(), "getTypeVars", 0, -1, !IS_UNIQUE, IS_ORDERED);
 

@@ -1136,12 +1136,12 @@ public class N4JSLanguageUtils {
 	 */
 	def public static OptionalFieldStrategy calculateOptionalFieldStrategy(N4JSTypeSystem ts, RuleEnvironment G, TypableElement expr, TypeRef typeRef) {
 		if (isConstTransitiveObjectLiteral(expr)) {
-			// Req. IDE-240500, case 1, 4a
+			// Req. IDE-240500, case 1, 2, 5a, 5b
 			return OptionalFieldStrategy.FIELDS_AND_ACCESSORS_OPTIONAL;
 		}
 
 		if (isConstTransitiveNewExpressionOrFinalNominalClassInstanceOrObjectLiteral(ts, G, expr, typeRef)) {
-			// Req. IDE-240500, case 2, 3, 4b, 4c
+			// Req. IDE-240500, case 3, 4, 5c, 5d
 			return OptionalFieldStrategy.GETTERS_OPTIONAL;
 		}
 

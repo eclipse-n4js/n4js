@@ -1449,22 +1449,25 @@ Optionality has an effect only in case of structural subtype checks $L <: R$ in 
 the left-hand side is one of the following:
 
 . an object literal.
+. a function expression.
 . a new expression.
 . an instance of a final class, i.e. the type of the value on left-hand side must be nominal and refer to a final class.
 . a reference to a const variable if its initializer expression is one of the following:
 .. an object literal.
+.. a function expression.
 .. a new expression.
 .. an instance of a final class (as explained above).
 .. an ternary expression
 
 and then
 
-* in cases 1 and 4a, *both* fields and accessors (getters and setters) are optional.
+* in cases 1, 2, and 5a and 5b, *both* fields and accessors (getters and setters) are optional.
 That means, an optional data field, getter, or setter of $R$ needs not be present in $L$.
-* in cases 2, 3, 4b, and 4c, only *getters* are optional, setters are not optional.
-That means, an optional getter of $R$ needs not be present in $L$ and an optional field of $R$ requires only a setter in $L$. Note that these cases are more restricted than the cases 1 and 4a.
+* in cases 3, 4, 5c, and 5d, only *getters* are optional, setters are not optional.
+That means, an optional getter of $R$ needs not be present in $L$ and an optional field of $R$ requires only a setter in $L$. Note that these cases are more restricted than the cases 1/2 and 5a/5b.
 
-Moreover, optionality has an effect in case of ternary expression $L <: R$ in which the left-hand side is a ternary expression, e.g. `l = b? trueExpr : falseExpr` whose `trueExpr` or `falseExpr` possibly recursively contains an expression of the kind mentioned above. In this case, the optionality effect is the more restricted optionality of `trueExpr` and `falseExpr`.
+Moreover, optionality has an effect in case of ternary expression $L <: R$ in which the left-hand side is a ternary expression, e.g. `l = b? trueExpr : falseExpr` whose `trueExpr` or `falseExpr` possibly recursively contains an expression of the kind mentioned above.
+In this case, the optionality effect is the more restricted optionality of `trueExpr` and `falseExpr`.
 
 If, according to these rules, a data field / getter / setter of $R$ need not be present in
 $L$ but a member with the same name and access is actually present in $L$, that member in $L$
@@ -1475,9 +1478,9 @@ for structural types).
 
 --
 
-In other words, in object literals (cases 1 and 4a) neither optional getters, optional setters,
+In other words, in object literals (cases 1/2 and 5a/5b) neither optional getters, optional setters,
 nor optional data fields are required. However, in case of new expressions and instances of
-final classes (cases 2, 3, 4b, 4c) only optional getters are not required in a subtype;
+final classes (cases 3, 4, 5c, 5d) only optional getters are not required in a subtype;
 optional setters are required as normal (i.e. optionality ignored) and optional data fields
 require at least a setter.
 
@@ -1527,8 +1530,8 @@ function fooSF0(): ~F0 { return new F0(); }
 function fooF0(): F0   { return new F0(); }
 ----
 
-It follows from the above definitions in Requirements <<Req-IDE-240500>> that cases 4a and 4b are not
-transitive across a chain of several `const` variables, whereas case 4c is transitive. For example:
+It follows from the above definitions in Requirements <<Req-IDE-240500>> that cases 5a/5b and 5c are not
+transitive across a chain of several `const` variables, whereas case 5d is transitive. For example:
 
 .Transitivity of the use cases of optional fields
 [source,n4js]
@@ -1634,8 +1637,8 @@ c.field.charAt(0); // exception at runtime: c.field.charAt is not a function
 In the last line of the above example, `c.field` is actually `42` but the type systems claims it is of type `string` and
 thus allows accessing member `charAt` of type `string` which is undefined at runtime the actual value `42`.
 
-The next example shows why cases 2 and 3 (i.e. new expressions and instances of final classes) have to be handled in
-a more restrictive manner than case 1 (i.e. object literals).
+The next example shows why cases 3 and 4 (i.e. new expressions and instances of final classes) have to be handled in
+a more restrictive manner than case 1 and 2 (i.e. object literals / function expressions).
 
 .Problem 2 of optional fields
 [source,n4js]
