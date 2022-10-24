@@ -25,11 +25,11 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
+import org.eclipse.n4js.resource.N4JSCache;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.utils.MainModuleAwareSelectableBasedScope;
 import org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope;
@@ -37,7 +37,6 @@ import org.eclipse.n4js.scoping.utils.QualifiedNameUtils;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.types.AbstractNamespace;
-import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TModule;
@@ -57,6 +56,7 @@ import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
@@ -86,6 +86,9 @@ public class DeclMergingHelper {
 
 	@Inject
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
+
+	@Inject
+	private N4JSCache cache;
 
 	/**
 	 * For each set of merged elements in the given list, this method will retain the
@@ -189,7 +192,7 @@ public class DeclMergingHelper {
 	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
 	 */
 	public List<AbstractNamespace> getMergedElements(N4JSResource context, AbstractNamespace namespace) {
-		return internalGetMergedElements(context, namespace, TypesPackage.Literals.ABSTRACT_NAMESPACE);
+		return cachedGetMergedElements(context, namespace, TypesPackage.Literals.ABSTRACT_NAMESPACE);
 	}
 
 	/**
@@ -199,7 +202,12 @@ public class DeclMergingHelper {
 	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
 	 */
 	public List<Type> getMergedElements(N4JSResource context, Type type) {
-		return internalGetMergedElements(context, type, TypesPackage.Literals.TYPE);
+		return cachedGetMergedElements(context, type, TypesPackage.Literals.TYPE);
+	}
+
+	private <T extends EObject> List<T> cachedGetMergedElements(N4JSResource context, T element, EClass eClass) {
+		return cache.get(Pair.of("getMergedElements", element), context,
+				() -> internalGetMergedElements(context, element, eClass));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -244,19 +252,6 @@ public class DeclMergingHelper {
 		List<EObject> result = new ArrayList<>(resultSet);
 		cleanListOfMergedElements(element, result);
 		return (List<T>) result;
-	}
-
-	/**
-	 * Returns those elements merged with the given element.
-	 * <p>
-	 * The given element does not have to be the
-	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
-	 */
-	public List<EObject> getMergedElements(N4JSResource context, IdentifiableElement elem) {
-		QualifiedName qn = qualifiedNameProvider.getFullyQualifiedName(elem);
-		List<EObject> result = globalScopeAccess.getElementsFromGlobalScope(context, EcorePackage.Literals.EOBJECT, qn);
-		cleanListOfMergedElements(elem, result);
-		return result;
 	}
 
 	private ProjectImportEnablingScope getProjectImportEnablingScope(N4JSResource resource, EClass elementType) {
