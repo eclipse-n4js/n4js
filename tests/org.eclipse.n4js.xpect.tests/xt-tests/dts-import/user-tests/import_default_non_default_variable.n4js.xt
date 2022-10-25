@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+	File "tslib1.d.ts" {
+		declare const Kconst1 : string;
+		export default Kconst1;
+	}
+	File "tslib2.d.ts" {
+		import defaultKconst from './tslib1.d.ts';
+		export { defaultKconst };
+	}
+   END_SETUP
+ */
+
+
+import { Kconst1 } from "tslib1";
+import defaultKconst1 from "tslib1";
+import defaultKconst2 from "tslib2";
+
+
+// XPECT type of 'k' --> string
+let k1 = Kconst1;
+
+
+// XPECT type of 'k' --> string
+let k2 = defaultKconst1;
+
+
+// XPECT type of 'k' --> string
+let k3 = defaultKconst2;
