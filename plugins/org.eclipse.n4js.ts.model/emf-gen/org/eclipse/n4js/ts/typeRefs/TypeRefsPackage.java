@@ -12,7 +12,6 @@ package org.eclipse.n4js.ts.typeRefs;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
@@ -9899,16 +9898,6 @@ public interface TypeRefsPackage extends EPackage {
 	 */
 	int OPTIONAL_FIELD_STRATEGY = 29;
 
-	/**
-	 * The meta object id for the '<em>UUID</em>' data type.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see java.util.UUID
-	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getUUID()
-	 * @generated
-	 */
-	int UUID = 30;
-
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument <em>Type Argument</em>}'.
@@ -11858,17 +11847,6 @@ public interface TypeRefsPackage extends EPackage {
 	EEnum getOptionalFieldStrategy();
 
 	/**
-	 * Returns the meta object for data type '{@link java.util.UUID <em>UUID</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>UUID</em>'.
-	 * @see java.util.UUID
-	 * @model instanceClass="java.util.UUID"
-	 * @generated
-	 */
-	EDataType getUUID();
-
-	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13470,16 +13448,6 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum OPTIONAL_FIELD_STRATEGY = eINSTANCE.getOptionalFieldStrategy();
-
-		/**
-		 * The meta object literal for the '<em>UUID</em>' data type.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see java.util.UUID
-		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getUUID()
-		 * @generated
-		 */
-		EDataType UUID = eINSTANCE.getUUID();
 
 	}
 

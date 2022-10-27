@@ -41,7 +41,6 @@ import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
@@ -711,7 +710,7 @@ import com.google.common.collect.Iterables;
 			return success(); // performance tweak
 		}
 		if (right instanceof ExistentialTypeRef) {
-			UUID otherId = ((ExistentialTypeRef) right).getId();
+			String otherId = ((ExistentialTypeRef) right).getId();
 			if (otherId != null && otherId.equals(existentialTypeRef.getId())) {
 				return success(); // same capture
 			}
@@ -742,7 +741,7 @@ import com.google.common.collect.Iterables;
 			return success(); // performance tweak
 		}
 		if (left instanceof ExistentialTypeRef) {
-			UUID otherId = ((ExistentialTypeRef) left).getId();
+			String otherId = ((ExistentialTypeRef) left).getId();
 			if (otherId != null && otherId.equals(existentialTypeRef.getId())) {
 				return success(); // same capture
 			}
