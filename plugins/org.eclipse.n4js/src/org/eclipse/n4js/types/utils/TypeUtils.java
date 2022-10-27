@@ -426,7 +426,7 @@ public class TypeUtils {
 		// projects of considerable size (stdlib, OPR) only about 13k captures were created per full build which
 		// amounted to <15ms for UUID creation.
 		final ExistentialTypeRef etr = TypeRefsFactory.eINSTANCE.createExistentialTypeRef();
-		etr.setId(UUID.randomUUID());
+		etr.setId(UUID.randomUUID().toString());
 		etr.setWildcard(wildcard);
 		return etr;
 	}
