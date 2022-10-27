@@ -11,29 +11,22 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
 	File "tslib1.d.ts" {
-		declare const KconstA : string;
-		export default KconstA;
+		export default function KconstA(): string;
 	}
 	File "tslib2.d.ts" {
-		import KconstB from './tslib1.d.ts';
-		export { KconstB };
+		export default function KconstB(): string;
 	}
    END_SETUP
  */
 
 
-import { KconstA } from "tslib1";
-import Kconst1 from "tslib1";
-import { KconstB } from "tslib2";
+import KconstA from "tslib1";
+import KconstB from "tslib2";
 
 
-// XPECT type of 'k' --> string
-let kA = KconstA;
+// XPECT type of 'kA' --> string
+let kA = KconstA();
 
 
-// XPECT type of 'k' --> string
-let k1 = Kconst1;
-
-
-// XPECT type of 'k' --> string
-let k2 = KconstB;
+// XPECT type of 'kB' --> string
+let kB = KconstB();

@@ -11,22 +11,26 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
 	File "tslib1.d.ts" {
-		export default function KconstA(): string;
+		export declare const createIntl: string;
+		export default class IntlProvider {}
 	}
 	File "tslib2.d.ts" {
-		export default function KconstB(): string;
+		import IntlProvider, { createIntl } from './tslib1.d.ts';
+		export { IntlProvider };
 	}
    END_SETUP
  */
 
 
-import KconstA from "tslib1";
-import KconstB from "tslib2";
+import IntlProvider, { createIntl } from "tslib1";
+import { IntlProvider as IntlProvider2 } from "tslib2";
 
 
-// XPECT type of 'k' --> string
-let kA = KconstA();
+// XPECT type of 'k1' --> string
+let k1 = createIntl;
 
+// XPECT type of 'k2' --> IntlProvider
+let k2 = new IntlProvider();
 
-// XPECT type of 'k' --> string
-let kB = KconstB();
+// XPECT type of 'k3' --> IntlProvider
+let k3 = new IntlProvider2();
