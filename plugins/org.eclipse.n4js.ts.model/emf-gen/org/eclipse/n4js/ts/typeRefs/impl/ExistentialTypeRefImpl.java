@@ -12,8 +12,6 @@ package org.eclipse.n4js.ts.typeRefs.impl;
 
 import java.lang.reflect.InvocationTargetException;
 
-import java.util.UUID;
-
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.EList;
@@ -56,7 +54,7 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	 * @generated
 	 * @ordered
 	 */
-	protected static final UUID ID_EDEFAULT = null;
+	protected static final String ID_EDEFAULT = null;
 
 	/**
 	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
@@ -66,7 +64,7 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	 * @generated
 	 * @ordered
 	 */
-	protected UUID id = ID_EDEFAULT;
+	protected String id = ID_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #isReopened() <em>Reopened</em>}' attribute.
@@ -123,7 +121,7 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	 * @generated
 	 */
 	@Override
-	public UUID getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -133,8 +131,8 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	 * @generated
 	 */
 	@Override
-	public void setId(UUID newId) {
-		UUID oldId = id;
+	public void setId(String newId) {
+		String oldId = id;
 		id = newId;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.EXISTENTIAL_TYPE_REF__ID, oldId, id));
@@ -289,7 +287,7 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__ID:
-				setId((UUID)newValue);
+				setId((String)newValue);
 				return;
 			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__REOPENED:
 				setReopened((Boolean)newValue);
