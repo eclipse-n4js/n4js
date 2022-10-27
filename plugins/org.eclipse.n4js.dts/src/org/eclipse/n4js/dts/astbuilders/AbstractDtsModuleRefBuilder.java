@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
+import java.nio.file.Path;
+
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.apache.log4j.Logger;
@@ -72,6 +74,19 @@ public abstract class AbstractDtsModuleRefBuilder<T extends ParserRuleContext, R
 
 		if (moduleSpecifier.startsWith("./")) {
 			moduleSpecifier = moduleSpecifier.substring(2);
+		}
+
+		if (moduleSpecifier.startsWith("../")) {
+			URI uri = resource.getURI().trimSegments(1); // trim current file
+			while (moduleSpecifier.startsWith("../")) {
+				moduleSpecifier = moduleSpecifier.substring(3);
+				uri = uri.trimSegments(1); // trim one parent folder
+			}
+
+			URI absModuleSpecifier = uri.appendSegment(moduleSpecifier);
+			Path absModuleSpecifierPath = Path.of(absModuleSpecifier.toFileString());
+			Path relModuleSpecifierPath = srcFolder.relativize(absModuleSpecifierPath);
+			moduleSpecifier = relModuleSpecifierPath.toString();
 		}
 
 		URI moduleSpecifierUri = null;
