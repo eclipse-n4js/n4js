@@ -23,6 +23,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.ImportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportedElementContext;
 import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.dts.utils.TripleSlashDirective;
+import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -101,7 +102,7 @@ public class DtsImportBuilder extends AbstractDtsModuleRefBuilder<ImportStatemen
 		setModuleSpecifier(result, ctx.StringLiteral()); // must also do this in case ctx.From() == null
 
 		if (ctx.Multiply() != null) {
-			// default import
+			// namespace import
 			NamespaceImportSpecifier nsis = N4JSFactory.eINSTANCE.createNamespaceImportSpecifier();
 			result.getImportSpecifiers().add(nsis);
 			nsis.setAlias(ctx.identifierName().getText());
@@ -128,8 +129,18 @@ public class DtsImportBuilder extends AbstractDtsModuleRefBuilder<ImportStatemen
 				}
 			}
 
-		} else if (ctx.identifierName() != null) {
-			// not supported
+		} else if (ctx.identifierName() != null && !ctx.identifierName().isEmpty()) {
+			// default import
+			DefaultImportSpecifier dis = N4JSFactory.eINSTANCE.createDefaultImportSpecifier();
+			String ieName = ctx.identifierName().getText();
+			dis.setImportedElementAsText(ieName);
+
+			TExportableElement tExpElemProxy = TypesFactory.eINSTANCE.createTExportableElement();
+			EReference eRef = N4JSPackage.eINSTANCE.getNamedImportSpecifier_ImportedElement();
+			ParserContextUtils.installProxy(resource, dis, eRef, tExpElemProxy, ieName);
+			dis.setImportedElement(tExpElemProxy);
+
+			result.getImportSpecifiers().add(dis);
 		}
 	}
 
