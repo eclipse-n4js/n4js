@@ -21,6 +21,7 @@ public class N4JSScopeProviderLocalOnly extends N4JSScopeProvider {
 	/** True: Proxies of IdentifierRefs are only resolved within the resource. Otherwise, the proxy is returned. */
 	private boolean suppressCrossFileResolutionOfIdentifierRef = false;
 
+	/** Returns an {@link TameAutoClosable} that suppresses cross-file resolution while it is open. */
 	public TameAutoClosable newCrossFileResolutionSuppressor() {
 		TameAutoClosable tac = new TameAutoClosable() {
 			private boolean tmpSuppressCrossFileResolutionOfIdentifierRef = init();
