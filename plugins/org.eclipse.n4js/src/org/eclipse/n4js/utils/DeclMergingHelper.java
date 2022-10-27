@@ -219,14 +219,14 @@ public class DeclMergingHelper {
 		Set<EObject> resultSet = new LinkedHashSet<>();
 
 		ProjectImportEnablingScope ctxPieScope = getProjectImportEnablingScope(context, eClass);
+		if (ctxPieScope == null) {
+			return Collections.emptyList();
+		}
+
 		if (QualifiedNameUtils.isGlobal(elemQN)) {
-			if (ctxPieScope == null) {
-				return Collections.emptyList();
-			}
-
 			resultSet.addAll(resolve(ctxPieScope.getElements(elemQN), context));
-		} else {
 
+		} else {
 			N4JSProjectConfigSnapshot elemPrj = workspaceAccess.findProjectContaining(element);
 			N4JSProjectConfigSnapshot ctxPrj = workspaceAccess.findProjectContaining(context);
 
