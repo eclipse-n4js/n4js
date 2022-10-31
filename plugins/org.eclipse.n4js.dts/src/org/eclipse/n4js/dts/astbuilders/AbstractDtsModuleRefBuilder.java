@@ -83,8 +83,7 @@ public abstract class AbstractDtsModuleRefBuilder<T extends ParserRuleContext, R
 				uri = uri.trimSegments(1); // trim one parent folder
 			}
 
-			URI absModuleSpecifier = uri.appendSegment(moduleSpecifier);
-			Path absModuleSpecifierPath = Path.of(absModuleSpecifier.toFileString());
+			Path absModuleSpecifierPath = Path.of(uri.toFileString(), moduleSpecifier);
 			Path relModuleSpecifierPath = srcFolder.relativize(absModuleSpecifierPath);
 			moduleSpecifier = relModuleSpecifierPath.toString();
 		}

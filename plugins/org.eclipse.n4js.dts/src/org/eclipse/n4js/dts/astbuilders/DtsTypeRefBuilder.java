@@ -75,10 +75,23 @@ import org.eclipse.n4js.ts.types.TypesFactory;
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefContext, TypeRef> {
+	final boolean handleReturnTypeRef;
+	private boolean returnTypeRefWasOptional = false;
 
 	/** Constructor */
 	public DtsTypeRefBuilder(AbstractDtsBuilder<?, ?> parent) {
+		this(parent, false);
+	}
+
+	/** Constructor */
+	public DtsTypeRefBuilder(AbstractDtsBuilder<?, ?> parent, boolean handleReturnTypeRef) {
 		super(parent);
+		this.handleReturnTypeRef = handleReturnTypeRef;
+	}
+
+	/** Returns true iff the resulting type reference is an optional return type ref */
+	protected boolean returnTypeRefWasOptional() {
+		return returnTypeRefWasOptional;
 	}
 
 	@Override
@@ -188,31 +201,54 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 
 	@Override
 	public void exitUnionTypeExpression(UnionTypeExpressionContext ctx) {
-		int n = ctx.intersectionTypeExpression().size();
-		if (result != null && n >= 2) {
-			UnionTypeExpression ute = TypeRefsFactory.eINSTANCE.createUnionTypeExpression();
+		if (result != null && ctx.intersectionTypeExpression().size() > 1) {
+			boolean returnTypeRefIsOptional = false;
+			List<TypeRef> typeRefs = new ArrayList<>();
 			for (IntersectionTypeExpressionContext childCtx : ctx.intersectionTypeExpression()) {
-				TypeRef childTypeRef = newTypeRefBuilder().consume(childCtx);
+				DtsTypeRefBuilder subTypeRefBuilder = newTypeRefBuilder(handleReturnTypeRef);
+				TypeRef childTypeRef = subTypeRefBuilder.consume(childCtx);
 				if (childTypeRef != null) {
-					ute.getTypeRefs().add(childTypeRef);
+					typeRefs.add(childTypeRef);
+				} else {
+					returnTypeRefIsOptional |= subTypeRefBuilder.returnTypeRefWasOptional();
 				}
 			}
-			result = ute;
+
+			if (typeRefs.size() == 0 && returnTypeRefIsOptional) {
+				DtsTypeRefBuilder subTypeRefBuilder = newTypeRefBuilder(handleReturnTypeRef);
+				typeRefs.add(subTypeRefBuilder.createParameterizedTypeRef("void", false));
+				returnTypeRefIsOptional = false;
+			}
+
+			if (typeRefs.size() == 1) {
+				result = typeRefs.get(0);
+			} else if (typeRefs.size() >= 2) {
+				UnionTypeExpression ute = TypeRefsFactory.eINSTANCE.createUnionTypeExpression();
+				ute.getTypeRefs().addAll(typeRefs);
+				result = ute;
+			}
+			result.setFollowedByQuestionMark(returnTypeRefIsOptional);
 		}
 	}
 
 	@Override
 	public void exitIntersectionTypeExpression(IntersectionTypeExpressionContext ctx) {
-		int n = ctx.operatorTypeRef().size();
-		if (result != null && n >= 2) {
-			IntersectionTypeExpression ite = TypeRefsFactory.eINSTANCE.createIntersectionTypeExpression();
+		if (result != null && ctx.operatorTypeRef().size() > 1) {
+			List<TypeRef> typeRefs = new ArrayList<>();
 			for (OperatorTypeRefContext childCtx : ctx.operatorTypeRef()) {
-				TypeRef childTypeRef = newTypeRefBuilder().consume(childCtx);
+				TypeRef childTypeRef = newTypeRefBuilder(handleReturnTypeRef).consume(childCtx);
 				if (childTypeRef != null) {
-					ite.getTypeRefs().add(childTypeRef);
+					typeRefs.add(childTypeRef);
 				}
 			}
-			result = ite;
+
+			if (typeRefs.size() == 1) {
+				result = typeRefs.get(0);
+			} else if (typeRefs.size() >= 2) {
+				IntersectionTypeExpression ite = TypeRefsFactory.eINSTANCE.createIntersectionTypeExpression();
+				ite.getTypeRefs().addAll(typeRefs);
+				result = ite;
+			}
 		}
 	}
 
@@ -269,7 +305,9 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 		fte.getTypeVars().addAll(newTypeVariablesBuilder().consume(ctx.typeParameters()));
 		fte.getFpars().addAll(newTFormalParametersBuilder().consumeWithDeclThisType(ctx.parameterBlock(), fte));
 		if (ctx.unionTypeExpression() != null) {
-			fte.setReturnTypeRef(orAnyPlus(newTypeRefBuilder().consume(ctx.unionTypeExpression())));
+			DtsTypeRefBuilder returnTypeRefBuilder = newTypeRefBuilderHandleReturnTypeRef();
+			fte.setReturnTypeRef(orAnyPlus(returnTypeRefBuilder.consume(ctx.unionTypeExpression())));
+			fte.setReturnValueMarkedOptional(returnTypeRefBuilder.returnTypeRefWasOptional());
 		} else if (ctx.typePredicateWithOperatorTypeRef() != null) {
 			fte.setReturnTypeRef(createBooleanTypeRef());
 		}
@@ -281,7 +319,8 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 		ParameterizedTypeRef ptr = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
 		ptr.setArrayNTypeExpression(true);
 		if (!ctx.tupleTypeArgument().isEmpty()) {
-			ptr.getDeclaredTypeArgs().addAll(newTypeRefBuilder().consumeManyTupleTypeArgs(ctx.tupleTypeArgument()));
+			ptr.getDeclaredTypeArgs()
+					.addAll(newTypeRefBuilder(handleReturnTypeRef).consumeManyTupleTypeArgs(ctx.tupleTypeArgument()));
 		} else {
 			ptr.getDeclaredTypeArgs().add(TypeRefsFactory.eINSTANCE.createWildcard());
 		}
@@ -353,9 +392,23 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 			return createAnyPlusTypeRef();
 		}
 
+		if ("void".equals(declTypeName)) {
+			if (handleReturnTypeRef) {
+				if (parent instanceof DtsTypeRefBuilder) {
+					DtsTypeRefBuilder parentTRB = (DtsTypeRefBuilder) parent;
+					if (parentTRB.handleReturnTypeRef) {
+						// at this point we know that the current 'void' reference is part of a composed type in a
+						// return type ref and will be omitted
+						returnTypeRefWasOptional = true;
+						return null;
+					}
+				}
+			}
+		}
+
 		if ("Readonly".equals(declTypeName) && typeArgs.iterator().hasNext()) {
 			// special case for Readonly
-			return newTypeRefBuilder().consume(typeArgs.iterator().next().typeRef());
+			return newTypeRefBuilder(handleReturnTypeRef).consume(typeArgs.iterator().next().typeRef());
 		} else {
 			ParameterizedTypeRef ptr = structural
 					? TypeRefsFactory.eINSTANCE.createParameterizedTypeRefStructural()
@@ -382,7 +435,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 			ParserContextUtils.installProxy(resource, ptr, eRef, typeProxy, lastSeg);
 			ptr.setDeclaredType(typeProxy);
 
-			ptr.getDeclaredTypeArgs().addAll(newTypeRefBuilder().consumeManyTypeArgs(typeArgs));
+			ptr.getDeclaredTypeArgs().addAll(newTypeRefBuilder(handleReturnTypeRef).consumeManyTypeArgs(typeArgs));
 
 			return ptr;
 		}

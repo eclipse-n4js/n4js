@@ -248,6 +248,16 @@ public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 	}
 
 	/***/
+	protected final DtsTypeRefBuilder newTypeRefBuilderHandleReturnTypeRef() {
+		return newTypeRefBuilder(true);
+	}
+
+	/***/
+	protected final DtsTypeRefBuilder newTypeRefBuilder(boolean handleReturnTypeRef) {
+		return new DtsTypeRefBuilder(this, handleReturnTypeRef);
+	}
+
+	/***/
 	protected final DtsTStructBodyBuilder newTStructBodyBuilder() {
 		return new DtsTStructBodyBuilder(this);
 	}
