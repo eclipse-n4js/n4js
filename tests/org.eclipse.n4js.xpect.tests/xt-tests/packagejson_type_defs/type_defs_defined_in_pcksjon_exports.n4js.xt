@@ -1,0 +1,92 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+
+	Workspace {
+		NodeModuleProject "dep" {
+			File "index.mjs" { from="dep_index.mjs" }
+			File "types.d.ts" { from="dep_types.d.ts" }
+			File "package.json" { from="dep_package.json" }
+		}
+		Project "myProject" {
+			Folder "src" {
+				ThisFile {}
+			}
+			File "package.json" { from="myProject_package.json" }
+		}
+	}
+
+
+	File "dep_types.d.ts" {
+	    declare function foo(p: string): number;
+	    export = foo;
+	}
+	File "dep_index.mjs" {
+		export function foo(p) { console.log(p); }
+	}
+	File "dep_package.json" {
+		{
+			"name": "dep",
+			"version": "2.0.0",
+  			"main": "index.mjs",
+  			"type": "module",
+  			"exports": {
+			    ".": {
+			      "types": "./types.d.ts",
+			      "module": "./index.mjs",
+			      "import": "./index.mjs",
+			      "default": "./index.mjs"
+			    }
+  			}
+		}
+	}
+
+
+
+	File "myProject_package.json" {
+		{
+			"name": "myProject",
+  			"main": "index.js",
+  			"type": "module",
+  			"dependencies": {
+  				"n4js-runtime": "*",
+  				"dep": "*"
+  			},
+  			"n4js": {
+				"projectType": "library",
+				"vendorId": "org.eclipse.n4js",
+				"vendorName": "Eclipse N4JS Project",
+				"output": "src-gen",
+				"sources": {
+					"source": [
+						"src"
+					]
+				}
+  			}
+		}
+	}
+
+	END_SETUP
+ */
+
+// XPECT noerrors -->
+import { foo } from "dep";
+
+let r = foo("hi");
+// XPECT type of 'r' --> number
+r;
+
+/* XPECT output ---
+hi
+--- */
