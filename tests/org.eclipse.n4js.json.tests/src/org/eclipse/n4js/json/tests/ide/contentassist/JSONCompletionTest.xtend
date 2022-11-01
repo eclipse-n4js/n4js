@@ -48,14 +48,17 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 				[Class, Snippet] devDependencies (Development dependencies of this npm) -> "devDependencies": {
 				    $1
 				}$0 [[0, 1] .. [0, 1]]
+				[Class, Snippet] exports (Entry point definitions) -> "exports": {
+				    $1
+				}$0 [[0, 1] .. [0, 1]]
 				[Property, Snippet] main (Main module. Path is relative to package root) -> "main": "$1"$0 [[0, 1] .. [0, 1]]
-				[Property, Snippet] module (Like "main", but provides a different file with esm code) -> "module": "$1"$0 [[0, 1] .. [0, 1]]
+				[Property, Snippet] module (Like "main" but provides a different file with esm code) -> "module": "$1"$0 [[0, 1] .. [0, 1]]
 				[Class, Snippet] n4js (N4JS section) -> "n4js": {
 				    $1
 				}$0 [[0, 1] .. [0, 1]]
 				[Property, Snippet] name (Npm name) -> "name": "$1"$0 [[0, 1] .. [0, 1]]
 				[Property, Snippet] type (The module format used for .js files in this project. Either 'commonjs' or 'module'.) -> "type": "$1"$0 [[0, 1] .. [0, 1]]
-				[Property, Snippet] types (Type module. (TypesScript) Path is relative to package root) -> "types": "$1"$0 [[0, 1] .. [0, 1]]
+				[Property, Snippet] types (Type module. (TypesScript) Path is relative to package root. Enabled only when using project import.) -> "types": "$1"$0 [[0, 1] .. [0, 1]]
 				[Property, Snippet] version (Npm semver version) -> "version": "$1"$0 [[0, 1] .. [0, 1]]
 				[Value, Snippet] workspaces (Array of projects names or glob that are members of the yarn workspace) -> "workspaces": [
 				    $1
@@ -82,14 +85,17 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 				[Class, Snippet] devDependencies (Development dependencies of this npm) -> "devDependencies": {
 				    $1
 				}$0 [[3, 1] .. [3, 1]]
+				[Class, Snippet] exports (Entry point definitions) -> "exports": {
+				    $1
+				}$0 [[3, 1] .. [3, 1]]
 				[Property, Snippet] main (Main module. Path is relative to package root) -> "main": "$1"$0 [[3, 1] .. [3, 1]]
-				[Property, Snippet] module (Like "main", but provides a different file with esm code) -> "module": "$1"$0 [[3, 1] .. [3, 1]]
+				[Property, Snippet] module (Like "main" but provides a different file with esm code) -> "module": "$1"$0 [[3, 1] .. [3, 1]]
 				[Class, Snippet] n4js (N4JS section) -> "n4js": {
 				    $1
 				}$0 [[3, 1] .. [3, 1]]
 				[Property, Snippet] name (Npm name) -> "name": "$1"$0 [[3, 1] .. [3, 1]]
 				[Property, Snippet] type (The module format used for .js files in this project. Either 'commonjs' or 'module'.) -> "type": "$1"$0 [[3, 1] .. [3, 1]]
-				[Property, Snippet] types (Type module. (TypesScript) Path is relative to package root) -> "types": "$1"$0 [[3, 1] .. [3, 1]]
+				[Property, Snippet] types (Type module. (TypesScript) Path is relative to package root. Enabled only when using project import.) -> "types": "$1"$0 [[3, 1] .. [3, 1]]
 				[Property, Snippet] version (Npm semver version) -> "version": "$1"$0 [[3, 1] .. [3, 1]]
 				[Value, Snippet] workspaces (Array of projects names or glob that are members of the yarn workspace) -> "workspaces": [
 				    $1

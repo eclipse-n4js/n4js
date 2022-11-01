@@ -62,7 +62,7 @@ public enum PackageJsonProperties {
 	/** Key of package.json property used to define entry point definitions. */
 	EXPORTS("exports", "Entry point definitions", JSONObject.class),
 	/** Key of package.json property used to define entry point definitions. */
-	EXPORTS_PATH(".", true, "Relative path", JSONObject.class, EXPORTS),
+	EXPORTS_PATH(".", true, "Relative path", JSONObject.class, ".", EXPORTS),
 	/** Key of package.json property used to define the entry point for TypeScript type definitions. */
 	EXPORTS_TYPES("types", "Entry-point for TypeScript type definitions", EXPORTS, EXPORTS_PATH),
 	/** Key of package.json property used to define the entry point for ESM modules. */
