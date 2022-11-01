@@ -366,8 +366,9 @@ public class PackageJsonHelper {
 		List<String> sourceContainerPaths = target.getSourceContainers().stream()
 				.flatMap(scd -> ProjectDescriptionUtils.getPathsNormalized(scd).stream())
 				.collect(Collectors.toList());
+		String mainOrTypesModule = target.getTypes() == null ? target.getMain() : target.getTypes();
 		String mainModulePath = ProjectDescriptionUtils.convertMainPathToModuleSpecifier(
-				target.getMain(), sourceContainerPaths);
+				mainOrTypesModule, sourceContainerPaths);
 		if (mainModulePath != null) {
 			target.setMainModule(mainModulePath);
 		}

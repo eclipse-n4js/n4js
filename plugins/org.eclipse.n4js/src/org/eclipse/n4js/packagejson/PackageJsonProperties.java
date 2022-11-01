@@ -54,7 +54,8 @@ public enum PackageJsonProperties {
 	// default see https://docs.npmjs.com/cli/v8/configuring-npm/package-json#main
 	MAIN("main", "Main module. Path is relative to package root", "index"),
 	/** Key of TypeScript standard, top-level package.json property "types". */
-	TYPES("types", "Type module. (TypesScript) Path is relative to package root"),
+	TYPES("types",
+			"Type module. (TypesScript) Path is relative to package root. Enabled only when using project import."),
 	/** Key of top-level package.json property "module", used by webpack and other tools. */
 	MODULE("module", "Like \"main\", but provides a different file with esm code"),
 

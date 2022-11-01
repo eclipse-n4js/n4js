@@ -74,7 +74,7 @@
  */
 
 // XPECT noerrors -->
-import { foo } from "dep";
+import { foo } from "dep"; // works only when using project import
 
 let r = foo("hi");
 // XPECT type of 'r' --> number
