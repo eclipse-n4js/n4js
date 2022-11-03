@@ -49,6 +49,7 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final String main;
 	private final String types;
 	private final String mainModule;
+	private final ImmutableList<ProjectExports> exports;
 	private final ProjectReference extendedRuntimeEnvironment;
 	private final ImmutableList<ProjectReference> providedRuntimeLibraries;
 	private final ImmutableList<ProjectReference> requiredRuntimeLibraries;
@@ -78,7 +79,7 @@ public class ProjectDescription extends ImmutableDataClass {
 	public ProjectDescription(FileURI location, FileURI relatedRootlocation,
 			String id, String packageName, String vendorId, String vendorName,
 			VersionNumber version, ProjectType projectType, String main, String types, String mainModule,
-			ProjectReference extendedRuntimeEnvironment,
+			Iterable<ProjectExports> exports, ProjectReference extendedRuntimeEnvironment,
 			Iterable<ProjectReference> providedRuntimeLibraries, Iterable<ProjectReference> requiredRuntimeLibraries,
 			Iterable<ProjectDependency> dependencies, String implementationId,
 			Iterable<ProjectReference> implementedProjects, String outputPath,
@@ -102,6 +103,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.main = main;
 		this.types = types;
 		this.mainModule = mainModule;
+		this.exports = ImmutableList.copyOf(exports);
 		this.extendedRuntimeEnvironment = extendedRuntimeEnvironment;
 		this.providedRuntimeLibraries = ImmutableList.copyOf(providedRuntimeLibraries);
 		this.requiredRuntimeLibraries = ImmutableList.copyOf(requiredRuntimeLibraries);
@@ -141,6 +143,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.main = template.main;
 		this.types = template.types;
 		this.mainModule = template.mainModule;
+		this.exports = template.exports;
 		this.extendedRuntimeEnvironment = template.extendedRuntimeEnvironment;
 		this.providedRuntimeLibraries = template.providedRuntimeLibraries;
 		this.requiredRuntimeLibraries = template.requiredRuntimeLibraries;
@@ -272,6 +275,10 @@ public class ProjectDescription extends ImmutableDataClass {
 
 	public String getTypes() {
 		return types;
+	}
+
+	public ImmutableList<ProjectExports> getExports() {
+		return exports;
 	}
 
 	public ProjectReference getExtendedRuntimeEnvironment() {

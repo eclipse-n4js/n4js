@@ -40,6 +40,7 @@ public class ProjectDescriptionBuilder {
 	private String main;
 	private String types;
 	private String mainModule;
+	private final List<ProjectExports> exports = new ArrayList<>();
 	private ProjectReference extendedRuntimeEnvironment;
 	private final List<ProjectReference> providedRuntimeLibraries = new ArrayList<>();
 	private final List<ProjectReference> requiredRuntimeLibraries = new ArrayList<>();
@@ -79,7 +80,7 @@ public class ProjectDescriptionBuilder {
 
 		return new ProjectDescription(location, relatedRootLocation, id,
 				packageName, vendorId, vendorName, version, projectType, main, types, mainModule,
-				extendedRuntimeEnvironment,
+				exports, extendedRuntimeEnvironment,
 				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
 				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage,
 				nestedNodeModulesFolder, esm, moduleProperty, n4jsNature, yarnWorkspaceRoot,
@@ -196,6 +197,15 @@ public class ProjectDescriptionBuilder {
 
 	public ProjectDescriptionBuilder setMainModule(String mainModule) {
 		this.mainModule = mainModule;
+		return this;
+	}
+
+	public List<ProjectExports> getExports() {
+		return exports;
+	}
+
+	public ProjectDescriptionBuilder addExports(ProjectExports export) {
+		this.exports.add(export);
 		return this;
 	}
 

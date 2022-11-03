@@ -36,6 +36,7 @@ import org.eclipse.n4js.n4JS.ModuleRef;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectExports;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.DeclMergingHelper;
@@ -474,7 +475,8 @@ public class ProjectImportEnablingScope implements IScope {
 				&& !Objects.equals(targetProject.getN4JSPackageName(), projectName)) {
 			// no elements found AND #findProject() returned a different project than we asked for (happens if a
 			// type definition project is available)
-			// -> as a fall back, try again in project we asked for (i.e. the defined project)
+			// -> try in project we asked for (i.e. the defined project)
+
 			targetProject = findProject(projectName, contextProject, false);
 			if (useMainModule) {
 				moduleNameToSearch = ImportSpecifierUtil.getMainModuleOfProject(targetProject);
@@ -484,6 +486,23 @@ public class ProjectImportEnablingScope implements IScope {
 			result = moduleNameToSearch != null
 					? getElementsWithDesiredProjectName(moduleNameToSearch, targetProject)
 					: Collections.emptyList();
+		}
+
+		if (result.isEmpty()
+				&& moduleName.isPresent()
+				&& projectName.getScopeName() == null
+				&& targetProject != null
+				&& !targetProject.getProjectDescription().getExports().isEmpty()) {
+			// try virtual packages defined in property package.json#exports
+
+			String exportsName = moduleName.orNull() == null ? null : moduleName.orNull().toString();
+
+			for (ProjectExports exports : targetProject.getProjectDescription().getExports()) {
+				if (Objects.equals(exportsName, exports.getExportsPathClean())) {
+					result = getElementsWithDesiredProjectName(exports.getMainModule(), targetProject);
+					break;
+				}
+			}
 		}
 
 		return result;
