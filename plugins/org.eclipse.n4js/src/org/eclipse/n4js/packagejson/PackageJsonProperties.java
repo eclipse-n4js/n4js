@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.packagejson;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -54,9 +55,20 @@ public enum PackageJsonProperties {
 	// default see https://docs.npmjs.com/cli/v8/configuring-npm/package-json#main
 	MAIN("main", "Main module. Path is relative to package root", "index"),
 	/** Key of TypeScript standard, top-level package.json property "types". */
-	TYPES("types", "Type module. (TypesScript) Path is relative to package root"),
+	TYPES("types",
+			"Type module. (TypesScript) Path is relative to package root. Enabled only when using project import."),
 	/** Key of top-level package.json property "module", used by webpack and other tools. */
-	MODULE("module", "Like \"main\", but provides a different file with esm code"),
+	MODULE("module", "Like \"main\" but provides a different file with esm code"),
+	/** Key of package.json property used to define entry point definitions. */
+	EXPORTS("exports", "Entry point definitions", JSONObject.class),
+	/** Key of package.json property used to define entry point definitions. */
+	EXPORTS_PATH(".", true, "Relative path", JSONObject.class, ".", EXPORTS),
+	/** Key of package.json property used to define the entry point for TypeScript type definitions. */
+	EXPORTS_TYPES("types", "Entry-point for TypeScript type definitions", EXPORTS, EXPORTS_PATH),
+	/** Key of package.json property used to define the entry point for ESM modules. */
+	EXPORTS_IMPORT("import", "Entry-point for ESM modules", "index", EXPORTS, EXPORTS_PATH),
+	/** Key of package.json property used by webpack and other tools. */
+	EXPORTS_MODULE("module", "Like \"main\" but provides a different file with esm code", EXPORTS, EXPORTS_PATH),
 
 	// Yarn properties
 	/**
@@ -141,8 +153,12 @@ public enum PackageJsonProperties {
 
 	/** section of the property within the package.json as a path of parents starting at the top level */
 	final public PackageJsonProperties[] parents;
+	/** all direct children of this property */
+	final public List<PackageJsonProperties> children = new ArrayList<>();
 	/** name of the property */
 	final public String name;
+	/** true iff this property name can have any postfix */
+	final public boolean anyPostfix;
 	/** description of the property */
 	final public String description;
 	/** default value of the property if the property is missing or null */
@@ -151,29 +167,41 @@ public enum PackageJsonProperties {
 	final public Class<? extends JSONValue> valueType;
 
 	private PackageJsonProperties(String name, String description, PackageJsonProperties... parents) {
-		this(name, description, JSONStringLiteral.class, null, parents);
+		this(name, false, description, JSONStringLiteral.class, null, parents);
 	}
 
 	private PackageJsonProperties(String name, String description, String defaultValue,
 			PackageJsonProperties... parents) {
 
-		this(name, description, JSONStringLiteral.class, defaultValue, parents);
+		this(name, false, description, JSONStringLiteral.class, defaultValue, parents);
 	}
 
 	private PackageJsonProperties(String name, String description, Class<? extends JSONValue> valueType,
 			PackageJsonProperties... parents) {
 
-		this(name, description, valueType, null, parents);
+		this(name, false, description, valueType, null, parents);
 	}
 
-	private PackageJsonProperties(String name, String description, Class<? extends JSONValue> valueType,
+	private PackageJsonProperties(String name, String description,
+			Class<? extends JSONValue> valueType,
+			Object defaultValue, PackageJsonProperties... parents) {
+
+		this(name, false, description, valueType, defaultValue, parents);
+	}
+
+	private PackageJsonProperties(String name, boolean anyPostfix, String description,
+			Class<? extends JSONValue> valueType,
 			Object defaultValue, PackageJsonProperties... parents) {
 
 		this.parents = parents;
 		this.name = name;
+		this.anyPostfix = anyPostfix;
 		this.description = description;
 		this.defaultValue = defaultValue;
 		this.valueType = valueType;
+		if (parents != null && parents.length > 0) {
+			parents[parents.length - 1].children.add(this);
+		}
 	}
 
 	static private Map<List<String>, Map<Class<? extends JSONValue>, PackageJsonProperties>> pathToEnum = new HashMap<>();
@@ -199,6 +227,8 @@ public enum PackageJsonProperties {
 			return null; // syntax error in JSON file
 		}
 		List<String> path = JSONModelUtils.getPathToNameValuePairOrNull(nvPair);
+		// path = rectifyPathNames(path); // not supported at the moment
+
 		Map<Class<? extends JSONValue>, PackageJsonProperties> typeMap = pathToEnum.get(path);
 		if (typeMap != null) {
 			Class<? extends JSONValue> valueClass = nvPair.getValue().getClass();
@@ -212,6 +242,35 @@ public enum PackageJsonProperties {
 			}
 		}
 		return null;
+	}
+
+	@SuppressWarnings("unused")
+	private static List<String> rectifyPathNames(List<String> path) {
+		if (!pathToEnum.containsKey(path)) {
+			// replace placeholders
+			for (int idx = 1; idx < path.size(); idx++) {
+				Map<Class<? extends JSONValue>, PackageJsonProperties> subPath = pathToEnum.get(path.subList(0, idx));
+				if (subPath == null) {
+					subPath = pathToEnum.get(path.subList(0, idx - 1));
+					if (subPath == null) {
+						return path; // can't help it
+					}
+
+					// find correct property
+					String pathParentName = path.get(idx - 1);
+					OUTER_LOOP: for (PackageJsonProperties prop : subPath.values()) {
+						for (PackageJsonProperties child : prop.children) {
+
+							if (child.anyPostfix && pathParentName.startsWith(child.name)) {
+								path.set(idx - 1, child.name); // rectify name
+								break OUTER_LOOP;
+							}
+						}
+					}
+				}
+			}
+		}
+		return path;
 	}
 
 	/**

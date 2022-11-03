@@ -46,6 +46,7 @@ import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
+import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescriptionBuilder;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
@@ -173,12 +174,18 @@ public class ProjectDescriptionLoader {
 	 * </ol>
 	 */
 	private void adjustMainPath(FileURI location, JSONDocument packageJSON) {
+		adjustMainPath(location, packageJSON, MAIN, "js");
+		adjustMainPath(location, packageJSON, PackageJsonProperties.TYPES, "d.ts");
+	}
+
+	private void adjustMainPath(FileURI location, JSONDocument packageJSON, PackageJsonProperties prop,
+			String fileExt) {
 		JSONValue content = packageJSON.getContent();
 		if (!(content instanceof JSONObject)) {
 			return;
 		}
 		JSONObject contentCasted = (JSONObject) content;
-		NameValuePair mainProperty = JSONModelUtils.getNameValuePair(contentCasted, MAIN.name).orElse(null);
+		NameValuePair mainProperty = JSONModelUtils.getNameValuePair(contentCasted, prop.name).orElse(null);
 
 		if (mainProperty == null) {
 			return;
@@ -197,14 +204,15 @@ public class ProjectDescriptionLoader {
 
 		URI locationWithMain = location.appendSegments(mainSegments).toURI();
 
-		if (!main.endsWith(".js") && isFile(URIConverter.INSTANCE, locationWithMain.appendFileExtension("js"))) {
-			main += ".js";
+		if (!main.endsWith("." + fileExt)
+				&& isFile(URIConverter.INSTANCE, locationWithMain.appendFileExtension(fileExt))) {
+			main += "." + fileExt;
 			mainProperty.setValue(JSONModelUtils.createStringLiteral(main));
 		} else if (isDirectory(URIConverter.INSTANCE, locationWithMain)) {
 			if (!(main.endsWith("/") || main.endsWith(File.separator))) {
 				main += "/";
 			}
-			main += "index.js";
+			main += "index." + fileExt;
 			mainProperty.setValue(JSONModelUtils.createStringLiteral(main));
 		}
 	}
