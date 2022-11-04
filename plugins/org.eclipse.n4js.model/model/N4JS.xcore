@@ -295,6 +295,13 @@ enum ModuleSpecifierForm {
 	 */
 	PROJECT,
 	/* 
+	 * A module specifier consisting of a project name followed by a path
+	 * defined in package.json property 'exports' (excluding '.').
+	 * The exports property defines a main module usually a types module.<p>
+	 * Example: <code>import {C} from "redux-saga/effects"</code>.
+	 */
+	PROJECT_EXPORTS,
+	/* 
 	 * Error case. Same as {@link #PROJECT}, but the target project does not
 	 * define a main module in its package.json.
 	 */

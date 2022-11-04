@@ -83,6 +83,22 @@ public enum ModuleSpecifierForm implements Enumerator {
 	PROJECT(0, "PROJECT", "PROJECT"),
 
 	/**
+	 * The '<em><b>PROJECT EXPORTS</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * A module specifier consisting of a project name followed by a path
+	 * defined in package.json property 'exports' (excluding '.').
+	 * The exports property defines a main module usually a types module.<p>
+	 * Example: <code>import {C} from "redux-saga/effects"</code>.
+	 * <!-- end-model-doc -->
+	 * @see #PROJECT_EXPORTS_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	PROJECT_EXPORTS(0, "PROJECT_EXPORTS", "PROJECT_EXPORTS"),
+
+	/**
 	 * The '<em><b>PROJECT NO MAIN</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -157,6 +173,23 @@ public enum ModuleSpecifierForm implements Enumerator {
 	public static final int PROJECT_VALUE = 0;
 
 	/**
+	 * The '<em><b>PROJECT EXPORTS</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * A module specifier consisting of a project name followed by a path
+	 * defined in package.json property 'exports' (excluding '.').
+	 * The exports property defines a main module usually a types module.<p>
+	 * Example: <code>import {C} from "redux-saga/effects"</code>.
+	 * <!-- end-model-doc -->
+	 * @see #PROJECT_EXPORTS
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int PROJECT_EXPORTS_VALUE = 0;
+
+	/**
 	 * The '<em><b>PROJECT NO MAIN</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -183,6 +216,7 @@ public enum ModuleSpecifierForm implements Enumerator {
 			PLAIN,
 			COMPLETE,
 			PROJECT,
+			PROJECT_EXPORTS,
 			PROJECT_NO_MAIN,
 		};
 
