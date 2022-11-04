@@ -227,7 +227,7 @@ public enum PackageJsonProperties {
 			return null; // syntax error in JSON file
 		}
 		List<String> path = JSONModelUtils.getPathToNameValuePairOrNull(nvPair);
-		// path = rectifyPathNames(path); // not supported at the moment
+		path = rectifyPathNames(path); // not supported at the moment
 
 		Map<Class<? extends JSONValue>, PackageJsonProperties> typeMap = pathToEnum.get(path);
 		if (typeMap != null) {

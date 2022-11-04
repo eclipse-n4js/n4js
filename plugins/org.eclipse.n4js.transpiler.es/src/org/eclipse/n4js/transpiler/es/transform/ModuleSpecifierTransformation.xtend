@@ -138,6 +138,11 @@ class ModuleSpecifierTransformation extends Transformation {
 			// in case of project imports (a.k.a. bare imports) we simply use
 			// the target project's name as module specifier:
 			return getActualProjectName(targetProject).rawName; // no file extension to add!
+		} else if (moduleSpecifierForm === ModuleSpecifierForm.PROJECT_EXPORTS) {
+			// SPECIAL CASE #4
+			// in case of project exports imports (defined by package.json property 'exports') we simply use
+			// the original module specifier:
+			return importDeclIM.moduleSpecifierAsText
 		}
 
 		return createAbsoluteModuleSpecifier(targetProject, targetModule);

@@ -45,10 +45,12 @@ import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
+import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.packagejson.projectDescription.DependencyType;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDependency;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescriptionBuilder;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectExports;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
@@ -56,6 +58,7 @@ import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.inject.Inject;
 
@@ -149,9 +152,14 @@ public class PackageJsonHelper {
 			case EXPORTS:
 				List<NameValuePair> exportElems = asNameValuePairsOrEmpty(value);
 				for (NameValuePair nvPair : exportElems) {
-					if (".".equals(nvPair.getName()) || "./".equals(nvPair.getName())) {
+					String exportsPath = nvPair.getName();
+					List<NameValuePair> nvPairExports = asNameValuePairsOrEmpty(nvPair.getValue());
+					if (".".equals(exportsPath) || "./".equals(exportsPath)) {
 						// only cases supported right now
-						convertRootPairs(target, asNameValuePairsOrEmpty(nvPair.getValue()));
+						convertRootPairs(target, nvPairExports);
+					} else {
+						ProjectExports exports = convertExportPairs(exportsPath, nvPairExports);
+						target.addExports(exports);
 					}
 				}
 				break;
@@ -194,6 +202,47 @@ public class PackageJsonHelper {
 				break;
 			}
 		}
+	}
+
+	private ProjectExports convertExportPairs(String exportsPath, List<NameValuePair> rootPairs) {
+		String main = null, types = null;
+		Boolean moduleProperty = null;
+		QualifiedName mainModuleQN = null;
+
+		for (NameValuePair pair : rootPairs) {
+			PackageJsonProperties property = PackageJsonProperties.valueOfNameValuePairOrNull(pair);
+			if (property == null) {
+				continue;
+			}
+
+			JSONValue value = pair.getValue();
+			switch (property) {
+			case EXPORTS_TYPES:
+				types = asNonEmptyStringOrNull(value);
+				break;
+			case EXPORTS_IMPORT:
+				main = asNonEmptyStringOrNull(value);
+				break;
+			case EXPORTS_MODULE:
+				// we don't care about the actual value, just about the fact that property "module" is present
+				moduleProperty = true;
+				break;
+			default:
+				break;
+			}
+		}
+		String mainModuleName = types == null ? main : types;
+		if (mainModuleName != null) {
+			mainModuleName = mainModuleName.startsWith("./") ? mainModuleName.substring(2) : mainModuleName;
+			if (mainModuleName.endsWith(N4JSGlobals.DTS_FILE_EXTENSION)) {
+				mainModuleName = mainModuleName.substring(0, mainModuleName.length() - 5);
+			} else if (mainModuleName.endsWith(N4JSGlobals.JS_FILE_EXTENSION)) {
+				mainModuleName = mainModuleName.substring(0, mainModuleName.length() - 3);
+			}
+			mainModuleQN = QualifiedName.create(mainModuleName.split(N4JSQualifiedNameConverter.DELIMITER));
+		}
+
+		return new ProjectExports(exportsPath, main, types, mainModuleQN, moduleProperty);
 	}
 
 	private void convertN4jsPairs(ProjectDescriptionBuilder target, List<NameValuePair> n4jsPairs) {
