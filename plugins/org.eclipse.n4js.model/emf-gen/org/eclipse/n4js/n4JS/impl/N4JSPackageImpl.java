@@ -10015,6 +10015,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		addEEnumLiteral(moduleSpecifierFormEEnum, ModuleSpecifierForm.PLAIN);
 		addEEnumLiteral(moduleSpecifierFormEEnum, ModuleSpecifierForm.COMPLETE);
 		addEEnumLiteral(moduleSpecifierFormEEnum, ModuleSpecifierForm.PROJECT);
+		addEEnumLiteral(moduleSpecifierFormEEnum, ModuleSpecifierForm.PROJECT_EXPORTS);
 		addEEnumLiteral(moduleSpecifierFormEEnum, ModuleSpecifierForm.PROJECT_NO_MAIN);
 
 		initEEnum(variableStatementKeywordEEnum, VariableStatementKeyword.class, "VariableStatementKeyword");

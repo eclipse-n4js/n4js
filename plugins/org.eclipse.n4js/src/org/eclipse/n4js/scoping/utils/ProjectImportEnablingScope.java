@@ -36,6 +36,7 @@ import org.eclipse.n4js.n4JS.ModuleRef;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectExports;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.DeclMergingHelper;
@@ -223,6 +224,9 @@ public class ProjectImportEnablingScope implements IScope {
 		case PROJECT:
 			sbErrrorMessage.append("project import");
 			break;
+		case PROJECT_EXPORTS:
+			sbErrrorMessage.append("project 'exports' import");
+			break;
 		case COMPLETE:
 			sbErrrorMessage.append("complete module specifier (with project name as first segment)");
 			break;
@@ -390,14 +394,21 @@ public class ProjectImportEnablingScope implements IScope {
 			name = QualifiedName.create(segments);
 		}
 
-		ModuleSpecifierForm moduleSpecifierForm = computeImportType(name, this.contextProject);
-
-		storeModuleSpecifierFormInAST(moduleSpecifierForm);
+		ModuleSpecifierForm moduleSpecifierForm = loadModuleSpecifierFormInAST();
+		if (moduleSpecifierForm == null || moduleSpecifierForm == ModuleSpecifierForm.UNKNOWN) {
+			moduleSpecifierForm = computeImportType(name, this.contextProject);
+			storeModuleSpecifierFormInAST(moduleSpecifierForm);
+		}
 
 		switch (moduleSpecifierForm) {
 		case PROJECT: {
 			final N4JSPackageName firstSegment = new N4JSPackageName(name.getFirstSegment());
 			return findModulesInProject(Optional.absent(), firstSegment);
+		}
+		case PROJECT_EXPORTS: {
+			final N4JSPackageName firstSegment = new N4JSPackageName(name.getFirstSegment());
+			final QualifiedName exportsName = name.skipFirst(1);
+			return findModulesInProjectExports(firstSegment, exportsName);
 		}
 		case COMPLETE: {
 			final N4JSPackageName firstSegment = new N4JSPackageName(name.getFirstSegment());
@@ -474,7 +485,8 @@ public class ProjectImportEnablingScope implements IScope {
 				&& !Objects.equals(targetProject.getN4JSPackageName(), projectName)) {
 			// no elements found AND #findProject() returned a different project than we asked for (happens if a
 			// type definition project is available)
-			// -> as a fall back, try again in project we asked for (i.e. the defined project)
+			// -> try in project we asked for (i.e. the defined project)
+
 			targetProject = findProject(projectName, contextProject, false);
 			if (useMainModule) {
 				moduleNameToSearch = ImportSpecifierUtil.getMainModuleOfProject(targetProject);
@@ -486,7 +498,38 @@ public class ProjectImportEnablingScope implements IScope {
 					: Collections.emptyList();
 		}
 
+		if (result.isEmpty()
+				&& moduleName.isPresent()
+				&& projectName.getScopeName() == null
+				&& targetProject != null
+				&& !targetProject.getProjectDescription().getExports().isEmpty()) {
+			// try virtual packages defined in property package.json#exports
+
+			String exportsName = moduleName.orNull() == null ? null : moduleName.orNull().toString();
+
+			for (ProjectExports exports : targetProject.getProjectDescription().getExports()) {
+				if (Objects.equals(exportsName, exports.getExportsPathClean())) {
+					result = getElementsWithDesiredProjectName(exports.getMainModule(), targetProject);
+					break;
+				}
+			}
+		}
+
 		return result;
+	}
+
+	private Collection<IEObjectDescription> findModulesInProjectExports(N4JSPackageName projectName,
+			QualifiedName exportsName) {
+
+		N4JSProjectConfigSnapshot targetProject = findProject(projectName, contextProject, true);
+		String exportsNameStr = exportsName.toString();
+
+		for (ProjectExports exports : targetProject.getProjectDescription().getExports()) {
+			if (Objects.equals(exportsNameStr, exports.getExportsPathClean())) {
+				return getElementsWithDesiredProjectName(exports.getMainModule(), targetProject);
+			}
+		}
+		return Collections.emptyList();
 	}
 
 	/**
@@ -569,6 +612,14 @@ public class ProjectImportEnablingScope implements IScope {
 				}, impExpDecl);
 			}
 		}
+	}
+
+	private ModuleSpecifierForm loadModuleSpecifierFormInAST() {
+		if (importOrExportDecl.isPresent()) {
+			ModuleRef impExpDecl = importOrExportDecl.get();
+			return impExpDecl.getModuleSpecifierForm();
+		}
+		return null;
 	}
 
 	/**

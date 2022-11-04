@@ -10,8 +10,12 @@
  */
 package org.eclipse.n4js.scoping.utils;
 
+import java.util.Objects;
+
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectExports;
+import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.xtext.naming.QualifiedName;
 
@@ -49,8 +53,16 @@ public class ImportSpecifierUtil {
 					return ModuleSpecifierForm.PROJECT;
 				}
 			} else {
-				return ModuleSpecifierForm.COMPLETE;
+				if (!project.getProjectDescription().getExports().isEmpty()) {
+					String tailName = Strings.join("/", name.skipFirst(1).getSegments());
+					for (ProjectExports pExports : project.getProjectDescription().getExports()) {
+						if (Objects.equals(tailName, pExports.getExportsPathClean())) {
+							return ModuleSpecifierForm.PROJECT_EXPORTS;
+						}
+					}
+				}
 			}
+			return ModuleSpecifierForm.COMPLETE;
 		}
 		// PRIORITY 2: interpret 'name' as a plain module specifier (i.e. without project ID)
 		// -> simplest case, because this is exactly how elements are identified within the Xtext index,
