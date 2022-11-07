@@ -59,6 +59,9 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 				[Property, Snippet] name (Npm name) -> "name": "$1"$0 [[0, 1] .. [0, 1]]
 				[Property, Snippet] type (The module format used for .js files in this project. Either 'commonjs' or 'module'.) -> "type": "$1"$0 [[0, 1] .. [0, 1]]
 				[Property, Snippet] types (Type module. (TypesScript) Path is relative to package root. Enabled only when using project import.) -> "types": "$1"$0 [[0, 1] .. [0, 1]]
+				[Class, Snippet] typesVersions (Defines source paths that contain type definition modules for specific TypeScript versions.) -> "typesVersions": {
+				    $1
+				}$0 [[0, 1] .. [0, 1]]
 				[Property, Snippet] version (Npm semver version) -> "version": "$1"$0 [[0, 1] .. [0, 1]]
 				[Value, Snippet] workspaces (Array of projects names or glob that are members of the yarn workspace) -> "workspaces": [
 				    $1
@@ -96,6 +99,9 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 				[Property, Snippet] name (Npm name) -> "name": "$1"$0 [[3, 1] .. [3, 1]]
 				[Property, Snippet] type (The module format used for .js files in this project. Either 'commonjs' or 'module'.) -> "type": "$1"$0 [[3, 1] .. [3, 1]]
 				[Property, Snippet] types (Type module. (TypesScript) Path is relative to package root. Enabled only when using project import.) -> "types": "$1"$0 [[3, 1] .. [3, 1]]
+				[Class, Snippet] typesVersions (Defines source paths that contain type definition modules for specific TypeScript versions.) -> "typesVersions": {
+				    $1
+				}$0 [[3, 1] .. [3, 1]]
 				[Property, Snippet] version (Npm semver version) -> "version": "$1"$0 [[3, 1] .. [3, 1]]
 				[Value, Snippet] workspaces (Array of projects names or glob that are members of the yarn workspace) -> "workspaces": [
 				    $1

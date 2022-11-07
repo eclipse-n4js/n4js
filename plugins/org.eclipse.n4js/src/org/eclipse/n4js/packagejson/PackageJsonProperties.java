@@ -57,6 +57,10 @@ public enum PackageJsonProperties {
 	/** Key of TypeScript standard, top-level package.json property "types". */
 	TYPES("types",
 			"Type module. (TypesScript) Path is relative to package root. Enabled only when using project import."),
+	/** Key of TypeScript standard, top-level package.json property "types". */
+	TYPES_VERSIONS("typesVersions",
+			"Defines source paths that contain type definition modules for specific TypeScript versions.",
+			JSONObject.class),
 	/** Key of top-level package.json property "module", used by webpack and other tools. */
 	MODULE("module", "Like \"main\" but provides a different file with esm code"),
 	/** Key of package.json property used to define entry point definitions. */
