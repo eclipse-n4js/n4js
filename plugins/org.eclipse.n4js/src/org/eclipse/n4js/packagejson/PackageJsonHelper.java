@@ -145,6 +145,9 @@ public class PackageJsonHelper {
 			case TYPES:
 				target.setTypes(asNonEmptyStringOrNull(value));
 				break;
+			case TYPES_VERSIONS:
+				target.setTypesVersions(convertTypesVersions(asNameValuePairsOrEmpty(value)));
+				break;
 			case MODULE:
 				// we don't care about the actual value, just about the fact that property "module" is present
 				target.setModuleProperty(true);
@@ -204,12 +207,38 @@ public class PackageJsonHelper {
 		}
 	}
 
-	private ProjectExports convertExportPairs(String exportsPath, List<NameValuePair> rootPairs) {
+	private String convertTypesVersions(List<NameValuePair> pairs) {
+		if (pairs.isEmpty()) {
+			return null;
+		}
+
+		NameValuePair fstEntry = pairs.get(0); // TODO: check all entries and select highest ts version
+		List<NameValuePair> redefinitionPaths = asNameValuePairsOrEmpty(fstEntry.getValue());
+		if (redefinitionPaths.isEmpty()) {
+			return null;
+		}
+
+		// TODO: support path redefinitions
+		for (NameValuePair pathPair : redefinitionPaths) {
+			if ("*".equals(pathPair.getName())) {
+				List<String> paths = asStringsInArrayOrEmpty(pathPair.getValue());
+				for (String path : paths) {
+					if (path.endsWith("*")) {
+						return path.substring(0, path.length() - 1);
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	private ProjectExports convertExportPairs(String exportsPath, List<NameValuePair> pairs) {
 		String main = null, types = null;
 		Boolean moduleProperty = null;
 		QualifiedName mainModuleQN = null;
 
-		for (NameValuePair pair : rootPairs) {
+		for (NameValuePair pair : pairs) {
 			PackageJsonProperties property = PackageJsonProperties.valueOfNameValuePairOrNull(pair);
 			if (property == null) {
 				continue;
@@ -435,14 +464,20 @@ public class PackageJsonHelper {
 			target.setProjectType(ProjectType.PLAINJS);
 		}
 
-		List<String> sourceContainerPaths = target.getSourceContainers().stream()
-				.flatMap(scd -> ProjectDescriptionUtils.getPathsNormalized(scd).stream())
-				.collect(Collectors.toList());
-		String mainOrTypesModule = target.getTypes() == null ? target.getMain() : target.getTypes();
-		String mainModulePath = ProjectDescriptionUtils.convertMainPathToModuleSpecifier(
-				mainOrTypesModule, sourceContainerPaths);
-		if (mainModulePath != null) {
-			target.setMainModule(mainModulePath);
+		String mainOrTypesModulePath;
+		if (target.getTypes() == null) {
+			mainOrTypesModulePath = target.getMain();
+		} else {
+			mainOrTypesModulePath = target.getTypes();
+			if (target.getTypesVersions() != null) {
+				mainOrTypesModulePath = target.getTypesVersions() + mainOrTypesModulePath;
+			}
+		}
+		mainOrTypesModulePath = ProjectDescriptionUtils.convertMainPathToModuleSpecifier(
+				mainOrTypesModulePath, List.of("."));
+
+		if (mainOrTypesModulePath != null) {
+			target.setMainModule(mainOrTypesModulePath);
 		}
 
 		if (target.getPackageName() == null) {
@@ -453,7 +488,6 @@ public class PackageJsonHelper {
 			// the entire contents will be deleted.
 			target.setOutputPath(".");
 		}
-
 	}
 
 	/**

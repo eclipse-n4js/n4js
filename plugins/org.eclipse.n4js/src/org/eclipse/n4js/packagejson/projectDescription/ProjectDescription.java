@@ -48,6 +48,7 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final ProjectType projectType;
 	private final String main;
 	private final String types;
+	private final String typesVersions;
 	private final String mainModule;
 	private final ImmutableList<ProjectExports> exports;
 	private final ProjectReference extendedRuntimeEnvironment;
@@ -78,8 +79,8 @@ public class ProjectDescription extends ImmutableDataClass {
 	/** Better use a {@link ProjectDescriptionBuilder builder}. */
 	public ProjectDescription(FileURI location, FileURI relatedRootlocation,
 			String id, String packageName, String vendorId, String vendorName,
-			VersionNumber version, ProjectType projectType, String main, String types, String mainModule,
-			Iterable<ProjectExports> exports, ProjectReference extendedRuntimeEnvironment,
+			VersionNumber version, ProjectType projectType, String main, String types, String typesVersions,
+			String mainModule, Iterable<ProjectExports> exports, ProjectReference extendedRuntimeEnvironment,
 			Iterable<ProjectReference> providedRuntimeLibraries, Iterable<ProjectReference> requiredRuntimeLibraries,
 			Iterable<ProjectDependency> dependencies, String implementationId,
 			Iterable<ProjectReference> implementedProjects, String outputPath,
@@ -102,6 +103,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.projectType = projectType;
 		this.main = main;
 		this.types = types;
+		this.typesVersions = typesVersions;
 		this.mainModule = mainModule;
 		this.exports = ImmutableList.copyOf(exports);
 		this.extendedRuntimeEnvironment = extendedRuntimeEnvironment;
@@ -142,6 +144,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.projectType = template.projectType;
 		this.main = template.main;
 		this.types = template.types;
+		this.typesVersions = template.typesVersions;
 		this.mainModule = template.mainModule;
 		this.exports = template.exports;
 		this.extendedRuntimeEnvironment = template.extendedRuntimeEnvironment;
@@ -187,6 +190,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		builder.setProjectType(projectType);
 		builder.setMain(main);
 		builder.setTypes(types);
+		builder.setTypes(typesVersions);
 		builder.setMainModule(mainModule);
 		builder.setExtendedRuntimeEnvironment(extendedRuntimeEnvironment);
 		builder.getProvidedRuntimeLibraries().addAll(providedRuntimeLibraries);
@@ -275,6 +279,10 @@ public class ProjectDescription extends ImmutableDataClass {
 
 	public String getTypes() {
 		return types;
+	}
+
+	public String getTypesVersions() {
+		return typesVersions;
 	}
 
 	public ImmutableList<ProjectExports> getExports() {
@@ -446,6 +454,7 @@ public class ProjectDescription extends ImmutableDataClass {
 				projectType,
 				main,
 				types,
+				typesVersions,
 				mainModule,
 				extendedRuntimeEnvironment,
 				providedRuntimeLibraries,
@@ -487,6 +496,7 @@ public class ProjectDescription extends ImmutableDataClass {
 				&& projectType == other.projectType
 				&& Objects.equals(main, other.main)
 				&& Objects.equals(types, other.types)
+				&& Objects.equals(typesVersions, other.typesVersions)
 				&& Objects.equals(mainModule, other.mainModule)
 				&& Objects.equals(extendedRuntimeEnvironment, other.extendedRuntimeEnvironment)
 				&& Objects.equals(providedRuntimeLibraries, other.providedRuntimeLibraries)

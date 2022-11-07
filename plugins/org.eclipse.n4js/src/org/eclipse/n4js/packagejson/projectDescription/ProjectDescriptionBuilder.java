@@ -39,6 +39,7 @@ public class ProjectDescriptionBuilder {
 	private ProjectType projectType;
 	private String main;
 	private String types;
+	private String typesVersions;
 	private String mainModule;
 	private final List<ProjectExports> exports = new ArrayList<>();
 	private ProjectReference extendedRuntimeEnvironment;
@@ -79,7 +80,7 @@ public class ProjectDescriptionBuilder {
 				: isGeneratorEnabledRewriteCjsImports;
 
 		return new ProjectDescription(location, relatedRootLocation, id,
-				packageName, vendorId, vendorName, version, projectType, main, types, mainModule,
+				packageName, vendorId, vendorName, version, projectType, main, types, typesVersions, mainModule,
 				exports, extendedRuntimeEnvironment,
 				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
 				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage,
@@ -222,8 +223,17 @@ public class ProjectDescriptionBuilder {
 		return types;
 	}
 
-	public ProjectDescriptionBuilder setTypes(String typesModule) {
-		this.types = typesModule;
+	public ProjectDescriptionBuilder setTypes(String types) {
+		this.types = types;
+		return this;
+	}
+
+	public String getTypesVersions() {
+		return typesVersions;
+	}
+
+	public ProjectDescriptionBuilder setTypesVersions(String typesVersions) {
+		this.typesVersions = typesVersions;
 		return this;
 	}
 
