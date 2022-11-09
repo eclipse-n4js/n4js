@@ -341,12 +341,9 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 			List<String> globsToInclude = new ArrayList<>();
 			List<String> globsToExclude = new ArrayList<>();
 
-			URI main = pd.getMain() == null
+			URI main = pd.getMainModule() == null
 					? null
-					: URI.createFileURI(pd.getMain()).resolve(getPath());
-			URI types = pd.getTypes() == null
-					? null
-					: URI.createFileURI(pd.getTypes()).resolve(getPath());
+					: URI.createFileURI(pd.getMainModule()).resolve(getPath());
 
 			if (main != null) {
 				if (URIUtils.toFile(main).isFile()) {
@@ -355,13 +352,6 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 					startUris.add(main.appendFileExtension(N4JSGlobals.JS_FILE_EXTENSION));
 				} else if (URIUtils.toFile(main.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION)).isFile()) {
 					startUris.add(main.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION));
-				}
-			}
-			if (types != null) {
-				if (URIUtils.toFile(types).isFile()) {
-					startUris.add(types);
-				} else if (URIUtils.toFile(types.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION)).isFile()) {
-					startUris.add(types.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION));
 				}
 			}
 
