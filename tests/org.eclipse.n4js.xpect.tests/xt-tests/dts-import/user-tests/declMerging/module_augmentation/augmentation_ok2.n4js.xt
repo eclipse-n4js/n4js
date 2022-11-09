@@ -1,0 +1,104 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+
+	Workspace {
+		Project "P1" {
+			Folder "src" {
+				ThisFile {}
+			}
+			File "package.json" { from="myProject_package.json" }
+		}
+		Project "P2" {
+			Folder "src" {
+				Folder "common" {
+					File "B.d.ts" { from="B.d.ts" }
+					File "C.d.ts" { from="C.d.ts" }
+				}
+				File "index.d.ts" { from="augmentation_ok2_A.d.ts" }
+			}
+			File "package.json" { from="P2_package.json" }
+		}
+	}
+	
+	
+	File "B.d.ts" {
+		import _ = require("../index");
+		declare module "../index" {
+		    interface LoDashStatic {
+		        assign(object: any): void;
+		    }
+		    interface LoDashStatic {
+		        assignIn(object: any): void;
+		    }
+		}
+	}
+	File "C.d.ts" {
+		import _ = require("../index");
+		declare module "../index" {
+		    interface LoDashStatic {
+		        extend(object: any): void;
+		    }
+		}
+	}
+	File "P2_package.json" {
+		{
+			"name": "P2",
+  			"main": "index.js",
+  			"types": "src/index.d.ts",
+  			"type": "module"
+		}
+	}
+
+
+	File "myProject_package.json" {
+		{
+			"name": "myProject",
+  			"main": "index.js",
+  			"type": "module",
+  			"dependencies": {
+  				"n4js-runtime": "*",
+  				"P2": "*"
+  			},
+  			"n4js": {
+				"projectType": "library",
+				"vendorId": "org.eclipse.n4js",
+				"vendorName": "Eclipse N4JS Project",
+				"output": "src-gen",
+				"sources": {
+					"source": [
+						"src"
+					]
+				}
+  			}
+		}
+	}
+
+	END_SETUP
+ */
+
+// XPECT noerrors -->
+import { LoDashStatic } from "P2";
+// XPECT noerrors -->
+import { extend } from "P2";
+// XPECT noerrors -->
+import { assign } from "P2";
+// XPECT noerrors -->
+import { assignIn } from "P2";
+
+let x: LoDashStatic;
+x;
+extend;
+assign;
+assignIn;
