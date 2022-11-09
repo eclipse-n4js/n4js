@@ -321,6 +321,9 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		if (packageName != null && packageName.isScopeTypes()) {
 			return true;
 		}
+		if (pd.getTypes() != null && !pd.getTypes().isBlank()) {
+			return true;
+		}
 		return false;
 	}
 
@@ -348,10 +351,10 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 			if (main != null) {
 				if (URIUtils.toFile(main).isFile()) {
 					startUris.add(main);
-				} else if (URIUtils.toFile(main.appendFileExtension(N4JSGlobals.JS_FILE_EXTENSION)).isFile()) {
-					startUris.add(main.appendFileExtension(N4JSGlobals.JS_FILE_EXTENSION));
 				} else if (URIUtils.toFile(main.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION)).isFile()) {
 					startUris.add(main.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION));
+				} else if (URIUtils.toFile(main.appendFileExtension(N4JSGlobals.JS_FILE_EXTENSION)).isFile()) {
+					startUris.add(main.appendFileExtension(N4JSGlobals.JS_FILE_EXTENSION));
 				}
 			}
 

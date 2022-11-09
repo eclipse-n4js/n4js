@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.ModuleRef;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.postprocessing.N4JSPostProcessor;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.builtin.N4Scheme;
@@ -42,6 +43,7 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.validation.Issue;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -175,7 +177,7 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 
 			Multimap<String, URI> moduleName2Uri = getModuleName2UrisMap(projectConfig, allUris);
 			List<URI> sortedUriClosure = computeSortedUriClosure(initialRequest.getResourceSet(),
-					projectConfig.getName(), moduleName2Uri, startUris);
+					projectConfig, moduleName2Uri, startUris);
 
 			if (isInitialBuild) {
 				return new AdjustedBuildRequest(initialRequest, sortedUriClosure, null);
@@ -200,7 +202,7 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 			List<URI> allUris = initialRequest.getDirtyFiles();
 			Multimap<String, URI> moduleName2Uri = getModuleName2UrisMap(projectConfig, allUris);
 			List<URI> sortedUris = computeSortedUriClosure(initialRequest.getResourceSet(),
-					projectConfig.getName(), moduleName2Uri, allUris);
+					projectConfig, moduleName2Uri, allUris);
 
 			return new AdjustedBuildRequest(initialRequest, sortedUris, null);
 
@@ -225,14 +227,16 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 		return moduleName2Uri;
 	}
 
-	private Collection<URI> getImportedUris(WorkspaceAwareResourceSet resourceSet, String prjName,
+	private Collection<URI> getImportedUris(WorkspaceAwareResourceSet resourceSet,
+			N4JSProjectConfigSnapshot projectConfig,
 			Multimap<String, URI> moduleName2Uri, URI uri) {
 
 		List<URI> result = new ArrayList<>();
 		List<ModuleRef> moduleRefs = getModuleRefsToOtherModules(resourceSet, uri);
 		for (ModuleRef moduleRef : moduleRefs) {
 			String moduleSpecifier = moduleRef.getModuleSpecifierAsText();
-			String adjModuleSpecifier = getAdjustedModuleSpecifierOrNull(moduleSpecifier, prjName, moduleName2Uri);
+			String adjModuleSpecifier = getAdjustedModuleSpecifierOrNull(moduleSpecifier, projectConfig,
+					moduleName2Uri);
 			if (adjModuleSpecifier != null) {
 				result.addAll(moduleName2Uri.get(adjModuleSpecifier));
 			}
@@ -279,13 +283,20 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 		}
 	}
 
-	private String getAdjustedModuleSpecifierOrNull(String moduleSpecifier, String prjName,
+	private String getAdjustedModuleSpecifierOrNull(String moduleSpecifier, N4JSProjectConfigSnapshot projectConfig,
 			Multimap<String, URI> moduleName2Uri) {
 
+		ProjectDescription pd = projectConfig.getProjectDescription();
+		if (!Strings.isNullOrEmpty(pd.getTypesVersions())) {
+			moduleSpecifier = pd.getTypesVersions() + moduleSpecifier;
+		}
+		String prjName = projectConfig.getPackageName();
 		if (moduleName2Uri.containsKey(moduleSpecifier)) {
 			return moduleSpecifier;
 		} else if (moduleSpecifier.startsWith("./")) {
 			moduleSpecifier = moduleSpecifier.substring(2); // remove './'
+		} else if (moduleSpecifier.equals(prjName)) {
+			moduleSpecifier = pd.getMainModule();
 		} else if (moduleSpecifier.startsWith(prjName)) {
 			moduleSpecifier = moduleSpecifier.substring(prjName.length() + 1);
 		}
@@ -309,7 +320,8 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 	 * already have been processed. Note however that in case of dependency cycles, sorting cannot avoid the recursive
 	 * post processing of dependencies.
 	 */
-	private List<URI> computeSortedUriClosure(WorkspaceAwareResourceSet resourceSet, String prjName,
+	private List<URI> computeSortedUriClosure(WorkspaceAwareResourceSet resourceSet,
+			N4JSProjectConfigSnapshot projectConfig,
 			Multimap<String, URI> moduleName2Uri, Collection<URI> startUris) {
 
 		List<URI> sortedResults = new ArrayList<>(startUris.size());
@@ -321,7 +333,7 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 			iter.remove();
 			sortedResults.add(uri);
 
-			Collection<URI> importedUris = getImportedUris(resourceSet, prjName, moduleName2Uri, uri);
+			Collection<URI> importedUris = getImportedUris(resourceSet, projectConfig, moduleName2Uri, uri);
 			importedUris.removeAll(sortedResults);
 			worklist.addAll(importedUris);
 		}
