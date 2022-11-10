@@ -799,6 +799,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			IParseResult result = null;
 
 			try (Measurement m = N4JSDataCollectors.dcDtsParser.getMeasurement()) {
+				N4JSProjectConfigSnapshot prj = workspaceAccess.findProjectContaining(this);
+				if (prj == null) {
+					unload();
+					return;
+				}
+				N4JSSourceFolderSnapshot srcFld = prj.findSourceFolderContaining(uri);
+				Path srcRoot = URIUtils.toPath((srcFld == null) ? prj.getPath() : srcFld.getPath());
+
 				if (URIUtils.isVirtualResourceURI(uri)) {
 					NestedResourceAdapter adapter = NestedResourceAdapter.get(this);
 					if (adapter == null) {
@@ -813,11 +821,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 							return;
 						}
 					}
-					result = new DtsParser().parse(null, null, this);
+					result = new DtsParser().parse(srcRoot, null, this);
 				} else {
-					N4JSSourceFolderSnapshot srcFld = workspaceAccess.findSourceFolderContaining(this, uri);
-					Path srcRoot = URIUtils.toPath(srcFld.getPath());
-
 					try (Reader reader = createReader(inputStream);) {
 						result = new DtsParser().parse(srcRoot, reader, this);
 					}

@@ -222,9 +222,17 @@ public class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractIm
 					String exportEqualsArg = ExportedElementsUtils.getExportEqualsArg(tmodule);
 					if (Objects.equal(exportEqualsArg, rootNS.getName())) {
 						ArrayList<String> newSegments = new ArrayList<>(qn.getSegments());
-						newSegments.remove(2); // removes the exported namespace name
-						if (newSegments.size() <= 2) {
-							newSegments.remove(1); // removes the MODULE_CONTENT_SEGMENT
+						int idxMCS = -1;
+						for (int i = 0; i < newSegments.size(); i++) {
+							if (MODULE_CONTENT_SEGMENT.equals(newSegments.get(i))) {
+								idxMCS = i;
+							}
+						}
+						if (idxMCS >= 0) {
+							newSegments.remove(idxMCS + 1); // removes the exported namespace name
+							if (newSegments.size() <= 2) {
+								newSegments.remove(idxMCS); // removes the MODULE_CONTENT_SEGMENT
+							}
 						}
 						return QualifiedName.create(newSegments);
 					}

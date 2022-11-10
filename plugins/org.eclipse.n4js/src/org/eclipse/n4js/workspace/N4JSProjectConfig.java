@@ -115,7 +115,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		Set<IN4JSSourceFolder> result = new LinkedHashSet<>();
 		for (SourceContainerDescription scd : pd.getSourceContainers()) {
 			SourceContainerType type = scd.getType();
-			for (String relPath : ProjectDescriptionUtils.getPathsNormalized(scd)) {
+			for (String relPath : ProjectDescriptionUtils.getPathsNormalized(scd.getPaths())) {
 				result.add(new N4JSSourceFolder(this, type, relPath));
 			}
 		}

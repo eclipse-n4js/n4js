@@ -39,6 +39,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONDocument;
@@ -58,6 +59,7 @@ import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.inject.Inject;
@@ -412,11 +414,7 @@ public class PackageJsonHelper {
 		// (note: this makes use of the source containers, so it possibly relies on default values having been applied)
 		if (valueOfTopLevelPropertyMain != null) {
 			if (!hasN4jsSpecificMainModule) { // only if no N4JS-specific "mainModule" property was given
-				List<String> sourceContainerPaths = target.getSourceContainers().stream()
-						.flatMap(scd -> ProjectDescriptionUtils.getPathsNormalized(scd).stream())
-						.collect(Collectors.toList());
-				String mainModulePath = ProjectDescriptionUtils.convertMainPathToModuleSpecifier(
-						valueOfTopLevelPropertyMain, sourceContainerPaths);
+				String mainModulePath = getMainModulePath(target, valueOfTopLevelPropertyMain);
 				if (mainModulePath != null) {
 					target.setMainModule(mainModulePath);
 				}
@@ -447,12 +445,20 @@ public class PackageJsonHelper {
 		}
 	}
 
+	private String getMainModulePath(ProjectDescriptionBuilder target, String main) {
+		List<String> sourceContainerPaths = target.getSourceContainers().stream()
+				.flatMap(scd -> ProjectDescriptionUtils.getPathsNormalized(scd.getPaths()).stream())
+				.collect(Collectors.toList());
+		String mainModulePath = ProjectDescriptionUtils.convertMainPathToModuleSpecifier(
+				main, sourceContainerPaths);
+		return mainModulePath;
+	}
+
 	/**
 	 * Apply default values to the given project description of a plain js project. This should be performed right after
 	 * loading and converting the project description from JSON.
 	 */
 	private void applyPlainJSDefaults(ProjectDescriptionBuilder target, String defaultProjectName) {
-		applyBaseDefaults(target);
 
 		if (target.getMain() == null) {
 			target.setMain(PackageJsonProperties.MAIN.defaultValue.toString());
@@ -470,13 +476,16 @@ public class PackageJsonHelper {
 		} else {
 			mainOrTypesModulePath = target.getTypes();
 			if (target.getTypesVersions() != null) {
-				mainOrTypesModulePath = target.getTypesVersions() + mainOrTypesModulePath;
+				setSourceContainer(target, target.getTypesVersions(), true);
 			}
 		}
-		mainOrTypesModulePath = ProjectDescriptionUtils.convertMainPathToModuleSpecifier(
-				mainOrTypesModulePath, List.of("."));
+		setSourceContainer(target, (String) OUTPUT.defaultValue, false);
 
 		if (mainOrTypesModulePath != null) {
+			if (mainOrTypesModulePath.startsWith("./")) {
+				mainOrTypesModulePath = mainOrTypesModulePath.substring(2);
+			}
+			mainOrTypesModulePath = URIUtils.trimFileExtension(URI.createFileURI(mainOrTypesModulePath)).toString();
 			target.setMainModule(mainOrTypesModulePath);
 		}
 
@@ -528,10 +537,10 @@ public class PackageJsonHelper {
 			target.setGeneratorEnabledRewriteCjsImports((Boolean) GENERATOR_REWRITE_CJS_IMPORTS.defaultValue);
 		}
 
-		applyBaseDefaults(target);
+		setSourceContainer(target, (String) OUTPUT.defaultValue, false);
 	}
 
-	private void applyBaseDefaults(ProjectDescriptionBuilder target) {
+	private void setSourceContainer(ProjectDescriptionBuilder target, String path, boolean replace) {
 		// if no source containers are defined (no matter what type),
 		// then add a default source container of type "source" with path "."
 		// EXCEPT target represents a yarn workspace root
@@ -540,7 +549,7 @@ public class PackageJsonHelper {
 			List<SourceContainerDescription> sourceContainers = target.getSourceContainers();
 			SourceContainerDescription sourceContainerOfTypeSource = null;
 			for (SourceContainerDescription sourceContainer : sourceContainers) {
-				if (!sourceContainer.getPaths().isEmpty()) {
+				if (!replace && !sourceContainer.getPaths().isEmpty()) {
 					return;
 				}
 				if (sourceContainerOfTypeSource == null
@@ -552,8 +561,7 @@ public class PackageJsonHelper {
 				sourceContainers.remove(sourceContainerOfTypeSource);
 			}
 			sourceContainers.add(new SourceContainerDescription(
-					SourceContainerType.SOURCE,
-					Collections.singleton((String) OUTPUT.defaultValue)));
+					SourceContainerType.SOURCE, Collections.singleton(path)));
 		}
 	}
 
