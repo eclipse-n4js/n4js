@@ -799,8 +799,12 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			IParseResult result = null;
 
 			try (Measurement m = N4JSDataCollectors.dcDtsParser.getMeasurement()) {
-				N4JSSourceFolderSnapshot srcFld = workspaceAccess.findSourceFolderContaining(this, uri);
-				Path srcRoot = URIUtils.toPath(srcFld.getPath());
+				N4JSProjectConfigSnapshot prj = workspaceAccess.findProjectContaining(this);
+				if (prj == null) {
+					return;
+				}
+				N4JSSourceFolderSnapshot srcFld = prj.findSourceFolderContaining(uri);
+				Path srcRoot = URIUtils.toPath((srcFld == null) ? prj.getPath() : srcFld.getPath());
 
 				if (URIUtils.isVirtualResourceURI(uri)) {
 					NestedResourceAdapter adapter = NestedResourceAdapter.get(this);
