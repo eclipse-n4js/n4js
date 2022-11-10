@@ -167,6 +167,7 @@ public class DtsParser {
 
 	private DtsParseResult parseNestedScript(Path srcFolder, LazyLinkingResource resource,
 			NestedResourceAdapter adapter) {
+
 		ParserRuleContext ctx = adapter.getContext();
 		List<StatementContext> statements = adapter.getStatements();
 		DtsTokenStream tokens = adapter.getTokenStream();

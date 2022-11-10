@@ -525,7 +525,7 @@ public class ProjectImportEnablingScope implements IScope {
 		String exportsNameStr = exportsName.toString();
 
 		for (ProjectExports exports : targetProject.getProjectDescription().getExports()) {
-			if (Objects.equals(exportsNameStr, exports.getExportsPathClean())) {
+			if (Objects.equals(exportsNameStr, exports.getExportsPathClean()) && exports.getMainModule() != null) {
 				return getElementsWithDesiredProjectName(exports.getMainModule(), targetProject);
 			}
 		}
@@ -538,6 +538,10 @@ public class ProjectImportEnablingScope implements IScope {
 	 */
 	public Collection<IEObjectDescription> getElementsWithDesiredProjectName(QualifiedName moduleSpecifier,
 			N4JSProjectConfigSnapshot targetProject) {
+
+		if (moduleSpecifier == null) {
+			return Collections.emptyList();
+		}
 
 		final Iterable<IEObjectDescription> moduleSpecifierMatchesWithPossibleDuplicates = delegate
 				.getElements(moduleSpecifier);

@@ -73,7 +73,14 @@ public abstract class AbstractDtsModuleRefBuilder<T extends ParserRuleContext, R
 		}
 
 		if (moduleSpecifier.startsWith("./")) {
-			moduleSpecifier = moduleSpecifier.substring(2);
+			Path relLocation = srcFolder.relativize(Path.of(resource.getURI().toFileString()));
+			if (relLocation.getNameCount() > 1) {
+				relLocation = relLocation.subpath(0, relLocation.getNameCount() - 1);
+			} else {
+				relLocation = Path.of("");
+			}
+			Path msRelLoc = relLocation.resolve(moduleSpecifier.substring(2));
+			moduleSpecifier = msRelLoc.toString();
 		}
 
 		if (moduleSpecifier.startsWith("../")) {

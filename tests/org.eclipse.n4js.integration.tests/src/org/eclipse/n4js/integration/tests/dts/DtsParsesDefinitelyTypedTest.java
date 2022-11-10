@@ -209,6 +209,7 @@ public class DtsParsesDefinitelyTypedTest {
 	 */
 	static public void parseFile(Path root, Path file, Consumer<DtsParseResult> onResult) throws Exception {
 		try (BufferedReader buf = new BufferedReader(new InputStreamReader(new FileInputStream(file.toFile())))) {
+
 			N4JSResource resource = new N4JSResource();
 			URI fileUri = new FileURI(file).toURI();
 			resource.setURI(fileUri);
@@ -224,7 +225,7 @@ public class DtsParsesDefinitelyTypedTest {
 				NestedResourceAdapter nestedResourceAdapter = resultInfoAdapter.getNestedResourceAdapter(uri);
 
 				NestedResourceAdapter.update(newResource, nestedResourceAdapter);
-				DtsParseResult newParseResult = new DtsParser().parse(null, null, newResource);
+				DtsParseResult newParseResult = new DtsParser().parse(root, null, newResource);
 
 				onResult.accept(newParseResult);
 			}
