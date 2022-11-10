@@ -459,7 +459,6 @@ public class PackageJsonHelper {
 	 * loading and converting the project description from JSON.
 	 */
 	private void applyPlainJSDefaults(ProjectDescriptionBuilder target, String defaultProjectName) {
-		setSourceContainer(target, (String) OUTPUT.defaultValue, true);
 
 		if (target.getMain() == null) {
 			target.setMain(PackageJsonProperties.MAIN.defaultValue.toString());
@@ -480,6 +479,7 @@ public class PackageJsonHelper {
 				setSourceContainer(target, target.getTypesVersions(), true);
 			}
 		}
+		setSourceContainer(target, (String) OUTPUT.defaultValue, false);
 
 		if (mainOrTypesModulePath != null) {
 			if (mainOrTypesModulePath.startsWith("./")) {

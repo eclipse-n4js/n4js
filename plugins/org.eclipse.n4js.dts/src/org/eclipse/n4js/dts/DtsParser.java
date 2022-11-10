@@ -99,7 +99,7 @@ public class DtsParser {
 				// should not happen, taken care of in caller
 			}
 
-			return parseNestedScript(resource, adapter);
+			return parseNestedScript(srcFolder, resource, adapter);
 		} else {
 			return parseScript(srcFolder, reader, resource);
 		}
@@ -165,7 +165,9 @@ public class DtsParser {
 		return new DtsParseResult(root, rootNode, syntaxErrors);
 	}
 
-	private DtsParseResult parseNestedScript(LazyLinkingResource resource, NestedResourceAdapter adapter) {
+	private DtsParseResult parseNestedScript(Path srcFolder, LazyLinkingResource resource,
+			NestedResourceAdapter adapter) {
+
 		ParserRuleContext ctx = adapter.getContext();
 		List<StatementContext> statements = adapter.getStatements();
 		DtsTokenStream tokens = adapter.getTokenStream();
@@ -193,7 +195,7 @@ public class DtsParser {
 		};
 
 		// convert parse tree to AST
-		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, null, resource);
+		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, srcFolder, resource);
 		Script root = astBuilder.consume(prgCtx);
 		RootNode rootNode = new RootNode(ctx);
 
