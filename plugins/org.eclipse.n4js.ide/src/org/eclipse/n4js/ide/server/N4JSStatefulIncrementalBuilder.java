@@ -287,9 +287,6 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 			Multimap<String, URI> moduleName2Uri) {
 
 		ProjectDescription pd = projectConfig.getProjectDescription();
-		if (!Strings.isNullOrEmpty(pd.getTypesVersions())) {
-			moduleSpecifier = pd.getTypesVersions() + moduleSpecifier;
-		}
 		String prjName = projectConfig.getPackageName();
 		if (moduleName2Uri.containsKey(moduleSpecifier)) {
 			return moduleSpecifier;

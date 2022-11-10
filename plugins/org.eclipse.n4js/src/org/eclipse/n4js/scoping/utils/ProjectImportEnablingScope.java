@@ -539,6 +539,10 @@ public class ProjectImportEnablingScope implements IScope {
 	public Collection<IEObjectDescription> getElementsWithDesiredProjectName(QualifiedName moduleSpecifier,
 			N4JSProjectConfigSnapshot targetProject) {
 
+		if (moduleSpecifier == null) {
+			return Collections.emptyList();
+		}
+
 		final Iterable<IEObjectDescription> moduleSpecifierMatchesWithPossibleDuplicates = delegate
 				.getElements(moduleSpecifier);
 

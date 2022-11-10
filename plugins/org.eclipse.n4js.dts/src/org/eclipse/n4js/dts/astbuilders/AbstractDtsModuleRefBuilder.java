@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
+import java.nio.file.Path;
+
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.apache.log4j.Logger;
@@ -71,7 +73,14 @@ public abstract class AbstractDtsModuleRefBuilder<T extends ParserRuleContext, R
 		}
 
 		if (moduleSpecifier.startsWith("./")) {
-			moduleSpecifier = moduleSpecifier.substring(2);
+			Path relLocation = srcFolder.relativize(Path.of(resource.getURI().toFileString()));
+			if (relLocation.getNameCount() > 1) {
+				relLocation = relLocation.subpath(0, relLocation.getNameCount() - 1);
+			} else {
+				relLocation = Path.of("");
+			}
+			Path msRelLoc = relLocation.resolve(moduleSpecifier.substring(2));
+			moduleSpecifier = msRelLoc.toString();
 		}
 
 		URI moduleSpecifierUri = null;

@@ -354,9 +354,9 @@ public class ProjectDescriptionUtils {
 	 * Returns the {@link SourceContainerDescription#getPaths() paths} of the given source container description but
 	 * normalized with {@link FileUtils#normalizeToDotWhenEmpty(String)}.
 	 */
-	public static List<String> getPathsNormalized(SourceContainerDescription scd) {
-		List<String> normalizedPaths = new ArrayList<>(scd.getPaths().size());
-		for (String path : scd.getPaths()) {
+	public static List<String> getPathsNormalized(List<String> paths) {
+		List<String> normalizedPaths = new ArrayList<>(paths.size());
+		for (String path : paths) {
 			String normalizedPath = FileUtils.normalizeToDotWhenEmpty(path);
 			normalizedPaths.add(normalizedPath);
 		}

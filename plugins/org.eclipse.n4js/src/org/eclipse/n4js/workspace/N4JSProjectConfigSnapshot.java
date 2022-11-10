@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
@@ -29,10 +30,12 @@ import org.eclipse.n4js.packagejson.projectDescription.ModuleFilter;
 import org.eclipse.n4js.packagejson.projectDescription.ModuleFilterSpecifier;
 import org.eclipse.n4js.packagejson.projectDescription.ModuleFilterType;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectExports;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ModuleFilterUtils;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSPackageName;
@@ -344,17 +347,36 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 			List<String> globsToInclude = new ArrayList<>();
 			List<String> globsToExclude = new ArrayList<>();
 
-			URI main = pd.getMainModule() == null
-					? null
-					: URI.createFileURI(pd.getMainModule()).resolve(getPath());
+			if (pd.getMainModule() != null) {
+				String mainModule = pd.getMainModule();
+				List<String> sourceContainerPaths = getProjectDescription().getSourceContainers().stream()
+						.flatMap(scd -> ProjectDescriptionUtils.getPathsNormalized(scd.getPaths()).stream())
+						.collect(Collectors.toList());
+				for (String srcPath : sourceContainerPaths) {
+					String mainModulePath = Path.of(srcPath, mainModule).toString();
+					URI main = URI.createFileURI(mainModulePath).resolve(getPath());
 
-			if (main != null) {
-				if (URIUtils.toFile(main).isFile()) {
-					startUris.add(main);
-				} else if (URIUtils.toFile(main.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION)).isFile()) {
-					startUris.add(main.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION));
-				} else if (URIUtils.toFile(main.appendFileExtension(N4JSGlobals.JS_FILE_EXTENSION)).isFile()) {
-					startUris.add(main.appendFileExtension(N4JSGlobals.JS_FILE_EXTENSION));
+					if (URIUtils.toFile(main).isFile()) {
+						startUris.add(main);
+					} else if (URIUtils.toFile(main.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION)).isFile()) {
+						startUris.add(main.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION));
+					} else if (URIUtils.toFile(main.appendFileExtension(N4JSGlobals.JS_FILE_EXTENSION)).isFile()) {
+						startUris.add(main.appendFileExtension(N4JSGlobals.JS_FILE_EXTENSION));
+					}
+				}
+			}
+			for (ProjectExports pe : pd.getExports()) {
+				URI expMain = pe.getMainModule() == null
+						? null
+						: URI.createFileURI(pe.getMainModule().toString("/")).resolve(getPath());
+				if (expMain != null) {
+					if (URIUtils.toFile(expMain).isFile()) {
+						startUris.add(expMain);
+					} else if (URIUtils.toFile(expMain.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION)).isFile()) {
+						startUris.add(expMain.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION));
+					} else if (URIUtils.toFile(expMain.appendFileExtension(N4JSGlobals.JS_FILE_EXTENSION)).isFile()) {
+						startUris.add(expMain.appendFileExtension(N4JSGlobals.JS_FILE_EXTENSION));
+					}
 				}
 			}
 
