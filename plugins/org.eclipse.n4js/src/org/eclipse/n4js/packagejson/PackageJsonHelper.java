@@ -145,6 +145,7 @@ public class PackageJsonHelper {
 				// (see method #adjustProjectDescriptionAfterConversion())
 				break;
 			case TYPES:
+			case TYPINGS:
 				target.setTypes(asNonEmptyStringOrNull(value));
 				break;
 			case TYPES_VERSIONS:
@@ -238,7 +239,6 @@ public class PackageJsonHelper {
 	private ProjectExports convertExportPairs(String exportsPath, List<NameValuePair> pairs) {
 		String main = null, types = null;
 		Boolean moduleProperty = null;
-		QualifiedName mainModuleQN = null;
 
 		for (NameValuePair pair : pairs) {
 			PackageJsonProperties property = PackageJsonProperties.valueOfNameValuePairOrNull(pair);
@@ -262,6 +262,12 @@ public class PackageJsonHelper {
 				break;
 			}
 		}
+		QualifiedName mainModuleQN = createQNForExports(main, types);
+
+		return new ProjectExports(exportsPath, main, types, mainModuleQN, moduleProperty);
+	}
+
+	private QualifiedName createQNForExports(String main, String types) {
 		String mainModuleName = types == null ? main : types;
 		if (mainModuleName != null) {
 			mainModuleName = mainModuleName.startsWith("./") ? mainModuleName.substring(2) : mainModuleName;
@@ -270,10 +276,9 @@ public class PackageJsonHelper {
 			} else if (mainModuleName.endsWith(N4JSGlobals.JS_FILE_EXTENSION)) {
 				mainModuleName = mainModuleName.substring(0, mainModuleName.length() - 3);
 			}
-			mainModuleQN = QualifiedName.create(mainModuleName.split(N4JSQualifiedNameConverter.DELIMITER));
+			return QualifiedName.create(mainModuleName.split(N4JSQualifiedNameConverter.DELIMITER));
 		}
-
-		return new ProjectExports(exportsPath, main, types, mainModuleQN, moduleProperty);
+		return null;
 	}
 
 	private void convertN4jsPairs(ProjectDescriptionBuilder target, List<NameValuePair> n4jsPairs) {
@@ -477,6 +482,7 @@ public class PackageJsonHelper {
 			mainOrTypesModulePath = target.getTypes();
 			if (target.getTypesVersions() != null) {
 				setSourceContainer(target, target.getTypesVersions(), true);
+				trimProjectExports(target.getExports(), target.getTypesVersions());
 			}
 		}
 		setSourceContainer(target, (String) OUTPUT.defaultValue, false);
@@ -497,6 +503,40 @@ public class PackageJsonHelper {
 			// the entire contents will be deleted.
 			target.setOutputPath(".");
 		}
+	}
+
+	// as a convention 'types', 'module', etc. of a subpath have the subpath's name as a prefix
+	private void trimProjectExports(List<ProjectExports> pes, String typesVersions) {
+		if (typesVersions == null) {
+			return;
+		}
+		for (int i = 0; i < pes.size(); i++) {
+			ProjectExports pe = pes.get(i);
+			if (pe.getExportsPathClean() == null) {
+				continue;
+			}
+			String newMain = stripPrefix(pe.getMain(), typesVersions);
+			String newTypes = stripPrefix(pe.getTypes(), typesVersions);
+			String newEP = "./" + stripPrefix(pe.getExportsPathClean(), typesVersions);
+			QualifiedName mainModuleQN = createQNForExports(newMain, newTypes);
+			pes.set(i, new ProjectExports(newEP, newMain, newTypes, mainModuleQN, pe.getModuleProperty()));
+		}
+	}
+
+	private String stripPrefix(String path, String prefix) {
+		if (path == null) {
+			return path;
+		}
+		if (path.startsWith("./")) {
+			if (path.startsWith(prefix)) {
+				return "./" + path.substring(prefix.length());
+			}
+		} else {
+			if (path.startsWith(prefix)) {
+				return path.substring(prefix.length());
+			}
+		}
+		return path;
 	}
 
 	/**
