@@ -47,10 +47,10 @@
   			"types": "types.d.ts",
    			"typesVersions": {
 	  			">=3.6": {
-		  			"*": ["./src-types/submodule/*"]
+		  			"*": ["./src-types/*"]
 	  			},
 	  			">=3.2": {
-	  				"*": ["./src-types2/submodule/*"]
+	  				"*": ["./src-types2/*"]
 	  			}
   			},
   			"exports": {
