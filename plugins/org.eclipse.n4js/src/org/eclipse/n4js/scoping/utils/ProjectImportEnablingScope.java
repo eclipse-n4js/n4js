@@ -225,7 +225,7 @@ public class ProjectImportEnablingScope implements IScope {
 			sbErrrorMessage.append("project import");
 			break;
 		case PROJECT_EXPORTS:
-			sbErrrorMessage.append("project 'exports' import");
+			sbErrrorMessage.append("project subpath import");
 			break;
 		case COMPLETE:
 			sbErrrorMessage.append("complete module specifier (with project name as first segment)");
