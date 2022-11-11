@@ -525,8 +525,9 @@ public class ProjectImportEnablingScope implements IScope {
 		String exportsNameStr = exportsName.toString();
 
 		for (ProjectExports exports : targetProject.getProjectDescription().getExports()) {
-			if (Objects.equals(exportsNameStr, exports.getExportsPathClean()) && exports.getMainModule() != null) {
-				return getElementsWithDesiredProjectName(exports.getMainModule(), targetProject);
+			QualifiedName mainModule = exports.getMainModule();
+			if (Objects.equals(exportsNameStr, exports.getExportsPathClean()) && mainModule != null) {
+				return getElementsWithDesiredProjectName(mainModule, targetProject, exports);
 			}
 		}
 		return Collections.emptyList();
@@ -538,6 +539,11 @@ public class ProjectImportEnablingScope implements IScope {
 	 */
 	public Collection<IEObjectDescription> getElementsWithDesiredProjectName(QualifiedName moduleSpecifier,
 			N4JSProjectConfigSnapshot targetProject) {
+		return getElementsWithDesiredProjectName(moduleSpecifier, targetProject, null);
+	}
+
+	private Collection<IEObjectDescription> getElementsWithDesiredProjectName(QualifiedName moduleSpecifier,
+			N4JSProjectConfigSnapshot targetProject, ProjectExports exports) {
 
 		if (moduleSpecifier == null) {
 			return Collections.emptyList();
@@ -557,7 +563,13 @@ public class ProjectImportEnablingScope implements IScope {
 			} else {
 				N4JSProjectConfigSnapshot containingProject = workspaceConfigSnapshot.findProjectContaining(uri);
 				if (containingProject == targetProject) {
-					result.put(uri.toString(), desc);
+					if (exports == null) {
+						result.put(uri.toString(), desc);
+					} else {
+						if (Objects.equals(desc.getQualifiedName(), exports.getMainModule())) {
+							result.put(uri.toString(), desc);
+						}
+					}
 				}
 			}
 		}
