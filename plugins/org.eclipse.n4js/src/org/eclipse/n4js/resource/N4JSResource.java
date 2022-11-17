@@ -806,6 +806,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				}
 				N4JSSourceFolderSnapshot srcFld = prj.findSourceFolderContaining(uri);
 				Path srcRoot = URIUtils.toPath((srcFld == null) ? prj.getPath() : srcFld.getPath());
+				String packageName = prj.getPackageName();
 
 				if (URIUtils.isVirtualResourceURI(uri)) {
 					NestedResourceAdapter adapter = NestedResourceAdapter.get(this);
@@ -822,10 +823,10 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 						}
 					}
 
-					result = new DtsParser().parse(srcRoot, null, this);
+					result = new DtsParser().parse(packageName, srcRoot, null, this);
 				} else {
 					try (Reader reader = createReader(inputStream);) {
-						result = new DtsParser().parse(srcRoot, reader, this);
+						result = new DtsParser().parse(packageName, srcRoot, reader, this);
 					}
 				}
 			}

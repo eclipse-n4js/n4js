@@ -41,7 +41,7 @@ public class DtsParseSnippetTest {
 			N4JSResource resource = new N4JSResource();
 			URI fileUri = new FileURI(new File("TMP.dts")).toURI();
 			resource.setURI(fileUri);
-			DtsParseResult parseResult = new DtsParser().parse(null, buf, resource);
+			DtsParseResult parseResult = new DtsParser().parse(null, null, buf, resource);
 
 			assertFalse(parseResult.hasSyntaxErrors());
 		}

@@ -80,7 +80,7 @@ public abstract class AbstractDtsModuleRefBuilder<T extends ParserRuleContext, R
 				relLocation = Path.of("");
 			}
 			Path msRelLoc = relLocation.resolve(moduleSpecifier.substring(2));
-			moduleSpecifier = msRelLoc.toString();
+			moduleSpecifier = this.packageName + "/" + msRelLoc.toString();
 		}
 
 		if (moduleSpecifier.startsWith("../")) {
@@ -92,7 +92,7 @@ public abstract class AbstractDtsModuleRefBuilder<T extends ParserRuleContext, R
 
 			Path absModuleSpecifierPath = Path.of(uri.toFileString(), moduleSpecifier);
 			Path relModuleSpecifierPath = srcFolder.relativize(absModuleSpecifierPath);
-			moduleSpecifier = relModuleSpecifierPath.toString();
+			moduleSpecifier = this.packageName + "/" + relModuleSpecifierPath.toString();
 		}
 
 		URI moduleSpecifierUri = null;

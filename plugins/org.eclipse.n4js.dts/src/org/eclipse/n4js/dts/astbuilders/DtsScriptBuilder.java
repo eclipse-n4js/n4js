@@ -68,8 +68,10 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 	private int globalScopeAugmentationCounter = 0;
 
 	/** Constructor */
-	public DtsScriptBuilder(DtsTokenStream tokenStream, Path srcFolder, LazyLinkingResource resource) {
-		super(tokenStream, srcFolder, resource);
+	public DtsScriptBuilder(DtsTokenStream tokenStream, String packageName, Path srcFolder,
+			LazyLinkingResource resource) {
+
+		super(tokenStream, packageName, srcFolder, resource);
 	}
 
 	/** Returns true iff this resource is nested/virtual */
