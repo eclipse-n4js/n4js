@@ -65,7 +65,9 @@
    END_SETUP
  */
 
-import {K1} from "lib1"
+import {K1} from "lib1";
+// XPECT errors --> "Import of K2 cannot be resolved." at "K2"
+import {K2} from "lib1";
 
 // XPECT type of 'k' --> string
 let k = K1;
