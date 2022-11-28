@@ -32,6 +32,8 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.utils.MainModuleAwareSelectableBasedScope;
 import org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope;
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.types.AbstractNamespace;
@@ -184,13 +186,20 @@ public class DeclMergingHelper {
 	}
 
 	/**
-	 * Returns those elements merged with the given namespace that are also {@link AbstractNamespace}s.
+	 * Returns those elements merged with the given type that are also {@link Type}s.
 	 * <p>
-	 * The given namespace does not have to be the
+	 * The given type does not have to be the
 	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
 	 */
-	public List<AbstractNamespace> getMergedElements(N4JSResource context, AbstractNamespace namespace) {
-		return cachedGetMergedElements(context, namespace, TypesPackage.Literals.ABSTRACT_NAMESPACE);
+	public List<ParameterizedTypeRef> getMergedTypeRefs(N4JSResource context, ParameterizedTypeRef typeRef) {
+		List<Type> mergedTypes = getMergedElements(context, typeRef.getDeclaredType());
+		List<ParameterizedTypeRef> mergedTypeRefs = new ArrayList<>(mergedTypes.size());
+		for (Type mt : mergedTypes) {
+			TypeArgument[] typeArgs = typeRef.getDeclaredTypeArgs()
+					.toArray(new TypeArgument[typeRef.getDeclaredTypeArgs().size()]);
+			mergedTypeRefs.add(TypeUtils.createTypeRef(mt, typeArgs));
+		}
+		return mergedTypeRefs;
 	}
 
 	/**
@@ -201,6 +210,16 @@ public class DeclMergingHelper {
 	 */
 	public List<Type> getMergedElements(N4JSResource context, Type type) {
 		return cachedGetMergedElements(context, type, TypesPackage.Literals.TYPE);
+	}
+
+	/**
+	 * Returns those elements merged with the given namespace that are also {@link AbstractNamespace}s.
+	 * <p>
+	 * The given namespace does not have to be the
+	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
+	 */
+	public List<AbstractNamespace> getMergedElements(N4JSResource context, AbstractNamespace namespace) {
+		return cachedGetMergedElements(context, namespace, TypesPackage.Literals.ABSTRACT_NAMESPACE);
 	}
 
 	private <T extends EObject> List<T> cachedGetMergedElements(N4JSResource context, T element, EClass eClass) {

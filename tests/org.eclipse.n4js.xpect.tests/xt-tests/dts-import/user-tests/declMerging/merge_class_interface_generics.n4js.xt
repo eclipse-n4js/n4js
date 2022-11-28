@@ -15,11 +15,11 @@
 	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
 
 	File "DTS.d.ts" {
-		export interface RW<T> {
-		  fieldI : T;
+		export interface RW<TI> {
+		  fieldI : TI;
 		}
-		export class RW<T> {
-		  fieldC : T;
+		export class RW<TC> {
+		  fieldC : TC;
 		}
 	}
 

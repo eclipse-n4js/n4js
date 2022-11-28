@@ -55,18 +55,18 @@ public abstract class AbstractMergingHierachyTraverser<ResultT> extends Abstract
 			return Collections.emptyList();
 		}
 
-		List<ParameterizedTypeRef> polyfillsOrMergedTypes = new ArrayList<>();
+		List<ParameterizedTypeRef> mergedTypes = new ArrayList<>();
 		if (DeclMergingUtils.mayBeMerged(filledType)) {
 			ParameterizedTypeRef currentTypeRef = getCurrentTypeRef();
 			if (currentTypeRef == null) {
 				currentTypeRef = TypeUtils.createTypeRef(filledType);
 			}
-			// polyfillsOrMergedTypes.addAll(declMergingHelper.getMergedElements(contextResource, filledType));
-			for (Type mt : declMergingHelper.getMergedElements(contextResource, filledType)) {
-				polyfillsOrMergedTypes.add(TypeUtils.createTypeRef(mt));
-			}
+			mergedTypes.addAll(declMergingHelper.getMergedTypeRefs(contextResource, currentTypeRef));
+			// for (Type mt : declMergingHelper.getMergedElements(contextResource, filledType)) {
+			// mergedTypes.add(TypeUtils.createTypeRef(mt));
+			// }
 		}
 
-		return polyfillsOrMergedTypes;
+		return mergedTypes;
 	}
 }
