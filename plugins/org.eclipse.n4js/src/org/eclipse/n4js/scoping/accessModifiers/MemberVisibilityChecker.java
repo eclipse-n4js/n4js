@@ -37,10 +37,11 @@ import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector;
+import org.eclipse.n4js.typesystem.utils.AllSuperTypesCollector;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
+import org.eclipse.n4js.utils.DeclMergingHelper;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.util.Strings;
 
@@ -56,6 +57,8 @@ public class MemberVisibilityChecker {
 	private TypeVisibilityChecker typeVisibilityChecker;
 	@Inject
 	private TypeSystemHelper tsh;
+	@Inject
+	private DeclMergingHelper declMergingHelper;
 
 	/**
 	 * Returns true if the given <i>enumType</i> is accessible in the given context
@@ -315,7 +318,8 @@ public class MemberVisibilityChecker {
 		}
 
 		// contextType must be a super-type of declaredRecieverType:
-		List<TClassifier> receiverSuperTypes = AllSuperTypesCollector.collect((TClassifier) declaredReceiverType);
+		List<TClassifier> receiverSuperTypes = AllSuperTypesCollector.collect((TClassifier) declaredReceiverType,
+				declMergingHelper);
 		if (!receiverSuperTypes.contains(contextType)) {
 			// Problem: if super-keyword was used, the call is still valid.
 			if (!supercall) {

@@ -119,15 +119,15 @@ import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
-import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable
-import org.eclipse.n4js.ts.types.util.SuperTypesMapper
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.types.utils.TypeCompareUtils
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.utils.AllSuperTypesCollector
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.SuperTypesMapper
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
@@ -1021,10 +1021,10 @@ public class N4JSLanguageUtils {
 	 * Tells if the given class has a covariant constructor, cf. {@link AnnotationDefinition#COVARIANT_CONSTRUCTOR}, or
 	 * the given interface requires all implementing classes to have a covariant constructor.
 	 */
-	def static boolean hasCovariantConstructor(TClassifier tClassifier) {
+	def static boolean hasCovariantConstructor(TClassifier tClassifier, DeclMergingHelper declMergingHelper) {
 		// NOTE: ignoring implicit super types, because none of them declares @CovariantConstructor
 		return tClassifier.declaredCovariantConstructor
-			|| AllSuperTypesCollector.collect(tClassifier).exists[declaredCovariantConstructor];
+			|| AllSuperTypesCollector.collect(tClassifier, declMergingHelper).exists[declaredCovariantConstructor];
 	}
 
 	/**

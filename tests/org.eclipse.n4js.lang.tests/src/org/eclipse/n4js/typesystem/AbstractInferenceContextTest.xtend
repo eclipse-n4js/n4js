@@ -29,6 +29,7 @@ import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
+import org.eclipse.n4js.utils.DeclMergingHelper
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.n4js.xsemantics.AbstractTypesystemTest
 import org.eclipse.xtext.service.OperationCanceledManager
@@ -49,6 +50,7 @@ public abstract class AbstractInferenceContextTest extends AbstractTypesystemTes
 
 	@Inject private N4JSTypeSystem ts;
 	@Inject private TypeSystemHelper tsh;
+	@Inject private DeclMergingHelper declMergingHelper;
 	@Inject private OperationCanceledManager operationCanceledManager;
 
 	protected static val DEFAULT_CODE = '''
@@ -267,7 +269,7 @@ public abstract class AbstractInferenceContextTest extends AbstractTypesystemTes
 	def private Map<InferenceVariable, TypeRef> getSolutionFromInferenceContext(Script script, TypeConstraint[] constraints, Pair<InferenceVariable, TypeRef>... expectedInstantiations) {
 		val G = RuleEnvironmentExtensions.newRuleEnvironment(script)
 		val infVars = expectedInstantiations.map[key].toSet
-		val InferenceContext infCtx = new InferenceContext(ts, tsh, operationCanceledManager, CancelIndicator.NullImpl, G, infVars)
+		val InferenceContext infCtx = new InferenceContext(ts, tsh, declMergingHelper, operationCanceledManager, CancelIndicator.NullImpl, G, infVars)
 		constraints.forEach[infCtx.addConstraint(left, right, variance)]
 
 		val solution = infCtx.solve

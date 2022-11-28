@@ -11,6 +11,12 @@
 package org.eclipse.n4js.jsdoc2spec.adoc;
 
 import com.google.inject.Inject
+import java.util.Collection
+import java.util.List
+import java.util.Map
+import java.util.Map.Entry
+import java.util.Set
+import java.util.SortedSet
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.jsdoc.dom.Composite
 import org.eclipse.n4js.jsdoc.dom.ContentNode
@@ -21,6 +27,7 @@ import org.eclipse.n4js.jsdoc.dom.SimpleTypeReference
 import org.eclipse.n4js.jsdoc.dom.Text
 import org.eclipse.n4js.jsdoc.dom.VariableReference
 import org.eclipse.n4js.jsdoc.tags.DefaultLineTagDefinition
+import org.eclipse.n4js.jsdoc2spec.KeyUtils
 import org.eclipse.n4js.jsdoc2spec.RepoRelativePath
 import org.eclipse.n4js.jsdoc2spec.SpecTestInfo
 import org.eclipse.n4js.ts.types.ContainerType
@@ -28,26 +35,20 @@ import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMemberWithAccessModifier
 import org.eclipse.n4js.ts.types.TMethod
+import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.TVariable
-import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
+import org.eclipse.n4js.typesystem.utils.AllSuperTypesCollector
+import org.eclipse.n4js.utils.DeclMergingHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.ValidatorMessageHelper
-import java.util.Collection
-import java.util.List
-import java.util.Map
-import java.util.Map.Entry
-import java.util.Set
-import java.util.SortedSet
 
 import static org.eclipse.n4js.jsdoc.N4JSDocletParser.*
-import org.eclipse.n4js.ts.types.TN4Classifier
-import org.eclipse.n4js.ts.types.TEnum
-import org.eclipse.n4js.jsdoc2spec.KeyUtils
 
 /**
  * Print AsciiDoc code of specification JSDoc. Start and end markers are printed by client.
@@ -59,6 +60,7 @@ class ADocSerializer {
 	@Inject ValidatorMessageHelper validatorMessageHelper;
 	@Inject N4JSElementKeywordProvider keywordProvider;
 	@Inject	RepoRelativePathHolder repoPathHolder;
+	@Inject	DeclMergingHelper declMergingHelper;
 
 
 	def CharSequence process(SpecRequirementSection spec, Map<String, SpecSection> specsByKey) {
@@ -333,7 +335,7 @@ class ADocSerializer {
 
 			val typeName = element.name;
 			val superTypes = AllSuperTypesCollector.collect(
-				element
+				element, declMergingHelper
 			)
 
 			val tests = testsForInherited.entrySet.filter[value!==null && !value.empty];

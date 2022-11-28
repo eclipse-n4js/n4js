@@ -1,0 +1,97 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	Workspace {
+		Project "myProject" {
+			Folder "src" {
+				ThisFile {}
+				File "A.n4js" { from="A1.n4js" }
+				File "B.n4js" { from="B1.n4js" }
+			}
+			Folder "src2" {
+				File "A.n4js" { from="A2.n4js" }
+				File "B.n4js" { from="B2.n4js" }
+			}
+			File "package.json" { from="package.json" }
+		}
+	}
+	
+	File "A1.n4js" {
+		@@StaticPolyfillAware
+		import {B} from "B"
+		export class A extends B {
+		  public fieldA1 : string;
+		}
+	}
+	File "A2.n4js" {
+		@@StaticPolyfillModule
+		@StaticPolyfill
+		export class A extends A {
+		  public fieldA2 : string;
+		}
+	}
+
+	File "B1.n4js" {
+		@@StaticPolyfillAware
+		export class B {
+		  public fieldB1 : string;
+		}
+	}
+	File "B2.n4js" {
+		@@StaticPolyfillModule
+		@StaticPolyfill
+		export class B extends B {
+		  public fieldB2 : string;
+		}
+	}
+
+
+
+	File "package.json" {
+		{
+		  "name": "test",
+		  "version": "0.0.1",
+		  "type": "module",
+		  "dependencies": {
+		    "n4js-runtime": ""
+		  },
+		  "n4js": {
+		    "projectType": "library",
+		    "output": "src-gen",
+		    "sources": {
+		      "source": [
+		        "src",
+		        "src2"
+		      ]
+		    }
+		  }
+		}
+	}
+
+	END_SETUP
+ */
+
+
+// XPECT noerrors -->
+import {A} from "A";
+
+const a: A = null;
+
+a.fieldA1;
+a.fieldA2;
+a.fieldB1;
+a.fieldB2;
+

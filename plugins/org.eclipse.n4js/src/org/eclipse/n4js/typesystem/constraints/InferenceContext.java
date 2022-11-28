@@ -42,6 +42,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.CharDiscreteDomain;
+import org.eclipse.n4js.utils.DeclMergingHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -159,8 +160,10 @@ public final class InferenceContext {
 	 * @param inferenceVariables
 	 *            the meta variables to be inferred.
 	 */
-	public InferenceContext(N4JSTypeSystem ts, TypeSystemHelper tsh, OperationCanceledManager operationCanceledManager,
-			CancelIndicator cancelIndicator, RuleEnvironment G, InferenceVariable... inferenceVariables) {
+	public InferenceContext(N4JSTypeSystem ts, TypeSystemHelper tsh, DeclMergingHelper declMergingHelper,
+			OperationCanceledManager operationCanceledManager, CancelIndicator cancelIndicator,
+			RuleEnvironment G, InferenceVariable... inferenceVariables) {
+
 		Objects.requireNonNull(ts);
 		Objects.requireNonNull(tsh);
 		Objects.requireNonNull(G);
@@ -170,7 +173,7 @@ public final class InferenceContext {
 		this.cancelIndicator = cancelIndicator;
 		this.G = G;
 		addInferenceVariables(false, inferenceVariables);
-		this.reducer = new Reducer(this, G, ts, tsh);
+		this.reducer = new Reducer(this, G, ts, tsh, declMergingHelper);
 		this.currentBounds = new BoundSet(this, G, ts);
 	}
 

@@ -8,13 +8,14 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ts.types.util;
+package org.eclipse.n4js.typesystem.utils;
 
 import java.util.List;
 
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.utils.DeclMergingHelper;
 
 import com.google.common.collect.Lists;
 
@@ -31,8 +32,8 @@ public class AllSuperTypesCollector extends AbstractCompleteHierarchyTraverser<L
 	 * @param type
 	 *            the type to start with.
 	 */
-	public AllSuperTypesCollector(ContainerType<?> type) {
-		super(type);
+	public AllSuperTypesCollector(ContainerType<?> type, DeclMergingHelper declMergingHelper) {
+		super(type, declMergingHelper);
 		result = Lists.newArrayList();
 	}
 
@@ -59,7 +60,7 @@ public class AllSuperTypesCollector extends AbstractCompleteHierarchyTraverser<L
 	 *            the type to start with.
 	 * @return transitive closure of all super classes and implemented interfaces.
 	 */
-	public static final List<TClassifier> collect(ContainerType<?> containerType) {
-		return new AllSuperTypesCollector(containerType).getResult();
+	public static final List<TClassifier> collect(ContainerType<?> containerType, DeclMergingHelper declMergingHelper) {
+		return new AllSuperTypesCollector(containerType, declMergingHelper).getResult();
 	}
 }

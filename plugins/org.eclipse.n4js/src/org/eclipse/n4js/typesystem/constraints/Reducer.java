@@ -43,15 +43,16 @@ import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypingStrategy;
-import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector;
 import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.types.utils.TypeCompareUtils;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
+import org.eclipse.n4js.typesystem.utils.AllSuperTypesCollector;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer.StructTypingInfo;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
+import org.eclipse.n4js.utils.DeclMergingHelper;
 import org.eclipse.n4js.utils.StructuralMembersTriple;
 import org.eclipse.n4js.utils.StructuralMembersTripleIterator;
 import org.eclipse.n4js.utils.StructuralTypesHelper;
@@ -74,6 +75,7 @@ import com.google.common.collect.Sets;
 	private final RuleEnvironment G;
 	private final N4JSTypeSystem ts;
 	private final TypeSystemHelper tsh;
+	private final DeclMergingHelper declMergingHelper;
 
 	enum BooleanOp {
 		CONJUNCTION, DISJUNCTION
@@ -82,11 +84,13 @@ import com.google.common.collect.Sets;
 	/**
 	 * Creates an instance.
 	 */
-	public Reducer(InferenceContext ic, RuleEnvironment G, N4JSTypeSystem ts, TypeSystemHelper tsh) {
+	public Reducer(InferenceContext ic, RuleEnvironment G, N4JSTypeSystem ts, TypeSystemHelper tsh,
+			DeclMergingHelper declMergingHelper) {
 		this.ic = ic;
 		this.G = G;
 		this.ts = ts;
 		this.tsh = tsh;
+		this.declMergingHelper = declMergingHelper;
 	}
 
 	/**
@@ -289,7 +293,7 @@ import com.google.common.collect.Sets;
 					if (idx == -1 && variance == CO && leftDecl instanceof ContainerType<?>) {
 						// choose first supertype of left
 						final List<TClassifier> superTypesOfLeft = AllSuperTypesCollector
-								.collect((ContainerType<?>) leftDecl);
+								.collect((ContainerType<?>) leftDecl, declMergingHelper);
 						for (int i = 0; i < rightsSize; i++) {
 							final TypeRef currElem = rights.get(i);
 							final Type currElemDecl = currElem.getDeclaredType();
@@ -308,7 +312,7 @@ import com.google.common.collect.Sets;
 								// TODO improve performance by using a super class iterator or super interfaces iterator
 								// depending on type of leftDecl
 								final List<TClassifier> superTypesOfCurrElem = AllSuperTypesCollector
-										.collect((ContainerType<?>) currElemDecl);
+										.collect((ContainerType<?>) currElemDecl, declMergingHelper);
 								if (superTypesOfCurrElem.contains(leftDecl)) {
 									idx = i;
 									break;

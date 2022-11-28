@@ -39,12 +39,14 @@ import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
+import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.VoidType
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.utils.DeclMergingHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
@@ -60,7 +62,6 @@ import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.types.TN4Classifier
 
 /**
  * Validation of rules that apply to individual members of a classifier.<p>
@@ -80,6 +81,12 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
+
+	@Inject
+	private LazyOverrideAwareMemberCollector lazyOverrideAwareMemberCollector;
+
+	@Inject
+	private DeclMergingHelper declMergingHelper;
 
 	/**
 	 * NEEDED
@@ -328,7 +335,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	private def boolean holdsConstructorInInterfaceRequiresCovarianceAnnotation(TMethod constructor) {
 		val container = constructor.containingType;
-		if (container instanceof TInterface && !N4JSLanguageUtils.hasCovariantConstructor(container as TInterface)) {
+		if (container instanceof TInterface && !N4JSLanguageUtils.hasCovariantConstructor(container as TInterface, declMergingHelper)) {
 			addIssue(getMessageForITF_CONSTRUCTOR_COVARIANCE, constructor.astElement,
 				PROPERTY_NAME_OWNER__DECLARED_NAME, ITF_CONSTRUCTOR_COVARIANCE);
 			return false;
@@ -579,7 +586,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 
 	private def internalCheckDuplicateFieldsIn(TClass tclass, ThisTypeRefStructural thisTypeRefStructInAST) {
 		val structFieldInitMode = thisTypeRefStructInAST.getTypingStrategy() == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
-		val members = LazyOverrideAwareMemberCollector.collectAllMembers(tclass)
+		val members = lazyOverrideAwareMemberCollector.collectAllMembers(tclass)
 		val membersByNameAndStatic = members.groupBy[Tuples.pair(name, static)];
 		val structuralMembersByNameAndStatic = thisTypeRefStructInAST.structuralMembers.groupBy [
 			Tuples.pair(name, static)

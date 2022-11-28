@@ -24,10 +24,8 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
-import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.resource.N4JSCache;
 import org.eclipse.n4js.resource.N4JSResource;
@@ -206,7 +204,7 @@ public class DeclMergingHelper {
 	}
 
 	private <T extends EObject> List<T> cachedGetMergedElements(N4JSResource context, T element, EClass eClass) {
-		return cache.get(Pair.of("getMergedElements", element), context,
+		return cache.get(Pair.of("getMergedElements" + eClass.getClassifierID(), element), context,
 				() -> internalGetMergedElements(context, element, eClass));
 	}
 
@@ -256,11 +254,10 @@ public class DeclMergingHelper {
 
 	private ProjectImportEnablingScope getProjectImportEnablingScope(N4JSResource resource, EClass elementType) {
 		IScope initialScope = globalScopeAccess.getRecordingGlobalScope(resource, elementType);
-		EReference reference = N4JSPackage.eINSTANCE.getModuleRef_Module();
 
 		IResourceDescriptions resourceDescriptions = resourceDescriptionsProvider.getResourceDescriptions(resource);
 		IScope delegateMainModuleAwareScope = MainModuleAwareSelectableBasedScope.createMainModuleAwareScope(
-				initialScope, resourceDescriptions, reference.getEReferenceType());
+				initialScope, resourceDescriptions, elementType);
 
 		N4JSWorkspaceConfigSnapshot ws = workspaceAccess.getWorkspaceConfig(resource);
 		IScope scope = ProjectImportEnablingScope

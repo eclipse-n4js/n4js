@@ -23,10 +23,11 @@ import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.UndefinedType
-import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.utils.AllSuperTypesCollector
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.utils.DeclMergingHelper
 import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.xtext.validation.Check
@@ -37,7 +38,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 /**
- * Validations related to callsites targeting N4Injector methods.
+ * Validations related to call sites targeting N4Injector methods.
  * <p>
  * For other DI-related validations see {@link N4JSDependencyInjectionValidator}
  */
@@ -48,6 +49,9 @@ class N4JSInjectorCallsitesValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject
 	private ResourceNameComputer resourceNameComputer;
+
+	@Inject
+	private DeclMergingHelper declMergingHelper;
 
 	/**
 	 * NEEEDED
@@ -137,7 +141,7 @@ class N4JSInjectorCallsitesValidator extends AbstractN4JSDeclarativeValidator {
 		// all binders used by the injector of interest
 		val usedBinders = N4JSDependencyInjectionValidator.usedBindersOf(dicTClass)
 		val bindersForWhichInstancesAreNeeded = usedBinders.filter[binder|
-			N4JSDependencyInjectionValidator.requiresInjection(binder) || hasNonEmptyCtor(binder)
+			N4JSDependencyInjectionValidator.requiresInjection(binder, declMergingHelper) || hasNonEmptyCtor(binder)
 		]
 		if (args.size == 1) {
 			holdsNoProvidedBindersNeeded(callExpression, bindersForWhichInstancesAreNeeded)
@@ -158,11 +162,11 @@ class N4JSInjectorCallsitesValidator extends AbstractN4JSDeclarativeValidator {
 	/**
 	 * Does the argument declare (or inherit) a ctor requiring parameters?
 	 */
-	private static def boolean hasNonEmptyCtor(TClass tClass) {
+	private def boolean hasNonEmptyCtor(TClass tClass) {
 		// note: AllSuperTypesCollector ignores implicit super types and polyfills, but that is ok, because
 		// we assume that members of implicit super types and polyfilled members won't have an @Inject
 		// TODO use an 'all super types' iterator instead of collector
-		AllSuperTypesCollector.collect(tClass)
+		AllSuperTypesCollector.collect(tClass, declMergingHelper)
 		.exists[t|
 			t.ownedMembers.exists[ctor|
 				ctor.constructor && lacksParams(ctor as TMethod)

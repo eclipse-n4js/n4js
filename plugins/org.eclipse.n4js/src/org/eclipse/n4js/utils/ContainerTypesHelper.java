@@ -51,11 +51,11 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.util.AbstractHierachyTraverser;
 import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.ts.types.util.NameStaticPair;
 import org.eclipse.n4js.ts.types.util.NonSymetricMemberKey;
 import org.eclipse.n4js.types.utils.TypeUtils;
+import org.eclipse.n4js.typesystem.utils.AbstractMergingHierachyTraverser;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -706,7 +706,7 @@ public class ContainerTypesHelper {
 
 		}
 
-		private abstract class AbstractMemberCollector<Result> extends AbstractHierachyTraverser<Result> {
+		private abstract class AbstractMemberCollector<Result> extends AbstractMergingHierachyTraverser<Result> {
 
 			private final boolean includeImplicitSuperTypes;
 			/**
@@ -727,9 +727,10 @@ public class ContainerTypesHelper {
 			 *             if <code>includeImplicitSuperTypes</code> is set to <code>true</code> and <code>type</code>
 			 *             is not contained in a properly initialized N4JS resource set.
 			 */
-			public AbstractMemberCollector(ContainerType<?> type,
-					boolean includeImplicitSuperTypes, boolean includePolyfills) {
-				super(type);
+			public AbstractMemberCollector(ContainerType<?> type, boolean includeImplicitSuperTypes,
+					boolean includePolyfills) {
+
+				super(type, contextResource, declMergingHelper);
 				this.includeImplicitSuperTypes = includeImplicitSuperTypes;
 				this.includePolyfills = includePolyfills;
 			}
@@ -757,12 +758,12 @@ public class ContainerTypesHelper {
 			}
 
 			@Override
-			protected List<ParameterizedTypeRef> getPolyfillsOrMergedTypes(Type filledType) {
+			protected List<ParameterizedTypeRef> getPolyfillTypeRefs(Type filledType) {
 				if (!(includePolyfills && filledType instanceof TClassifier)) {
 					return Collections.emptyList();
 				}
 
-				List<Type> polyfillsOrMergedTypes = new ArrayList<>();
+				List<Type> polyfills = new ArrayList<>();
 
 				TClassifier tClassifier = (TClassifier) filledType;
 				if (filledType.isProvidedByRuntime() // only runtime types can be polyfilled, but
@@ -772,7 +773,7 @@ public class ContainerTypesHelper {
 						// if there is no name, there cannot be a polyfill
 
 						// no need for filtering, the special FQN for polyfills ensures only polyfills are returned:
-						polyfillsOrMergedTypes.addAll(getPolyfillTypesFromScope(qn));
+						polyfills.addAll(getPolyfillTypesFromScope(qn));
 					}
 				} else if (filledType instanceof TClass // only classes can be statically polyfilled
 						&& isContainedInStaticPolyfillAware(filledType) // and only types in "aware" modules
@@ -782,35 +783,15 @@ public class ContainerTypesHelper {
 						// if there is no name, there cannot be a polyfill
 
 						// no need for filtering, the special FQN for polyfills ensures only polyfills are returned:
-						polyfillsOrMergedTypes.addAll(getPolyfillTypesFromScope(qn));
+						polyfills.addAll(getPolyfillTypesFromScope(qn));
 					}
 				}
 
-				if (DeclMergingUtils.mayBeMerged(filledType)) {
-					polyfillsOrMergedTypes.addAll(declMergingHelper.getMergedElements(contextResource, tClassifier));
-				}
-
-				return polyfillsOrMergedTypes.stream()
+				return polyfills.stream()
 						.map(type -> TypeUtils.createTypeRef(type))
 						.collect(Collectors.toList());
 			}
 
-			@Override
-			protected List<ParameterizedTypeRef> getMergedTypes(Type filledType) {
-				if (!(includePolyfills && filledType instanceof TClassifier)) {
-					return Collections.emptyList();
-				}
-				TClassifier tClassifier = (TClassifier) filledType;
-
-				List<Type> polyfillsOrMergedTypes = new ArrayList<>();
-				if (DeclMergingUtils.mayBeMerged(filledType)) {
-					polyfillsOrMergedTypes.addAll(declMergingHelper.getMergedElements(contextResource, tClassifier));
-				}
-
-				return polyfillsOrMergedTypes.stream()
-						.map(type -> TypeUtils.createTypeRef(type))
-						.collect(Collectors.toList());
-			}
 		}
 
 		private class AllMembersCollector extends AbstractMemberCollector<MemberList<TMember>> {

@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.typesystem;
 
-import static org.eclipse.n4js.types.utils.TypeExtensions.ref;
+import static org.eclipse.n4js.ts.types.util.TypeExtensions.ref;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_TYPE_CALL_EXPRESSION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_TYPE_PROPERTY_ACCESS_EXPRESSION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_VARIABLE_DECLARATION;
@@ -168,7 +168,6 @@ import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper.Callable;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper.Newable;
-import org.eclipse.n4js.utils.DeclMergingHelper;
 import org.eclipse.n4js.utils.DestructureHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
@@ -191,8 +190,6 @@ import com.google.inject.Inject;
 	private MemberScopingHelper memberScopingHelper;
 	@Inject
 	private IQualifiedNameConverter qualifiedNameConverter;
-	@Inject
-	private DeclMergingHelper declMergingHelper;
 	@Inject
 	private DestructureHelper destructureHelper;
 	@Inject
@@ -1039,7 +1036,7 @@ import com.google.inject.Inject;
 					// cases such as "c.constructor" or "this.constructor"
 					final Type declType = receiverTypeRefUB.getDeclaredType();
 					final boolean finalCtorSig = declType instanceof TClassifier
-							&& N4JSLanguageUtils.hasCovariantConstructor((TClassifier) declType);
+							&& N4JSLanguageUtils.hasCovariantConstructor((TClassifier) declType, declMergingHelper);
 					if (finalCtorSig) {
 						ctorTypeArg = ref(declType);
 					} else if (declType != null) {

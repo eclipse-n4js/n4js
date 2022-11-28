@@ -17,9 +17,10 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TAnnotationTypeRefArgument
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.typesystem.utils.AllSuperTypesCollector
+import org.eclipse.n4js.utils.DeclMergingHelper
 
 import static org.eclipse.n4js.AnnotationDefinition.*
-import static org.eclipse.n4js.ts.types.util.AllSuperTypesCollector.collect
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
@@ -44,9 +45,9 @@ class DIUtility {
 	 * Returns true if provided type is instanceof {@link TClass}
 	 * and at least owned member is annotated with {@link AnnotationDefinition#INJECT}.
 	 */
-	def public static boolean hasInjectedMembers(Type type) {
+	def public static boolean hasInjectedMembers(Type type, DeclMergingHelper declMergingHelper) {
 		if (type instanceof TClass)
-			collect(type).exists[ownedMembers.exists[INJECT.hasAnnotation(it)]]
+			AllSuperTypesCollector.collect(type, declMergingHelper).exists[ownedMembers.exists[INJECT.hasAnnotation(it)]]
 		else
 			false;
 	}
@@ -56,8 +57,8 @@ class DIUtility {
 	 * or are can be injected and have DI relevant information, e.g. scope annotation.
 	 * Also if type has a super type (injection of inherited members)
 	 */
-	def public static boolean isInjectedClass(Type it){
-		isSingleton || hasInjectedMembers || hasSuperType
+	def public static boolean isInjectedClass(Type it, DeclMergingHelper declMergingHelper){
+		isSingleton || hasInjectedMembers(declMergingHelper) || hasSuperType
 	}
 
 	def public static boolean isBinder(Type type) {
@@ -110,8 +111,8 @@ class DIUtility {
 	}
 
 		/** Returns with {@code true} if one or more members of the given type are annotated with {@code @Inject} annotation. */
-	def public static boolean requiresInjection(Type type) {
-		return if (type instanceof TClass) collect(type).exists[ownedMembers.exists[INJECT.hasAnnotation(it)]] else false;
+	def public static boolean requiresInjection(Type type, DeclMergingHelper declMergingHelper) {
+		return if (type instanceof TClass) AllSuperTypesCollector.collect(type, declMergingHelper).exists[ownedMembers.exists[INJECT.hasAnnotation(it)]] else false;
 	}
 
 	/**
@@ -119,8 +120,8 @@ class DIUtility {
 	 * or the type reference represents an N4 provider, and the dependency of the provider requires injection. Otherwise
 	 * returns with {@code false}.
 	 */
-	def public static boolean requiresInjection(TypeRef it) {
-		return declaredType.requiresInjection || (providerType && providedType.requiresInjection)
+	def public static boolean requiresInjection(TypeRef it, DeclMergingHelper declMergingHelper) {
+		return declaredType.requiresInjection(declMergingHelper) || (providerType && providedType.requiresInjection(declMergingHelper))
 	}
 
 	/**

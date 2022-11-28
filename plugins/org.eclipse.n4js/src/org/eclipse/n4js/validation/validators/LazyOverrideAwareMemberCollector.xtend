@@ -23,10 +23,12 @@ import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.util.AbstractCompleteHierarchyTraverser
 import org.eclipse.n4js.types.utils.TypeUtils
+import org.eclipse.n4js.typesystem.utils.AbstractCompleteHierarchyTraverser
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
+import org.eclipse.n4js.utils.DeclMergingHelper
+import com.google.inject.Inject
 
 /**
  * Collects all members, including inherited members, of a type and omits some members overridden in the type hierarchy.
@@ -40,107 +42,111 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
  * </ul>
  * Thus, this collector should only be used for validation purposes.
  */
-public class LazyOverrideAwareMemberCollector extends AbstractCompleteHierarchyTraverser<List<TMember>> {
-	val boolean includeImplicitSuperTypes;
 
-	private var List<TMember> result;
-	private val RuleEnvironment G;
-
-	val boolean onlyInheritedMembers
+public class LazyOverrideAwareMemberCollector {
+	@Inject
+	private DeclMergingHelper declMergingHelper;
 
 
 	/**
-	 * Collects all members, including owned members and members defined in implicite super types.
+	 * Collects all members, including owned members and members defined in implicit super types.
 	 */
-	def static List<TMember> collectAllMembers(ContainerType<?> type) {
-		return new LazyOverrideAwareMemberCollector(type, true, false).getResult();
+	def List<TMember> collectAllMembers(ContainerType<?> type) {
+		return new LazyOverrideAwareMemberCollectorX(type, declMergingHelper, true, false).getResult();
 	}
 
 	/**
 	 * Collects all inherited members, including members defined in implicit super types; owned members are omitted.
 	 */
-	def static List<TMember> collectAllInheritedMembers(ContainerType<?> type) {
-		return new LazyOverrideAwareMemberCollector(type, true, true).getResult();
+	def List<TMember> collectAllInheritedMembers(ContainerType<?> type) {
+		return new LazyOverrideAwareMemberCollectorX(type, declMergingHelper, true, true).getResult();
 	}
 
 	/**
 	 * Collects all declared members, including owned members; members defined in implicit super types are omitted.
 	 */
-	def static List<TMember> collectAllDeclaredMembers(ContainerType<?> type) {
-		return new LazyOverrideAwareMemberCollector(type, false, false).getResult();
+	def List<TMember> collectAllDeclaredMembers(ContainerType<?> type) {
+		return new LazyOverrideAwareMemberCollectorX(type, declMergingHelper, false, false).getResult();
 	}
 
 	/**
 	 * Collects all declared inherited members; owned members and members defined in implicit super types are omitted.
 	 */
-	def static List<TMember> collectAllDeclaredInheritedMembers(ContainerType<?> type) {
-		return new LazyOverrideAwareMemberCollector(type, false, true).getResult();
+	def List<TMember> collectAllDeclaredInheritedMembers(ContainerType<?> type) {
+		return new LazyOverrideAwareMemberCollectorX(type, declMergingHelper, false, true).getResult();
 	}
 
-	def private List<TMember> createResultInstance() {
-		return Lists.newLinkedList()
-	}
+	static class LazyOverrideAwareMemberCollectorX extends AbstractCompleteHierarchyTraverser<List<TMember>> {
+	
+		val boolean includeImplicitSuperTypes;
+	
+		private var List<TMember> result;
+		private val RuleEnvironment G;
+	
+		val boolean onlyInheritedMembers
+		
 
-
-	/**
-	 * Creates a new collector with optional support for implicit super types, better use static helper methods.
-	 *
-	 * @param type
-	 *            the base type. Must be contained in a resource set if <code>includeImplicitSuperTypes</code> is set to
-	 *            <code>true</code>.
-	 * @param includeImplicitSuperTypes
-	 *            if true also members of implicit super types will be collected; otherwise only members of declared
-	 *            super types are included.
-	 * @param onlyInheritedMembers
-	 * 			if true, owned members of type are ignore, that is only inherited members are collected
-	 * @throws IllegalArgumentException
-	 *             if <code>includeImplicitSuperTypes</code> is set to <code>true</code> and <code>type</code> is not
-	 *             contained in a properly initialized N4JS resource set.
-	 */
-	private new(ContainerType<?> type, boolean includeImplicitSuperTypes, boolean onlyInheritedMembers) {
-		super(type);
-		this.onlyInheritedMembers = onlyInheritedMembers;
-		this.includeImplicitSuperTypes = includeImplicitSuperTypes;
-		result = createResultInstance();
-		G = if ( includeImplicitSuperTypes) RuleEnvironmentExtensions.newRuleEnvironment(type) else null;
-	}
-
-	override protected List<TMember> doGetResult() {
-		return result;
-	}
-
-	override protected void doProcess(ContainerType<?> type) {
-		if (type instanceof TClassifier) {
-			val ownedMembers = type.getOwnedMembers()
-			result.addAll(ownedMembers);
+		/**
+		 * Creates a new collector with optional support for implicit super types, better use static helper methods.
+		 *
+		 * @param type
+		 *            the base type. Must be contained in a resource set if <code>includeImplicitSuperTypes</code> is set to
+		 *            <code>true</code>.
+		 * @param includeImplicitSuperTypes
+		 *            if true also members of implicit super types will be collected; otherwise only members of declared
+		 *            super types are included.
+		 * @param onlyInheritedMembers
+		 * 			if true, owned members of type are ignore, that is only inherited members are collected
+		 * @throws IllegalArgumentException
+		 *             if <code>includeImplicitSuperTypes</code> is set to <code>true</code> and <code>type</code> is not
+		 *             contained in a properly initialized N4JS resource set.
+		 */
+		private new(ContainerType<?> type, DeclMergingHelper declMergingHelper, boolean includeImplicitSuperTypes, boolean onlyInheritedMembers) {
+			super(type, declMergingHelper);
+			this.onlyInheritedMembers = onlyInheritedMembers;
+			this.includeImplicitSuperTypes = includeImplicitSuperTypes;
+			result = createResultInstance();
+			G = if ( includeImplicitSuperTypes) RuleEnvironmentExtensions.newRuleEnvironment(type) else null;
 		}
-	}
 
-	override protected doProcess(PrimitiveType currentType) {
-		// nothing to do in this case
-	}
-
-	def protected processAndReplace(TClassifier type) {
-		val ownedMembers = type.getOwnedMembers()
-		val iterInherited = result.iterator
-		while (iterInherited.hasNext()) {
-			val inherited = iterInherited.next;
-			if (ownedMembers.exists[
-				name==inherited.name && memberType===inherited.memberType && static===inherited.static
-			]) {
-				iterInherited.remove
+		def List<TMember> createResultInstance() {
+			return Lists.newLinkedList()
+		}
+	
+		override protected List<TMember> doGetResult() {
+			return result;
+		}
+	
+		override protected void doProcess(ContainerType<?> type) {
+			if (type instanceof TClassifier) {
+				val ownedMembers = type.getOwnedMembers()
+				result.addAll(ownedMembers);
 			}
 		}
-		result.addAll(ownedMembers)
-	}
-
-
-	/**
-	 * Does not add owned members and add inherited members overridden aware.
-	 */
-	override Boolean caseTClass(TClass object) {
-		if (guard.tryNext(object)) {
-
+	
+		override protected doProcess(PrimitiveType currentType) {
+			// nothing to do in this case
+		}
+	
+		def protected processAndReplace(TClassifier type) {
+			val ownedMembers = type.getOwnedMembers()
+			val iterInherited = result.iterator
+			while (iterInherited.hasNext()) {
+				val inherited = iterInherited.next;
+				if (ownedMembers.exists[
+					name==inherited.name && memberType===inherited.memberType && static===inherited.static
+				]) {
+					iterInherited.remove
+				}
+			}
+			result.addAll(ownedMembers)
+		}
+	
+	
+		/**
+		 * Does not add owned members and add inherited members overridden aware.
+		 */
+		override boolean visitTClass(ParameterizedTypeRef typeRef, TClass object) {
 			val parentResult = result
 			if (object!==bottomType) {
 				result = createResultInstance();
@@ -159,17 +165,16 @@ public class LazyOverrideAwareMemberCollector extends AbstractCompleteHierarchyT
 				parentResult.addAll(result); // merge
 				result = parentResult;
 			}
+
+			return Boolean.FALSE;
 		}
-		return Boolean.FALSE;
-	}
-
-
-
-	/**
-	 * Does not add owned members and add inherited members overridden aware.
-	 */
-	override public Boolean caseTInterface(TInterface object) {
-		if (guard.tryNext(object)) {
+	
+	
+	
+		/**
+		 * Does not add owned members and add inherited members overridden aware.
+		 */
+		override public boolean visitTInterface(ParameterizedTypeRef typeRef, TInterface object) {
 			val parentResult = result
 			if (object!==bottomType) {
 				result = createResultInstance();
@@ -185,21 +190,21 @@ public class LazyOverrideAwareMemberCollector extends AbstractCompleteHierarchyT
 				parentResult.addAll(result); // merge
 				result = parentResult;
 			}
-
+	
+			return Boolean.FALSE;
 		}
-		return Boolean.FALSE;
-	}
-
-
-	override protected List<ParameterizedTypeRef> getImplicitSuperTypes(Type t) {
-		if (includeImplicitSuperTypes) {
-			val List<ParameterizedTypeRef> implSuperTypeRefs = new ArrayList<ParameterizedTypeRef>();
-			for (TypeRef currTypeRef : RuleEnvironmentExtensions.collectAllImplicitSuperTypes(G,
-					TypeUtils.createTypeRef(t)))
-				implSuperTypeRefs.add(currTypeRef as ParameterizedTypeRef); // they should all be ParameterizedTypeRefs
-			return implSuperTypeRefs;
+	
+	
+		override protected List<ParameterizedTypeRef> getImplicitSuperTypes(Type t) {
+			if (includeImplicitSuperTypes) {
+				val List<ParameterizedTypeRef> implSuperTypeRefs = new ArrayList<ParameterizedTypeRef>();
+				for (TypeRef currTypeRef : RuleEnvironmentExtensions.collectAllImplicitSuperTypes(G,
+						TypeUtils.createTypeRef(t)))
+					implSuperTypeRefs.add(currTypeRef as ParameterizedTypeRef); // they should all be ParameterizedTypeRefs
+				return implSuperTypeRefs;
+			}
+			else
+				return Collections.emptyList();
 		}
-		else
-			return Collections.emptyList();
 	}
 }
