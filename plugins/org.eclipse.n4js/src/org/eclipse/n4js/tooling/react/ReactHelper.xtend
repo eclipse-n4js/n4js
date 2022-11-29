@@ -142,9 +142,12 @@ class ReactHelper {
 	 * 
 	 * @param context the EObject serving the context to look for React.Element.
 	 */
-	def public TInterface lookUpReactElement(EObject context) {
+	def public TClassifier lookUpReactElement(EObject context) {
 		val reactElement = lookUpReactClassifier(context, REACT_ELEMENT, TInterface)
-		return reactElement;
+		if (reactElement !== null) {
+			return reactElement;
+		}
+		return lookUpReactClassifier_OLD(context, REACT_ELEMENT, TClass);
 	}
 
 	/**
@@ -153,8 +156,11 @@ class ReactHelper {
 	 * @param context the EObject serving the context to look for React.Component.
 	 */
 	def public TClass lookUpReactComponent(EObject context) {
-		val reactComponent = lookUpReactClassifier(context, REACT_COMPONENT, TClass)
-		return reactComponent;
+		val reactComponent = lookUpReactClassifier(context, REACT_COMPONENT, TClass);
+		if (reactComponent !== null) {
+			return reactComponent;
+		}
+		return lookUpReactClassifier_OLD(context, REACT_COMPONENT, TClass);
 	}
 
 	/**
@@ -234,7 +240,17 @@ class ReactHelper {
 					}
 				}
 			}
+			return null;
+		]);
+	}
+	def private <T extends TClassifier> T lookUpReactClassifier_OLD(EObject context, String reactClassifierName, Class<T> clazz) {
+		val resource = context.eResource;
+		val tModule = getJsxBackendModule(resource);
+		if (tModule === null || tModule.eResource === null)
+			return null;
 
+		val String key = REACT_KEY + "_OLD." + reactClassifierName;
+		return resourceScopeCacheHelper.get(key, tModule.eResource, [
 			// used for @n4jsd/react
 			val tClassifier = tModule.types.filter(clazz).findFirst[name == reactClassifierName];
 			return tClassifier;
