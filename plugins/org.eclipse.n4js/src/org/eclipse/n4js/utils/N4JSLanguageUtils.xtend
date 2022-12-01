@@ -29,6 +29,7 @@ import org.eclipse.n4js.n4JS.AbstractAnnotationList
 import org.eclipse.n4js.n4JS.AbstractVariable
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.Argument
+import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression
@@ -1175,6 +1176,10 @@ public class N4JSLanguageUtils {
 			return true;
 		}
 
+		if (expr instanceof ArrowFunction) {
+			return true;
+		}
+
 		if (expr instanceof IdentifierRef) {
 			val idElem = expr.getId();
 			if (idElem instanceof TVariable) {
@@ -1221,6 +1226,10 @@ public class N4JSLanguageUtils {
 		}
 
 		if (expr instanceof ObjectLiteral) {
+			return true;
+		}
+
+		if (expr instanceof ArrowFunction) {
 			return true;
 		}
 
