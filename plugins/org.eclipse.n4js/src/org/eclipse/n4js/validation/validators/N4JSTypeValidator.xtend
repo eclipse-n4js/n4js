@@ -457,7 +457,6 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 
 		val expectedTypeRef = ts.expectedType(G, expression.eContainer, expression);
 		if (expectedTypeRef !== null) {
-			tsh.addSubstitutions(G, expectedTypeRef);
 
 			// for certain problems in single-expression arrow functions, we want a special error message
 			val singleExprArrowFunction = N4JSASTUtils.getContainingSingleExpressionArrowFunction(expression);
