@@ -349,7 +349,9 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 					if (right.isCallSignature) {
 						// in case a call signature is missing on the left side, it is ok
 						// if the left side is itself a function and is override-compatible:
-						val result = ts.subtype(G, info.left, TypeUtils.createTypeRef(right));
+						tsh.addSubstitutions(G, info.right);
+						val TypeRef rightTypeRef = ts.substTypeVariables(G, TypeUtils.createTypeRef(right));
+						val result = ts.subtype(G, info.left, rightTypeRef);
 						if (result.success) {
 							return; // success
 						}
@@ -424,8 +426,10 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 					if (right.isCallSignature) {
 						// in case a call signature is missing on the left side, it is ok
 						// if the left side is itself a function and is override-compatible:
+						tsh.addSubstitutions(G, info.right);
+						val TypeRef rightTypeRef = ts.substTypeVariables(G, TypeUtils.createTypeRef(right));
 						return Collections.singletonList(
-							new TypeConstraint(info.left, TypeUtils.createTypeRef(right), Variance.CO));
+							new TypeConstraint(info.left, rightTypeRef, Variance.CO));
 					}
 				}
 				return Collections.singletonList(TypeConstraint.FALSE);
