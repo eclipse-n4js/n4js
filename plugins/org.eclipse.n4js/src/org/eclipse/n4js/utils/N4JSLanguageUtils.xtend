@@ -40,6 +40,7 @@ import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
+import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
@@ -1180,6 +1181,10 @@ public class N4JSLanguageUtils {
 			return true;
 		}
 
+		if (expr instanceof FunctionExpression) {
+			return true;
+		}
+
 		if (expr instanceof IdentifierRef) {
 			val idElem = expr.getId();
 			if (idElem instanceof TVariable) {
@@ -1230,6 +1235,10 @@ public class N4JSLanguageUtils {
 		}
 
 		if (expr instanceof ArrowFunction) {
+			return true;
+		}
+
+		if (expr instanceof FunctionExpression) {
 			return true;
 		}
 

@@ -35,6 +35,11 @@ import {fun, funWithArgs} from "tslib";
  
 // XPECT noerrors -->
 fun((props: string, ref: number) : string => { return "";});
+// XPECT noerrors -->
+fun(function(props: string, ref: number) : string { return "";});
+
 
 // XPECT noerrors -->
 <string, number>funWithArgs((props: string, ref: number) : string => { return "";});
+// XPECT noerrors -->
+<string, number>funWithArgs(function(props: string, ref: number) : string { return "";});
