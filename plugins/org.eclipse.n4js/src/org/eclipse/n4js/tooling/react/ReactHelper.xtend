@@ -147,7 +147,7 @@ class ReactHelper {
 		if (reactElement !== null) {
 			return reactElement;
 		}
-		return lookUpReactClassifier_OLD(context, REACT_ELEMENT, TClass);
+		return lookUpReactClassifier_OLD(context, REACT_ELEMENT, TInterface);
 	}
 
 	/**
