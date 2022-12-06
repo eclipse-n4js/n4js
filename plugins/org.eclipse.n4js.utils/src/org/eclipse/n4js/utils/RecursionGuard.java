@@ -61,21 +61,6 @@ public class RecursionGuard<T> {
 		this.equivalence = checkNotNull(equivalence, "equivalence");
 	}
 
-	static public class GuardFailedException extends Exception {
-		// empty
-	}
-
-	/**
-	 * Announce the next element and report whether that one is currently in the stack. That is, element should only be
-	 * processed by caller if this method returns true.
-	 */
-	public TameAutoClosable tryNextAuto(final T element) throws GuardFailedException {
-		if (!tryNext(element)) {
-			throw new GuardFailedException();
-		}
-		return () -> done(element);
-	}
-
 	/**
 	 * Announce the next element and report whether that one is currently in the stack. That is, element should only be
 	 * processed by caller if this method returns true.

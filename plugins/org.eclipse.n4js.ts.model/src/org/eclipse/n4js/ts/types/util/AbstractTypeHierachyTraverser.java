@@ -25,8 +25,6 @@ import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.RecursionGuard;
-import org.eclipse.n4js.utils.RecursionGuard.GuardFailedException;
-import org.eclipse.n4js.utils.TameAutoClosable;
 
 import com.google.common.collect.Iterables;
 
@@ -266,22 +264,21 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 		return guardedSwitch(typeRef);
 	}
 
-	@SuppressWarnings("resource")
 	protected boolean guardedSwitch(ParameterizedTypeRef typeRef) {
 		if (typeRef.getDeclaredType() == bottomType && currentTypeRefs.size() > 1) {
 			return false;
 		}
-		TameAutoClosable guardGranted = null;
-		try {
-			guardGranted = guard.tryNextAuto(typeRef);
-			return doSwitch(typeRef);
-		} catch (GuardFailedException e) {
+		if (guard.tryNext(typeRef)) {
+			try {
+				return doSwitch(typeRef);
+			} finally {
+				if (releaseGuard(typeRef)) {
+					guard.done(typeRef);
+				}
+			}
+		} else {
 			// guard failed
 			return false;
-		} finally {
-			if (guardGranted != null && releaseGuard(typeRef)) {
-				guardGranted.close();
-			}
 		}
 	}
 

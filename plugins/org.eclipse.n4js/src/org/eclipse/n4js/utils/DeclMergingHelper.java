@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -190,6 +191,8 @@ public class DeclMergingHelper {
 	 * <p>
 	 * The given type does not have to be the
 	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
+	 *
+	 * @implNote Check {@link DeclMergingUtils#mayBeMerged(EObject)} before calling this method
 	 */
 	public List<ParameterizedTypeRef> getMergedTypeRefs(N4JSResource context, ParameterizedTypeRef typeRef) {
 		List<Type> mergedTypes = getMergedElements(context, typeRef.getDeclaredType());
@@ -207,6 +210,8 @@ public class DeclMergingHelper {
 	 * <p>
 	 * The given type does not have to be the
 	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
+	 *
+	 * @implNote Check {@link DeclMergingUtils#mayBeMerged(EObject)} before calling this method
 	 */
 	public List<Type> getMergedElements(N4JSResource context, Type type) {
 		return cachedGetMergedElements(context, type, TypesPackage.Literals.TYPE);
@@ -217,14 +222,37 @@ public class DeclMergingHelper {
 	 * <p>
 	 * The given namespace does not have to be the
 	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
+	 *
+	 * @implNote Check {@link DeclMergingUtils#mayBeMerged(EObject)} before calling this method
 	 */
 	public List<AbstractNamespace> getMergedElements(N4JSResource context, AbstractNamespace namespace) {
 		return cachedGetMergedElements(context, namespace, TypesPackage.Literals.ABSTRACT_NAMESPACE);
 	}
 
 	private <T extends EObject> List<T> cachedGetMergedElements(N4JSResource context, T element, EClass eClass) {
-		return cache.get(Pair.of("getMergedElements" + eClass.getClassifierID(), element), context,
-				() -> internalGetMergedElements(context, element, eClass));
+		String keyName = "getMergedElements" + eClass.getClassifierID();
+		Pair<String, T> key = Pair.of(keyName, element);
+		if (!cache.contains(key, context)) {
+			List<T> mergedElements = internalGetMergedElements(context, element, eClass);
+			cache.get(key, context, () -> mergedElements);
+
+			Set<T> mergedElementsSet = new HashSet<>(mergedElements);
+			mergedElementsSet.add(element);
+
+			for (T mergedElem : mergedElements) {
+				Pair<String, T> otherKey = Pair.of(keyName, mergedElem);
+				cache.get(otherKey, context, () -> {
+					ArrayList<Object> otherMergedElems = new ArrayList<>();
+					for (T e : mergedElementsSet) {
+						if (e != mergedElem) {
+							otherMergedElems.add(e);
+						}
+					}
+					return otherMergedElems;
+				});
+			}
+		}
+		return cache.mustGet(key, context);
 	}
 
 	@SuppressWarnings("unchecked")

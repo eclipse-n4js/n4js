@@ -62,9 +62,6 @@ public abstract class AbstractMergingHierachyTraverser<ResultT> extends Abstract
 				currentTypeRef = TypeUtils.createTypeRef(filledType);
 			}
 			mergedTypes.addAll(declMergingHelper.getMergedTypeRefs(contextResource, currentTypeRef));
-			// for (Type mt : declMergingHelper.getMergedElements(contextResource, filledType)) {
-			// mergedTypes.add(TypeUtils.createTypeRef(mt));
-			// }
 		}
 
 		return mergedTypes;
