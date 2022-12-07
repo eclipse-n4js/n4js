@@ -28,6 +28,7 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
+import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TypingStrategy
@@ -167,6 +168,14 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 						JSX_TAG_UNKNOWN
 					);
 				}
+			} else if (exprTypeRef instanceof TypeTypeRef
+				&& (exprTypeRef as TypeTypeRef).typeArg?.declaredType instanceof TClass
+				&& ((exprTypeRef as TypeTypeRef).typeArg.declaredType as TClass).abstract
+			) {
+				// JSX element name starts with an upper case, error because it does not bind to a class or function
+				// See Req. IDE-241115
+				val message = getMessageForJSX_REACT_ELEMENT_CLASS_MUST_NOT_BE_ABSTRACT();
+				addIssue(message, expr, JSX_REACT_ELEMENT_CLASS_MUST_NOT_BE_ABSTRACT);
 			} else {
 				// JSX element name starts with an upper case, error because it does not bind to a class or function
 				// See Req. IDE-241115
