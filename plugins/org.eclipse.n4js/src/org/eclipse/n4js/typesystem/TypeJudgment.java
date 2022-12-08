@@ -1408,7 +1408,8 @@ import com.google.inject.Inject;
 			if (classifierReactElement == null) {
 				return unknown();
 			}
-			return ref(classifierReactElement);
+			TypeRef propsType = reactHelper.getPropsType(jsxElem);
+			return ref(classifierReactElement, propsType);
 		}
 
 		@Override

@@ -675,6 +675,11 @@ public class ParserContextUtils {
 		return createParameterizedTypeRef(resource, "any", true);
 	}
 
+	/** @return a new {@code ~Object} type reference. */
+	public static ParameterizedTypeRef createStructuralObjectTypeRef(LazyLinkingResource resource) {
+		return createParameterizedTypeRef(resource, "~Object", true);
+	}
+
 	/** @return a new {@code void} type reference. */
 	public static ParameterizedTypeRef createVoidTypeRef(LazyLinkingResource resource) {
 		return createParameterizedTypeRef(resource, "void", false);

@@ -11,6 +11,8 @@
 package org.eclipse.n4js.tooling.react
 
 import com.google.inject.Inject
+import java.util.Collections
+import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.JSXElement
@@ -19,13 +21,19 @@ import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
+import org.eclipse.n4js.ts.types.ElementExportDefinition
+import org.eclipse.n4js.ts.types.ExportDefinition
+import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
+import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.TNamespace
+import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
@@ -36,12 +44,6 @@ import org.eclipse.xtext.scoping.IScopeProvider
 import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.types.ExportDefinition
-import org.eclipse.n4js.ts.types.ElementExportDefinition
-import org.eclipse.n4js.ts.types.TNamespace
-import org.eclipse.n4js.ts.types.TVariable
-import org.eclipse.n4js.ts.types.IdentifiableElement
-import org.eclipse.n4js.ts.types.TInterface
 
 /**
  * This helper provides utilities for looking up React definitions such as React.Component or React.ReactElement or
@@ -200,6 +202,16 @@ class ReactHelper {
 			}
 		}
 		return null;
+	}
+	
+	def public TypeRef getConstructorFunctionType(JSXElement jsxElem) {
+		val G = newRuleEnvironment(jsxElem);
+		var TypeRef returnTypeRef = getJsxElementBindingType(jsxElem);
+		if (returnTypeRef instanceof TypeTypeRef && (returnTypeRef as TypeTypeRef).typeArg instanceof TypeRef) {
+			returnTypeRef = (returnTypeRef as TypeTypeRef).typeArg as TypeRef;
+		}
+		val List<TypeRef> args = Collections.singletonList(anyTypeRef(G));
+		return TypeUtils.createFunctionTypeExpression(args, returnTypeRef);
 	}
 
 	/**

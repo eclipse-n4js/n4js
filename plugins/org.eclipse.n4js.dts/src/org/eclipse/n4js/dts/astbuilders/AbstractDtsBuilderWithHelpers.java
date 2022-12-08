@@ -180,6 +180,11 @@ public abstract class AbstractDtsBuilderWithHelpers<T extends ParserRuleContext,
 		return ParserContextUtils.createAnyPlusTypeRef(resource);
 	}
 
+	/** @return a new {@code ~Object} type reference. */
+	protected final ParameterizedTypeRef createStructuralObjectTypeRef() {
+		return ParserContextUtils.createStructuralObjectTypeRef(resource);
+	}
+
 	/** @return a new {@link ParameterizedTypeRef} pointing to the given declared type. */
 	protected final ParameterizedTypeRef createParameterizedTypeRef(String declTypeName, boolean dynamic) {
 		return ParserContextUtils.createParameterizedTypeRef(resource, declTypeName, null, dynamic);
