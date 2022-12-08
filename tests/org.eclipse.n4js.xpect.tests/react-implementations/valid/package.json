@@ -2,17 +2,6 @@
 	"name": "react",
 	"version": "17.0.0",
 	"type": "module",
-	"main": "./index.js",
-	"n4js": {
-		"projectType": "library",
-		"vendorId": "npm",
-		"vendorName": "npm",
-		"output": ".",
-		"mainModule": "index",
-		"sources": {
-			"external": [
-				"."
-			]
-		}
-	}
+	"types": "index.d.ts",
+	"main": "./index.js"
 }
