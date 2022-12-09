@@ -254,12 +254,12 @@ public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 
 	/***/
 	protected final DtsTypeRefBuilder newTypeRefBuilderHandleReturnTypeRef() {
-		return newTypeRefBuilder(true);
+		return newTypeRefBuilder(true, false);
 	}
 
 	/***/
-	protected final DtsTypeRefBuilder newTypeRefBuilder(boolean handleReturnTypeRef) {
-		return new DtsTypeRefBuilder(this, handleReturnTypeRef);
+	protected final DtsTypeRefBuilder newTypeRefBuilder(boolean handleReturnTypeRef, boolean handleTypeAwaited) {
+		return new DtsTypeRefBuilder(this, handleReturnTypeRef, handleTypeAwaited);
 	}
 
 	/***/

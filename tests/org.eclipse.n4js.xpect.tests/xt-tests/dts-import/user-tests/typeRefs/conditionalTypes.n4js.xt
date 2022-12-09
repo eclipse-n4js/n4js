@@ -1,0 +1,131 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "tslib.d.ts" {
+
+		export const ANY01 : bigint = undefined;
+		export const ANY02 : BigInt = undefined;
+		export const ANY03 : ConstructorParameters<Type> = undefined;
+		export const ANY04 : InstanceType<Type> = undefined;
+		export const ANY05 : OmitThisParameter<Type> = undefined;
+		export const ANY06 : Parameters<Type> = undefined;
+		export const ANY07 : Record<Keys, Type> = undefined;
+		export const ANY08 : ReturnType<Type> = undefined;
+		export const ANY09 : ThisParameterType<Type> = undefined;
+		export const ANY10 : ThisType<Type> = undefined;
+		export const ANY11 : unknown = undefined;
+		
+		export const STRING1 : Uppercase<String> = undefined;
+		export const STRING2 : Lowercase<String> = undefined;
+		export const STRING3 : Capitalize<String> = undefined;
+		export const STRING4 : Uncapitalize<String> = undefined;
+		
+		export const DELEGATE1 : Exclude<Object, "length"> = undefined;
+		export const DELEGATE2 : Extract<Object, Union> = undefined;
+		export const DELEGATE3 : NonNullable<Object> = undefined;
+		export const DELEGATE4 : Omit<Object, Keys> = undefined;
+		export const DELEGATE5 : Partial<Object> = undefined;
+		export const DELEGATE6 : Pick<Object, Keys> = undefined;
+		export const DELEGATE7 : Readonly<Object> = undefined;
+		export const DELEGATE8 : Required<Object> = undefined;
+		export const DELEGATE9 : Awaited<Object | Promise<string>> = undefined;
+		
+	}
+
+	END_SETUP
+ */
+
+import { ANY01, ANY02, ANY03, ANY04, ANY05, ANY06, ANY07, ANY08, ANY09, ANY10, ANY11, STRING1, STRING2, STRING3, STRING4, DELEGATE1, DELEGATE2, DELEGATE3, DELEGATE4, DELEGATE5, DELEGATE6, DELEGATE7, DELEGATE8, DELEGATE9 } from "tslib";
+
+
+
+
+// XPECT type of 'ANY01' --> any+
+ANY01
+
+// XPECT type of 'ANY02' --> any+
+ANY02
+
+// XPECT type of 'ANY03' --> any+
+ANY03
+
+// XPECT type of 'ANY04' --> any+
+ANY04
+
+// XPECT type of 'ANY05' --> any+
+ANY05
+
+// XPECT type of 'ANY06' --> any+
+ANY06
+
+// XPECT type of 'ANY07' --> any+
+ANY07
+
+// XPECT type of 'ANY08' --> any+
+ANY08
+
+// XPECT type of 'ANY09' --> any+
+ANY09
+
+// XPECT type of 'ANY10' --> any+
+ANY10
+
+// XPECT type of 'ANY11' --> any+
+ANY11
+
+
+
+
+// XPECT type of 'STRING1' --> string
+STRING1
+
+// XPECT type of 'STRING2' --> string
+STRING2
+
+// XPECT type of 'STRING3' --> string
+STRING3
+
+// XPECT type of 'STRING4' --> string
+STRING4
+
+
+
+
+// XPECT type of 'DELEGATE1' --> Object
+DELEGATE1
+
+// XPECT type of 'DELEGATE2' --> Object
+DELEGATE2
+
+// XPECT type of 'DELEGATE3' --> Object
+DELEGATE3
+
+// XPECT type of 'DELEGATE4' --> Object
+DELEGATE4
+
+// XPECT type of 'DELEGATE5' --> Object
+DELEGATE5
+
+// XPECT type of 'DELEGATE6' --> Object
+DELEGATE6
+
+// XPECT type of 'DELEGATE7' --> Object
+DELEGATE7
+
+// XPECT type of 'DELEGATE8' --> Object
+DELEGATE8
+
+// XPECT type of 'DELEGATE9' --> union{Object,string}
+DELEGATE9
+
