@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
@@ -39,6 +40,7 @@ import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
@@ -835,6 +837,17 @@ import com.google.common.collect.Sets;
 			final TMember l = next.getLeft();
 			final TMember r = next.getRight();
 			if (l == null || r == null) {
+				if (l == null && left instanceof FunctionTypeExpression && r instanceof TMethod
+						&& ((TMethod) r).isCallSignature()) {
+					TMethod rightCS = (TMethod) r;
+					tsh.addSubstitutions(G, right);
+					FunctionTypeExprOrRef rightTypeRef = (FunctionTypeExprOrRef) ts.substTypeVariables(G,
+							TypeUtils.createTypeRef(rightCS));
+					// in case a call signature is missing on the left side, it is ok
+					// if the left side is itself a function
+					reduceFunctionTypeExprOrRef((FunctionTypeExpression) left, rightTypeRef, variance);
+				}
+
 				// ignore missing members
 				// (Note: we're ignoring this altogether, here. We could check if the existing member is optional and
 				// otherwise add bound FALSE, but this is not our job. There are other validations checking that and
