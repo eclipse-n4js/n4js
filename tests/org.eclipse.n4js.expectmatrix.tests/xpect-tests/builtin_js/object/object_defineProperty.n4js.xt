@@ -11,14 +11,6 @@
 
 /* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.N4JSExpectMatrixTest END_SETUP */
 
-/*
-   IDE-2140: If you get a failure here (because the error does no longer show up), then perform the following clean up:
-   1) remove all unnecessary casts in all invocations of Object#defineProperty() in this file and all other files in this folder
-   2) check for similar situations in other test files in repository "n4js" and in stdlib/OPR
-   3) remove this comment and the line "const temp: ...".
- */
-// XPECT errors --> "~Object with { value: int } is not a subtype of intersection{PropertyDescriptor,ThisType<any>}." at "{ value: 42 }"
-const temp: PropertyDescriptor & ThisType<any> = { value: 42 };
 
 // Object.defineProperty()
 // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
@@ -26,14 +18,10 @@ const temp: PropertyDescriptor & ThisType<any> = { value: 42 };
 var o : Object = {}; // Creates a new object
 
 // Example of an object property added with defineProperty with a data property descriptor
-// IDE-2140 XPECT warnings --> "Unnecessary cast from 37 to any" at "37 as any"
-Object.defineProperty(o, "a", {value : 37 as any,
-                               // IDE-2140 XPECT warnings --> "Unnecessary cast from true to boolean" at "true as boolean"
-                               writable : true as boolean,
-                               // IDE-2140 XPECT warnings --> "Unnecessary cast from true to boolean" at "true as boolean"
-                               enumerable : true as boolean,
-                               // IDE-2140 XPECT warnings --> "Unnecessary cast from true to boolean" at "true as boolean"
-                               configurable : true as boolean});
+Object.defineProperty(o, "a", {value : 37,
+                               writable : true,
+                               enumerable : true,
+                               configurable : true});
 // 'a' property exists in the o object and its value is 37
 
 console.log(JSON.stringify(o));
@@ -42,10 +30,8 @@ console.log(JSON.stringify(o));
 var bValue = 38;
 Object.defineProperty(o, "b", {get : function(){ return bValue; },
                                set : function(newValue : any){ bValue = newValue as number; },
-                               // IDE-2140 XPECT warnings --> "Unnecessary cast from true to boolean" at "true as boolean"
-                               enumerable : true as boolean,
-                               // IDE-2140 XPECT warnings --> "Unnecessary cast from true to boolean" at "true as boolean"
-                               configurable : true as boolean});
+                               enumerable : true,
+                               configurable : true});
 console.log("38 = " + o["b"]); // 38
 // 'b' property exists in the o object and its value is 38
 // The value of o.b is now always identical to bValue, unless o.b is redefined
@@ -53,8 +39,7 @@ console.log("38 = " + o["b"]); // 38
 // You cannot try to mix both :
 function fail () {
 	try {
-		// IDE-2140 XPECT warnings --> "Unnecessary cast from 167317762 to any" at "0x9f91102 as any"
-		Object.defineProperty(o, "conflict", { value: 0x9f91102 as any, get: function() { return 0xdeadbeef; } });
+		Object.defineProperty(o, "conflict", { value: 0x9f91102, get: function() { return 0xdeadbeef; } });
 	}
 	catch (e) { console.log((e as Object).toString()); }
 }
