@@ -837,7 +837,7 @@ import com.google.common.collect.Sets;
 						&& ((TMethod) r).isCallSignature()) {
 					TMethod rightCS = (TMethod) r;
 					tsh.addSubstitutions(G, right);
-					FunctionTypeExpression rightTypeRef = (FunctionTypeExpression) ts.substTypeVariables(G,
+					FunctionTypeExprOrRef rightTypeRef = (FunctionTypeExprOrRef) ts.substTypeVariables(G,
 							TypeUtils.createTypeRef(rightCS));
 					// in case a call signature is missing on the left side, it is ok
 					// if the left side is itself a function
