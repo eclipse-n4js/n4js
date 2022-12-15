@@ -79,28 +79,6 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 				}
 			}
 			return false;
-			
-		} else if (leftTypeVars.empty && !rightTypeVars.empty) {
-
-			// left is generic, right is non-generic
-			// (i.e. cases like: {function(string):string} <: {function<T>(T):T})
-			// rationale: if there exists a valid binding of right's type variables
-			// so that left <: bound(right), then left <: right
-
-			val infCtx = new InferenceContext(ts, tsh, operationCanceledManager, G.cancelIndicator, G); // start with no inference variables
-			val right_withInfVars = infCtx.newInferenceVariablesFor(right); // create an inference variable for each type param in left
-			// assuming 'left' was {function<T>(T):T}, then left_withInfVars is now: {function(α):α} (non-generic!)
-			infCtx.addConstraint(left, right_withInfVars, Variance.CO);
-			val solution = infCtx.solve; // will give us something like α->string
-			if (solution !== null) {
-				val G_solution = G.newRuleEnvironment;
-				solution.entrySet.forEach[G_solution.addTypeMapping(key,value)];
-				val rightSubst = ts.substTypeVariables(G_solution, right_withInfVars);
-				if (rightSubst instanceof FunctionTypeExprOrRef) {
-					return primIsSubtypeFunction(G, left, rightSubst);
-				}
-			}
-			return false;
 
 		} else {
 
