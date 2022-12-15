@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ts.typeRefs;
 
+import org.eclipse.n4js.ts.types.TypingStrategy;
 
 /**
  * <!-- begin-user-doc -->
@@ -37,5 +38,39 @@ public interface IntersectionTypeExpression extends ComposedTypeRef {
 	 * @generated
 	 */
 	String internalGetTypeRefAsString(boolean resolveProxies);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Convenience method, returns true iff all composed type refs are use site structural typed.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isUseSiteStructuralTyping();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Convenience method, returns true iff all composed type refs are def site structural typed.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isDefSiteStructuralTyping();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * Returns the actual typing strategy, that is TypingStrategy.STRUCTURAL iff this type is def site structural typing.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TypingStrategy getTypingStrategy();
 
 } // IntersectionTypeExpression
