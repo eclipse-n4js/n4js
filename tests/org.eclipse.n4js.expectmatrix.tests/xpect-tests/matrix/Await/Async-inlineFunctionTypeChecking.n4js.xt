@@ -34,8 +34,7 @@ var v12 = dumbnumbs.map(
 async function luckify2(num : number) {
   return num + 7;
 }
-//this, however, is fine
-// IDE-2140: return type inference
+
 // XPECT type of 'v31' --> Array<Promise<any,?>>
 // XPECT noerrors -->
 var v31 = dumbnumbs.map(luckify2);

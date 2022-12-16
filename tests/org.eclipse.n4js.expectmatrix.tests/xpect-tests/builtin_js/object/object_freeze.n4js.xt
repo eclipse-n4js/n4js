@@ -53,14 +53,12 @@ function fail(){
 // Attempted changes through Object.defineProperty will also throw TypeError
 function attemptChanges() {
 	try {
-		// IDE-2140 XPECT warnings --> "Unnecessary cast from 17 to any" at "17 as any"
-		Object.defineProperty(obj, "ohai", { value: 17 as any }); // throws a TypeError
+		Object.defineProperty(obj, "ohai", { value: 17 }); // throws a TypeError
 	}
 	catch (e) { console.log((e as Object).toString());
 	}
 	try {
-		// IDE-2140 XPECT warnings --> "Unnecessary cast from "eit" to any" at ""eit" as any"
-		Object.defineProperty(obj, "foo", { value: "eit" as any }); // throws a TypeError
+		Object.defineProperty(obj, "foo", { value: "eit" }); // throws a TypeError
 	}
 	catch (e1) { console.log((e1 as Object).toString());}
 	}

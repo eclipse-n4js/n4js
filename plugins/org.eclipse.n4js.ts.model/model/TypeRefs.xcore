@@ -431,6 +431,30 @@ class IntersectionTypeExpression extends ComposedTypeRef {
 	op String internalGetTypeRefAsString(boolean resolveProxies) {
 		return "intersection" + super.internalGetTypeRefAsString(resolveProxies);
 	}
+	
+	/*
+	 * Convenience method, returns true iff all composed type refs are use site structural typed.
+	 */
+	op boolean isUseSiteStructuralTyping() {
+		return typeRefs.forall[isUseSiteStructuralTyping]
+	}
+	
+	/*
+	 * Convenience method, returns true iff all composed type refs are def site structural typed.
+	 */
+	op boolean isDefSiteStructuralTyping() {
+		return typeRefs.forall[isDefSiteStructuralTyping]
+	}
+	
+	/**
+	 * Returns the actual typing strategy, that is TypingStrategy.STRUCTURAL iff this type is def site structural typing.
+	 */
+	op TypingStrategy getTypingStrategy() {
+		if (isDefSiteStructuralTyping) {
+			return TypingStrategy.STRUCTURAL
+		}
+		return TypingStrategy.NOMINAL
+	}
 }
 
 /*

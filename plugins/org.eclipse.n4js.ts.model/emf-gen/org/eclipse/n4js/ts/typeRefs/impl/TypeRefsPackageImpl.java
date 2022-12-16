@@ -870,6 +870,36 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
+	public EOperation getIntersectionTypeExpression__IsUseSiteStructuralTyping() {
+		return intersectionTypeExpressionEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getIntersectionTypeExpression__IsDefSiteStructuralTyping() {
+		return intersectionTypeExpressionEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getIntersectionTypeExpression__GetTypingStrategy() {
+		return intersectionTypeExpressionEClass.getEOperations().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getThisTypeRef() {
 		return thisTypeRefEClass;
 	}
@@ -2331,6 +2361,9 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 
 		intersectionTypeExpressionEClass = createEClass(INTERSECTION_TYPE_EXPRESSION);
 		createEOperation(intersectionTypeExpressionEClass, INTERSECTION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN);
+		createEOperation(intersectionTypeExpressionEClass, INTERSECTION_TYPE_EXPRESSION___IS_USE_SITE_STRUCTURAL_TYPING);
+		createEOperation(intersectionTypeExpressionEClass, INTERSECTION_TYPE_EXPRESSION___IS_DEF_SITE_STRUCTURAL_TYPING);
+		createEOperation(intersectionTypeExpressionEClass, INTERSECTION_TYPE_EXPRESSION___GET_TYPING_STRATEGY);
 
 		thisTypeRefEClass = createEClass(THIS_TYPE_REF);
 		createEOperation(thisTypeRefEClass, THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN);
@@ -2666,6 +2699,12 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 
 		op = initEOperation(getIntersectionTypeExpression__InternalGetTypeRefAsString__boolean(), theEcorePackage.getEString(), "internalGetTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, theEcorePackage.getEBoolean(), "resolveProxies", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getIntersectionTypeExpression__IsUseSiteStructuralTyping(), theEcorePackage.getEBoolean(), "isUseSiteStructuralTyping", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getIntersectionTypeExpression__IsDefSiteStructuralTyping(), theEcorePackage.getEBoolean(), "isDefSiteStructuralTyping", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getIntersectionTypeExpression__GetTypingStrategy(), theTypesPackage.getTypingStrategy(), "getTypingStrategy", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(thisTypeRefEClass, ThisTypeRef.class, "ThisTypeRef", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

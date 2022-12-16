@@ -105,6 +105,13 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 				addSubstitutions(G, actualThisTypeRef);
 			}
 		}
+		else if(typeRef instanceof ComposedTypeRef) {
+			for (tRef : typeRef.typeRefs) {
+				if (tRef !== null) {
+					addSubstitutions(G, tRef);
+				}
+			}
+		}
 		else if(declType instanceof TypeAlias) {
 			primAddSubstitutions(G, typeRef);
 			val actualTypeRef = declType.typeRef;

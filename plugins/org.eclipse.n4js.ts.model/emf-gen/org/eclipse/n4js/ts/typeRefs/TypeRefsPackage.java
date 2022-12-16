@@ -2208,15 +2208,6 @@ public interface TypeRefsPackage extends EPackage {
 	int INTERSECTION_TYPE_EXPRESSION___IS_BOTTOM_TYPE = COMPOSED_TYPE_REF___IS_BOTTOM_TYPE;
 
 	/**
-	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERSECTION_TYPE_EXPRESSION___GET_TYPING_STRATEGY = COMPOSED_TYPE_REF___GET_TYPING_STRATEGY;
-
-	/**
 	 * The operation id for the '<em>Get Structural Members</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2233,24 +2224,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int INTERSECTION_TYPE_EXPRESSION___IS_STRUCTURAL_TYPING = COMPOSED_TYPE_REF___IS_STRUCTURAL_TYPING;
-
-	/**
-	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERSECTION_TYPE_EXPRESSION___IS_USE_SITE_STRUCTURAL_TYPING = COMPOSED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
-
-	/**
-	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERSECTION_TYPE_EXPRESSION___IS_DEF_SITE_STRUCTURAL_TYPING = COMPOSED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
 	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
@@ -2280,13 +2253,40 @@ public interface TypeRefsPackage extends EPackage {
 	int INTERSECTION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = COMPOSED_TYPE_REF_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERSECTION_TYPE_EXPRESSION___IS_USE_SITE_STRUCTURAL_TYPING = COMPOSED_TYPE_REF_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERSECTION_TYPE_EXPRESSION___IS_DEF_SITE_STRUCTURAL_TYPING = COMPOSED_TYPE_REF_OPERATION_COUNT + 2;
+
+	/**
+	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERSECTION_TYPE_EXPRESSION___GET_TYPING_STRATEGY = COMPOSED_TYPE_REF_OPERATION_COUNT + 3;
+
+	/**
 	 * The number of operations of the '<em>Intersection Type Expression</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INTERSECTION_TYPE_EXPRESSION_OPERATION_COUNT = COMPOSED_TYPE_REF_OPERATION_COUNT + 1;
+	int INTERSECTION_TYPE_EXPRESSION_OPERATION_COUNT = COMPOSED_TYPE_REF_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.ThisTypeRefImpl <em>This Type Ref</em>}' class.
@@ -10424,6 +10424,36 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getIntersectionTypeExpression__InternalGetTypeRefAsString__boolean();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression#isUseSiteStructuralTyping() <em>Is Use Site Structural Typing</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Use Site Structural Typing</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression#isUseSiteStructuralTyping()
+	 * @generated
+	 */
+	EOperation getIntersectionTypeExpression__IsUseSiteStructuralTyping();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression#isDefSiteStructuralTyping() <em>Is Def Site Structural Typing</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Def Site Structural Typing</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression#isDefSiteStructuralTyping()
+	 * @generated
+	 */
+	EOperation getIntersectionTypeExpression__IsDefSiteStructuralTyping();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression#getTypingStrategy() <em>Get Typing Strategy</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Typing Strategy</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression#getTypingStrategy()
+	 * @generated
+	 */
+	EOperation getIntersectionTypeExpression__GetTypingStrategy();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.ThisTypeRef <em>This Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12298,6 +12328,30 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation INTERSECTION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getIntersectionTypeExpression__InternalGetTypeRefAsString__boolean();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Use Site Structural Typing</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation INTERSECTION_TYPE_EXPRESSION___IS_USE_SITE_STRUCTURAL_TYPING = eINSTANCE.getIntersectionTypeExpression__IsUseSiteStructuralTyping();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Def Site Structural Typing</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation INTERSECTION_TYPE_EXPRESSION___IS_DEF_SITE_STRUCTURAL_TYPING = eINSTANCE.getIntersectionTypeExpression__IsDefSiteStructuralTyping();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Typing Strategy</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation INTERSECTION_TYPE_EXPRESSION___GET_TYPING_STRATEGY = eINSTANCE.getIntersectionTypeExpression__GetTypingStrategy();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.ThisTypeRefImpl <em>This Type Ref</em>}' class.
