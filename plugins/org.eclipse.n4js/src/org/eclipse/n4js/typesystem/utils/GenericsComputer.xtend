@@ -24,6 +24,7 @@ import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
+import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
@@ -51,7 +52,6 @@ import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.utils.RecursionGuard
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 
 /**
  * Type System Helper Strategy for managing type variable mappings in RuleEnvironments of XSemantics.
@@ -99,6 +99,13 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 			val actualThisTypeRef = typeRef.actualThisTypeRef;
 			if (actualThisTypeRef !== null) {
 				addSubstitutions(G, actualThisTypeRef);
+			}
+		}
+		else if(typeRef instanceof ComposedTypeRef) {
+			for (tRef : typeRef.typeRefs) {
+				if (tRef !== null) {
+					addSubstitutions(G, tRef);
+				}
 			}
 		}
 		else if(declType instanceof TypeAlias) {

@@ -73,5 +73,5 @@ var afr1 = a1.f3(new C())();
 
 // f4() returns a function(R):R. By analogy with afr1 (see above), f4()(new C()) would be expected to return a C
 // and the type of afr2 should be inferred.
-// IDE-2140, IDEBUG-164 the type parameter XPECT type of afr2 --> B
+// IDEBUG-164 the type parameter XPECT type of afr2 --> B
 var afr2 = a1.f4()(new C());

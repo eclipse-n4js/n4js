@@ -41,26 +41,22 @@ console.log("4 frozen = " + (Object.isFrozen(oneProp) === true));
 var nonWritable = { e: "plep" };
 // IDEBUG-124 XPECT noerrors --> "IDEBUG-124: preventExtensions"
 Object.preventExtensions(nonWritable);
-// IDE-2140 XPECT warnings --> "Unnecessary cast from false to boolean" at "false as boolean"
-Object.defineProperty(nonWritable, "e", { writable: false as boolean }); // make non-writable
+Object.defineProperty(nonWritable, "e", { writable: false }); // make non-writable
 console.log("5 not frozen = " + (Object.isFrozen(nonWritable) === false));
 
 // Changing that property to non-configurable then makes the object frozen.
-// IDE-2140 XPECT warnings --> "Unnecessary cast from false to boolean" at "false as boolean"
-Object.defineProperty(nonWritable, "e", { configurable: false as boolean }); // make non-configurable
+Object.defineProperty(nonWritable, "e", { configurable: false }); // make non-configurable
 console.log("6 frozen = " + (Object.isFrozen(nonWritable) === true));
 
 // A non-extensible object with a non-configurable but still writable property also isn't frozen.
 var nonConfigurable = { release: "the kraken!" };
 // IDEBUG-124 XPECT noerrors --> "IDEBUG-124: preventExtensions"
 Object.preventExtensions(nonConfigurable);
-// IDE-2140 XPECT warnings --> "Unnecessary cast from false to boolean" at "false as boolean"
-Object.defineProperty(nonConfigurable, "release", { configurable: false as boolean });
+Object.defineProperty(nonConfigurable, "release", { configurable: false });
 console.log("7 not frozen = " + (Object.isFrozen(nonConfigurable) === false));
 
 // Changing that property to non-writable then makes the object frozen.
-// IDE-2140 XPECT warnings --> "Unnecessary cast from false to boolean" at "false as boolean"
-Object.defineProperty(nonConfigurable, "release", { writable: false as boolean });
+Object.defineProperty(nonConfigurable, "release", { writable: false });
 console.log("8 frozen = " + (Object.isFrozen(nonConfigurable) === true));
 
 // A non-extensible object with a configurable accessor property isn't frozen.
@@ -70,8 +66,7 @@ Object.preventExtensions(accessor);
 console.log("9 not frozen = " + (Object.isFrozen(accessor) === false));
 
 // ...but make that property non-configurable and it becomes frozen.
-// IDE-2140 XPECT warnings --> "Unnecessary cast from false to boolean" at "false as boolean"
-Object.defineProperty(accessor, "food", { configurable: false as boolean });
+Object.defineProperty(accessor, "food", { configurable: false });
 console.log("10 frozen = " + (Object.isFrozen(accessor) === true));
 
 // But the easiest way for an object to be frozen is if Object.freeze has been called on it.
