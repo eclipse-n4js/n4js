@@ -14,9 +14,8 @@
 // Array.prototype.reduce()
 // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
 
-/* TODO IDE-2140
 
-// IDEBUG-125 X----PECT noerrors --> "IDEBUG-125: optional parameter"
+// IDEBUG-125 XPECT noerrors --> "IDEBUG-125: optional parameter"
 var total = [0, 1, 2, 3].<number>reduce(function(a : number, b : number) {
     return a + b;
 });
@@ -26,21 +25,20 @@ console.log(total);
 var arr = [[0, 1], [2, 3], [4, 5]];
 
 var flattened = arr.reduce(function(a : Array<number>, b : Array<number>) {
-    // IDEBUG-128 X----PECT noerrors --> "IDEBUG-128: type inference"
+    // IDEBUG-128 XPECT noerrors --> "IDEBUG-128: type inference"
     return a.concat(b);
 }, []);
 
 var flattened2 : Array<number> = [[0, 1], [2, 3], [4, 5]].reduce(function(a : Array<number>, b) {
-    // IDEBUG-128 X----PECT noerrors --> "IDEBUG-128: type inference"
+    // IDEBUG-128 XPECT noerrors --> "IDEBUG-128: type inference"
     return a.concat(b);
 }, []);
 
 console.log(flattened);
 console.log(flattened2);
 
-*/
 
-/* X----PECT output ---
+/* XPECT output ---
 6
 [ 0, 1, 2, 3, 4, 5 ]
 [ 0, 1, 2, 3, 4, 5 ]

@@ -11,6 +11,7 @@
 package org.eclipse.n4js.utils
 
 import com.google.inject.Inject
+import java.util.LinkedHashSet
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
@@ -102,6 +103,17 @@ class StructuralTypesHelper {
 		Function1<TMember, Boolean> predicate) {
 
 		return emptyList;
+	}
+
+	def private dispatch Iterable<TMember> doCollectMembers(RuleEnvironment G, IntersectionTypeExpression ref,
+		Function1<TMember, Boolean> predicate) {
+		
+		val allMembers = new LinkedHashSet();
+		for (tRef : ref.typeRefs) {
+			allMembers.addAll(doCollectMembers(G, tRef, predicate));
+		}
+		
+		return allMembers;
 	}
 
 	def private dispatch Iterable<TMember> doCollectMembers(RuleEnvironment G, BoundThisTypeRef ref,
