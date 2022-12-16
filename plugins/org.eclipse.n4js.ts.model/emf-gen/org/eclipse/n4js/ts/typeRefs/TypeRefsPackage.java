@@ -2217,15 +2217,6 @@ public interface TypeRefsPackage extends EPackage {
 	int INTERSECTION_TYPE_EXPRESSION___GET_STRUCTURAL_MEMBERS = COMPOSED_TYPE_REF___GET_STRUCTURAL_MEMBERS;
 
 	/**
-	 * The operation id for the '<em>Is Structural Typing</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERSECTION_TYPE_EXPRESSION___IS_STRUCTURAL_TYPING = COMPOSED_TYPE_REF___IS_STRUCTURAL_TYPING;
-
-	/**
 	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2271,13 +2262,22 @@ public interface TypeRefsPackage extends EPackage {
 	int INTERSECTION_TYPE_EXPRESSION___IS_DEF_SITE_STRUCTURAL_TYPING = COMPOSED_TYPE_REF_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERSECTION_TYPE_EXPRESSION___IS_STRUCTURAL_TYPING = COMPOSED_TYPE_REF_OPERATION_COUNT + 3;
+
+	/**
 	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INTERSECTION_TYPE_EXPRESSION___GET_TYPING_STRATEGY = COMPOSED_TYPE_REF_OPERATION_COUNT + 3;
+	int INTERSECTION_TYPE_EXPRESSION___GET_TYPING_STRATEGY = COMPOSED_TYPE_REF_OPERATION_COUNT + 4;
 
 	/**
 	 * The number of operations of the '<em>Intersection Type Expression</em>' class.
@@ -2286,7 +2286,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int INTERSECTION_TYPE_EXPRESSION_OPERATION_COUNT = COMPOSED_TYPE_REF_OPERATION_COUNT + 4;
+	int INTERSECTION_TYPE_EXPRESSION_OPERATION_COUNT = COMPOSED_TYPE_REF_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.ThisTypeRefImpl <em>This Type Ref</em>}' class.
@@ -10444,6 +10444,16 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getIntersectionTypeExpression__IsDefSiteStructuralTyping();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression#isStructuralTyping() <em>Is Structural Typing</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Structural Typing</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression#isStructuralTyping()
+	 * @generated
+	 */
+	EOperation getIntersectionTypeExpression__IsStructuralTyping();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression#getTypingStrategy() <em>Get Typing Strategy</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12344,6 +12354,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation INTERSECTION_TYPE_EXPRESSION___IS_DEF_SITE_STRUCTURAL_TYPING = eINSTANCE.getIntersectionTypeExpression__IsDefSiteStructuralTyping();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Structural Typing</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation INTERSECTION_TYPE_EXPRESSION___IS_STRUCTURAL_TYPING = eINSTANCE.getIntersectionTypeExpression__IsStructuralTyping();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Typing Strategy</b></em>' operation.

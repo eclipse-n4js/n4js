@@ -447,10 +447,17 @@ class IntersectionTypeExpression extends ComposedTypeRef {
 	}
 	
 	/**
+	 * Returns true iff all composed type refs are typed either def or use site structural
+	 */
+	op boolean isStructuralTyping() {
+		return typeRefs.forall[isUseSiteStructuralTyping || isDefSiteStructuralTyping]
+	}
+	
+	/**
 	 * Returns the actual typing strategy, that is TypingStrategy.STRUCTURAL iff this type is def site structural typing.
 	 */
 	op TypingStrategy getTypingStrategy() {
-		if (isDefSiteStructuralTyping) {
+		if (isStructuralTyping) {
 			return TypingStrategy.STRUCTURAL
 		}
 		return TypingStrategy.NOMINAL
