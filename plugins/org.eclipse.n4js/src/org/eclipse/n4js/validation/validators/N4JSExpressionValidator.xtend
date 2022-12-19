@@ -674,7 +674,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	private def boolean holdsConstructSignatureIsAccessible(NewExpression newExpression, TypeRef calleeTypeRef, TMethod constructSig) {
-		val container = constructSig.eContainer;
+		val container = constructSig?.eContainer;
 		if (container instanceof TInterface) { // avoid checking accessibility of construct signatures in StructuralTypeRefs/TStructuralTypes (they're always public)
 			if (!memberVisibilityChecker.isVisible(newExpression, calleeTypeRef, constructSig).visibility) {
 				val message = IssueCodes.getMessageForVIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR("construct signature", container.name);
