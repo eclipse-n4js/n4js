@@ -66,6 +66,18 @@ public interface IntersectionTypeExpression extends ComposedTypeRef {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
+	 * Returns true iff all composed type refs are typed either def or use site structural
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isStructuralTyping();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
 	 * Returns the actual typing strategy, that is TypingStrategy.STRUCTURAL iff this type is def site structural typing.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"

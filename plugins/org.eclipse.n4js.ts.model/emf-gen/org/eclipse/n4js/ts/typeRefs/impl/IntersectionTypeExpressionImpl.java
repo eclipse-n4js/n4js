@@ -102,9 +102,24 @@ public class IntersectionTypeExpressionImpl extends ComposedTypeRefImpl implemen
 	 * @generated
 	 */
 	@Override
+	public boolean isStructuralTyping() {
+		final Function1<TypeRef, Boolean> _function = new Function1<TypeRef, Boolean>() {
+			public Boolean apply(final TypeRef it) {
+				return Boolean.valueOf((it.isUseSiteStructuralTyping() || it.isDefSiteStructuralTyping()));
+			}
+		};
+		return IterableExtensions.<TypeRef>forall(this.getTypeRefs(), _function);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public TypingStrategy getTypingStrategy() {
-		boolean _isDefSiteStructuralTyping = this.isDefSiteStructuralTyping();
-		if (_isDefSiteStructuralTyping) {
+		boolean _isStructuralTyping = this.isStructuralTyping();
+		if (_isStructuralTyping) {
 			return TypingStrategy.STRUCTURAL;
 		}
 		return TypingStrategy.NOMINAL;
@@ -126,6 +141,7 @@ public class IntersectionTypeExpressionImpl extends ComposedTypeRefImpl implemen
 		if (baseClass == TypeRef.class) {
 			switch (baseOperationID) {
 				case TypeRefsPackage.TYPE_REF___GET_TYPING_STRATEGY: return TypeRefsPackage.INTERSECTION_TYPE_EXPRESSION___GET_TYPING_STRATEGY;
+				case TypeRefsPackage.TYPE_REF___IS_STRUCTURAL_TYPING: return TypeRefsPackage.INTERSECTION_TYPE_EXPRESSION___IS_STRUCTURAL_TYPING;
 				case TypeRefsPackage.TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING: return TypeRefsPackage.INTERSECTION_TYPE_EXPRESSION___IS_USE_SITE_STRUCTURAL_TYPING;
 				case TypeRefsPackage.TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING: return TypeRefsPackage.INTERSECTION_TYPE_EXPRESSION___IS_DEF_SITE_STRUCTURAL_TYPING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
@@ -154,6 +170,8 @@ public class IntersectionTypeExpressionImpl extends ComposedTypeRefImpl implemen
 				return isUseSiteStructuralTyping();
 			case TypeRefsPackage.INTERSECTION_TYPE_EXPRESSION___IS_DEF_SITE_STRUCTURAL_TYPING:
 				return isDefSiteStructuralTyping();
+			case TypeRefsPackage.INTERSECTION_TYPE_EXPRESSION___IS_STRUCTURAL_TYPING:
+				return isStructuralTyping();
 			case TypeRefsPackage.INTERSECTION_TYPE_EXPRESSION___GET_TYPING_STRATEGY:
 				return getTypingStrategy();
 		}

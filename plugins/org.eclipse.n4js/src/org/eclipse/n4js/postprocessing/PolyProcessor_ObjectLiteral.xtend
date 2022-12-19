@@ -78,8 +78,7 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 		}
 
 		// quick mode as a performance tweak:
-		val haveUsableExpectedType = expectedTypeRef !== null
-				&& (expectedTypeRef.useSiteStructuralTyping || expectedTypeRef.defSiteStructuralTyping); // TODO reconsider
+		val haveUsableExpectedType = expectedTypeRef !== null && expectedTypeRef.structuralTyping; // TODO reconsider
 		val quickMode = !haveUsableExpectedType && !TypeUtils.isInferenceVariable(expectedTypeRef);
 
 		val List<TStructMember> tMembers = newArrayList;
