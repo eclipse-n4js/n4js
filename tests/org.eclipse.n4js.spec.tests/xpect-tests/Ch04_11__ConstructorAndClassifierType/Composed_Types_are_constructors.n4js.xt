@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+class C1 {}
+class C2 {}
+
+// XPECT warnings --> "The use of the any type in a union type is discouraged." at "any"
+const CKu1 : constructor{C1} | any+ = C1;
+const CKu2 : constructor{C1} | constructor{C2} = C1;
+const CKu3 : constructor{C1} | constructor{C1} = C1;
+
+// XPECT warnings --> "The use of the any type in an intersection type is discouraged." at "any"
+const CKi1 : constructor{C1} & any+ = C1;
+const CKi2 : constructor{C1} & constructor{C1} = C1;
+const CKi3 : constructor{C1} & constructor{C2} = undefined;
+
+// XPECT noerrors -->
+new CKu1();
+// XPECT noerrors -->
+new CKu2();
+// XPECT noerrors -->
+new CKu3();
+
+// XPECT noerrors -->
+new CKi1();
+// XPECT noerrors -->
+new CKi2();
+// XPECT errors --> "More than one constructor or construct signature in intersection: constructor{C1}, constructor{C2}." at "CKi3"
+new CKi3();
+
