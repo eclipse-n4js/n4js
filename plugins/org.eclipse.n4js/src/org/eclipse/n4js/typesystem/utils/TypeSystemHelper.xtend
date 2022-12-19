@@ -14,6 +14,7 @@ import com.google.common.base.Optional
 import com.google.common.collect.Iterables
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import java.util.ArrayList
 import java.util.Arrays
 import java.util.Collections
 import java.util.LinkedList
@@ -52,6 +53,7 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.types.util.TypeExtensions
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.types.utils.TypeUtils
@@ -471,19 +473,49 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	}
 
 	def public List<Newable> getNewableTypeRefs(RuleEnvironment G, TypeRef typeRef, NewExpression newExpr, boolean ignoreConstructSignatures) {
+
 		if (typeRef instanceof UnionTypeExpression) {
-			// TODO implement special handling for unions
-			return Collections.emptyList();
-		} else if (typeRef instanceof IntersectionTypeExpression) {
-			// TODO improve special handling for intersections
-			val result = <Newable>newArrayList;
+			val newables = <Newable>newArrayList;
 			for (currTypeRef : typeRef.typeRefs) {
 				val curr = internalGetNewableTypeRef(G, currTypeRef, newExpr, ignoreConstructSignatures);
 				if (curr !== null) {
-					result += curr;
+					newables += curr;
 				}
 			}
-			return result;
+			val List<TypeRef> constructSigsReturn = new ArrayList();
+			val List<TypeRef> resTypeRefs = new ArrayList();
+			for (newable : newables) {
+				resTypeRefs += newable.instanceTypeRef;
+				constructSigsReturn += newable.ctorOrConstructSig.returnTypeRef
+			}
+			
+			// use non-simplified because union with any+ will remove other types that would give additional info to the user
+			val resTypeRef = TypeUtils.createNonSimplifiedUnionType(resTypeRefs);
+			val constructSig = TypesFactory.eINSTANCE.createTMethod();
+			constructSig.returnTypeRef = TypeUtils.createNonSimplifiedUnionType(constructSigsReturn);
+			val vArgs = TypesFactory.eINSTANCE.createTFormalParameter();
+			constructSig.fpars += vArgs;
+			vArgs.variadic = true;
+			vArgs.typeRef = G.anyTypeRefDynamic;
+			// TODO improve merging of construct signatures
+		
+			return Collections.singletonList(new Newable(typeRef, constructSig, resTypeRef));
+			
+		} else if (typeRef instanceof IntersectionTypeExpression) {
+			// TODO improve special handling for intersections
+			val typeRef2 = simplifyComputer.simplify(G, typeRef, true);
+			if (typeRef2 instanceof IntersectionTypeExpression) {
+				val result = <Newable>newArrayList;
+				for (currTypeRef : typeRef2.typeRefs) {
+					val curr = internalGetNewableTypeRef(G, currTypeRef, newExpr, ignoreConstructSignatures);
+					if (curr !== null) {
+						result += curr;
+					}
+				}
+				return result;
+			} else {
+				return getNewableTypeRefs(G, typeRef2, newExpr, ignoreConstructSignatures);
+			}
 		}
 		val result = internalGetNewableTypeRef(G, typeRef, newExpr, ignoreConstructSignatures);
 		if (result !== null) {
@@ -501,6 +533,16 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 			}
 			val instanceTypeRef = createTypeRefFromStaticType(G, calleeTypeRef, newExpr);
 			return new Newable(calleeTypeRef, ctor, instanceTypeRef)
+		}
+		if (G.isAnyDynamic(calleeTypeRef)) {
+			val constructSig = TypesFactory.eINSTANCE.createTMethod();
+			constructSig.returnTypeRef = G.anyTypeRefDynamic;
+			val vArgs = TypesFactory.eINSTANCE.createTFormalParameter();
+			constructSig.fpars += vArgs;
+			vArgs.variadic = true;
+			vArgs.typeRef = G.anyTypeRefDynamic;
+		
+			return new Newable(calleeTypeRef, constructSig, G.anyTypeRefDynamic);
 		}
 		if (!ignoreConstructSignatures) {
 			val constructSig = getConstructSignature(G, calleeTypeRef);
