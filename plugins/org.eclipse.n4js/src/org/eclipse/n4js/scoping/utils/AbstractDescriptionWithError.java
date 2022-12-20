@@ -15,6 +15,7 @@ import org.eclipse.n4js.resource.ErrorAwareLinkingService;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TGetter;
+import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.xtext.scoping.ForwardingEObjectDescription;
@@ -42,22 +43,26 @@ public abstract class AbstractDescriptionWithError extends ForwardingEObjectDesc
 	 * Returns the name of the member type, e.g., method or field.
 	 */
 	protected static String getMemberTypeName(EObject eObject, boolean structFieldInitMode) {
+		String qualifier = "";
+		if (eObject instanceof TMember) {
+			qualifier = "static ";
+		}
 		if (eObject instanceof TMethod) {
-			return "method";
+			return qualifier + "method";
 		}
 		if (eObject instanceof TField) {
-			return "field";
+			return qualifier + "field";
 		}
 		if (eObject instanceof TGetter) {
-			return "getter";
+			return qualifier + "getter";
 		}
 		if (eObject instanceof TSetter) {
-			return structFieldInitMode ? "getter" : "setter";
+			return qualifier + (structFieldInitMode ? "getter" : "setter");
 		}
 		if (eObject instanceof TEnumLiteral) {
 			return "enum literal";
 		}
-		return "member";
+		return qualifier + "member";
 	}
 
 }
