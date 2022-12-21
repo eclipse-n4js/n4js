@@ -12,14 +12,13 @@ package org.eclipse.n4js.scoping.members;
 
 import java.util.List;
 
+import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 
 import com.google.common.base.Joiner;
-
-import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
-import org.eclipse.n4js.validation.IssueCodes;
 
 /**
  * This description wraps a member of a union type that is not present in all contained types or is somehow incompatible
@@ -44,13 +43,13 @@ public class UnionMemberDescriptionWithError extends ComposedMemberDescriptionWi
 			MapOfIndexes<String> indexesPerCode) {
 
 		return initMissingFrom(missingFrom)
-				|| initDifferentMemberTypes(indexesPerMemberType, name, readOnlyField)
+				|| initInvalidCombination(indexesPerMemberType, name, readOnlyField, indexesPerCode)
 				|| initSubMessages(descriptions, indexesPerCode)
 				|| initDefault();
 	}
 
-	private boolean initDifferentMemberTypes(MapOfIndexes<String> indexesPerMemberType, final QualifiedName name,
-			boolean readOnlyField) {
+	private boolean initInvalidCombination(MapOfIndexes<String> indexesPerMemberType, final QualifiedName name,
+			boolean readOnlyField, MapOfIndexes<String> indexesPerCode) {
 		if (indexesPerMemberType.size() > 1) {
 			int numberOfFields = indexesPerMemberType.numberOf("field");
 			// check for three special cases of error 'multipleKinds' that require a more informative message
@@ -79,6 +78,14 @@ public class UnionMemberDescriptionWithError extends ComposedMemberDescriptionWi
 				}
 			}
 
+			// invalid special case
+			if (indexesPerCode.containsKey(IssueCodes.VIS_WRONG_STATIC_ACCESSOR)) {
+				message = IssueCodes.getMessageForVIS_WRONG_STATIC_ACCESSOR("static", name, "non-static");
+				code = IssueCodes.VIS_WRONG_STATIC_ACCESSOR;
+				return true;
+			}
+
+			// generic case
 			StringBuilder strb = new StringBuilder();
 			for (String memberTypeName : indexesPerMemberType.keySet()) {
 				String foundScopes = indexesPerMemberType.getScopeNamesForKey(memberTypeName);
