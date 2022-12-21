@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 import java.util.regex.Pattern;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -41,6 +42,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.ObjectLiteralTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.OperatorTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterizedTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParenthesizedTypeRefContext;
+import org.eclipse.n4js.dts.TypeScriptParser.PropertyAccessExpressionInTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.QueryTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ThisTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TupleTypeArgumentContext;
@@ -63,10 +65,13 @@ import org.eclipse.n4js.ts.typeRefs.ThisTypeRefNominal;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
+import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesFactory;
+
+import com.google.common.base.Objects;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
@@ -82,6 +87,9 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 
 	static Set<String> DELEGEATE_TO_TYPE_ARG = Set.of("Exclude", "Extract", "NonNullable", "Omit", "Partial",
 			"Pick", "Readonly", "Required");
+
+	final List<String> inferredNames = new ArrayList<>();
+	final Stack<List<String>> inferNamesStack = new Stack<>();
 
 	final boolean handleReturnTypeRef;
 	final boolean handleTypeAwaited;
@@ -99,6 +107,16 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 				|| (parent instanceof DtsTypeRefBuilder && ((DtsTypeRefBuilder) parent).handleReturnTypeRef);
 		this.handleTypeAwaited = handleTypeAwaited
 				|| (parent instanceof DtsTypeRefBuilder && ((DtsTypeRefBuilder) parent).handleTypeAwaited);
+
+		// init inferred names from parent DtsTypeRefBuilder
+		AbstractDtsBuilder<?, ?> aParent = parent;
+		while (aParent != null && !(aParent instanceof DtsTypeRefBuilder)) {
+			aParent = aParent.parent;
+		}
+		if (aParent instanceof DtsTypeRefBuilder) {
+			DtsTypeRefBuilder trbParent = (DtsTypeRefBuilder) aParent;
+			inferNamesStack.addAll(trbParent.inferNamesStack);
+		}
 	}
 
 	/** Returns true iff the resulting type reference is an optional return type ref */
@@ -116,6 +134,20 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 				RULE_primaryTypeExpression,
 				RULE_literalType,
 				RULE_typeRefWithModifiers);
+	}
+
+	@Override
+	protected void resetResult() {
+		super.resetResult();
+		// propagate inferred names to parent DtsTypeRefBuilder
+		AbstractDtsBuilder<?, ?> aParent = parent;
+		while (aParent != null && !(aParent instanceof DtsTypeRefBuilder)) {
+			aParent = aParent.parent;
+		}
+		if (aParent instanceof DtsTypeRefBuilder) {
+			DtsTypeRefBuilder trbParent = (DtsTypeRefBuilder) aParent;
+			trbParent.inferredNames.addAll(inferredNames);
+		}
 	}
 
 	/** Convenience method for consuming 0..* {@link TypeRefContext}s in one go. */
@@ -213,7 +245,21 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 		} else {
 			// TODO improve
 			result = null; // overwrite existing result
+
+			boolean popInferredNames = false;
+			if (ctx.unionTypeExpression().size() > 1) {
+				UnionTypeExpressionContext conditionType = ctx.unionTypeExpression(1);
+				newTypeRefBuilder().consume(conditionType);
+				if (!inferredNames.isEmpty()) {
+					inferNamesStack.push(new ArrayList<>(inferredNames));
+					inferredNames.clear();
+					popInferredNames = true;
+				}
+			}
 			handleUnionType(ctx.conditionalTypeRef());
+			if (popInferredNames) {
+				inferNamesStack.pop();
+			}
 		}
 	}
 
@@ -358,7 +404,19 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 
 	@Override
 	public void enterQueryTypeRef(QueryTypeRefContext ctx) {
-		result = createAnyPlusTypeRef();
+		PropertyAccessExpressionInTypeRefContext paeitr = ctx.propertyAccessExpressionInTypeRef();
+		String declTypeName = paeitr != null ? paeitr.getText() : null;
+		TypeRef ptr = createParameterizedTypeRef(declTypeName, (TypeArgumentsContext) null, false);
+
+		if (ptr != null) {
+			TypeTypeRef ttr = TypeRefsFactory.eINSTANCE.createTypeTypeRef();
+			ttr.setOriginalAliasTypeRef(null);
+			ttr.setTypeArg(ptr);
+			ttr.setConstructorRef(true);
+			result = ttr;
+		} else {
+			result = createAnyPlusTypeRef();
+		}
 	}
 
 	@Override
@@ -368,6 +426,9 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 
 	@Override
 	public void enterInferTypeRef(InferTypeRefContext ctx) {
+		if (ctx.typeReferenceName() != null) {
+			inferredNames.add(ctx.typeReferenceName().getText());
+		}
 		result = createAnyPlusTypeRef();
 	}
 
@@ -446,6 +507,14 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 						returnTypeRefWasOptional = true;
 						return null;
 					}
+				}
+			}
+		}
+
+		for (List<String> inferNamesFrame : inferNamesStack) {
+			for (String inferName : inferNamesFrame) {
+				if (Objects.equal(inferName, declTypeName)) {
+					return createAnyPlusTypeRef();
 				}
 			}
 		}
