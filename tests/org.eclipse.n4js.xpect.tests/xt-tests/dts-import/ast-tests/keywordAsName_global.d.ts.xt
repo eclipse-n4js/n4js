@@ -32,5 +32,6 @@ Script: true
    VariableStatement: [external, public], const
     VariableDeclaration: c02
      TypeReferenceNode
-      ParameterizedTypeRef: OFF, false, false, any, ?~, true, false
+      TypeTypeRef: true, false, false
+       ParameterizedTypeRef: OFF, false, false, global, ?~, false, false
 --- */
