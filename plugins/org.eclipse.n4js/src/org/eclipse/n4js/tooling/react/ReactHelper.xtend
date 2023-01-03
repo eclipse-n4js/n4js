@@ -145,10 +145,10 @@ class ReactHelper {
 	 * @param context the EObject serving the context to look for React.Element.
 	 */
 	def public TClassifier lookUpReactElement(EObject context) {
-		val reactElement = lookUpReactClassifier(context, REACT_ELEMENT, TInterface)
-		if (reactElement !== null) {
-			return reactElement;
-		}
+//		val reactElement = lookUpReactClassifier(context, REACT_ELEMENT, TInterface)
+//		if (reactElement !== null) {
+//			return reactElement;
+//		}
 		return lookUpReactClassifier_OLD(context, REACT_ELEMENT, TInterface);
 	}
 
@@ -158,10 +158,10 @@ class ReactHelper {
 	 * @param context the EObject serving the context to look for React.Component.
 	 */
 	def public TClass lookUpReactComponent(EObject context) {
-		val reactComponent = lookUpReactClassifier(context, REACT_COMPONENT, TClass);
-		if (reactComponent !== null) {
-			return reactComponent;
-		}
+//		val reactComponent = lookUpReactClassifier(context, REACT_COMPONENT, TClass);
+//		if (reactComponent !== null) {
+//			return reactComponent;
+//		}
 		return lookUpReactClassifier_OLD(context, REACT_COMPONENT, TClass);
 	}
 
