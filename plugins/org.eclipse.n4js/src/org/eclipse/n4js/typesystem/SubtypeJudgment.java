@@ -21,6 +21,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getCon
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getReplacement;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.hasReplacements;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.intType;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isAnyDynamic;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isFunction;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isObject;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.n4EnumType;
@@ -405,6 +406,9 @@ import com.google.common.collect.Iterables;
 			return success();
 		}
 		if (leftDeclType.eIsProxy() || rightDeclType.eIsProxy()) {
+			return success();
+		}
+		if (isAnyDynamic(G, left) || isAnyDynamic(G, right)) {
 			return success();
 		}
 		if ((leftDeclType == intType(G) && rightDeclType == numberType(G))
