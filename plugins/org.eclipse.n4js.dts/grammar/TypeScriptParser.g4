@@ -215,7 +215,7 @@ thisTypeRef
     ;
 
 queryTypeRef
-    : 'typeof' propertyAccessExpressionInTypeRef
+    : 'typeof' (importTypeRef | propertyAccessExpressionInTypeRef)
 ;
 
 importTypeRef
