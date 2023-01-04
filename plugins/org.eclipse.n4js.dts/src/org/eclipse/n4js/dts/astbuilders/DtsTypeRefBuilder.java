@@ -225,8 +225,8 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 	}
 
 	/** @return a wrapped {@link ParameterizedTypeRef}, created from the given context. */
-	public ParameterizedTypeRef consume(ParameterizedTypeRefContext ctx) {
-		return (ParameterizedTypeRef) doConsume(ctx);
+	public TypeRef consume(ParameterizedTypeRefContext ctx) {
+		return doConsume(ctx);
 	}
 
 	@Override
@@ -298,7 +298,10 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 				ute.getTypeRefs().addAll(typeRefs);
 				result = ute;
 			}
-			result.setFollowedByQuestionMark(returnTypeRefIsOptional);
+
+			if (result != null) {
+				result.setFollowedByQuestionMark(returnTypeRefIsOptional);
+			}
 		}
 	}
 

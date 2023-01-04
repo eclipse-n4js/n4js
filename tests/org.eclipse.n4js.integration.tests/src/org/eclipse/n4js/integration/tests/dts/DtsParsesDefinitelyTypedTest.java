@@ -73,7 +73,7 @@ public class DtsParsesDefinitelyTypedTest {
 		hardReset("https://github.com/DefinitelyTyped/DefinitelyTyped.git", targetDir,
 				"master", true, true);
 
-		assertParseCounts(targetDir, 19500, 1500, 0);
+		assertParseCounts(targetDir, 30000, 1000, 0);
 	}
 
 	/**
