@@ -12,6 +12,8 @@ package org.eclipse.n4js.typesystem.utils;
 
 import java.util.List;
 
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClassifier;
@@ -38,14 +40,20 @@ public class AllSuperTypesCollector extends AbstractCompleteHierarchyTraverser<L
 	}
 
 	@Override
+	protected Measurement getMeasurement() {
+		return N4JSDataCollectors.dcTHT_AllSuperTypesCollector.getMeasurementIfInactive("HierarchyTraverser");
+	}
+
+	@Override
 	protected List<TClassifier> doGetResult() {
 		return result;
 	}
 
 	@Override
 	protected void doProcess(ContainerType<?> containerType) {
-		if (containerType instanceof TClassifier)
+		if (containerType instanceof TClassifier) {
 			result.add((TClassifier) containerType);
+		}
 	}
 
 	@Override

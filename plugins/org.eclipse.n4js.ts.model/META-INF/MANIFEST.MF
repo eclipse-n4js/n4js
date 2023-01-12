@@ -11,6 +11,7 @@ Require-Bundle: org.eclipse.n4js.releng.utils;resolution:=optional,
  org.eclipse.core.resources;resolution:=optional,
  org.eclipse.text;resolution:=optional,
  org.eclipse.n4js.utils,
+ org.eclipse.n4js.smith,
  org.objectweb.asm,
  org.apache.commons.logging
 Bundle-RequiredExecutionEnvironment: JavaSE-11

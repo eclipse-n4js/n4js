@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.types.internal;
 
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.ArrayLike;
 import org.eclipse.n4js.ts.types.ContainerType;
@@ -38,6 +40,11 @@ public class FindElementTypeHelper extends AbstractTypeHierachyTraverser<TypeRef
 	 */
 	public FindElementTypeHelper(PrimitiveType type) {
 		super(type);
+	}
+
+	@Override
+	protected Measurement getMeasurement() {
+		return N4JSDataCollectors.dcTHT_FindElementTypeHelper.getMeasurementIfInactive("HierarchyTraverser");
 	}
 
 	@Override

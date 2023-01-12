@@ -425,6 +425,7 @@ class UnionTypeExpression extends ComposedTypeRef {
  * or in the context of a type variable. It may also be inferred by the type system.
  */
 class IntersectionTypeExpression extends ComposedTypeRef {
+	
 	/*
 	 * Overrides {@link TypeRef#internalGetTypeRefAsString(boolean)}
 	 */
@@ -436,21 +437,21 @@ class IntersectionTypeExpression extends ComposedTypeRef {
 	 * Convenience method, returns true iff all composed type refs are use site structural typed.
 	 */
 	op boolean isUseSiteStructuralTyping() {
-		return typeRefs.forall[isUseSiteStructuralTyping]
+		return typeRefs.forall[isUseSiteStructuralTyping];
 	}
 	
 	/*
 	 * Convenience method, returns true iff all composed type refs are def site structural typed.
 	 */
 	op boolean isDefSiteStructuralTyping() {
-		return typeRefs.forall[isDefSiteStructuralTyping]
+		return typeRefs.forall[isDefSiteStructuralTyping];
 	}
 	
 	/**
 	 * Returns true iff all composed type refs are typed either def or use site structural
 	 */
 	op boolean isStructuralTyping() {
-		return typeRefs.forall[isUseSiteStructuralTyping || isDefSiteStructuralTyping]
+		return typeRefs.forall[isUseSiteStructuralTyping || isDefSiteStructuralTyping];
 	}
 	
 	/**

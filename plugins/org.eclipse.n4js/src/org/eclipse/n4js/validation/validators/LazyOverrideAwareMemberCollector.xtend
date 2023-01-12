@@ -29,6 +29,8 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.DeclMergingHelper
 import com.google.inject.Inject
+import org.eclipse.n4js.smith.N4JSDataCollectors
+import org.eclipse.n4js.smith.Measurement
 
 /**
  * Collects all members, including inherited members, of a type and omits some members overridden in the type hierarchy.
@@ -107,6 +109,10 @@ public class LazyOverrideAwareMemberCollector {
 			this.includeImplicitSuperTypes = includeImplicitSuperTypes;
 			result = createResultInstance();
 			G = if ( includeImplicitSuperTypes) RuleEnvironmentExtensions.newRuleEnvironment(type) else null;
+		}
+
+		override Measurement getMeasurement() {
+			return N4JSDataCollectors.dcTHT_LazyOverrideAwareMemberCollectorX.getMeasurementIfInactive("HierarchyTraverser");
 		}
 
 		def List<TMember> createResultInstance() {

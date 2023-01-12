@@ -10,8 +10,11 @@
  */
 package org.eclipse.n4js.typesystem.utils;
 
+import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.types.ContainerType;
@@ -26,6 +29,8 @@ public class AllSuperTypeRefsCollector extends AbstractCompleteHierarchyTraverse
 
 	private final List<ParameterizedTypeRef> result;
 
+	private final ParameterizedTypeRef typeRef;
+
 	/**
 	 * Creates a new collector.
 	 *
@@ -34,12 +39,23 @@ public class AllSuperTypeRefsCollector extends AbstractCompleteHierarchyTraverse
 	 */
 	public AllSuperTypeRefsCollector(ParameterizedTypeRef typeRef, DeclMergingHelper declMergingHelper) {
 		super(typeRef, declMergingHelper);
+		this.typeRef = typeRef;
 		result = Lists.newArrayList();
 	}
 
 	@Override
+	protected Measurement getMeasurement() {
+		return N4JSDataCollectors.dcTHT_AllSuperTypeRefsCollector.getMeasurementIfInactive("HierarchyTraverser");
+	}
+
+	// @Override
+	// protected Object getCacheKey() {
+	// return N4JSCache.makeKey("AllSuperTypeRefsCollector", typeRef);
+	// }
+
+	@Override
 	protected List<ParameterizedTypeRef> doGetResult() {
-		return result;
+		return Collections.unmodifiableList(result);
 	}
 
 	@Override
@@ -60,23 +76,26 @@ public class AllSuperTypeRefsCollector extends AbstractCompleteHierarchyTraverse
 		// TInterface casted = (TInterface) containerType;
 		// result.addAll(getSuperTypes(casted ));
 		// }
-		if (bottomType != containerType) {
-			ParameterizedTypeRef typeRef = getCurrentTypeRef();
-			if (typeRef == null) {
-				typeRef = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
-				typeRef.setDeclaredType(containerType);
+		if (!isCurrentBottomOrPolyfillOrMergedType()) {
+			ParameterizedTypeRef ptr = getCurrentTypeRef();
+			if (ptr == typeRef) {
+				return;
 			}
-			result.add(typeRef);
+			if (ptr == null) {
+				ptr = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
+				ptr.setDeclaredType(containerType);
+			}
+			result.add(ptr);
 		}
 	}
 
 	@Override
 	protected void doProcess(PrimitiveType currentType) {
 		PrimitiveType assignmentCompatible = currentType.getAssignmentCompatible();
-		if (assignmentCompatible != null) {
-			ParameterizedTypeRef typeRef = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
-			typeRef.setDeclaredType(assignmentCompatible);
-			result.add(typeRef);
+		if (!isDirectPolyfillOrMergedType && assignmentCompatible != null) {
+			ParameterizedTypeRef ptr = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
+			ptr.setDeclaredType(assignmentCompatible);
+			result.add(ptr);
 		}
 	}
 

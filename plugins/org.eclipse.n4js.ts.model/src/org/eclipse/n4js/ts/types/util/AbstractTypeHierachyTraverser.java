@@ -10,11 +10,12 @@
  */
 package org.eclipse.n4js.ts.types.util;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.types.ContainerType;
@@ -25,6 +26,9 @@ import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.RecursionGuard;
+import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.util.IResourceScopeCache;
+import org.eclipse.xtext.util.OnChangeEvictingCache;
 
 import com.google.common.collect.Iterables;
 
@@ -65,6 +69,8 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 	 */
 	protected boolean suppressPolyfillOrMergedTypes;
 
+	protected boolean isDirectPolyfillOrMergedType;
+
 	/** Creates a new traverser that is used to safely process a potentially cyclic inheritance tree. */
 	public AbstractTypeHierachyTraverser(ContainerType<?> type) {
 		this((Type) type);
@@ -90,13 +96,47 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 	}
 
 	/** Return the computed result. */
-	public Result getResult() {
+	final public Result getResult() {
+		try (Measurement m = getMeasurement()) {
+			Result result = null;
+			Resource resource = bottomType.eResource();
+			Object key = getCacheKey();
+
+			if (key != null && resource instanceof XtextResource) {
+				IResourceScopeCache cache = ((XtextResource) resource).getCache();
+				if (cache != null) {
+					result = cache.get(key, resource, this::internalGetResult);
+				}
+			}
+			if (result == null) {
+				result = internalGetResult();
+			}
+
+			return result;
+		}
+	}
+
+	abstract protected Measurement getMeasurement();
+
+	protected Result internalGetResult() {
 		traverse();
 		return doGetResult();
 	}
 
+	protected Object getCacheKey() {
+		return null;
+	}
+
+	protected Object getCacheKeyElems() {
+		return null;
+	}
+
 	/** Internal getter for the result. */
 	protected abstract Result doGetResult();
+
+	protected OnChangeEvictingCache getCache() {
+		return null;
+	}
 
 	/**
 	 * Process the given container type. The traversal itself is handled by this class.
@@ -146,8 +186,13 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 	protected boolean visitTClass(ParameterizedTypeRef typeRef, TClass object) {
 		if (!object.isPolyfill()) {
 			Iterable<ParameterizedTypeRef> polyfills = getPolyfillTypeRefs(object);
-			if (doSwitchTypeRefs(polyfills)) {
-				return true;
+			try {
+				isDirectPolyfillOrMergedType = true;
+				if (doSwitchTypeRefs(polyfills)) {
+					return true;
+				}
+			} finally {
+				isDirectPolyfillOrMergedType = false;
 			}
 		}
 		if (process(object)) {
@@ -160,11 +205,13 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 			Iterable<ParameterizedTypeRef> mergedTypes = getMergedTypeRefs(object);
 			try {
 				suppressPolyfillOrMergedTypes = true;
+				isDirectPolyfillOrMergedType = true;
 				if (doSwitchTypeRefs(mergedTypes)) {
 					return true;
 				}
 			} finally {
 				suppressPolyfillOrMergedTypes = false;
+				isDirectPolyfillOrMergedType = false;
 			}
 		}
 		if (doSwitchImplementedInterfaces(object)) {
@@ -178,6 +225,7 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 			Iterable<ParameterizedTypeRef> polyfillsOrMerged = getPolyfillsOrMergedTypeRefs(object);
 			try {
 				suppressPolyfillOrMergedTypes = true;
+				isDirectPolyfillOrMergedType = true;
 				// handle classes first
 				for (ParameterizedTypeRef ptr : polyfillsOrMerged) {
 					if (ptr.getDeclaredType() instanceof TClass) {
@@ -195,6 +243,7 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 				}
 			} finally {
 				suppressPolyfillOrMergedTypes = false;
+				isDirectPolyfillOrMergedType = false;
 			}
 		}
 		if (process(object)) {
@@ -210,25 +259,61 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 		return process(object);
 	}
 
+	protected boolean isCurrentBottomOrPolyfillOrMergedType() {
+		if (getCurrentTypeRef() == null) {
+			return false;
+		}
+		Type currType = getCurrentTypeRef().getDeclaredType();
+		if (bottomType == currType) {
+			return true;
+		}
+		if (!isDirectPolyfillOrMergedType) {
+			return false;
+		}
+		if (currentTypeRefs.size() < 2) {
+			return false;
+		}
+		ParameterizedTypeRef beforeElem = currentTypeRefs.get(currentTypeRefs.size() - 2);
+		return bottomType == beforeElem.getDeclaredType();
+	}
+
 	/**
 	 * Process the super type of a class.
 	 */
 	protected boolean doSwitchSuperTypes(TClass object) {
-		return doSwitchTypeRefs(getSuperTypes(object));
+		boolean tmp = isDirectPolyfillOrMergedType;
+		try {
+			isDirectPolyfillOrMergedType = false;
+			return doSwitchTypeRefs(getSuperTypes(object));
+		} finally {
+			isDirectPolyfillOrMergedType = tmp;
+		}
 	}
 
 	/**
 	 * Process the consumed roles of a class.
 	 */
 	protected boolean doSwitchImplementedInterfaces(TClass object) {
-		return doSwitchTypeRefs(object.getImplementedInterfaceRefs());
+		boolean tmp = isDirectPolyfillOrMergedType;
+		try {
+			isDirectPolyfillOrMergedType = false;
+			return doSwitchTypeRefs(object.getImplementedInterfaceRefs());
+		} finally {
+			isDirectPolyfillOrMergedType = tmp;
+		}
 	}
 
 	/**
 	 * Process the super interfaces of an interface.
 	 */
 	protected boolean doSwitchSuperInterfaces(TInterface object) {
-		return doSwitchTypeRefs(getSuperTypes(object));
+		boolean tmp = isDirectPolyfillOrMergedType;
+		try {
+			isDirectPolyfillOrMergedType = false;
+			return doSwitchTypeRefs(getSuperTypes(object));
+		} finally {
+			isDirectPolyfillOrMergedType = tmp;
+		}
 	}
 
 	/**
@@ -318,26 +403,13 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 	 * Returns collection of all super types except consumed roles, i.e. super class.
 	 */
 	protected List<ParameterizedTypeRef> getSuperTypes(Type t) {
-		if (t instanceof TClass) {
-			if (((TClass) t).getSuperClassRef() != null) {
-				return Collections.singletonList(((TClass) t).getSuperClassRef());
-			}
+		if (t instanceof TClass && ((TClass) t).getSuperClassRef() != null) {
+			return Collections.singletonList(((TClass) t).getSuperClassRef());
 
 		} else if (t instanceof TInterface) {
 			TInterface ti = (TInterface) t;
-			List<ParameterizedTypeRef> mergedTypes = getMergedTypeRefs(t);
-			if (mergedTypes.isEmpty() && !ti.getSuperInterfaceRefs().isEmpty()) {
+			if (!ti.getSuperInterfaceRefs().isEmpty()) {
 				return ti.getSuperInterfaceRefs();
-			}
-			List<ParameterizedTypeRef> superInterfaces = new ArrayList<>();
-			superInterfaces.addAll(ti.getSuperInterfaceRefs());
-			for (ParameterizedTypeRef mT : mergedTypes) {
-				if (mT.getDeclaredType() instanceof TInterface) {
-					superInterfaces.addAll(((TInterface) mT.getDeclaredType()).getSuperInterfaceRefs());
-				}
-			}
-			if (!superInterfaces.isEmpty()) {
-				return superInterfaces;
 			}
 		}
 		return getImplicitSuperTypes(t);
