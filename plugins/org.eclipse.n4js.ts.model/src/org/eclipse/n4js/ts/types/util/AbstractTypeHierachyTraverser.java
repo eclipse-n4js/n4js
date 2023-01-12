@@ -28,7 +28,6 @@ import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.RecursionGuard;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.IResourceScopeCache;
-import org.eclipse.xtext.util.OnChangeEvictingCache;
 
 import com.google.common.collect.Iterables;
 
@@ -69,6 +68,7 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 	 */
 	protected boolean suppressPolyfillOrMergedTypes;
 
+	/** If <code>true</code>, the current type is a direct polyfill or merged type. */
 	protected boolean isDirectPolyfillOrMergedType;
 
 	/** Creates a new traverser that is used to safely process a potentially cyclic inheritance tree. */
@@ -116,27 +116,22 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 		}
 	}
 
+	/** Implement to enable performance measurements. */
 	abstract protected Measurement getMeasurement();
 
-	protected Result internalGetResult() {
-		traverse();
-		return doGetResult();
-	}
-
+	/** Override to enable caching. */
 	protected Object getCacheKey() {
 		return null;
 	}
 
-	protected Object getCacheKeyElems() {
-		return null;
+	/** Computes the result. */
+	protected Result internalGetResult() {
+		doSwitchTypeRef(getCurrentTypeRef());
+		return doGetResult();
 	}
 
 	/** Internal getter for the result. */
 	protected abstract Result doGetResult();
-
-	protected OnChangeEvictingCache getCache() {
-		return null;
-	}
 
 	/**
 	 * Process the given container type. The traversal itself is handled by this class.
@@ -156,18 +151,17 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 	 */
 	protected abstract boolean process(PrimitiveType type);
 
-	protected void traverse() {
-		boolean result = doSwitchTypeRef(getCurrentTypeRef());
-		if (result) {
-			return;
-		}
-	}
-
-	protected boolean visitPrimitiveType(ParameterizedTypeRef typeRef, PrimitiveType object) {
-		if (process(object)) {
+	/**
+	 * Processes primitive types.
+	 *
+	 * @param typeRef
+	 *            for the given primitive type
+	 */
+	protected boolean visitPrimitiveType(ParameterizedTypeRef typeRef, PrimitiveType primType) {
+		if (process(primType)) {
 			return true;
 		}
-		PrimitiveType assignmentCompatible = object.getAssignmentCompatible();
+		PrimitiveType assignmentCompatible = primType.getAssignmentCompatible();
 		if (assignmentCompatible != null) {
 			ParameterizedTypeRef typeRefAC = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
 			typeRefAC.setDeclaredType(assignmentCompatible);
@@ -180,12 +174,14 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 	}
 
 	/**
-	 * Processes declared consumed roles, implemented interfaces and super type. Note that implicit super types are
-	 * <b>not</b> not processes, see class description for details.
+	 * Processes classes: polyfills, the class itself, its super types, its merged types, its super interfaces.
+	 *
+	 * @param typeRef
+	 *            for the given class
 	 */
-	protected boolean visitTClass(ParameterizedTypeRef typeRef, TClass object) {
-		if (!object.isPolyfill()) {
-			Iterable<ParameterizedTypeRef> polyfills = getPolyfillTypeRefs(object);
+	protected boolean visitTClass(ParameterizedTypeRef typeRef, TClass clazz) {
+		if (!clazz.isPolyfill()) {
+			Iterable<ParameterizedTypeRef> polyfills = getPolyfillTypeRefs(clazz);
 			try {
 				isDirectPolyfillOrMergedType = true;
 				if (doSwitchTypeRefs(polyfills)) {
@@ -195,14 +191,14 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 				isDirectPolyfillOrMergedType = false;
 			}
 		}
-		if (process(object)) {
+		if (process(clazz)) {
 			return true;
 		}
-		if (doSwitchSuperTypes(object)) {
+		if (doSwitchSuperTypes(clazz)) {
 			return true;
 		}
 		if (!suppressPolyfillOrMergedTypes) {
-			Iterable<ParameterizedTypeRef> mergedTypes = getMergedTypeRefs(object);
+			Iterable<ParameterizedTypeRef> mergedTypes = getMergedTypeRefs(clazz);
 			try {
 				suppressPolyfillOrMergedTypes = true;
 				isDirectPolyfillOrMergedType = true;
@@ -214,15 +210,21 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 				isDirectPolyfillOrMergedType = false;
 			}
 		}
-		if (doSwitchImplementedInterfaces(object)) {
+		if (doSwitchImplementedInterfaces(clazz)) {
 			return true;
 		}
 		return false;
 	}
 
-	protected boolean visitTInterface(ParameterizedTypeRef typeRef, TInterface object) {
-		if (!suppressPolyfillOrMergedTypes && !object.isPolyfill()) {
-			Iterable<ParameterizedTypeRef> polyfillsOrMerged = getPolyfillsOrMergedTypeRefs(object);
+	/**
+	 * Processes interfaces: polyfills and merged types, the interface itself, its super interfaces.
+	 *
+	 * @param typeRef
+	 *            for the given interface
+	 */
+	protected boolean visitTInterface(ParameterizedTypeRef typeRef, TInterface interf) {
+		if (!suppressPolyfillOrMergedTypes && !interf.isPolyfill()) {
+			Iterable<ParameterizedTypeRef> polyfillsOrMerged = getPolyfillsOrMergedTypeRefs(interf);
 			try {
 				suppressPolyfillOrMergedTypes = true;
 				isDirectPolyfillOrMergedType = true;
@@ -246,19 +248,26 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 				isDirectPolyfillOrMergedType = false;
 			}
 		}
-		if (process(object)) {
+		if (process(interf)) {
 			return true;
 		}
-		if (doSwitchSuperInterfaces(object)) {
+		if (doSwitchSuperInterfaces(interf)) {
 			return true;
 		}
 		return false;
 	}
 
-	protected boolean visitTStructuralType(ParameterizedTypeRef typeRef, TStructuralType object) {
-		return process(object);
+	/**
+	 * Processes structural types.
+	 *
+	 * @param typeRef
+	 *            for the given structural type
+	 */
+	protected boolean visitTStructuralType(ParameterizedTypeRef typeRef, TStructuralType structType) {
+		return process(structType);
 	}
 
+	/** Returns true iff the current type ref is the bottom type or a polyfill / merged type of the bottom type. */
 	protected boolean isCurrentBottomOrPolyfillOrMergedType() {
 		if (getCurrentTypeRef() == null) {
 			return false;
@@ -349,6 +358,7 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 		return guardedSwitch(typeRef);
 	}
 
+	/** Wrapper method of {@link #doSwitch(ParameterizedTypeRef)} mainly to apply guarded behavior. */
 	protected boolean guardedSwitch(ParameterizedTypeRef typeRef) {
 		if (typeRef.getDeclaredType() == bottomType && currentTypeRefs.size() > 1) {
 			return false;
@@ -367,11 +377,17 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 		}
 	}
 
+	/**
+	 * Guards make sure a type is not visited twice. However releasing enables multiple visits. Drawback of not
+	 * releasing arises with same type but different type arguments.
+	 *
+	 * Default: never visit types twice; drawback: same type with different type argument
+	 */
 	protected boolean releaseGuard() {
-		// default: never visit types twice; drawback: same type with different type argument
 		return false;
 	}
 
+	/** Delegate depending on the type of the given ref. */
 	protected boolean doSwitch(ParameterizedTypeRef typeRef) {
 		try {
 			Type type = typeRef.getDeclaredType();
@@ -392,6 +408,7 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 		}
 	}
 
+	/** Returns the type ref currently being visited */
 	protected ParameterizedTypeRef getCurrentTypeRef() {
 		if (currentTypeRefs.empty()) {
 			return null;

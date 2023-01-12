@@ -59,10 +59,12 @@ public class N4JSCache extends OnChangeEvictingCache {
 		return super.get(key, resource, provider);
 	}
 
+	/** Use this get method as a general convention. */
 	public <T> T get(Resource resource, Provider<T> provider, Object firstKey, Object... moreKeys) {
 		return super.get(makeKey(firstKey, moreKeys), resource, provider);
 	}
 
+	/** Create keys for the cache here. */
 	static public Object makeKey(Object firstKey, Object... moreKeys) {
 		Preconditions.checkNotNull(firstKey);
 
