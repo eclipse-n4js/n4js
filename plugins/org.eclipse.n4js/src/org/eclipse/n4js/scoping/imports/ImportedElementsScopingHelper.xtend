@@ -15,7 +15,6 @@ import com.google.common.base.Throwables
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.HashMap
-import java.util.Objects
 import org.apache.log4j.Logger
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource

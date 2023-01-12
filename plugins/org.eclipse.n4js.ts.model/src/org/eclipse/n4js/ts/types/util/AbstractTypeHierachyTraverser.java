@@ -357,7 +357,7 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 			try {
 				return doSwitch(typeRef);
 			} finally {
-				if (releaseGuard(typeRef)) {
+				if (releaseGuard()) {
 					guard.done(typeRef);
 				}
 			}
@@ -367,7 +367,7 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 		}
 	}
 
-	protected boolean releaseGuard(ParameterizedTypeRef typeRef) {
+	protected boolean releaseGuard() {
 		// default: never visit types twice; drawback: same type with different type argument
 		return false;
 	}

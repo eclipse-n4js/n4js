@@ -12,7 +12,6 @@ package org.eclipse.n4js.scoping.utils
 
 import com.google.common.collect.Iterables
 import com.google.inject.Inject
-import java.util.Objects
 import java.util.function.Supplier
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration

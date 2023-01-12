@@ -18,7 +18,6 @@ import java.util.Collections
 import java.util.Comparator
 import java.util.Iterator
 import java.util.List
-import java.util.Objects
 import java.util.concurrent.atomic.AtomicBoolean
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
