@@ -22,7 +22,8 @@ import org.eclipse.n4js.utils.DeclMergingHelper;
 import com.google.common.collect.Lists;
 
 /**
- * Collects all declared super types, implicit super types or polyfills are ignored.
+ * Collects all declared super types, implicit super types or polyfills are ignored. The bottom type or its
+ * merged/polyfilled types <b>are</b> included.
  */
 public class AllSuperTypesCollector extends AbstractCompleteHierarchyTraverser<List<TClassifier>> {
 

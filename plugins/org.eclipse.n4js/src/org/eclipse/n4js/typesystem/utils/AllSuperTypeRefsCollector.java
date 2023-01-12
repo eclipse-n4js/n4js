@@ -24,6 +24,7 @@ import org.eclipse.n4js.utils.DeclMergingHelper;
 import com.google.common.collect.Lists;
 
 /**
+ * The bottom type or its merged/polyfilled types <b>are not</b> included.
  */
 public class AllSuperTypeRefsCollector extends AbstractCompleteHierarchyTraverser<List<ParameterizedTypeRef>> {
 
@@ -48,18 +49,13 @@ public class AllSuperTypeRefsCollector extends AbstractCompleteHierarchyTraverse
 		return N4JSDataCollectors.dcTHT_AllSuperTypeRefsCollector.getMeasurementIfInactive("HierarchyTraverser");
 	}
 
-	// @Override
-	// protected Object getCacheKey() {
-	// return N4JSCache.makeKey("AllSuperTypeRefsCollector", typeRef);
-	// }
-
 	@Override
 	protected List<ParameterizedTypeRef> doGetResult() {
 		return Collections.unmodifiableList(result);
 	}
 
 	@Override
-	protected boolean releaseGuard(ParameterizedTypeRef typeRef) {
+	protected boolean releaseGuard() {
 		return true;
 	}
 
