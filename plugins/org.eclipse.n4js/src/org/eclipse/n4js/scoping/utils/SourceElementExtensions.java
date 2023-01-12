@@ -36,6 +36,7 @@ import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
+import org.eclipse.n4js.resource.N4JSCache;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TAbstractVariable;
 import org.eclipse.n4js.ts.types.TClass;
@@ -45,8 +46,6 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
-import org.eclipse.xtext.util.IResourceScopeCache;
-import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -58,7 +57,7 @@ import com.google.inject.Singleton;
 public class SourceElementExtensions {
 
 	@Inject
-	IResourceScopeCache cache;
+	N4JSCache cache;
 
 	@Inject
 	JavaScriptVariantHelper jsVariantHelper;
@@ -74,8 +73,8 @@ public class SourceElementExtensions {
 	 * @return the list of EObjects visible
 	 */
 	public List<IdentifiableElement> collectVisibleIdentifiableElements(VariableEnvironmentElement element) {
-		Pair<String, VariableEnvironmentElement> key = Pair.of("collectVisibleIdentifiableElements", element);
-		return cache.get(key, element.eResource(), () -> doCollectVisibleIdentifiableElements(element));
+		return cache.get(element.eResource(), () -> doCollectVisibleIdentifiableElements(element),
+				"collectVisibleIdentifiableElements", element);
 	}
 
 	/**
@@ -86,8 +85,7 @@ public class SourceElementExtensions {
 	 * @return list with single entry of an arguments variable or empty list.
 	 */
 	public List<IdentifiableElement> collectLocalArguments(VariableEnvironmentElement element) {
-		Pair<String, VariableEnvironmentElement> key = Pair.of("collectLocalArguments", element);
-		return cache.get(key, element.eResource(), () -> doCollectLocalArguments(element));
+		return cache.get(element.eResource(), () -> doCollectLocalArguments(element), "collectLocalArguments", element);
 	}
 
 	private List<IdentifiableElement> doCollectVisibleIdentifiableElements(VariableEnvironmentElement element) {
@@ -131,10 +129,11 @@ public class SourceElementExtensions {
 			return doCollectVisibleIdentifiableElementsUncached(start, element, includeBlockScopedElements);
 
 		} else {
-			return cache.get(Pair.of("doCollectVisibleIdentifiableElements?includeBlockScopedElements=false", element),
+			return cache.get(
 					element.eResource(), () -> {
 						return doCollectVisibleIdentifiableElementsUncached(start, element, includeBlockScopedElements);
-					});
+					},
+					"doCollectVisibleIdentifiableElements?includeBlockScopedElements=false", element);
 		}
 	}
 

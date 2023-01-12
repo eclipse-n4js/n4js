@@ -16,6 +16,7 @@ import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.JSXElement
+import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
@@ -41,7 +42,6 @@ import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScopeProvider
-import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
@@ -52,7 +52,7 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 class ReactHelper {
 	@Inject private N4JSTypeSystem ts
 	@Inject private TypeSystemHelper tsh
-	@Inject private IResourceScopeCache resourceScopeCacheHelper
+	@Inject private N4JSCache cache
 	@Inject private IScopeProvider scopeProvider;
 
 	public final static String REACT_PROJECT_ID = "react"
@@ -74,7 +74,7 @@ class ReactHelper {
 	 */
 	def public TModule getJsxBackendModule(Resource resource) {
 		val String key = REACT_KEY + "." + "TMODULE";
-		return resourceScopeCacheHelper.get(key, resource, [
+		return cache.get(resource, [
 			val scope = (scopeProvider as N4JSScopeProvider).getScopeForImplicitImports(resource as N4JSResource);
 			val matchingDescriptions = scope.getElements(QualifiedName.create(REACT_PROJECT_ID));
 			// resolve all found 'react.js' files, until a valid react implementation is found
@@ -85,7 +85,7 @@ class ReactHelper {
 			]
 			// filter for valid react modules only
 			.filter[module | module.isValidReactModule].head;
-		]);
+		], key);
 	}
 	
 	/**
@@ -239,7 +239,7 @@ class ReactHelper {
 			return null;
 
 		val String key = REACT_KEY + "." + reactClassifierName;
-		return resourceScopeCacheHelper.get(key, tModule.eResource, [
+		return cache.get(tModule.eResource, [
 			// used for @types/react
 			for (ExportDefinition expDef : tModule.exportDefinitions) {
 				if (expDef instanceof ElementExportDefinition) {
@@ -253,7 +253,7 @@ class ReactHelper {
 				}
 			}
 			return null;
-		]);
+		], key);
 	}
 	def private <T extends TClassifier> T lookUpReactClassifier_OLD(EObject context, String reactClassifierName, Class<T> clazz) {
 		val resource = context.eResource;
@@ -262,11 +262,11 @@ class ReactHelper {
 			return null;
 
 		val String key = REACT_KEY + "_OLD." + reactClassifierName;
-		return resourceScopeCacheHelper.get(key, tModule.eResource, [
+		return cache.get(tModule.eResource, [
 			// used for @n4jsd/react
 			val tClassifier = tModule.types.filter(clazz).findFirst[name == reactClassifierName];
 			return tClassifier;
-		]);
+		], key);
 	}
 
 	def private IdentifiableElement lookUpReactFragmentComponent(TModule module) {

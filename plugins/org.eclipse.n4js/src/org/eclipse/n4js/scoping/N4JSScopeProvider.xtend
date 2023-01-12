@@ -18,6 +18,7 @@ import java.util.Collections
 import java.util.Comparator
 import java.util.Iterator
 import java.util.List
+import java.util.Objects
 import java.util.concurrent.atomic.AtomicBoolean
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
@@ -468,22 +469,23 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	private def ScopeInfo getLexicalEnvironmentScope(VariableEnvironmentElement vee, EObject context, EReference ref) {
 		ensureLexicalEnvironmentScopes(context, ref);
-		return cache.mustGet('scope_IdentifierRef_id' -> vee, vee.eResource);
+		return cache.mustGet(vee.eResource, 'scope_IdentifierRef_id', vee);
 	}
 
 
 	private def void ensureLexicalEnvironmentScopes(EObject context, EReference reference) {
 		val Script script = EcoreUtil.getRootContainer(context) as Script;
 		val resource = script.eResource;
-		val veeScopesBuilt = cache.contains('scope_IdentifierRef_id' -> script, resource); // note that a script is a vee
+		val key = N4JSCache.makeKey('scope_IdentifierRef_id', script);
+		val veeScopesBuilt = cache.contains(resource, key); // note that a script is a vee
 		if (!veeScopesBuilt) {
-			cache.get('scope_IdentifierRef_id' -> script, resource, [buildLexicalEnvironmentScope(script, context, reference)]);
+			cache.get(resource, [buildLexicalEnvironmentScope(script, context, reference)], key);
 			val Iterator<EObject> scriptIterator = script.eAllContents;
 			while (scriptIterator.hasNext) {
 				val vee = scriptIterator.next;
 				if (vee instanceof VariableEnvironmentElement) {
 					// fill the cache
-					cache.get('scope_IdentifierRef_id' -> vee, resource, [buildLexicalEnvironmentScope(vee, context, reference)]);
+					cache.get(resource, [buildLexicalEnvironmentScope(vee, context, reference)], 'scope_IdentifierRef_id', vee);
 				}
 			}
 		}
@@ -507,7 +509,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			val Script script = EcoreUtil.getRootContainer(vee) as Script;
 			val resource = script.eResource;
 			// TODO GH-2338 reconsider the following recursion guard (required for chains of re-exports in cyclic modules)
-			val guard = cache.get("buildLexicalEnvironmentScope__importedValuesComputationGuard" -> script, resource, [new AtomicBoolean(false)]);
+			val guard = cache.get(resource, [new AtomicBoolean(false)], "buildLexicalEnvironmentScope__importedValuesComputationGuard", script);
 			val alreadyInProgress = guard.getAndSet(true);
 			if (alreadyInProgress) {
 				scope = IScope.NULLSCOPE;
@@ -580,7 +582,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val resource = context.eResource;
 
 		// TODO GH-2338 reconsider the following recursion guard (required for chains of re-exports in cyclic modules)
-		val guard = cache.get("scope_AllTopLevelElementsFromAbstractNamespace__exportedElementsComputationGuard" -> context, resource, [new AtomicBoolean(false)]);
+		val guard = cache.get(resource, [new AtomicBoolean(false)], "scope_AllTopLevelElementsFromAbstractNamespace__exportedElementsComputationGuard", context);
 		val alreadyInProgress = guard.getAndSet(true);
 		if (alreadyInProgress) {
 			return parentOrNull;

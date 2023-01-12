@@ -75,7 +75,7 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 
 	/** Returns true iff a resource descriptions exists already for the given resource */
 	public boolean hasResourceDescription(final Resource resource) {
-		return cache.contains(CACHE_KEY, resource);
+		return cache.contains(resource, CACHE_KEY);
 	}
 
 	@Override

@@ -57,7 +57,6 @@ import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
@@ -231,17 +230,16 @@ public class DeclMergingHelper {
 
 	private <T extends EObject> List<T> cachedGetMergedElements(N4JSResource context, T element, EClass eClass) {
 		String keyName = "getMergedElements" + eClass.getClassifierID();
-		Pair<String, T> key = Pair.of(keyName, element);
-		if (!cache.contains(key, context)) {
+		Object key = N4JSCache.makeKey(keyName, element);
+		if (!cache.contains(context, key)) {
 			List<T> mergedElements = internalGetMergedElements(context, element, eClass);
-			cache.get(key, context, () -> mergedElements);
+			cache.get(context, () -> mergedElements, key);
 
 			Set<T> mergedElementsSet = new HashSet<>(mergedElements);
 			mergedElementsSet.add(element);
 
 			for (T mergedElem : mergedElements) {
-				Pair<String, T> otherKey = Pair.of(keyName, mergedElem);
-				cache.get(otherKey, context, () -> {
+				cache.get(context, () -> {
 					ArrayList<Object> otherMergedElems = new ArrayList<>();
 					for (T e : mergedElementsSet) {
 						if (e != mergedElem) {
@@ -249,10 +247,11 @@ public class DeclMergingHelper {
 						}
 					}
 					return otherMergedElems;
-				});
+				},
+						keyName, mergedElem);
 			}
 		}
-		return cache.mustGet(key, context);
+		return cache.mustGet(context, key);
 	}
 
 	@SuppressWarnings("unchecked")

@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.Type;
@@ -80,6 +82,11 @@ public class SuperTypesMapper<T> extends AbstractTypeHierachyTraverser<List<T>> 
 		super(type);
 		this.mapper = mapper;
 		this.stopAtFirstNonNullResult = stopAtFirstNonNullResult;
+	}
+
+	@Override
+	protected Measurement getMeasurement() {
+		return N4JSDataCollectors.dcTHT_SuperTypesMapper.getMeasurementIfInactive("HierarchyTraverser");
 	}
 
 	@Override
