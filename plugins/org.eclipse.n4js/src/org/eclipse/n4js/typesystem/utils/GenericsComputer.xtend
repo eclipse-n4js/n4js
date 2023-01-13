@@ -230,7 +230,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	private def collectSuperTypeRefs(TypeRef typeRef) {
 		val result = newArrayList
 		primCollectSuperTypeRefs(typeRef,result,new RecursionGuard<TypeRef>());
-		val result2 = AllSuperTypeRefsCollector.collect(typeRef as ParameterizedTypeRef, declMergingHelper);
+		val result2 = new ArrayList(AllSuperTypeRefsCollector.collect(typeRef as ParameterizedTypeRef, declMergingHelper));
 		result2.add(0, typeRef as ParameterizedTypeRef);
 		return result2;
 	}
