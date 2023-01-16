@@ -24,7 +24,7 @@
     "debug": "~4.3.1",
     "glob": "^7.1.6",
     "istanbul-lib-coverage": "^3.2.0",
-    "minimatch": "3.0.4",
+    "minimatch": "3.0.5",
     "n4js-runtime": "^0.1.0",
     "n4js-runtime-es2015": "^0.1.0",
     "n4js-runtime-esnext": "^0.1.0",
