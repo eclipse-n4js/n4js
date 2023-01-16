@@ -9,9 +9,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-export external public abstract class ReactElement {
-    private constructor();
-};
+export external public interface ~ReactElement<out P = any> {
+}
 
 export external public interface ~ComponentProps {
     public children?: Array<ReactElement>;

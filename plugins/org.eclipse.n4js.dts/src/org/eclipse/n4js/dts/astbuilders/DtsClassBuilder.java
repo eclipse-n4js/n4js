@@ -92,8 +92,11 @@ public class DtsClassBuilder
 		if (heritage != null) {
 			ClassExtendsClauseContext extendsClause = heritage.classExtendsClause();
 			if (extendsClause != null && extendsClause.parameterizedTypeRef() != null) {
-				ParameterizedTypeRef typeRef = newTypeRefBuilder().consume(extendsClause.parameterizedTypeRef());
-				result.setSuperClassRef(ParserContextUtils.wrapInTypeRefNode(typeRef));
+				TypeRef typeRef = newTypeRefBuilder().consume(extendsClause.parameterizedTypeRef());
+				if (typeRef instanceof ParameterizedTypeRef) { // could also be composed type ref
+					ParameterizedTypeRef ptr = (ParameterizedTypeRef) typeRef;
+					result.setSuperClassRef(ParserContextUtils.wrapInTypeRefNode(ptr));
+				}
 			}
 			ClassImplementsClauseContext implementsClause = heritage.classImplementsClause();
 			if (implementsClause != null && implementsClause.classOrInterfaceTypeList() != null
@@ -101,8 +104,11 @@ public class DtsClassBuilder
 				// TODO classes implementing classes not supported in N4JS!
 				for (ParameterizedTypeRefContext extendsTypeRefCtx : implementsClause.classOrInterfaceTypeList()
 						.parameterizedTypeRef()) {
-					ParameterizedTypeRef typeRef = newTypeRefBuilder().consume(extendsTypeRefCtx);
-					result.getImplementedInterfaceRefs().add(ParserContextUtils.wrapInTypeRefNode(typeRef));
+					TypeRef typeRef = newTypeRefBuilder().consume(extendsTypeRefCtx);
+					if (typeRef instanceof ParameterizedTypeRef) { // could also be composed type ref
+						ParameterizedTypeRef ptr = (ParameterizedTypeRef) typeRef;
+						result.getImplementedInterfaceRefs().add(ParserContextUtils.wrapInTypeRefNode(ptr));
+					}
 				}
 			}
 		}

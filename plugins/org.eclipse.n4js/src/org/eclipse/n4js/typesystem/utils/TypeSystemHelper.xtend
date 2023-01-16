@@ -54,8 +54,8 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesFactory
+import org.eclipse.n4js.ts.types.util.TypeExtensions
 import org.eclipse.n4js.ts.types.util.Variance
-import org.eclipse.n4js.types.utils.TypeExtensions
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
@@ -380,7 +380,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 
 	/**
 	 * Checks if a value of the given type is "callable" (i.e. can be invoked with a call expression).
-	 * If so, returns an instance of class {@link Callable) with further information; if not, returns
+	 * If so, returns an instance of class {@link Callable} with further information; if not, returns
 	 * <code>null</code>.
 	 */
 	def public Callable getCallableTypeRef(RuleEnvironment G, TypeRef typeRef) {
@@ -648,6 +648,17 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 					structType.callSignature
 				};
 			}
+		}
+		return null;
+	}
+	
+	def public FunctionTypeExprOrRef getFunctionTypeExprOrRef(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef instanceof FunctionTypeExprOrRef) {
+			return typeRef;
+		}
+		val callable = getCallableTypeRef(G, typeRef);
+		if (callable !== null) {
+			return callable.signatureTypeRef.orNull;
 		}
 		return null;
 	}

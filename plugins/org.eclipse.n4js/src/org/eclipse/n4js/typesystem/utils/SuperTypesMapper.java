@@ -8,21 +8,24 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ts.types.util;
+package org.eclipse.n4js.typesystem.utils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.util.AbstractTypeHierachyTraverser;
 
 /**
  * Implements the common map operation on the direct and indirect super types of a class, interface, etc.
  */
-public class SuperTypesMapper<T> extends AbstractHierachyTraverser<List<T>> {
+public class SuperTypesMapper<T> extends AbstractTypeHierachyTraverser<List<T>> {
 
 	/** The map function. May return <code>null</code> to denote that the given super type should be ignored. */
 	protected final Function<Type, T> mapper;
@@ -79,6 +82,11 @@ public class SuperTypesMapper<T> extends AbstractHierachyTraverser<List<T>> {
 		super(type);
 		this.mapper = mapper;
 		this.stopAtFirstNonNullResult = stopAtFirstNonNullResult;
+	}
+
+	@Override
+	protected Measurement getMeasurement() {
+		return N4JSDataCollectors.dcTHT_SuperTypesMapper.getMeasurementIfInactive("HierarchyTraverser");
 	}
 
 	@Override

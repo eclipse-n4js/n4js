@@ -91,7 +91,9 @@ public class DtsParser {
 	}
 
 	/** Parses d.ts files */
-	public DtsParseResult parse(Path srcFolder, Reader reader, LazyLinkingResource resource) throws IOException {
+	public DtsParseResult parse(String packageName, Path srcFolder, Reader reader, LazyLinkingResource resource)
+			throws IOException {
+
 		URI uri = resource.getURI();
 		if (URIUtils.isVirtualResourceURI(uri)) {
 			NestedResourceAdapter adapter = NestedResourceAdapter.get(resource);
@@ -99,9 +101,9 @@ public class DtsParser {
 				// should not happen, taken care of in caller
 			}
 
-			return parseNestedScript(srcFolder, resource, adapter);
+			return parseNestedScript(packageName, srcFolder, resource, adapter);
 		} else {
-			return parseScript(srcFolder, reader, resource);
+			return parseScript(packageName, srcFolder, reader, resource);
 		}
 	}
 
@@ -116,7 +118,9 @@ public class DtsParser {
 		return program;
 	}
 
-	private DtsParseResult parseScript(Path srcFolder, Reader reader, LazyLinkingResource resource) throws IOException {
+	private DtsParseResult parseScript(String packageName, Path srcFolder, Reader reader, LazyLinkingResource resource)
+			throws IOException {
+
 		CharStream fileContents = fromReader(reader);
 		long millis = System.currentTimeMillis();
 
@@ -152,7 +156,7 @@ public class DtsParser {
 		resource.clearLazyProxyInformation();
 
 		// convert parse tree to AST
-		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, srcFolder, resource);
+		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, packageName, srcFolder, resource);
 		Script root = astBuilder.consume(stats.tree);
 		RootNode rootNode = new RootNode(stats.tree);
 		Iterable<? extends INode> syntaxErrors = stats.errors;
@@ -165,7 +169,7 @@ public class DtsParser {
 		return new DtsParseResult(root, rootNode, syntaxErrors);
 	}
 
-	private DtsParseResult parseNestedScript(Path srcFolder, LazyLinkingResource resource,
+	private DtsParseResult parseNestedScript(String packageName, Path srcFolder, LazyLinkingResource resource,
 			NestedResourceAdapter adapter) {
 
 		ParserRuleContext ctx = adapter.getContext();
@@ -195,7 +199,7 @@ public class DtsParser {
 		};
 
 		// convert parse tree to AST
-		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, srcFolder, resource);
+		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, packageName, srcFolder, resource);
 		Script root = astBuilder.consume(prgCtx);
 		RootNode rootNode = new RootNode(ctx);
 

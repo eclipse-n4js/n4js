@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+	File "tslib1.d.ts" {
+		export default function KconstA(): string;
+	}
+	File "tslib2.d.ts" {
+		export default function KconstB(): string;
+	}
+   END_SETUP
+ */
+
+
+import KconstA from "tslib1";
+import KconstB from "tslib2";
+
+
+// XPECT type of 'kA' --> string
+let kA = KconstA();
+
+
+// XPECT type of 'kB' --> string
+let kB = KconstB();

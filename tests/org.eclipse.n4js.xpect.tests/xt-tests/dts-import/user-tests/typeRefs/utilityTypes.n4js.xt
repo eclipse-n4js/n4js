@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "tslib.d.ts" {
+
+		export type A1<T> = T extends string ? string : number;
+		export type A2<S,T> = T extends string ? S extends number ? string : boolean : number;
+		export type A3<T> = T extends A1<infer P> ? P extends number ? string : boolean : number;
+		
+	}
+
+	END_SETUP
+ */
+
+import { A1, A2, A3 } from "tslib";
+
+
+
+let sn : string | number;
+let snb : string | number | boolean;
+
+let a1 : A1<string>;
+// XPECT type of 'a1' --> A1<string>
+a1
+// XPECT noerrors -->
+sn = a1;
+a1 = sn;
+
+
+let a2 : A2<string, number>;
+// XPECT type of 'a2' --> A2<string,number>
+a2
+// XPECT noerrors -->
+snb = a2;
+a2 = snb;
+
+
+let a3 : A3<string>;
+// XPECT type of 'a3' --> A3<string>
+a3
+// XPECT noerrors -->
+snb = a3;
+a3 = snb;

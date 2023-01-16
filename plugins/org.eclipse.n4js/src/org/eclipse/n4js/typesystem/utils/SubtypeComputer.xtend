@@ -25,6 +25,7 @@ import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
+import org.eclipse.n4js.utils.DeclMergingHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.xtext.service.OperationCanceledManager
 
@@ -43,6 +44,8 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 	private N4JSTypeSystem ts;
 	@Inject
 	private TypeSystemHelper tsh;
+	@Inject
+	private DeclMergingHelper declMergingHelper;
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
@@ -65,7 +68,7 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 			// rationale: if there exists a valid binding of left's type variables
 			// so that bound(left) <: right, then left <: right
 
-			val infCtx = new InferenceContext(ts, tsh, operationCanceledManager, G.cancelIndicator, G); // start with no inference variables
+			val infCtx = new InferenceContext(ts, tsh, declMergingHelper, operationCanceledManager, G.cancelIndicator, G); // start with no inference variables
 			val left_withInfVars = infCtx.newInferenceVariablesFor(left); // create an inference variable for each type param in left
 			// assuming 'left' was {function<T>(T):T}, then left_withInfVars is now: {function(α):α} (non-generic!)
 			infCtx.addConstraint(left_withInfVars, right, Variance.CO);

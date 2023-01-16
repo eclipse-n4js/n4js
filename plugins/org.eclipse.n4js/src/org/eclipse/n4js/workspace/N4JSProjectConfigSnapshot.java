@@ -347,11 +347,11 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 			List<String> globsToInclude = new ArrayList<>();
 			List<String> globsToExclude = new ArrayList<>();
 
+			List<String> sourceContainerPaths = getProjectDescription().getSourceContainers().stream()
+					.flatMap(scd -> ProjectDescriptionUtils.getPathsNormalized(scd.getPaths()).stream())
+					.collect(Collectors.toList());
 			if (pd.getMainModule() != null) {
 				String mainModule = pd.getMainModule();
-				List<String> sourceContainerPaths = getProjectDescription().getSourceContainers().stream()
-						.flatMap(scd -> ProjectDescriptionUtils.getPathsNormalized(scd.getPaths()).stream())
-						.collect(Collectors.toList());
 				for (String srcPath : sourceContainerPaths) {
 					String mainModulePath = Path.of(srcPath, mainModule).toString();
 					URI main = URI.createFileURI(mainModulePath).resolve(getPath());
@@ -366,10 +366,12 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 				}
 			}
 			for (ProjectExports pe : pd.getExports()) {
-				URI expMain = pe.getMainModule() == null
-						? null
-						: URI.createFileURI(pe.getMainModule().toString("/")).resolve(getPath());
-				if (expMain != null) {
+				if (pe.getMainModule() == null) {
+					continue;
+				}
+				for (String srcPath : sourceContainerPaths) {
+					String mainModulePath = Path.of(srcPath, pe.getMainModule().toString("/")).toString();
+					URI expMain = URI.createFileURI(mainModulePath).resolve(getPath());
 					if (URIUtils.toFile(expMain).isFile()) {
 						startUris.add(expMain);
 					} else if (URIUtils.toFile(expMain.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION)).isFile()) {

@@ -24,14 +24,15 @@ import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.util.AllSuperTypeRefsCollector
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.utils.DeclMergingHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 
 import static extension org.eclipse.n4js.types.utils.TypeUtils.convertTypeArgsToRefs
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 
 /**
  * Helper class for dealing with built-in types {@link BuiltInTypeScope#getIterableType() Iterable} and
@@ -41,6 +42,7 @@ class IterableComputer extends TypeSystemHelperStrategy {
 
 	@Inject private N4JSTypeSystem ts;
 	@Inject private ContainerTypesHelper containerTypesHelper;
+	@Inject private DeclMergingHelper declMergingHelper;
 
 	/**
 	 * Given a type that is or (directly or indirectly) implements one of the Iterable or IterableN built-in types,
@@ -114,7 +116,7 @@ class IterableComputer extends TypeSystemHelperStrategy {
 			// (the IterableN<> are nominal, so they must be implemented explicitly anyway; Iterable<> is
 			// structural but may still be implemented explicitly which would be simpler for us)
 			val results = newArrayList;
-			for(superTypeRef : AllSuperTypeRefsCollector.collect(declType)) {
+			for(superTypeRef : AllSuperTypeRefsCollector.collect(typeRef as ParameterizedTypeRef, declMergingHelper)) {
 				if(superTypeRef?.declaredType===iterableType || (includeIterableN && G.isIterableN(superTypeRef))) {
 					// next if() is important: sorts out the super-type references to IterableN-1 in IterableN
 					// (but only required if including the IterableN)

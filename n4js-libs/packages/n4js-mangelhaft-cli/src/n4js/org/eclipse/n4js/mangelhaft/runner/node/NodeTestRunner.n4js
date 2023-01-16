@@ -136,7 +136,7 @@ class NodeTestRunner  {
             const coverageMap = lib_coverage.createCoverageMap(coverage);
             mkdirp(lib_path.dirname(nycCoveragePath));
             log("Writing %s", nycCoveragePath);
-            lib_fs.writeFileSync(nycCoveragePath, JSON.stringify(coverageMap, null, 2), { encoding: "UTF-8" });
+            lib_fs.writeFileSync(nycCoveragePath, JSON.stringify(coverageMap, null, 2), { BufferEncoding encoding: "utf-8" });
 
             const coverageSummary = lib_coverage.createCoverageSummary();
             for (const file of coverageMap.files()) {

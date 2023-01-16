@@ -29,6 +29,7 @@ public class ProjectExports extends ImmutableDataClass {
 
 	public ProjectExports(String exportsPath, String main, String types, QualifiedName mainModule,
 			Boolean moduleProperty) {
+
 		this.exportsPath = exportsPath;
 		this.exportsPathClean = exportsPath.startsWith("./") ? exportsPath.substring(2) : exportsPath;
 		this.main = main;

@@ -66,6 +66,32 @@ public final class N4JSDataCollectors {
 
 	public static final DataCollector dcTemp = create("TEMP");
 
+	public static final DataCollector dcCache = create("Cache");
+	public static final DataCollector dcCacheGet = create("Get", dcCache);
+	public static final DataCollector dcCachePut = create("Put", dcCache);
+	public static final DataCollector dcCacheMakeKeys = create("MakeKeys", dcCache);
+	public static final DataCollector dcCacheSetTarget = create("SetTarget", dcCache);
+
+	public static final DataCollector dcTypeHierachyTraverser = create("TypeHierachyTraverser");
+	public static final DataCollector dcTHT_AllMembersCollector = create("AllMembersCollector",
+			dcTypeHierachyTraverser);
+	public static final DataCollector dcTHT_CollectMembersHelper = create("CollectMembersHelper",
+			dcTypeHierachyTraverser);
+	public static final DataCollector dcTHT_MemberEntriesCollector = create("MemberEntriesCollector",
+			dcTypeHierachyTraverser);
+	public static final DataCollector dcTHT_FindCallConstructSignatureHelper = create(
+			"FindCallConstructSignatureHelper", dcTypeHierachyTraverser);
+	public static final DataCollector dcTHT_FindMemberHelper = create("FindMemberHelper", dcTypeHierachyTraverser);
+	public static final DataCollector dcTHT_LazyOverrideAwareMemberCollectorX = create(
+			"LazyOverrideAwareMemberCollectorX", dcTypeHierachyTraverser);
+	public static final DataCollector dcTHT_AllSuperTypeRefsCollector = create("AllSuperTypeRefsCollector",
+			dcTypeHierachyTraverser);
+	public static final DataCollector dcTHT_AllSuperTypesCollector = create("AllSuperTypesCollector",
+			dcTypeHierachyTraverser);
+	public static final DataCollector dcTHT_FindElementTypeHelper = create("FindElementTypeHelper",
+			dcTypeHierachyTraverser);
+	public static final DataCollector dcTHT_SuperTypesMapper = create("SuperTypesMapper", dcTypeHierachyTraverser);
+
 	public static DataCollector createDataCollectorForCheckMethod(String methodName) {
 		final DataCollector parent;
 		if (N4JSDataCollectors.dcValidationsPackageJson.hasActiveMeasurement()) {

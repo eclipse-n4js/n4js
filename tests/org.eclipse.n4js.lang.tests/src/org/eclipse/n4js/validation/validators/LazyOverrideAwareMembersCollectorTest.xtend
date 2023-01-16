@@ -20,7 +20,6 @@ import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.junit.Test
 import org.junit.runner.RunWith
-import static org.eclipse.n4js.validation.validators.LazyOverrideAwareMemberCollector.*
 
 import static org.junit.Assert.*
 
@@ -30,6 +29,10 @@ import static org.junit.Assert.*
 @InjectWith(N4JSInjectorProvider)
 @RunWith(XtextRunner)
 class LazyOverrideAwareMembersCollectorTest {
+	
+	@Inject
+	LazyOverrideAwareMemberCollector lazyOverrideAwareMemberCollector;
+	
 	@Inject
 	extension ParseHelper<Script>
 
@@ -56,15 +59,15 @@ class LazyOverrideAwareMembersCollectorTest {
 		val A = module.types.get(0) as TClass;
 		val B = module.types.get(1) as TClass;
 
-		val membersA = collectAllDeclaredMembers(A)
+		val membersA = lazyOverrideAwareMemberCollector.collectAllDeclaredMembers(A)
 		assertEquals(4, membersA.size);
 
-		val membersB = collectAllDeclaredMembers(B)
+		val membersB = lazyOverrideAwareMemberCollector.collectAllDeclaredMembers(B)
 		assertEquals(4, membersB.size);
 
 		assertArrayEquals(membersA.toArray, membersB.toArray);
 
-		val inheritedMembersB = collectAllDeclaredInheritedMembers(B)
+		val inheritedMembersB = lazyOverrideAwareMemberCollector.collectAllDeclaredInheritedMembers(B)
 		assertEquals(4, inheritedMembersB.size);
 
 		assertArrayEquals(membersA.toArray, inheritedMembersB.toArray);
@@ -94,13 +97,13 @@ class LazyOverrideAwareMembersCollectorTest {
 		val A = module.types.get(0) as TClass;
 		val B = module.types.get(1) as TClass;
 
-		val membersA = collectAllDeclaredMembers(A)
+		val membersA = lazyOverrideAwareMemberCollector.collectAllDeclaredMembers(A)
 		assertEquals(4, membersA.size);
 
-		val membersB = collectAllDeclaredMembers(B)
+		val membersB = lazyOverrideAwareMemberCollector.collectAllDeclaredMembers(B)
 		assertEquals(4, membersB.size);
 
-		val inheritedMembersB = collectAllDeclaredInheritedMembers(B)
+		val inheritedMembersB = lazyOverrideAwareMemberCollector.collectAllDeclaredInheritedMembers(B)
 		assertEquals(4, inheritedMembersB.size);
 
 		assertArrayEquals(membersA.toArray, inheritedMembersB.toArray);
@@ -123,7 +126,7 @@ class LazyOverrideAwareMembersCollectorTest {
 		val module = script.module;
 		val C = module.types.get(2) as TClass;
 
-		val membersC = collectAllDeclaredMembers(C)
+		val membersC = lazyOverrideAwareMemberCollector.collectAllDeclaredMembers(C)
 		// actually we found more than we will have later -- the validator will warn us!
 		assertEquals("Members: " + membersC.map[it.name].join(",")+".", 2, membersC.size);
 	}
@@ -142,7 +145,7 @@ class LazyOverrideAwareMembersCollectorTest {
 		script.validate(); // there may be errors
 		val module = script.module;
 		val C = module.types.get(2) as TClass;
-		val membersC = collectAllDeclaredMembers(C)
+		val membersC = lazyOverrideAwareMemberCollector.collectAllDeclaredMembers(C)
 		assertEquals(2, membersC.size);
 	}
 

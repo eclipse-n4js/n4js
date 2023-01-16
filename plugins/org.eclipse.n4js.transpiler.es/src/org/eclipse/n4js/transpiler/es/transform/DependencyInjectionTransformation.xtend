@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.transpiler.es.transform
 
+import com.google.inject.Inject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.ArrayLiteral
@@ -25,6 +26,7 @@ import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TN4Classifier
+import org.eclipse.n4js.utils.DeclMergingHelper
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -40,6 +42,8 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
  * TODO the DI code below makes heavy use of TModule (probably) without true need; refactor this
  */
 class DependencyInjectionTransformation extends Transformation {
+	
+	@Inject private DeclMergingHelper declMergingHelper;
 
 	override assertPreConditions() {
 		// true
@@ -112,7 +116,7 @@ class DependencyInjectionTransformation extends Transformation {
 			}
 			result += "binders" -> generateBinders(tClass) as Expression;
 			result += injectionPointsMetaInfo(tClass);
-		} else if(isInjectedClass(tClass)) {
+		} else if(isInjectedClass(tClass, declMergingHelper)) {
 			result += injectionPointsMetaInfo(tClass);
 		}
 		return result;

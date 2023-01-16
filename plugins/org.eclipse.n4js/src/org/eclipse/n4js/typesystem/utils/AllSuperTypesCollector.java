@@ -8,18 +8,22 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ts.types.util;
+package org.eclipse.n4js.typesystem.utils;
 
 import java.util.List;
 
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.utils.DeclMergingHelper;
 
 import com.google.common.collect.Lists;
 
 /**
- * Collects all declared super types, implicit super types or polyfills are ignored.
+ * Collects all declared super types, implicit super types or polyfills are ignored. The bottom type or its
+ * merged/polyfilled types <b>are</b> included.
  */
 public class AllSuperTypesCollector extends AbstractCompleteHierarchyTraverser<List<TClassifier>> {
 
@@ -31,9 +35,14 @@ public class AllSuperTypesCollector extends AbstractCompleteHierarchyTraverser<L
 	 * @param type
 	 *            the type to start with.
 	 */
-	public AllSuperTypesCollector(ContainerType<?> type) {
-		super(type);
+	public AllSuperTypesCollector(ContainerType<?> type, DeclMergingHelper declMergingHelper) {
+		super(type, declMergingHelper);
 		result = Lists.newArrayList();
+	}
+
+	@Override
+	protected Measurement getMeasurement() {
+		return N4JSDataCollectors.dcTHT_AllSuperTypesCollector.getMeasurementIfInactive("HierarchyTraverser");
 	}
 
 	@Override
@@ -43,8 +52,9 @@ public class AllSuperTypesCollector extends AbstractCompleteHierarchyTraverser<L
 
 	@Override
 	protected void doProcess(ContainerType<?> containerType) {
-		if (containerType instanceof TClassifier)
+		if (containerType instanceof TClassifier) {
 			result.add((TClassifier) containerType);
+		}
 	}
 
 	@Override
@@ -59,7 +69,7 @@ public class AllSuperTypesCollector extends AbstractCompleteHierarchyTraverser<L
 	 *            the type to start with.
 	 * @return transitive closure of all super classes and implemented interfaces.
 	 */
-	public static final List<TClassifier> collect(ContainerType<?> containerType) {
-		return new AllSuperTypesCollector(containerType).getResult();
+	public static final List<TClassifier> collect(ContainerType<?> containerType, DeclMergingHelper declMergingHelper) {
+		return new AllSuperTypesCollector(containerType, declMergingHelper).getResult();
 	}
 }

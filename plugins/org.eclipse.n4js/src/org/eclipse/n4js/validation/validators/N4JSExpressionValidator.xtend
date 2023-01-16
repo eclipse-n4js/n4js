@@ -120,6 +120,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.utils.DeclMergingHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
 import org.eclipse.n4js.utils.PromisifyHelper
@@ -161,6 +162,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject private JavaScriptVariantHelper jsVariantHelper;
 
 	@Inject private IQualifiedNameConverter qualifiedNameConverter;
+
+	@Inject private DeclMergingHelper declMergingHelper;
 
 	/**
 	 * NEEEDED
@@ -597,7 +600,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val isDirectRef = callee instanceof IdentifierRef && (callee as IdentifierRef).id === staticType;
 		val isConcreteOrCovariant =
 			!(typeArg instanceof Wildcard || typeArg instanceof ExistentialTypeRef || typeArg instanceof ThisTypeRef)
-			|| (staticType instanceof TClassifier && N4JSLanguageUtils.hasCovariantConstructor(staticType as TClassifier));
+			|| (staticType instanceof TClassifier && N4JSLanguageUtils.hasCovariantConstructor(staticType as TClassifier, declMergingHelper));
 		if (staticType === G.symbolObjectType) {
 			// error case #1: new Symbol()
 			val message = IssueCodes.messageForBIT_SYMBOL_NOT_A_CTOR;
@@ -671,7 +674,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	private def boolean holdsConstructSignatureIsAccessible(NewExpression newExpression, TypeRef calleeTypeRef, TMethod constructSig) {
-		val container = constructSig.eContainer;
+		val container = constructSig?.eContainer;
 		if (container instanceof TInterface) { // avoid checking accessibility of construct signatures in StructuralTypeRefs/TStructuralTypes (they're always public)
 			if (!memberVisibilityChecker.isVisible(newExpression, calleeTypeRef, constructSig).visibility) {
 				val message = IssueCodes.getMessageForVIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR("construct signature", container.name);
@@ -689,7 +692,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				val declType = ub.declaredType;
 				if(declType instanceof TClassifier) {
 					// but only if declType has a covariant constructor:
-					if(N4JSLanguageUtils.hasCovariantConstructor(declType)) {
+					if(N4JSLanguageUtils.hasCovariantConstructor(declType, declMergingHelper)) {
 						return declType;
 					}
 				}

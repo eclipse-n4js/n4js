@@ -53,5 +53,5 @@ export public function readJsonFile(path: string): Object+ {
 export public function outputTextFile(filePath: string, content: string): void {
     const dir = lib_path.dirname(filePath);
     mkdirp(dir);
-    writeFileSync(filePath, content, { encoding: "UTF-8" });
+    writeFileSync(filePath, content, { BufferEncoding encoding: "utf-8" });
 }

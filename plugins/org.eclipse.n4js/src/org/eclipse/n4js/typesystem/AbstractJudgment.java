@@ -14,6 +14,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
+import org.eclipse.n4js.utils.DeclMergingHelper;
 
 import com.google.inject.Inject;
 
@@ -35,6 +36,8 @@ import com.google.inject.Inject;
 	protected TypeSystemHelper typeSystemHelper;
 	@Inject
 	protected ContainerTypesHelper containerTypesHelper;
+	@Inject
+	protected DeclMergingHelper declMergingHelper;
 
 	protected static UnknownTypeRef unknown() {
 		return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();

@@ -112,6 +112,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
+import org.eclipse.n4js.utils.DeclMergingHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
@@ -162,6 +163,8 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	private JavaScriptVariantHelper jsVariantHelper;
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
+	@Inject
+	private DeclMergingHelper declMergingHelper;
 
 	private final static String TYPE_VAR_CONTEXT = "TYPE_VAR_CONTEXT";
 
@@ -272,7 +275,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 
 	private boolean checkSpecConstructorOverrideCompatibility(TClassifier tClassifier, TMethod inheritedConstructor) {
 		final Type rightThisContext = MemberRedefinitionUtils.findThisContextForConstructor(tClassifier,
-				inheritedConstructor);
+				inheritedConstructor, declMergingHelper);
 		final Result subtypeResult = isSubTypeResult(inheritedConstructor, rightThisContext, inheritedConstructor);
 		if (subtypeResult.isFailure()) {
 			final String msg = getMessageForCLF_PSEUDO_REDEFINED_SPEC_CTOR_INCOMPATIBLE(
@@ -784,7 +787,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 		}
 		if (baseType instanceof TClass) {
 			final TClass tSuperClass = ((TClass) baseType).getSuperClass();
-			if (tSuperClass != null && N4JSLanguageUtils.hasCovariantConstructor(tSuperClass)) {
+			if (tSuperClass != null && N4JSLanguageUtils.hasCovariantConstructor(tSuperClass, declMergingHelper)) {
 				return true;
 			}
 		}
@@ -1238,7 +1241,8 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 
 	private Result isSubTypeResult(TMember left, TMember right) {
 		final Type rightThisContext = left.isConstructor() && right.isConstructor() && !isPolyfill(left)
-				? MemberRedefinitionUtils.findThisContextForConstructor(left.getContainingType(), (TMethod) right)
+				? MemberRedefinitionUtils.findThisContextForConstructor(left.getContainingType(), (TMethod) right,
+						declMergingHelper)
 				: null; // null means: use default context
 		return isSubTypeResult(left, rightThisContext, right);
 	}

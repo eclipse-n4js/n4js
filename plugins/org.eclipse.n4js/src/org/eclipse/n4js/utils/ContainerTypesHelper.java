@@ -18,7 +18,6 @@ import static org.eclipse.n4js.utils.N4JSLanguageUtils.isContainedInStaticPolyfi
 
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,17 +26,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.resource.N4JSCache;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.members.TMemberEntry;
 import org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource;
 import org.eclipse.n4js.scoping.utils.PolyfillUtils;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.FieldAccessor;
@@ -51,15 +52,14 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.util.AbstractHierachyTraverser;
 import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.ts.types.util.NameStaticPair;
 import org.eclipse.n4js.ts.types.util.NonSymetricMemberKey;
 import org.eclipse.n4js.types.utils.TypeUtils;
+import org.eclipse.n4js.typesystem.utils.AbstractMergingHierachyTraverser;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 
@@ -94,7 +94,7 @@ public class ContainerTypesHelper {
 	private ImportedNamesRecordingGlobalScopeAccess globalScopeAccess;
 
 	@Inject
-	private IResourceScopeCache cache;
+	private N4JSCache cache;
 
 	/**
 	 * Returns a new member collector to collect members available in the current context. The available members are
@@ -155,16 +155,18 @@ public class ContainerTypesHelper {
 		 * Finds the owned or inherited call signature of the given {@link TInterface}.
 		 */
 		public TMethod findCallSignature(TInterface tInterface) {
-			return cache.get(Arrays.asList("findCallSignature", tInterface), contextResource,
-					() -> new FindCallConstructSignatureHelper(tInterface, false).getResult());
+			return cache.get(contextResource,
+					() -> new FindCallConstructSignatureHelper(tInterface, false).getResult(),
+					"findCallSignature", tInterface);
 		}
 
 		/**
 		 * Finds the owned or inherited construct signature of the given {@link TInterface}.
 		 */
 		public TMethod findConstructSignature(TInterface tInterface) {
-			return cache.get(Arrays.asList("findConstructSignature", tInterface), contextResource,
-					() -> new FindCallConstructSignatureHelper(tInterface, true).getResult());
+			return cache.get(contextResource,
+					() -> new FindCallConstructSignatureHelper(tInterface, true).getResult(),
+					"findConstructSignature", tInterface);
 		}
 
 		/**
@@ -179,12 +181,11 @@ public class ContainerTypesHelper {
 		 * Find an owned or inherited member with the given name and writable flag.
 		 */
 		public TMember findMember(ContainerType<?> type, String name, boolean writable, boolean staticAccess,
-				boolean includeImplicitSuperTypes,
-				boolean includePolyfills) {
-			return cache.get(Arrays.asList("findMember", type, name, writable, staticAccess, includeImplicitSuperTypes,
-					includePolyfills), contextResource,
+				boolean includeImplicitSuperTypes, boolean includePolyfills) {
+			return cache.get(contextResource,
 					() -> new FindMemberHelper(type, name, writable, staticAccess, includeImplicitSuperTypes,
-							includePolyfills).getResult());
+							includePolyfills).getResult(),
+					"findMember", type, name, writable, staticAccess, includeImplicitSuperTypes, includePolyfills);
 		}
 
 		/**
@@ -261,8 +262,11 @@ public class ContainerTypesHelper {
 		/**
 		 * Similar to {@link #members(ContainerType)} but with a filter to only accept certain elements.
 		 */
-		private MemberList<TMember> members(ContainerType<?> type, Predicate<TMember> filter) {
-			return new CollectMembersHelper(type, true, true, false, filter).getResult();
+		private MemberList<TMember> members(ContainerType<?> type, TClass ignoreParent) {
+			return cache.get(
+					contextResource,
+					() -> new CollectMembersHelper(type, true, true, false, ignoreParent).getResult(),
+					"members", true, true, false, ignoreParent);
 		}
 
 		/**
@@ -287,11 +291,10 @@ public class ContainerTypesHelper {
 		public MemberList<TMember> members(ContainerType<?> type, boolean includeImplicitSuperTypes,
 				boolean includePolyfills, boolean includeCallConstructSignatures) {
 			return cache.get(
-					Arrays.asList("members", type, includeImplicitSuperTypes, includePolyfills,
-							includeCallConstructSignatures),
 					contextResource,
 					() -> new CollectMembersHelper(type, includeImplicitSuperTypes, includePolyfills,
-							includeCallConstructSignatures, m -> true).getResult());
+							includeCallConstructSignatures, null).getResult(),
+					"members", type, includeImplicitSuperTypes, includePolyfills, includeCallConstructSignatures);
 		}
 
 		/**
@@ -325,12 +328,10 @@ public class ContainerTypesHelper {
 		 */
 		public MemberList<TMember> allMembers(ContainerType<?> type, boolean includeImplicitSuperTypes,
 				boolean includePolyfills, boolean includeInheritedMembers) {
-			return cache.get(
-					Arrays.asList("allMembers", type, includeImplicitSuperTypes, includePolyfills,
-							includeInheritedMembers),
-					contextResource, () -> new AllMembersCollector(type, includeImplicitSuperTypes, includePolyfills,
-							includeInheritedMembers)
-									.getResult());
+			return cache.get(contextResource,
+					() -> new AllMembersCollector(type, includeImplicitSuperTypes, includePolyfills,
+							includeInheritedMembers).getResult(),
+					"allMembers", type, includeImplicitSuperTypes, includePolyfills, includeInheritedMembers);
 		}
 
 		/**
@@ -349,7 +350,7 @@ public class ContainerTypesHelper {
 		public MemberList<TMember> inheritedMembers(TClass clazz) {
 			TClassifier superType = explicitOrImplicitSuperType(clazz);
 			if (superType != null) {
-				return members(superType, m -> m.getContainingType() != clazz); // avoid problems with cycles
+				return members(superType, clazz); // avoid problems with cycles
 			}
 			return MemberList.emptyList();
 		}
@@ -366,7 +367,7 @@ public class ContainerTypesHelper {
 			for (ParameterizedTypeRef interfaceTypeRef : interfaces) {
 
 				allInheritedMembers.addAll(members((ContainerType<?>) interfaceTypeRef.getDeclaredType(),
-						m -> m.getContainingType() != clazz)); // avoid problems with cycles
+						clazz)); // avoid problems with cycles
 			}
 			return allInheritedMembers;
 		}
@@ -706,9 +707,9 @@ public class ContainerTypesHelper {
 
 		}
 
-		private abstract class AbstractMemberCollector<Result> extends AbstractHierachyTraverser<Result> {
+		private abstract class AbstractMemberCollector<Result> extends AbstractMergingHierachyTraverser<Result> {
 
-			private final boolean includeImplicitSuperTypes;
+			protected final boolean includeImplicitSuperTypes;
 			/**
 			 * Flag indicating whether members defined in dynamic or static polyfills are collected as well.
 			 */
@@ -727,9 +728,10 @@ public class ContainerTypesHelper {
 			 *             if <code>includeImplicitSuperTypes</code> is set to <code>true</code> and <code>type</code>
 			 *             is not contained in a properly initialized N4JS resource set.
 			 */
-			public AbstractMemberCollector(ContainerType<?> type,
-					boolean includeImplicitSuperTypes, boolean includePolyfills) {
-				super(type);
+			public AbstractMemberCollector(ContainerType<?> type, boolean includeImplicitSuperTypes,
+					boolean includePolyfills) {
+
+				super(type, contextResource, declMergingHelper);
 				this.includeImplicitSuperTypes = includeImplicitSuperTypes;
 				this.includePolyfills = includePolyfills;
 			}
@@ -757,12 +759,12 @@ public class ContainerTypesHelper {
 			}
 
 			@Override
-			protected List<ParameterizedTypeRef> getPolyfillsOrMergedTypes(Type filledType) {
+			protected List<ParameterizedTypeRef> getPolyfillTypeRefs(Type filledType) {
 				if (!(includePolyfills && filledType instanceof TClassifier)) {
 					return Collections.emptyList();
 				}
 
-				List<Type> polyfillsOrMergedTypes = new ArrayList<>();
+				List<Type> polyfills = new ArrayList<>();
 
 				TClassifier tClassifier = (TClassifier) filledType;
 				if (filledType.isProvidedByRuntime() // only runtime types can be polyfilled, but
@@ -772,7 +774,7 @@ public class ContainerTypesHelper {
 						// if there is no name, there cannot be a polyfill
 
 						// no need for filtering, the special FQN for polyfills ensures only polyfills are returned:
-						polyfillsOrMergedTypes.addAll(getPolyfillTypesFromScope(qn));
+						polyfills.addAll(getPolyfillTypesFromScope(qn));
 					}
 				} else if (filledType instanceof TClass // only classes can be statically polyfilled
 						&& isContainedInStaticPolyfillAware(filledType) // and only types in "aware" modules
@@ -782,18 +784,15 @@ public class ContainerTypesHelper {
 						// if there is no name, there cannot be a polyfill
 
 						// no need for filtering, the special FQN for polyfills ensures only polyfills are returned:
-						polyfillsOrMergedTypes.addAll(getPolyfillTypesFromScope(qn));
+						polyfills.addAll(getPolyfillTypesFromScope(qn));
 					}
 				}
 
-				if (DeclMergingUtils.mayBeMerged(filledType)) {
-					polyfillsOrMergedTypes.addAll(declMergingHelper.getMergedElements(contextResource, tClassifier));
-				}
-
-				return polyfillsOrMergedTypes.stream()
+				return polyfills.stream()
 						.map(type -> TypeUtils.createTypeRef(type))
 						.collect(Collectors.toList());
 			}
+
 		}
 
 		private class AllMembersCollector extends AbstractMemberCollector<MemberList<TMember>> {
@@ -826,6 +825,17 @@ public class ContainerTypesHelper {
 					}
 				}
 				return false;
+			}
+
+			// @Override
+			// protected Object getCacheKey() {
+			// return Objects.hash(bottomType, includeImplicitSuperTypes, includePolyfills,
+			// includeInheritedMembers);
+			// }
+
+			@Override
+			protected Measurement getMeasurement() {
+				return N4JSDataCollectors.dcTHT_AllMembersCollector.getMeasurementIfInactive("HierarchyTraverser");
 			}
 
 			@Override
@@ -876,22 +886,26 @@ public class ContainerTypesHelper {
 			protected final boolean includeCallConstructSignatures;
 
 			private final Map<NameAndAccess, TMember> nameAccessToMember;
-			private final Predicate<TMember> filter;
+			private final TClass ignoreParent;
 
 			/**
 			 * Creates a new collector that is used to safely traverse a potentially cyclic inheritance tree and collect
 			 * the members of the type.
 			 *
-			 * @param filter
-			 *            only members passing the filter are added to the collection. If the filter is null, everything
-			 *            is accepted
+			 * @param ignoreParent
+			 *            ignores those members that have the same parent as ignoreParent
 			 */
 			public CollectMembersHelper(ContainerType<?> type, boolean includeImplicitSuperTypes,
-					boolean includePolyfills, boolean includeCallConstructSignatures, Predicate<TMember> filter) {
+					boolean includePolyfills, boolean includeCallConstructSignatures, TClass ignoreParent) {
 				super(type, includeImplicitSuperTypes, includePolyfills);
 				this.includeCallConstructSignatures = includeCallConstructSignatures;
-				this.filter = filter == null ? m -> true : filter;
+				this.ignoreParent = ignoreParent;
 				nameAccessToMember = Maps.newLinkedHashMap();
+			}
+
+			@Override
+			protected Measurement getMeasurement() {
+				return N4JSDataCollectors.dcTHT_CollectMembersHelper.getMeasurementIfInactive("HierarchyTraverser");
 			}
 
 			@Override
@@ -927,7 +941,7 @@ public class ContainerTypesHelper {
 
 					// do not add members that are readable AND writeable twice
 					final boolean isDuplicate = m.isReadable() && m.isWriteable() && key.isWriteAccess();
-					if (!isDuplicate && !isIgnoredMember(m) && filter.test(m)) {
+					if (!isDuplicate && !isIgnoredMember(m) && ignoreParent != m.getContainingType()) {
 						TMember prev = nameAccessToMember.put(key, m);
 						if (prev != null) { // found prev, either from sub type or preceding interface
 							if (!(prev.isAbstract() && !m.isAbstract()) // concrete members precede abstract members
@@ -961,6 +975,11 @@ public class ContainerTypesHelper {
 				} else {
 					source = INHERITED;
 				}
+			}
+
+			@Override
+			protected Measurement getMeasurement() {
+				return N4JSDataCollectors.dcTHT_MemberEntriesCollector.getMeasurementIfInactive("HierarchyTraverser");
 			}
 
 			@Override
@@ -1015,6 +1034,12 @@ public class ContainerTypesHelper {
 			}
 
 			@Override
+			protected Measurement getMeasurement() {
+				return N4JSDataCollectors.dcTHT_FindCallConstructSignatureHelper
+						.getMeasurementIfInactive("HierarchyTraverser");
+			}
+
+			@Override
 			protected boolean process(ContainerType<?> type) {
 				if (type instanceof TInterface) {
 					TMethod sig = searchConstructSig ? type.getConstructSignature() : type.getCallSignature();
@@ -1048,10 +1073,16 @@ public class ContainerTypesHelper {
 			FindMemberHelper(ContainerType<?> type,
 					String name, boolean writeAccess, boolean staticAccess,
 					boolean includeImplicitSuperTypes, boolean includePolyfills) {
+
 				super(type, includeImplicitSuperTypes, includePolyfills);
 				this.name = name;
 				this.writeAccess = writeAccess;
 				this.staticAccess = staticAccess;
+			}
+
+			@Override
+			protected Measurement getMeasurement() {
+				return N4JSDataCollectors.dcTHT_FindMemberHelper.getMeasurementIfInactive("HierarchyTraverser");
 			}
 
 			@Override

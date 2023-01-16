@@ -43,12 +43,13 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypeVariable
+import org.eclipse.n4js.ts.types.util.TypeExtensions
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.types.utils.TypeCompareHelper
-import org.eclipse.n4js.types.utils.TypeExtensions
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
+import org.eclipse.n4js.utils.DeclMergingHelper
 import org.eclipse.n4js.utils.RecursionGuard
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
@@ -68,6 +69,9 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 
 	@Inject
 	private SimplifyComputer simplifyComputer;
+
+	@Inject
+	private DeclMergingHelper declMergingHelper;
 
 	/**
 	 * Given a type reference to a generic type G where type variables are already bound, e.g.,
@@ -226,7 +230,9 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	private def collectSuperTypeRefs(TypeRef typeRef) {
 		val result = newArrayList
 		primCollectSuperTypeRefs(typeRef,result,new RecursionGuard<TypeRef>());
-		return result;
+		val result2 = new ArrayList(AllSuperTypeRefsCollector.collect(typeRef as ParameterizedTypeRef, declMergingHelper));
+		result2.add(0, typeRef as ParameterizedTypeRef);
+		return result2;
 	}
 	private def void primCollectSuperTypeRefs(TypeRef typeRef, List<? super TypeRef> addHere, RecursionGuard<TypeRef> guard) {
 		if(guard.tryNext(typeRef)) {

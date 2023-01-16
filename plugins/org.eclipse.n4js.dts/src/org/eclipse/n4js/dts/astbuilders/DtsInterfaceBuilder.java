@@ -85,8 +85,11 @@ public class DtsInterfaceBuilder
 			// TODO interfaces extending classes not supported in N4JS!
 			for (ParameterizedTypeRefContext extendsTypeRefCtx : extendsClause.classOrInterfaceTypeList()
 					.parameterizedTypeRef()) {
-				ParameterizedTypeRef typeRef = newTypeRefBuilder().consume(extendsTypeRefCtx);
-				result.getSuperInterfaceRefs().add(ParserContextUtils.wrapInTypeRefNode(typeRef));
+				TypeRef typeRef = newTypeRefBuilder().consume(extendsTypeRefCtx);
+				if (typeRef instanceof ParameterizedTypeRef) { // could also be composed type ref
+					ParameterizedTypeRef ptr = (ParameterizedTypeRef) typeRef;
+					result.getSuperInterfaceRefs().add(ParserContextUtils.wrapInTypeRefNode(ptr));
+				}
 			}
 		}
 

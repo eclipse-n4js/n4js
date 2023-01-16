@@ -1,0 +1,73 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   
+	Workspace {
+		NodeModuleProject "lib1" {
+			Folder "src" {
+				File "module.d.ts" { from="lib1_module.d.ts" }
+			}
+			File "index.d.ts" { from="lib1_index.d.ts" }
+			File "package.json" { from="lib1_package.json" }
+		}
+		NodeModuleProject "lib2" {
+			Folder "src" {
+				File "module.d.ts" { from="lib2_module.d.ts" }
+			}
+			File "package.json" { from="lib2_package.json" }
+		}
+		Project "myProject" {
+			Folder "src" {
+				ThisFile {}
+			}
+			DEPENDS_ON "lib1,lib2"
+		}
+	}
+   
+	File "lib1_index.d.ts" {
+		export * from "./src/module";
+	}
+	File "lib1_module.d.ts" {
+		export const K1 : string;
+	}
+	File "lib1_package.json" {
+		{
+			"name": "lib1",
+			"version": "1.0.0",
+  			"main": "index.js",
+  			"type": "module",
+  			"dependencies": {
+  				"lib2": "*"
+  			}
+		}
+	}
+   
+	File "lib2_module.d.ts" {
+		export const K2 : number;
+	}
+	File "lib2_package.json" {
+		{
+			"name": "lib2",
+			"version": "1.0.0",
+  			"main": "src/module.js",
+  			"type": "module"
+		}
+	}
+   END_SETUP
+ */
+
+import {K1} from "lib1";
+// XPECT errors --> "Import of K2 cannot be resolved." at "K2"
+import {K2} from "lib1";
+
+// XPECT type of 'k' --> string
+let k = K1;

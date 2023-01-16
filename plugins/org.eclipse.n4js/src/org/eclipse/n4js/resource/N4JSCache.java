@@ -16,6 +16,7 @@
 package org.eclipse.n4js.resource;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.common.notify.Notifier;
@@ -23,6 +24,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.validation.helper.IssuesProvider;
 import org.eclipse.xtext.service.OperationCanceledError;
 import org.eclipse.xtext.service.OperationCanceledManager;
@@ -32,7 +35,9 @@ import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -44,6 +49,33 @@ public class N4JSCache extends OnChangeEvictingCache {
 
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
+
+	/**
+	 * @deprecated Use {@link #get(Resource, Provider, Object, Object...)} instead.
+	 */
+	@Deprecated
+	@Override
+	public <T> T get(Object key, Resource resource, Provider<T> provider) {
+		return super.get(key, resource, provider);
+	}
+
+	/** Use this get method as a general convention. */
+	public <T> T get(Resource resource, Provider<T> provider, Object firstKey, Object... moreKeys) {
+		return super.get(makeKey(firstKey, moreKeys), resource, provider);
+	}
+
+	/** Create keys for the cache here. */
+	static public Object makeKey(Object firstKey, Object... moreKeys) {
+		Preconditions.checkNotNull(firstKey);
+
+		try (Measurement M = N4JSDataCollectors.dcCacheMakeKeys.getMeasurementIfInactive()) {
+			int firstHashCode = firstKey.hashCode();
+			if (moreKeys == null || moreKeys.length == 0) {
+				return firstHashCode;
+			}
+			return 31 * firstHashCode + Objects.hash(moreKeys);
+		}
+	}
 
 	@Override
 	public CacheAdapter getOrCreate(Resource resource) {
@@ -92,8 +124,9 @@ public class N4JSCache extends OnChangeEvictingCache {
 			CheckMode checkMode,
 			CancelIndicator monitor) {
 		try {
-			List<Issue> issues = get(N4JS_AllIssues + checkMode, res,
-					new IssuesProvider(resourceValidator, res, checkMode, operationCanceledManager, monitor));
+			List<Issue> issues = get(res,
+					new IssuesProvider(resourceValidator, res, checkMode, operationCanceledManager, monitor),
+					N4JS_AllIssues + checkMode);
 			return issues;
 		} catch (OperationCanceledError oce) {
 			// observation: the cache remains unchanged, to avoid cache corruption.
@@ -131,15 +164,16 @@ public class N4JSCache extends OnChangeEvictingCache {
 	}
 
 	/** @return true iff the cache for the given resource does not contain the given key */
-	public boolean contains(Object key, Resource resource) {
+	public boolean contains(Resource resource, Object firstKey, Object... moreKeys) {
 		CacheAdapter adapter = getOrCreate(resource);
-		return adapter.get(key) != null;
+		return adapter.get(makeKey(firstKey, moreKeys)) != null;
 	}
 
 	/** @return a cached value for the given pair of resource and key or throws an {@link IllegalStateException}. */
 	@SuppressWarnings("unchecked")
-	public <T> T mustGet(Object key, Resource resource) {
+	public <T> T mustGet(Resource resource, Object firstKey, Object... moreKeys) {
 		CacheAdapter adapter = getOrCreate(resource);
+		Object key = makeKey(firstKey, moreKeys);
 		Object value = adapter.get(key);
 		if (value == null) {
 			throw new IllegalStateException(
@@ -155,6 +189,20 @@ public class N4JSCache extends OnChangeEvictingCache {
 	 * from the type information in the xtext index.
 	 */
 	private final class N4JSCacheAdapter extends CacheAdapter {
+		@Override
+		public <T> T get(Object name) {
+			try (Measurement M = N4JSDataCollectors.dcCacheGet.getMeasurementIfInactive()) {
+				return super.get(name);
+			}
+		}
+
+		@Override
+		public void set(Object name, Object value) {
+			try (Measurement M = N4JSDataCollectors.dcCachePut.getMeasurementIfInactive()) {
+				super.set(name, value);
+			}
+		}
+
 		@Override
 		protected boolean resolve() {
 			return false; // changed to false!
@@ -172,18 +220,22 @@ public class N4JSCache extends OnChangeEvictingCache {
 
 		@Override
 		protected void setTarget(Resource target) {
-			if (target instanceof N4JSResource) {
-				// copied from super method:
-				basicSetTarget(target);
-				InternalEList<EObject> contents = (InternalEList<EObject>) target.getContents();
-				for (int i = 0, size = contents.size(); i < size; ++i) {
-					Notifier notifier = contents.basicGet(i); // changed from contents.get(i) to contents.basicGet(i)
-					// to avoid resolving the object (i.e. avoid call to
-					// ModuleAwareContentsList#resolve() in N4JSResource)
-					addAdapter(notifier);
-				}
-			} else
-				super.setTarget(target);
+			try (Measurement M = N4JSDataCollectors.dcCacheSetTarget.getMeasurementIfInactive()) {
+
+				if (target instanceof N4JSResource) {
+					// copied from super method:
+					basicSetTarget(target);
+					InternalEList<EObject> contents = (InternalEList<EObject>) target.getContents();
+					for (int i = 0, size = contents.size(); i < size; ++i) {
+						Notifier notifier = contents.basicGet(i); // changed from contents.get(i) to
+																	// contents.basicGet(i)
+						// to avoid resolving the object (i.e. avoid call to
+						// ModuleAwareContentsList#resolve() in N4JSResource)
+						addAdapter(notifier);
+					}
+				} else
+					super.setTarget(target);
+			}
 		}
 	}
 }

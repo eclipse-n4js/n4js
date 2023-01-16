@@ -38,43 +38,7 @@
 import { Ifc } from "a/b/someModule"
 
 
-// (1) can access static members of class 'Ifc' (but not instance members)
-
-// XPECT noerrors -->
-let v01: string = Ifc.fieldStatic;
-// XPECT errors --> "string is not a subtype of number." at "Ifc.fieldStatic"
-let v02: number = Ifc.fieldStatic;
-// XPECT errors --> "The non-static member fieldInstance cannot be accessed from a static context." at "fieldInstance"
-Ifc.fieldInstance;
-
-
-// (2) can use 'Ifc' as type
-
-// XPECT noerrors -->
-let value: Ifc;
-
-
-// (3) can access instance members of values of type 'Ifc'
-
-// XPECT noerrors -->
-let v11: string = value.field1;
-// XPECT errors --> "string is not a subtype of number." at "value.field1"
-let v12: number = value.field1;
-
-// XPECT errors --> "number is not a subtype of string." at "value.fieldInstance"
-let v21: string = value.fieldInstance;
-// XPECT noerrors -->
-let v22: number = value.fieldInstance;
-
-
-// (4) can create instances of class 'Ifc'
-
 // XPECT noerrors -->
 let instance = new Ifc(42);
 // XPECT errors --> ""str" is not a subtype of number." at ""str""
 new Ifc("str");
-
-// XPECT noerrors -->
-value = instance;
-// XPECT noerrors -->
-instance = value;

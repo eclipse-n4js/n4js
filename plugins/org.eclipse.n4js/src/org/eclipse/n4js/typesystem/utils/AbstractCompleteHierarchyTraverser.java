@@ -8,22 +8,33 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ts.types.util;
+package org.eclipse.n4js.typesystem.utils;
 
+import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
+import org.eclipse.n4js.utils.DeclMergingHelper;
 
 /**
  * A hierarchy traverser that will always traverse the complete hierarchy.
  */
-public abstract class AbstractCompleteHierarchyTraverser<Result> extends AbstractHierachyTraverser<Result> {
+public abstract class AbstractCompleteHierarchyTraverser<ResultT> extends AbstractMergingHierachyTraverser<ResultT> {
 
 	/**
 	 * Creates a new traverser that is used to safely process a potentially cyclic inheritance tree. The complete
 	 * hierarchy is traversed.
 	 */
-	protected AbstractCompleteHierarchyTraverser(ContainerType<?> type) {
-		super(type);
+	protected AbstractCompleteHierarchyTraverser(ContainerType<?> type, DeclMergingHelper declMergingHelper) {
+		super(type, (N4JSResource) type.eResource(), declMergingHelper);
+	}
+
+	/**
+	 * Creates a new traverser that is used to safely process a potentially cyclic inheritance tree. The complete
+	 * hierarchy is traversed.
+	 */
+	protected AbstractCompleteHierarchyTraverser(ParameterizedTypeRef typeRef, DeclMergingHelper declMergingHelper) {
+		super(typeRef, (N4JSResource) typeRef.getDeclaredType().eResource(), declMergingHelper);
 	}
 
 	@Override
