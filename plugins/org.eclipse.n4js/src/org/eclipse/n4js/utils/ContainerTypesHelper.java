@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -182,8 +181,7 @@ public class ContainerTypesHelper {
 		 * Find an owned or inherited member with the given name and writable flag.
 		 */
 		public TMember findMember(ContainerType<?> type, String name, boolean writable, boolean staticAccess,
-				boolean includeImplicitSuperTypes,
-				boolean includePolyfills) {
+				boolean includeImplicitSuperTypes, boolean includePolyfills) {
 			return cache.get(contextResource,
 					() -> new FindMemberHelper(type, name, writable, staticAccess, includeImplicitSuperTypes,
 							includePolyfills).getResult(),
@@ -264,8 +262,11 @@ public class ContainerTypesHelper {
 		/**
 		 * Similar to {@link #members(ContainerType)} but with a filter to only accept certain elements.
 		 */
-		private MemberList<TMember> members(ContainerType<?> type, Predicate<TMember> filter) {
-			return new CollectMembersHelper(type, true, true, false, filter).getResult();
+		private MemberList<TMember> members(ContainerType<?> type, TClass ignoreParent) {
+			return cache.get(
+					contextResource,
+					() -> new CollectMembersHelper(type, true, true, false, ignoreParent).getResult(),
+					"members", true, true, false, ignoreParent);
 		}
 
 		/**
@@ -292,7 +293,7 @@ public class ContainerTypesHelper {
 			return cache.get(
 					contextResource,
 					() -> new CollectMembersHelper(type, includeImplicitSuperTypes, includePolyfills,
-							includeCallConstructSignatures, m -> true).getResult(),
+							includeCallConstructSignatures, null).getResult(),
 					"members", type, includeImplicitSuperTypes, includePolyfills, includeCallConstructSignatures);
 		}
 
@@ -349,7 +350,7 @@ public class ContainerTypesHelper {
 		public MemberList<TMember> inheritedMembers(TClass clazz) {
 			TClassifier superType = explicitOrImplicitSuperType(clazz);
 			if (superType != null) {
-				return members(superType, m -> m.getContainingType() != clazz); // avoid problems with cycles
+				return members(superType, clazz); // avoid problems with cycles
 			}
 			return MemberList.emptyList();
 		}
@@ -366,7 +367,7 @@ public class ContainerTypesHelper {
 			for (ParameterizedTypeRef interfaceTypeRef : interfaces) {
 
 				allInheritedMembers.addAll(members((ContainerType<?>) interfaceTypeRef.getDeclaredType(),
-						m -> m.getContainingType() != clazz)); // avoid problems with cycles
+						clazz)); // avoid problems with cycles
 			}
 			return allInheritedMembers;
 		}
@@ -885,21 +886,20 @@ public class ContainerTypesHelper {
 			protected final boolean includeCallConstructSignatures;
 
 			private final Map<NameAndAccess, TMember> nameAccessToMember;
-			private final Predicate<TMember> filter;
+			private final TClass ignoreParent;
 
 			/**
 			 * Creates a new collector that is used to safely traverse a potentially cyclic inheritance tree and collect
 			 * the members of the type.
 			 *
-			 * @param filter
-			 *            only members passing the filter are added to the collection. If the filter is null, everything
-			 *            is accepted
+			 * @param ignoreParent
+			 *            ignores those members that have the same parent as ignoreParent
 			 */
 			public CollectMembersHelper(ContainerType<?> type, boolean includeImplicitSuperTypes,
-					boolean includePolyfills, boolean includeCallConstructSignatures, Predicate<TMember> filter) {
+					boolean includePolyfills, boolean includeCallConstructSignatures, TClass ignoreParent) {
 				super(type, includeImplicitSuperTypes, includePolyfills);
 				this.includeCallConstructSignatures = includeCallConstructSignatures;
-				this.filter = filter == null ? m -> true : filter;
+				this.ignoreParent = ignoreParent;
 				nameAccessToMember = Maps.newLinkedHashMap();
 			}
 
@@ -907,13 +907,6 @@ public class ContainerTypesHelper {
 			protected Measurement getMeasurement() {
 				return N4JSDataCollectors.dcTHT_CollectMembersHelper.getMeasurementIfInactive("HierarchyTraverser");
 			}
-
-			// @Override
-			// protected Object getCacheKey() {
-			// return Objects.hash(bottomType, includeImplicitSuperTypes, includePolyfills,
-			// includeCallConstructSignatures,
-			// filter);
-			// }
 
 			@Override
 			protected MemberList<TMember> doGetResult() {
@@ -948,7 +941,7 @@ public class ContainerTypesHelper {
 
 					// do not add members that are readable AND writeable twice
 					final boolean isDuplicate = m.isReadable() && m.isWriteable() && key.isWriteAccess();
-					if (!isDuplicate && !isIgnoredMember(m) && filter.test(m)) {
+					if (!isDuplicate && !isIgnoredMember(m) && ignoreParent != m.getContainingType()) {
 						TMember prev = nameAccessToMember.put(key, m);
 						if (prev != null) { // found prev, either from sub type or preceding interface
 							if (!(prev.isAbstract() && !m.isAbstract()) // concrete members precede abstract members
