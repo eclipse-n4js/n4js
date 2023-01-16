@@ -149,7 +149,7 @@ public class EObjectDescriptionToNameWithPositionMapper implements Function<IEOb
 	}
 
 	/**
-	 * Returns the position only, that is everyting after the {@link #SEPARATOR}.
+	 * Returns the position only, that is everything after the {@link #SEPARATOR}.
 	 */
 	public static String getPositionFromNameWithPosition(String nameWithPosition) {
 		int index = nameWithPosition.indexOf(SEPARATOR);
