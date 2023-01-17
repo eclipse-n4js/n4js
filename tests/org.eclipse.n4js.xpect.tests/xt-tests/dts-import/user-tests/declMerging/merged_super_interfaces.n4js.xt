@@ -31,7 +31,7 @@
  */
 
 
-import {J} from "DTS"
+import {J, I1, I2} from "DTS"
 
 let j : J;
 
