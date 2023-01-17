@@ -17,12 +17,15 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportFromBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportedElementContext;
+import org.eclipse.n4js.dts.TypeScriptParser.MultipleImportElementsContext;
 import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.dts.utils.TripleSlashDirective;
+import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -101,15 +104,21 @@ public class DtsImportBuilder extends AbstractDtsModuleRefBuilder<ImportStatemen
 		setModuleSpecifier(result, ctx.StringLiteral()); // must also do this in case ctx.From() == null
 
 		if (ctx.Multiply() != null) {
-			// default import
+			// namespace import
 			NamespaceImportSpecifier nsis = N4JSFactory.eINSTANCE.createNamespaceImportSpecifier();
 			result.getImportSpecifiers().add(nsis);
 			nsis.setAlias(ctx.identifierName().getText());
 			nsis.setDeclaredDynamic(true);
 
 		} else if (ctx.multipleImportElements() != null && ctx.multipleImportElements().importedElement() != null) {
+			MultipleImportElementsContext mieCtx = ctx.multipleImportElements();
+			if (mieCtx.identifierName() != null && !mieCtx.identifierName().isEmpty()) {
+				// default import
+				addDefaultImport(mieCtx.identifierName());
+			}
+
 			// named import
-			for (ImportedElementContext ieCtx : ctx.multipleImportElements().importedElement()) {
+			for (ImportedElementContext ieCtx : mieCtx.importedElement()) {
 				if (ieCtx.identifierName() != null && !ieCtx.identifierName().isEmpty()) {
 					NamedImportSpecifier nis = N4JSFactory.eINSTANCE.createNamedImportSpecifier();
 					String ieName = ieCtx.identifierName().get(0).getText();
@@ -128,9 +137,23 @@ public class DtsImportBuilder extends AbstractDtsModuleRefBuilder<ImportStatemen
 				}
 			}
 
-		} else if (ctx.identifierName() != null) {
-			// not supported
+		} else if (ctx.identifierName() != null && !ctx.identifierName().isEmpty()) {
+			// default import
+			addDefaultImport(ctx.identifierName());
 		}
+	}
+
+	private void addDefaultImport(IdentifierNameContext idNameCtx) {
+		DefaultImportSpecifier dis = N4JSFactory.eINSTANCE.createDefaultImportSpecifier();
+		String ieName = idNameCtx.getText();
+		dis.setImportedElementAsText(ieName);
+
+		TExportableElement tExpElemProxy = TypesFactory.eINSTANCE.createTExportableElement();
+		EReference eRef = N4JSPackage.eINSTANCE.getNamedImportSpecifier_ImportedElement();
+		ParserContextUtils.installProxy(resource, dis, eRef, tExpElemProxy, ieName);
+		dis.setImportedElement(tExpElemProxy);
+
+		result.getImportSpecifiers().add(dis);
 	}
 
 	@Override

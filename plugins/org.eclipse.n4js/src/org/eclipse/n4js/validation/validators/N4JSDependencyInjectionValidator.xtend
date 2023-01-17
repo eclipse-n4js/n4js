@@ -50,13 +50,14 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
-import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.types.util.SuperInterfacesIterable
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.utils.AllSuperTypesCollector
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.utils.DeclMergingHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.scoping.IScopeProvider
@@ -81,6 +82,8 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 	private N4JSTypeSystem ts;
 	@Inject
 	private TypeSystemHelper tsh;
+	@Inject
+	private DeclMergingHelper declMergingHelper;
 
 	@Inject
 	private extension ContainerTypesHelper;
@@ -138,11 +141,11 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		}
 
 		val tClazz = staticType as TClass;
-		if (requiresInjection(tClazz)) {
+		if (requiresInjection(tClazz, declMergingHelper)) {
 			addIssue(getMessageForDI_MUST_BE_INJECTED(tClazz.typeAsString),
 				newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, DI_MUST_BE_INJECTED);
 		}
-		if (isMarkedInjected(tClazz)) {
+		if (isMarkedInjected(tClazz, declMergingHelper)) {
 			addIssue(getMessageForDI_API_INJECTED(),
 				newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, DI_API_INJECTED);
 		}
@@ -990,11 +993,11 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 	/**
 	 * Does the given type inherit or declare some members annotated with (at)Inject?
 	 */
-	public static def boolean requiresInjection(TClass type) {
+	public static def boolean requiresInjection(TClass type, DeclMergingHelper declMergingHelper) {
 		// note: AllSuperTypesCollector ignores implicit super types and polyfills, but that is ok, because
 		// we assume that members of implicit super types and polyfilled members won't have an @Inject
 		// TODO use an 'all super types' iterator instead of collector
-		AllSuperTypesCollector.collect(type)
+		AllSuperTypesCollector.collect(type, declMergingHelper)
 		.exists[t|
 			t.ownedMembers.exists[m|
 				INJECT.hasAnnotation(m)
@@ -1005,9 +1008,9 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 	/**
 	 * Is the given type (or some super-type) marked (at)Injected?
 	 */
-	public static def boolean isMarkedInjected(TClass type) {
+	public static def boolean isMarkedInjected(TClass type, DeclMergingHelper declMergingHelper) {
 		// TODO use an 'all super types' iterator instead of collector
-		AllSuperTypesCollector.collect(type).exists[t| INJECTED.hasAnnotation(t)]
+		AllSuperTypesCollector.collect(type, declMergingHelper).exists[t| INJECTED.hasAnnotation(t)]
 	}
 
 	/**

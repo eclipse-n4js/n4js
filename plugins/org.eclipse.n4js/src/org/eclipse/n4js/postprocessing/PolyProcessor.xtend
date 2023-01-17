@@ -33,6 +33,7 @@ import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
+import org.eclipse.n4js.utils.DeclMergingHelper
 import org.eclipse.n4js.utils.DestructureHelper
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.service.OperationCanceledManager
@@ -63,6 +64,8 @@ package class PolyProcessor extends AbstractPolyProcessor {
 	private N4JSTypeSystem ts;
 	@Inject
 	private TypeSystemHelper tsh;
+	@Inject
+	private DeclMergingHelper declMergingHelper;
 
 	@Inject
 	private DestructureHelper destructureHelper;
@@ -144,7 +147,7 @@ package class PolyProcessor extends AbstractPolyProcessor {
 	 */
 	def package void inferType(RuleEnvironment G, Expression rootPoly, ASTMetaInfoCache cache) {
 		// create a new constraint system
-		val InferenceContext infCtx = new InferenceContext(ts, tsh, operationCanceledManager, G.cancelIndicator, G);
+		val InferenceContext infCtx = new InferenceContext(ts, tsh, declMergingHelper, operationCanceledManager, G.cancelIndicator, G);
 
 		// in plain JS files, we want to avoid searching for a solution (to avoid performance problems in some JS files
 		// with extremely large array/object literals) but to avoid having to deal with this case with additional code,

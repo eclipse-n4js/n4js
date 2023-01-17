@@ -10,11 +10,13 @@
  */
 package org.eclipse.n4js.scoping.utils
 
+import com.google.common.collect.Iterables
 import com.google.inject.Inject
 import java.util.function.Supplier
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.scoping.imports.ImportedElementsScopingHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
@@ -26,8 +28,6 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.xtext.resource.EObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.impl.SingletonScope
-import org.eclipse.xtext.util.IResourceScopeCache
-import com.google.common.collect.Iterables
 
 /**
  * Helper for {@link N4JSScopeProvider N4JSScopeProvider} using
@@ -37,7 +37,7 @@ import com.google.common.collect.Iterables
 class LocallyKnownTypesScopingHelper {
 
 	@Inject
-	IResourceScopeCache cache
+	N4JSCache cache
 
 	@Inject
 	ImportedElementsScopingHelper importedElementsScopingHelper
@@ -95,7 +95,7 @@ class LocallyKnownTypesScopingHelper {
 
 	/** Returns scope with locally known types and (as parent) import scope; the result is cached. */
 	def IScope scopeWithLocallyDeclaredElems(Script script, Supplier<IScope> parentSupplier, boolean onlyNamespacelikes) {
-		return cache.get(script -> 'locallyKnownTypes_'+String.valueOf(onlyNamespacelikes), script.eResource) [|
+		return cache.get(script.eResource, [|
 			// all types in the index:
 			val parent = parentSupplier.get();
 			// but imported types are preferred (or maybe renamed with aliases):
@@ -104,7 +104,7 @@ class LocallyKnownTypesScopingHelper {
 			val localTypes = scopeWithLocallyDeclaredElems(script, importScope, onlyNamespacelikes);
 			
 			return localTypes;
-		];
+		], script, 'locallyKnownTypes_'+String.valueOf(onlyNamespacelikes));
 	}
 	
 	/** Returns scope with locally declared types (without import scope). */
@@ -114,9 +114,9 @@ class LocallyKnownTypesScopingHelper {
 	
 	/** Returns scope with locally declared types (without import scope). */
 	def IScope scopeWithLocallyDeclaredElems(N4NamespaceDeclaration namespace, IScope parent, boolean onlyNamespacelikes) {
-		return cache.get(namespace -> 'scopeWithLocallyDeclaredElems_'+String.valueOf(onlyNamespacelikes), namespace.eResource) [|
+		return cache.get(namespace.eResource, [|
 			return scopeWithLocallyDeclaredElems(namespace.definedType as AbstractNamespace, namespace, parent, onlyNamespacelikes);
-		];
+		], namespace, 'scopeWithLocallyDeclaredElems_'+String.valueOf(onlyNamespacelikes));
 	}
 	
 	/** Returns scope with locally declared types (without import scope). */

@@ -57,7 +57,9 @@ public enum PackageJsonProperties {
 	/** Key of TypeScript standard, top-level package.json property "types". */
 	TYPES("types",
 			"Type module. (TypesScript) Path is relative to package root. Enabled only when using project import."),
-	/** Key of TypeScript standard, top-level package.json property "types". */
+	/** Synonymous with 'types'. */
+	TYPINGS("typings", "Synonymous with 'types'."),
+	/** Key of TypeScript standard, top-level package.json property "typesVersions". */
 	TYPES_VERSIONS("typesVersions",
 			"Defines source paths that contain type definition modules for specific TypeScript versions.",
 			JSONObject.class),
@@ -231,7 +233,7 @@ public enum PackageJsonProperties {
 			return null; // syntax error in JSON file
 		}
 		List<String> path = JSONModelUtils.getPathToNameValuePairOrNull(nvPair);
-		path = rectifyPathNames(path); // not supported at the moment
+		path = rectifyPathNames(path);
 
 		Map<Class<? extends JSONValue>, PackageJsonProperties> typeMap = pathToEnum.get(path);
 		if (typeMap != null) {
@@ -248,7 +250,6 @@ public enum PackageJsonProperties {
 		return null;
 	}
 
-	@SuppressWarnings("unused")
 	private static List<String> rectifyPathNames(List<String> path) {
 		if (!pathToEnum.containsKey(path)) {
 			// replace placeholders

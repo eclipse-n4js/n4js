@@ -40,7 +40,7 @@ function MyNormalFunction(props: ~React.ComponentProps with {myOtherProp: string
 	return "My Normal Function";
 }
 
-// XPECT errors --> "Expecting a function returning a value of type ReactElement but the return type is string." at "MyNormalFunction"
+// XPECT errors --> "Expecting a function returning a value of type ReactElement<?> but the return type is string." at "MyNormalFunction"
 <MyNormalFunction myOtherProp="Hello"/>
 
 class MyReactClassComponent extends React.Component<~React.ComponentProps with {prop: int}, Object> {

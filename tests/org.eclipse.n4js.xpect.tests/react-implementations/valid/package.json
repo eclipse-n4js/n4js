@@ -1,6 +1,6 @@
 {
 	"name": "react",
-	"version": "17.0.0",
+	"version": "17.0.1",
 	"type": "module",
 	"main": "./index.js",
 	"n4js": {

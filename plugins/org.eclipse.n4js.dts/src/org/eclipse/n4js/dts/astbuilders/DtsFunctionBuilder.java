@@ -50,7 +50,7 @@ public class DtsFunctionBuilder extends AbstractDtsBuilderWithHelpers<FunctionDe
 		result.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
 
 		result.setGenerator(ctx.Multiply() != null);
-		TypeRef typeRef = newTypeRefBuilder().consume(ctx.callSignature().typeRef());
+		TypeRef typeRef = newTypeRefBuilderHandleReturnTypeRef().consume(ctx.callSignature().typeRef());
 		result.setDeclaredReturnTypeRefNode(ParserContextUtils.wrapInTypeRefNode(orAnyPlus(typeRef)));
 		List<N4TypeVariable> typeVars = newN4TypeVariablesBuilder().consume(ctx.callSignature().typeParameters());
 		result.getTypeVars().addAll(typeVars);

@@ -24,6 +24,7 @@ import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.ExportedElementsCollector
 import org.eclipse.n4js.scoping.N4JSScopeProvider
@@ -54,7 +55,6 @@ import org.eclipse.xtext.resource.EObjectDescription
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.impl.AliasedEObjectDescription
 import org.eclipse.xtext.scoping.IScope
-import org.eclipse.xtext.util.IResourceScopeCache
 
 /** internal helper collection type */
 class IEODesc2ISpec extends HashMap<IEObjectDescription, ImportSpecifier> {}
@@ -70,7 +70,7 @@ class ImportedElementsScopingHelper {
 	private final static Logger LOGGER = Logger.getLogger(ImportedElementsScopingHelper);
 
 	@Inject
-	IResourceScopeCache cache
+	N4JSCache cache
 
 	@Inject
 	private TypeVisibilityChecker typeVisibilityChecker
@@ -96,21 +96,21 @@ class ImportedElementsScopingHelper {
 
 
 	def IScope getImportedTypes(IScope parentScope, Script script) {
-		val IScope scriptScope = cache.get(script -> 'importedTypes', script.eResource) [|
+		val IScope scriptScope = cache.get(script.eResource, [|
 			return findImportedElements(script, parentScope, true, false);
-		]
+		], 'importedTypes', script)
 		return scriptScope
 	}
 
 	def IScope getImportedValues(IScope parentScope, Script script) {
-		val IScope scriptScope = cache.get(script -> 'importedValues', script.eResource) [|
+		val IScope scriptScope = cache.get(script.eResource, [|
 			// filter out primitive types in next line (otherwise code like "let x = int;" would be allowed)
 			val noPrimitiveBuiltIns = new NoPrimitiveTypesScope(BuiltInTypeScope.get(script.eResource.resourceSet));
 			val uberParent = new UberParentScope("ImportedElementsScopingHelper-uberParent", noPrimitiveBuiltIns, parentScope);
 			val globalObjectScope = getGlobalObjectProperties(uberParent, script);
 			val result = findImportedElements(script, globalObjectScope, false, true);
 			return result;
-		]
+		], 'importedValues', script);
 		return scriptScope
 	}
 

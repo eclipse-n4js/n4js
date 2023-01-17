@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.typesystem;
 
-import static org.eclipse.n4js.types.utils.TypeExtensions.ref;
+import static org.eclipse.n4js.ts.types.util.TypeExtensions.ref;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__STRUCT;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE__REPLACE_BOOLEAN_BY_UNION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE__REPLACE_ENUM_TYPE_BY_UNION;
@@ -21,6 +21,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getCon
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getReplacement;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.hasReplacements;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.intType;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isAnyDynamic;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isFunction;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isObject;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.n4EnumType;
@@ -74,9 +75,9 @@ import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypingStrategy;
-import org.eclipse.n4js.ts.types.util.AllSuperTypeRefsCollector;
 import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.types.utils.TypeUtils;
+import org.eclipse.n4js.typesystem.utils.AllSuperTypeRefsCollector;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
@@ -407,6 +408,9 @@ import com.google.common.collect.Iterables;
 		if (leftDeclType.eIsProxy() || rightDeclType.eIsProxy()) {
 			return success();
 		}
+		if (isAnyDynamic(G, left) || isAnyDynamic(G, right)) {
+			return success();
+		}
 		if ((leftDeclType == intType(G) && rightDeclType == numberType(G))
 				|| (leftDeclType == numberType(G) && rightDeclType == intType(G))) {
 			return success(); // int <: number AND number <: int (for now, int and number are synonymous)
@@ -526,7 +530,7 @@ import com.google.common.collect.Iterables;
 			return checkSameDeclaredTypes(G, left, right, rightDeclType);
 		} else {
 			final List<ParameterizedTypeRef> allSuperTypeRefs = leftDeclType instanceof ContainerType<?>
-					? AllSuperTypeRefsCollector.collect((ContainerType<?>) leftDeclType)
+					? AllSuperTypeRefsCollector.collect(left, declMergingHelper)
 					: CollectionLiterals.newArrayList();
 			final Iterable<ParameterizedTypeRef> superTypeRefs = IterableExtensions.operator_plus(allSuperTypeRefs,
 					collectAllImplicitSuperTypes(G, left));
@@ -636,7 +640,7 @@ import com.google.common.collect.Iterables;
 			}
 
 			final boolean leftHasCovariantConstructor = left_staticType instanceof TClassifier
-					&& N4JSLanguageUtils.hasCovariantConstructor((TClassifier) left_staticType);
+					&& N4JSLanguageUtils.hasCovariantConstructor((TClassifier) left_staticType, declMergingHelper);
 
 			// left must not contain a wildcard, (open or closed) existential type, this type
 			// (except we have a @CovariantConstructor or we have same capture on both sides)

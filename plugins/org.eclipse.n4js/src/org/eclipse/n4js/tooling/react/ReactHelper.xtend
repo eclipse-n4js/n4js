@@ -11,21 +11,30 @@
 package org.eclipse.n4js.tooling.react
 
 import com.google.inject.Inject
+import java.util.Collections
+import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.JSXElement
+import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
+import org.eclipse.n4js.ts.types.ElementExportDefinition
+import org.eclipse.n4js.ts.types.ExportDefinition
+import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
+import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.TNamespace
+import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
@@ -33,7 +42,6 @@ import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScopeProvider
-import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
@@ -44,7 +52,7 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 class ReactHelper {
 	@Inject private N4JSTypeSystem ts
 	@Inject private TypeSystemHelper tsh
-	@Inject private IResourceScopeCache resourceScopeCacheHelper
+	@Inject private N4JSCache cache
 	@Inject private IScopeProvider scopeProvider;
 
 	public final static String REACT_PROJECT_ID = "react"
@@ -66,7 +74,7 @@ class ReactHelper {
 	 */
 	def public TModule getJsxBackendModule(Resource resource) {
 		val String key = REACT_KEY + "." + "TMODULE";
-		return resourceScopeCacheHelper.get(key, resource, [
+		return cache.get(resource, [
 			val scope = (scopeProvider as N4JSScopeProvider).getScopeForImplicitImports(resource as N4JSResource);
 			val matchingDescriptions = scope.getElements(QualifiedName.create(REACT_PROJECT_ID));
 			// resolve all found 'react.js' files, until a valid react implementation is found
@@ -77,7 +85,7 @@ class ReactHelper {
 			]
 			// filter for valid react modules only
 			.filter[module | module.isValidReactModule].head;
-		]);
+		], key);
 	}
 	
 	/**
@@ -123,7 +131,7 @@ class ReactHelper {
 	 * Returns the fragment factory function for JSX elements which can be extracted
 	 * from the given {@link Resource}.
 	 */
-	def public TClass getJsxBackendFragmentComponent(Resource resource) {
+	def public IdentifiableElement getJsxBackendFragmentComponent(Resource resource) {
 		val module = this.getJsxBackendModule(resource);
 		if (module !== null) {
 			return lookUpReactFragmentComponent(module);
@@ -137,8 +145,11 @@ class ReactHelper {
 	 * @param context the EObject serving the context to look for React.Element.
 	 */
 	def public TClassifier lookUpReactElement(EObject context) {
-		val reactElement = lookUpReactClassifier(context, REACT_ELEMENT)
-		return reactElement;
+//		val reactElement = lookUpReactClassifier(context, REACT_ELEMENT, TInterface)
+//		if (reactElement !== null) {
+//			return reactElement;
+//		}
+		return lookUpReactClassifier_OLD(context, REACT_ELEMENT, TInterface);
 	}
 
 	/**
@@ -146,9 +157,12 @@ class ReactHelper {
 	 * 
 	 * @param context the EObject serving the context to look for React.Component.
 	 */
-	def public TClassifier lookUpReactComponent(EObject context) {
-		val reactComponent = lookUpReactClassifier(context, REACT_COMPONENT)
-		return reactComponent;
+	def public TClass lookUpReactComponent(EObject context) {
+//		val reactComponent = lookUpReactClassifier(context, REACT_COMPONENT, TClass);
+//		if (reactComponent !== null) {
+//			return reactComponent;
+//		}
+		return lookUpReactClassifier_OLD(context, REACT_COMPONENT, TClass);
 	}
 
 	/**
@@ -167,11 +181,11 @@ class ReactHelper {
 		if (exprTypeRef instanceof TypeTypeRef && (exprTypeRef as TypeTypeRef).constructorRef) {
 			// The JSX element refers to a class
 			val tclass = tsh.getStaticType(G, exprTypeRef as TypeTypeRef);
-			val tComponentClassifier = lookUpReactClassifier(jsxElem, ReactHelper.REACT_COMPONENT);
-			if (tComponentClassifier === null || tComponentClassifier.typeVars.isEmpty) {
+			val tComponentClass = lookUpReactComponent(jsxElem);
+			if (tComponentClass === null || tComponentClass.typeVars.isEmpty) {
 				return null;
 			}
-			val reactComponentProps = tComponentClassifier.typeVars.get(0);
+			val reactComponentProps = tComponentClass.typeVars.get(0);
 			// Add type variable -> type argument mappings from the current and all super types
 			tsh.addSubstitutions(G, TypeUtils.createTypeRef(tclass));
 			// Substitute type variables in the 'props' and return the result
@@ -188,6 +202,16 @@ class ReactHelper {
 			}
 		}
 		return null;
+	}
+	
+	def public TypeRef getConstructorFunctionType(JSXElement jsxElem) {
+		val G = newRuleEnvironment(jsxElem);
+		var TypeRef returnTypeRef = getJsxElementBindingType(jsxElem);
+		if (returnTypeRef instanceof TypeTypeRef && (returnTypeRef as TypeTypeRef).typeArg instanceof TypeRef) {
+			returnTypeRef = (returnTypeRef as TypeTypeRef).typeArg as TypeRef;
+		}
+		val List<TypeRef> args = Collections.singletonList(anyTypeRef(G));
+		return TypeUtils.createFunctionTypeExpression(args, returnTypeRef);
 	}
 
 	/**
@@ -208,21 +232,58 @@ class ReactHelper {
 	 * @param context the EObject serving the context to look for React classifiers.
 	 * @param reactClassifierName the name of React classifier.
 	 */
-	def private TClassifier lookUpReactClassifier(EObject context, String reactClassifierName) {
+	def private <T extends TClassifier> T lookUpReactClassifier(EObject context, String reactClassifierName, Class<T> clazz) {
 		val resource = context.eResource;
-		val String key = REACT_KEY + "." + reactClassifierName;
-		return resourceScopeCacheHelper.get(key, resource, [
-			val tModule = getJsxBackendModule(resource);
-			if (tModule === null)
-				return null;
+		val tModule = getJsxBackendModule(resource);
+		if (tModule === null || tModule.eResource === null)
+			return null;
 
-			val tClassifier = tModule.types.filter(TClassifier).findFirst[name == reactClassifierName];
+		val String key = REACT_KEY + "." + reactClassifierName;
+		return cache.get(tModule.eResource, [
+			// used for @types/react
+			for (ExportDefinition expDef : tModule.exportDefinitions) {
+				if (expDef instanceof ElementExportDefinition) {
+					if (expDef.exportedName == "React" && expDef.exportedElement instanceof TNamespace) {
+						for (Type type : (expDef.exportedElement as TNamespace).types) {
+							if (clazz.isAssignableFrom(type.class) && reactClassifierName.equals(type.getName())) {
+								return type as T;
+							}
+						}
+					}
+				}
+			}
+			return null;
+		], key);
+	}
+	def private <T extends TClassifier> T lookUpReactClassifier_OLD(EObject context, String reactClassifierName, Class<T> clazz) {
+		val resource = context.eResource;
+		val tModule = getJsxBackendModule(resource);
+		if (tModule === null || tModule.eResource === null)
+			return null;
+
+		val String key = REACT_KEY + "_OLD." + reactClassifierName;
+		return cache.get(tModule.eResource, [
+			// used for @n4jsd/react
+			val tClassifier = tModule.types.filter(clazz).findFirst[name == reactClassifierName];
 			return tClassifier;
-		]);
+		], key);
 	}
 
-	def private TClass lookUpReactFragmentComponent(TModule module) {
+	def private IdentifiableElement lookUpReactFragmentComponent(TModule module) {
 		if (module !== null) {
+			// used for @types/react
+			for (ExportDefinition expDef : module.exportDefinitions) {
+				if (expDef instanceof ElementExportDefinition) {
+					if (expDef.exportedName == "React" && expDef.exportedElement instanceof TNamespace) {
+						for (TVariable currTopLevelVar : (expDef.exportedElement as TNamespace).exportedVariables) {
+							if (REACT_FRAGMENT_NAME.equals(currTopLevelVar.getName())) {
+								return currTopLevelVar;
+							}
+						}
+					}
+				}
+			}
+			// used for @n4jsd/react
 			for (Type currTopLevelType : module.getTypes()) {
 				if (currTopLevelType instanceof TClass
 						&& REACT_FRAGMENT_NAME.equals(currTopLevelType.getName())) {
@@ -240,6 +301,19 @@ class ReactHelper {
 	 */
 	def private TFunction lookUpReactElementFactoryFunction(TModule module) {
 		if (module !== null) {
+			// used for @types/react
+			for (ExportDefinition expDef : module.exportDefinitions) {
+				if (expDef instanceof ElementExportDefinition) {
+					if (expDef.exportedName == "React" && expDef.exportedElement instanceof TNamespace) {
+						for (TFunction currTopLevelType : (expDef.exportedElement as TNamespace).getFunctions()) {
+							if (REACT_ELEMENT_FACTORY_FUNCTION_NAME.equals(currTopLevelType.getName())) {
+								return currTopLevelType;
+							}
+						}
+					}
+				}
+			}
+			// used for @n4jsd/react
 			for (TFunction currTopLevelType : module.getFunctions()) {
 				if (REACT_ELEMENT_FACTORY_FUNCTION_NAME.equals(currTopLevelType.getName())) {
 					return currTopLevelType;

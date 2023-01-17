@@ -890,8 +890,18 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getIntersectionTypeExpression__GetTypingStrategy() {
+	public EOperation getIntersectionTypeExpression__IsStructuralTyping() {
 		return intersectionTypeExpressionEClass.getEOperations().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getIntersectionTypeExpression__GetTypingStrategy() {
+		return intersectionTypeExpressionEClass.getEOperations().get(4);
 	}
 
 	/**
@@ -2363,6 +2373,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEOperation(intersectionTypeExpressionEClass, INTERSECTION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN);
 		createEOperation(intersectionTypeExpressionEClass, INTERSECTION_TYPE_EXPRESSION___IS_USE_SITE_STRUCTURAL_TYPING);
 		createEOperation(intersectionTypeExpressionEClass, INTERSECTION_TYPE_EXPRESSION___IS_DEF_SITE_STRUCTURAL_TYPING);
+		createEOperation(intersectionTypeExpressionEClass, INTERSECTION_TYPE_EXPRESSION___IS_STRUCTURAL_TYPING);
 		createEOperation(intersectionTypeExpressionEClass, INTERSECTION_TYPE_EXPRESSION___GET_TYPING_STRATEGY);
 
 		thisTypeRefEClass = createEClass(THIS_TYPE_REF);
@@ -2703,6 +2714,8 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEOperation(getIntersectionTypeExpression__IsUseSiteStructuralTyping(), theEcorePackage.getEBoolean(), "isUseSiteStructuralTyping", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getIntersectionTypeExpression__IsDefSiteStructuralTyping(), theEcorePackage.getEBoolean(), "isDefSiteStructuralTyping", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getIntersectionTypeExpression__IsStructuralTyping(), theEcorePackage.getEBoolean(), "isStructuralTyping", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getIntersectionTypeExpression__GetTypingStrategy(), theTypesPackage.getTypingStrategy(), "getTypingStrategy", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

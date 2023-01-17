@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -24,20 +25,19 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
-import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
+import org.eclipse.n4js.resource.N4JSCache;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.utils.MainModuleAwareSelectableBasedScope;
 import org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope;
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.types.AbstractNamespace;
-import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TModule;
@@ -86,6 +86,9 @@ public class DeclMergingHelper {
 
 	@Inject
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
+
+	@Inject
+	private N4JSCache cache;
 
 	/**
 	 * For each set of merged elements in the given list, this method will retain the
@@ -183,13 +186,22 @@ public class DeclMergingHelper {
 	}
 
 	/**
-	 * Returns those elements merged with the given namespace that are also {@link AbstractNamespace}s.
+	 * Returns those elements merged with the given type that are also {@link Type}s.
 	 * <p>
-	 * The given namespace does not have to be the
+	 * The given type does not have to be the
 	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
+	 *
+	 * @implNote Check {@link DeclMergingUtils#mayBeMerged(EObject)} before calling this method
 	 */
-	public List<AbstractNamespace> getMergedElements(N4JSResource context, AbstractNamespace namespace) {
-		return internalGetMergedElements(context, namespace, TypesPackage.Literals.ABSTRACT_NAMESPACE);
+	public List<ParameterizedTypeRef> getMergedTypeRefs(N4JSResource context, ParameterizedTypeRef typeRef) {
+		List<Type> mergedTypes = getMergedElements(context, typeRef.getDeclaredType());
+		List<ParameterizedTypeRef> mergedTypeRefs = new ArrayList<>(mergedTypes.size());
+		for (Type mt : mergedTypes) {
+			TypeArgument[] typeArgs = typeRef.getDeclaredTypeArgs()
+					.toArray(new TypeArgument[typeRef.getDeclaredTypeArgs().size()]);
+			mergedTypeRefs.add(TypeUtils.createTypeRef(mt, typeArgs));
+		}
+		return mergedTypeRefs;
 	}
 
 	/**
@@ -197,9 +209,49 @@ public class DeclMergingHelper {
 	 * <p>
 	 * The given type does not have to be the
 	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
+	 *
+	 * @implNote Check {@link DeclMergingUtils#mayBeMerged(EObject)} before calling this method
 	 */
 	public List<Type> getMergedElements(N4JSResource context, Type type) {
-		return internalGetMergedElements(context, type, TypesPackage.Literals.TYPE);
+		return cachedGetMergedElements(context, type, TypesPackage.Literals.TYPE);
+	}
+
+	/**
+	 * Returns those elements merged with the given namespace that are also {@link AbstractNamespace}s.
+	 * <p>
+	 * The given namespace does not have to be the
+	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
+	 *
+	 * @implNote Check {@link DeclMergingUtils#mayBeMerged(EObject)} before calling this method
+	 */
+	public List<AbstractNamespace> getMergedElements(N4JSResource context, AbstractNamespace namespace) {
+		return cachedGetMergedElements(context, namespace, TypesPackage.Literals.ABSTRACT_NAMESPACE);
+	}
+
+	private <T extends EObject> List<T> cachedGetMergedElements(N4JSResource context, T element, EClass eClass) {
+		String keyName = "getMergedElements" + eClass.getClassifierID();
+		Object key = N4JSCache.makeKey(keyName, element);
+		if (!cache.contains(context, key)) {
+			List<T> mergedElements = internalGetMergedElements(context, element, eClass);
+			cache.get(context, () -> mergedElements, key);
+
+			Set<T> mergedElementsSet = new HashSet<>(mergedElements);
+			mergedElementsSet.add(element);
+
+			for (T mergedElem : mergedElements) {
+				cache.get(context, () -> {
+					ArrayList<Object> otherMergedElems = new ArrayList<>();
+					for (T e : mergedElementsSet) {
+						if (e != mergedElem) {
+							otherMergedElems.add(e);
+						}
+					}
+					return otherMergedElems;
+				},
+						keyName, mergedElem);
+			}
+		}
+		return cache.mustGet(context, key);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -211,14 +263,14 @@ public class DeclMergingHelper {
 		Set<EObject> resultSet = new LinkedHashSet<>();
 
 		ProjectImportEnablingScope ctxPieScope = getProjectImportEnablingScope(context, eClass);
+		if (ctxPieScope == null) {
+			return Collections.emptyList();
+		}
+
 		if (QualifiedNameUtils.isGlobal(elemQN)) {
-			if (ctxPieScope == null) {
-				return Collections.emptyList();
-			}
-
 			resultSet.addAll(resolve(ctxPieScope.getElements(elemQN), context));
-		} else {
 
+		} else {
 			N4JSProjectConfigSnapshot elemPrj = workspaceAccess.findProjectContaining(element);
 			N4JSProjectConfigSnapshot ctxPrj = workspaceAccess.findProjectContaining(context);
 
@@ -246,26 +298,12 @@ public class DeclMergingHelper {
 		return (List<T>) result;
 	}
 
-	/**
-	 * Returns those elements merged with the given element.
-	 * <p>
-	 * The given element does not have to be the
-	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
-	 */
-	public List<EObject> getMergedElements(N4JSResource context, IdentifiableElement elem) {
-		QualifiedName qn = qualifiedNameProvider.getFullyQualifiedName(elem);
-		List<EObject> result = globalScopeAccess.getElementsFromGlobalScope(context, EcorePackage.Literals.EOBJECT, qn);
-		cleanListOfMergedElements(elem, result);
-		return result;
-	}
-
 	private ProjectImportEnablingScope getProjectImportEnablingScope(N4JSResource resource, EClass elementType) {
 		IScope initialScope = globalScopeAccess.getRecordingGlobalScope(resource, elementType);
-		EReference reference = N4JSPackage.eINSTANCE.getModuleRef_Module();
 
 		IResourceDescriptions resourceDescriptions = resourceDescriptionsProvider.getResourceDescriptions(resource);
 		IScope delegateMainModuleAwareScope = MainModuleAwareSelectableBasedScope.createMainModuleAwareScope(
-				initialScope, resourceDescriptions, reference.getEReferenceType());
+				initialScope, resourceDescriptions, elementType);
 
 		N4JSWorkspaceConfigSnapshot ws = workspaceAccess.getWorkspaceConfig(resource);
 		IScope scope = ProjectImportEnablingScope

@@ -59,10 +59,11 @@ public final class EObjectDescriptionHelper {
 			return false;
 		}
 
+		// TODO: Check if can be removed:
 		// if not a main module we assume true
-		if (!isMainModule(eoDescription)) {
-			return true;
-		}
+		// if (!isMainModule(eoDescription)) {
+		// return true;
+		// }
 
 		// for main modules we check containing project
 		Resource eObjectResource = eObject != null ? eObject.eResource() : null;

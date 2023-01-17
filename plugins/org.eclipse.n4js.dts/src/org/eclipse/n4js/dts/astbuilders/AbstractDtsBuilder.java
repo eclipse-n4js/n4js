@@ -43,6 +43,8 @@ public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 	protected final AbstractDtsBuilder<?, ?> parent;
 	/** Token stream for access to other lexer channels */
 	protected final DtsTokenStream tokenStream;
+	/** Package name of the parsed file */
+	protected final String packageName;
 	/** Source folder root of the parsed file */
 	protected final Path srcFolder;
 	/** Current resource */
@@ -57,17 +59,20 @@ public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 
 	/** Creates a new child builder for the given parent. */
 	public AbstractDtsBuilder(AbstractDtsBuilder<?, ?> parent) {
-		this(parent, parent.tokenStream, parent.srcFolder, parent.resource);
+		this(parent, parent.tokenStream, parent.packageName, parent.srcFolder, parent.resource);
 	}
 
 	/** Creates a new root builder without parent. */
-	public AbstractDtsBuilder(DtsTokenStream tokenStream, Path srcFolder, LazyLinkingResource resource) {
-		this(null, tokenStream, srcFolder, resource);
+	public AbstractDtsBuilder(DtsTokenStream tokenStream, String packageName, Path srcFolder,
+			LazyLinkingResource resource) {
+		this(null, tokenStream, packageName, srcFolder, resource);
 	}
 
-	private AbstractDtsBuilder(AbstractDtsBuilder<?, ?> parent, DtsTokenStream tokenStream, Path srcFolder,
-			LazyLinkingResource resource) {
+	private AbstractDtsBuilder(AbstractDtsBuilder<?, ?> parent, DtsTokenStream tokenStream, String packageName,
+			Path srcFolder, LazyLinkingResource resource) {
+
 		this.parent = parent;
+		this.packageName = packageName;
 		this.srcFolder = srcFolder;
 		this.tokenStream = tokenStream;
 		this.resource = resource;
@@ -245,6 +250,16 @@ public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 	/***/
 	protected final DtsTypeRefBuilder newTypeRefBuilder() {
 		return new DtsTypeRefBuilder(this);
+	}
+
+	/***/
+	protected final DtsTypeRefBuilder newTypeRefBuilderHandleReturnTypeRef() {
+		return newTypeRefBuilder(true, false);
+	}
+
+	/***/
+	protected final DtsTypeRefBuilder newTypeRefBuilder(boolean handleReturnTypeRef, boolean handleTypeAwaited) {
+		return new DtsTypeRefBuilder(this, handleReturnTypeRef, handleTypeAwaited);
 	}
 
 	/***/

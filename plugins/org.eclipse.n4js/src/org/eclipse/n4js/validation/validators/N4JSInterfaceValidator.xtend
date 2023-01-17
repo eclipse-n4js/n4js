@@ -20,6 +20,7 @@ import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TypingStrategy
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.xtext.validation.Check
@@ -108,6 +109,9 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator implements
 							val message = getMessageForCLF_EXTENDS_PRIMITIVE_GENERIC_TYPE(extendedType.name);
 							addIssue(message, it, null, CLF_EXTENDS_PRIMITIVE_GENERIC_TYPE)
 						}
+					} else if (RuleEnvironmentExtensions.isAnyDynamic(RuleEnvironmentExtensions.newRuleEnvironment(extendedType), extendedTypeRef)) {
+						// allow any+ as a supertype (motivated from type alias being any+ used in d.ts files
+						
 					} else {
 						val message = IssueCodes.getMessageForCLF_WRONG_META_TYPE(n4Interface.description, "extend",
 							extendedType.description);

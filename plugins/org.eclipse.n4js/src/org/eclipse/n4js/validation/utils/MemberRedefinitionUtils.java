@@ -33,6 +33,7 @@ import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.utils.DeclMergingHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 
 import com.google.common.collect.Iterables;
@@ -173,14 +174,15 @@ public class MemberRedefinitionUtils {
 	 * <code>baseContext</code> and C1's constructor as <code>ctor</code> and it would return C3 as the 'this' context
 	 * to use.
 	 */
-	public static final Type findThisContextForConstructor(Type baseContext, TMethod ctor) {
+	public static final Type findThisContextForConstructor(Type baseContext, TMethod ctor,
+			DeclMergingHelper declMergingHelper) {
 		final Type ctorContainer = ctor.getContainingType();
 		if (!(baseContext instanceof TClass) || !(ctorContainer instanceof TClass)) {
 			return ctorContainer;
 		}
 		final TClass ctorContainerCasted = (TClass) ctorContainer;
 		final TClass baseContextCasted = (TClass) baseContext;
-		if (N4JSLanguageUtils.hasCovariantConstructor(ctorContainerCasted)) {
+		if (N4JSLanguageUtils.hasCovariantConstructor(ctorContainerCasted, declMergingHelper)) {
 			return ctorContainerCasted;
 		}
 		final List<TClass> superClassesUpToCtorContainer = new ArrayList<>();
@@ -193,7 +195,7 @@ public class MemberRedefinitionUtils {
 		}
 		for (int i = superClassesUpToCtorContainer.size() - 1; i >= 0; i--) {
 			final TClass superClass = superClassesUpToCtorContainer.get(i);
-			if (N4JSLanguageUtils.hasCovariantConstructor(superClass)) {
+			if (N4JSLanguageUtils.hasCovariantConstructor(superClass, declMergingHelper)) {
 				return superClass;
 			}
 		}

@@ -8,13 +8,14 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.types.utils;
+package org.eclipse.n4js.ts.types.util;
 
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TypingStrategy;
 
 /**
  * Some static convenience methods intended to be used in Xsemantics as extensions methods. By convention, all methods
@@ -28,6 +29,15 @@ public class TypeExtensions {
 	 */
 	public static final TypeRef ref(Type declaredType, TypeArgument... typeArgs) {
 		return TypeUtils.createTypeRef(declaredType, typeArgs);
+	}
+
+	/**
+	 * Creates a {@link TypeRef} for the given {@link Type}. Simply delegates to
+	 * {@link TypeUtils#createTypeRef(Type, TypingStrategy, boolean, TypeArgument...)}.
+	 */
+	public static final TypeRef ref(Type declaredType, TypingStrategy typingStrategy,
+			boolean autoCreateTypeArgs, TypeArgument... typeArgs) {
+		return TypeUtils.createTypeRef(declaredType, typingStrategy, autoCreateTypeArgs, typeArgs);
 	}
 
 	/**

@@ -73,7 +73,7 @@ public class DtsParsesDefinitelyTypedTest {
 		hardReset("https://github.com/DefinitelyTyped/DefinitelyTyped.git", targetDir,
 				"master", true, true);
 
-		assertParseCounts(targetDir, 19500, 1500, 0);
+		assertParseCounts(targetDir, 30000, 1000, 0);
 	}
 
 	/**
@@ -213,7 +213,7 @@ public class DtsParsesDefinitelyTypedTest {
 			N4JSResource resource = new N4JSResource();
 			URI fileUri = new FileURI(file).toURI();
 			resource.setURI(fileUri);
-			DtsParseResult parseResult = new DtsParser().parse(root, buf, resource);
+			DtsParseResult parseResult = new DtsParser().parse("test", root, buf, resource);
 
 			onResult.accept(parseResult);
 
@@ -225,7 +225,7 @@ public class DtsParsesDefinitelyTypedTest {
 				NestedResourceAdapter nestedResourceAdapter = resultInfoAdapter.getNestedResourceAdapter(uri);
 
 				NestedResourceAdapter.update(newResource, nestedResourceAdapter);
-				DtsParseResult newParseResult = new DtsParser().parse(root, null, newResource);
+				DtsParseResult newParseResult = new DtsParser().parse("test", root, null, newResource);
 
 				onResult.accept(newParseResult);
 			}

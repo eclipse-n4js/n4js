@@ -35,6 +35,7 @@ import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.dts.TypeScriptParser.BlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.DeclarationStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.DeclareStatementContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ExportElementDirectlyContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ExportEqualsContext;
 import org.eclipse.n4js.dts.TypeScriptParser.GlobalScopeAugmentationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
@@ -153,6 +154,16 @@ public class ParserContextUtils {
 		// as it turns out, elements declared in a .d.ts file are always available from the outside, not matter whether
 		// they are preceded by keyword 'declared' or 'export' or none of the two; thus, we always return 'true':
 		return true;
+	}
+
+	/** @return true iff the element represented by the given context is exported as default. */
+	public static boolean isDefaultExport(ParserRuleContext ctx) {
+		ExportElementDirectlyContext eedCtx = getContainerOfType(ctx, ExportElementDirectlyContext.class);
+		if (eedCtx == null) {
+			return false;
+		}
+		boolean hasDefaultKeyword = eedCtx.Default() != null;
+		return hasDefaultKeyword;
 	}
 
 	/** @return the global scope augmentations directly contained in the given module declaration. */
@@ -322,7 +333,8 @@ public class ParserContextUtils {
 		}
 
 		boolean isExported = ParserContextUtils.isExported(ctx);
-		addAndHandleExported(addHere, eRef, elem, makePrivateIfNotExported, isExported, false);
+		boolean isDefault = ParserContextUtils.isDefaultExport(ctx);
+		addAndHandleExported(addHere, eRef, elem, makePrivateIfNotExported, isExported, isDefault);
 	}
 
 	/** Returns true iff the given name refers to a module augmentation declaration */
@@ -658,9 +670,19 @@ public class ParserContextUtils {
 		return createParameterizedTypeRef(resource, "boolean", false);
 	}
 
+	/** @return a new {@code string} type reference. */
+	public static ParameterizedTypeRef createStringTypeRef(LazyLinkingResource resource) {
+		return createParameterizedTypeRef(resource, "string", false);
+	}
+
 	/** @return a new {@code any+} type reference. */
 	public static ParameterizedTypeRef createAnyPlusTypeRef(LazyLinkingResource resource) {
 		return createParameterizedTypeRef(resource, "any", true);
+	}
+
+	/** @return a new {@code ~Object} type reference. */
+	public static ParameterizedTypeRef createStructuralObjectTypeRef(LazyLinkingResource resource) {
+		return createParameterizedTypeRef(resource, "~Object", true);
 	}
 
 	/** @return a new {@code void} type reference. */

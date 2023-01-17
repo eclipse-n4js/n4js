@@ -62,6 +62,7 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 				[Class, Snippet] typesVersions (Defines source paths that contain type definition modules for specific TypeScript versions.) -> "typesVersions": {
 				    $1
 				}$0 [[0, 1] .. [0, 1]]
+				[Property, Snippet] typings (Synonymous with 'types'.) -> "typings": "$1"$0 [[0, 1] .. [0, 1]]
 				[Property, Snippet] version (Npm semver version) -> "version": "$1"$0 [[0, 1] .. [0, 1]]
 				[Value, Snippet] workspaces (Array of projects names or glob that are members of the yarn workspace) -> "workspaces": [
 				    $1
@@ -102,6 +103,7 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 				[Class, Snippet] typesVersions (Defines source paths that contain type definition modules for specific TypeScript versions.) -> "typesVersions": {
 				    $1
 				}$0 [[3, 1] .. [3, 1]]
+				[Property, Snippet] typings (Synonymous with 'types'.) -> "typings": "$1"$0 [[3, 1] .. [3, 1]]
 				[Property, Snippet] version (Npm semver version) -> "version": "$1"$0 [[3, 1] .. [3, 1]]
 				[Value, Snippet] workspaces (Array of projects names or glob that are members of the yarn workspace) -> "workspaces": [
 				    $1

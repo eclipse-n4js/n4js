@@ -27,3 +27,10 @@ let utf9 : string|number = "utf9";
 let y1 : A & B = {sn : utf9};
 // XPECT noerrors -->
 let y2 : A & B = {sn : "utf9"};
+
+// XPECT noerrors -->
+let z1 : A & ~Object with {} = {sn : utf9};
+// XPECT noerrors -->
+let z2 : A & ~Object with {} = {sn : "utf9"};
+// XPECT noerrors -->
+let z3 : A & ~Object with { so?: string } = {sn : "utf8"};

@@ -80,7 +80,19 @@ public abstract class AbstractDtsModuleRefBuilder<T extends ParserRuleContext, R
 				relLocation = Path.of("");
 			}
 			Path msRelLoc = relLocation.resolve(moduleSpecifier.substring(2));
-			moduleSpecifier = msRelLoc.toString();
+			moduleSpecifier = this.packageName + "/" + msRelLoc.toString();
+		}
+
+		if (moduleSpecifier.startsWith("../")) {
+			URI uri = resource.getURI().trimSegments(1); // trim current file
+			while (moduleSpecifier.startsWith("../")) {
+				moduleSpecifier = moduleSpecifier.substring(3);
+				uri = uri.trimSegments(1); // trim one parent folder
+			}
+
+			Path absModuleSpecifierPath = Path.of(uri.toFileString(), moduleSpecifier);
+			Path relModuleSpecifierPath = srcFolder.relativize(absModuleSpecifierPath);
+			moduleSpecifier = this.packageName + "/" + relModuleSpecifierPath.toString();
 		}
 
 		URI moduleSpecifierUri = null;

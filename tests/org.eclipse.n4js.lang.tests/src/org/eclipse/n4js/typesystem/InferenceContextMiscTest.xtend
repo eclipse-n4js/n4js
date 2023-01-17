@@ -18,6 +18,7 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
+import org.eclipse.n4js.utils.DeclMergingHelper
 import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.util.CancelIndicator
 import org.junit.Test
@@ -35,6 +36,9 @@ class InferenceContextMiscTest extends AbstractN4JSTest {
 
 	@Inject
 	private TypeSystemHelper tsh;
+
+	@Inject
+	private DeclMergingHelper declMergingHelper;
 
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
@@ -82,6 +86,6 @@ class InferenceContextMiscTest extends AbstractN4JSTest {
 
 	def private InferenceContext createInferenceContext(EObject context) {
 		val G = context.newRuleEnvironment;
-		return new InferenceContext(ts, tsh, operationCanceledManager, CancelIndicator.NullImpl, G);
+		return new InferenceContext(ts, tsh, declMergingHelper, operationCanceledManager, CancelIndicator.NullImpl, G);
 	}
 }

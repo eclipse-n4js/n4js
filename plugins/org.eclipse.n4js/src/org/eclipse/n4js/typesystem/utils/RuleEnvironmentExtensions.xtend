@@ -551,6 +551,11 @@ class RuleEnvironmentExtensions {
 		G.objectType.createTypeRef
 	}
 
+	/* 	Returns newly created reference to built-in type {@code Object} */
+	public def static structuralObjectTypeRef(RuleEnvironment G) {
+		G.objectType.createTypeRef(TypingStrategy.STRUCTURAL)
+	}
+
 	/* 	Returns newly created reference to built-in global object type */
 	public def static globalObjectType(RuleEnvironment G) {
 		return G.getPredefinedTypes().globalObjectScope.globalObject;

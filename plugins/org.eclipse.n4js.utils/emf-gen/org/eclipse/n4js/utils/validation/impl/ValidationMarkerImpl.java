@@ -20,9 +20,7 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.emf.ecore.resource.Resource;
-
 import org.eclipse.n4js.utils.validation.ValidationMarker;
 import org.eclipse.n4js.utils.validation.ValidationPackage;
 
