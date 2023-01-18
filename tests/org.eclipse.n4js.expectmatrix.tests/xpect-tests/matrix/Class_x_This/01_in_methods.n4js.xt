@@ -24,7 +24,7 @@ class A {
 
 	// cannot use this in static methods X!PECT errors --> "The this type isn't allowed on this place. You can only use it as return type of instance methods or structurally on use site in the constructor." at "this"
 	// this in static methods only for n4jsd-files, this in body not instance-type but class type.
-	// XPECT errors --> "type{this[A]} is not a subtype of this[A]." at "this"
+	// XPECT errors --> "constructor{this[A]} is not a subtype of this[A]." at "this"
 	static fStatic() : this { return this; }
 }
 
