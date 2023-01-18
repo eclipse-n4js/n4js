@@ -125,16 +125,10 @@ public class SourceElementExtensions {
 	private List<IdentifiableElement> doCollectVisibleIdentifiableElements(VariableEnvironmentElement start,
 			EObject element, boolean includeBlockScopedElements) {
 
-		if (includeBlockScopedElements) {
-			return doCollectVisibleIdentifiableElementsUncached(start, element, includeBlockScopedElements);
-
-		} else {
-			return cache.get(
-					element.eResource(), () -> {
-						return doCollectVisibleIdentifiableElementsUncached(start, element, includeBlockScopedElements);
-					},
-					"doCollectVisibleIdentifiableElements?includeBlockScopedElements=false", element);
-		}
+		return cache.get(
+				element.eResource(),
+				() -> doCollectVisibleIdentifiableElementsUncached(start, element, includeBlockScopedElements),
+				"doCollectVisibleIdentifiableElements", element, includeBlockScopedElements);
 	}
 
 	private List<IdentifiableElement> doCollectVisibleIdentifiableElementsUncached(VariableEnvironmentElement start,
