@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ts.types.util;
 
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TFunction;
@@ -27,7 +28,7 @@ public class TypeExtensions {
 	 * Creates a {@link TypeRef} for the given {@link Type}. Simply delegates to
 	 * {@link TypeUtils#createTypeRef(Type, TypeArgument...)}.
 	 */
-	public static final TypeRef ref(Type declaredType, TypeArgument... typeArgs) {
+	public static final ParameterizedTypeRef ref(Type declaredType, TypeArgument... typeArgs) {
 		return TypeUtils.createTypeRef(declaredType, typeArgs);
 	}
 
