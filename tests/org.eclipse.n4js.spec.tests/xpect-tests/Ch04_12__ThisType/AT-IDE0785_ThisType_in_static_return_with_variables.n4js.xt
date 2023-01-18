@@ -17,7 +17,7 @@ class C {
   	// XPECT noerrors -->
 	static staticMethod() : type{this} {
 		var /*type{this}*/ c = this;
-		// XPECT errors --> "constructor{C} is not a subtype of type{this[C]}." at "C"
+		// XPECT errors --> "constructor{C} is not a subtype of constructor{this[C]}." at "C"
 	  	c = C;
 	  	// XPECT noerrors -->
 		return c;

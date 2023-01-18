@@ -15,7 +15,7 @@
 abstract class A {
 
 	static m() {
-		// XPECT type of 'typeThis' --> type{this[A]}
+		// XPECT type of 'typeThis' --> constructor{this[A]}
 		let typeThis = this;
 
 		let typeA: type{A};
@@ -26,7 +26,7 @@ abstract class A {
 		// XPECT noerrors -->
 		typeExtA = typeThis;
 
-		// XPECT errors --> "Cannot instantiate type{this[A]}." at "typeThis"
+		// XPECT errors --> "Cannot instantiate this[A], because A does not have a @CovariantConstructor." at "typeThis"
 		new typeThis();
 	}
 }
@@ -39,10 +39,10 @@ class B {
 	// constructor{this[B]}) even if B isn't abstract, because there might always be abstract subclasses!
 
 	static m() {
-		// XPECT type of 'typeThis' --> type{this[B]}
+		// XPECT type of 'typeThis' --> constructor{this[B]}
 		let typeThis = this;
 
-		// XPECT errors --> "Cannot instantiate type{this[B]}." at "typeThis"
+		// XPECT errors --> "Cannot instantiate this[B], because B does not have a @CovariantConstructor." at "typeThis"
 		new typeThis();
 	}
 }
