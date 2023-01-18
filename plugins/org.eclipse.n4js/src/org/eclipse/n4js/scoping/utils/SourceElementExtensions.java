@@ -11,9 +11,9 @@
 package org.eclipse.n4js.scoping.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
@@ -41,9 +41,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TAbstractVariable;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
-import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 
@@ -73,8 +71,7 @@ public class SourceElementExtensions {
 	 * @return the list of EObjects visible
 	 */
 	public List<IdentifiableElement> collectVisibleIdentifiableElements(VariableEnvironmentElement element) {
-		return cache.get(element.eResource(), () -> doCollectVisibleIdentifiableElements(element),
-				"collectVisibleIdentifiableElements", element);
+		return doCollectVisibleIdentifiableElements(element);
 	}
 
 	/**
@@ -85,7 +82,7 @@ public class SourceElementExtensions {
 	 * @return list with single entry of an arguments variable or empty list.
 	 */
 	public List<IdentifiableElement> collectLocalArguments(VariableEnvironmentElement element) {
-		return cache.get(element.eResource(), () -> doCollectLocalArguments(element), "collectLocalArguments", element);
+		return doCollectLocalArguments(element);
 	}
 
 	private List<IdentifiableElement> doCollectVisibleIdentifiableElements(VariableEnvironmentElement element) {
@@ -143,7 +140,7 @@ public class SourceElementExtensions {
 			veeSwitch.doSwitch(next);
 		}
 		validIEs.addAll(invalidIEs);
-		return validIEs;
+		return Collections.unmodifiableList(validIEs);
 	}
 
 	private class VEESwitch extends N4JSSwitch<Boolean> {
@@ -294,26 +291,16 @@ public class SourceElementExtensions {
 	static private void collectVisibleTypedElement(TypeDefiningElement element,
 			List<? super IdentifiableElement> addHere) {
 
-		collectVisibleIdentifiableElement(element, addHere, e -> e.getDefinedType());
+		IdentifiableElement ie = element.getDefinedType();
+		if (ie != null) {
+			addHere.add(ie);
+		}
 	}
 
 	static private void collectVisibleVariable(AbstractVariable<?> element, List<? super IdentifiableElement> addHere) {
-		collectVisibleIdentifiableElement(element, addHere, e -> e.getDefinedVariable());
-	}
-
-	/**
-	 * Determines the defined for the given element, if there is no one, it is tried to infer it via
-	 * {@link N4JSTypeSystem#tau(TypableElement)}. If a type could be inferred or was already there it will be
-	 * collected.
-	 */
-	static private <T extends TypableElement> void collectVisibleIdentifiableElement(
-			T element, List<? super IdentifiableElement> addHere, Function<T, IdentifiableElement> calculateType) {
-
-		if (calculateType != null) {
-			IdentifiableElement ie = calculateType.apply(element);
-			if (ie != null) {
-				addHere.add(ie);
-			}
+		IdentifiableElement ie = element.getDefinedVariable();
+		if (ie != null) {
+			addHere.add(ie);
 		}
 	}
 
