@@ -69,11 +69,12 @@ public class N4JSCache extends OnChangeEvictingCache {
 		Preconditions.checkNotNull(firstKey);
 
 		try (Measurement M = N4JSDataCollectors.dcCacheMakeKeys.getMeasurementIfInactive()) {
-			int firstHashCode = firstKey.hashCode();
+			long firstHashCode = 31 * firstKey.hashCode();
 			if (moreKeys == null || moreKeys.length == 0) {
-				return firstHashCode;
+				return new Object[] { firstHashCode, firstKey };
 			}
-			return 31 * firstHashCode + Objects.hash(moreKeys);
+			long hashCode = firstHashCode + Objects.hash(moreKeys);
+			return new Object[] { hashCode, firstKey, moreKeys };
 		}
 	}
 
