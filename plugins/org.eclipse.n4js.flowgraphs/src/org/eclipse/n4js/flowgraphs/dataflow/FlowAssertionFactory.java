@@ -10,7 +10,9 @@
  */
 package org.eclipse.n4js.flowgraphs.dataflow;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
@@ -34,7 +36,7 @@ public class FlowAssertionFactory {
 			boolean negateCondition) {
 
 		EObject conditionParent = condition.eContainer();
-		ArrayList<BooleanExpression> beList = getBooleanExpressions(topContainer, conditionParent, negateCondition);
+		LinkedList<BooleanExpression> beList = getBooleanExpressions(topContainer, conditionParent, negateCondition);
 		if (beList.size() == 1) {
 			// early return for performance
 			BooleanExpression bExpr = beList.get(0);
@@ -46,10 +48,10 @@ public class FlowAssertionFactory {
 		return get(beList, negateTree);
 	}
 
-	static private ArrayList<BooleanExpression> getBooleanExpressions(EObject topContainer, EObject condition,
+	static private LinkedList<BooleanExpression> getBooleanExpressions(EObject topContainer, EObject condition,
 			boolean negateCondition) {
 
-		ArrayList<BooleanExpression> bExprs = new ArrayList<>();
+		LinkedList<BooleanExpression> bExprs = new LinkedList<>();
 		if (negateCondition) {
 			bExprs.add(BooleanExpression.not);
 		}
@@ -58,9 +60,7 @@ public class FlowAssertionFactory {
 		return bExprs;
 	}
 
-	static private void addBooleanExpressions(EObject topContainer, ArrayList<BooleanExpression> bExprs,
-			EObject condition) {
-
+	static private void addBooleanExpressions(EObject topContainer, List<BooleanExpression> bExprs, EObject condition) {
 		if (topContainer == condition) {
 			return;
 		}
@@ -109,46 +109,55 @@ public class FlowAssertionFactory {
 		addBooleanExpressions(topContainer, bExprs, parent); // tail recursion
 	}
 
-	static private void simplify(ArrayList<BooleanExpression> bExpressions) {
-		int startIdx = 0;
-		while (startIdx + 1 < bExpressions.size()) {
-			BooleanExpression be0 = (bExpressions.size() > startIdx + 0) ? bExpressions.get(startIdx + 0) : null;
-			BooleanExpression be1 = (bExpressions.size() > startIdx + 1) ? bExpressions.get(startIdx + 1) : null;
+	static private void simplify(LinkedList<BooleanExpression> bExpressions) {
+
+		ListIterator<BooleanExpression> iter = bExpressions.listIterator();
+
+		while (iter.hasNext()) {
+			BooleanExpression be0 = iter.next();
+			if (!iter.hasNext()) {
+				return;
+			}
+			BooleanExpression be1 = iter.next();
 
 			if (be0 == BooleanExpression.and && be1 == BooleanExpression.and) {
-				bExpressions.remove(startIdx);
+				iter.remove();
+				iter.previous();
 				continue;
 			}
 			if (be0 == BooleanExpression.or && be1 == BooleanExpression.or) {
-				bExpressions.remove(startIdx);
+				iter.remove();
+				iter.previous();
 				continue;
 			}
 			if (be0 == BooleanExpression.not && be1 == BooleanExpression.not) {
-				bExpressions.remove(startIdx);
-				bExpressions.remove(startIdx);
-				startIdx = Math.max(0, startIdx - 1);
+				iter.remove();
+				iter.previous();
+				iter.remove();
 				continue;
 			}
 			if (be0 == BooleanExpression.not && be1 == BooleanExpression.or) {
-				bExpressions.remove(startIdx);
-				bExpressions.remove(startIdx);
-				bExpressions.add(startIdx, BooleanExpression.and);
-				startIdx = Math.max(0, startIdx - 1);
+				iter.remove();
+				iter.previous();
+				iter.remove();
+				iter.add(BooleanExpression.and);
+				iter.add(BooleanExpression.not);
+				iter.previous();
 				continue;
 			}
 			if (be0 == BooleanExpression.not && be1 == BooleanExpression.and) {
-				bExpressions.remove(startIdx);
-				bExpressions.remove(startIdx);
-				bExpressions.add(startIdx, BooleanExpression.or);
-				startIdx = Math.max(0, startIdx - 1);
+				iter.remove();
+				iter.previous();
+				iter.remove();
+				iter.add(BooleanExpression.or);
+				iter.add(BooleanExpression.not);
+				iter.previous();
 				continue;
 			}
-
-			startIdx++;
 		}
 	}
 
-	static private GuardAssertion get(ArrayList<BooleanExpression> beList, boolean negateTree) {
+	static private GuardAssertion get(LinkedList<BooleanExpression> beList, boolean negateTree) {
 		if (negateTree) {
 			beList.add(BooleanExpression.not);
 		}
