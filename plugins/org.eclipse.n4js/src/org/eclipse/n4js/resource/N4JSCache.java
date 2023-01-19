@@ -17,6 +17,7 @@ package org.eclipse.n4js.resource;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.common.notify.Notifier;
@@ -70,9 +71,11 @@ public class N4JSCache extends OnChangeEvictingCache {
 
 		try (Measurement M = N4JSDataCollectors.dcCacheMakeKeys.getMeasurementIfInactive()) {
 			if (moreKeys == null || moreKeys.length == 0) {
+				// must directly return first element because this could be already a key
 				return firstKey;
 			}
-			return Arrays.asList(firstKey, Arrays.asList(moreKeys));
+			int hashCode = 31 * firstKey.hashCode() + Objects.hash(moreKeys);
+			return Arrays.asList(hashCode, firstKey, Arrays.asList(moreKeys));
 		}
 	}
 
