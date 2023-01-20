@@ -127,12 +127,7 @@ public class SymbolFactory {
 		if (cfe == null) {
 			return false;
 		}
-		Class<? extends ControlFlowElement> clazz = cfe.getClass();
-		Function<ControlFlowElement, Symbol> creator = symbolCreators.get(clazz);
-		if (creator == null) {
-			return false;
-		}
-		return creator.apply(cfe) != null;
+		return symbolCreators.containsKey(cfe.getClass());
 	}
 
 	/** @return a {@link Symbol} for the given element or null */
