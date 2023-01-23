@@ -15,7 +15,6 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ExpressionStatement;
 import org.eclipse.n4js.n4JS.LabelledStatement;
-import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 
 /**
  * Some {@link ControlFlowElement}s are not represented in the control flow graph but are replaced by another
@@ -25,43 +24,16 @@ import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 public class CFEMapper {
 
 	/**
-	 * Maps the given {@link EObject} to another {@link EObject} which will be used in the control flow graph. This
-	 * method invokes the internal mapping methods repeatedly until a fixpoint is reached.
+	 * Maps the given {@link EObject} to another {@link EObject} which will be used in the control flow graph.
 	 */
-	static public ControlFlowElement map(ControlFlowElement eObj) {
-		ControlFlowElement eObjTmp = eObj;
-		ControlFlowElement lastEObj = null;
-		while (eObjTmp != null) {
-			lastEObj = eObjTmp;
-			eObjTmp = mapInternal(eObjTmp);
+	static public ControlFlowElement map(ControlFlowElement cfe) {
+		while (cfe instanceof LabelledStatement && ((LabelledStatement) cfe).getStatement() != null) {
+			cfe = ((LabelledStatement) cfe).getStatement();
 		}
-		return lastEObj;
-	}
-
-	/**
-	 * Maps the given {@link ControlFlowElement} to another {@link ControlFlowElement} which will be used in the control
-	 * flow graph.
-	 */
-	static private ControlFlowElement mapInternal(EObject eObj) {
-		return new InternalCFEMapper().doSwitch(eObj);
-	}
-
-	static private class InternalCFEMapper extends N4JSSwitch<ControlFlowElement> {
-
-		@Override
-		public ControlFlowElement caseLabelledStatement(LabelledStatement feature) {
-			return feature.getStatement();
+		if (cfe instanceof ExpressionStatement && ((ExpressionStatement) cfe).getExpression() != null) {
+			cfe = ((ExpressionStatement) cfe).getExpression();
 		}
-
-		@Override
-		public ControlFlowElement caseExpressionStatement(ExpressionStatement feature) {
-			return feature.getExpression();
-		}
-
-		@Override
-		public ControlFlowElement defaultCase(EObject feature) {
-			return null;
-		}
+		return cfe;
 	}
 
 }

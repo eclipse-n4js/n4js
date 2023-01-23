@@ -46,8 +46,8 @@ public class ComplexNode implements ControlFlowable {
 
 	/** Constructor */
 	public ComplexNode(ControlFlowElement container, ControlFlowElement astElement) {
-		this.container = container;
-		this.astElement = astElement;
+		this.container = CFEMapper.map(container);
+		this.astElement = CFEMapper.map(astElement);
 	}
 
 	/**
@@ -153,12 +153,12 @@ public class ComplexNode implements ControlFlowable {
 
 	/** @return the control flow container. See {@link FGUtils#isCFContainer(EObject)}. */
 	public ControlFlowElement getControlFlowContainer() {
-		return CFEMapper.map(container);
+		return container;
 	}
 
 	@Override
 	public ControlFlowElement getControlFlowElement() {
-		return CFEMapper.map(astElement);
+		return astElement;
 	}
 
 	/** @return all nodes */
