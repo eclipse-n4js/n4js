@@ -13,7 +13,6 @@ package org.eclipse.n4js.typesystem.utils;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.n4js.resource.N4JSCache;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -50,10 +49,11 @@ public class AllSuperTypeRefsCollector extends AbstractCompleteHierarchyTraverse
 		return N4JSDataCollectors.dcTHT_AllSuperTypeRefsCollector.getMeasurementIfInactive("HierarchyTraverser");
 	}
 
-	@Override
-	protected Object getCacheKey() {
-		return N4JSCache.makeKey("AllSuperTypeRefsCollector", typeRef);
-	}
+	// FIXME : undo
+	// @Override
+	// protected Object getCacheKey() {
+	// return N4JSCache.makeKey("AllSuperTypeRefsCollector", typeRef);
+	// }
 
 	@Override
 	protected List<ParameterizedTypeRef> doGetResult() {

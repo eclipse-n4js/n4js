@@ -262,11 +262,15 @@ public class ContainerTypesHelper {
 		/**
 		 * Similar to {@link #members(ContainerType)} but with a filter to only accept certain elements.
 		 */
+		// private MemberList<TMember> members(ContainerType<?> type, TClass ignoreParent) {
+		// return cache.get(
+		// contextResource,
+		// () -> new CollectMembersHelper(type, true, true, false, ignoreParent).getResult(),
+		// "members", true, true, false, ignoreParent);
+		// }
+		// FIXME : undo
 		private MemberList<TMember> members(ContainerType<?> type, TClass ignoreParent) {
-			return cache.get(
-					contextResource,
-					() -> new CollectMembersHelper(type, true, true, false, ignoreParent).getResult(),
-					"members", true, true, false, ignoreParent);
+			return new CollectMembersHelper(type, true, true, false, ignoreParent).getResult();
 		}
 
 		/**
