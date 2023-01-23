@@ -168,6 +168,8 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 						JSX_TAG_UNKNOWN
 					);
 				}
+			} else if (G.isAnyDynamic(exprTypeRef)) {
+				return;
 			} else if (exprTypeRef instanceof TypeTypeRef
 				&& (exprTypeRef as TypeTypeRef).typeArg?.declaredType instanceof TClass
 				&& ((exprTypeRef as TypeTypeRef).typeArg.declaredType as TClass).abstract

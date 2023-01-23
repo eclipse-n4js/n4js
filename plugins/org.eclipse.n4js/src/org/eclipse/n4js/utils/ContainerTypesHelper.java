@@ -263,10 +263,7 @@ public class ContainerTypesHelper {
 		 * Similar to {@link #members(ContainerType)} but with a filter to only accept certain elements.
 		 */
 		private MemberList<TMember> members(ContainerType<?> type, TClass ignoreParent) {
-			return cache.get(
-					contextResource,
-					() -> new CollectMembersHelper(type, true, true, false, ignoreParent).getResult(),
-					"members", true, true, false, ignoreParent);
+			return members(type, true, true, false, ignoreParent);
 		}
 
 		/**
@@ -290,10 +287,15 @@ public class ContainerTypesHelper {
 		 */
 		public MemberList<TMember> members(ContainerType<?> type, boolean includeImplicitSuperTypes,
 				boolean includePolyfills, boolean includeCallConstructSignatures) {
+			return members(type, includeImplicitSuperTypes, includePolyfills, includeCallConstructSignatures, null);
+		}
+
+		private MemberList<TMember> members(ContainerType<?> type, boolean includeImplicitSuperTypes,
+				boolean includePolyfills, boolean includeCallConstructSignatures, TClass ignoreParent) {
 			return cache.get(
 					contextResource,
 					() -> new CollectMembersHelper(type, includeImplicitSuperTypes, includePolyfills,
-							includeCallConstructSignatures, null).getResult(),
+							includeCallConstructSignatures, ignoreParent).getResult(),
 					"members", type, includeImplicitSuperTypes, includePolyfills, includeCallConstructSignatures);
 		}
 

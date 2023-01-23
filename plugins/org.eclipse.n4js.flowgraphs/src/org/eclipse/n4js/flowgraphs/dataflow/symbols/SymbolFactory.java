@@ -127,7 +127,18 @@ public class SymbolFactory {
 		if (cfe == null) {
 			return false;
 		}
-		return symbolCreators.containsKey(cfe.getClass());
+		Function<ControlFlowElement, Symbol> creator = symbolCreators.get(cfe.getClass());
+		if (creator == null) {
+			return false;
+		}
+		if (cfe instanceof UnaryExpression) {
+			return ((UnaryExpression) cfe).getOp() == UnaryOperator.VOID;
+		}
+		if (cfe instanceof NumericLiteral) {
+			return new BigDecimal(0).equals(((NumericLiteral) cfe).getValue());
+		}
+
+		return true;
 	}
 
 	/** @return a {@link Symbol} for the given element or null */

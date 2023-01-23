@@ -1137,7 +1137,7 @@ public class N4JSLanguageUtils {
 	 * @return the optional field strategy of the expression.
 	 */
 	def public static OptionalFieldStrategy calculateOptionalFieldStrategy(N4JSTypeSystem ts, RuleEnvironment G, TypableElement expr, TypeRef typeRef) {
-		if (isConstTransitiveObjectLiteral(expr)) {
+		if (isConstTransitiveObjectLiteral(G, expr)) {
 			// Req. IDE-240500, case 1, 2, 5a, 5b
 			return OptionalFieldStrategy.FIELDS_AND_ACCESSORS_OPTIONAL;
 		}
@@ -1168,7 +1168,7 @@ public class N4JSLanguageUtils {
 	 * @return true if the expression is an object literal or references an object literal
 	 * 			transitively through a const variable.
 	 */
-	def private static boolean isConstTransitiveObjectLiteral(TypableElement expr) {
+	def private static boolean isConstTransitiveObjectLiteral(RuleEnvironment G, TypableElement expr) {
 		if (expr instanceof NullLiteral) {
 			return true;
 		}
@@ -1187,6 +1187,9 @@ public class N4JSLanguageUtils {
 
 		if (expr instanceof IdentifierRef) {
 			val idElem = expr.getId();
+			if (isUndefinedLiteral(G, expr)) {
+				return true;
+			}
 			if (idElem instanceof TVariable) {
 				if (idElem.isConst()) {
 					if (idElem.objectLiteral) {
@@ -1201,12 +1204,12 @@ public class N4JSLanguageUtils {
 		}
 		
 		if (expr instanceof ConditionalExpression) {
-			return isConstTransitiveObjectLiteral(expr.trueExpression) && isConstTransitiveObjectLiteral(expr.falseExpression);
+			return isConstTransitiveObjectLiteral(G, expr.trueExpression) && isConstTransitiveObjectLiteral(G, expr.falseExpression);
 		}
 		
 		if (expr instanceof BinaryLogicalExpression) {
 			return expr.op === BinaryLogicalOperator.OR
-				&& isConstTransitiveObjectLiteral(expr.lhs) && isConstTransitiveObjectLiteral(expr.rhs);
+				&& isConstTransitiveObjectLiteral(G, expr.lhs) && isConstTransitiveObjectLiteral(G, expr.rhs);
 		}
 
 		return false;

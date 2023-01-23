@@ -282,6 +282,9 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 
 	/** Finds quick-fixes for the given issue code and adds these quick-fixes to the acceptor iff available. */
 	public void findQuickfixes(Either<String, Integer> code, Options options, CodeActionAcceptor acceptor) {
+		if (code == null) {
+			return;
+		}
 		String diagCode = code.getLeft();
 		for (QuickFixImplementation qfix : quickfixMap.get(diagCode)) {
 			ICodeActionAcceptor accTmp = qfix.multiFix ? new MultiQuickfixAcceptor(qfix.id, acceptor) : acceptor;
