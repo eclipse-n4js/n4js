@@ -26,7 +26,7 @@ import org.eclipse.n4js.n4JS.Script;
  */
 public class FlowGraph {
 	final private Script script;
-	final private Set<ControlFlowElement> cfContainers;
+	final private Collection<ControlFlowElement> cfContainers;
 	final private Map<ControlFlowElement, ComplexNode> cnMap; // this map can grow very large
 
 	/** Constructor. */
@@ -34,8 +34,16 @@ public class FlowGraph {
 			Map<ControlFlowElement, ComplexNode> cnMap) {
 
 		this.script = script;
-		this.cfContainers = cfContainers;
 		this.cnMap = cnMap;
+
+		// The order of containers is reversed.
+		// This provokes fail-fast behavior regarding the assertion 'isVisited()'
+		// in {@link DeadFlowContext.Backward#setDeadCode(Node)}
+		List<ControlFlowElement> containerList = new LinkedList<>();
+		for (ControlFlowElement cfe : cfContainers) {
+			containerList.add(0, cfe);
+		}
+		this.cfContainers = containerList;
 	}
 
 	/** @return the script of this {@link FlowGraph} */
@@ -64,14 +72,7 @@ public class FlowGraph {
 
 	/** see {@link N4JSFlowAnalyser#getAllContainers()}. */
 	public Collection<ControlFlowElement> getAllContainers() {
-		// The order of containers is reversed.
-		// This provokes fail-fast behavior regarding the assertion 'isVisited()'
-		// in {@link DeadFlowContext.Backward#setDeadCode(Node)}
-		List<ControlFlowElement> containerList = new LinkedList<>();
-		for (ControlFlowElement cfe : cfContainers) {
-			containerList.add(0, cfe);
-		}
-		return containerList;
+		return cfContainers;
 	}
 
 	/** Call to free memory */

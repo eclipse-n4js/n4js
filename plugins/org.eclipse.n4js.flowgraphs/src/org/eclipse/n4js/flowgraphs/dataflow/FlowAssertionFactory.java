@@ -10,8 +10,9 @@
  */
 package org.eclipse.n4js.flowgraphs.dataflow;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
@@ -35,22 +36,22 @@ public class FlowAssertionFactory {
 			boolean negateCondition) {
 
 		EObject conditionParent = condition.eContainer();
-		ArrayList<BooleanExpression> beList = getBooleanExpressions(topContainer, conditionParent, negateCondition);
-		HashSet<BooleanExpression> beSet = new HashSet<>(beList);
-		boolean mayHolds = false;
-		mayHolds |= beSet.contains(BooleanExpression.eq);
-		mayHolds |= beSet.contains(BooleanExpression.neq);
-		if (mayHolds) {
-			return GuardAssertion.MayHolds;
+		LinkedList<BooleanExpression> beList = getBooleanExpressions(topContainer, conditionParent, negateCondition);
+		if (beList.size() == 1) {
+			// early return for performance
+			BooleanExpression bExpr = beList.get(0);
+			if (bExpr == BooleanExpression.eq || bExpr == BooleanExpression.neq) {
+				return GuardAssertion.MayHolds;
+			}
 		}
 
 		return get(beList, negateTree);
 	}
 
-	static private ArrayList<BooleanExpression> getBooleanExpressions(EObject topContainer, EObject condition,
+	static private LinkedList<BooleanExpression> getBooleanExpressions(EObject topContainer, EObject condition,
 			boolean negateCondition) {
 
-		ArrayList<BooleanExpression> bExprs = new ArrayList<>();
+		LinkedList<BooleanExpression> bExprs = new LinkedList<>();
 		if (negateCondition) {
 			bExprs.add(BooleanExpression.not);
 		}
@@ -59,9 +60,7 @@ public class FlowAssertionFactory {
 		return bExprs;
 	}
 
-	static private void addBooleanExpressions(EObject topContainer, ArrayList<BooleanExpression> bExprs,
-			EObject condition) {
-
+	static private void addBooleanExpressions(EObject topContainer, List<BooleanExpression> bExprs, EObject condition) {
 		if (topContainer == condition) {
 			return;
 		}
@@ -97,56 +96,72 @@ public class FlowAssertionFactory {
 		}
 		if (nextValue != null) {
 			bExprs.add(nextValue);
+
+			if (nextValue == BooleanExpression.eq || nextValue == BooleanExpression.neq) {
+				// early return for performance
+				bExprs.clear();
+				bExprs.add(nextValue);
+				return;
+			}
 		}
 
 		EObject parent = condition.eContainer();
 		addBooleanExpressions(topContainer, bExprs, parent); // tail recursion
 	}
 
-	static private void simplify(ArrayList<BooleanExpression> bExpressions, int startIdx) {
-		BooleanExpression be0 = (bExpressions.size() > startIdx + 0) ? bExpressions.get(startIdx + 0) : null;
-		BooleanExpression be1 = (bExpressions.size() > startIdx + 1) ? bExpressions.get(startIdx + 1) : null;
+	static private void simplify(LinkedList<BooleanExpression> bExpressions) {
 
-		int reverseStartIdx = Math.max(0, startIdx - 2);
-		if (be0 == BooleanExpression.and && be1 == BooleanExpression.and) {
-			bExpressions.remove(startIdx);
-			simplify(bExpressions, reverseStartIdx); // tail recursion
-			return;
-		}
-		if (be0 == BooleanExpression.not && be1 == BooleanExpression.not) {
-			bExpressions.remove(startIdx);
-			bExpressions.remove(startIdx);
-			simplify(bExpressions, reverseStartIdx); // tail recursion
-			return;
-		}
-		if (be0 == BooleanExpression.or && be1 == BooleanExpression.or) {
-			bExpressions.remove(startIdx);
-			simplify(bExpressions, reverseStartIdx); // tail recursion
-			return;
-		}
-		if (be0 == BooleanExpression.not && be1 == BooleanExpression.or) {
-			bExpressions.remove(startIdx + 1);
-			bExpressions.add(startIdx, BooleanExpression.and);
-			simplify(bExpressions, reverseStartIdx); // tail recursion
-			return;
-		}
-		if (be0 == BooleanExpression.not && be1 == BooleanExpression.and) {
-			bExpressions.remove(startIdx + 1);
-			bExpressions.add(startIdx, BooleanExpression.or);
-			simplify(bExpressions, reverseStartIdx); // tail recursion
-			return;
-		}
+		ListIterator<BooleanExpression> iter = bExpressions.listIterator();
 
-		if (startIdx + 1 < bExpressions.size()) {
-			simplify(bExpressions, startIdx + 1); // tail recursion
+		while (iter.hasNext()) {
+			BooleanExpression be0 = iter.next();
+			if (!iter.hasNext()) {
+				return;
+			}
+			BooleanExpression be1 = iter.next();
+
+			if (be0 == BooleanExpression.and && be1 == BooleanExpression.and) {
+				iter.remove();
+				iter.previous();
+				continue;
+			}
+			if (be0 == BooleanExpression.or && be1 == BooleanExpression.or) {
+				iter.remove();
+				iter.previous();
+				continue;
+			}
+			if (be0 == BooleanExpression.not && be1 == BooleanExpression.not) {
+				iter.remove();
+				iter.previous();
+				iter.remove();
+				continue;
+			}
+			if (be0 == BooleanExpression.not && be1 == BooleanExpression.or) {
+				iter.remove();
+				iter.previous();
+				iter.remove();
+				iter.add(BooleanExpression.and);
+				iter.add(BooleanExpression.not);
+				iter.previous();
+				continue;
+			}
+			if (be0 == BooleanExpression.not && be1 == BooleanExpression.and) {
+				iter.remove();
+				iter.previous();
+				iter.remove();
+				iter.add(BooleanExpression.or);
+				iter.add(BooleanExpression.not);
+				iter.previous();
+				continue;
+			}
 		}
 	}
 
-	static private GuardAssertion get(ArrayList<BooleanExpression> beList, boolean negateTree) {
+	static private GuardAssertion get(LinkedList<BooleanExpression> beList, boolean negateTree) {
 		if (negateTree) {
 			beList.add(BooleanExpression.not);
 		}
-		simplify(beList, 0);
+		simplify(beList);
 
 		if (beList.size() == 0) {
 			return GuardAssertion.AlwaysHolds;

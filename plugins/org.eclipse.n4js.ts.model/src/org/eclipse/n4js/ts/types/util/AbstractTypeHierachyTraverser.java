@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
@@ -26,8 +25,6 @@ import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.RecursionGuard;
-import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.util.IResourceScopeCache;
 
 import com.google.common.collect.Iterables;
 
@@ -98,33 +95,19 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 	/** Return the computed result. */
 	final public Result getResult() {
 		try (Measurement m = getMeasurement()) {
-			Result result = null;
-			Resource resource = bottomType.eResource();
-			Object key = getCacheKey();
-
-			if (key != null && resource instanceof XtextResource) {
-				IResourceScopeCache cache = ((XtextResource) resource).getCache();
-				if (cache != null) {
-					result = cache.get(key, resource, this::internalGetResult);
-				}
-			}
-			if (result == null) {
-				result = internalGetResult();
-			}
-
-			return result;
+			return internalGetResult();
 		}
 	}
 
 	/** Implement to enable performance measurements. */
 	abstract protected Measurement getMeasurement();
 
-	/** Override to enable caching. */
-	protected Object getCacheKey() {
-		return null;
-	}
-
-	/** Computes the result. */
+	/**
+	 * Computes the result.
+	 *
+	 * @implNote Caching is not feasible since it causes {@link OutOfMemoryError}s and has little gains only. Also, when
+	 *           properly done it would need to respect merged types.
+	 */
 	protected Result internalGetResult() {
 		doSwitchTypeRef(getCurrentTypeRef());
 		return doGetResult();
