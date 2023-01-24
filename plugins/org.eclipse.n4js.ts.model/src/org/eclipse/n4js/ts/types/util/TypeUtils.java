@@ -231,7 +231,7 @@ public class TypeUtils {
 	 * [1] {@link TypeExtensions#ref(Type, TypeArgument...)}<br>
 	 * [2] {@link TypeUtils#createTypeRef(Type, TypingStrategy, boolean, TypeArgument...)}
 	 */
-	public static TypeRef createTypeRefWithParamsAsArgs(Type type) {
+	public static ParameterizedTypeRef createTypeRefWithParamsAsArgs(Type type) {
 		if (type.isGeneric()) {
 			TypeRef[] typeArgs = type.getTypeVars().stream().map(tv -> TypeExtensions.ref(tv)).toArray(TypeRef[]::new);
 			return TypeExtensions.ref(type, typeArgs);

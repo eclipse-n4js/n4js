@@ -12,14 +12,28 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 
-class C {
 
-  	// XPECT noerrors -->
-	static staticMethod() : type{this} {
-		var /*type{this}*/ c = this;
-		// XPECT errors --> "constructor{C} is not a subtype of constructor{this[C]}." at "C"
-	  	c = C;
-	  	// XPECT noerrors -->
-		return c;
-	}
+class C1 {
+    public static fooC1() {
+        let c = this;
+        // XPECT type of 'c' --> constructor{this[C1]}
+        c;
+    }
+}
+
+abstract class C2 {
+    public static fooC2() {
+        let c = this;
+        // XPECT type of 'c' --> constructor{this[C2]}
+        c;
+    }
+}
+
+@Final
+class C3 {
+    public static fooC3() {
+        let c = this;
+        // XPECT type of 'c' --> constructor{this[C3]}
+        c;
+    }
 }

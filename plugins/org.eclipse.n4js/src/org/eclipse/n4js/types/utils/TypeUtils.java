@@ -89,7 +89,7 @@ public class TypeUtils {
 	}
 
 	/** @see org.eclipse.n4js.ts.types.util.TypeUtils#createTypeRefWithParamsAsArgs(Type) */
-	public static TypeRef createTypeRefWithParamsAsArgs(Type type) {
+	public static ParameterizedTypeRef createTypeRefWithParamsAsArgs(Type type) {
 		return org.eclipse.n4js.ts.types.util.TypeUtils.createTypeRefWithParamsAsArgs(type);
 	}
 

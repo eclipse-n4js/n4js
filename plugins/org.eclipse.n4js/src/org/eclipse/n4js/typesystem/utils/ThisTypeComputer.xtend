@@ -25,6 +25,7 @@ import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
+import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
@@ -97,8 +98,13 @@ class ThisTypeComputer extends TypeSystemHelperStrategy {
 					if (isInReturnDeclaration_Of_StaticMethod(location, containingFunction as N4MethodDeclaration)) {
 						return getThisTypeAtLocation(G, thisTargetDefType.createTypeRef(TypingStrategy.DEFAULT, true));
 					} else if (isInBody_Of_StaticMethod(location, containingFunction as N4MethodDeclaration)) {
-						return TypeUtils.createClassifierBoundThisTypeRef(
-								TypeUtils.createTypeTypeRef(thisTargetDefType.createTypeRefWithParamsAsArgs, false));
+						val ttRef = createTypeRefWithParamsAsArgs(thisTargetDefType);
+						if (thisTargetDefType instanceof TClass) {
+							val classTypeRef = ttRef//if (thisTargetDefType.final) ttRef else createWildcardExtends(ttRef);
+							return TypeUtils.createTypeTypeRef(TypeUtils.createBoundThisTypeRef(classTypeRef), true);
+						} else {
+							return TypeUtils.createClassifierBoundThisTypeRef(TypeUtils.createTypeTypeRef(ttRef, false));
+						}
 					} else {
 						return TypeUtils.createConstructorTypeRef(thisTargetDefType);
 					}
