@@ -170,11 +170,11 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="n4js.target.platform"
-      defaultValue="N4JS_2021_06"
+      defaultValue="N4JS_2023_03"
       storageURI="scope://Workspace">    <!-- label! -->
     <choice
-        value="N4JS_2021_06"
-        label="N4JS_2021_06"/>    <!-- label! -->
+        value="N4JS_2023_03"
+        label="N4JS_2023_03"/>    <!-- label! -->
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -193,23 +193,23 @@
       label="Xcore">
     <requirement
         name="org.eclipse.emf.ecore.xcore.sdk.feature.group"
-        versionRange="[1.18.0,1.18.1)"/>
+        versionRange="[1.23.0,1.23.1)"/>
     <repository
-        url="http://download.eclipse.org/modeling/emf/emf/builds/release/2.26"/>
-    <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
+        url="http://download.eclipse.org/modeling/emf/emf/builds/release/2.32"/>
+    <description>Install EMF for ${scope.project.label}</description>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
       label="Xtext/Xtend">
     <requirement
         name="org.eclipse.xtend.sdk.feature.group"
-        versionRange="[2.26.0,2.26.1)"/>
+        versionRange="[2.29.0,2.29.1)"/>
     <requirement
         name="org.eclipse.xtext.sdk.feature.group"
-        versionRange="[2.26.0,2.26.1)"/>
+        versionRange="[2.29.0,2.29.1)"/>
     <repository
-        url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.26.0"/>
-    <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
+        url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.29.0"/>
+    <description>Install Xtext and Xtend for ${scope.project.label}</description>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -219,15 +219,17 @@
         versionRange="[2.1.1,2.1.2)"/>
     <repository
         url="http://download.itemis.com/updates/releases/2.1.1"/>
+    <description>Install ANTLR3 for Xtext</description>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
       label="MWE">
     <requirement
         name="org.eclipse.emf.mwe2.language.sdk.feature.group"
-        versionRange="[2.12.2,2.12.3)"/>
+        versionRange="[2.14.0,2.14.1)"/>
     <repository
-        url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.12.2"/>
+        url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.14.0"/>
+    <description>Install MWE2 for ${scope.project.label}</description>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -249,27 +251,11 @@
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
-      label="Jenkins Editor">
-    <requirement
-        name="de.jcup.jenkinseditor.feature.feature.group"/>
-    <repository
-        url="https://de-jcup.github.io/update-site-eclipse-jenkins-editor/update-site/"/>
-  </setupTask>
-  <setupTask
-      xsi:type="setup.p2:P2Task"
-      label="Docker Tooling">
-    <requirement
-        name="org.eclipse.linuxtools.docker.feature.feature.group"/>
-    <repository
-        url="http://download.eclipse.org/releases/2021-06"/>
-  </setupTask>
-  <setupTask
-      xsi:type="setup.p2:P2Task"
       label="M2E">
     <requirement
         name="org.eclipse.m2e.feature.feature.group"/>
     <repository
-        url="https://download.eclipse.org/technology/m2e/releases/1.19.0"/>
+        url="https://download.eclipse.org/technology/m2e/releases/2.1.2"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -277,7 +263,7 @@
     <requirement
         name="org.eclipse.epp.mpc.feature.group"/>
     <repository
-        url="http://download.eclipse.org/mpc/releases/1.8.0"/>
+        url="http://download.eclipse.org/mpc/releases/1.9.3"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -293,7 +279,7 @@
     <requirement
         name="org.eclipse.lsp4j.sdk.feature.group"/>
     <repository
-        url="http://download.eclipse.org/lsp4j/updates/releases/0.12.0"/>
+        url="http://download.eclipse.org/lsp4j/updates/releases/0.19.0"/>
   </setupTask>
   <setupTask
       xsi:type="git:GitCloneTask"
@@ -376,24 +362,24 @@
         </predicate>
       </sourceLocator>
       <repositoryList
-          name="N4JS_2021_06">    <!-- label! -->
+          name="N4JS_2023_03">    <!-- label! -->
         <repository
-            url="http://download.eclipse.org/eclipse/updates/4.20"/>
+            url="http://download.eclipse.org/releases/2023-03"/>
         <repository
-            url="http://download.eclipse.org/egit/updates-5.7"/>
+            url="http://download.eclipse.org/egit/updates-6.4"/>
         <repository
-            url="https://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.44.v20210927"/>
+            url="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.48.v20220622"/>
         <repository
-            url="http://download.eclipse.org/modeling/emf/emf/builds/release/2.26"/>
+            url="http://download.eclipse.org/modeling/emf/emf/builds/release/2.32"/>
         <repository
-            url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.12.2"/>
+            url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.14.0"/>
         <repository
             url="http://download.eclipse.org/modeling/m2t/xpand/updates/releases/R201605260315"/>
 <!-- TODO: Switch back again to a release version of Xtext
         <repository
             url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.25.0"/> -->
         <repository
-            url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.26.0"/>
+            url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.29.0"/>
         <repository
             url="https://download.eclipse.org/tools/orbit/downloads/drops/R20210223232630/repository"/>
         <repository
@@ -407,11 +393,11 @@
         <repository
             url="http://download.eclipse.org/tools/gef/updates/legacy/releases/4.0.0_gef-master_1952"/>
         <repository
-            url="http://download.eclipse.org/mpc/releases/1.8.0"/>
+            url="http://download.eclipse.org/mpc/releases/1.9.3"/>
         <repository
             url="http://download.eclipse.org/usssdk/drops/release/1.2.2"/>
         <repository
-            url="http://download.eclipse.org/lsp4j/updates/releases/0.12.0"/>
+            url="http://download.eclipse.org/lsp4j/updates/releases/0.19.0"/>
       </repositoryList>
     </targlet>
   </setupTask>
@@ -492,7 +478,7 @@
     <description>The dynamic working sets for ${scope.project.label}</description>
   </setupTask>
   <stream name="master"
-      label="master (2021_06)"/>    <!-- label! -->
+      label="GH-2480 (2023_03)"/>    <!-- label! -->
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
