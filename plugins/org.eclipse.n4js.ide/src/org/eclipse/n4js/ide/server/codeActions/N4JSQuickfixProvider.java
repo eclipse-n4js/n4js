@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.Position;
@@ -147,14 +148,14 @@ public class N4JSQuickfixProvider {
 
 	private EObject getEObject(QuickfixContext context) {
 		Document doc = context.options.getDocument();
-		XtextResource resource = context.options.getResource();
+		Resource resource = context.options.getResource();
 		return getEObject(doc, resource, context.getDiagnostic().getRange());
 	}
 
-	private EObject getEObject(Document doc, XtextResource resource, Range range) {
+	private EObject getEObject(Document doc, Resource resource, Range range) {
 		Position start = range.getStart();
 		int startOffset = doc.getOffSet(start);
-		return eObjectAtOffsetHelper.resolveContainedElementAt(resource, startOffset);
+		return eObjectAtOffsetHelper.resolveContainedElementAt((XtextResource) resource, startOffset);
 	}
 
 }

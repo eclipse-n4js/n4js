@@ -15,6 +15,8 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.lsp4j.WorkspaceSymbol;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolService;
@@ -33,7 +35,7 @@ import com.google.inject.Singleton;
  * language-specific {@link DocumentSymbolService} returned by the {@link IResourceServiceProvider}.
  */
 @Singleton
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 public class N4JSWorkspaceSymbolService extends WorkspaceSymbolService {
 
 	@Inject // note: we deliberately inject >>N4JS<<DocumentSymbolService, not DocumentSymbolService!
@@ -43,8 +45,9 @@ public class N4JSWorkspaceSymbolService extends WorkspaceSymbolService {
 	private OperationCanceledManager operationCanceledManager;
 
 	@Override
-	public List<? extends SymbolInformation> getSymbols(String query, IResourceAccess resourceAccess,
-			IResourceDescriptions indexData, CancelIndicator cancelIndicator) {
+	public Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>> getSymbols(String query,
+			IResourceAccess resourceAccess, IResourceDescriptions indexData, CancelIndicator cancelIndicator) {
+
 		List<SymbolInformation> result = new LinkedList<>();
 		for (IResourceDescription resourceDescription : indexData.getAllResourceDescriptions()) {
 			operationCanceledManager.checkCanceled(cancelIndicator);
@@ -60,6 +63,6 @@ public class N4JSWorkspaceSymbolService extends WorkspaceSymbolService {
 				// of workspace symbols)
 			}
 		}
-		return result;
+		return Either.forLeft(result);
 	}
 }

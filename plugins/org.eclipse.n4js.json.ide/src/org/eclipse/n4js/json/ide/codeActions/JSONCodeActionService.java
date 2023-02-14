@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.Diagnostic;
@@ -78,13 +79,13 @@ public class JSONCodeActionService implements ICodeActionService2 {
 
 	private EObject getEObject(Options options, Diagnostic diag) {
 		Document doc = options.getDocument();
-		XtextResource resource = options.getResource();
+		Resource resource = options.getResource();
 		return getEObject(doc, resource, diag.getRange());
 	}
 
-	private EObject getEObject(Document doc, XtextResource resource, Range range) {
+	private EObject getEObject(Document doc, Resource resource, Range range) {
 		Position start = range.getStart();
 		int startOffset = doc.getOffSet(start);
-		return eObjectAtOffsetHelper.resolveContainedElementAt(resource, startOffset);
+		return eObjectAtOffsetHelper.resolveContainedElementAt((XtextResource) resource, startOffset);
 	}
 }

@@ -48,6 +48,7 @@ import org.eclipse.lsp4j.ImplementationParams;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
+import org.eclipse.lsp4j.PrepareRenameDefaultBehavior;
 import org.eclipse.lsp4j.PrepareRenameParams;
 import org.eclipse.lsp4j.PrepareRenameResult;
 import org.eclipse.lsp4j.Range;
@@ -62,6 +63,7 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.lsp4j.jsonrpc.messages.Either3;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex;
@@ -495,7 +497,9 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	}
 
 	@Override
-	public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(PrepareRenameParams params) {
+	public CompletableFuture<Either3<Range, PrepareRenameResult, PrepareRenameDefaultBehavior>> prepareRename(
+			PrepareRenameParams params) {
+
 		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInExistingContext(uri, "prepareRename", (rtc, ci) -> {
 			return prepareRename(rtc, params, ci);
@@ -503,7 +507,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	}
 
 	/** Prepare the rename operation. Executed in a read request. */
-	protected Either<Range, PrepareRenameResult> prepareRename(ResourceTaskContext rtc,
+	protected Either3<Range, PrepareRenameResult, PrepareRenameDefaultBehavior> prepareRename(ResourceTaskContext rtc,
 			PrepareRenameParams params, CancelIndicator cancelIndicator) {
 
 		URI uri = rtc.getURI();

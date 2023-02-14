@@ -292,7 +292,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	private TypeRefsPackageImpl() {
 		super(eNS_URI, TypeRefsFactory.eINSTANCE);
 	}
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -75,8 +75,7 @@ public class ParamHelper {
 		if (fromIdentifier != null) {
 			return fromIdentifier;
 		}
-		@SuppressWarnings("deprecation")
-		URI deprecatedURI = toURI(params.getUri());
+		URI deprecatedURI = toURI(params.getTextDocument().getUri());
 		return deprecatedURI;
 	}
 
@@ -124,8 +123,7 @@ public class ParamHelper {
 		if (fromIdentifier != null) {
 			return fromIdentifier;
 		}
-		@SuppressWarnings("deprecation")
-		URI deprecatedURI = toURI(params.getUri());
+		URI deprecatedURI = toURI(params.getTextDocument().getUri());
 		return deprecatedURI;
 	}
 

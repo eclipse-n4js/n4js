@@ -38,7 +38,7 @@ import com.google.inject.Singleton;
  * obtaining symbol information. See {@link #getSymbolLocation(IEObjectDescription)}.
  */
 @Singleton
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 
 	@Inject

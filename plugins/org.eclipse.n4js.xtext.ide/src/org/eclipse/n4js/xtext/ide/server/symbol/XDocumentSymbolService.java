@@ -41,7 +41,7 @@ import com.google.inject.Singleton;
  * Minor adjustments compared to the default {@link DocumentSymbolService}.
  */
 @Singleton
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 public class XDocumentSymbolService extends DocumentSymbolService {
 
 	@Inject

@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionContext;
 import org.eclipse.lsp4j.CodeActionParams;
@@ -113,7 +114,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		}
 
 		void compute(String code, Options options, ICodeActionAcceptor acceptor) {
-			XtextResource resource = options.getResource();
+			Resource resource = options.getResource();
 			if (!(resource instanceof N4JSResource)) {
 				return;
 			}

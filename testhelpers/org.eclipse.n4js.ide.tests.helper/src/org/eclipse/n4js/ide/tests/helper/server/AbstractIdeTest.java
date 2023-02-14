@@ -67,7 +67,6 @@ import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
-import org.eclipse.lsp4j.ResourceChange;
 import org.eclipse.lsp4j.ResourceOperation;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
@@ -1111,7 +1110,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			}
 			return appliedChanges;
 		}
-		List<Either<ResourceChange, TextDocumentEdit>> resourceChanges = workspaceEdit.getResourceChanges();
+		List<Either<TextDocumentEdit, ResourceOperation>> resourceChanges = workspaceEdit.getDocumentChanges();
 		if (resourceChanges != null && !resourceChanges.isEmpty()) {
 			throw new UnsupportedOperationException(
 					"deprecated property 'WorkspaceEdit#resourceChanges' is not supported");
