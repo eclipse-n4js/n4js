@@ -25,7 +25,7 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.egit.core,
  com.jcraft.jsch;bundle-version="0.1.37",
  org.eclipse.jgit,
- org.eclipse.jgit.ssh.jsch
+ org.eclipse.jgit.ssh.jsch;bundle-version="[6.5.0,6.6.0)"
 Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.analysis,
  org.eclipse.n4js.csv,
