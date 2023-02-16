@@ -46,14 +46,6 @@
     </setupTask>
     <setupTask
         xsi:type="setup:CompoundTask"
-        name="org.eclipse.egit.core">
-      <setupTask
-          xsi:type="setup:PreferenceTask"
-          key="/instance/org.eclipse.egit.core/core_autoIgnoreDerivedResources"
-          value="false"/>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:CompoundTask"
         name="org.eclipse.jdt.ui">
       <setupTask
           xsi:type="setup:PreferenceTask"
@@ -135,8 +127,8 @@
   </setupTask>
   <setupTask
       xsi:type="jdt:JRETask"
-      version="JavaSE-11"
-      location="${jre.location-11}">
+      version="JavaSE-17"
+      location="${jre.location-17}">
     <description>Define the JRE needed to compile and run the Java projects of ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -150,7 +142,7 @@
   <setupTask
       xsi:type="setup:EclipseIniTask"
       option="-Dosgi.requiredJavaVersion"
-      value="=11"
+      value="=17"
       vm="true">
     <description></description>
   </setupTask>
@@ -258,30 +250,6 @@
         url="https://download.eclipse.org/technology/m2e/releases/2.1.2"/>
   </setupTask>
   <setupTask
-      xsi:type="setup.p2:P2Task"
-      label="Marketplace Client (mpc)">
-    <requirement
-        name="org.eclipse.epp.mpc.feature.group"/>
-    <repository
-        url="http://download.eclipse.org/mpc/releases/1.9.3"/>
-  </setupTask>
-  <setupTask
-      xsi:type="setup.p2:P2Task"
-      label="User Storage">
-    <requirement
-        name="org.eclipse.userstorage.feature.group"/>
-    <repository
-        url="http://download.eclipse.org/usssdk/drops/release/1.2.2"/>
-  </setupTask>
-  <setupTask
-      xsi:type="setup.p2:P2Task"
-      label="LSP4J">
-    <requirement
-        name="org.eclipse.lsp4j.sdk.feature.group"/>
-    <repository
-        url="http://download.eclipse.org/lsp4j/updates/releases/0.19.0"/>
-  </setupTask>
-  <setupTask
       xsi:type="git:GitCloneTask"
       id="git.clone.n4js"
       remoteURI="eclipse/n4js">
@@ -365,8 +333,6 @@
           name="N4JS_2023_03">    <!-- label! -->
         <repository
             url="http://download.eclipse.org/releases/2023-03"/>
-        <repository
-            url="http://download.eclipse.org/egit/updates-6.4"/>
         <repository
             url="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.48.v20220622"/>
         <repository
@@ -477,7 +443,7 @@
     </workingSet>
     <description>The dynamic working sets for ${scope.project.label}</description>
   </setupTask>
-  <stream name="master"
+  <stream name="GH-2480"
       label="GH-2480 (2023_03)"/>    <!-- label! -->
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"

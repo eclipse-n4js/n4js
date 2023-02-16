@@ -29,13 +29,13 @@ Contributors:
 
 	<properties>
 		<!-- java version -->
-		<java-compile-version>11</java-compile-version>
+		<java-compile-version>17</java-compile-version>
 		<!-- keep in sync with n4js-extended/docker-build/Dockerfile -->
-		<jdk-version>11</jdk-version>
+		<jdk-version>17</jdk-version>
 		<maven.compiler.source>${jdk-version}</maven.compiler.source>
 		<maven.compiler.target>${jdk-version}</maven.compiler.target>
 		<!-- keep in sync with n4js-extended/docker-build/Dockerfile -->
-		<maven-version>3.6.0</maven-version>
+		<maven-version>3.9.0</maven-version>
 
 		<!-- encoding -->
 		<project.encoding>UTF-8</project.encoding>
@@ -44,10 +44,10 @@ Contributors:
 		<project.reporting.outputEncoding>${project.encoding}</project.reporting.outputEncoding>
 
 		<!-- tycho -->
-		<tycho-version>1.4.0</tycho-version>
+		<tycho-version>3.0.2</tycho-version>
 
 		<!-- Xtext, Xtend and their runtime -->
-		<xtext-version>2.25.0</xtext-version>
+		<xtext-version>2.29.0</xtext-version>
 
 		<!-- maven plugins -->
 		<build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
@@ -75,7 +75,7 @@ Contributors:
 		<maven-verifier-plugin.version>1.1</maven-verifier-plugin.version>
 		<xslt-generator-maven-plugin.version>1.8</xslt-generator-maven-plugin.version>
 		<addjars-maven-plugin.version>1.0.5</addjars-maven-plugin.version>
-		<maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
+		<maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
 
 		<!-- Flags for the java compiler, e.g. -g For debug-information (see http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html) -->
 		<java-compiler-arguments></java-compiler-arguments>

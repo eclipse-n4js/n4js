@@ -15,7 +15,7 @@ Require-Bundle: org.eclipse.emf.ecore.xcore,
  org.eclipse.equinox.common;resolution:=optional,
  org.eclipse.jdt.core
 Automatic-Module-Name: org.eclipse.n4js.semver.model
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.n4js.semver.Semver,
  org.eclipse.n4js.semver.model,
  org.eclipse.n4js.semver.Semver.util

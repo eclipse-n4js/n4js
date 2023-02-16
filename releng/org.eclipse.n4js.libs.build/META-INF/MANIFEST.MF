@@ -5,10 +5,10 @@ Bundle-SymbolicName: org.eclipse.n4js.libs.build;singleton:=true
 Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
 Bundle-Version: 0.0.1.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Require-Bundle: com.google.guava,
- org.eclipse.emf.mwe2.launch;resolution:=optional,
+ org.eclipse.emf.mwe2.launch,
  org.eclipse.n4js,
  org.eclipse.n4js.json.model,
  org.eclipse.n4js.utils,

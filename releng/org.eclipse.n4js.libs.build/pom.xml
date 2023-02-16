@@ -60,7 +60,9 @@ Contributors:
 						</goals>
 						<configuration>
 							<includeProjectDependencies>true</includeProjectDependencies>
-							<includePluginDependencies>true</includePluginDependencies>
+							<!-- Causes Error 
+								java.lang.NoSuchMethodError: 'org.apache.commons.cli.Option$Builder org.apache.commons.cli.Option.builder(java.lang.String)'
+							<includePluginDependencies>true</includePluginDependencies> -->
 							<mainClass>org.eclipse.emf.mwe2.launch.runtime.Mwe2Launcher</mainClass>
 							<arguments>
 								<argument>file://${project.basedir}${mwe2-file-location}</argument>
