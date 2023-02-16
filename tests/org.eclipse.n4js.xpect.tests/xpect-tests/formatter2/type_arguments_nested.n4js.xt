@@ -57,6 +57,8 @@ Annos
 // 
 /* XPECT formattedLines 26 ---
 var b2: A<Annos, A<A<Annos, boolean>, Boolean>> = new A<Annos, A<A<Annos, boolean>, Boolean>>;
+
+
 --- */
 var b2: A<Annos, A <A<Annos,boolean>,Boolean>> = new A
                 <

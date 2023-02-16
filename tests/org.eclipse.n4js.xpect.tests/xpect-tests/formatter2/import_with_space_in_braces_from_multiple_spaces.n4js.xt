@@ -28,6 +28,7 @@ import { Ce } from "formatter2/input";
  * Error to notify a cancelation.
  *\/
 export public class CanceledError extends Ce<Error> {}
+
 --- */
 import {       Ce       } from "formatter2/input"
 

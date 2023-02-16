@@ -49,6 +49,7 @@ value
 // TODO fix formatting of TStructMembers
 /* XPECT formattedLines 22 ---
 let v01: ~Object with {field?: string; get getter?(): string; set setter?(value: string)};
+
 --- */
 let
 v01

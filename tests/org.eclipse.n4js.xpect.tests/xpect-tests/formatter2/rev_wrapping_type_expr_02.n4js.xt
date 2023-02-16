@@ -26,6 +26,7 @@ class LooooooooooongC {
 	shortField: ~Object with {looooooooooooooooongMember0; looooooooooooooooongMember1; looooooooooooooooongMember2;
 			looooooooooooooooongMember3;};
 }
+
 --- */
 class LooooooooooongC {
 

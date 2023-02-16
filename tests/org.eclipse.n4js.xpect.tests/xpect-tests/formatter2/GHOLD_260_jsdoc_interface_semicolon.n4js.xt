@@ -38,6 +38,7 @@ interface I2 {
 	/\** B *\/
 	m2(): void;
 }
+
 --- */
 interface I2 {
   /** A */

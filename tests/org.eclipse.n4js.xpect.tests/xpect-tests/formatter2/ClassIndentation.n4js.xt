@@ -50,6 +50,7 @@ interface DataAdapter {
 }
 interface ContentDataSetEvent {}
 interface DataEvent {}
+
 --- */
 export public class EmailSetAdapter implements DataAdapter {
   private events: Array<ContentDataSetEvent> = [];

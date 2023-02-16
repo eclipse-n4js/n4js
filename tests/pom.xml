@@ -65,10 +65,10 @@ Contributors:
 						<testSourceDirectory>${project.basedir}/src</testSourceDirectory>
 						<testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
 						<failIfNoTests>${surefire-plugin.failIfNoTests}</failIfNoTests>
-						<systemProperties>
+						<systemPropertyVariables>
 							<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
 							<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-						</systemProperties>
+						</systemPropertyVariables>
 						<includes>
 							<!-- replace surefire's default inclusion patterns by this simpler convention: -->
 							<include>**/*Test.java</include>
@@ -87,10 +87,10 @@ Contributors:
 							<phase>test</phase>
 							<configuration>
 								<runOrder>alphabetical</runOrder>
-								<systemProperties>
+								<systemPropertyVariables>
 									<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
 									<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-								</systemProperties>
+								</systemPropertyVariables>
 								<additionalClasspathElements>
 									<additionalClasspathElement>${cu_org.eclipse.n4js.runner}</additionalClasspathElement>
 								</additionalClasspathElements>
