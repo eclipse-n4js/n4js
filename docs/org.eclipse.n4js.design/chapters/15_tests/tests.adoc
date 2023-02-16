@@ -183,7 +183,7 @@ executing this code in Eclipse with configuration:
 
 [source,bash]
 ----
--Xms512m -Xmx1024m -XX:MaxPermSize=512m $-$Djub.consumers=CONSOLE,H2 $-$Djub.db.file=.benchmarks $-$Djub.customkey=${current_date}
+-Xms512m -Xmx1024m $-$Djub.consumers=CONSOLE,H2 $-$Djub.db.file=.benchmarks $-$Djub.customkey=${current_date}
 ----
 
 will cause :
