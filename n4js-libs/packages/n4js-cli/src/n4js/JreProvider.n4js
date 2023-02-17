@@ -21,7 +21,7 @@ import {JreInfo, Platform, JRE_INFO_MAP, JAVA_DEFAULT, BIN_DIR, JRE_URL_DIR, JRE
 import {detectJavaVersion} from 'JavaVersion';
 
 const decompress: {function(string, string): Promise<any,any>} = lib_decompress.default;
-export const JRE_VERSION = 11;
+export const JRE_VERSION = 17;
 
 
 
@@ -76,7 +76,7 @@ export function isLocalJre(javaPath: string): boolean {
 
 
 /**
- * Checks whether Java 11 is available globally. If not checks whether 
+ * Checks whether Java 17 is available globally. If not checks whether 
  * Java is available in the local bin folder. If not Java JRE is downloaded
  * and extracted to the local bin folder.
  */
@@ -103,18 +103,14 @@ export public async function ensureJRE(log: {function(string)} = npmlog.info) : 
     // Download and extract JRE
     const jreInfo = getJreInfo();
     if (jreInfo) {
-        if (isPlatformProblemMuslLibc()) {
-            log("Detected musl libc on this platform: Will not download Adopt OpenJDK since musl libc is not supported by Adopt OpenJDK.");
-        } else {
-            log("Downloading and extracting JRE (Adopt OpenJDK) into local folder.");
-            
-            try {
-                await downloadJRE(jreInfo, log);
-                await extractJRE(jreInfo, log);
-                return;
-            } catch (err) {
-                log(err as string);
-            }
+        log("Downloading and extracting JRE (Adopt OpenJDK) into local folder.");
+        
+        try {
+            await downloadJRE(jreInfo, log);
+            await extractJRE(jreInfo, log);
+            return;
+        } catch (err) {
+            log(err as string);
         }
 
     } else {
@@ -124,7 +120,8 @@ export public async function ensureJRE(log: {function(string)} = npmlog.info) : 
 }
 
 function getJreInfo() : JreInfo {
-    const platform = process.arch + "_" + process.platform;
+    const platform = process.arch + "_" + process.platform
+    	+ (isPlatformProblemMuslLibc() ? "_alpine" : "");
     return JRE_INFO_MAP.get(platform as Platform);
 }
 
