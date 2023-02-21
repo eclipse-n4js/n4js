@@ -388,8 +388,8 @@ Contributors:
 		the build -->
 	<pluginRepositories>
 		<pluginRepository>
-			<id>maven_central</id>
-			<url>https://repo.eclipse.org/content/maven_central/</url>
+			<id>eclipse</id>
+			<url>https://repo.eclipse.org/content/repositories/eclipse-releases/</url>
 			<releases>
 				<enabled>true</enabled>
 				<updatePolicy>daily</updatePolicy>
@@ -438,8 +438,8 @@ Contributors:
 			</repositories>
 			<pluginRepositories>
 				<pluginRepository>
-					<id>maven_central</id>
-					<url>https://repo.eclipse.org/content/maven_central/</url>
+					<id>eclipse</id>
+					<url>https://repo.eclipse.org/content/repositories/eclipse-releases/</url>
 					<releases>
 						<enabled>true</enabled>
 						<updatePolicy>daily</updatePolicy>
