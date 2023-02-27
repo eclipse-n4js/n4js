@@ -215,6 +215,7 @@ function f8(e: E) {
 
 	}
 };
+
 --- */
 function f8(e: E) {
 	switch (e) {

@@ -10,7 +10,13 @@
  */
 package org.eclipse.n4js.ide.server.symbol;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
@@ -23,10 +29,18 @@ import org.eclipse.n4js.scoping.utils.PolyfillUtils;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.xtext.ide.server.symbol.XDocumentSymbolService;
+import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
+import org.eclipse.xtext.findReferences.TargetURIs;
+import org.eclipse.xtext.ide.server.DocumentExtensions;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceServiceProvider;
+import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.service.OperationCanceledManager;
+import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 
 import com.google.inject.Inject;
@@ -38,11 +52,41 @@ import com.google.inject.Singleton;
  * obtaining symbol information. See {@link #getSymbolLocation(IEObjectDescription)}.
  */
 @Singleton
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 
 	@Inject
 	private UriExtensions uriExtensions;
+	@Inject
+	private EObjectAtOffsetHelper eObjectAtOffsetHelper;
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
+	@Inject
+	private IResourceServiceProvider.Registry resourceServiceProviderRegistry;
+
+	@Override
+	public List<? extends Location> getDefinitions(XtextResource resource, int offset,
+			IReferenceFinder.IResourceAccess resourceAccess, CancelIndicator cancelIndicator) {
+		EObject element = eObjectAtOffsetHelper.resolveElementAt(resource, offset);
+		if (element == null) {
+			return Collections.emptyList();
+		}
+
+		List<Location> locations = new ArrayList<>();
+		TargetURIs targetURIs = collectTargetURIs(element);
+		for (URI targetURI : targetURIs) {
+			operationCanceledManager.checkCanceled(cancelIndicator);
+			doRead(resourceAccess, targetURI, (EObject obj) -> {
+				Location location = resourceServiceProviderRegistry
+						.getResourceServiceProvider(targetURI.trimFragment())
+						.get(DocumentExtensions.class).newLocation(obj);
+				if (location != null) {
+					locations.add(location);
+				}
+			});
+		}
+		return locations;
+	}
 
 	@Override
 	protected boolean filter(IEObjectDescription description, String query) {
@@ -141,4 +185,5 @@ public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 	protected SymbolKind getSymbolKind(EClass type) {
 		return SymbolKindUtil.getSymbolKind(type);
 	}
+
 }

@@ -29,4 +29,4 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.n4js.cli,
  org.eclipse.n4js.cli.compiler
 Automatic-Module-Name: org.eclipse.n4js.cli
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17

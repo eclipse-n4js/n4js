@@ -50,11 +50,11 @@ Contributors:
 				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
 					<argLine>-Xmx2048m</argLine>
-					<systemProperties>
+					<systemPropertyVariables>
 						<log4j.configuration>${loggingArgs}</log4j.configuration>
 						<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
 						<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-					</systemProperties>
+					</systemPropertyVariables>
 			</configuration>
 			</plugin>
 		</plugins>

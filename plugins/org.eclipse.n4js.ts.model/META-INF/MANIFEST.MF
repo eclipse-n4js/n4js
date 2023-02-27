@@ -4,8 +4,8 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.n4js.ts.model;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Require-Bundle: org.eclipse.n4js.releng.utils;resolution:=optional,
- org.eclipse.emf.ecore.xcore;bundle-version="1.1.0",
- org.eclipse.emf.mwe2.launch;bundle-version="2.12.1";resolution:=optional,
+ org.eclipse.emf.ecore.xcore,
+ org.eclipse.emf.mwe2.launch;resolution:=optional,
  org.eclipse.jdt.core,
  org.eclipse.core.runtime;resolution:=optional,
  org.eclipse.core.resources;resolution:=optional,
@@ -14,7 +14,7 @@ Require-Bundle: org.eclipse.n4js.releng.utils;resolution:=optional,
  org.eclipse.n4js.smith,
  org.objectweb.asm,
  org.apache.commons.logging
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.n4js.ts.typeRefs,
  org.eclipse.n4js.ts.typeRefs.impl,
  org.eclipse.n4js.ts.typeRefs.util,

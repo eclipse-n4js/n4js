@@ -12,7 +12,7 @@ package org.eclipse.n4js.xtext.ide.server;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.apache.log4j.lf5.LogLevel;
+import org.apache.log4j.helpers.UtilLoggingLevel;
 import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
 import org.eclipse.lsp4j.jsonrpc.services.JsonSegment;
 
@@ -23,7 +23,7 @@ import org.eclipse.lsp4j.jsonrpc.services.JsonSegment;
 @JsonSegment("debug")
 public interface DebugEndpointDefinition {
 
-	/** Sets the log level of Log4j. @see {@link LogLevel} */
+	/** Sets the log level of Log4j. @see {@link UtilLoggingLevel} */
 	@JsonRequest
 	CompletableFuture<Void> setLogLevel(String level);
 

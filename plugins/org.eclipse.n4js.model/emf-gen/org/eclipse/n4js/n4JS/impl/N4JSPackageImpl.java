@@ -1620,7 +1620,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	private N4JSPackageImpl() {
 		super(eNS_URI, N4JSFactory.eINSTANCE);
 	}
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

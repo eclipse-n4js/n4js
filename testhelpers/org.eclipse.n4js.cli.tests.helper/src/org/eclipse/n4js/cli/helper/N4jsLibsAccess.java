@@ -457,7 +457,7 @@ public class N4jsLibsAccess {
 				+ "$ mvn -DnoTests clean verify\n"
 				+ "  (OR in Eclipse: simply run MWE2 workflow 'BuildN4jsLibs.mwe2')\n"
 				+ "$ ./releng/utils/scripts/start-verdaccio.sh\n"
-				+ "(note: requires Java 11 and docker)\n"
+				+ "(note: requires Java 17 and docker)\n"
 				+ "*********************************************************************************";
 		LOGGER.error(msg);
 		Assert.fail(msg);

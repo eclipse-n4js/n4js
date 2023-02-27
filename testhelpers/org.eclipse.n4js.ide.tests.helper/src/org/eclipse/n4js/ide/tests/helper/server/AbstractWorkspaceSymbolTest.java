@@ -18,7 +18,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.lsp4j.WorkspaceSymbol;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractWorkspaceSymbolTest.WorkspaceSymbolConfig;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.utils.Strings;
@@ -26,6 +28,7 @@ import org.eclipse.n4js.utils.Strings;
 /**
  * Abstract test class for definition protocol tests.
  */
+@SuppressWarnings("deprecation")
 abstract public class AbstractWorkspaceSymbolTest extends AbstractStructuredIdeTest<WorkspaceSymbolConfig> {
 
 	/***/
@@ -48,8 +51,10 @@ abstract public class AbstractWorkspaceSymbolTest extends AbstractStructuredIdeT
 	protected void performTest(Project project, String moduleName, WorkspaceSymbolConfig wsc)
 			throws InterruptedException, ExecutionException, URISyntaxException {
 
-		CompletableFuture<List<? extends SymbolInformation>> result = languageServer.symbol(wsc.params);
-		List<? extends SymbolInformation> symbols = result.get();
+		CompletableFuture<Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>>> result = languageServer
+				.symbol(wsc.params);
+		Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>> symbolsLists = result.get();
+		List<? extends SymbolInformation> symbols = symbolsLists.getLeft();
 
 		String actualSymbols = Strings.join(", ", s -> getStringLSP4J().toString(s), symbols);
 		assertEquals(wsc.expectation, actualSymbols);

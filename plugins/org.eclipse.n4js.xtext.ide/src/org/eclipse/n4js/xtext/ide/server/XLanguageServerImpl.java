@@ -61,6 +61,7 @@ import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
+import org.eclipse.lsp4j.PrepareRenameDefaultBehavior;
 import org.eclipse.lsp4j.PrepareRenameParams;
 import org.eclipse.lsp4j.PrepareRenameResult;
 import org.eclipse.lsp4j.Range;
@@ -80,11 +81,13 @@ import org.eclipse.lsp4j.TypeDefinitionParams;
 import org.eclipse.lsp4j.WorkspaceClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.WorkspaceFolder;
+import org.eclipse.lsp4j.WorkspaceSymbol;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.json.JsonRpcMethod;
 import org.eclipse.lsp4j.jsonrpc.json.JsonRpcMethodProvider;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.lsp4j.jsonrpc.messages.Either3;
 import org.eclipse.lsp4j.jsonrpc.services.ServiceEndpoints;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
@@ -577,7 +580,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	@Override
-	public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams params) {
+	public CompletableFuture<Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>>> symbol(
+			WorkspaceSymbolParams params) {
 		return lsFrontend.symbol(params);
 	}
 
@@ -669,11 +673,13 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	@Override
-	public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(PrepareRenameParams params) {
+	public CompletableFuture<Either3<Range, PrepareRenameResult, PrepareRenameDefaultBehavior>> prepareRename(
+			PrepareRenameParams params) {
+
 		if (!isSupported(paramHelper.getURI(params))) {
 			// LSP specification: "If null is returned then it is deemed that a ‘textDocument/rename’ request
 			// is not valid at the given position."
-			return CompletableFuture.completedFuture(Either.forLeft(null));
+			return CompletableFuture.completedFuture(Either3.forSecond(null));
 		}
 		return lsFrontend.prepareRename(params);
 	}
@@ -776,6 +782,12 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 				return function.apply(
 						new ILanguageServerAccess.Context(res, doc, isOpen, ci));
 			});
+		}
+
+		@Override
+		public <T> T doSyncRead(String uri, Function<Context, T> function) {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 		@Override

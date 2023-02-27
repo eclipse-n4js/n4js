@@ -35,6 +35,7 @@ for(let a=1;a<7;a++){console.log("a=",a)}
 for (let a = 1; a < 7; a++) {
 	console.log("a=", a);
 }
+
 --- */
 for
      (

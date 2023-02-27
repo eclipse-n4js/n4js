@@ -92,6 +92,7 @@ interface ParameterizedLongLonglongName<P>{}
 // Don't tear export KW and exported statement apart.
 /* XPECT formattedLines 3 ---
 export @Final public class FixedPoint6 implements ParameterizedLongLonglongName<FixedPoint6>, SomeLongLonglongName {}
+
 --- */
 export @Final public class FixedPoint6 implements ParameterizedLongLonglongName<FixedPoint6>, SomeLongLonglongName {
 

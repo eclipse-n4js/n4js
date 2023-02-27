@@ -25,6 +25,7 @@ public class A {
 		return null;
 	}
 }
+
 --- */
 public class A {
     public toNFONObject(nfonRawSerializer:{function(any): any}): ~Object {

@@ -21,16 +21,18 @@ export public const RESOURCES_DIR = path.resolve(__dirname, "..", "resources");
 export public const JRE_DIR = path.resolve(BIN_DIR, "jre");
 export public const N4JSC_JAR = path.resolve(BIN_DIR, "n4jsc.jar");
 export public const N4JS_CLI_CONFIG = "n4js-cli.config";
-export public const JRE_URL_DIR = "https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.6%2B10/";
+export public const JRE_URL_DIR = "https://github.com/AdoptOpenJDK/openjdk17-binaries/releases/download/jdk-2021-05-07-13-31/";
 export public const JRE_INFO_MAP = new Map<Platform, JreInfo>([
-    [Platform.x64_aix,     {bin: "bin/java", name: "OpenJDK11U-jre_ppc64_aix_hotspot_11.0.6_10.tar.gz"}],
-    [Platform.x64_darwin,  {bin: "Contents/Home/bin/java", name: "OpenJDK11U-jre_x64_mac_hotspot_11.0.6_10.tar.gz"}],
-    [Platform.x64_freebsd, {bin: "bin/java", name: "OpenJDK11U-jre_x64_linux_hotspot_11.0.6_10.tar.gz"}],
-    [Platform.x64_linux,   {bin: "bin/java", name: "OpenJDK11U-jre_x64_linux_hotspot_11.0.6_10.tar.gz"}],
-    [Platform.x64_openbsd, {bin: "bin/java", name: "OpenJDK11U-jre_x64_linux_hotspot_11.0.6_10.tar.gz"}],
+    [Platform.x64_aix,     null],
+    [Platform.x64_darwin,  {bin: "Contents/Home/bin/java", name: "OpenJDK-jre_x64_mac_hotspot_2021-05-06-23-30.tar.gz"}],
+    [Platform.arm64_darwin,  {bin: "Contents/Home/bin/java", name: "OpenJDK-jre_arm64_mac_hotspot_2021-05-06-23-30.tar.gz"}],
+    [Platform.x64_freebsd, {bin: "bin/java", name: "OpenJDK-jre_x64_linux_hotspot_2021-05-06-23-30.tar.gz"}],
+    [Platform.x64_linux,   {bin: "bin/java", name: "OpenJDK-jre_x64_linux_hotspot_2021-05-06-23-30.tar.gz"}],
+    [Platform.x64_linux_alpine,   {bin: "bin/java", name: "OpenJDK-jre_x64_alpine-linux_hotspot_2021-05-06-23-30.tar.gz"}],
+    [Platform.x64_openbsd, {bin: "bin/java", name: "OpenJDK-jre_x64_linux_hotspot_2021-05-06-23-30.tar.gz"}],
     [Platform.x64_sunos,   null],
-    [Platform.x32_win32,   {bin: "bin/java.exe", name: "OpenJDK11U-jre_x86-32_windows_hotspot_11.0.6_10.zip"}],
-    [Platform.x64_win32,   {bin: "bin/java.exe", name: "OpenJDK11U-jre_x64_windows_hotspot_11.0.6_10.zip"}]]
+    [Platform.x32_win32,   {bin: "bin/java.exe", name: "OpenJDK-jre_x86-32_windows_hotspot_2021-05-06-23-30.zip"}],
+    [Platform.x64_win32,   {bin: "bin/java.exe", name: "OpenJDK-jre_x64_windows_hotspot_2021-05-06-23-30.zip"}]]
      as Iterable<Iterable2<Platform, JreInfo>>);
 
 
@@ -38,8 +40,10 @@ export public const JRE_INFO_MAP = new Map<Platform, JreInfo>([
 export enum Platform {
     x64_aix,
     x64_darwin,
+    arm64_darwin,
     x64_freebsd,
     x64_linux,
+    x64_linux_alpine,
     x64_openbsd,
     x64_sunos,
     x32_win32,

@@ -17,7 +17,9 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.lsp4j.WorkspaceSymbol;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.xtext.ide.server.ResourceTaskManager;
 import org.eclipse.n4js.xtext.ide.server.WorkspaceFrontend;
 import org.eclipse.n4js.xtext.ide.server.util.LspLogger;
@@ -34,7 +36,7 @@ import com.google.inject.Inject;
 /**
  * N4JS-specific customizations of {@link WorkspaceFrontend}.
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 public class N4JSWorkspaceFrontend extends WorkspaceFrontend {
 
 	@Inject
@@ -62,7 +64,9 @@ public class N4JSWorkspaceFrontend extends WorkspaceFrontend {
 	};
 
 	@Override
-	protected List<? extends SymbolInformation> symbol(WorkspaceSymbolParams params, CancelIndicator cancelIndicator) {
+	protected Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>> symbol(
+			WorkspaceSymbolParams params, CancelIndicator cancelIndicator) {
+
 		if (params.getPartialResultToken() != null) {
 			logPartialResultTokenReminder();
 		}
@@ -73,8 +77,8 @@ public class N4JSWorkspaceFrontend extends WorkspaceFrontend {
 		IResourceAccess resourceAccess = nonLoadingResourceAccess;
 		XChunkedResourceDescriptions liveScopeIndex = resourceTaskManager.createLiveScopeIndex();
 		try {
-			List<? extends SymbolInformation> symbols = workspaceSymbolService.getSymbols(params.getQuery(),
-					resourceAccess, liveScopeIndex, cancelIndicator);
+			Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>> symbols = workspaceSymbolService
+					.getSymbols(params.getQuery(), resourceAccess, liveScopeIndex, cancelIndicator);
 			return symbols;
 		} catch (Throwable th) {
 			// It seems that if this request fails (even if due to a cancellation), then some LSP clients (e.g. VS Code)
@@ -83,7 +87,7 @@ public class N4JSWorkspaceFrontend extends WorkspaceFrontend {
 			if (!operationCanceledManager.isOperationCanceledException(th)) {
 				lspLogger.error("error while computing workspace symbols", th);
 			}
-			return Collections.emptyList();
+			return Either.forLeft(Collections.emptyList());
 		}
 	}
 

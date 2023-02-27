@@ -44,4 +44,4 @@ Export-Package: org.eclipse.n4js.ide,
  org.eclipse.n4js.ide.server.hover,
  org.eclipse.n4js.ide.server.util
 Automatic-Module-Name: org.eclipse.n4js.ide
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17

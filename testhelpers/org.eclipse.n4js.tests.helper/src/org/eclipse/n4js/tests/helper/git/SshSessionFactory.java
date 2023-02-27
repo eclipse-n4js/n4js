@@ -16,8 +16,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import org.eclipse.jgit.transport.JschConfigSessionFactory;
-import org.eclipse.jgit.transport.OpenSshConfig.Host;
+import org.eclipse.jgit.transport.ssh.jsch.JschConfigSessionFactory;
+import org.eclipse.jgit.transport.ssh.jsch.OpenSshConfig.Host;
 import org.eclipse.jgit.util.FS;
 
 import com.google.common.base.StandardSystemProperty;

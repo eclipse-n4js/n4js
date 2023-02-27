@@ -4,7 +4,7 @@ Bundle-Name: org.eclipse.n4js.json.model
 Bundle-SymbolicName: org.eclipse.n4js.json.model; singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: org.eclipse.n4js
-Require-Bundle: org.eclipse.emf.ecore.xcore;bundle-version="1.1.0",
+Require-Bundle: org.eclipse.emf.ecore.xcore,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.releng.utils,
  org.eclipse.emf.mwe2.launch;resolution:=optional,
@@ -16,7 +16,7 @@ Require-Bundle: org.eclipse.emf.ecore.xcore;bundle-version="1.1.0",
  org.objectweb.asm;resolution:=optional,
  org.eclipse.equinox.common;resolution:=optional
 Automatic-Module-Name: org.eclipse.n4js.json.model
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.n4js.json.JSON,
  org.eclipse.n4js.json.JSON.util,
  org.eclipse.n4js.json.model.utils

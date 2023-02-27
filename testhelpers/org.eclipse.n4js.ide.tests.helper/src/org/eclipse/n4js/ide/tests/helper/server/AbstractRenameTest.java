@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.eclipse.lsp4j.Position;
+import org.eclipse.lsp4j.PrepareRenameDefaultBehavior;
 import org.eclipse.lsp4j.PrepareRenameParams;
 import org.eclipse.lsp4j.PrepareRenameResult;
 import org.eclipse.lsp4j.Range;
@@ -216,7 +217,8 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 		PrepareRenameParams prepareRenameParams = new PrepareRenameParams();
 		prepareRenameParams.setTextDocument(new TextDocumentIdentifier(uriStr));
 		prepareRenameParams.setPosition(new Position(pos.line, pos.column));
-		Either<Range, PrepareRenameResult> result1 = languageServer.prepareRename(prepareRenameParams).get();
+		Either<Range, Either<PrepareRenameResult, PrepareRenameDefaultBehavior>> result1 = languageServer
+				.prepareRename(prepareRenameParams).get();
 		if (result1 == null || (result1.getLeft() == null && result1.getRight() == null)) {
 			fail("element cannot be renamed", sourceBefore, pos);
 		}

@@ -15,8 +15,9 @@ import * as path from "path";
 import * as childProcess from "child_process";
 import {RESOURCES_DIR} from 'Globals';
 
-const JAVA_SOURCE_FILE = path.resolve(RESOURCES_DIR, "PrintJavaVersion.java");
-const JAVA_CLASS_FILE = path.resolve(RESOURCES_DIR, "PrintJavaVersion.class");
+const JAVA_SOURCE_CLASSNAME = "PrintJavaVersion";
+const JAVA_SOURCE_FILE = path.resolve(RESOURCES_DIR, JAVA_SOURCE_CLASSNAME + ".java");
+const JAVA_CLASS_FILE = path.resolve(RESOURCES_DIR, JAVA_SOURCE_CLASSNAME + ".class");
 
 
 /**
@@ -35,7 +36,7 @@ export public function detectJavaVersion() : int {
     if (procRun.error) {
         throw procRun.error;
     }
-    if (procRun.stderr) {
+    if (procRun.stderr && procRun.stderr.toString()) {
         throw procRun.stderr;
     }
 

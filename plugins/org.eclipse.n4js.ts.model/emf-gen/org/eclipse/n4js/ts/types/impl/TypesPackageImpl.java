@@ -643,7 +643,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	private TypesPackageImpl() {
 		super(eNS_URI, TypesFactory.eINSTANCE);
 	}
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -15,4 +15,4 @@ Require-Bundle: org.eclipse.n4js.semver,
  com.google.inject,
  com.google.gson
 Automatic-Module-Name: org.eclipse.n4js.semver.ide
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17

@@ -22,5 +22,5 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.cli,
  org.eclipse.xpect,
  org.eclipse.xpect.xtext.lib
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.eclipse.n4js.ide.tests

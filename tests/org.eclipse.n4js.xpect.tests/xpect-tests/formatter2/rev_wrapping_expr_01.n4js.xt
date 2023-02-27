@@ -23,6 +23,7 @@ class C {
 	field = midSizedVariableName + midSizedVariableName + midSizedVariableName + midSizedVariableName +
 		midSizedVariableName + midSizedVariableName + midSizedVariableName + midSizedVariableName;
 }
+
 --- */
 var midSizedVariableName;
 
