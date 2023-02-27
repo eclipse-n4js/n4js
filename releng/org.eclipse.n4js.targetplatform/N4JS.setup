@@ -443,8 +443,8 @@
     </workingSet>
     <description>The dynamic working sets for ${scope.project.label}</description>
   </setupTask>
-  <stream name="GH-2480"
-      label="GH-2480 (2023_03)"/>    <!-- label! -->
+  <stream name="master"
+      label="master (2023_03)"/>    <!-- label! -->
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
