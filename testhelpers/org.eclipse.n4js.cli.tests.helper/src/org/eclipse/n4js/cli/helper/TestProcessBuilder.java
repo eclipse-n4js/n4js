@@ -122,7 +122,8 @@ public class TestProcessBuilder {
 
 	private String[] createCommand(Path workingDirectory, Map<String, String> output_env,
 			Path executable, String[] options) {
-		List<String> cmd = getCommands(Optional.of(workingDirectory), output_env, executable, options);
+		Optional<Path> wDir = workingDirectory == null ? Optional.absent() : Optional.of(workingDirectory);
+		List<String> cmd = getCommands(wDir, output_env, executable, options);
 		return cmd.toArray(new String[0]);
 	}
 
@@ -133,17 +134,15 @@ public class TestProcessBuilder {
 	private List<String> getCommands(Optional<Path> workingDirectory, Map<String, String> output_env, Path executable,
 			String... options) {
 
-		Path executableAbsolute = workingDirectory.isPresent()
-				? workingDirectory.get().resolve(executable)
-				: executable.toAbsolutePath();
-
-		Path additionalPath = executableAbsolute.getParent();
-		prependToPathString(output_env, additionalPath);
+		if (executable.getNameCount() > 1) {
+			Path additionalPath = executable.getParent();
+			prependToPathString(output_env, additionalPath);
+		}
 
 		ArrayList<String> cmd = new ArrayList<>();
 
 		// start command line with absolute path to binary
-		String npmPath = "\"" + executableAbsolute.toString() + "\"";
+		String npmPath = "\"" + executable.toString() + "\"";
 
 		if (isWindows()) {
 			cmd.addAll(Arrays.asList(BinariesConstants.WIN_SHELL_COMAMNDS));
