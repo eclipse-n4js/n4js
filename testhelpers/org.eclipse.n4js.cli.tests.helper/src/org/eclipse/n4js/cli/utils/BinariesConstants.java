@@ -176,7 +176,7 @@ public final class BinariesConstants {
 	/** Shell command for Windows OS */
 	public static final String[] WIN_SHELL_COMAMNDS = { "cmd", "/c" };
 	/** Shell command for *nix OS */
-	public static final String[] NIX_SHELL_COMAMNDS = { "sh", "-c" };
+	public static final String[] NIX_SHELL_COMAMNDS = { "/bin/bash", "-c" };
 
 	private BinariesConstants() {
 		// No initialization.
