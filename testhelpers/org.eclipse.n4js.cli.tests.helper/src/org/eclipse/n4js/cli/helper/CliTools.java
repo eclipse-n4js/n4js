@@ -274,22 +274,44 @@ public class CliTools {
 
 		final File[] existingFiles = destinationFolder.listFiles();
 		if (isEmpty(existingFiles)) {
-			LOGGER.info("Cloning repository ...");
+			LOGGER.info("Git cloning repository ...");
 			// git clone --branch <BRANCH> --single-branch --depth 1 <URI>
-			gitRun(localClonePath, "clone", "--branch", branch, "--single-branch", "--depth 1", remoteUri);
-			LOGGER.info("Cloning repository ... done.");
-		}
+			gitRun(localClonePath, "clone", remoteUri, localClonePath.toString());
+			LOGGER.info("Git cloning repository ... done.");
 
-		LOGGER.info("Resetting repository ...");
-		// git reset --hard HEAD
-		gitRun(localClonePath, "reset", "--hard", "HEAD");
-		LOGGER.info("Resetting repository ... done.");
+			LOGGER.info("Git fetch ...");
+			// git fetch
+			gitRun(localClonePath, "fetch");
+			LOGGER.info("Git fetch ... done.");
 
-		if (clean) {
-			LOGGER.info("Cleaning repository ...");
-			// git clean -dxf
-			gitRun(localClonePath, "clean", "-dxf");
-			LOGGER.info("Cleaning repository ... done.");
+			LOGGER.info("Git checkout branch " + branch + "...");
+			// git checkout BRANCH
+			gitRun(localClonePath, "checkout", "origin/" + branch);
+			LOGGER.info("Git checkout branch " + branch + "... done.");
+
+		} else {
+
+			LOGGER.info("Git fetch ...");
+			// git fetch
+			gitRun(localClonePath, "fetch");
+			LOGGER.info("Git fetch ... done.");
+
+			LOGGER.info("Git checkout branch " + branch + "...");
+			// git checkout BRANCH
+			gitRun(localClonePath, "checkout", "origin/" + branch);
+			LOGGER.info("Git checkout branch " + branch + "... done.");
+
+			LOGGER.info("Git resetting repository ...");
+			// git reset --hard HEAD
+			gitRun(localClonePath, "reset", "--hard", "HEAD");
+			LOGGER.info("Git resetting repository ... done.");
+
+			if (clean) {
+				LOGGER.info("Git cleaning repository ...");
+				// git clean -dxf
+				gitRun(localClonePath, "clean", "-dxf");
+				LOGGER.info("Git cleaning repository ... done.");
+			}
 		}
 	}
 
