@@ -55,6 +55,7 @@ public class BinariesLocatorHelper {
 	private Path memoizedNodePath = null;
 	private Path memoizedNpmPath = null;
 	private Path memoizedYarnPath = null;
+	private Path memoizedGitPath = null;
 
 	/** Returns the path to the Java binary. */
 	public Path getJavaBinary() {
@@ -86,6 +87,14 @@ public class BinariesLocatorHelper {
 			memoizedYarnPath = findYarnPath().resolve(BinariesConstants.YARN_BINARY_NAME);
 		}
 		return memoizedYarnPath;
+	}
+
+	/** Returns the path to the yarn binary. */
+	public Path getGitBinary() {
+		if (memoizedGitPath == null) {
+			memoizedGitPath = findGitPath().resolve(BinariesConstants.GIT_BINARY_NAME);
+		}
+		return memoizedGitPath;
 	}
 
 	/**
@@ -218,6 +227,63 @@ public class BinariesLocatorHelper {
 		yarnPathCandidate = new File(BinariesConstants.BUILT_IN_DEFAULT_YARN_PATH).toPath();
 
 		return yarnPathCandidate;
+	}
+
+	/**
+	 * Like {@link #findNodePath()}, but for the git binary.
+	 *
+	 * @return string with absolute path to the binary
+	 */
+	private Path findGitPath() {
+		Path gitPathCandidate = null;
+
+		// 1. lookup by DEFAULT_GIT_PATH_VM_ARG
+		gitPathCandidate = resolveFolderContaingBinary(
+				tryGetEnvOrSystemVariable(BinariesConstants.DEFAULT_GIT_PATH_VM_ARG));
+		if (gitPathCandidate != null) {
+			info("User specified default git path will be used: '" + gitPathCandidate
+					+ ".' based on the '" + BinariesConstants.DEFAULT_GIT_PATH_VM_ARG + "' VM argument.");
+			return gitPathCandidate;
+		}
+		debug("Could not resolve git path from '" + BinariesConstants.DEFAULT_GIT_PATH_VM_ARG
+				+ "' VM argument.");
+
+		// 2. lookup by GIT_PATH_ENV
+		gitPathCandidate = resolveFolderContaingBinary(
+				tryGetEnvOrSystemVariable(BinariesConstants.GIT_PATH_ENV));
+		if (gitPathCandidate != null) {
+			info("User specified default git path will be used: '" + gitPathCandidate
+					+ ".' based on the '" + BinariesConstants.GIT_PATH_ENV + "' environment argument.");
+			return gitPathCandidate;
+		}
+		debug("Could not resolve git path from '" + BinariesConstants.GIT_PATH_ENV);
+
+		// 3. lookup by PATH
+		gitPathCandidate = resolveFolderContaingBinary(
+				ExecutableLookupUtil.findInPath(BinariesConstants.GIT_BINARY_NAME));
+		if (gitPathCandidate != null) {
+			info("Obtained git path will be used: '" + gitPathCandidate
+					+ ".' based on the OS PATH.");
+			return gitPathCandidate;
+		}
+		debug("Could not resolve git path from OS PATH variable.");
+
+		// 4. lookup by OS query
+		gitPathCandidate = resolveFolderContaingBinary(
+				lookForBinary(BinariesConstants.GIT_BINARY_NAME));
+		if (gitPathCandidate != null) {
+			info("Obtained git path will be used: '" + gitPathCandidate
+					+ ".' based on the OS dynamic lookup.");
+			return gitPathCandidate;
+
+		}
+		debug("Could not resolve git path from OS dynamic lookup.");
+
+		// 5. use default, whether it is correct or not.
+		info("Could not resolve git path. Falling back to default path: " + gitPathCandidate);
+		gitPathCandidate = new File(BinariesConstants.BUILT_IN_DEFAULT_GIT_PATH).toPath();
+
+		return gitPathCandidate;
 	}
 
 	/**

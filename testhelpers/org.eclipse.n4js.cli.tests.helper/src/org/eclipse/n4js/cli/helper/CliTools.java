@@ -10,13 +10,18 @@
  */
 package org.eclipse.n4js.cli.helper;
 
+import static org.apache.log4j.Logger.getLogger;
+import static org.eclipse.n4js.utils.collections.Arrays2.isEmpty;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
+import org.apache.log4j.Logger;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.N4jscOptions;
@@ -24,6 +29,7 @@ import org.eclipse.xtext.testing.GlobalRegistries;
 import org.eclipse.xtext.testing.GlobalRegistries.GlobalStateMemento;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.inject.Injector;
 
@@ -31,6 +37,7 @@ import com.google.inject.Injector;
  * Class to call n4jsc and other other cli tools.
  */
 public class CliTools {
+	private static final Logger LOGGER = getLogger(CliTools.class);
 
 	/** Default timeout for executions performed via the methods in this class. */
 	public static final long DEFAULT_TIMEOUT_IN_MINUTES = 30;
@@ -206,11 +213,98 @@ public class CliTools {
 		});
 	}
 
+	/** see {@link TestProcessExecuter#gitRun(Path, Map, String[])} */
+	public ProcessResult gitRun(Path workingDir, String... options) {
+		return withoutCorruptingGlobalState(() -> {
+			return getExProcessExecuter().gitRun(workingDir, environment, options);
+		});
+	}
+
 	/** see {@link TestProcessExecuter#run(Path, Map, Path, String...)} */
 	public ProcessResult run(Path workingDir, Path executable, String... options) {
 		return withoutCorruptingGlobalState(() -> {
 			return getExProcessExecuter().run(workingDir, environment, executable, options);
 		});
+	}
+
+	/**
+	 * Sugar for {@link #gitHardReset(String, Path, String, boolean)} with multiple remote git URIs and local paths.
+	 *
+	 * @param remoteUris
+	 *            the URI of the remote repository.
+	 * @param localClonePaths
+	 *            the local path of the cloned repository.
+	 * @param branch
+	 *            the name of the branch to reset the {@code HEAD} pointer.
+	 * @param clean
+	 *            if {@code true}, a Git clean will be executed after the reset.
+	 */
+	public void gitHardReset(List<String> remoteUris, List<Path> localClonePaths, String branch,
+			boolean clean) {
+
+		Preconditions.checkArgument(remoteUris.size() == localClonePaths.size());
+
+		for (int i = 0; i < remoteUris.size(); i++) {
+			Path wd = localClonePaths.get(i);
+			String repoUri = remoteUris.get(i);
+			gitHardReset(repoUri, wd, branch, clean);
+		}
+	}
+
+	/**
+	 * Hard resets the {@code HEAD} of the reference in the locally cloned Git repository. If the repository does not
+	 * exists yet at the given local clone path, then it also clones it.
+	 *
+	 * @param remoteUri
+	 *            the URI of the remote repository. Could be omitted if the {@code cloneIfMissing} is {@code false}.
+	 * @param localClonePath
+	 *            the local path of the cloned repository.
+	 * @param branch
+	 *            the name of the branch to reset the {@code HEAD} pointer.
+	 * @param clean
+	 *            if {@code true}, a Git clean will be executed after the reset, similar to running the command
+	 *            {@code "git clean -dxff"}. Such an extensive clean will set the repository back to the state right
+	 *            after freshly cloning it.
+	 */
+	public void gitHardReset(String remoteUri, Path localClonePath, String branch, boolean clean) {
+		File destinationFolder = localClonePath.toFile();
+		if (!destinationFolder.isDirectory()) {
+			destinationFolder.mkdirs();
+		}
+
+		final File[] existingFiles = destinationFolder.listFiles();
+		if (isEmpty(existingFiles)) {
+			LOGGER.info("Cloning repository ...");
+			// git clone --branch <BRANCH> --single-branch --depth 1 <URI>
+			gitRun(localClonePath, "clone", "--branch", branch, "--single-branch", "--depth 1", remoteUri);
+			LOGGER.info("Cloning repository ... done.");
+		}
+
+		LOGGER.info("Resetting repository ...");
+		// git reset --hard HEAD
+		gitRun(localClonePath, "reset", "--hard", "HEAD");
+		LOGGER.info("Resetting repository ... done.");
+
+		if (clean) {
+			LOGGER.info("Cleaning repository ...");
+			// git clean -dxf
+			gitRun(localClonePath, "clean", "-dxf");
+			LOGGER.info("Cleaning repository ... done.");
+		}
+	}
+
+	/**
+	 * Initialize and update the submodules with the given repository-relative <code>submodulePaths</code> inside the
+	 * Git repository at the given clone path. Throws exceptions in case of error.
+	 *
+	 * @param localClonePaths
+	 *            the local path of the cloned repository.
+	 */
+	public void gitInitAndUpdateSubmodules(Iterable<Path> localClonePaths) {
+		for (Path clonePath : localClonePaths) {
+			gitRun(clonePath, "submodule", "init");
+			gitRun(clonePath, "submodule", "update");
+		}
 	}
 
 	private TestProcessExecuter getExProcessExecuter() {

@@ -72,6 +72,11 @@ public class TestProcessExecuter {
 		return joinProcess("yarn", () -> testProcessBuilder.yarnRun(workingDir, environment, options));
 	}
 
+	/** Runs git OPTIONS in the given {@code workingDir} */
+	public ProcessResult gitRun(Path workingDir, Map<String, String> environment, String... options) {
+		return joinProcess("git", () -> testProcessBuilder.gitRun(workingDir, environment, options));
+	}
+
 	/** Runs n4jsc.jar in the given {@code workingDir} with the given environment additions and options. */
 	public ProcessResult n4jscRun(Path workingDir, Map<String, String> environment, N4jscOptions options) {
 		return joinProcess("n4jsc.jar", () -> testProcessBuilder.n4jscRun(workingDir, environment, options));

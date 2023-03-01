@@ -83,12 +83,12 @@ import com.google.common.collect.Iterables;
 /**
  * Contains a bunch of utility methods for performing Git operations.
  */
-public abstract class GitUtils {
+public abstract class GitUtils_old {
 
 	/**
 	 * Shared logger instance.
 	 */
-	private static final Logger LOGGER = getLogger(GitUtils.class);
+	private static final Logger LOGGER = getLogger(GitUtils_old.class);
 
 	private static final String ORIGIN = DEFAULT_REMOTE_NAME;
 
