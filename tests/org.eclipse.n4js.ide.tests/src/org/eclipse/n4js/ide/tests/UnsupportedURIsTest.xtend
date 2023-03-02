@@ -115,7 +115,7 @@ class UnsupportedURIsTest extends AbstractIdeTest {
 
 	def private void changeOpenedFile(URI uri, int newVersion, CharSequence newText) {
 		val docId = new VersionedTextDocumentIdentifier(uri.toString(), newVersion);
-		val changes = #[ new TextDocumentContentChangeEvent(new Range(new Position(0, 0), new Position(0, 0)), 0, newText.toString) ];
+		val changes = #[ new TextDocumentContentChangeEvent(new Range(new Position(0, 0), new Position(0, 0)), newText.toString) ];
 		languageServer.didChange(new DidChangeTextDocumentParams(docId, changes));
 	}
 
