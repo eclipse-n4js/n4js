@@ -58,6 +58,11 @@ public final class BinariesConstants {
 	public static final String DEFAULT_YARN_PATH_VM_ARG = "org.eclipse.n4js.defaultYarnPath";
 
 	/**
+	 * Default git path, similar to {@code DEFAULT_NODE_PATH_VM_ARG}
+	 */
+	public static final String DEFAULT_GIT_PATH_VM_ARG = "org.eclipse.n4js.defaultGitPath";
+
+	/**
 	 * Default java path, similar to {@code DEFAULT_NODE_PATH_VM_ARG}
 	 */
 	public static final String DEFAULT_JAVA_PATH_VM_ARG = "org.eclipse.n4js.defaultJavaPath";
@@ -81,6 +86,16 @@ public final class BinariesConstants {
 	 * argument might override this configuration.
 	 */
 	public static final String YARN_PATH_ENV = "YARN_PATH";
+
+	/**
+	 * Jenkins environment variable for the {@code git} binary path. Points to the actual binary (with an absolute path)
+	 * instead of pointing to the folder containing the binary.
+	 *
+	 * <p>
+	 * Even if it is available the {@link #DEFAULT_GIT_PATH_VM_ARG <code>org.eclipse.n4js.defaultGitPath</code>} VM
+	 * argument might override this configuration.
+	 */
+	public static final String GIT_PATH_ENV = "GIT_PATH";
 
 	/**
 	 * Jenkins environment variable for the {@code java} binary path. Points to the actual binary (with an absolute
@@ -114,6 +129,18 @@ public final class BinariesConstants {
 	 */
 	public static final String BUILT_IN_DEFAULT_YARN_PATH = isWindows()
 			? new File("C:" + separator + "Program Files" + separator + "yarn").getAbsolutePath()
+			: new File(separator + "usr" + File.separator + "local" + separator + "bin").getAbsolutePath();
+
+	/**
+	 * The (fallback) built-in default {@code git} path if the above VM or ENV property is not specified.
+	 *
+	 * <ul>
+	 * <li>On Windows systems: {@code C:\Program Files\git}</li>
+	 * <li>On Unix systems: {@code /usr/local/bin}</li>
+	 * </ul>
+	 */
+	public static final String BUILT_IN_DEFAULT_GIT_PATH = isWindows()
+			? new File("C:" + separator + "Program Files" + separator + "git").getAbsolutePath()
 			: new File(separator + "usr" + File.separator + "local" + separator + "bin").getAbsolutePath();
 
 	/**
@@ -152,6 +179,8 @@ public final class BinariesConstants {
 	public static final String YARN_LABEL = "Yarn";
 	/** The {@code yarn} binary name without file extension. */
 	public static final String YARN_BINARY_NAME = "yarn";
+	/** The {@code git} binary name without file extension. */
+	public static final String GIT_BINARY_NAME = "git";
 	/** The minimum {@code yarn} version. */
 	public static final VersionNumber YARN_MIN_VERSION = SemverUtils.createVersionNumber(1, 13, 0);
 	/** The argument for yarn to print out the version number */
@@ -176,7 +205,7 @@ public final class BinariesConstants {
 	/** Shell command for Windows OS */
 	public static final String[] WIN_SHELL_COMAMNDS = { "cmd", "/c" };
 	/** Shell command for *nix OS */
-	public static final String[] NIX_SHELL_COMAMNDS = { "sh", "-c" };
+	public static final String[] NIX_SHELL_COMAMNDS = { "/bin/bash", "-c" };
 
 	private BinariesConstants() {
 		// No initialization.

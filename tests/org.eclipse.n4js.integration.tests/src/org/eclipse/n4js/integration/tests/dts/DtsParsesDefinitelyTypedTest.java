@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.integration.tests.dts;
 
-import static org.eclipse.n4js.tests.helper.git.GitUtils.hardReset;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -30,6 +28,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.cli.helper.CliTools;
 import org.eclipse.n4js.dts.DtsParseResult;
 import org.eclipse.n4js.dts.DtsParser;
 import org.eclipse.n4js.dts.LoadResultInfoAdapter;
@@ -70,8 +69,9 @@ public class DtsParsesDefinitelyTypedTest {
 
 		Path targetDir = Path.of(workspace, DEFINITELY_TYPED_CHECKOUT_DIR_NAME);
 
-		hardReset("https://github.com/DefinitelyTyped/DefinitelyTyped.git", targetDir,
-				"master", true, true);
+		CliTools cliTools = new CliTools();
+		cliTools.setInheritIO(true);
+		cliTools.gitHardReset("https://github.com/DefinitelyTyped/DefinitelyTyped.git", targetDir, "master", true);
 
 		assertParseCounts(targetDir, 30000, 1000, 0);
 	}

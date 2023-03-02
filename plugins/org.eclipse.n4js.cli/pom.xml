@@ -63,7 +63,6 @@ Contributors:
 								org.eclipse.jdt.launching,
 								org.bouncycastle.bcpg,
 								org.bouncycastle.bcprov,
-								org.eclipse.jgit,
 								org.apache.sshd.osgi,
 								org.apache.sshd.sftp,
 						<!--		com.fasterxml.jackson.core.jackson-core,

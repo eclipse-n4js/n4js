@@ -12,13 +12,11 @@ package org.eclipse.n4js.jsdoc2spec;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.jgit.errors.ConfigInvalidException;
-import org.eclipse.jgit.lib.Config;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.utils.Log;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
@@ -29,7 +27,6 @@ import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
 import com.google.common.base.Strings;
-import com.google.common.io.Files;
 
 /**
  * Value object containing information about the repository relative location of a file, optionally with line number to
@@ -97,7 +94,7 @@ public class RepoRelativePath {
 			}
 			currentFolder = currentFolder.getParentFile();
 		}
-		return currentFolder;
+		return null;
 	}
 
 	/**
@@ -126,12 +123,8 @@ public class RepoRelativePath {
 			return null;
 		}
 		try {
-			String configStr = Files.asCharSource(config, Charset.defaultCharset()).read();
-			Config cfg = new Config();
-
-			cfg.fromText(configStr);
-			String originURL = cfg.getString("remote", "origin", "url");
-			if (originURL != null && !originURL.isEmpty()) {
+			String originURL = getUrlFromGitConfig(config);
+			if (!originURL.isEmpty()) {
 				int lastSlash = originURL.lastIndexOf('/');
 				String repoName = null;
 				if (lastSlash >= 0) {
@@ -144,15 +137,32 @@ public class RepoRelativePath {
 				}
 				return repoName;
 			}
-		} catch (ConfigInvalidException | IOException e) {
+		} catch (Exception e) {
 			LOGGER.warn("Cannot read git config at " + config.getAbsolutePath(), e);
 		}
 
 		return null;
 	}
 
-	private static String getRepoPath(File repoFolder, File fileInsideRepo) {
+	private static String getUrlFromGitConfig(File config) throws IOException {
+		String[] configLines = Files.readString(config.toPath()).split("\\s*\\n\\s*");
+		int lineIdx = 0;
+		while (lineIdx < configLines.length && !"[remote \"origin\"]".equals(configLines[lineIdx])) {
+			lineIdx++;
+		}
+		while (lineIdx < configLines.length) {
+			if (configLines[lineIdx].startsWith("url = ")) {
+				return configLines[lineIdx].substring("url = ".length());
+			}
+			lineIdx++;
+		}
+		return null;
+	}
 
+	private static String getRepoPath(File repoFolder, File fileInsideRepo) {
+		if (repoFolder == null || fileInsideRepo == null) {
+			return null;
+		}
 		String repoFolderAbs = repoFolder.getAbsolutePath();
 		String fileInsideRepoAbs = fileInsideRepo.getAbsolutePath();
 

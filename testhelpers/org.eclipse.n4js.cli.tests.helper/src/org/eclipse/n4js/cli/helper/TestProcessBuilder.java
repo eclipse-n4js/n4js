@@ -25,8 +25,6 @@ import org.eclipse.n4js.cli.utils.BinariesConstants;
 import org.eclipse.n4js.cli.utils.BinariesLocatorHelper;
 import org.eclipse.n4js.cli.utils.BinariesUtils;
 
-import com.google.common.base.Optional;
-
 /**
  * Concrete runner, i.e. runner implementation for node.js engine.
  */
@@ -59,6 +57,12 @@ public class TestProcessBuilder {
 		return createProcessBuilder(workingDirectory, cmd, environment);
 	}
 
+	/** @return a process: {@code git OPTIONS} */
+	public ProcessBuilder gitRun(Path workingDirectory, Map<String, String> environment, String[] options) {
+		final String[] cmd = createCommandGitRun(environment, options);
+		return createProcessBuilder(workingDirectory, cmd, environment);
+	}
+
 	/** @return a Java process: {@code java -jar n4jsc.jar OPTIONS} */
 	public ProcessBuilder n4jscRun(Path workingDirectory, Map<String, String> environment, N4jscOptions options) {
 		BinariesUtils.inheritNodeJsPathEnvVariable(environment); // necessary?
@@ -70,7 +74,7 @@ public class TestProcessBuilder {
 	public ProcessBuilder run(Path workingDirectory, Map<String, String> environment, Path executable,
 			String[] options) {
 		BinariesUtils.inheritNodeJsPathEnvVariable(environment); // necessary?
-		final String[] cmd = createCommand(workingDirectory, environment, executable, options);
+		final String[] cmd = createCommand(environment, executable, options);
 		return createProcessBuilder(workingDirectory, cmd, environment);
 	}
 
@@ -106,6 +110,16 @@ public class TestProcessBuilder {
 		return cmd.toArray(new String[0]);
 	}
 
+	private String[] createCommandGitRun(Map<String, String> output_env, String[] options) {
+		List<String> cmd = getCommands(output_env, binariesLocatorHelper.getGitBinary(), options);
+
+		// yarn will invoke node, so node must be on the path:
+		Path nodePath = binariesLocatorHelper.getNodeBinary().toAbsolutePath().getParent();
+		prependToPathString(output_env, nodePath);
+
+		return cmd.toArray(new String[0]);
+	}
+
 	private String[] createCommandN4jscRun(Map<String, String> output_env, N4jscOptions options) {
 		File n4jscAbsoluteFile = N4jscJarProvider.getAbsoluteRunnableN4jsc();
 		String n4jscFileName = n4jscAbsoluteFile.toString();
@@ -120,30 +134,22 @@ public class TestProcessBuilder {
 		return cmd.toArray(new String[0]);
 	}
 
-	private String[] createCommand(Path workingDirectory, Map<String, String> output_env,
-			Path executable, String[] options) {
-		List<String> cmd = getCommands(Optional.of(workingDirectory), output_env, executable, options);
+	private String[] createCommand(Map<String, String> output_env, Path executable, String[] options) {
+		List<String> cmd = getCommands(output_env, executable, options);
 		return cmd.toArray(new String[0]);
 	}
 
-	private List<String> getCommands(Map<String, String> output_env, Path binaryPathAndName, String... options) {
-		return getCommands(Optional.absent(), output_env, binaryPathAndName, options);
-	}
+	private List<String> getCommands(Map<String, String> output_env, Path executable, String... options) {
 
-	private List<String> getCommands(Optional<Path> workingDirectory, Map<String, String> output_env, Path executable,
-			String... options) {
-
-		Path executableAbsolute = workingDirectory.isPresent()
-				? workingDirectory.get().resolve(executable)
-				: executable.toAbsolutePath();
-
-		Path additionalPath = executableAbsolute.getParent();
-		prependToPathString(output_env, additionalPath);
+		if (executable.getNameCount() > 1) {
+			Path additionalPath = executable.getParent();
+			prependToPathString(output_env, additionalPath);
+		}
 
 		ArrayList<String> cmd = new ArrayList<>();
 
 		// start command line with absolute path to binary
-		String npmPath = "\"" + executableAbsolute.toString() + "\"";
+		String npmPath = "\"" + executable.toString() + "\"";
 
 		if (isWindows()) {
 			cmd.addAll(Arrays.asList(BinariesConstants.WIN_SHELL_COMAMNDS));

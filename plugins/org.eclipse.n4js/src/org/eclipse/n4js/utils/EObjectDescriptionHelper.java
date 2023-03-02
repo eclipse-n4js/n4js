@@ -87,6 +87,7 @@ public final class EObjectDescriptionHelper {
 	 * necessary because the headless compiler doesn't serialize the modules for performance reasons, so the
 	 * N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY user data entry is not there to check.
 	 */
+	@SuppressWarnings("unused")
 	private boolean isMainModule(IEObjectDescription eoDescription) {
 		return isMainModuleFromObject(eoDescription) || isMainModuleFromUserData(eoDescription);
 	}
