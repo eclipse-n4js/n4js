@@ -178,9 +178,10 @@ public class LspServer {
 		N4jscConsole.setSuppress(true);
 
 		LspLogger lspLogger = languageServer.getLspLogger();
+		ServerIncidentLogger incidentLogger = languageServer.getServerIncidentLogger();
+
 		Appender lspLoggerAppender = redirectLog4jToLspLogger(lspLogger);
-		Appender serverIncidentAppender = copyLog4jErrorsToServerIncidentLogger(
-				languageServer.getServerIncidentLogger());
+		Appender serverIncidentAppender = copyLog4jErrorsToServerIncidentLogger(incidentLogger);
 
 		PrintStream oldStdOut = System.out;
 		PrintStream oldStdErr = System.err;
