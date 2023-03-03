@@ -14,11 +14,18 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.ProgressParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
+import org.eclipse.lsp4j.WorkDoneProgressBegin;
+import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
+import org.eclipse.lsp4j.WorkDoneProgressEnd;
+import org.eclipse.lsp4j.WorkDoneProgressNotification;
+import org.eclipse.lsp4j.WorkDoneProgressReport;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.ide.client.AbstractN4JSLanguageClient;
@@ -97,6 +104,27 @@ public class N4jscLanguageClient extends AbstractN4JSLanguageClient implements A
 	@Override
 	public void logMessage(MessageParams message) {
 		N4jscConsole.println(message.getMessage());
+	}
+
+	@Override
+	public CompletableFuture<Void> createProgress(WorkDoneProgressCreateParams params) {
+		return CompletableFuture.completedFuture(null);
+	}
+
+	@Override
+	public void notifyProgress(ProgressParams params) {
+		WorkDoneProgressNotification notification = params.getValue().getLeft();
+		if (notification instanceof WorkDoneProgressBegin) {
+			WorkDoneProgressBegin beginNotification = (WorkDoneProgressBegin) notification;
+			N4jscConsole.println(beginNotification.getTitle());
+		}
+		if (notification instanceof WorkDoneProgressReport) {
+			// ignore
+		}
+		if (notification instanceof WorkDoneProgressEnd) {
+			WorkDoneProgressEnd endNotification = (WorkDoneProgressEnd) notification;
+			N4jscConsole.println(endNotification.getMessage());
+		}
 	}
 
 	@Override

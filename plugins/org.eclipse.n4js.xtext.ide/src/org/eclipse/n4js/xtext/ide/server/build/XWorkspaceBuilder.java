@@ -21,8 +21,16 @@ import java.util.stream.Collectors;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.lsp4j.ProgressParams;
+import org.eclipse.lsp4j.WorkDoneProgressBegin;
+import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
+import org.eclipse.lsp4j.WorkDoneProgressEnd;
+import org.eclipse.lsp4j.WorkDoneProgressNotification;
+import org.eclipse.lsp4j.WorkDoneProgressReport;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.xtext.ide.server.ResourceChangeSet;
+import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
 import org.eclipse.n4js.xtext.ide.server.build.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.xtext.ide.server.build.XWorkspaceManager.UpdateResult;
 import org.eclipse.n4js.xtext.ide.server.util.LspLogger;
@@ -100,6 +108,9 @@ public class XWorkspaceBuilder {
 	@Inject
 	private BuildOrderFactory buildOrderFactory;
 
+	@Inject
+	private XLanguageServerImpl languageServer;
+
 	private final Set<URI> newDirtyFiles = new LinkedHashSet<>();
 	private final Set<URI> newDeletedFiles = new LinkedHashSet<>();
 	private boolean newRefreshRequest = false;
@@ -110,6 +121,8 @@ public class XWorkspaceBuilder {
 
 	/** Holds all deltas of all projects. In case of a cancelled build, this set is not empty at start of next build. */
 	private final List<IResourceDescription.Delta> toBeConsideredDeltas = new ArrayList<>();
+
+	private WorkDoneProgressCreateParams currentProgress;
 
 	/**
 	 * Initializes the workspace and triggers an initial build (always non-cancelable).
@@ -138,21 +151,26 @@ public class XWorkspaceBuilder {
 	 * @return the delta.
 	 */
 	private IResourceDescription.Event doInitialBuild() {
-		lspLogger.log("Initial build ...");
+		startProgress("", "Full build");
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		WorkspaceConfigSnapshot workspaceConfig = workspaceManager.getWorkspaceConfig();
 		try {
 			Collection<? extends ProjectConfigSnapshot> allProjects = workspaceManager.getProjectConfigs();
 			BuildOrderIterator pboIterator = buildOrderFactory.createBuildOrderIterator(workspaceConfig, allProjects);
+
 			logBuildOrder(workspaceConfig);
 
 			List<IResourceDescription.Delta> allDeltas = new ArrayList<>();
+			int pboIndex = 0;
 
 			while (pboIterator.hasNext()) {
 				ProjectConfigSnapshot projectConfig = pboIterator.next();
 				String projectID = projectConfig.getName();
 				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(projectID);
+
+				updateProgress(projectID, (100 * pboIndex++) / allProjects.size());
+
 				XBuildResult partialresult = projectBuilder.doInitialBuild(buildRequestFactory, allDeltas);
 				allDeltas.addAll(partialresult.getAffectedResources());
 			}
@@ -160,7 +178,8 @@ public class XWorkspaceBuilder {
 			onBuildDone(true, false, Optional.absent());
 
 			stopwatch.stop();
-			lspLogger.log("... initial build done (" + stopwatch.toString() + ").");
+
+			endProgress("Full build done.");
 
 			return new ResourceDescriptionChangeEvent(allDeltas);
 		} catch (Throwable th) {
@@ -169,12 +188,56 @@ public class XWorkspaceBuilder {
 			onBuildDone(true, wasCanceled, Optional.of(th));
 
 			if (wasCanceled) {
-				lspLogger.log("... initial build canceled.");
+				endProgress("Full build canceled.");
 				operationCanceledManager.propagateIfCancelException(th);
+				// returns here
 			}
 
-			lspLogger.error("... initial build ABORTED due to exception:", th);
+			lspLogger.error("Full build ABORTED due to exception:", th);
+			endProgress("Full build ABORTED due to an exception.");
+
 			throw th;
+		}
+	}
+
+	private void startProgress(String message, String title) {
+		endProgress("Build terminated due to new build.");
+
+		if (currentProgress == null) {
+			Either<String, Integer> token = Either.forRight((int) (System.currentTimeMillis() % Integer.MAX_VALUE));
+			currentProgress = new WorkDoneProgressCreateParams(token);
+			languageServer.getLanguageClient().createProgress(currentProgress);
+
+			WorkDoneProgressBegin progressNotification = new WorkDoneProgressBegin();
+			progressNotification.setTitle(title);
+			progressNotification.setMessage(message);
+			progressNotification.setCancellable(false);
+			progressNotification.setPercentage(0);
+			Either<WorkDoneProgressNotification, Object> notification = Either.forLeft(progressNotification);
+			ProgressParams progressParams = new ProgressParams(currentProgress.getToken(), notification);
+			languageServer.getLanguageClient().notifyProgress(progressParams);
+		}
+	}
+
+	private void updateProgress(String message, int percentage) {
+		if (currentProgress != null) {
+			WorkDoneProgressReport progressNotification = new WorkDoneProgressReport();
+			progressNotification.setMessage(message);
+			progressNotification.setCancellable(false);
+			progressNotification.setPercentage(percentage);
+			Either<WorkDoneProgressNotification, Object> notification = Either.forLeft(progressNotification);
+			ProgressParams progressParams = new ProgressParams(currentProgress.getToken(), notification);
+			languageServer.getLanguageClient().notifyProgress(progressParams);
+		}
+	}
+
+	private void endProgress(String message) {
+		if (currentProgress != null) {
+			WorkDoneProgressEnd progressNotification = new WorkDoneProgressEnd();
+			progressNotification.setMessage(message);
+			Either<WorkDoneProgressNotification, Object> notification = Either.forLeft(progressNotification);
+			ProgressParams progressParams = new ProgressParams(currentProgress.getToken(), notification);
+			languageServer.getLanguageClient().notifyProgress(progressParams);
 		}
 	}
 
@@ -277,6 +340,7 @@ public class XWorkspaceBuilder {
 	 * </ol>
 	 */
 	protected IResourceDescription.Event doIncrementalWorkspaceUpdateAndBuild(CancelIndicator cancelIndicator) {
+		startProgress("", "Build");
 
 		// in case many incremental build tasks pile up in the queue (e.g. while a non-cancelable initial build is
 		// running), we don't want to repeatedly invoke IWorkspaceManager#update() in each of those tasks but only in
@@ -292,7 +356,7 @@ public class XWorkspaceBuilder {
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		if (newRefreshRequest) {
-			lspLogger.log("Refreshing ...");
+			updateProgress("Refreshing", 0);
 		}
 
 		UpdateResult updateResult = workspaceManager.update(newDirtyFiles, newDeletedFiles, newRefreshRequest);
@@ -343,10 +407,12 @@ public class XWorkspaceBuilder {
 		handleContentsOfRemovedProjects(updateResult.removedProjectsContents);
 
 		if (newRefreshRequest) {
-			lspLogger.log("... refresh done (" + stopwatch.toString() + "; "
+			lspLogger.log("Refresh done (" + stopwatch.toString() + "; "
 					+ "projects added/removed: " + changes.getAddedProjects().size() + "/"
 					+ changes.getRemovedProjects().size() + "; "
 					+ "files dirty/deleted: " + dirtyFiles.size() + "/" + deletedFiles.size() + ").");
+
+			updateProgress("Refreshing", 1);
 		}
 
 		for (String cyclicProject : updateResult.cyclicProjectsAdded) {
@@ -363,6 +429,7 @@ public class XWorkspaceBuilder {
 		}
 
 		if (dirtyFiles.isEmpty() && deletedFiles.isEmpty() && affectedByDeletedProjects.isEmpty()) {
+			endProgress("Empty change set.");
 			return new ResourceDescriptionChangeEvent(Collections.emptyList());
 		}
 
@@ -412,8 +479,6 @@ public class XWorkspaceBuilder {
 
 	/** Run the build on the workspace */
 	private IResourceDescription.Event doIncrementalBuild(CancelIndicator cancelIndicator) {
-		lspLogger.log("Building ...");
-
 		WorkspaceConfigSnapshot workspaceConfig = workspaceManager.getWorkspaceConfig();
 		try {
 			Set<URI> dirtyFilesToBuild = new LinkedHashSet<>(this.dirtyFiles);
@@ -462,7 +527,7 @@ public class XWorkspaceBuilder {
 
 			onBuildDone(false, false, Optional.absent());
 
-			lspLogger.log("... build done.");
+			endProgress("Build done.");
 
 			return new ResourceDescriptionChangeEvent(result);
 		} catch (Throwable th) {
@@ -471,13 +536,16 @@ public class XWorkspaceBuilder {
 			onBuildDone(false, wasCanceled, Optional.of(th));
 
 			if (wasCanceled) {
-				lspLogger.log("... build canceled.");
+				endProgress("Build canceled.");
 				operationCanceledManager.propagateIfCancelException(th);
+				// returns here
 			}
 
 			// unknown exception or error (and not a cancellation case):
 			// QueueExecutorService will log this as an error with stack trace, so here we just use #log():
-			lspLogger.log("... build ABORTED due to exception: " + th.getMessage());
+			endProgress("Build ABORTED due to exception.");
+			lspLogger.log("Build ABORTED due to exception: " + th.getMessage());
+
 			throw th;
 		}
 	}
