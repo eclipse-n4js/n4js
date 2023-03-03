@@ -22,44 +22,44 @@ public class DocumentSymbolTest extends AbstractDocumentSymbolTest {
 	@Test
 	public void openWorkspaceSymbolsClassTest() throws Exception {
 		test("class C { field: string; method(): {}}",
-				"(C, Class, (test-project/src/MyModule.n4js, [0:6 - 0:7]))\n" +
-						"(field, Field, (test-project/src/MyModule.n4js, [0:10 - 0:15]))\n" +
-						"(method, Method, (test-project/src/MyModule.n4js, [0:25 - 0:31]))");
+				"(C, Class, [0:6 - 0:7])\n" +
+						"(field, Field, [0:10 - 0:15])\n" +
+						"(method, Method, [0:25 - 0:31])");
 	}
 
 	/***/
 	@Test
 	public void openWorkspaceSymbolsInterfaceTest() throws Exception {
 		test("interface I { field: string; method(): {} }",
-				"(I, Interface, (test-project/src/MyModule.n4js, [0:10 - 0:11]))\n" +
-						"(field, Field, (test-project/src/MyModule.n4js, [0:14 - 0:19]))\n" +
-						"(method, Method, (test-project/src/MyModule.n4js, [0:29 - 0:35]))");
+				"(I, Interface, [0:10 - 0:11])\n" +
+						"(field, Field, [0:14 - 0:19])\n" +
+						"(method, Method, [0:29 - 0:35])");
 	}
 
 	/***/
 	@Test
 	public void openWorkspaceSymbolsNamespaceTest() throws Exception {
 		test("namespace N { class C {} interface I {}}",
-				"(N, Namespace, (test-project/src/MyModule.n4js, [0:10 - 0:11]))\n" +
-						"(C, Class, (test-project/src/MyModule.n4js, [0:20 - 0:21]))\n" +
-						"(I, Interface, (test-project/src/MyModule.n4js, [0:35 - 0:36]))");
+				"(N, Namespace, [0:10 - 0:11])\n" +
+						"(C, Class, [0:20 - 0:21])\n" +
+						"(I, Interface, [0:35 - 0:36])");
 	}
 
 	/***/
 	@Test
 	public void openWorkspaceSymbolsEnumTest() throws Exception {
 		test("enum E {green, red}",
-				"(E, Enum, (test-project/src/MyModule.n4js, [0:5 - 0:6]))\n" +
-						"(green, EnumMember, (test-project/src/MyModule.n4js, [0:8 - 0:13]))\n" +
-						"(red, EnumMember, (test-project/src/MyModule.n4js, [0:15 - 0:18]))");
+				"(E, Enum, [0:5 - 0:6])\n" +
+						"(green, EnumMember, [0:8 - 0:13])\n" +
+						"(red, EnumMember, [0:15 - 0:18])");
 	}
 
 	/***/
 	@Test
 	public void openWorkspaceSymbolsTypeAliasTest() throws Exception {
 		test("class A {}; type T = A;",
-				"(A, Class, (test-project/src/MyModule.n4js, [0:6 - 0:7]))\n" +
-						"(T, Interface, (test-project/src/MyModule.n4js, [0:17 - 0:18]))");
+				"(A, Class, [0:6 - 0:7])\n" +
+						"(T, Interface, [0:17 - 0:18])");
 	}
 
 }
