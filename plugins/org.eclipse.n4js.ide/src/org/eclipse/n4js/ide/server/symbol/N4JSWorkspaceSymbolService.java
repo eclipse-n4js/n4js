@@ -48,14 +48,14 @@ public class N4JSWorkspaceSymbolService extends WorkspaceSymbolService {
 	public Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>> getSymbols(String query,
 			IResourceAccess resourceAccess, IResourceDescriptions indexData, CancelIndicator cancelIndicator) {
 
-		List<SymbolInformation> result = new LinkedList<>();
+		List<WorkspaceSymbol> result = new LinkedList<>();
 		for (IResourceDescription resourceDescription : indexData.getAllResourceDescriptions()) {
 			operationCanceledManager.checkCanceled(cancelIndicator);
 			URI uri = resourceDescription.getURI();
 			ResourceType resourceType = ResourceType.getResourceType(uri);
 			if (resourceType.isN4JS()) {
-				List<? extends SymbolInformation> symbols = n4jsDocumentSymbolService.getSymbols(resourceDescription,
-						query, resourceAccess, cancelIndicator);
+				List<? extends WorkspaceSymbol> symbols = n4jsDocumentSymbolService.getWorkspaceSymbols(
+						resourceDescription, query, resourceAccess, cancelIndicator);
 				result.addAll(symbols);
 			} else {
 				// ignore this
@@ -63,6 +63,6 @@ public class N4JSWorkspaceSymbolService extends WorkspaceSymbolService {
 				// of workspace symbols)
 			}
 		}
-		return Either.forLeft(result);
+		return Either.forRight(result);
 	}
 }

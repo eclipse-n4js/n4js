@@ -17,6 +17,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.lsp4j.WorkspaceSymbol;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.findReferences.ReferenceAcceptor;
@@ -114,6 +116,25 @@ public class XDocumentSymbolService extends DocumentSymbolService {
 				indexData,
 				cancelIndicator);
 		return locations;
+	}
+
+	/** Convert to non-deprecated type */
+	public List<? extends WorkspaceSymbol> getWorkspaceSymbols(IResourceDescription resourceDescription, String query,
+			IResourceAccess resourceAccess, CancelIndicator cancelIndicator) {
+
+		List<WorkspaceSymbol> wSymbols = new ArrayList<>();
+		for (SymbolInformation symbol : getSymbols(resourceDescription, query, resourceAccess, cancelIndicator)) {
+			wSymbols.add(convert(symbol));
+		}
+		return wSymbols;
+	}
+
+	private WorkspaceSymbol convert(SymbolInformation symbol) {
+		return new WorkspaceSymbol(
+				symbol.getName(),
+				symbol.getKind(),
+				Either.forLeft(symbol.getLocation()),
+				symbol.getContainerName());
 	}
 
 	/**

@@ -54,7 +54,7 @@ abstract public class AbstractWorkspaceSymbolTest extends AbstractStructuredIdeT
 		CompletableFuture<Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>>> result = languageServer
 				.symbol(wsc.params);
 		Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>> symbolsLists = result.get();
-		List<? extends SymbolInformation> symbols = symbolsLists.getLeft();
+		List<? extends WorkspaceSymbol> symbols = symbolsLists.getRight();
 
 		String actualSymbols = Strings.join(", ", s -> getStringLSP4J().toString(s), symbols);
 		assertEquals(wsc.expectation, actualSymbols);

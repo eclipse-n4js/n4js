@@ -17,11 +17,13 @@ import java.util.List;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.SymbolKind;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.server.util.SymbolKindUtil;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
@@ -34,6 +36,7 @@ import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.findReferences.TargetURIs;
 import org.eclipse.xtext.ide.server.DocumentExtensions;
 import org.eclipse.xtext.ide.server.UriExtensions;
+import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -43,6 +46,8 @@ import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 
+import com.google.common.collect.Lists;
+import com.google.common.graph.Traverser;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -63,6 +68,8 @@ public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 	private OperationCanceledManager operationCanceledManager;
 	@Inject
 	private IResourceServiceProvider.Registry resourceServiceProviderRegistry;
+	@Inject
+	private HierarchicalDocumentSymbolService hierarchicalDocumentSymbolService;
 
 	@Override
 	public List<? extends Location> getDefinitions(XtextResource resource, int offset,
@@ -110,6 +117,7 @@ public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 	@Override
 	protected void createSymbol(IEObjectDescription description, IResourceAccess resourceAccess,
 			Procedure1<? super SymbolInformation> acceptor) {
+
 		SymbolInformation symbol = createSymbol(description);
 		if (symbol != null) {
 			acceptor.apply(symbol);
@@ -186,4 +194,20 @@ public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 		return SymbolKindUtil.getSymbolKind(type);
 	}
 
+	@Override
+	public List<Either<SymbolInformation, DocumentSymbol>> getSymbols(XtextResource resource,
+			CancelIndicator cancelIndicator) {
+
+		ArrayList<DocumentSymbol> infos = new ArrayList<>();
+		List<DocumentSymbol> rootSymbols = Lists
+				.transform(hierarchicalDocumentSymbolService.getSymbols(resource, cancelIndicator), Either::getRight);
+
+		for (DocumentSymbol rootSymbol : rootSymbols) {
+			Iterable<DocumentSymbol> symbols = Traverser.forTree(DocumentSymbol::getChildren)
+					.depthFirstPreOrder(rootSymbol);
+
+			infos.addAll(Lists.newArrayList(symbols));
+		}
+		return Lists.transform(infos, Either::forRight);
+	}
 }

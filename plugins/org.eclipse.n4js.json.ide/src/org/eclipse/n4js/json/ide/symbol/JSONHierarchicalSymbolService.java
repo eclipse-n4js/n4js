@@ -32,6 +32,7 @@ import com.google.inject.Inject;
 /**
  * Creates the JSON outline tree for LSP based editors.
  */
+@SuppressWarnings("deprecation")
 public class JSONHierarchicalSymbolService extends HierarchicalDocumentSymbolService {
 
 	@Inject
@@ -43,6 +44,7 @@ public class JSONHierarchicalSymbolService extends HierarchicalDocumentSymbolSer
 	@Override
 	public List<Either<SymbolInformation, DocumentSymbol>> getSymbols(XtextResource resource,
 			CancelIndicator cancelIndicator) {
+
 		List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
 		for (EObject content : resource.getContents()) {
 			if (content instanceof JSONDocument) {

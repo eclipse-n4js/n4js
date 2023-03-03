@@ -41,6 +41,8 @@ import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceEdit;
+import org.eclipse.lsp4j.WorkspaceSymbol;
+import org.eclipse.lsp4j.WorkspaceSymbolLocation;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.messages.Tuple.Two;
 import org.eclipse.n4js.scoping.builtin.N4Scheme;
@@ -185,6 +187,18 @@ public class StringLSP4J {
 	}
 
 	/** @return string for given element */
+	public Object toString11(Either<Location, WorkspaceSymbolLocation> location) {
+		if (location == null) {
+			return "";
+		}
+		if (location.isLeft()) {
+			return toString(location.getLeft());
+		} else {
+			return toString(location.getRight());
+		}
+	}
+
+	/** @return string for given element */
 	public String toString(InsertReplaceEdit irEdit) {
 		return "(" + irEdit.getNewText() + " at " + toString(irEdit.getInsert()) + "/" + toString(irEdit.getReplace())
 				+ ")";
@@ -206,8 +220,12 @@ public class StringLSP4J {
 
 	/** @return string for given element */
 	public String toString(DocumentSymbol ds) {
-		String children = ds.getChildren().isEmpty() ? "" : "\n" + Strings.join("\n   -> ", ds.getChildren());
-		return "(" + Strings.join(", ", ds.getName(), ds.getKind(), toString(ds.getRange())) + children + ")";
+		return "(" + Strings.join(", ", ds.getName(), ds.getKind(), toString(ds.getSelectionRange())) + ")";
+	}
+
+	/** @return string for given element */
+	public String toString(WorkspaceSymbol ws) {
+		return "(" + Strings.join(", ", ws.getName(), ws.getKind(), toString11(ws.getLocation())) + ")";
 	}
 
 	/** @return string for given element */
@@ -396,6 +414,18 @@ public class StringLSP4J {
 				toString(location.getRange()));
 
 		return "(" + str + ")";
+	}
+
+	/** @return string for given element */
+	public String toString(WorkspaceSymbolLocation location) {
+		if (location == null) {
+			return "";
+		}
+		String uri = location.getUri().startsWith(N4Scheme.SCHEME)
+				? location.getUri()
+				: relativize(location.getUri());
+
+		return "(" + uri + ")";
 	}
 
 	/** @return string for given element */

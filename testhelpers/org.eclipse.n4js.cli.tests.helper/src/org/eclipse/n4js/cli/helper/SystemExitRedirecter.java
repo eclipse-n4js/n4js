@@ -14,7 +14,13 @@ import java.security.Permission;
 
 /**
  * Catches calls to System.exit() and throws an {@link SystemExitException} instead.
+ *
+ * @implNote The Java {@link SecurityManager} is deprecated. Here it is used to throw an exception instead of exiting
+ *           the application. This cannot be done with a shutdown hook. Since work is still in progress regarding
+ *           replacements (see here: https://openjdk.org/jeps/411 and here: https://bugs.openjdk.org/browse/JDK-8199704)
+ *           we will ignore the warning at the moment and revisit this issue once we need to update Java.
  */
+@SuppressWarnings({ "removal", "deprecation" })
 public class SystemExitRedirecter {
 
 	/** Enables redirection */
