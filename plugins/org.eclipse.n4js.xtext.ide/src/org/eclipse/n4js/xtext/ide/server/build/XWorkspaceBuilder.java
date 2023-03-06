@@ -160,7 +160,7 @@ public class XWorkspaceBuilder {
 
 			stopwatch.stop();
 
-			endProgress("Full build done.");
+			endProgress("Full build done. (" + stopwatch.toString() + ").");
 
 			return new ResourceDescriptionChangeEvent(allDeltas);
 		} catch (Throwable th) {
@@ -202,7 +202,7 @@ public class XWorkspaceBuilder {
 				}
 			}
 		}
-		int totalFileCount = todoList.size();
+		int totalFileCount = Math.max(1, todoList.size());
 		postCreateListener = request -> {
 			request.addBeforeBuildFileListener(uri -> {
 				todoList.remove(request.getProjectName(), uri);
