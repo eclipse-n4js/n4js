@@ -169,7 +169,7 @@ public class XStatefulIncrementalBuilder {
 			// (note: do not handle OperationCanceledException this way; it would break the builder, see GH-1775)
 		}
 
-		return new XBuildResult(request.getIndex(), request.getFileMappings(), allProcessedDeltas);
+		return new XBuildResult(request, allProcessedDeltas);
 	}
 
 	/** Overwrite this method to adjust the build request while working / loading resources already. */
@@ -225,6 +225,8 @@ public class XStatefulIncrementalBuilder {
 		IResourceValidator resourceValidator = serviceProvider.getResourceValidator();
 
 		Resource resource = loadResult.resource;
+
+		request.beforeBuildFile(source);
 
 		if (resource == null) {
 			// loading of resource failed

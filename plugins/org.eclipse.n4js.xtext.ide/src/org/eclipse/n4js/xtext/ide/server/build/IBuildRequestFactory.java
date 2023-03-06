@@ -54,6 +54,14 @@ public interface IBuildRequestFactory {
 			boolean doValidate,
 			boolean writeStorageResources);
 
-	/** Called after the build request was created. */
-	void onPostCreate(XBuildRequest request);
+	/** Adds the {@link OnPostCreateListener} */
+	void addOnPostCreateListener(OnPostCreateListener listener);
+
+	/** Removes the {@link OnPostCreateListener} */
+	void removeOnPostCreateListener(OnPostCreateListener listener);
+
+	/** Provides callback on the created build request */
+	interface OnPostCreateListener {
+		void onPostCreate(XBuildRequest request);
+	}
 }

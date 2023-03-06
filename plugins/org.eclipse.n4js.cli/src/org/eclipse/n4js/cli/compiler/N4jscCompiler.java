@@ -22,7 +22,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializedParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
-import org.eclipse.n4js.cli.N4jscBuildRequestFactory;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
@@ -35,6 +34,7 @@ import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.xtext.ide.server.LanguageServerFrontend;
 import org.eclipse.n4js.xtext.ide.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
+import org.eclipse.n4js.xtext.ide.server.build.IBuildRequestFactory;
 import org.eclipse.n4js.xtext.ide.server.build.XWorkspaceManager;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 
@@ -136,10 +136,12 @@ public class N4jscCompiler {
 
 	private void setupWorkspaceBuildActionListener() {
 		Injector injector = N4jscFactory.getOrCreateInjector();
-		N4jscBuildRequestFactory buildRequestFactory = injector.getInstance(N4jscBuildRequestFactory.class);
-		buildRequestFactory.setAfterGenerateListener(callback);
-		buildRequestFactory.setAfterDeleteListener(callback);
-		buildRequestFactory.setAfterBuildListener(callback);
+		IBuildRequestFactory buildRequestFactory = injector.getInstance(IBuildRequestFactory.class);
+		buildRequestFactory.addOnPostCreateListener(request -> {
+			request.addAfterGenerateListener(callback);
+			request.addAfterDeleteListener(callback);
+			request.addAfterBuildRequestListener(callback);
+		});
 	}
 
 	private void throwIfNoProjectsFound() throws N4jscException {

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.xtext.workspace;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 
@@ -50,6 +51,12 @@ public class WorkspaceConfigSnapshot extends Snapshot {
 	/** Getter for the root path. */
 	public URI getPath() {
 		return path;
+	}
+
+	/** Getter for the root path. */
+	public Path makeWorkspaceRelative(URI containedUri) {
+		Path p = Path.of(getPath().toFileString());
+		return p.relativize(Path.of(containedUri.toFileString()));
 	}
 
 	/** Tells whether this workspace is empty, i.e. does not contain any projects. */

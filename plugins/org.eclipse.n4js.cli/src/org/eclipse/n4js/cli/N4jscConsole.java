@@ -40,22 +40,21 @@ public class N4jscConsole {
 
 	/** Sets the info line. Used to report progress. */
 	@SuppressWarnings("resource")
-	static public void setInfoLine(String line) {
-		if (StringUtils.isBlank(line)) {
-			line = null;
+	static public void setInfoLine(String newLine) {
+		if (StringUtils.isBlank(newLine)) {
+			newLine = null;
 		}
 
 		String infoLineOld = infoLine;
-		infoLine = line;
+		infoLine = newLine;
 
 		if (atStartPosition) {
-			if (infoLineOld == null && line != null) {
+			if (infoLineOld != null) {
+				infoLine = String.format("%1$" + infoLineOld.length() + "s", "");
 				doPrint(getPrintStream(), "", true);
-			} else if (infoLineOld != null && line == null) {
-				doPrint(getPrintStream(), "", true);
-			} else if (infoLineOld != null && line != null) {
-				doPrint(getPrintStream(), "", true);
+				infoLine = newLine;
 			}
+			doPrint(getPrintStream(), "", true);
 		}
 	}
 
@@ -85,7 +84,7 @@ public class N4jscConsole {
 
 	static private void doPrint(PrintStream ps, String msg, boolean forceInfoLine) {
 		ps.print(msg);
-		atStartPosition = msg.endsWith("\n") || msg.endsWith("\n\r");
+		atStartPosition = (atStartPosition && msg.isEmpty()) || msg.endsWith("\n") || msg.endsWith("\n\r");
 		if (infoLine != null && (atStartPosition || forceInfoLine)) {
 			ps.print(infoLine + "\r");
 		}
