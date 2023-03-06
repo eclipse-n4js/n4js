@@ -22,7 +22,9 @@ import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.ProgressParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
+import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.ide.client.AbstractN4JSLanguageClient;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
@@ -151,6 +153,17 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 				break;
 			}
 		}
+	}
+
+	@Override
+	public CompletableFuture<Void> createProgress(WorkDoneProgressCreateParams params) {
+		// ignore
+		return CompletableFuture.completedFuture(null);
+	}
+
+	@Override
+	public void notifyProgress(ProgressParams params) {
+		// ignore
 	}
 
 	@Override
