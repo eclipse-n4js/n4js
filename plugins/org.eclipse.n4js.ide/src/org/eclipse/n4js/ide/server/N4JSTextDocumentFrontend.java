@@ -46,7 +46,6 @@ import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.xtext.ide.server.ResourceTaskContext;
 import org.eclipse.n4js.xtext.ide.server.TextDocumentFrontend;
-import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
 import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
 import org.eclipse.xtext.util.CancelIndicator;
 
@@ -57,7 +56,7 @@ import com.google.inject.Inject;
  * Extends {@link N4JSTextDocumentFrontend} to implement N4JS server capabilities.
  */
 public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
-	private static Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
+	private static Logger LOG = Logger.getLogger(N4JSTextDocumentFrontend.class);
 
 	@Inject
 	private WorkspaceAccess workspaceAccess;

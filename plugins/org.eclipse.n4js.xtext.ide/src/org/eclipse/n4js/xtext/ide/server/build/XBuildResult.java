@@ -25,10 +25,9 @@ public class XBuildResult {
 	private final List<IResourceDescription.Delta> affectedResources;
 
 	/** Constructor. */
-	public XBuildResult(ResourceDescriptionsData index, XSource2GeneratedMapping fileMappings,
-			List<IResourceDescription.Delta> affectedResources) {
-		this.index = index;
-		this.fileMappings = fileMappings;
+	public XBuildResult(XBuildRequest request, List<IResourceDescription.Delta> affectedResources) {
+		this.index = request.getIndex();
+		this.fileMappings = request.getFileMappings();
 		this.affectedResources = affectedResources;
 	}
 

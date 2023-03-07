@@ -79,6 +79,12 @@ public class XBuildRequest {
 		void afterDelete(URI file);
 	}
 
+	/** Listener for start of build of a single file events */
+	public static interface BeforeBuildFileListener {
+		/** Called before a file will be built */
+		void beforeBuildFile(URI file);
+	}
+
 	/** Listener for the build done of a single file events */
 	public static interface AfterBuildFileListener {
 		/** Called after a file was built */
@@ -98,6 +104,8 @@ public class XBuildRequest {
 	private List<AfterDeleteListener> afterDeleteListeners;
 
 	private List<AffectedListener> affectedListeners;
+
+	private List<BeforeBuildFileListener> beforeBuildFileListeners;
 
 	private List<AfterBuildFileListener> afterBuildFileListeners;
 
@@ -205,9 +213,7 @@ public class XBuildRequest {
 		this.cancelIndicator = cancelIndicator;
 	}
 
-	/**
-	 * Attach a validation listener to the requested build.
-	 */
+	/** Attach a validation listener to the requested build. */
 	public void addAfterValidateListener(AfterValidateListener listener) {
 		if (afterValidateListeners == null) {
 			afterValidateListeners = new ArrayList<>();
@@ -224,9 +230,7 @@ public class XBuildRequest {
 		}
 	}
 
-	/**
-	 * Attach a generate listener to the requested build.
-	 */
+	/** Attach a generate listener to the requested build. */
 	public void addAfterGenerateListener(AfterGenerateListener listener) {
 		if (afterGenerateListeners == null) {
 			afterGenerateListeners = new ArrayList<>();
@@ -243,9 +247,7 @@ public class XBuildRequest {
 		}
 	}
 
-	/**
-	 * Attach a delete listener to the requested build.
-	 */
+	/** Attach a delete listener to the requested build. */
 	public void addAfterDeleteListener(AfterDeleteListener listener) {
 		if (afterDeleteListeners == null) {
 			afterDeleteListeners = new ArrayList<>();
@@ -262,9 +264,7 @@ public class XBuildRequest {
 		}
 	}
 
-	/**
-	 * Attach an affected listener to the requested build.
-	 */
+	/** Attach an affected listener to the requested build. */
 	public void addAffectedListener(AffectedListener listener) {
 		if (affectedListeners == null) {
 			affectedListeners = new ArrayList<>();
@@ -272,9 +272,7 @@ public class XBuildRequest {
 		affectedListeners.add(Objects.requireNonNull(listener));
 	}
 
-	/**
-	 * Notify the request that we are going to work with the given URI.
-	 */
+	/** Notify the request that we are going to work with the given URI. */
 	public void afterDetectedAsAffected(URI uri) {
 		if (affectedListeners != null) {
 			for (AffectedListener listener : affectedListeners) {
@@ -283,9 +281,24 @@ public class XBuildRequest {
 		}
 	}
 
-	/**
-	 * Attach an after build file listener to the requested build.
-	 */
+	/** Attach an before build file listener to the requested build. */
+	public void addBeforeBuildFileListener(BeforeBuildFileListener listener) {
+		if (beforeBuildFileListeners == null) {
+			beforeBuildFileListeners = new ArrayList<>();
+		}
+		beforeBuildFileListeners.add(Objects.requireNonNull(listener));
+	}
+
+	/** Notify the request that a file will be built with the given URI. */
+	public void beforeBuildFile(URI uri) {
+		if (beforeBuildFileListeners != null) {
+			for (BeforeBuildFileListener listener : beforeBuildFileListeners) {
+				listener.beforeBuildFile(uri);
+			}
+		}
+	}
+
+	/** Attach an after build file listener to the requested build. */
 	public void addAfterBuildFileListener(AfterBuildFileListener listener) {
 		if (afterBuildFileListeners == null) {
 			afterBuildFileListeners = new ArrayList<>();
@@ -293,9 +306,7 @@ public class XBuildRequest {
 		afterBuildFileListeners.add(Objects.requireNonNull(listener));
 	}
 
-	/**
-	 * Notify the request that a file was built with the given URI.
-	 */
+	/** Notify the request that a file was built with the given URI. */
 	public void afterBuildFile(URI uri) {
 		if (afterBuildFileListeners != null) {
 			for (AfterBuildFileListener listener : afterBuildFileListeners) {

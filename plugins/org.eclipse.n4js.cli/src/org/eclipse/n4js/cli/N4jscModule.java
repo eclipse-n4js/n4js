@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.cli;
 
-import org.eclipse.n4js.xtext.ide.server.build.DefaultBuildRequestFactory;
 import org.eclipse.xtext.service.AbstractGenericModule;
 
 /**
@@ -19,7 +18,7 @@ import org.eclipse.xtext.service.AbstractGenericModule;
 @SuppressWarnings({ "javadoc" })
 public class N4jscModule extends AbstractGenericModule {
 
-	public Class<? extends DefaultBuildRequestFactory> bindDocumentExtensions() {
-		return N4jscBuildRequestFactory.class;
-	}
+	// public Class<? extends DefaultBuildRequestFactory> bindDocumentExtensions() {
+	// return N4jscBuildRequestFactory.class;
+	// }
 }

@@ -17,12 +17,16 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.Stack;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Console for the user to see.
  */
 public class N4jscConsole {
 	private static final Stack<String> moduleNames = new Stack<>();
 	private static boolean suppress = false;
+	private static String infoLine = null;
+	private static boolean atStartPosition = true;
 
 	/** Set to {@code true} to disable console print outs */
 	static public void setSuppress(boolean pSuppress) {
@@ -32,6 +36,26 @@ public class N4jscConsole {
 	/** @return the output stream for user directed output */
 	static public PrintStream getPrintStream() {
 		return System.out;
+	}
+
+	/** Sets the info line. Used to report progress. */
+	@SuppressWarnings("resource")
+	static public void setInfoLine(String newLine) {
+		if (StringUtils.isBlank(newLine)) {
+			newLine = null;
+		}
+
+		String infoLineOld = infoLine;
+		infoLine = newLine;
+
+		if (atStartPosition) {
+			if (infoLineOld != null) {
+				infoLine = String.format("%1$" + infoLineOld.length() + "s", "");
+				doPrint(getPrintStream(), "", true);
+				infoLine = newLine;
+			}
+			doPrint(getPrintStream(), "", true);
+		}
 	}
 
 	/** Prints a message on the console */
@@ -54,7 +78,15 @@ public class N4jscConsole {
 	/** Prints a message on the given stream */
 	static public void print(PrintStream ps, String msg) {
 		if (!suppress) {
-			ps.print(addModuleNamePrefix(msg));
+			doPrint(ps, addModuleNamePrefix(msg), false);
+		}
+	}
+
+	static private void doPrint(PrintStream ps, String msg, boolean forceInfoLine) {
+		ps.print(msg);
+		atStartPosition = (atStartPosition && msg.isEmpty()) || msg.endsWith("\n") || msg.endsWith("\n\r");
+		if (infoLine != null && (atStartPosition || forceInfoLine)) {
+			ps.print(infoLine + "\r");
 		}
 	}
 

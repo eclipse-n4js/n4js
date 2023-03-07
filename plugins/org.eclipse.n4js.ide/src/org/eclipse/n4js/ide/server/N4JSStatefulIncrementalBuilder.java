@@ -109,6 +109,16 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 		}
 
 		@Override
+		public void addBeforeBuildFileListener(BeforeBuildFileListener listener) {
+			delegate.addBeforeBuildFileListener(listener);
+		}
+
+		@Override
+		public void beforeBuildFile(URI uri) {
+			delegate.beforeBuildFile(uri);
+		}
+
+		@Override
 		public void addAfterBuildFileListener(AfterBuildFileListener listener) {
 			delegate.addAfterBuildFileListener(listener);
 		}

@@ -132,6 +132,13 @@ public class BuildOrderIterator implements IOrderIterator<ProjectConfigSnapshot>
 		return next;
 	}
 
+	/** Resets this visitor. I.e. this visitor can be reused. */
+	public void reset() {
+		iteratorIndex = -1;
+		visitedAlready.clear();
+		lastVisited = null;
+	}
+
 	private ProjectConfigSnapshot atIndex() {
 		return boi.sortedProjects.get(iteratorIndex);
 

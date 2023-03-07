@@ -13,6 +13,8 @@ package org.eclipse.n4js.xtext.ide.server.build;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
@@ -27,6 +29,7 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class DefaultBuildRequestFactory implements IBuildRequestFactory {
+	private final List<OnPostCreateListener> onPostCreateListeners = new LinkedList<>();
 
 	@Override
 	public XBuildRequest createEmptyBuildRequest(WorkspaceConfigSnapshot workspaceConfig,
@@ -65,13 +68,20 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 				index, resourceSet, fileMappings,
 				projectConfig.isGeneratorEnabled(), doValidate, projectConfig.indexOnly(), writeStorageResources);
 
-		onPostCreate(request);
+		for (OnPostCreateListener listener : onPostCreateListeners) {
+			listener.onPostCreate(request);
+		}
+
 		return request;
 	}
 
 	@Override
-	public void onPostCreate(XBuildRequest request) {
-		// overwrite me
+	public void addOnPostCreateListener(OnPostCreateListener listener) {
+		this.onPostCreateListeners.add(listener);
 	}
 
+	@Override
+	public void removeOnPostCreateListener(OnPostCreateListener listener) {
+		this.onPostCreateListeners.remove(listener);
+	}
 }

@@ -58,7 +58,7 @@ class MultiSingletonExpectation {
 	// TODO GH-2061 investigate the new duplicates (compare to old test expectation above)
 
 	static def String get() '''
-		Found multiple instances for 17 singleton classes:
+		Found multiple instances for 18 singleton classes:
 		Singleton 'org.eclipse.n4js.common.unicode.services.UnicodeGrammarAccess' has 3 instances that have the following injectors:
 			- JSON-Injector
 			- N4JS-Injector
@@ -73,6 +73,9 @@ class MultiSingletonExpectation {
 			- JSON-Injector
 			- N4JS-Injector
 		Singleton 'org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex' has 2 instances that have the following injectors:
+			- JSON-Injector
+			- N4JS-Injector
+		Singleton 'org.eclipse.n4js.xtext.ide.server.build.DefaultBuildRequestFactory' has 2 instances that have the following injectors:
 			- JSON-Injector
 			- N4JS-Injector
 		Singleton 'org.eclipse.n4js.xtext.ide.server.build.ProjectStatePersister' has 2 instances that have the following injectors:
