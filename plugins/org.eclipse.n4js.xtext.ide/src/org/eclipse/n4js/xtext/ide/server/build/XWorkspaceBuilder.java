@@ -110,6 +110,7 @@ public class XWorkspaceBuilder {
 	 * Initializes the workspace and triggers an initial build (always non-cancelable).
 	 */
 	public BuildTask createInitialBuildTask() {
+		startProgress("Init build", "Loading...");
 		return (cancelIndicator) -> this.doInitialBuild();
 	}
 
@@ -117,6 +118,7 @@ public class XWorkspaceBuilder {
 	 * Re-initializes the workspace and triggers the equivalent to an initial build (also non-cancelable).
 	 */
 	public BuildTask createReinitialBuildTask() {
+		startProgress("Full build", "Re-initialize...");
 		// because we are about to re-initialize the workspace and build everything anyway, we can get rid of all
 		// changes reported up to this point (but do not clear #newDirty|DeletedFiles at then end of the initial build,
 		// because changes that are reported during the initial build must not be overlooked!)
@@ -133,7 +135,6 @@ public class XWorkspaceBuilder {
 	 * @return the delta.
 	 */
 	private IResourceDescription.Event doInitialBuild() {
-		startProgress("", "Full build");
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		OnPostCreateListener postCreateListener = null;
@@ -160,7 +161,8 @@ public class XWorkspaceBuilder {
 
 			stopwatch.stop();
 
-			endProgress("Full build done. (" + stopwatch.toString() + ").");
+			endProgress("Full build done. (" + stopwatch.toString() + ")");
+			lspLogger.log("Full build done. (" + stopwatch.toString() + ")");
 
 			return new ResourceDescriptionChangeEvent(allDeltas);
 		} catch (Throwable th) {
@@ -217,7 +219,7 @@ public class XWorkspaceBuilder {
 		return postCreateListener;
 	}
 
-	private void startProgress(String message, String title) {
+	private void startProgress(String title, String message) {
 		endProgress("Build terminated due to new build.");
 
 		if (currentProgress == null) {
@@ -255,6 +257,7 @@ public class XWorkspaceBuilder {
 			Either<WorkDoneProgressNotification, Object> notification = Either.forLeft(progressNotification);
 			ProgressParams progressParams = new ProgressParams(currentProgress.getToken(), notification);
 			languageServer.getLanguageClient().notifyProgress(progressParams);
+			currentProgress = null;
 		}
 	}
 
@@ -357,7 +360,7 @@ public class XWorkspaceBuilder {
 	 * </ol>
 	 */
 	protected IResourceDescription.Event doIncrementalWorkspaceUpdateAndBuild(CancelIndicator cancelIndicator) {
-		startProgress("", "Build");
+		startProgress("Build", "");
 
 		// in case many incremental build tasks pile up in the queue (e.g. while a non-cancelable initial build is
 		// running), we don't want to repeatedly invoke IWorkspaceManager#update() in each of those tasks but only in
@@ -496,6 +499,7 @@ public class XWorkspaceBuilder {
 
 	/** Run the build on the workspace */
 	private IResourceDescription.Event doIncrementalBuild(CancelIndicator cancelIndicator) {
+		Stopwatch stopwatch = Stopwatch.createStarted();
 		WorkspaceConfigSnapshot workspaceConfig = workspaceManager.getWorkspaceConfig();
 		OnPostCreateListener postCreateListener = null;
 
@@ -549,12 +553,14 @@ public class XWorkspaceBuilder {
 
 				pboIterator.visitAffected(newlyBuiltDeltas);
 			}
+			stopwatch.stop();
 
 			List<IResourceDescription.Delta> result = toBeConsideredDeltas;
 
 			onBuildDone(false, false, postCreateListener, Optional.absent());
 
 			endProgress("Build done.");
+			lspLogger.log("Build done. (" + stopwatch.toString() + ").");
 
 			return new ResourceDescriptionChangeEvent(result);
 		} catch (Throwable th) {

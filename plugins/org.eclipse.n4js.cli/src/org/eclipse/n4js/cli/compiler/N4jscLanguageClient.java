@@ -115,8 +115,8 @@ public class N4jscLanguageClient extends AbstractN4JSLanguageClient implements A
 	public void notifyProgress(ProgressParams params) {
 		WorkDoneProgressNotification notification = params.getValue().getLeft();
 		if (notification instanceof WorkDoneProgressBegin) {
-			WorkDoneProgressBegin begin = (WorkDoneProgressBegin) notification;
-			N4jscConsole.println(begin.getTitle());
+			// WorkDoneProgressBegin begin = (WorkDoneProgressBegin) notification;
+			// N4jscConsole.println(begin.getTitle());
 		}
 		if (notification instanceof WorkDoneProgressReport) {
 			WorkDoneProgressReport report = (WorkDoneProgressReport) notification;
@@ -125,9 +125,9 @@ public class N4jscLanguageClient extends AbstractN4JSLanguageClient implements A
 			N4jscConsole.setInfoLine(msg);
 		}
 		if (notification instanceof WorkDoneProgressEnd) {
-			WorkDoneProgressEnd end = (WorkDoneProgressEnd) notification;
 			N4jscConsole.setInfoLine(null);
-			N4jscConsole.println(end.getMessage());
+			// WorkDoneProgressEnd end = (WorkDoneProgressEnd) notification;
+			// N4jscConsole.println(end.getMessage());
 		}
 	}
 
