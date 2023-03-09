@@ -216,15 +216,15 @@
   },
   "devDependencies": {
     "json": "11.0.0",
-    "vsce": "1.95.1"
+    "@vscode/vsce": "2.18.0"
   },
   "dependencies": {
     "@types/node": "^16",
     "n4js-cli": "latest",
     "n4js-runtime": "latest",
     "n4js-runtime-es2015": "latest",
-    "npmlog": "4.1.2",
-    "vscode-languageclient": "7.0.0"
+    "npmlog": "7.0.1",
+    "vscode-languageclient": "8.1.0"
   },
   "scripts": {},
   "n4js": {
