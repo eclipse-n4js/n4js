@@ -81,6 +81,7 @@ public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProto
 		ServerCapabilities capabilities = super.createServerCapabilities(params);
 
 		capabilities.setImplementationProvider(true);
+		capabilities.setCallHierarchyProvider(true);
 
 		return capabilities;
 	}
