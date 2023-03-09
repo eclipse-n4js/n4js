@@ -60,6 +60,10 @@ import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentClientCapabilities;
 import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextEdit;
+import org.eclipse.lsp4j.TypeHierarchyItem;
+import org.eclipse.lsp4j.TypeHierarchyPrepareParams;
+import org.eclipse.lsp4j.TypeHierarchySubtypesParams;
+import org.eclipse.lsp4j.TypeHierarchySupertypesParams;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
@@ -520,6 +524,55 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		options.setParams(params);
 		options.setCancelIndicator(cancelIndicator);
 		return renameService.prepareRename(options);
+	}
+
+	@Override
+	public CompletableFuture<List<TypeHierarchyItem>> prepareTypeHierarchy(TypeHierarchyPrepareParams params) {
+		URI uri = paramHelper.getURI(params);
+		return resourceTaskManager.runInExistingContext(uri, "prepareTypeHierarchy", (rtc, ci) -> {
+			return prepareTypeHierarchy(rtc, params, ci);
+		});
+	}
+
+	/** Returns types that the request is performed upon */
+	@SuppressWarnings("unused")
+	protected List<TypeHierarchyItem> prepareTypeHierarchy(ResourceTaskContext rtc, TypeHierarchyPrepareParams params,
+			CancelIndicator ci) {
+
+		// enable capability in XLanguageServerImpl and implement this method in subclass
+		return Collections.emptyList();
+	}
+
+	@Override
+	public CompletableFuture<List<TypeHierarchyItem>> typeHierarchySubtypes(TypeHierarchySubtypesParams params) {
+		URI uri = paramHelper.getURI(params);
+		return resourceTaskManager.runInExistingContext(uri, "typeHierarchySubtypes", (rtc, ci) -> {
+			return typeHierarchySubtypes(rtc, params, ci);
+		});
+	}
+
+	/** Returns all subtypes of the type given in params */
+	@SuppressWarnings("unused")
+	protected List<TypeHierarchyItem> typeHierarchySubtypes(ResourceTaskContext rtc, TypeHierarchySubtypesParams params,
+			CancelIndicator ci) {
+
+		return Collections.emptyList();
+	}
+
+	@Override
+	public CompletableFuture<List<TypeHierarchyItem>> typeHierarchySupertypes(TypeHierarchySupertypesParams params) {
+		URI uri = paramHelper.getURI(params);
+		return resourceTaskManager.runInExistingContext(uri, "typeHierarchySupertypes", (rtc, ci) -> {
+			return typeHierarchySupertypes(rtc, params, ci);
+		});
+	}
+
+	/** Returns all supertypes of the type given in params */
+	@SuppressWarnings("unused")
+	protected List<TypeHierarchyItem> typeHierarchySupertypes(ResourceTaskContext rtc,
+			TypeHierarchySupertypesParams params, CancelIndicator ci) {
+
+		return Collections.emptyList();
 	}
 
 	@Override

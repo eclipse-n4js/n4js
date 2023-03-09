@@ -28,6 +28,8 @@ import org.eclipse.lsp4j.RenameParams;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
+import org.eclipse.lsp4j.TypeHierarchySubtypesParams;
+import org.eclipse.lsp4j.TypeHierarchySupertypesParams;
 import org.eclipse.xtext.ide.server.UriExtensions;
 
 import com.google.inject.Inject;
@@ -142,8 +144,19 @@ public class ParamHelper {
 		return fileEvent != null ? toURI(fileEvent.getUri()) : null;
 	}
 
+	/** Extracts the URI from the given LSP file event. May return <code>null</code>. */
+	public URI getURI(TypeHierarchySubtypesParams params) {
+		return params != null && params.getItem() != null ? toURI(params.getItem().getUri()) : null;
+	}
+
+	/** Extracts the URI from the given LSP file event. May return <code>null</code>. */
+	public URI getURI(TypeHierarchySupertypesParams params) {
+		return params != null && params.getItem() != null ? toURI(params.getItem().getUri()) : null;
+	}
+
 	/** Converts the given string to a {@link URI}. Returns <code>null</code> iff <code>null</code> is passed in. */
 	public URI toURI(String uriStr) {
 		return uriStr != null ? uriExtensions.toUri(uriStr) : null;
 	}
+
 }

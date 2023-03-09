@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -29,6 +30,10 @@ import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
+import org.eclipse.lsp4j.TypeHierarchyItem;
+import org.eclipse.lsp4j.TypeHierarchyPrepareParams;
+import org.eclipse.lsp4j.TypeHierarchySubtypesParams;
+import org.eclipse.lsp4j.TypeHierarchySupertypesParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
 import org.eclipse.n4js.smith.CollectedDataAccess;
@@ -40,6 +45,9 @@ import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.transpiler.sourcemap.MappingEntry;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMap;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMapFileLocator;
+import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.typesystem.utils.AllSuperTypesCollector;
+import org.eclipse.n4js.utils.DeclMergingHelper;
 import org.eclipse.n4js.utils.ResourceNameComputer;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
@@ -47,6 +55,7 @@ import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.xtext.ide.server.ResourceTaskContext;
 import org.eclipse.n4js.xtext.ide.server.TextDocumentFrontend;
 import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Strings;
@@ -69,6 +78,9 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 
 	@Inject
 	private ContentAssistDataCollectors contentAssistDataCollectors;
+
+	@Inject
+	private DeclMergingHelper declMergingHelper;
 
 	@Override
 	protected Either<List<CompletionItem>, CompletionList> completion(ResourceTaskContext rtc, CompletionParams params,
@@ -140,4 +152,29 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 		return new Range(new Position(), new Position());
 	}
 
+	@Override
+	protected List<TypeHierarchyItem> prepareTypeHierarchy(ResourceTaskContext rtc, TypeHierarchyPrepareParams params,
+			CancelIndicator ci) {
+
+		return Collections.emptyList();
+	}
+
+	@Override
+	protected List<TypeHierarchyItem> typeHierarchySubtypes(ResourceTaskContext rtc, TypeHierarchySubtypesParams params,
+			CancelIndicator ci) {
+
+		return Collections.emptyList();
+	}
+
+	@Override
+	protected List<TypeHierarchyItem> typeHierarchySupertypes(ResourceTaskContext rtc,
+			TypeHierarchySupertypesParams params, CancelIndicator ci) {
+
+		XtextResource resource = rtc.getResource();
+
+		TypeHierarchyItem type = params.getItem();
+
+		List<TClassifier> superTypes = AllSuperTypesCollector.collect(null, declMergingHelper);
+		return Collections.emptyList();
+	}
 }
