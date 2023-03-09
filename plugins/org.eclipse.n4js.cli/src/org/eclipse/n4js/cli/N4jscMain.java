@@ -32,7 +32,11 @@ public class N4jscMain {
 
 	/** Entry point of n4jsc compiler */
 	public static void main(String[] args) {
-		main(null, args);
+		try {
+			main(null, args);
+		} catch (SystemExitException e) {
+			System.exit(e.status);
+		}
 	}
 
 	/** Entry point of n4jsc compiler from tests to modify the working directory */
@@ -77,16 +81,15 @@ public class N4jscMain {
 			if (options.isVerbose() || !exitState.isSuppressUserMessage()) {
 				N4jscConsole.println(exitState.toUserString());
 			}
-			System.exit(exitState.getExitCode().getExitCodeValue());
+			throw new SystemExitException(exitState.getExitCode().getExitCodeValue());
 
 		} catch (N4jscException e) {
 			N4jscConsole.println(e.toUserString());
 			if (options.isVerbose()) {
 				e.printStackTrace();
 			}
-			System.exit(e.getExitCode());
+			throw new SystemExitException(e.getExitCode());
 		}
-
 	}
 
 	private static N4jscOptions getOptions(String[] args) {
@@ -108,10 +111,8 @@ public class N4jscMain {
 
 		} catch (N4jscException e) {
 			N4jscConsole.println(e.toUserString());
-			System.exit(e.getExitCode());
+			throw new SystemExitException(e.getExitCode());
 		}
-
-		return null; // never happens
 	}
 
 	/** @return a {@link N4jscExitState} for graceful termination of n4jsc */

@@ -20,7 +20,7 @@ import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.N4jscTestFactory;
-import org.eclipse.n4js.cli.helper.SystemExitRedirecter.SystemExitException;
+import org.eclipse.n4js.cli.SystemExitException;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.xtext.ide.server.build.XWorkspaceManager;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
@@ -34,7 +34,6 @@ import com.google.inject.Injector;
  */
 public class InProcessExecuter {
 	final private SystemOutRedirecter systemOutRedirecter = new SystemOutRedirecter();
-	final private SystemExitRedirecter systemExitRedirecter = new SystemExitRedirecter();
 	private N4jscTestFactory.State originalFactoryState = null;
 
 	interface N4jscProcess<ArgType> {
@@ -108,12 +107,10 @@ public class InProcessExecuter {
 	void setRedirections() {
 		originalFactoryState = N4jscTestFactory.setAfterStoringState(isEnabledBackend, Optional.absent());
 		systemOutRedirecter.set(isMirrorSystemOut);
-		systemExitRedirecter.set();
 	}
 
 	void unsetRedirections() {
 		systemOutRedirecter.unset();
-		systemExitRedirecter.unset();
 		N4jscTestFactory.unsetAndRestoreState(originalFactoryState);
 	}
 }
