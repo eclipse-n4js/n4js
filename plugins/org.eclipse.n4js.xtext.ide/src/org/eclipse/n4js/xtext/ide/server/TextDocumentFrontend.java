@@ -546,7 +546,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	@Override
 	public CompletableFuture<List<TypeHierarchyItem>> typeHierarchySubtypes(TypeHierarchySubtypesParams params) {
 		URI uri = paramHelper.getURI(params);
-		return resourceTaskManager.runInExistingContext(uri, "typeHierarchySubtypes", (rtc, ci) -> {
+		return resourceTaskManager.runInTemporaryContext(uri, "typeHierarchySubtypes", false, (rtc, ci) -> {
 			return typeHierarchySubtypes(rtc, params, ci);
 		});
 	}
@@ -562,7 +562,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	@Override
 	public CompletableFuture<List<TypeHierarchyItem>> typeHierarchySupertypes(TypeHierarchySupertypesParams params) {
 		URI uri = paramHelper.getURI(params);
-		return resourceTaskManager.runInExistingContext(uri, "typeHierarchySupertypes", (rtc, ci) -> {
+		return resourceTaskManager.runInTemporaryContext(uri, "typeHierarchySupertypes", false, (rtc, ci) -> {
 			return typeHierarchySupertypes(rtc, params, ci);
 		});
 	}

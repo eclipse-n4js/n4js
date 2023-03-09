@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
@@ -29,6 +30,7 @@ import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
+import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TypeHierarchyItem;
 import org.eclipse.lsp4j.TypeHierarchyPrepareParams;
@@ -36,6 +38,7 @@ import org.eclipse.lsp4j.TypeHierarchySubtypesParams;
 import org.eclipse.lsp4j.TypeHierarchySupertypesParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
+import org.eclipse.n4js.ide.server.util.SymbolKindUtil;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectorUtils;
@@ -45,7 +48,10 @@ import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.transpiler.sourcemap.MappingEntry;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMap;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMapFileLocator;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.typesystem.utils.AllSuperTypesCollector;
 import org.eclipse.n4js.utils.DeclMergingHelper;
 import org.eclipse.n4js.utils.ResourceNameComputer;
@@ -54,9 +60,13 @@ import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.xtext.ide.server.ResourceTaskContext;
 import org.eclipse.n4js.xtext.ide.server.TextDocumentFrontend;
+import org.eclipse.n4js.xtext.ide.server.XDocument;
 import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
+import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
+import org.eclipse.xtext.resource.ILocationInFileProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.util.ITextRegion;
 
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
@@ -81,6 +91,12 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 
 	@Inject
 	private DeclMergingHelper declMergingHelper;
+
+	@Inject
+	private EObjectAtOffsetHelper eObjectAtOffsetHelper;
+
+	@Inject
+	private ILocationInFileProvider locationInFileProvider;
 
 	@Override
 	protected Either<List<CompletionItem>, CompletionList> completion(ResourceTaskContext rtc, CompletionParams params,
@@ -156,6 +172,16 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	protected List<TypeHierarchyItem> prepareTypeHierarchy(ResourceTaskContext rtc, TypeHierarchyPrepareParams params,
 			CancelIndicator ci) {
 
+		int offset = rtc.getDocument().getOffSet(params.getPosition());
+		EObject element = eObjectAtOffsetHelper.resolveElementAt(rtc.getResource(), offset);
+		if (element instanceof TypeRef) {
+			TypeRef tRef = (TypeRef) element;
+			element = tRef.getDeclaredType();
+		}
+		if (element instanceof Type) {
+			TypeHierarchyItem item = toTypeHierarchyItem((Type) element);
+			return List.of(item);
+		}
 		return Collections.emptyList();
 	}
 
@@ -163,6 +189,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	protected List<TypeHierarchyItem> typeHierarchySubtypes(ResourceTaskContext rtc, TypeHierarchySubtypesParams params,
 			CancelIndicator ci) {
 
+		// TODO
 		return Collections.emptyList();
 	}
 
@@ -170,11 +197,41 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	protected List<TypeHierarchyItem> typeHierarchySupertypes(ResourceTaskContext rtc,
 			TypeHierarchySupertypesParams params, CancelIndicator ci) {
 
-		XtextResource resource = rtc.getResource();
+		int offset = rtc.getDocument().getOffSet(params.getItem().getSelectionRange().getStart());
+		EObject element = eObjectAtOffsetHelper.resolveElementAt(rtc.getResource(), offset);
 
-		TypeHierarchyItem type = params.getItem();
+		if (element instanceof ContainerType<?>) {
+			ContainerType<?> cType = (ContainerType<?>) element;
+			List<TClassifier> superTypes = AllSuperTypesCollector.collect(cType, declMergingHelper);
+			List<TypeHierarchyItem> superTypesTHI = new ArrayList<>();
+			for (TClassifier sType : superTypes) {
+				TypeHierarchyItem item = toTypeHierarchyItem(sType);
+				superTypesTHI.add(item);
+			}
 
-		List<TClassifier> superTypes = AllSuperTypesCollector.collect(null, declMergingHelper);
+			return superTypesTHI;
+		}
+
 		return Collections.emptyList();
 	}
+
+	private TypeHierarchyItem toTypeHierarchyItem(Type type) {
+		XtextResource resource = (XtextResource) type.eResource();
+		XDocument doc = new XDocument(1, resource.getParseResult().getRootNode().getText());
+		SymbolKind symbolKind = SymbolKindUtil.getSymbolKind(type.eClass());
+		String uri = type.eResource().getURI().toFileString();
+
+		ITextRegion fullRegion = locationInFileProvider.getFullTextRegion(type);
+		Position fullStartPos = doc.getPosition(fullRegion.getOffset());
+		Position fullEndPos = doc.getPosition(fullRegion.getOffset() + fullRegion.getLength());
+		ITextRegion sgnfRegion = locationInFileProvider.getSignificantTextRegion(type);
+		Position sgnfStartPos = doc.getPosition(sgnfRegion.getOffset());
+		Position sgnfEndPos = doc.getPosition(sgnfRegion.getOffset() + sgnfRegion.getLength());
+		Range range = new Range(fullStartPos, fullEndPos);
+		Range selectionRange = new Range(sgnfStartPos, sgnfEndPos);
+
+		TypeHierarchyItem item = new TypeHierarchyItem(type.getName(), symbolKind, uri, range, selectionRange);
+		return item;
+	}
+
 }
