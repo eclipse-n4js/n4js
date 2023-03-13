@@ -28,6 +28,7 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
  *   <li>{@link org.eclipse.n4js.ts.types.TClass#isDeclaredFinal <em>Declared Final</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TClass#isDeclaredStaticPolyfill <em>Declared Static Polyfill</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TClass#isObservable <em>Observable</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TClass#getSubClassRefs <em>Sub Class Refs</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TClass#getSuperClassRef <em>Super Class Ref</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TClass#getImplementedInterfaceRefs <em>Implemented Interface Refs</em>}</li>
  * </ul>
@@ -148,6 +149,18 @@ public interface TClass extends TN4Classifier {
 	void setObservable(boolean value);
 
 	/**
+	 * Returns the value of the '<em><b>Sub Class Refs</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Sub Class Refs</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTClass_SubClassRefs()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<ParameterizedTypeRef> getSubClassRefs();
+
+	/**
 	 * Returns the value of the '<em><b>Super Class Ref</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -201,6 +214,18 @@ public interface TClass extends TN4Classifier {
 	 * @generated
 	 */
 	TClass getSuperClass();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * Convenience method, returns all subclasses and sub-interfaces as type references.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.ParameterizedTypeRefIterable" unique="false"
+	 * @generated
+	 */
+	Iterable<ParameterizedTypeRef> getSubClassifierRefs();
 
 	/**
 	 * <!-- begin-user-doc -->

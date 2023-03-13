@@ -6261,13 +6261,31 @@ public interface TypesPackage extends EPackage {
 	int TCLASSIFIER___IS_ABSTRACT = CONTAINER_TYPE_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Sub Classifiers</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASSIFIER___GET_SUB_CLASSIFIERS = CONTAINER_TYPE_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Get Super Classifiers</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER___GET_SUPER_CLASSIFIERS = CONTAINER_TYPE_OPERATION_COUNT + 2;
+	int TCLASSIFIER___GET_SUPER_CLASSIFIERS = CONTAINER_TYPE_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Get Sub Classifier Refs</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASSIFIER___GET_SUB_CLASSIFIER_REFS = CONTAINER_TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Super Classifier Refs</em>' operation.
@@ -6276,7 +6294,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER___GET_SUPER_CLASSIFIER_REFS = CONTAINER_TYPE_OPERATION_COUNT + 3;
+	int TCLASSIFIER___GET_SUPER_CLASSIFIER_REFS = CONTAINER_TYPE_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Implemented Or Extended Interface Refs</em>' operation.
@@ -6285,7 +6303,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = CONTAINER_TYPE_OPERATION_COUNT + 4;
+	int TCLASSIFIER___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = CONTAINER_TYPE_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -6294,7 +6312,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER___IS_FINAL = CONTAINER_TYPE_OPERATION_COUNT + 5;
+	int TCLASSIFIER___IS_FINAL = CONTAINER_TYPE_OPERATION_COUNT + 7;
 
 	/**
 	 * The number of operations of the '<em>TClassifier</em>' class.
@@ -6303,7 +6321,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER_OPERATION_COUNT = CONTAINER_TYPE_OPERATION_COUNT + 6;
+	int TCLASSIFIER_OPERATION_COUNT = CONTAINER_TYPE_OPERATION_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ArrayLikeImpl <em>Array Like</em>}' class.
@@ -6722,6 +6740,15 @@ public interface TypesPackage extends EPackage {
 	int TN4_CLASSIFIER___IS_ABSTRACT = TCLASSIFIER___IS_ABSTRACT;
 
 	/**
+	 * The operation id for the '<em>Get Sub Classifiers</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER___GET_SUB_CLASSIFIERS = TCLASSIFIER___GET_SUB_CLASSIFIERS;
+
+	/**
 	 * The operation id for the '<em>Get Super Classifiers</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6729,6 +6756,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TN4_CLASSIFIER___GET_SUPER_CLASSIFIERS = TCLASSIFIER___GET_SUPER_CLASSIFIERS;
+
+	/**
+	 * The operation id for the '<em>Get Sub Classifier Refs</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER___GET_SUB_CLASSIFIER_REFS = TCLASSIFIER___GET_SUB_CLASSIFIER_REFS;
 
 	/**
 	 * The operation id for the '<em>Get Super Classifier Refs</em>' operation.
@@ -7047,13 +7083,22 @@ public interface TypesPackage extends EPackage {
 	int TCLASS__OBSERVABLE = TN4_CLASSIFIER_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Sub Class Refs</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS__SUB_CLASS_REFS = TN4_CLASSIFIER_FEATURE_COUNT + 5;
+
+	/**
 	 * The feature id for the '<em><b>Super Class Ref</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS__SUPER_CLASS_REF = TN4_CLASSIFIER_FEATURE_COUNT + 5;
+	int TCLASS__SUPER_CLASS_REF = TN4_CLASSIFIER_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Implemented Interface Refs</b></em>' containment reference list.
@@ -7062,7 +7107,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS__IMPLEMENTED_INTERFACE_REFS = TN4_CLASSIFIER_FEATURE_COUNT + 6;
+	int TCLASS__IMPLEMENTED_INTERFACE_REFS = TN4_CLASSIFIER_FEATURE_COUNT + 7;
 
 	/**
 	 * The number of structural features of the '<em>TClass</em>' class.
@@ -7071,7 +7116,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS_FEATURE_COUNT = TN4_CLASSIFIER_FEATURE_COUNT + 7;
+	int TCLASS_FEATURE_COUNT = TN4_CLASSIFIER_FEATURE_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -7236,6 +7281,15 @@ public interface TypesPackage extends EPackage {
 	int TCLASS___GET_AST_ELEMENT_NO_RESOLVE = TN4_CLASSIFIER___GET_AST_ELEMENT_NO_RESOLVE;
 
 	/**
+	 * The operation id for the '<em>Get Sub Classifiers</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS___GET_SUB_CLASSIFIERS = TN4_CLASSIFIER___GET_SUB_CLASSIFIERS;
+
+	/**
 	 * The operation id for the '<em>Get Super Classifiers</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7308,13 +7362,22 @@ public interface TypesPackage extends EPackage {
 	int TCLASS___GET_SUPER_CLASS = TN4_CLASSIFIER_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Sub Classifier Refs</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS___GET_SUB_CLASSIFIER_REFS = TN4_CLASSIFIER_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Get Super Classifier Refs</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS___GET_SUPER_CLASSIFIER_REFS = TN4_CLASSIFIER_OPERATION_COUNT + 2;
+	int TCLASS___GET_SUPER_CLASSIFIER_REFS = TN4_CLASSIFIER_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Implemented Or Extended Interface Refs</em>' operation.
@@ -7323,7 +7386,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = TN4_CLASSIFIER_OPERATION_COUNT + 3;
+	int TCLASS___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = TN4_CLASSIFIER_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -7332,7 +7395,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS___IS_POLYFILL = TN4_CLASSIFIER_OPERATION_COUNT + 4;
+	int TCLASS___IS_POLYFILL = TN4_CLASSIFIER_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Static Polyfill</em>' operation.
@@ -7341,7 +7404,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS___IS_STATIC_POLYFILL = TN4_CLASSIFIER_OPERATION_COUNT + 5;
+	int TCLASS___IS_STATIC_POLYFILL = TN4_CLASSIFIER_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -7350,7 +7413,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS___IS_FINAL = TN4_CLASSIFIER_OPERATION_COUNT + 6;
+	int TCLASS___IS_FINAL = TN4_CLASSIFIER_OPERATION_COUNT + 7;
 
 	/**
 	 * The number of operations of the '<em>TClass</em>' class.
@@ -7359,7 +7422,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS_OPERATION_COUNT = TN4_CLASSIFIER_OPERATION_COUNT + 7;
+	int TCLASS_OPERATION_COUNT = TN4_CLASSIFIER_OPERATION_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TInterfaceImpl <em>TInterface</em>}' class.
@@ -7543,13 +7606,31 @@ public interface TypesPackage extends EPackage {
 	int TINTERFACE__TYPING_STRATEGY = TN4_CLASSIFIER__TYPING_STRATEGY;
 
 	/**
+	 * The feature id for the '<em><b>Sub Class Refs</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE__SUB_CLASS_REFS = TN4_CLASSIFIER_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Sub Interface Refs</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE__SUB_INTERFACE_REFS = TN4_CLASSIFIER_FEATURE_COUNT + 1;
+
+	/**
 	 * The feature id for the '<em><b>Super Interface Refs</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TINTERFACE__SUPER_INTERFACE_REFS = TN4_CLASSIFIER_FEATURE_COUNT + 0;
+	int TINTERFACE__SUPER_INTERFACE_REFS = TN4_CLASSIFIER_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>TInterface</em>' class.
@@ -7558,7 +7639,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TINTERFACE_FEATURE_COUNT = TN4_CLASSIFIER_FEATURE_COUNT + 1;
+	int TINTERFACE_FEATURE_COUNT = TN4_CLASSIFIER_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -7723,6 +7804,15 @@ public interface TypesPackage extends EPackage {
 	int TINTERFACE___GET_AST_ELEMENT_NO_RESOLVE = TN4_CLASSIFIER___GET_AST_ELEMENT_NO_RESOLVE;
 
 	/**
+	 * The operation id for the '<em>Get Sub Classifiers</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE___GET_SUB_CLASSIFIERS = TN4_CLASSIFIER___GET_SUB_CLASSIFIERS;
+
+	/**
 	 * The operation id for the '<em>Get Super Classifiers</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7813,13 +7903,22 @@ public interface TypesPackage extends EPackage {
 	int TINTERFACE___GET_SUPER_CLASSIFIER_REFS = TN4_CLASSIFIER_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Sub Classifier Refs</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE___GET_SUB_CLASSIFIER_REFS = TN4_CLASSIFIER_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Get Implemented Or Extended Interface Refs</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TINTERFACE___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = TN4_CLASSIFIER_OPERATION_COUNT + 2;
+	int TINTERFACE___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = TN4_CLASSIFIER_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -7828,7 +7927,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TINTERFACE___IS_HOLLOW = TN4_CLASSIFIER_OPERATION_COUNT + 3;
+	int TINTERFACE___IS_HOLLOW = TN4_CLASSIFIER_OPERATION_COUNT + 4;
 
 	/**
 	 * The number of operations of the '<em>TInterface</em>' class.
@@ -7837,7 +7936,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TINTERFACE_OPERATION_COUNT = TN4_CLASSIFIER_OPERATION_COUNT + 4;
+	int TINTERFACE_OPERATION_COUNT = TN4_CLASSIFIER_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TMemberImpl <em>TMember</em>}' class.
@@ -16546,6 +16645,16 @@ public interface TypesPackage extends EPackage {
 	EOperation getTClassifier__IsAbstract();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TClassifier#getSubClassifiers() <em>Get Sub Classifiers</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Sub Classifiers</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TClassifier#getSubClassifiers()
+	 * @generated
+	 */
+	EOperation getTClassifier__GetSubClassifiers();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TClassifier#getSuperClassifiers() <em>Get Super Classifiers</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16554,6 +16663,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTClassifier__GetSuperClassifiers();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TClassifier#getSubClassifierRefs() <em>Get Sub Classifier Refs</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Sub Classifier Refs</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TClassifier#getSubClassifierRefs()
+	 * @generated
+	 */
+	EOperation getTClassifier__GetSubClassifierRefs();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TClassifier#getSuperClassifierRefs() <em>Get Super Classifier Refs</em>}' operation.
@@ -16746,6 +16865,17 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTClass_Observable();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TClass#getSubClassRefs <em>Sub Class Refs</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Sub Class Refs</em>'.
+	 * @see org.eclipse.n4js.ts.types.TClass#getSubClassRefs()
+	 * @see #getTClass()
+	 * @generated
+	 */
+	EReference getTClass_SubClassRefs();
+
+	/**
 	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.TClass#getSuperClassRef <em>Super Class Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16786,6 +16916,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTClass__GetSuperClass();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TClass#getSubClassifierRefs() <em>Get Sub Classifier Refs</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Sub Classifier Refs</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TClass#getSubClassifierRefs()
+	 * @generated
+	 */
+	EOperation getTClass__GetSubClassifierRefs();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TClass#getSuperClassifierRefs() <em>Get Super Classifier Refs</em>}' operation.
@@ -16848,6 +16988,28 @@ public interface TypesPackage extends EPackage {
 	EClass getTInterface();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TInterface#getSubClassRefs <em>Sub Class Refs</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Sub Class Refs</em>'.
+	 * @see org.eclipse.n4js.ts.types.TInterface#getSubClassRefs()
+	 * @see #getTInterface()
+	 * @generated
+	 */
+	EReference getTInterface_SubClassRefs();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TInterface#getSubInterfaceRefs <em>Sub Interface Refs</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Sub Interface Refs</em>'.
+	 * @see org.eclipse.n4js.ts.types.TInterface#getSubInterfaceRefs()
+	 * @see #getTInterface()
+	 * @generated
+	 */
+	EReference getTInterface_SubInterfaceRefs();
+
+	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TInterface#getSuperInterfaceRefs <em>Super Interface Refs</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16877,6 +17039,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTInterface__GetSuperClassifierRefs();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TInterface#getSubClassifierRefs() <em>Get Sub Classifier Refs</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Sub Classifier Refs</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TInterface#getSubClassifierRefs()
+	 * @generated
+	 */
+	EOperation getTInterface__GetSubClassifierRefs();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TInterface#getImplementedOrExtendedInterfaceRefs() <em>Get Implemented Or Extended Interface Refs</em>}' operation.
@@ -19516,12 +19688,28 @@ public interface TypesPackage extends EPackage {
 		EOperation TCLASSIFIER___IS_ABSTRACT = eINSTANCE.getTClassifier__IsAbstract();
 
 		/**
+		 * The meta object literal for the '<em><b>Get Sub Classifiers</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TCLASSIFIER___GET_SUB_CLASSIFIERS = eINSTANCE.getTClassifier__GetSubClassifiers();
+
+		/**
 		 * The meta object literal for the '<em><b>Get Super Classifiers</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EOperation TCLASSIFIER___GET_SUPER_CLASSIFIERS = eINSTANCE.getTClassifier__GetSuperClassifiers();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Sub Classifier Refs</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TCLASSIFIER___GET_SUB_CLASSIFIER_REFS = eINSTANCE.getTClassifier__GetSubClassifierRefs();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Super Classifier Refs</b></em>' operation.
@@ -19674,6 +19862,14 @@ public interface TypesPackage extends EPackage {
 		EAttribute TCLASS__OBSERVABLE = eINSTANCE.getTClass_Observable();
 
 		/**
+		 * The meta object literal for the '<em><b>Sub Class Refs</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TCLASS__SUB_CLASS_REFS = eINSTANCE.getTClass_SubClassRefs();
+
+		/**
 		 * The meta object literal for the '<em><b>Super Class Ref</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -19704,6 +19900,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TCLASS___GET_SUPER_CLASS = eINSTANCE.getTClass__GetSuperClass();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Sub Classifier Refs</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TCLASS___GET_SUB_CLASSIFIER_REFS = eINSTANCE.getTClass__GetSubClassifierRefs();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Super Classifier Refs</b></em>' operation.
@@ -19756,6 +19960,22 @@ public interface TypesPackage extends EPackage {
 		EClass TINTERFACE = eINSTANCE.getTInterface();
 
 		/**
+		 * The meta object literal for the '<em><b>Sub Class Refs</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TINTERFACE__SUB_CLASS_REFS = eINSTANCE.getTInterface_SubClassRefs();
+
+		/**
+		 * The meta object literal for the '<em><b>Sub Interface Refs</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TINTERFACE__SUB_INTERFACE_REFS = eINSTANCE.getTInterface_SubInterfaceRefs();
+
+		/**
 		 * The meta object literal for the '<em><b>Super Interface Refs</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -19778,6 +19998,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TINTERFACE___GET_SUPER_CLASSIFIER_REFS = eINSTANCE.getTInterface__GetSuperClassifierRefs();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Sub Classifier Refs</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TINTERFACE___GET_SUB_CLASSIFIER_REFS = eINSTANCE.getTInterface__GetSubClassifierRefs();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Implemented Or Extended Interface Refs</b></em>' operation.
