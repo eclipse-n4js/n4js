@@ -184,8 +184,19 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	protected List<TypeHierarchyItem> typeHierarchySubtypes(ResourceTaskContext rtc, TypeHierarchySubtypesParams params,
 			CancelIndicator ci) {
 
-		// TODO
-		return Collections.emptyList();
+		rtc.resolveResource(ci);
+		int offset = rtc.getDocument().getOffSet(params.getItem().getSelectionRange().getStart());
+		EObject element = eObjectAtOffsetHelper.resolveElementAt(rtc.getResource(), offset);
+
+		List<TypeHierarchyItem> superTypesTHI = new ArrayList<>();
+		if (element instanceof TClassifier) {
+			TClassifier tClassifier = (TClassifier) element;
+			for (TClassifier subClassifier : tClassifier.getSubClassifiers()) {
+				superTypesTHI.add(toTypeHierarchyItem(subClassifier));
+			}
+		}
+
+		return superTypesTHI;
 	}
 
 	@Override
