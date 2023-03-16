@@ -1112,23 +1112,6 @@ abstract class TClassifier extends ContainerType<TMember>, SyntaxRelatedTElement
 	}
 
 	/**
-	 * Convenience method, returns all subclasses and sub-interfaces as classifiers.
-	 */
-	op IterableOfTClassifier getSubClassifiers() {
-		val List<TClassifier> result = <TClassifier>newArrayList;
-		val Object _superClassifierRefs = this.getSubClassifierRefs();
-		for (Object superClassifierRef : (_superClassifierRefs as Iterable<?>)) {
-			if (superClassifierRef !== null) {
-				val Type declType = (superClassifierRef as TypeRef).getDeclaredType();
-				if (declType instanceof TClassifier) {
-					result.add(declType);
-				}
-			}
-		}
-		return result;
-	}
-
-	/**
 	 * Convenience method, returns all super classes and implemented or extended interfaces as classifiers.
 	 */
 	op IterableOfTClassifier getSuperClassifiers() {
@@ -1137,22 +1120,16 @@ abstract class TClassifier extends ContainerType<TMember>, SyntaxRelatedTElement
 		// so let's do it the old-school way:
 		val List<TClassifier> result = <TClassifier>newArrayList;
 		val Object _superClassifierRefs = this.getSuperClassifierRefs();
-		for (Object superClassifierRef : (_superClassifierRefs as Iterable<?>)) {
-			if (superClassifierRef !== null) {
+		for(Object superClassifierRef : (_superClassifierRefs as Iterable<?>)) {
+			if(superClassifierRef!==null) {
 				val Type declType = (superClassifierRef as TypeRef).getDeclaredType();
-				if (declType instanceof TClassifier) {
+				if(declType instanceof TClassifier) {
 					result.add(declType);
 				}
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * Convenience method, returns all subclasses and sub-interfaces as type references.
-	 */
-	op ParameterizedTypeRefIterable getSubClassifierRefs() {
-		return <ParameterizedTypeRef>emptyList();
+//		return <TClassifier>emptyList;
 	}
 
 	/**
@@ -1222,13 +1199,11 @@ class TClass extends TN4Classifier {
 	boolean declaredFinal
 	boolean declaredStaticPolyfill
 	boolean observable
-	contains ParameterizedTypeRef[] subClassRefs // set in TypeDeferredProcessor
 	contains ParameterizedTypeRef superClassRef
 	contains ParameterizedTypeRef[] implementedInterfaceRefs
 	op boolean isAbstract() {
 		return declaredAbstract
 	}
-	
 	/**
 	 * Convenience method, return the explicitly declared super class casted to a {@link TClass} or <code>null</code> if
 	 * not possible, not available. Ignores implicit super types!
@@ -1237,14 +1212,6 @@ class TClass extends TN4Classifier {
 		val superType = superClassRef?.declaredType;
 		return if(superType instanceof TClass) superType else null;
 	}
-	
-	/**
-	 * Convenience method, returns all subclasses and sub-interfaces as type references.
-	 */
-	op ParameterizedTypeRefIterable getSubClassifierRefs() {
-		return subClassRefs;
-	}
-	
 	/**
 	 * Convenience method, returns all super classes, consumed roles and implemented or extend interfaces
 	 */
@@ -1279,8 +1246,6 @@ class TClass extends TN4Classifier {
 }
 
 class TInterface extends TN4Classifier {
-	contains ParameterizedTypeRef[] subClassRefs // set in TypeDeferredProcessor
-	contains ParameterizedTypeRef[] subInterfaceRefs // set in TypeDeferredProcessor
 	contains ParameterizedTypeRef[] superInterfaceRefs
 
 	op boolean isAbstract() {
@@ -1291,13 +1256,6 @@ class TInterface extends TN4Classifier {
 	 */
 	op ParameterizedTypeRefIterable getSuperClassifierRefs() {
 		return superInterfaceRefs;
-	}
-	
-	/**
-	 * Convenience method, returns all subclasses and sub-interfaces as type references.
-	 */
-	op ParameterizedTypeRefIterable getSubClassifierRefs() {
-		return subClassRefs + subInterfaceRefs;
 	}
 	/**
 	 * Convenience method, returns all implemented (or extended) interfaces

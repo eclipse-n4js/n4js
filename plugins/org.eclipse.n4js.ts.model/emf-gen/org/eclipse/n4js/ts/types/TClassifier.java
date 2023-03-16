@@ -72,36 +72,12 @@ public interface TClassifier extends ContainerType<TMember>, SyntaxRelatedTEleme
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Convenience method, returns all subclasses and sub-interfaces as classifiers.
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.IterableOfTClassifier" unique="false"
-	 * @generated
-	 */
-	Iterable<? extends TClassifier> getSubClassifiers();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
 	 * Convenience method, returns all super classes and implemented or extended interfaces as classifiers.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.IterableOfTClassifier" unique="false"
 	 * @generated
 	 */
 	Iterable<? extends TClassifier> getSuperClassifiers();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * Convenience method, returns all subclasses and sub-interfaces as type references.
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.ParameterizedTypeRefIterable" unique="false"
-	 * @generated
-	 */
-	Iterable<ParameterizedTypeRef> getSubClassifierRefs();
 
 	/**
 	 * <!-- begin-user-doc -->

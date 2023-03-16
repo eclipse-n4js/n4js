@@ -12,8 +12,6 @@ package org.eclipse.n4js.ts.types.impl;
 
 import com.google.common.base.Objects;
 
-import com.google.common.collect.Iterables;
-
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -49,34 +47,12 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TInterfaceImpl#getSubClassRefs <em>Sub Class Refs</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TInterfaceImpl#getSubInterfaceRefs <em>Sub Interface Refs</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TInterfaceImpl#getSuperInterfaceRefs <em>Super Interface Refs</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
-	/**
-	 * The cached value of the '{@link #getSubClassRefs() <em>Sub Class Refs</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getSubClassRefs()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<ParameterizedTypeRef> subClassRefs;
-
-	/**
-	 * The cached value of the '{@link #getSubInterfaceRefs() <em>Sub Interface Refs</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getSubInterfaceRefs()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<ParameterizedTypeRef> subInterfaceRefs;
-
 	/**
 	 * The cached value of the '{@link #getSuperInterfaceRefs() <em>Super Interface Refs</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -104,32 +80,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	@Override
 	protected EClass eStaticClass() {
 		return TypesPackage.Literals.TINTERFACE;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EList<ParameterizedTypeRef> getSubClassRefs() {
-		if (subClassRefs == null) {
-			subClassRefs = new EObjectContainmentEList<ParameterizedTypeRef>(ParameterizedTypeRef.class, this, TypesPackage.TINTERFACE__SUB_CLASS_REFS);
-		}
-		return subClassRefs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EList<ParameterizedTypeRef> getSubInterfaceRefs() {
-		if (subInterfaceRefs == null) {
-			subInterfaceRefs = new EObjectContainmentEList<ParameterizedTypeRef>(ParameterizedTypeRef.class, this, TypesPackage.TINTERFACE__SUB_INTERFACE_REFS);
-		}
-		return subInterfaceRefs;
 	}
 
 	/**
@@ -171,18 +121,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	 * @generated
 	 */
 	@Override
-	public Iterable<ParameterizedTypeRef> getSubClassifierRefs() {
-		EList<ParameterizedTypeRef> _subClassRefs = this.getSubClassRefs();
-		EList<ParameterizedTypeRef> _subInterfaceRefs = this.getSubInterfaceRefs();
-		return Iterables.<ParameterizedTypeRef>concat(_subClassRefs, _subInterfaceRefs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public Iterable<ParameterizedTypeRef> getImplementedOrExtendedInterfaceRefs() {
 		return this.getSuperInterfaceRefs();
 	}
@@ -210,10 +148,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case TypesPackage.TINTERFACE__SUB_CLASS_REFS:
-				return ((InternalEList<?>)getSubClassRefs()).basicRemove(otherEnd, msgs);
-			case TypesPackage.TINTERFACE__SUB_INTERFACE_REFS:
-				return ((InternalEList<?>)getSubInterfaceRefs()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TINTERFACE__SUPER_INTERFACE_REFS:
 				return ((InternalEList<?>)getSuperInterfaceRefs()).basicRemove(otherEnd, msgs);
 		}
@@ -228,10 +162,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TypesPackage.TINTERFACE__SUB_CLASS_REFS:
-				return getSubClassRefs();
-			case TypesPackage.TINTERFACE__SUB_INTERFACE_REFS:
-				return getSubInterfaceRefs();
 			case TypesPackage.TINTERFACE__SUPER_INTERFACE_REFS:
 				return getSuperInterfaceRefs();
 		}
@@ -247,14 +177,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TypesPackage.TINTERFACE__SUB_CLASS_REFS:
-				getSubClassRefs().clear();
-				getSubClassRefs().addAll((Collection<? extends ParameterizedTypeRef>)newValue);
-				return;
-			case TypesPackage.TINTERFACE__SUB_INTERFACE_REFS:
-				getSubInterfaceRefs().clear();
-				getSubInterfaceRefs().addAll((Collection<? extends ParameterizedTypeRef>)newValue);
-				return;
 			case TypesPackage.TINTERFACE__SUPER_INTERFACE_REFS:
 				getSuperInterfaceRefs().clear();
 				getSuperInterfaceRefs().addAll((Collection<? extends ParameterizedTypeRef>)newValue);
@@ -271,12 +193,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TypesPackage.TINTERFACE__SUB_CLASS_REFS:
-				getSubClassRefs().clear();
-				return;
-			case TypesPackage.TINTERFACE__SUB_INTERFACE_REFS:
-				getSubInterfaceRefs().clear();
-				return;
 			case TypesPackage.TINTERFACE__SUPER_INTERFACE_REFS:
 				getSuperInterfaceRefs().clear();
 				return;
@@ -292,10 +208,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TypesPackage.TINTERFACE__SUB_CLASS_REFS:
-				return subClassRefs != null && !subClassRefs.isEmpty();
-			case TypesPackage.TINTERFACE__SUB_INTERFACE_REFS:
-				return subInterfaceRefs != null && !subInterfaceRefs.isEmpty();
 			case TypesPackage.TINTERFACE__SUPER_INTERFACE_REFS:
 				return superInterfaceRefs != null && !superInterfaceRefs.isEmpty();
 		}
@@ -324,7 +236,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 		if (baseClass == TClassifier.class) {
 			switch (baseOperationID) {
 				case TypesPackage.TCLASSIFIER___IS_ABSTRACT: return TypesPackage.TINTERFACE___IS_ABSTRACT;
-				case TypesPackage.TCLASSIFIER___GET_SUB_CLASSIFIER_REFS: return TypesPackage.TINTERFACE___GET_SUB_CLASSIFIER_REFS;
 				case TypesPackage.TCLASSIFIER___GET_SUPER_CLASSIFIER_REFS: return TypesPackage.TINTERFACE___GET_SUPER_CLASSIFIER_REFS;
 				case TypesPackage.TCLASSIFIER___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS: return TypesPackage.TINTERFACE___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
@@ -345,8 +256,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 				return isAbstract();
 			case TypesPackage.TINTERFACE___GET_SUPER_CLASSIFIER_REFS:
 				return getSuperClassifierRefs();
-			case TypesPackage.TINTERFACE___GET_SUB_CLASSIFIER_REFS:
-				return getSubClassifierRefs();
 			case TypesPackage.TINTERFACE___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS:
 				return getImplementedOrExtendedInterfaceRefs();
 			case TypesPackage.TINTERFACE___IS_HOLLOW:

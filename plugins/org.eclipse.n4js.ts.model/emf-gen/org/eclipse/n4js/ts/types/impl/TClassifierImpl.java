@@ -180,26 +180,6 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 	 * @generated
 	 */
 	@Override
-	public Iterable<? extends TClassifier> getSubClassifiers() {
-		final List<TClassifier> result = CollectionLiterals.<TClassifier>newArrayList();
-		final Object _superClassifierRefs = this.getSubClassifierRefs();
-		for (final Object superClassifierRef : ((Iterable<?>) _superClassifierRefs)) {
-			if ((superClassifierRef != null)) {
-				final Type declType = ((TypeRef) superClassifierRef).getDeclaredType();
-				if ((declType instanceof TClassifier)) {
-					result.add(((TClassifier)declType));
-				}
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public Iterable<? extends TClassifier> getSuperClassifiers() {
 		final List<TClassifier> result = CollectionLiterals.<TClassifier>newArrayList();
 		final Object _superClassifierRefs = this.getSuperClassifierRefs();
@@ -212,16 +192,6 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Iterable<ParameterizedTypeRef> getSubClassifierRefs() {
-		return CollectionLiterals.<ParameterizedTypeRef>emptyList();
 	}
 
 	/**
@@ -402,12 +372,8 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 		switch (operationID) {
 			case TypesPackage.TCLASSIFIER___IS_ABSTRACT:
 				return isAbstract();
-			case TypesPackage.TCLASSIFIER___GET_SUB_CLASSIFIERS:
-				return getSubClassifiers();
 			case TypesPackage.TCLASSIFIER___GET_SUPER_CLASSIFIERS:
 				return getSuperClassifiers();
-			case TypesPackage.TCLASSIFIER___GET_SUB_CLASSIFIER_REFS:
-				return getSubClassifierRefs();
 			case TypesPackage.TCLASSIFIER___GET_SUPER_CLASSIFIER_REFS:
 				return getSuperClassifierRefs();
 			case TypesPackage.TCLASSIFIER___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS:

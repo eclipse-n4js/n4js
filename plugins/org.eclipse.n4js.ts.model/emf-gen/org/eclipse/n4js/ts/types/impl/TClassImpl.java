@@ -52,7 +52,6 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isDeclaredFinal <em>Declared Final</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isDeclaredStaticPolyfill <em>Declared Static Polyfill</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isObservable <em>Observable</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#getSubClassRefs <em>Sub Class Refs</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#getSuperClassRef <em>Super Class Ref</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#getImplementedInterfaceRefs <em>Implemented Interface Refs</em>}</li>
  * </ul>
@@ -159,16 +158,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * @ordered
 	 */
 	protected boolean observable = OBSERVABLE_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getSubClassRefs() <em>Sub Class Refs</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getSubClassRefs()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<ParameterizedTypeRef> subClassRefs;
 
 	/**
 	 * The cached value of the '{@link #getSuperClassRef() <em>Super Class Ref</em>}' containment reference.
@@ -330,19 +319,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * @generated
 	 */
 	@Override
-	public EList<ParameterizedTypeRef> getSubClassRefs() {
-		if (subClassRefs == null) {
-			subClassRefs = new EObjectContainmentEList<ParameterizedTypeRef>(ParameterizedTypeRef.class, this, TypesPackage.TCLASS__SUB_CLASS_REFS);
-		}
-		return subClassRefs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public ParameterizedTypeRef getSuperClassRef() {
 		return superClassRef;
 	}
@@ -434,16 +410,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * @generated
 	 */
 	@Override
-	public Iterable<ParameterizedTypeRef> getSubClassifierRefs() {
-		return this.getSubClassRefs();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public Iterable<ParameterizedTypeRef> getSuperClassifierRefs() {
 		ParameterizedTypeRef _superClassRef = this.getSuperClassRef();
 		boolean _tripleNotEquals = (_superClassRef != null);
@@ -503,8 +469,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case TypesPackage.TCLASS__SUB_CLASS_REFS:
-				return ((InternalEList<?>)getSubClassRefs()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TCLASS__SUPER_CLASS_REF:
 				return basicSetSuperClassRef(null, msgs);
 			case TypesPackage.TCLASS__IMPLEMENTED_INTERFACE_REFS:
@@ -531,8 +495,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 				return isDeclaredStaticPolyfill();
 			case TypesPackage.TCLASS__OBSERVABLE:
 				return isObservable();
-			case TypesPackage.TCLASS__SUB_CLASS_REFS:
-				return getSubClassRefs();
 			case TypesPackage.TCLASS__SUPER_CLASS_REF:
 				return getSuperClassRef();
 			case TypesPackage.TCLASS__IMPLEMENTED_INTERFACE_REFS:
@@ -564,10 +526,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 				return;
 			case TypesPackage.TCLASS__OBSERVABLE:
 				setObservable((Boolean)newValue);
-				return;
-			case TypesPackage.TCLASS__SUB_CLASS_REFS:
-				getSubClassRefs().clear();
-				getSubClassRefs().addAll((Collection<? extends ParameterizedTypeRef>)newValue);
 				return;
 			case TypesPackage.TCLASS__SUPER_CLASS_REF:
 				setSuperClassRef((ParameterizedTypeRef)newValue);
@@ -603,9 +561,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 			case TypesPackage.TCLASS__OBSERVABLE:
 				setObservable(OBSERVABLE_EDEFAULT);
 				return;
-			case TypesPackage.TCLASS__SUB_CLASS_REFS:
-				getSubClassRefs().clear();
-				return;
 			case TypesPackage.TCLASS__SUPER_CLASS_REF:
 				setSuperClassRef((ParameterizedTypeRef)null);
 				return;
@@ -634,8 +589,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 				return declaredStaticPolyfill != DECLARED_STATIC_POLYFILL_EDEFAULT;
 			case TypesPackage.TCLASS__OBSERVABLE:
 				return observable != OBSERVABLE_EDEFAULT;
-			case TypesPackage.TCLASS__SUB_CLASS_REFS:
-				return subClassRefs != null && !subClassRefs.isEmpty();
 			case TypesPackage.TCLASS__SUPER_CLASS_REF:
 				return superClassRef != null;
 			case TypesPackage.TCLASS__IMPLEMENTED_INTERFACE_REFS:
@@ -662,7 +615,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 		if (baseClass == TClassifier.class) {
 			switch (baseOperationID) {
 				case TypesPackage.TCLASSIFIER___IS_ABSTRACT: return TypesPackage.TCLASS___IS_ABSTRACT;
-				case TypesPackage.TCLASSIFIER___GET_SUB_CLASSIFIER_REFS: return TypesPackage.TCLASS___GET_SUB_CLASSIFIER_REFS;
 				case TypesPackage.TCLASSIFIER___GET_SUPER_CLASSIFIER_REFS: return TypesPackage.TCLASS___GET_SUPER_CLASSIFIER_REFS;
 				case TypesPackage.TCLASSIFIER___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS: return TypesPackage.TCLASS___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS;
 				case TypesPackage.TCLASSIFIER___IS_FINAL: return TypesPackage.TCLASS___IS_FINAL;
@@ -690,8 +642,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 				return isAbstract();
 			case TypesPackage.TCLASS___GET_SUPER_CLASS:
 				return getSuperClass();
-			case TypesPackage.TCLASS___GET_SUB_CLASSIFIER_REFS:
-				return getSubClassifierRefs();
 			case TypesPackage.TCLASS___GET_SUPER_CLASSIFIER_REFS:
 				return getSuperClassifierRefs();
 			case TypesPackage.TCLASS___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS:
