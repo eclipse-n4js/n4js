@@ -41,6 +41,7 @@ import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IReferenceDescription;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescription;
+import org.eclipse.xtext.resource.impl.EObjectDescriptionLookUp;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IAcceptor;
 import org.eclipse.xtext.util.IResourceScopeCache;
@@ -79,6 +80,13 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 		this.qualifiedNameProvider = qualifiedNameProvider;
 		this.typeHelper = typeHelper;
 		this.strategy = strategy;
+	}
+
+	@Override
+	protected EObjectDescriptionLookUp getLookUp() {
+		if (lookup == null)
+			lookup = new EObjectDescriptionLookUp(computeExportedObjects());
+		return lookup;
 	}
 
 	@Override

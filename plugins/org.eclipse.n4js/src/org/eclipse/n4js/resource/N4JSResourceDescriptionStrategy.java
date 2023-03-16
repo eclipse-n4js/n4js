@@ -44,7 +44,6 @@ import org.eclipse.xtext.util.IAcceptor;
 import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.LineAndColumn;
 
-import com.google.common.collect.ForwardingMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -388,28 +387,19 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 			return UserDataMapper.createTimestampUserData(module);
 		}
 		Location location = computeLocation(module);
-		return new ForwardingMap<>() {
 
-			private Map<String, String> delegate;
-
-			@Override
-			protected Map<String, String> delegate() {
-				if (delegate == null) {
-					try {
-						delegate = UserDataMapper.createUserData(module);
-						if (location != null) {
-							delegate.put(LOCATION_KEY, location.toString());
-						}
-						N4JSResource resource = (N4JSResource) module.eResource();
-						UserDataMapper.writeDependenciesToUserData(resource, delegate);
-					} catch (Exception e) {
-						throw new IllegalStateException(e);
-					}
-				}
-				return delegate;
+		try {
+			Map<String, String> delegate = UserDataMapper.createUserData(module);
+			if (location != null) {
+				delegate.put(LOCATION_KEY, location.toString());
 			}
-		};
+			N4JSResource resource = (N4JSResource) module.eResource();
+			UserDataMapper.writeDependenciesToUserData(resource, delegate);
 
+			return delegate;
+		} catch (Exception e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 	private void addLocationUserData(Map<String, String> userData, IdentifiableElement elem) {
