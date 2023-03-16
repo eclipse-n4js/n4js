@@ -40,6 +40,7 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
 import org.eclipse.n4js.ide.server.util.SymbolKindUtil;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectorUtils;
@@ -49,6 +50,7 @@ import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.transpiler.sourcemap.MappingEntry;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMap;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMapFileLocator;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.Type;
@@ -62,11 +64,14 @@ import org.eclipse.n4js.xtext.ide.server.XDocument;
 import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.ILocationInFileProvider;
+import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.ITextRegion;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
@@ -184,15 +189,20 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	protected List<TypeHierarchyItem> typeHierarchySubtypes(ResourceTaskContext rtc, TypeHierarchySubtypesParams params,
 			CancelIndicator ci) {
 
-		rtc.resolveResource(ci);
+		loadTModule(rtc);
 		int offset = rtc.getDocument().getOffSet(params.getItem().getSelectionRange().getStart());
 		EObject element = eObjectAtOffsetHelper.resolveElementAt(rtc.getResource(), offset);
 
 		List<TypeHierarchyItem> superTypesTHI = new ArrayList<>();
 		if (element instanceof TClassifier) {
 			TClassifier tClassifier = (TClassifier) element;
-			for (TClassifier subClassifier : tClassifier.getSubClassifiers()) {
-				superTypesTHI.add(toTypeHierarchyItem(subClassifier));
+			Iterable<ParameterizedTypeRef> subClassifierRefs = tClassifier.getSubClassifierRefs();
+
+			for (ParameterizedTypeRef subClassifierRef : Lists.newArrayList(subClassifierRefs)) {
+				Type subType = subClassifierRef.getDeclaredType();
+				if (subType != null) {
+					superTypesTHI.add(toTypeHierarchyItem(subType));
+				}
 			}
 		}
 
@@ -203,7 +213,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	protected List<TypeHierarchyItem> typeHierarchySupertypes(ResourceTaskContext rtc,
 			TypeHierarchySupertypesParams params, CancelIndicator ci) {
 
-		rtc.resolveResource(ci);
+		loadTModule(rtc);
 		int offset = rtc.getDocument().getOffSet(params.getItem().getSelectionRange().getStart());
 		EObject element = eObjectAtOffsetHelper.resolveElementAt(rtc.getResource(), offset);
 
@@ -220,6 +230,20 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 		}
 
 		return superTypesTHI;
+	}
+
+	private void loadTModule(ResourceTaskContext rtc) {
+		N4JSResource n4res = (N4JSResource) rtc.getResource();
+		if (!n4res.isLoaded()) {
+
+			IResourceDescriptions xtextIndex = workspaceAccess.getXtextIndex(n4res).orNull();
+			IResourceDescription resourceDescription = xtextIndex != null
+					? xtextIndex.getResourceDescription(n4res.getURI())
+					: null;
+			if (!n4res.isLoaded() && resourceDescription != null) {
+				n4res.loadFromDescription(resourceDescription);
+			}
+		}
 	}
 
 	private TypeHierarchyItem toTypeHierarchyItem(Type type) {
