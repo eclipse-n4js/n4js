@@ -40,11 +40,6 @@ import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.EcoreUtilN4
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.n4JS.N4ClassDeclaration
-import org.eclipse.n4js.ts.types.TClass
-import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
-import org.eclipse.n4js.n4JS.TypeReferenceNode
-import org.eclipse.n4js.ts.types.TInterface
 
 /**
  * Processor for handling {@link DeferredTypeRef}s, <b>except</b> those related to poly expressions, which are handled
@@ -113,45 +108,6 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 			N4FieldDeclaration: {
 				val tField = astNode.definedField;
 				setTypeRef(astNode, tField, true, G, cache);
-			}
-			N4ClassDeclaration: {
-				if (astNode.superClassRef !== null && astNode.superClassRef.typeRef instanceof ParameterizedTypeRef) {
-					val superClassRef = astNode.superClassRef.typeRef as ParameterizedTypeRef;
-					val superClass = superClassRef.declaredType;
-					if (superClass instanceof TClass) {
-						EcoreUtilN4.doWithDeliver(false, [
-							superClass.subClassRefs.add(TypeUtils.createTypeRef(astNode.definedType));
-						], superClass);
-					}
-				}
-				if (astNode.implementedInterfaceRefs !== null) {
-					for (TypeReferenceNode<?> trn : astNode.implementedInterfaceRefs) {
-						if (trn.typeRef instanceof ParameterizedTypeRef) {
-							val superInterfaceRef = trn.typeRef as ParameterizedTypeRef;
-							val superInterface = superInterfaceRef.declaredType;
-							if (superInterface instanceof TInterface) {
-								EcoreUtilN4.doWithDeliver(false, [
-									superInterface.subClassRefs.add(TypeUtils.createTypeRef(astNode.definedType));
-								], superInterface);
-							}
-						}
-					}
-				}
-			}
-			N4InterfaceDeclaration: {
-				if (astNode.superInterfaceRefs !== null) {
-					for (TypeReferenceNode<?> trn : astNode.superInterfaceRefs) {
-						if (trn.typeRef instanceof ParameterizedTypeRef) {
-							val superInterfaceRef = trn.typeRef as ParameterizedTypeRef;
-							val superInterface = superInterfaceRef.declaredType;
-							if (superInterface instanceof TInterface) {
-								EcoreUtilN4.doWithDeliver(false, [
-									superInterface.subInterfaceRefs.add(TypeUtils.createTypeRef(astNode.definedType));
-								], superInterface);
-							}
-						}
-					}
-				}
 			}
 			FormalParameter: {
 				val parent = astNode.eContainer;
