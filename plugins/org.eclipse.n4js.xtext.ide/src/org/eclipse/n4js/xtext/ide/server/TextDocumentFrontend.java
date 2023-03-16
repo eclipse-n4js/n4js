@@ -106,23 +106,30 @@ import com.google.inject.Singleton;
 @Singleton
 public class TextDocumentFrontend implements TextDocumentService, IIndexListener {
 
+	/***/
 	@Inject
-	private ResourceTaskManager resourceTaskManager;
+	protected ResourceTaskManager resourceTaskManager;
 
+	/***/
 	@Inject
-	private ParamHelper paramHelper;
+	protected ParamHelper paramHelper;
 
+	/***/
 	@Inject
-	private IResourceServiceProvider.Registry languagesRegistry;
+	protected IResourceServiceProvider.Registry languagesRegistry;
 
+	/***/
 	@Inject
-	private ConcurrentIndex index;
+	protected ConcurrentIndex concurrentIndex;
 
+	/***/
 	private boolean hierarchicalSymbols;
 
-	private IResourceAccess resourceAccess;
+	/***/
+	protected IResourceAccess resourceAccess;
 
-	private ILanguageServerAccess access;
+	/***/
+	protected ILanguageServerAccess langServerAccess;
 
 	/** Sets connection to client */
 	public void connect(@SuppressWarnings("unused") LanguageClient client) {
@@ -130,19 +137,18 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	}
 
 	/** Sets non-injectable fields */
-	public void initialize(InitializeParams initializeParams,
-			@SuppressWarnings("hiding") ILanguageServerAccess access) {
+	public void initialize(InitializeParams initializeParams, ILanguageServerAccess access) {
 		this.hierarchicalSymbols = isHierarchicalDocumentSymbolSupport(initializeParams);
 		this.resourceAccess = new XWorkspaceResourceAccess(resourceTaskManager);
-		this.access = access;
-		index.addListener(this);
+		this.langServerAccess = access;
+		concurrentIndex.addListener(this);
 	}
 
 	/** Resets non-injectable fields */
 	public void disconnect() {
 		this.resourceAccess = null;
-		this.access = null;
-		index.removeListener(this);
+		this.langServerAccess = null;
+		concurrentIndex.removeListener(this);
 	}
 
 	@Override
@@ -492,7 +498,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		IRenameService2 renameService2 = getService(resourceServiceProvider, IRenameService2.class);
 		if ((renameService2 != null)) {
 			IRenameService2.Options options = new IRenameService2.Options();
-			options.setLanguageServerAccess(access);
+			options.setLanguageServerAccess(langServerAccess);
 			options.setRenameParams(renameParams);
 			options.setCancelIndicator(cancelIndicator);
 			return renameService2.rename(options);
@@ -520,7 +526,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 			throw new UnsupportedOperationException();
 		}
 		IRenameService2.PrepareRenameOptions options = new IRenameService2.PrepareRenameOptions();
-		options.setLanguageServerAccess(access);
+		options.setLanguageServerAccess(langServerAccess);
 		options.setParams(params);
 		options.setCancelIndicator(cancelIndicator);
 		return renameService.prepareRename(options);
@@ -660,7 +666,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		ICodeActionService2.Options options = new ICodeActionService2.Options();
 		options.setDocument(doc);
 		options.setResource(res);
-		options.setLanguageServerAccess(access);
+		options.setLanguageServerAccess(langServerAccess);
 		options.setCodeActionParams(params);
 		options.setCancelIndicator(cancelIndicator);
 		return options;

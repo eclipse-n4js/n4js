@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -31,6 +32,7 @@ import org.eclipse.lsp4j.ImplementationParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
+import org.eclipse.lsp4j.ProgressParams;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
@@ -38,6 +40,10 @@ import org.eclipse.lsp4j.TypeHierarchyItem;
 import org.eclipse.lsp4j.TypeHierarchyPrepareParams;
 import org.eclipse.lsp4j.TypeHierarchySubtypesParams;
 import org.eclipse.lsp4j.TypeHierarchySupertypesParams;
+import org.eclipse.lsp4j.WorkDoneProgressBegin;
+import org.eclipse.lsp4j.WorkDoneProgressEnd;
+import org.eclipse.lsp4j.WorkDoneProgressNotification;
+import org.eclipse.lsp4j.WorkDoneProgressReport;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
 import org.eclipse.n4js.ide.server.util.SymbolKindUtil;
@@ -71,6 +77,7 @@ import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.findReferences.TargetURICollector;
 import org.eclipse.xtext.findReferences.TargetURIs;
+import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.ILocationInFileProvider;
 import org.eclipse.xtext.resource.IReferenceDescription;
@@ -221,7 +228,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 			targetURICollector.add(element, targetURIs);
 			SimpleReferenceAcceptor referenceAcceptor = new SimpleReferenceAcceptor();
 			referenceFinder.findAllReferences(targetURIs, new SimpleResourceAccess(resSet), index, referenceAcceptor,
-					null);
+					new SubTypeProgressMonitor(langServerAccess, params));
 
 			for (EObject ref : referenceAcceptor.results) {
 				if (ref instanceof Type) {
@@ -271,6 +278,25 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 		return element;
 	}
 
+	private TypeHierarchyItem toTypeHierarchyItem(Type type) {
+		XtextResource resource = (XtextResource) type.eResource();
+		XDocument doc = new XDocument(1, resource.getParseResult().getRootNode().getText());
+		SymbolKind symbolKind = SymbolKindUtil.getSymbolKind(type.eClass());
+		String uri = type.eResource().getURI().toString();
+
+		ITextRegion fullRegion = locationInFileProvider.getFullTextRegion(type);
+		Position fullStartPos = doc.getPosition(fullRegion.getOffset());
+		Position fullEndPos = doc.getPosition(fullRegion.getOffset() + fullRegion.getLength());
+		ITextRegion sgnfRegion = locationInFileProvider.getSignificantTextRegion(type);
+		Position sgnfStartPos = doc.getPosition(sgnfRegion.getOffset());
+		Position sgnfEndPos = doc.getPosition(sgnfRegion.getOffset() + sgnfRegion.getLength());
+		Range range = new Range(fullStartPos, fullEndPos);
+		Range selectionRange = new Range(sgnfStartPos, sgnfEndPos);
+
+		TypeHierarchyItem item = new TypeHierarchyItem(type.getName(), symbolKind, uri, range, selectionRange);
+		return item;
+	}
+
 	static class SimpleReferenceAcceptor implements IReferenceFinder.Acceptor {
 		final ArrayList<EObject> results = Lists.newArrayList();
 
@@ -301,23 +327,84 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 		}
 	}
 
-	private TypeHierarchyItem toTypeHierarchyItem(Type type) {
-		XtextResource resource = (XtextResource) type.eResource();
-		XDocument doc = new XDocument(1, resource.getParseResult().getRootNode().getText());
-		SymbolKind symbolKind = SymbolKindUtil.getSymbolKind(type.eClass());
-		String uri = type.eResource().getURI().toString();
+	static class SubTypeProgressMonitor implements IProgressMonitor {
+		final ILanguageServerAccess langServerAccess;
+		final Either<String, Integer> workDoneToken;
 
-		ITextRegion fullRegion = locationInFileProvider.getFullTextRegion(type);
-		Position fullStartPos = doc.getPosition(fullRegion.getOffset());
-		Position fullEndPos = doc.getPosition(fullRegion.getOffset() + fullRegion.getLength());
-		ITextRegion sgnfRegion = locationInFileProvider.getSignificantTextRegion(type);
-		Position sgnfStartPos = doc.getPosition(sgnfRegion.getOffset());
-		Position sgnfEndPos = doc.getPosition(sgnfRegion.getOffset() + sgnfRegion.getLength());
-		Range range = new Range(fullStartPos, fullEndPos);
-		Range selectionRange = new Range(sgnfStartPos, sgnfEndPos);
+		private int totalWork;
+		private String name;
+		private boolean isCancelled = false;
 
-		TypeHierarchyItem item = new TypeHierarchyItem(type.getName(), symbolKind, uri, range, selectionRange);
-		return item;
+		/** Constructor */
+		public SubTypeProgressMonitor(ILanguageServerAccess langServerAccess, TypeHierarchySubtypesParams params) {
+			this.langServerAccess = langServerAccess;
+			this.workDoneToken = params.getWorkDoneToken();
+		}
+
+		@Override
+		public boolean isCanceled() {
+			return isCancelled;
+		}
+
+		@Override
+		public void setCanceled(boolean value) {
+			isCancelled = value;
+		}
+
+		@Override
+		public void internalWorked(double work) {
+			// ignore
+		}
+
+		@Override
+		public void setTaskName(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public void subTask(String newName) {
+			this.name = newName;
+		}
+
+		@Override
+		public void beginTask(String newName, int newTotalWork) {
+			if (workDoneToken == null) {
+				return;
+			}
+			this.name = newName;
+			this.totalWork = Math.max(1, newTotalWork);
+			WorkDoneProgressBegin report = new WorkDoneProgressBegin();
+			report.setCancellable(false);
+			Either<WorkDoneProgressNotification, Object> notification = Either.forLeft(report);
+			ProgressParams pp = new ProgressParams(workDoneToken, notification);
+			langServerAccess.getLanguageClient().notifyProgress(pp);
+		}
+
+		@Override
+		public void done() {
+			if (workDoneToken == null) {
+				return;
+			}
+			this.totalWork = Math.max(1, totalWork);
+			WorkDoneProgressEnd report = new WorkDoneProgressEnd();
+			Either<WorkDoneProgressNotification, Object> notification = Either.forLeft(report);
+			ProgressParams pp = new ProgressParams(workDoneToken, notification);
+			langServerAccess.getLanguageClient().notifyProgress(pp);
+		}
+
+		@Override
+		public void worked(int work) {
+			if (workDoneToken == null) {
+				return;
+			}
+			int percent = (work * 100) / totalWork;
+			WorkDoneProgressReport report = new WorkDoneProgressReport();
+			report.setCancellable(false);
+			report.setPercentage(percent);
+			report.setMessage(name);
+			Either<WorkDoneProgressNotification, Object> notification = Either.forLeft(report);
+			ProgressParams pp = new ProgressParams(workDoneToken, notification);
+			langServerAccess.getLanguageClient().notifyProgress(pp);
+		}
 	}
-
 }
