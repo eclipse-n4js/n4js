@@ -22,6 +22,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
@@ -39,7 +41,9 @@ import org.eclipse.lsp4j.TypeHierarchySupertypesParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
 import org.eclipse.n4js.ide.server.util.SymbolKindUtil;
+import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollector;
@@ -47,11 +51,13 @@ import org.eclipse.n4js.smith.DataCollectorUtils;
 import org.eclipse.n4js.smith.DataPoint;
 import org.eclipse.n4js.smith.DataSeries;
 import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.tooling.findReferences.SimpleResourceAccess;
 import org.eclipse.n4js.transpiler.sourcemap.MappingEntry;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMap;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMapFileLocator;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.ResourceNameComputer;
@@ -62,21 +68,28 @@ import org.eclipse.n4js.xtext.ide.server.ResourceTaskContext;
 import org.eclipse.n4js.xtext.ide.server.TextDocumentFrontend;
 import org.eclipse.n4js.xtext.ide.server.XDocument;
 import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
+import org.eclipse.xtext.findReferences.IReferenceFinder;
+import org.eclipse.xtext.findReferences.TargetURICollector;
+import org.eclipse.xtext.findReferences.TargetURIs;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.ILocationInFileProvider;
+import org.eclipse.xtext.resource.IReferenceDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.ITextRegion;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  * Extends {@link N4JSTextDocumentFrontend} to implement N4JS server capabilities.
  */
+@SuppressWarnings("restriction")
 public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	private static Logger LOG = Logger.getLogger(N4JSTextDocumentFrontend.class);
 
@@ -97,6 +110,15 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 
 	@Inject
 	private ILocationInFileProvider locationInFileProvider;
+
+	@Inject
+	private IReferenceFinder referenceFinder;
+
+	@Inject
+	private TargetURICollector targetURICollector;
+
+	@Inject
+	private Provider<TargetURIs> targetURIProvider;
 
 	@Override
 	protected Either<List<CompletionItem>, CompletionList> completion(ResourceTaskContext rtc, CompletionParams params,
@@ -189,19 +211,22 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	protected List<TypeHierarchyItem> typeHierarchySubtypes(ResourceTaskContext rtc, TypeHierarchySubtypesParams params,
 			CancelIndicator ci) {
 
-		loadTModule(rtc);
-		int offset = rtc.getDocument().getOffSet(params.getItem().getSelectionRange().getStart());
-		EObject element = eObjectAtOffsetHelper.resolveElementAt(rtc.getResource(), offset);
+		EObject element = resolveElement(rtc, params.getItem());
 
 		List<TypeHierarchyItem> superTypesTHI = new ArrayList<>();
 		if (element instanceof TClassifier) {
-			TClassifier tClassifier = (TClassifier) element;
-			Iterable<ParameterizedTypeRef> subClassifierRefs = tClassifier.getSubClassifierRefs();
+			XtextResourceSet resSet = rtc.getResourceSet();
+			IResourceDescriptions index = workspaceAccess.getXtextIndex(resSet).get();
+			TargetURIs targetURIs = targetURIProvider.get();
+			targetURICollector.add(element, targetURIs);
+			SimpleReferenceAcceptor referenceAcceptor = new SimpleReferenceAcceptor();
+			referenceFinder.findAllReferences(targetURIs, new SimpleResourceAccess(resSet), index, referenceAcceptor,
+					null);
 
-			for (ParameterizedTypeRef subClassifierRef : Lists.newArrayList(subClassifierRefs)) {
-				Type subType = subClassifierRef.getDeclaredType();
-				if (subType != null) {
-					superTypesTHI.add(toTypeHierarchyItem(subType));
+			for (EObject ref : referenceAcceptor.results) {
+				if (ref instanceof Type) {
+					Type referredType = (Type) ref;
+					superTypesTHI.add(toTypeHierarchyItem(referredType));
 				}
 			}
 		}
@@ -213,9 +238,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	protected List<TypeHierarchyItem> typeHierarchySupertypes(ResourceTaskContext rtc,
 			TypeHierarchySupertypesParams params, CancelIndicator ci) {
 
-		loadTModule(rtc);
-		int offset = rtc.getDocument().getOffSet(params.getItem().getSelectionRange().getStart());
-		EObject element = eObjectAtOffsetHelper.resolveElementAt(rtc.getResource(), offset);
+		EObject element = resolveElement(rtc, params.getItem());
 
 		if (element instanceof N4TypeDeclaration) {
 			N4TypeDeclaration typeDecl = (N4TypeDeclaration) element;
@@ -232,17 +255,49 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 		return superTypesTHI;
 	}
 
-	private void loadTModule(ResourceTaskContext rtc) {
-		N4JSResource n4res = (N4JSResource) rtc.getResource();
-		if (!n4res.isLoaded()) {
+	private EObject resolveElement(ResourceTaskContext rtc, TypeHierarchyItem thItem) {
+		XtextResourceSet resSet = rtc.getResourceSet();
+		N4JSResource resource = (N4JSResource) rtc.getResource();
+		IResourceDescriptions index = workspaceAccess.getXtextIndex(resSet).get();
 
-			IResourceDescriptions xtextIndex = workspaceAccess.getXtextIndex(n4res).orNull();
-			IResourceDescription resourceDescription = xtextIndex != null
-					? xtextIndex.getResourceDescription(n4res.getURI())
-					: null;
-			if (!n4res.isLoaded() && resourceDescription != null) {
-				n4res.loadFromDescription(resourceDescription);
+		IResourceDescription resDesc = index.getResourceDescription(rtc.getURI());
+		if (resDesc != null) {
+			// ensures that we get an TModele element (instead of an AST element)
+			workspaceAccess.loadModuleFromIndex(resSet, resDesc, true);
+		}
+
+		int offset = rtc.getDocument().getOffSet(thItem.getSelectionRange().getStart());
+		EObject element = eObjectAtOffsetHelper.resolveElementAt(resource, offset);
+		return element;
+	}
+
+	static class SimpleReferenceAcceptor implements IReferenceFinder.Acceptor {
+		final ArrayList<EObject> results = Lists.newArrayList();
+
+		@Override
+		public void accept(EObject src, URI srcURI, EReference eRef, int idx, EObject tgtOrProxy, URI tgtURI) {
+			Resource res = src != null ? src.eResource() : null;
+			URI resURI = res != null ? res.getURI() : null;
+			if (src == null || res == null || resURI == null) {
+				return;
 			}
+
+			if (eRef == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE
+					&& src instanceof ParameterizedTypeRef && src.eContainer() instanceof TypeReferenceNode<?>) {
+
+				EObject parentType = src.eContainer().eContainer();
+				if (parentType instanceof N4ClassifierDeclaration) {
+					N4ClassifierDeclaration n4classifierDecl = (N4ClassifierDeclaration) parentType;
+					results.add(n4classifierDecl.getDefinedType());
+				}
+			}
+		}
+
+		@Override
+		public void accept(IReferenceDescription description) {
+			// This method is only called in case of finding refs for primitives.
+			// For instance, the method is called when a reference to a primitive type (e.g. string)
+			// is found in primitives.n4jsd
 		}
 	}
 
