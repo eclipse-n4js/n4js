@@ -84,6 +84,10 @@ import org.eclipse.lsp4j.TextDocumentClientCapabilities;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.TypeDefinitionParams;
+import org.eclipse.lsp4j.TypeHierarchyItem;
+import org.eclipse.lsp4j.TypeHierarchyPrepareParams;
+import org.eclipse.lsp4j.TypeHierarchySubtypesParams;
+import org.eclipse.lsp4j.TypeHierarchySupertypesParams;
 import org.eclipse.lsp4j.WorkspaceClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.WorkspaceFolder;
@@ -705,6 +709,30 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public CompletableFuture<List<CallHierarchyOutgoingCall>> callHierarchyOutgoingCalls(
 			CallHierarchyOutgoingCallsParams params) {
 		return lsFrontend.callHierarchyOutgoingCalls(params);
+	}
+
+	@Override
+	public CompletableFuture<List<TypeHierarchyItem>> prepareTypeHierarchy(TypeHierarchyPrepareParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return CompletableFuture.completedFuture(Collections.emptyList());
+		}
+		return lsFrontend.prepareTypeHierarchy(params);
+	}
+
+	@Override
+	public CompletableFuture<List<TypeHierarchyItem>> typeHierarchySubtypes(TypeHierarchySubtypesParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return CompletableFuture.completedFuture(Collections.emptyList());
+		}
+		return lsFrontend.typeHierarchySubtypes(params);
+	}
+
+	@Override
+	public CompletableFuture<List<TypeHierarchyItem>> typeHierarchySupertypes(TypeHierarchySupertypesParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return CompletableFuture.completedFuture(Collections.emptyList());
+		}
+		return lsFrontend.typeHierarchySupertypes(params);
 	}
 
 	@Override

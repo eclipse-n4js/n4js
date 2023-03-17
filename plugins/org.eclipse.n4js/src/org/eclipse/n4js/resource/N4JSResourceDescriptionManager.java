@@ -37,7 +37,6 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionManager;
-import org.eclipse.xtext.resource.impl.EObjectDescriptionLookUp;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -81,17 +80,11 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	@Override
 	protected IResourceDescription createResourceDescription(final Resource resource,
 			IDefaultResourceDescriptionStrategy strategy) {
+
 		return new N4JSResourceDescription(crossReferenceComputer, typeHelper,
 				qualifiedNameProvider, resource,
 				(N4JSResourceDescriptionStrategy) strategy,
-				getCache()) {
-			@Override
-			protected EObjectDescriptionLookUp getLookUp() {
-				if (lookup == null)
-					lookup = new EObjectDescriptionLookUp(computeExportedObjects());
-				return lookup;
-			}
-		};
+				getCache());
 	}
 
 	@Override

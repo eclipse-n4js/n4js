@@ -33,12 +33,16 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.types.utils.TypeHelper;
+import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.linking.impl.ImportedNamesAdapter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IReferenceDescription;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescription;
+import org.eclipse.xtext.resource.impl.EObjectDescriptionLookUp;
+import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IAcceptor;
 import org.eclipse.xtext.util.IResourceScopeCache;
 
@@ -76,6 +80,13 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 		this.qualifiedNameProvider = qualifiedNameProvider;
 		this.typeHelper = typeHelper;
 		this.strategy = strategy;
+	}
+
+	@Override
+	protected EObjectDescriptionLookUp getLookUp() {
+		if (lookup == null)
+			lookup = new EObjectDescriptionLookUp(computeExportedObjects());
+		return lookup;
 	}
 
 	@Override
@@ -132,7 +143,14 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 					// get imported names collected during global scoping
 					// the scope provider registers every request in scoping so that by this
 					// also all names are collected that cannot be resolved
-					Iterable<QualifiedName> superImportedNames = super.getImportedNames();
+
+					EcoreUtil2.resolveLazyCrossReferences(getResource(), CancelIndicator.NullImpl);
+					ImportedNamesAdapter adapter = ImportedNamesAdapter.find(getResource());
+					Iterable<QualifiedName> superImportedNames = Collections.emptySet();
+					if (adapter != null) {
+						superImportedNames = adapter.getImportedNames();
+					}
+
 					// use sorted set to ensure order of items
 					final SortedSet<QualifiedName> importedNames;
 					if (superImportedNames != null) {

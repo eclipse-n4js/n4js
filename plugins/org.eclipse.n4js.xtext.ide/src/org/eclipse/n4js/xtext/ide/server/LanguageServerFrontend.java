@@ -346,19 +346,16 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 	}
 
 	@Override
-	@Beta
 	public CompletableFuture<List<TypeHierarchyItem>> prepareTypeHierarchy(TypeHierarchyPrepareParams params) {
 		return textDocumentFrontend.prepareTypeHierarchy(params);
 	}
 
 	@Override
-	@Beta
 	public CompletableFuture<List<TypeHierarchyItem>> typeHierarchySupertypes(TypeHierarchySupertypesParams params) {
 		return textDocumentFrontend.typeHierarchySupertypes(params);
 	}
 
 	@Override
-	@Beta
 	public CompletableFuture<List<TypeHierarchyItem>> typeHierarchySubtypes(TypeHierarchySubtypesParams params) {
 		return textDocumentFrontend.typeHierarchySubtypes(params);
 	}

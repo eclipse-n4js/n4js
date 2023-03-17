@@ -104,9 +104,7 @@ export function getActivate(vscode: any+, vscodeLC: any+): {function(context: an
         
         // Create the language client and start the client.
         let lc = new vscodeLC.LanguageClient(CHANNEL_NAME, serverOptions, clientOptions, true);
-        lc.onReady().then(() => {
-
-            
+        lc.start().then(() => {
             const rtDocumentContents = new vscodeLC.RequestType('n4js/documentContents');
             const textDocumentContentProvider = {
                 provideTextDocumentContent: (uri: any+, token: any+): any+ => {
@@ -131,7 +129,6 @@ export function getActivate(vscode: any+, vscodeLC: any+): {function(context: an
             const printDebugInfoHandler = () => lc.sendRequest(printDebugInfoRT, { });
             context.subscriptions.push(vscode.commands.registerCommand(printDebugInfoCommand, printDebugInfoHandler));
         });
-        let disposableLangClient = lc.start();
 
 
 
@@ -141,10 +138,6 @@ export function getActivate(vscode: any+, vscodeLC: any+): {function(context: an
                 setOutputAppenders(vscode, outputChannel);
             }
         }));
-        
-        // Push the disposable to the context's subscriptions so that the 
-        // client can be deactivated on extension deactivation
-        context.subscriptions.push(disposableLangClient);
     };
 }
 

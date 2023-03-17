@@ -28,9 +28,8 @@
       <unit id="org.apache.xmlgraphics" version="2.7.0.v20221018-0736"/>
       <unit id="org.eclipse.core.net" version="1.4.0.v20220813-1037"/>
       <unit id="org.eclipse.e4.core.di.extensions.supplier" version="0.16.400.v20220613-1047"/>
-      <unit id="org.eclipse.egit.core" version="6.5.0.202302011120-m2"/>
-      <unit id="org.eclipse.emf.ecore.editor" version="2.18.0.v20230114-0744"/>
-      <unit id="org.eclipse.emf.ecore.xcore" version="1.24.0.v20230114-0744"/>
+      <unit id="org.eclipse.emf.ecore.editor" version="2.18.0.v20230224-1122"/>
+      <unit id="org.eclipse.emf.ecore.xcore" version="1.24.0.v20230204-1018"/>
       <unit id="org.eclipse.emf.mwe.core" version="1.8.0.v20221117-1134"/>
       <unit id="org.eclipse.emf.mwe2.launch" version="2.14.0.v20221117-1134"/>
       <unit id="org.eclipse.emf.mwe2.lib" version="2.14.0.v20221117-1134"/>
@@ -39,12 +38,12 @@
       <unit id="org.eclipse.equinox.p2.jarprocessor" version="1.2.400.v20221201-0952"/>
       <unit id="org.eclipse.equinox.p2.metadata.repository" version="1.4.100.v20220329-1456"/>
       <unit id="org.eclipse.equinox.p2.repository" version="2.6.300.v20221030-1923"/>
-      <unit id="org.eclipse.lsp4j" version="0.19.0.v20221118-0359"/>
-      <unit id="org.eclipse.lsp4j.jsonrpc" version="0.19.0.v20221118-0359"/>
-      <unit id="org.eclipse.xtext.testing" version="2.30.0.v20230130-0747"/>
-      <unit id="org.eclipse.xtext.ui.codetemplates.ui" version="2.30.0.v20230130-0748"/>
-      <unit id="org.eclipse.xtext.xbase" version="2.30.0.v20230130-0758"/>
-      <unit id="org.eclipse.xtext.xtext.generator" version="2.30.0.v20230130-0747"/>
+      <unit id="org.eclipse.lsp4j" version="0.20.1.v20230228-1531"/>
+      <unit id="org.eclipse.lsp4j.jsonrpc" version="0.20.1.v20230228-1531"/>
+      <unit id="org.eclipse.xtext.testing" version="2.30.0.v20230227-1116"/>
+      <unit id="org.eclipse.xtext.ui.codetemplates.ui" version="2.30.0.v20230227-1159"/>
+      <unit id="org.eclipse.xtext.xbase" version="2.30.0.v20230227-1128"/>
+      <unit id="org.eclipse.xtext.xtext.generator" version="2.30.0.v20230227-1116"/>
       <unit id="org.eclipse.xtend" version="2.2.0.v201605260315"/>
       <unit id="org.hamcrest.core" version="1.3.0.v20180420-1519"/>
       <unit id="org.kohsuke.args4j" version="2.33.0.v20160323-2218"/>
@@ -53,7 +52,7 @@
       <unit id="org.slf4j.api" version="1.7.30.v20221112-0806"/>
       <unit id="org.w3c.dom.events" version="3.0.0.draft20060413_v201105210656"/>
       <unit id="org.w3c.dom.svg" version="1.1.0.v201011041433"/>
-      <repository location="https://download.eclipse.org/releases/2023-03/202302031000"/>
+      <repository location="https://download.eclipse.org/releases/2023-03/202303151000"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.xpect.xtext.lib" version="0.2.0.202004061200"/>

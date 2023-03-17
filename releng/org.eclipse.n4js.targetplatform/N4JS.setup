@@ -332,7 +332,7 @@
       <repositoryList
           name="N4JS_2023_03">    <!-- label! -->
         <repository
-            url="http://download.eclipse.org/releases/2023-03/202302031000"/>
+            url="http://download.eclipse.org/releases/2023-03/202303151000"/>
         <repository
             url="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.48.v20220622"/>
         <repository
