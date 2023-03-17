@@ -18,6 +18,7 @@ import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
+import org.eclipse.lsp4j.TypeHierarchyRegistrationOptions;
 import org.eclipse.n4js.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.xtext.ide.server.ResourceTaskContext;
 import org.eclipse.n4js.xtext.ide.server.XDocument;
@@ -81,6 +82,11 @@ public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProto
 		ServerCapabilities capabilities = super.createServerCapabilities(params);
 
 		capabilities.setImplementationProvider(true);
+
+		TypeHierarchyRegistrationOptions thro = new TypeHierarchyRegistrationOptions();
+		thro.setId("TypeHierarchyRegistrationOptions");
+		thro.setWorkDoneProgress(true);
+		capabilities.setTypeHierarchyProvider(thro);
 
 		return capabilities;
 	}

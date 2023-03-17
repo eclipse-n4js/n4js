@@ -10,12 +10,17 @@
  */
 package org.eclipse.n4js.naming;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.xtext.linking.impl.ImportedNamesAdapter;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Adapts default implementation to not normalize qualified names to be all lower case.
@@ -42,7 +47,7 @@ public class N4JSImportedNamesAdapter extends ImportedNamesAdapter {
 
 		@Override
 		public IEObjectDescription getSingleElement(QualifiedName name) {
-			getImportedNames().add(name);
+			addImportedName(name);
 			return delegate.getSingleElement(name);
 		}
 
@@ -51,7 +56,7 @@ public class N4JSImportedNamesAdapter extends ImportedNamesAdapter {
 			return new Iterable<>() {
 				@Override
 				public Iterator<IEObjectDescription> iterator() {
-					getImportedNames().add(name);
+					addImportedName(name);
 					final Iterable<IEObjectDescription> elements = delegate.getElements(name);
 					return elements.iterator();
 				}
@@ -59,8 +64,26 @@ public class N4JSImportedNamesAdapter extends ImportedNamesAdapter {
 		}
 	}
 
+	private final Set<QualifiedName> nonNullImportedNames = new HashSet<>();
+
 	@Override
 	public IScope wrap(IScope scope) {
 		return new N4JSWrappingScope(scope);
+	}
+
+	@Override
+	public Set<QualifiedName> getImportedNames() {
+		return Collections.unmodifiableSet(nonNullImportedNames);
+	}
+
+	/** Adds given element to set of imported names. */
+	public void addImportedName(QualifiedName name) {
+		Preconditions.checkNotNull(name);
+		nonNullImportedNames.add(name);
+	}
+
+	@Override
+	public void clear() {
+		nonNullImportedNames.clear();
 	}
 }

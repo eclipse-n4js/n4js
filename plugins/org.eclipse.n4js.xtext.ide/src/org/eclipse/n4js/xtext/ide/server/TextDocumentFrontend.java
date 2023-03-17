@@ -60,6 +60,10 @@ import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentClientCapabilities;
 import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextEdit;
+import org.eclipse.lsp4j.TypeHierarchyItem;
+import org.eclipse.lsp4j.TypeHierarchyPrepareParams;
+import org.eclipse.lsp4j.TypeHierarchySubtypesParams;
+import org.eclipse.lsp4j.TypeHierarchySupertypesParams;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
@@ -102,23 +106,30 @@ import com.google.inject.Singleton;
 @Singleton
 public class TextDocumentFrontend implements TextDocumentService, IIndexListener {
 
+	/***/
 	@Inject
-	private ResourceTaskManager resourceTaskManager;
+	protected ResourceTaskManager resourceTaskManager;
 
+	/***/
 	@Inject
-	private ParamHelper paramHelper;
+	protected ParamHelper paramHelper;
 
+	/***/
 	@Inject
-	private IResourceServiceProvider.Registry languagesRegistry;
+	protected IResourceServiceProvider.Registry languagesRegistry;
 
+	/***/
 	@Inject
-	private ConcurrentIndex index;
+	protected ConcurrentIndex concurrentIndex;
 
+	/***/
 	private boolean hierarchicalSymbols;
 
-	private IResourceAccess resourceAccess;
+	/***/
+	protected IResourceAccess resourceAccess;
 
-	private ILanguageServerAccess access;
+	/***/
+	protected ILanguageServerAccess langServerAccess;
 
 	/** Sets connection to client */
 	public void connect(@SuppressWarnings("unused") LanguageClient client) {
@@ -126,19 +137,18 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	}
 
 	/** Sets non-injectable fields */
-	public void initialize(InitializeParams initializeParams,
-			@SuppressWarnings("hiding") ILanguageServerAccess access) {
+	public void initialize(InitializeParams initializeParams, ILanguageServerAccess access) {
 		this.hierarchicalSymbols = isHierarchicalDocumentSymbolSupport(initializeParams);
 		this.resourceAccess = new XWorkspaceResourceAccess(resourceTaskManager);
-		this.access = access;
-		index.addListener(this);
+		this.langServerAccess = access;
+		concurrentIndex.addListener(this);
 	}
 
 	/** Resets non-injectable fields */
 	public void disconnect() {
 		this.resourceAccess = null;
-		this.access = null;
-		index.removeListener(this);
+		this.langServerAccess = null;
+		concurrentIndex.removeListener(this);
 	}
 
 	@Override
@@ -488,7 +498,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		IRenameService2 renameService2 = getService(resourceServiceProvider, IRenameService2.class);
 		if ((renameService2 != null)) {
 			IRenameService2.Options options = new IRenameService2.Options();
-			options.setLanguageServerAccess(access);
+			options.setLanguageServerAccess(langServerAccess);
 			options.setRenameParams(renameParams);
 			options.setCancelIndicator(cancelIndicator);
 			return renameService2.rename(options);
@@ -516,10 +526,59 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 			throw new UnsupportedOperationException();
 		}
 		IRenameService2.PrepareRenameOptions options = new IRenameService2.PrepareRenameOptions();
-		options.setLanguageServerAccess(access);
+		options.setLanguageServerAccess(langServerAccess);
 		options.setParams(params);
 		options.setCancelIndicator(cancelIndicator);
 		return renameService.prepareRename(options);
+	}
+
+	@Override
+	public CompletableFuture<List<TypeHierarchyItem>> prepareTypeHierarchy(TypeHierarchyPrepareParams params) {
+		URI uri = paramHelper.getURI(params);
+		return resourceTaskManager.runInExistingContext(uri, "prepareTypeHierarchy", (rtc, ci) -> {
+			return prepareTypeHierarchy(rtc, params, ci);
+		});
+	}
+
+	/** Returns types that the request is performed upon */
+	@SuppressWarnings("unused")
+	protected List<TypeHierarchyItem> prepareTypeHierarchy(ResourceTaskContext rtc, TypeHierarchyPrepareParams params,
+			CancelIndicator ci) {
+
+		// enable capability in XLanguageServerImpl and implement this method in subclass
+		return Collections.emptyList();
+	}
+
+	@Override
+	public CompletableFuture<List<TypeHierarchyItem>> typeHierarchySubtypes(TypeHierarchySubtypesParams params) {
+		URI uri = paramHelper.getURI(params);
+		return resourceTaskManager.runInTemporaryContext(uri, "typeHierarchySubtypes", false, (rtc, ci) -> {
+			return typeHierarchySubtypes(rtc, params, ci);
+		});
+	}
+
+	/** Returns all subtypes of the type given in params */
+	@SuppressWarnings("unused")
+	protected List<TypeHierarchyItem> typeHierarchySubtypes(ResourceTaskContext rtc, TypeHierarchySubtypesParams params,
+			CancelIndicator ci) {
+
+		return Collections.emptyList();
+	}
+
+	@Override
+	public CompletableFuture<List<TypeHierarchyItem>> typeHierarchySupertypes(TypeHierarchySupertypesParams params) {
+		URI uri = paramHelper.getURI(params);
+		return resourceTaskManager.runInTemporaryContext(uri, "typeHierarchySupertypes", false, (rtc, ci) -> {
+			return typeHierarchySupertypes(rtc, params, ci);
+		});
+	}
+
+	/** Returns all supertypes of the type given in params */
+	@SuppressWarnings("unused")
+	protected List<TypeHierarchyItem> typeHierarchySupertypes(ResourceTaskContext rtc,
+			TypeHierarchySupertypesParams params, CancelIndicator ci) {
+
+		return Collections.emptyList();
 	}
 
 	@Override
@@ -607,7 +666,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		ICodeActionService2.Options options = new ICodeActionService2.Options();
 		options.setDocument(doc);
 		options.setResource(res);
-		options.setLanguageServerAccess(access);
+		options.setLanguageServerAccess(langServerAccess);
 		options.setCodeActionParams(params);
 		options.setCancelIndicator(cancelIndicator);
 		return options;

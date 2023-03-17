@@ -108,12 +108,14 @@ public class DtsAfterBuildListener implements AfterBuildRequestListener {
 
 	private void ensureContent() throws IOException {
 		JsonElement json = JsonUtils.loadJson(tsconfig.toPath());
-		JsonArray includeArr = json.getAsJsonObject().getAsJsonArray("include");
 		String includePath = createIncludePath();
-		for (JsonElement includeElem : includeArr) {
-			String includeValue = includeElem.getAsString();
-			if (Objects.equals(includeValue, includePath)) {
-				return; // everything is fine
+		JsonArray includeArr = json.getAsJsonObject().getAsJsonArray("include");
+		if (includeArr != null) {
+			for (JsonElement includeElem : includeArr) {
+				String includeValue = includeElem.getAsString();
+				if (Objects.equals(includeValue, includePath)) {
+					return; // everything is fine
+				}
 			}
 		}
 
