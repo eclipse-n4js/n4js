@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.lsp4j.CallHierarchyRegistrationOptions;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.ServerCapabilities;
@@ -82,11 +83,15 @@ public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProto
 		ServerCapabilities capabilities = super.createServerCapabilities(params);
 
 		capabilities.setImplementationProvider(true);
-		capabilities.setCallHierarchyProvider(true);
+
+		CallHierarchyRegistrationOptions chro = new CallHierarchyRegistrationOptions();
+		chro.setId("CallHierarchyRegistrationOptions");
+		chro.setWorkDoneProgress(true); // enable progress reporting during call hierarchy computation
+		capabilities.setCallHierarchyProvider(chro);
 
 		TypeHierarchyRegistrationOptions thro = new TypeHierarchyRegistrationOptions();
 		thro.setId("TypeHierarchyRegistrationOptions");
-		thro.setWorkDoneProgress(true);
+		thro.setWorkDoneProgress(true); // enable progress reporting during type hierarchy computation
 		capabilities.setTypeHierarchyProvider(thro);
 
 		return capabilities;

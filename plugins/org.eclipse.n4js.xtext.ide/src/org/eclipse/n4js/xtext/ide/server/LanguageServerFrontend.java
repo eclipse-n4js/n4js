@@ -89,7 +89,6 @@ import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
 import org.eclipse.n4js.xtext.ide.server.util.LspLogger;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 
-import com.google.common.annotations.Beta;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
