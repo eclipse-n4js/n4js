@@ -90,6 +90,7 @@ import org.eclipse.n4js.xtext.ide.server.ResourceTaskContext;
 import org.eclipse.n4js.xtext.ide.server.TextDocumentFrontend;
 import org.eclipse.n4js.xtext.ide.server.XDocument;
 import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.findReferences.TargetURICollector;
 import org.eclipse.xtext.findReferences.TargetURIs;
@@ -234,16 +235,42 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	protected List<CallHierarchyIncomingCall> callHierarchyIncomingCalls(ResourceTaskContext rtc,
 			CallHierarchyIncomingCallsParams params, CancelIndicator ci) {
 
-		// TODO
-		return Collections.emptyList();
+		EObject element = resolveElement(rtc, params.getItem().getSelectionRange());
+
+		List<CallHierarchyIncomingCall> incomingCalls = new ArrayList<>();
+		if (element instanceof TFunction) {
+			XtextResourceSet resSet = rtc.getResourceSet();
+			IResourceDescriptions index = workspaceAccess.getXtextIndex(resSet).get();
+			TargetURIs targetURIs = targetURIProvider.get();
+			targetURICollector.add(element, targetURIs);
+			FunctionReferenceAcceptor referenceAcceptor = new FunctionReferenceAcceptor();
+			referenceFinder.findAllReferences(targetURIs, new SimpleResourceAccess(resSet), index, referenceAcceptor,
+					new SubTypeProgressMonitor(langServerAccess, params.getWorkDoneToken()));
+
+			for (EObject ref : referenceAcceptor.results) {
+				if (ref instanceof TFunction) {
+					TFunction referredFunction = (TFunction) ref;
+					CallHierarchyItem item = toCallHierarchyItem(referredFunction);
+					List<Range> fromRanges = List.of();
+					incomingCalls.add(new CallHierarchyIncomingCall(item, fromRanges));
+				}
+			}
+		}
+
+		return incomingCalls;
 	}
 
 	@Override
 	protected List<CallHierarchyOutgoingCall> callHierarchyOutgoingCalls(ResourceTaskContext rtc,
 			CallHierarchyOutgoingCallsParams params, CancelIndicator ci) {
 
-		int offset = rtc.getDocument().getOffSet(params.getItem().getSelectionRange().getStart());
-		EObject element = eObjectAtOffsetHelper.resolveElementAt(rtc.getResource(), offset);
+		EObject element = resolveElement(rtc, params.getItem().getSelectionRange());
+
+		if (element instanceof TFunction) {
+			TFunction tFun = (TFunction) element;
+			element = tFun.getAstElement();
+		}
+
 		if (element instanceof FunctionDefinition) {
 			FunctionDefinition funDef = (FunctionDefinition) element;
 			List<ParameterizedCallExpression> calls = EcoreUtilN4.getAllContentsOfTypeStopAt(funDef.getBody(),
@@ -319,7 +346,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	protected List<TypeHierarchyItem> typeHierarchySubtypes(ResourceTaskContext rtc, TypeHierarchySubtypesParams params,
 			CancelIndicator ci) {
 
-		EObject element = resolveElement(rtc, params.getItem());
+		EObject element = resolveElement(rtc, params.getItem().getSelectionRange());
 
 		List<TypeHierarchyItem> superTypesTHI = new ArrayList<>();
 		if (element instanceof TClassifier) {
@@ -327,9 +354,9 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 			IResourceDescriptions index = workspaceAccess.getXtextIndex(resSet).get();
 			TargetURIs targetURIs = targetURIProvider.get();
 			targetURICollector.add(element, targetURIs);
-			SimpleReferenceAcceptor referenceAcceptor = new SimpleReferenceAcceptor();
+			DeclaredTypeReferenceAcceptor referenceAcceptor = new DeclaredTypeReferenceAcceptor();
 			referenceFinder.findAllReferences(targetURIs, new SimpleResourceAccess(resSet), index, referenceAcceptor,
-					new SubTypeProgressMonitor(langServerAccess, params));
+					new SubTypeProgressMonitor(langServerAccess, params.getWorkDoneToken()));
 
 			for (EObject ref : referenceAcceptor.results) {
 				if (ref instanceof Type) {
@@ -346,7 +373,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	protected List<TypeHierarchyItem> typeHierarchySupertypes(ResourceTaskContext rtc,
 			TypeHierarchySupertypesParams params, CancelIndicator ci) {
 
-		EObject element = resolveElement(rtc, params.getItem());
+		EObject element = resolveElement(rtc, params.getItem().getSelectionRange());
 
 		if (element instanceof N4TypeDeclaration) {
 			N4TypeDeclaration typeDecl = (N4TypeDeclaration) element;
@@ -363,7 +390,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 		return superTypesTHI;
 	}
 
-	private EObject resolveElement(ResourceTaskContext rtc, TypeHierarchyItem thItem) {
+	private EObject resolveElement(ResourceTaskContext rtc, Range selRange) {
 		XtextResourceSet resSet = rtc.getResourceSet();
 		N4JSResource resource = (N4JSResource) rtc.getResource();
 		IResourceDescriptions index = workspaceAccess.getXtextIndex(resSet).get();
@@ -374,7 +401,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 			workspaceAccess.loadModuleFromIndex(resSet, resDesc, true);
 		}
 
-		int offset = rtc.getDocument().getOffSet(thItem.getSelectionRange().getStart());
+		int offset = rtc.getDocument().getOffSet(selRange.getStart());
 		EObject element = eObjectAtOffsetHelper.resolveElementAt(resource, offset);
 		return element;
 	}
@@ -398,7 +425,36 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 		return item;
 	}
 
-	static class SimpleReferenceAcceptor implements IReferenceFinder.Acceptor {
+	static class FunctionReferenceAcceptor implements IReferenceFinder.Acceptor {
+		final ArrayList<EObject> results = Lists.newArrayList();
+
+		@Override
+		public void accept(EObject src, URI srcURI, EReference eRef, int idx, EObject tgtOrProxy, URI tgtURI) {
+			Resource res = src != null ? src.eResource() : null;
+			URI resURI = res != null ? res.getURI() : null;
+			if (src == null || res == null || resURI == null) {
+				return;
+			}
+
+			if (eRef == N4JSPackage.Literals.IDENTIFIER_REF__ID
+					&& src instanceof IdentifierRef && src.eContainer() instanceof ParameterizedCallExpression) {
+
+				FunctionDefinition fDefinition = EcoreUtil2.getContainerOfType(src, FunctionDefinition.class);
+				if (fDefinition != null) {
+					results.add(fDefinition.getDefinedType());
+				}
+			}
+		}
+
+		@Override
+		public void accept(IReferenceDescription description) {
+			// This method is only called in case of finding refs for primitives.
+			// For instance, the method is called when a reference to a primitive type (e.g. string)
+			// is found in primitives.n4jsd
+		}
+	}
+
+	static class DeclaredTypeReferenceAcceptor implements IReferenceFinder.Acceptor {
 		final ArrayList<EObject> results = Lists.newArrayList();
 
 		@Override
@@ -437,9 +493,9 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 		private boolean isCancelled = false;
 
 		/** Constructor */
-		public SubTypeProgressMonitor(ILanguageServerAccess langServerAccess, TypeHierarchySubtypesParams params) {
+		public SubTypeProgressMonitor(ILanguageServerAccess langServerAccess, Either<String, Integer> workDoneToken) {
 			this.langServerAccess = langServerAccess;
-			this.workDoneToken = params.getWorkDoneToken();
+			this.workDoneToken = workDoneToken;
 		}
 
 		@Override
