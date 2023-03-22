@@ -10,9 +10,7 @@
  */
 package org.eclipse.n4js.tooling.findReferences;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.SortedSet;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -41,6 +39,7 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.resource.IResourceDescription;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -64,52 +63,47 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 	@Override
 	protected void findReferencesInDescription(TargetURIs targetURIs, IResourceDescription resourceDescription,
 			IResourceAccess resourceAccess, Acceptor acceptor, IProgressMonitor monitor) {
-		TargetURIKey.Data findReferencesData = keys.getData(targetURIs, resourceAccess);
-		if (monitor.isCanceled())
-			throw new OperationCanceledException();
 
-		final Set<QualifiedName> typesOrModulesToFind = findReferencesData.getTypesOrModulesToFind();
+		TargetURIKey.Data findReferencesData = keys.getData(targetURIs, resourceAccess);
+		if (monitor.isCanceled()) {
+			throw new OperationCanceledException();
+		}
+
+		final SortedSet<QualifiedName> typesOrModulesToFind = findReferencesData.getTypesOrModulesToFind();
 		if (typesOrModulesToFind.isEmpty()) {
 			return;
 		}
+
+		URI uri = resourceDescription.getURI();
 		Iterable<QualifiedName> importedNames = resourceDescription.getImportedNames();
-		// scenario 1: imported names from index
-		// TODO check if imported names from editors are returned as a set?
-		// maybe we need another check for instanceof SortedSet<?>
-		if (importedNames instanceof List<?>) {
-			List<QualifiedName> sorted = (List<QualifiedName>) importedNames;
-			List<QualifiedName> searchMe = sorted;
+
+		if (importedNames instanceof SortedSet<QualifiedName>) {
 			// Optimize search
+			SortedSet<QualifiedName> sortedSet = (SortedSet<QualifiedName>) importedNames;
 			for (QualifiedName typeOrModuleToFind : typesOrModulesToFind) {
-				int insertionIndex = Collections.binarySearch(searchMe, typeOrModuleToFind);
-				if (insertionIndex >= 0) {
+				SortedSet<QualifiedName> tailSet = sortedSet.tailSet(typeOrModuleToFind);
+				if (!tailSet.isEmpty() && Objects.equal(tailSet.first(), typeOrModuleToFind)) {
 					resourceAccess.readOnly(
-							resourceDescription.getURI(),
+							uri,
 							(resourceSet) -> {
-								findReferences(targetURIs, resourceSet.getResource(resourceDescription.getURI(), true),
-										acceptor, monitor);
+								findReferences(targetURIs, resourceSet.getResource(uri, true), acceptor, monitor);
 								return null;
 							});
-					return;
-				} else {
-					int startFrom = -(insertionIndex + 1);
-					if (startFrom >= sorted.size()) {
-						return;
-					}
-					searchMe = sorted.subList(startFrom, sorted.size());
+					// return;
 				}
+				sortedSet = tailSet;
 			}
+
 		} else {
 			for (QualifiedName importedName : importedNames) {
 				if (typesOrModulesToFind.contains(importedName)) {
 					resourceAccess.readOnly(
-							resourceDescription.getURI(),
+							uri,
 							(resourceSet) -> {
-								findReferences(targetURIs, resourceSet.getResource(resourceDescription.getURI(), true),
-										acceptor, monitor);
+								findReferences(targetURIs, resourceSet.getResource(uri, true), acceptor, monitor);
 								return null;
 							});
-					return;
+					// return;
 				}
 			}
 		}
