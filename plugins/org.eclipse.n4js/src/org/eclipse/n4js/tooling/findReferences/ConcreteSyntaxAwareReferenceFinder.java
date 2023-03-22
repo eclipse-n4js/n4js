@@ -11,6 +11,7 @@
 package org.eclipse.n4js.tooling.findReferences;
 
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -69,7 +70,7 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 			throw new OperationCanceledException();
 		}
 
-		final SortedSet<QualifiedName> typesOrModulesToFind = findReferencesData.getTypesOrModulesToFind();
+		SortedSet<QualifiedName> typesOrModulesToFind = findReferencesData.getTypesOrModulesToFind();
 		if (typesOrModulesToFind.isEmpty()) {
 			return;
 		}
@@ -89,12 +90,12 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 								findReferences(targetURIs, resourceSet.getResource(uri, true), acceptor, monitor);
 								return null;
 							});
-					// return;
 				}
 				sortedSet = tailSet;
 			}
 
 		} else {
+			typesOrModulesToFind = new TreeSet<>(typesOrModulesToFind);
 			for (QualifiedName importedName : importedNames) {
 				if (typesOrModulesToFind.contains(importedName)) {
 					resourceAccess.readOnly(
@@ -103,7 +104,6 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 								findReferences(targetURIs, resourceSet.getResource(uri, true), acceptor, monitor);
 								return null;
 							});
-					// return;
 					typesOrModulesToFind.remove(importedName);
 					if (typesOrModulesToFind.isEmpty()) {
 						break;
