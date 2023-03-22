@@ -104,6 +104,10 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 								return null;
 							});
 					// return;
+					typesOrModulesToFind.remove(importedName);
+					if (typesOrModulesToFind.isEmpty()) {
+						break;
+					}
 				}
 			}
 		}
