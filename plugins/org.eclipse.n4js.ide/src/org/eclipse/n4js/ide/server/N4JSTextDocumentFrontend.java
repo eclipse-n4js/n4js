@@ -258,8 +258,11 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 
 			TFunction tFun = (TFunction) element;
 			EObject funDef = tFun.getAstElement();
+
 			if (funDef instanceof FunctionDefinition
 					&& AnnotationDefinition.OVERRIDE.hasAnnotation((FunctionDefinition) funDef)) {
+
+				// case 1: Method has annotation @Override
 
 				TMethod method = (TMethod) element;
 				ContainerType<?> parent = method.getContainingType();
@@ -276,7 +279,28 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 								new SubTypeProgressMonitor(langServerAccess, params.getWorkDoneToken()));
 					}
 				}
+			} else if (funDef instanceof FunctionDefinition
+					&& ((FunctionDefinition) funDef).getBody() == null) {
+
+				// case 2: Method has no body
+				TMethod method = (TMethod) element;
+				ContainerType<?> parent = method.getContainingType();
+				Collection<ContainerType<?>> subtypes = findSubtypes(rtc, params.getWorkDoneToken(), parent, true);
+
+				for (ContainerType<?> subtype : subtypes) {
+					for (EObject member : subtype.getOwnedMembers()) {
+						if (member instanceof TMethod) {
+							TMethod subMethod = (TMethod) member;
+							if (Objects.equal(method.getName(), subMethod.getName())) {
+								referenceAcceptor.results.add(subMethod);
+							}
+						}
+					}
+				}
+
 			} else {
+
+				// case 3: default
 				TargetURIs targetURIs = targetURIProvider.get();
 				targetURICollector.add(element, targetURIs);
 				referenceFinder.findAllReferences(targetURIs, new SimpleResourceAccess(resSet), index,
