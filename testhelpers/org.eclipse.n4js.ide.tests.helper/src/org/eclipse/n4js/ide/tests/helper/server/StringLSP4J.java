@@ -39,6 +39,7 @@ import org.eclipse.lsp4j.SignatureInformation;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
+import org.eclipse.lsp4j.TypeHierarchyItem;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.WorkspaceSymbol;
@@ -486,6 +487,22 @@ public class StringLSP4J {
 				Strings.toString(item.getCommitCharacters()),
 				toString(item.getCommand()),
 				Objects.toString(item.getData(), ""));
+		return "(" + str + ")";
+	}
+
+	/** @return string for given element */
+	public String toString(TypeHierarchyItem thi) {
+		if (thi == null) {
+			return "";
+		}
+
+		String str = Strings.join(", ",
+				relativize(thi.getUri()),
+				thi.getName(),
+				thi.getKind() == null ? "<null>" : thi.getKind().name(),
+				toString(thi.getRange()),
+				toString(thi.getSelectionRange()));
+
 		return "(" + str + ")";
 	}
 
