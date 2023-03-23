@@ -14,7 +14,7 @@ import org.eclipse.n4js.ide.tests.helper.server.AbstractSubtypeHierarchyTest;
 import org.junit.Test;
 
 /**
- * Test class for subtype hierarchy
+ * Test class for supertype hierarchy
  */
 public class SupertypeHierarchyTest extends AbstractSubtypeHierarchyTest {
 

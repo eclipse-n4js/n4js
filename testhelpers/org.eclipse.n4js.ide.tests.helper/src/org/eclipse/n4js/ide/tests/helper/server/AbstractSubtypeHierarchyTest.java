@@ -57,14 +57,14 @@ abstract public class AbstractSubtypeHierarchyTest extends AbstractStructuredIde
 	protected void testSubtypesAtCursor(String content, String expectation) throws Exception {
 		ContentAndPosition contentAndPosition = getContentAndPosition(content);
 		Position position = new Position(contentAndPosition.line, contentAndPosition.column);
-		test(content, new TypeHierarchyConfig(expectation, position, true));
+		test(contentAndPosition.content, new TypeHierarchyConfig(expectation, position, true));
 	}
 
 	/** Call this method in a test */
 	protected void testSupertypesAtCursor(String content, String expectation) throws Exception {
 		ContentAndPosition contentAndPosition = getContentAndPosition(content);
 		Position position = new Position(contentAndPosition.line, contentAndPosition.column);
-		test(content, new TypeHierarchyConfig(expectation, position, false));
+		test(contentAndPosition.content, new TypeHierarchyConfig(expectation, position, false));
 	}
 
 	@Override
