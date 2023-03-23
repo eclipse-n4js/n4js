@@ -533,7 +533,7 @@ public class StringLSP4J {
 
 		String str = Strings.join(", ",
 				toString(chic.getFrom()),
-				Strings.toString(chic.getFromRanges()));
+				Strings.toString(this::toString, chic.getFromRanges()));
 
 		return "(" + str + ")";
 	}
@@ -546,7 +546,7 @@ public class StringLSP4J {
 
 		String str = Strings.join(", ",
 				toString(choc.getTo()),
-				Strings.toString(choc.getFromRanges()));
+				Strings.toString(this::toString, choc.getFromRanges()));
 
 		return "(" + str + ")";
 	}

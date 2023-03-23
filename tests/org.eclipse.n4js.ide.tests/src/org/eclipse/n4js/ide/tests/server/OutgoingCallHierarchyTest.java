@@ -16,68 +16,67 @@ import org.junit.Test;
 /**
  * Test class for incoming call hierarchy
  */
-public class IncomingCallHierarchyTest extends AbstractCallHierarchyTest {
+public class OutgoingCallHierarchyTest extends AbstractCallHierarchyTest {
 
 	/** */
 	@Test
 	public void test_function_1a() throws Exception {
-		testIncomingCallsAtCursor("""
+		testOutgoingCallsAtCursor("""
 				function f<|>() { g(); }
 				function g() {}
-				""", "");
+				""", """
+				((test-project/src/MyModule.n4js, g, Function, [1:0 - 2:0], [1:9 - 1:10]), [[0:15 - 0:18]])""");
 	}
 
 	/** */
 	@Test
 	public void test_function_1b() throws Exception {
-		testIncomingCallsAtCursor("""
+		testOutgoingCallsAtCursor("""
 				function f() { g(); }
 				function g<|>() {}
-				""", """
-				((test-project/src/MyModule.n4js, f, Function, [0:0 - 0:21], [0:9 - 0:10]), [])""");
+				""", "");
 	}
 
 	/** */
 	@Test
 	public void test_method_1a() throws Exception {
-		testIncomingCallsAtCursor("""
+		testOutgoingCallsAtCursor("""
 				class C {
 					f<|>() { this.g(); }
 					g() {}
+				}
+				""", """
+				((test-project/src/MyModule.n4js, g, Method, [2:1 - 2:7], [2:1 - 2:2]), [[1:7 - 1:15]])""");
+	}
+
+	/** */
+	@Test
+	public void test_method_1b() throws Exception {
+		testOutgoingCallsAtCursor("""
+				class C {
+					f() { this.g(); }
+					g<|>() {}
 				}
 				""", "");
 	}
 
 	/** */
 	@Test
-	public void test_method_1b() throws Exception {
-		testIncomingCallsAtCursor("""
-				class C {
-					f() { this.g(); }
-					g<|>() {}
-				}
-				""", """
-				((test-project/src/MyModule.n4js, f, Method, [1:1 - 1:18], [1:1 - 1:2]), [])""");
-	}
-
-	/** */
-	@Test
 	public void test_method_interface_1() throws Exception {
-		testIncomingCallsAtCursor("""
+		testOutgoingCallsAtCursor("""
 				interface I { m(); }
 				class C implements I {
 					@Override
 					m() { f(); }
 				}
 				function f<|>() {}
-				""", """
-				((test-project/src/MyModule.n4js, m, Method, [2:1 - 3:13], [3:1 - 3:2]), [])""");
+				""", "");
 	}
 
 	/** */
 	@Test
 	public void test_method_interface_2a() throws Exception {
-		testIncomingCallsAtCursor("""
+		testOutgoingCallsAtCursor("""
 				interface I { m<|>(); }
 				class C implements I {
 					@Override
@@ -87,13 +86,13 @@ public class IncomingCallHierarchyTest extends AbstractCallHierarchyTest {
 					new C().m();
 				}
 				""", """
-				((test-project/src/MyModule.n4js, m, Method, [2:1 - 3:13], [3:1 - 3:2]), [])""");
+				((test-project/src/MyModule.n4js, f, Function, [5:0 - 8:0], [5:9 - 5:10]), [[3:7 - 3:10]])""");
 	}
 
 	/** */
 	@Test
 	public void test_method_interface_3a() throws Exception {
-		testIncomingCallsAtCursor("""
+		testOutgoingCallsAtCursor("""
 				interface I { m(); }
 				class C implements I {
 					@Override
@@ -103,13 +102,13 @@ public class IncomingCallHierarchyTest extends AbstractCallHierarchyTest {
 					new C().m();
 				}
 				""", """
-				((test-project/src/MyModule.n4js, f, Function, [5:0 - 8:0], [5:9 - 5:10]), [])""");
+				((test-project/src/MyModule.n4js, f, Function, [5:0 - 8:0], [5:9 - 5:10]), [[3:7 - 3:10]])""");
 	}
 
 	/** */
 	@Test
 	public void test_method_interface_2b() throws Exception {
-		testIncomingCallsAtCursor("""
+		testOutgoingCallsAtCursor("""
 				interface I { m<|>(); }
 				class C implements I {
 					@Override
@@ -119,13 +118,13 @@ public class IncomingCallHierarchyTest extends AbstractCallHierarchyTest {
 					new C().m();
 				}
 				""", """
-				((test-project/src/MyModule.n4js, m, Method, [2:1 - 3:13], [3:1 - 3:2]), [])""");
+				((test-project/src/MyModule.n4js, f, Function, [5:0 - 8:0], [5:9 - 5:10]), [[3:7 - 3:10]])""");
 	}
 
 	/** */
 	@Test
 	public void test_method_interface_3b() throws Exception {
-		testIncomingCallsAtCursor("""
+		testOutgoingCallsAtCursor("""
 				interface I { m(); }
 				class C implements I {
 					@Override
@@ -135,13 +134,13 @@ public class IncomingCallHierarchyTest extends AbstractCallHierarchyTest {
 					(new C() as I).m();
 				}
 				""", """
-				((test-project/src/MyModule.n4js, f, Function, [5:0 - 8:0], [5:9 - 5:10]), [])""");
+				((test-project/src/MyModule.n4js, f, Function, [5:0 - 8:0], [5:9 - 5:10]), [[3:7 - 3:10]])""");
 	}
 
 	/** */
 	@Test
 	public void test_method_interface_4a() throws Exception {
-		testIncomingCallsAtCursor("""
+		testOutgoingCallsAtCursor("""
 				interface I { m<|>(); }
 				interface J extends I {
 					@Override
@@ -159,15 +158,14 @@ public class IncomingCallHierarchyTest extends AbstractCallHierarchyTest {
 					(new CJ() as I).m();
 				}
 				""", """
-				((test-project/src/MyModule.n4js, m, Method, [2:1 - 3:5], [3:1 - 3:2]), [])
-				((test-project/src/MyModule.n4js, m, Method, [6:1 - 7:13], [7:1 - 7:2]), [])
-				((test-project/src/MyModule.n4js, m, Method, [10:1 - 11:13], [11:1 - 11:2]), [])""");
+				((test-project/src/MyModule.n4js, f, Function, [13:0 - 16:0], [13:9 - 13:10]), [[7:7 - 7:10]])
+				((test-project/src/MyModule.n4js, f, Function, [13:0 - 16:0], [13:9 - 13:10]), [[11:7 - 11:10]])""");
 	}
 
 	/** */
 	@Test
 	public void test_method_interface_4b() throws Exception {
-		testIncomingCallsAtCursor("""
+		testOutgoingCallsAtCursor("""
 				interface I { m(); }
 				interface J extends I {
 					@Override
@@ -185,13 +183,13 @@ public class IncomingCallHierarchyTest extends AbstractCallHierarchyTest {
 					(new CJ() as I).m();
 				}
 				""", """
-				((test-project/src/MyModule.n4js, f, Function, [13:0 - 16:0], [13:9 - 13:10]), [])""");
+				((test-project/src/MyModule.n4js, f, Function, [13:0 - 16:0], [13:9 - 13:10]), [[11:7 - 11:10]])""");
 	}
 
 	/** */
 	@Test
 	public void test_method_interface_4c() throws Exception {
-		testIncomingCallsAtCursor("""
+		testOutgoingCallsAtCursor("""
 				interface I { m(); }
 				interface J extends I {
 					@Override
@@ -209,13 +207,13 @@ public class IncomingCallHierarchyTest extends AbstractCallHierarchyTest {
 					(new CJ() as I).m();
 				}
 				""", """
-				((test-project/src/MyModule.n4js, f, Function, [13:0 - 16:0], [13:9 - 13:10]), [])""");
+				((test-project/src/MyModule.n4js, f, Function, [13:0 - 16:0], [13:9 - 13:10]), [[7:7 - 7:10]])""");
 	}
 
 	/** */
 	@Test
 	public void test_method_interface_4d() throws Exception {
-		testIncomingCallsAtCursor("""
+		testOutgoingCallsAtCursor("""
 				interface I { m(); }
 				interface J extends I {
 					@Override
@@ -233,7 +231,7 @@ public class IncomingCallHierarchyTest extends AbstractCallHierarchyTest {
 					(new CJ() as I).m();
 				}
 				""", """
-				((test-project/src/MyModule.n4js, f, Function, [13:0 - 16:0], [13:9 - 13:10]), [])""");
+				((test-project/src/MyModule.n4js, f, Function, [13:0 - 16:0], [13:9 - 13:10]), [[11:7 - 11:10]])""");
 	}
 
 }
