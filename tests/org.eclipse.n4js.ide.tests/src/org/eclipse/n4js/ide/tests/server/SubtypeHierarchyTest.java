@@ -10,13 +10,13 @@
  */
 package org.eclipse.n4js.ide.tests.server;
 
-import org.eclipse.n4js.ide.tests.helper.server.AbstractSubtypeHierarchyTest;
+import org.eclipse.n4js.ide.tests.helper.server.AbstractTypeHierarchyTest;
 import org.junit.Test;
 
 /**
  * Test class for subtype hierarchy
  */
-public class SubtypeHierarchyTest extends AbstractSubtypeHierarchyTest {
+public class SubtypeHierarchyTest extends AbstractTypeHierarchyTest {
 
 	/** */
 	@Test

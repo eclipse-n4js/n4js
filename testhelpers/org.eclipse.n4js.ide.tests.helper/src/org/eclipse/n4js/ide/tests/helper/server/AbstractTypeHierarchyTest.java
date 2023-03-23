@@ -23,14 +23,14 @@ import org.eclipse.lsp4j.TypeHierarchyItem;
 import org.eclipse.lsp4j.TypeHierarchyPrepareParams;
 import org.eclipse.lsp4j.TypeHierarchySubtypesParams;
 import org.eclipse.lsp4j.TypeHierarchySupertypesParams;
-import org.eclipse.n4js.ide.tests.helper.server.AbstractSubtypeHierarchyTest.TypeHierarchyConfig;
+import org.eclipse.n4js.ide.tests.helper.server.AbstractTypeHierarchyTest.TypeHierarchyConfig;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.utils.Strings;
 
 /**
  * Abstract test class for type hierarchy protocol tests.
  */
-abstract public class AbstractSubtypeHierarchyTest extends AbstractStructuredIdeTest<TypeHierarchyConfig> {
+abstract public class AbstractTypeHierarchyTest extends AbstractStructuredIdeTest<TypeHierarchyConfig> {
 
 	/***/
 	public static class TypeHierarchyConfig {
