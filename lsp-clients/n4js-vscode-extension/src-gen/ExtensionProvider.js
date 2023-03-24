@@ -75,7 +75,7 @@ export function getActivate(vscode, vscodeLC) {
 			outputChannel: outputChannel
 		};
 		let lc = new vscodeLC.LanguageClient(CHANNEL_NAME, serverOptions, clientOptions, true);
-		lc.onReady().then(()=>{
+		lc.start().then(()=>{
 			const rtDocumentContents = new vscodeLC.RequestType('n4js/documentContents');
 			const textDocumentContentProvider = {
 				provideTextDocumentContent: (uri, token)=>{
@@ -99,7 +99,6 @@ export function getActivate(vscode, vscodeLC) {
 			const printDebugInfoHandler = ()=>lc.sendRequest(printDebugInfoRT, {});
 			context.subscriptions.push(vscode.commands.registerCommand(printDebugInfoCommand, printDebugInfoHandler));
 		});
-		let disposableLangClient = lc.start();
 		context.subscriptions.push(vscode.workspace.onDidChangeConfiguration((e)=>{
 			if (e.affectsConfiguration('n4js.traceOutput', {
 				languageId: 'n4js'
@@ -107,7 +106,6 @@ export function getActivate(vscode, vscodeLC) {
 				setOutputAppenders(vscode, outputChannel);
 			}
 		}));
-		context.subscriptions.push(disposableLangClient);
 	};
 }
 export function getDeactivate(vscode, vscodeLC) {
