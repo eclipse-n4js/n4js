@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.eclipse.lsp4j.CallHierarchyIncomingCall;
+import org.eclipse.lsp4j.CallHierarchyItem;
+import org.eclipse.lsp4j.CallHierarchyOutgoingCall;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.CompletionItem;
@@ -39,6 +42,7 @@ import org.eclipse.lsp4j.SignatureInformation;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
+import org.eclipse.lsp4j.TypeHierarchyItem;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.WorkspaceSymbol;
@@ -486,6 +490,64 @@ public class StringLSP4J {
 				Strings.toString(item.getCommitCharacters()),
 				toString(item.getCommand()),
 				Objects.toString(item.getData(), ""));
+		return "(" + str + ")";
+	}
+
+	/** @return string for given element */
+	public String toString(TypeHierarchyItem thi) {
+		if (thi == null) {
+			return "";
+		}
+
+		String str = Strings.join(", ",
+				relativize(thi.getUri()),
+				thi.getName(),
+				thi.getKind() == null ? "<null>" : thi.getKind().name(),
+				toString(thi.getRange()),
+				toString(thi.getSelectionRange()));
+
+		return "(" + str + ")";
+	}
+
+	/** @return string for given element */
+	public String toString(CallHierarchyItem chi) {
+		if (chi == null) {
+			return "";
+		}
+
+		String str = Strings.join(", ",
+				relativize(chi.getUri()),
+				chi.getName(),
+				chi.getKind() == null ? "<null>" : chi.getKind().name(),
+				toString(chi.getRange()),
+				toString(chi.getSelectionRange()));
+
+		return "(" + str + ")";
+	}
+
+	/** @return string for given element */
+	public String toString(CallHierarchyIncomingCall chic) {
+		if (chic == null) {
+			return "";
+		}
+
+		String str = Strings.join(", ",
+				toString(chic.getFrom()),
+				Strings.toString(this::toString, chic.getFromRanges()));
+
+		return "(" + str + ")";
+	}
+
+	/** @return string for given element */
+	public String toString(CallHierarchyOutgoingCall choc) {
+		if (choc == null) {
+			return "";
+		}
+
+		String str = Strings.join(", ",
+				toString(choc.getTo()),
+				Strings.toString(this::toString, choc.getFromRanges()));
+
 		return "(" + str + ")";
 	}
 

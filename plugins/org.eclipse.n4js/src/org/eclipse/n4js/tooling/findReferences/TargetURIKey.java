@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.N4JSGlobals;
@@ -131,7 +132,7 @@ public class TargetURIKey {
 		 *
 		 * @return the names to find.
 		 */
-		public Set<QualifiedName> getTypesOrModulesToFind() {
+		public SortedSet<QualifiedName> getTypesOrModulesToFind() {
 			return typesOrModulesToFind;
 		}
 
@@ -175,9 +176,9 @@ public class TargetURIKey {
 	}
 
 	private void init(Data result, IResourceAccess resourceAccess, TargetURIs targetURIs) {
-		targetURIs.getTargetResourceURIs().forEach((resourceURI) -> {
+		for (URI resourceURI : targetURIs.getTargetResourceURIs()) {
 			resourceAccess.readOnly(resourceURI, (resourceSet) -> {
-				targetURIs.getEObjectURIs(resourceURI).forEach((objectURI) -> {
+				for (URI objectURI : targetURIs.getEObjectURIs(resourceURI)) {
 					try {
 						EObject object = resourceSet.getEObject(objectURI, true);
 						if (object != null) {
@@ -186,10 +187,10 @@ public class TargetURIKey {
 					} catch (RuntimeException e) {
 						// ignore
 					}
-				});
+				}
 				return null;
 			});
-		});
+		}
 	}
 
 	/**

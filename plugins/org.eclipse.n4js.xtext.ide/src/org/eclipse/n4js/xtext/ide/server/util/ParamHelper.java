@@ -11,6 +11,8 @@
 package org.eclipse.n4js.xtext.ide.server.util;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.lsp4j.CallHierarchyIncomingCallsParams;
+import org.eclipse.lsp4j.CallHierarchyOutgoingCallsParams;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.CodeLensParams;
 import org.eclipse.lsp4j.CompletionParams;
@@ -142,6 +144,16 @@ public class ParamHelper {
 	/** Extracts the URI from the given LSP file event. May return <code>null</code>. */
 	public URI getURI(FileEvent fileEvent) {
 		return fileEvent != null ? toURI(fileEvent.getUri()) : null;
+	}
+
+	/** Extracts the URI from the given LSP file event. May return <code>null</code>. */
+	public URI getURI(CallHierarchyIncomingCallsParams params) {
+		return params != null && params.getItem() != null ? toURI(params.getItem().getUri()) : null;
+	}
+
+	/** Extracts the URI from the given LSP file event. May return <code>null</code>. */
+	public URI getURI(CallHierarchyOutgoingCallsParams params) {
+		return params != null && params.getItem() != null ? toURI(params.getItem().getUri()) : null;
 	}
 
 	/** Extracts the URI from the given LSP file event. May return <code>null</code>. */

@@ -16,8 +16,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -25,6 +28,12 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.lsp4j.CallHierarchyIncomingCall;
+import org.eclipse.lsp4j.CallHierarchyIncomingCallsParams;
+import org.eclipse.lsp4j.CallHierarchyItem;
+import org.eclipse.lsp4j.CallHierarchyOutgoingCall;
+import org.eclipse.lsp4j.CallHierarchyOutgoingCallsParams;
+import org.eclipse.lsp4j.CallHierarchyPrepareParams;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
@@ -45,10 +54,17 @@ import org.eclipse.lsp4j.WorkDoneProgressEnd;
 import org.eclipse.lsp4j.WorkDoneProgressNotification;
 import org.eclipse.lsp4j.WorkDoneProgressReport;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
 import org.eclipse.n4js.ide.server.util.SymbolKindUtil;
+import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.FunctionDefinition;
+import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
+import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
+import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.CollectedDataAccess;
@@ -61,11 +77,20 @@ import org.eclipse.n4js.tooling.findReferences.SimpleResourceAccess;
 import org.eclipse.n4js.transpiler.sourcemap.MappingEntry;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMap;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMapFileLocator;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
+import org.eclipse.n4js.ts.types.ContainerType;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TFunction;
+import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.typesystem.utils.AllSuperTypesCollector;
+import org.eclipse.n4js.utils.DeclMergingHelper;
+import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.ResourceNameComputer;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
@@ -74,6 +99,7 @@ import org.eclipse.n4js.xtext.ide.server.ResourceTaskContext;
 import org.eclipse.n4js.xtext.ide.server.TextDocumentFrontend;
 import org.eclipse.n4js.xtext.ide.server.XDocument;
 import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.findReferences.TargetURICollector;
 import org.eclipse.xtext.findReferences.TargetURIs;
@@ -88,6 +114,7 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.ITextRegion;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -126,6 +153,9 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 
 	@Inject
 	private Provider<TargetURIs> targetURIProvider;
+
+	@Inject
+	private DeclMergingHelper declMergingHelper;
 
 	@Override
 	protected Either<List<CompletionItem>, CompletionList> completion(ResourceTaskContext rtc, CompletionParams params,
@@ -198,6 +228,189 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	}
 
 	@Override
+	protected List<CallHierarchyItem> prepareCallHierarchy(ResourceTaskContext rtc,
+			CallHierarchyPrepareParams params, CancelIndicator ci) {
+
+		int offset = rtc.getDocument().getOffSet(params.getPosition());
+		EObject element = eObjectAtOffsetHelper.resolveElementAt(rtc.getResource(), offset);
+		if (element instanceof FunctionTypeExprOrRef) {
+			FunctionTypeExprOrRef fRef = (FunctionTypeExprOrRef) element;
+			element = fRef.getFunctionType();
+		}
+		if (element instanceof TFunction) {
+			CallHierarchyItem item = toCallHierarchyItem((TFunction) element);
+			return List.of(item);
+		}
+		return Collections.emptyList();
+	}
+
+	@Override
+	protected List<CallHierarchyIncomingCall> callHierarchyIncomingCalls(ResourceTaskContext rtc,
+			CallHierarchyIncomingCallsParams params, CancelIndicator ci) {
+
+		EObject element = resolveElement(rtc, params.getItem().getSelectionRange());
+
+		List<CallHierarchyIncomingCall> incomingCalls = new ArrayList<>();
+		if (element instanceof TFunction) {
+			XtextResourceSet resSet = rtc.getResourceSet();
+			IResourceDescriptions index = workspaceAccess.getXtextIndex(resSet).get();
+			FunctionReferenceAcceptor referenceAcceptor = new FunctionReferenceAcceptor();
+
+			TFunction tFun = (TFunction) element;
+			EObject funDef = tFun.getAstElement();
+
+			if (funDef instanceof FunctionDefinition
+					&& AnnotationDefinition.OVERRIDE.hasAnnotation((FunctionDefinition) funDef)) {
+
+				// case 1: Method has annotation @Override
+
+				TMethod method = (TMethod) element;
+				ContainerType<?> parent = method.getContainingType();
+				// Reflective: also returns the given container type
+				List<TClassifier> superTypes = AllSuperTypesCollector.collect(parent, declMergingHelper);
+
+				for (TClassifier superType : superTypes) {
+					TMember superMethod = superType.findOwnedMember(method.getName());
+					if (superMethod instanceof TMethod) {
+						TargetURIs targetURIs = targetURIProvider.get();
+						targetURICollector.add(superMethod, targetURIs);
+						referenceFinder.findAllReferences(targetURIs, new SimpleResourceAccess(resSet), index,
+								referenceAcceptor,
+								new SubTypeProgressMonitor(langServerAccess, params.getWorkDoneToken()));
+					}
+				}
+			} else if (funDef instanceof FunctionDefinition
+					&& ((FunctionDefinition) funDef).getBody() == null) {
+
+				// case 2: Method has no body
+				TMethod method = (TMethod) element;
+				ContainerType<?> parent = method.getContainingType();
+				Collection<ContainerType<?>> subtypes = findSubtypes(rtc, params.getWorkDoneToken(), parent, true);
+
+				for (ContainerType<?> subtype : subtypes) {
+					for (EObject member : subtype.getOwnedMembers()) {
+						if (member instanceof TMethod) {
+							TMethod subMethod = (TMethod) member;
+							if (Objects.equal(method.getName(), subMethod.getName())) {
+								referenceAcceptor.results.add(subMethod);
+							}
+						}
+					}
+				}
+
+			} else {
+
+				// case 3: default
+				TargetURIs targetURIs = targetURIProvider.get();
+				targetURICollector.add(element, targetURIs);
+				referenceFinder.findAllReferences(targetURIs, new SimpleResourceAccess(resSet), index,
+						referenceAcceptor,
+						new SubTypeProgressMonitor(langServerAccess, params.getWorkDoneToken()));
+			}
+
+			for (EObject ref : referenceAcceptor.results) {
+				if (ref instanceof TFunction) {
+					TFunction referredFunction = (TFunction) ref;
+					CallHierarchyItem item = toCallHierarchyItem(referredFunction);
+					List<Range> fromRanges = List.of();
+					incomingCalls.add(new CallHierarchyIncomingCall(item, fromRanges));
+				}
+			}
+		}
+
+		return incomingCalls;
+	}
+
+	@Override
+	protected List<CallHierarchyOutgoingCall> callHierarchyOutgoingCalls(ResourceTaskContext rtc,
+			CallHierarchyOutgoingCallsParams params, CancelIndicator ci) {
+
+		EObject element = resolveElement(rtc, params.getItem().getSelectionRange());
+		List<FunctionDefinition> funDefs = new ArrayList<>();
+
+		if (element instanceof TMethod) {
+			TMethod method = (TMethod) element;
+			EObject parentContainer = element.eContainer();
+			Collection<ContainerType<?>> subtypes = findSubtypes(rtc, params.getWorkDoneToken(), parentContainer, true);
+			if (parentContainer instanceof ContainerType<?>) {
+				subtypes.add((ContainerType<?>) parentContainer);
+			}
+
+			for (ContainerType<?> subtype : subtypes) {
+				for (EObject member : subtype.getOwnedMembers()) {
+					if (member instanceof TMethod) {
+						TMethod subMethod = (TMethod) member;
+						if (Objects.equal(method.getName(), subMethod.getName())) {
+							EObject funDef = subMethod.getAstElement();
+							if (funDef instanceof FunctionDefinition) {
+								funDefs.add((FunctionDefinition) funDef);
+							}
+						}
+					}
+				}
+			}
+
+		} else if (element instanceof TFunction) {
+			TFunction tFun = (TFunction) element;
+			EObject funDef = tFun.getAstElement();
+			if (funDef instanceof FunctionDefinition) {
+				funDefs.add((FunctionDefinition) funDef);
+			}
+		}
+
+		List<CallHierarchyOutgoingCall> result = new ArrayList<>();
+		for (FunctionDefinition funDef : funDefs) {
+			List<ParameterizedCallExpression> calls = EcoreUtilN4.getAllContentsOfTypeStopAt(funDef.getBody(),
+					ParameterizedCallExpression.class,
+					N4JSPackage.Literals.FUNCTION_OR_FIELD_ACCESSOR__BODY);
+
+			for (ParameterizedCallExpression call : calls) {
+				Expression target = call.getTarget();
+				IdentifiableElement targetTFunction = null;
+				if (target instanceof ParameterizedPropertyAccessExpression) {
+					ParameterizedPropertyAccessExpression ppae = (ParameterizedPropertyAccessExpression) target;
+					targetTFunction = ppae.getProperty();
+				}
+				if (target instanceof IdentifierRef) {
+					IdentifierRef idRef = (IdentifierRef) target;
+					targetTFunction = idRef.getTargetElement();
+				}
+				if (targetTFunction instanceof TFunction) {
+					TFunction targetFunDef = (TFunction) targetTFunction;
+					XtextResource resCall = (XtextResource) call.eResource();
+					XDocument docCall = new XDocument(1, resCall.getParseResult().getRootNode().getText());
+					ITextRegion sgnfRegion = locationInFileProvider.getSignificantTextRegion(call);
+					Position sgnfStartPos = docCall.getPosition(sgnfRegion.getOffset());
+					Position sgnfEndPos = docCall.getPosition(sgnfRegion.getOffset() + sgnfRegion.getLength());
+					List<Range> fromRanges = List.of(new Range(sgnfStartPos, sgnfEndPos));
+					CallHierarchyItem item = toCallHierarchyItem(targetFunDef);
+					result.add(new CallHierarchyOutgoingCall(item, fromRanges));
+				}
+			}
+		}
+		return result;
+	}
+
+	private CallHierarchyItem toCallHierarchyItem(TFunction fun) {
+		XtextResource resource = (XtextResource) fun.eResource();
+		XDocument doc = new XDocument(1, resource.getParseResult().getRootNode().getText());
+		SymbolKind symbolKind = SymbolKindUtil.getSymbolKind(fun.eClass());
+		String uri = resource.getURI().toString();
+
+		ITextRegion fullRegion = locationInFileProvider.getFullTextRegion(fun);
+		Position fullStartPos = doc.getPosition(fullRegion.getOffset());
+		Position fullEndPos = doc.getPosition(fullRegion.getOffset() + fullRegion.getLength());
+		ITextRegion sgnfRegion = locationInFileProvider.getSignificantTextRegion(fun);
+		Position sgnfStartPos = doc.getPosition(sgnfRegion.getOffset());
+		Position sgnfEndPos = doc.getPosition(sgnfRegion.getOffset() + sgnfRegion.getLength());
+		Range range = new Range(fullStartPos, fullEndPos);
+		Range selectionRange = new Range(sgnfStartPos, sgnfEndPos);
+
+		CallHierarchyItem item = new CallHierarchyItem(fun.getName(), symbolKind, uri, range, selectionRange);
+		return item;
+	}
+
+	@Override
 	protected List<TypeHierarchyItem> prepareTypeHierarchy(ResourceTaskContext rtc, TypeHierarchyPrepareParams params,
 			CancelIndicator ci) {
 
@@ -218,34 +431,52 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	protected List<TypeHierarchyItem> typeHierarchySubtypes(ResourceTaskContext rtc, TypeHierarchySubtypesParams params,
 			CancelIndicator ci) {
 
-		EObject element = resolveElement(rtc, params.getItem());
+		EObject element = resolveElement(rtc, params.getItem().getSelectionRange());
 
-		List<TypeHierarchyItem> superTypesTHI = new ArrayList<>();
+		List<TypeHierarchyItem> subTypesTHI = new ArrayList<>();
 		if (element instanceof TClassifier) {
-			XtextResourceSet resSet = rtc.getResourceSet();
-			IResourceDescriptions index = workspaceAccess.getXtextIndex(resSet).get();
-			TargetURIs targetURIs = targetURIProvider.get();
-			targetURICollector.add(element, targetURIs);
-			SimpleReferenceAcceptor referenceAcceptor = new SimpleReferenceAcceptor();
-			referenceFinder.findAllReferences(targetURIs, new SimpleResourceAccess(resSet), index, referenceAcceptor,
-					new SubTypeProgressMonitor(langServerAccess, params));
+			Collection<ContainerType<?>> subtypes = findSubtypes(rtc, params.getWorkDoneToken(), element, false);
 
-			for (EObject ref : referenceAcceptor.results) {
-				if (ref instanceof Type) {
-					Type referredType = (Type) ref;
-					superTypesTHI.add(toTypeHierarchyItem(referredType));
+			for (Type referredType : subtypes) {
+				subTypesTHI.add(toTypeHierarchyItem(referredType));
+			}
+		}
+
+		return subTypesTHI;
+	}
+
+	private Collection<ContainerType<?>> findSubtypes(ResourceTaskContext rtc, Either<String, Integer> workDoneToken,
+			EObject element, boolean transitive) {
+
+		XtextResourceSet resSet = rtc.getResourceSet();
+		IResourceDescriptions index = workspaceAccess.getXtextIndex(resSet).get();
+		TargetURIs targetURIs = targetURIProvider.get();
+		targetURICollector.add(element, targetURIs);
+
+		Set<ContainerType<?>> allResults = new LinkedHashSet<>();
+		while (!targetURIs.isEmpty()) {
+			DeclaredTypeReferenceAcceptor referenceAcceptor = new DeclaredTypeReferenceAcceptor();
+			referenceFinder.findAllReferences(targetURIs, new SimpleResourceAccess(resSet), index, referenceAcceptor,
+					new SubTypeProgressMonitor(langServerAccess, workDoneToken));
+
+			allResults.addAll(referenceAcceptor.results);
+			targetURIs = targetURIProvider.get();
+
+			if (transitive) {
+				for (EObject result : referenceAcceptor.results) {
+					targetURICollector.add(result, targetURIs);
 				}
 			}
 		}
 
-		return superTypesTHI;
+		return allResults;
 	}
 
 	@Override
 	protected List<TypeHierarchyItem> typeHierarchySupertypes(ResourceTaskContext rtc,
 			TypeHierarchySupertypesParams params, CancelIndicator ci) {
 
-		EObject element = resolveElement(rtc, params.getItem());
+		EObject element = resolveElement(rtc, params.getItem().getSelectionRange());
 
 		if (element instanceof N4TypeDeclaration) {
 			N4TypeDeclaration typeDecl = (N4TypeDeclaration) element;
@@ -262,7 +493,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 		return superTypesTHI;
 	}
 
-	private EObject resolveElement(ResourceTaskContext rtc, TypeHierarchyItem thItem) {
+	private EObject resolveElement(ResourceTaskContext rtc, Range selRange) {
 		XtextResourceSet resSet = rtc.getResourceSet();
 		N4JSResource resource = (N4JSResource) rtc.getResource();
 		IResourceDescriptions index = workspaceAccess.getXtextIndex(resSet).get();
@@ -273,7 +504,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 			workspaceAccess.loadModuleFromIndex(resSet, resDesc, true);
 		}
 
-		int offset = rtc.getDocument().getOffSet(thItem.getSelectionRange().getStart());
+		int offset = rtc.getDocument().getOffSet(selRange.getStart());
 		EObject element = eObjectAtOffsetHelper.resolveElementAt(resource, offset);
 		return element;
 	}
@@ -297,8 +528,38 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 		return item;
 	}
 
-	static class SimpleReferenceAcceptor implements IReferenceFinder.Acceptor {
+	static class FunctionReferenceAcceptor implements IReferenceFinder.Acceptor {
 		final ArrayList<EObject> results = Lists.newArrayList();
+
+		@Override
+		public void accept(EObject src, URI srcURI, EReference eRef, int idx, EObject tgtOrProxy, URI tgtURI) {
+			Resource res = src != null ? src.eResource() : null;
+			URI resURI = res != null ? res.getURI() : null;
+			if (src == null || res == null || resURI == null) {
+				return;
+			}
+
+			if ((eRef == N4JSPackage.Literals.IDENTIFIER_REF__ID
+					|| eRef == N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY)
+					&& src.eContainer() instanceof ParameterizedCallExpression) {
+
+				FunctionDefinition fDefinition = EcoreUtil2.getContainerOfType(src, FunctionDefinition.class);
+				if (fDefinition != null) {
+					results.add(fDefinition.getDefinedType());
+				}
+			}
+		}
+
+		@Override
+		public void accept(IReferenceDescription description) {
+			// This method is only called in case of finding refs for primitives.
+			// For instance, the method is called when a reference to a primitive type (e.g. string)
+			// is found in primitives.n4jsd
+		}
+	}
+
+	static class DeclaredTypeReferenceAcceptor implements IReferenceFinder.Acceptor {
+		final Set<ContainerType<?>> results = new LinkedHashSet<>();
 
 		@Override
 		public void accept(EObject src, URI srcURI, EReference eRef, int idx, EObject tgtOrProxy, URI tgtURI) {
@@ -314,7 +575,10 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 				EObject parentType = src.eContainer().eContainer();
 				if (parentType instanceof N4ClassifierDeclaration) {
 					N4ClassifierDeclaration n4classifierDecl = (N4ClassifierDeclaration) parentType;
-					results.add(n4classifierDecl.getDefinedType());
+					Type definedType = n4classifierDecl.getDefinedType();
+					if (definedType instanceof ContainerType<?>) {
+						results.add((ContainerType<?>) definedType);
+					}
 				}
 			}
 		}
@@ -336,9 +600,9 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 		private boolean isCancelled = false;
 
 		/** Constructor */
-		public SubTypeProgressMonitor(ILanguageServerAccess langServerAccess, TypeHierarchySubtypesParams params) {
+		public SubTypeProgressMonitor(ILanguageServerAccess langServerAccess, Either<String, Integer> workDoneToken) {
 			this.langServerAccess = langServerAccess;
-			this.workDoneToken = params.getWorkDoneToken();
+			this.workDoneToken = workDoneToken;
 		}
 
 		@Override

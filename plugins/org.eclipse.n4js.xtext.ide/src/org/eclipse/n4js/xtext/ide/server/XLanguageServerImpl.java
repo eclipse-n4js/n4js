@@ -21,6 +21,12 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.lsp4j.CallHierarchyIncomingCall;
+import org.eclipse.lsp4j.CallHierarchyIncomingCallsParams;
+import org.eclipse.lsp4j.CallHierarchyItem;
+import org.eclipse.lsp4j.CallHierarchyOutgoingCall;
+import org.eclipse.lsp4j.CallHierarchyOutgoingCallsParams;
+import org.eclipse.lsp4j.CallHierarchyPrepareParams;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
@@ -686,6 +692,23 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			return CompletableFuture.completedFuture(Either3.forSecond(null));
 		}
 		return lsFrontend.prepareRename(params);
+	}
+
+	@Override
+	public CompletableFuture<List<CallHierarchyItem>> prepareCallHierarchy(CallHierarchyPrepareParams params) {
+		return lsFrontend.prepareCallHierarchy(params);
+	}
+
+	@Override
+	public CompletableFuture<List<CallHierarchyIncomingCall>> callHierarchyIncomingCalls(
+			CallHierarchyIncomingCallsParams params) {
+		return lsFrontend.callHierarchyIncomingCalls(params);
+	}
+
+	@Override
+	public CompletableFuture<List<CallHierarchyOutgoingCall>> callHierarchyOutgoingCalls(
+			CallHierarchyOutgoingCallsParams params) {
+		return lsFrontend.callHierarchyOutgoingCalls(params);
 	}
 
 	@Override

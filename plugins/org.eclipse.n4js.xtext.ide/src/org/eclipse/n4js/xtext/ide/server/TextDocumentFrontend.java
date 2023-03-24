@@ -20,6 +20,12 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.lsp4j.CallHierarchyIncomingCall;
+import org.eclipse.lsp4j.CallHierarchyIncomingCallsParams;
+import org.eclipse.lsp4j.CallHierarchyItem;
+import org.eclipse.lsp4j.CallHierarchyOutgoingCall;
+import org.eclipse.lsp4j.CallHierarchyOutgoingCallsParams;
+import org.eclipse.lsp4j.CallHierarchyPrepareParams;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionParams;
@@ -530,6 +536,56 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		options.setParams(params);
 		options.setCancelIndicator(cancelIndicator);
 		return renameService.prepareRename(options);
+	}
+
+	@Override
+	public CompletableFuture<List<CallHierarchyItem>> prepareCallHierarchy(CallHierarchyPrepareParams params) {
+		URI uri = paramHelper.getURI(params);
+		return resourceTaskManager.runInExistingContext(uri, "prepareCallHierarchy", (rtc, ci) -> {
+			return prepareCallHierarchy(rtc, params, ci);
+		});
+	}
+
+	/** Returns a list of outgoing calls */
+	@SuppressWarnings("unused")
+	protected List<CallHierarchyItem> prepareCallHierarchy(ResourceTaskContext rtc,
+			CallHierarchyPrepareParams params, CancelIndicator ci) {
+		// enable capability in XLanguageServerImpl and implement this method in subclass
+		return Collections.emptyList();
+	}
+
+	@Override
+	public CompletableFuture<List<CallHierarchyIncomingCall>> callHierarchyIncomingCalls(
+			CallHierarchyIncomingCallsParams params) {
+		URI uri = paramHelper.getURI(params);
+		return resourceTaskManager.runInTemporaryContext(uri, "callHierarchyIncomingCalls", false, (rtc, ci) -> {
+			return callHierarchyIncomingCalls(rtc, params, ci);
+		});
+	}
+
+	/** Returns a list of incoming calls */
+	@SuppressWarnings("unused")
+	protected List<CallHierarchyIncomingCall> callHierarchyIncomingCalls(ResourceTaskContext rtc,
+			CallHierarchyIncomingCallsParams params, CancelIndicator ci) {
+		// enable capability in XLanguageServerImpl and implement this method in subclass
+		return Collections.emptyList();
+	}
+
+	@Override
+	public CompletableFuture<List<CallHierarchyOutgoingCall>> callHierarchyOutgoingCalls(
+			CallHierarchyOutgoingCallsParams params) {
+		URI uri = paramHelper.getURI(params);
+		return resourceTaskManager.runInTemporaryContext(uri, "callHierarchyOutgoingCalls", false, (rtc, ci) -> {
+			return callHierarchyOutgoingCalls(rtc, params, ci);
+		});
+	}
+
+	/** Returns a list of outgoing calls */
+	@SuppressWarnings("unused")
+	protected List<CallHierarchyOutgoingCall> callHierarchyOutgoingCalls(ResourceTaskContext rtc,
+			CallHierarchyOutgoingCallsParams params, CancelIndicator ci) {
+		// enable capability in XLanguageServerImpl and implement this method in subclass
+		return Collections.emptyList();
 	}
 
 	@Override

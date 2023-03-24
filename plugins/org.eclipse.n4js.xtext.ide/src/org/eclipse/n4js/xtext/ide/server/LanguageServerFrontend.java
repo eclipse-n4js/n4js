@@ -16,8 +16,10 @@ import java.util.concurrent.CompletableFuture;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.CallHierarchyIncomingCall;
 import org.eclipse.lsp4j.CallHierarchyIncomingCallsParams;
+import org.eclipse.lsp4j.CallHierarchyItem;
 import org.eclipse.lsp4j.CallHierarchyOutgoingCall;
 import org.eclipse.lsp4j.CallHierarchyOutgoingCallsParams;
+import org.eclipse.lsp4j.CallHierarchyPrepareParams;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.CodeLens;
@@ -87,7 +89,6 @@ import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
 import org.eclipse.n4js.xtext.ide.server.util.LspLogger;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 
-import com.google.common.annotations.Beta;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -359,21 +360,23 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 	}
 
 	@Override
-	@Beta
+	public CompletableFuture<List<CallHierarchyItem>> prepareCallHierarchy(CallHierarchyPrepareParams params) {
+		return textDocumentFrontend.prepareCallHierarchy(params);
+	}
+
+	@Override
 	public CompletableFuture<List<CallHierarchyIncomingCall>> callHierarchyIncomingCalls(
 			CallHierarchyIncomingCallsParams params) {
 		return textDocumentFrontend.callHierarchyIncomingCalls(params);
 	}
 
 	@Override
-	@Beta
 	public CompletableFuture<List<CallHierarchyOutgoingCall>> callHierarchyOutgoingCalls(
 			CallHierarchyOutgoingCallsParams params) {
 		return textDocumentFrontend.callHierarchyOutgoingCalls(params);
 	}
 
 	@Override
-	@Beta
 	public CompletableFuture<List<SelectionRange>> selectionRange(SelectionRangeParams params) {
 		return textDocumentFrontend.selectionRange(params);
 	}
