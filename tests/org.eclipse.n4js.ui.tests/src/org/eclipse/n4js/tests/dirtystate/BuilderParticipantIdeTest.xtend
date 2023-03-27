@@ -68,7 +68,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 				"pr0_0pa0/Class0" -> TestFiles.class0()
 		);
 		startAndWaitForLspServer();
-		assertIssues(
+		assertIssues2(
 			"Class0" -> #[
 				"(Error, [3:23 - 3:40], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [6:26 - 6:32], Couldn't resolve reference to Type 'Class1'.)"
@@ -104,7 +104,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 		changeNonOpenedFile("A", InheritanceTestFiles.AOtherMethodName());
 		joinServerRequests();
 		// One marker for using the old method name
-		assertIssues("B" -> #["(Error, [5:2 - 5:5], Couldn't resolve reference to IdentifiableElement 'foo'.)"]);
+		assertIssues2("B" -> #["(Error, [5:2 - 5:5], Couldn't resolve reference to IdentifiableElement 'foo'.)"]);
 
 		changeNonOpenedFile("A", InheritanceTestFiles.A());
 		joinServerRequests();
@@ -136,7 +136,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 		changeNonOpenedFile("A", InheritanceTestFiles.AOtherMethodName());
 		joinServerRequests();
 		// First marker for using old method name
-		assertIssues(
+		assertIssues2(
 			"B" -> #["(Error, [5:2 - 5:5], Couldn't resolve reference to IdentifiableElement 'foo'.)"],
 			"C" -> #["(Error, [5:2 - 5:6], Couldn't resolve reference to IdentifiableElement 'getB'.)"],
 			"D" -> #["(Error, [7:14 - 7:18], Couldn't resolve reference to IdentifiableElement 'getB'.)"]
@@ -172,7 +172,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 		startAndWaitForLspServer();
 		// expected markers
 		// Variable brother is used before it is declared
-		assertIssues("Sister" -> #["(Warning, [7:0 - 7:7], Variable brother is used before it is declared)"]);
+		assertIssues2("Sister" -> #["(Warning, [7:0 - 7:7], Variable brother is used before it is declared)"]);
 
 		changeNonOpenedFile("Sister", TestFiles.classSisterNew());
 		joinServerRequests();
@@ -189,7 +189,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 		// ... sister.getBrother().getChild().age;
 		// Consequential error, not reported anymore:
 		// --> Couldn't resolve reference to TMember 'age'. at var brotherChildAge = sister.getBrother().getChild().age;
-		assertIssues(
+		assertIssues2(
 			"Brother" -> #[
 				"(Error, [7:20 - 7:30], Couldn't resolve reference to IdentifiableElement 'getBrother'.)",
 				"(Error, [9:17 - 9:27], Couldn't resolve reference to IdentifiableElement 'getBrother'.)"
@@ -206,7 +206,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 
 		// expected markers
 		// Variable brother is used before it is declared
-		assertIssues("Sister" -> #[ "(Warning, [7:0 - 7:7], Variable brother is used before it is declared)" ]);
+		assertIssues2("Sister" -> #[ "(Warning, [7:0 - 7:7], Variable brother is used before it is declared)" ]);
 	}
 
 	// @formatter:off
@@ -236,7 +236,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 
 		changeNonOpenedFile("ARole", RoleTestFiles.roleAChanged());
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"BRole" -> #["(Error, [4:7 - 4:16], Couldn't resolve reference to IdentifiableElement 'myMethodA'.)"],
 			"CRole" -> #["(Error, [5:7 - 5:16], Couldn't resolve reference to IdentifiableElement 'myMethodA'.)"]
 		);
@@ -271,7 +271,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 
 		changeNonOpenedFile("BRole", RoleTestFiles.roleBChanged());
 		joinServerRequests();
-		assertIssues("CRole" -> #["(Error, [6:7 - 6:16], Couldn't resolve reference to IdentifiableElement 'myMethodB'.)"]);
+		assertIssues2("CRole" -> #["(Error, [6:7 - 6:16], Couldn't resolve reference to IdentifiableElement 'myMethodB'.)"]);
 
 		changeNonOpenedFile("BRole", RoleTestFiles.roleB());
 		joinServerRequests();
@@ -303,14 +303,14 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 
 		changeNonOpenedFile("BRole", RoleTestFiles.roleBChanged2());
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"BRole" -> #["(Warning, [0:9 - 0:14], The import of ARole is unused.)"],
 			"CRole" -> #["(Error, [6:7 - 6:16], Couldn't resolve reference to IdentifiableElement 'myMethodB'.)"]
 		);
 
 		changeNonOpenedFile("BRole", RoleTestFiles.roleBChanged3());
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"BRole" -> #["(Warning, [0:9 - 0:14], The import of ARole is unused.)"]
 		);
 	}
@@ -345,12 +345,12 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 		changeNonOpenedFile("E", RoleTestFiles.classEChanged());
 		joinServerRequests();
 		// File E should have no errors as now using method of D
-		assertIssues("E" -> #["(Warning, [1:9 - 1:14], The import of BRole is unused.)"]);
+		assertIssues2("E" -> #["(Warning, [1:9 - 1:14], The import of BRole is unused.)"]);
 
 		changeNonOpenedFile("D", RoleTestFiles.classDChanged());
 		joinServerRequests();
 		// File E should have errors after method not available anymore
-		assertIssues(
+		assertIssues2(
 			"E" -> #[
 				"(Warning, [1:9 - 1:14], The import of BRole is unused.)",
 				"(Error, [5:7 - 5:16], Couldn't resolve reference to IdentifiableElement 'myMethodB'.)"
@@ -388,7 +388,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 
 		changeNonOpenedFile("InterfaceA", InterfaceTestFiles.interfaceAChanged());
 		joinServerRequests();
-		assertIssues("ClassWithInterfaces" -> #["(Error, [4:7 - 4:15], Couldn't resolve reference to IdentifiableElement 'methodIA'.)"]);
+		assertIssues2("ClassWithInterfaces" -> #["(Error, [4:7 - 4:15], Couldn't resolve reference to IdentifiableElement 'methodIA'.)"]);
 
 		changeNonOpenedFile("InterfaceA", InterfaceTestFiles.interfaceA());
 		joinServerRequests();
@@ -426,7 +426,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 		changeNonOpenedFile("MyInterfaceFour", MemberTestFiles.myInterfaceFourChanged());
 		joinServerRequests();
 		// File MyClassOne with other missing method name in chain should have errors
-		assertIssues("MyClassOne" -> #["(Error, [5:35 - 5:47], Couldn't resolve reference to IdentifiableElement 'myMethodFour'.)"]);
+		assertIssues2("MyClassOne" -> #["(Error, [5:35 - 5:47], Couldn't resolve reference to IdentifiableElement 'myMethodFour'.)"]);
 
 		changeNonOpenedFile("MyInterfaceFour", MemberTestFiles.myInterfaceFour());
 		joinServerRequests();
@@ -494,7 +494,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 		changeNonOpenedFile("C", TransitiveInheritMemberTestFiles.CChanged());
 		joinServerRequests();
 		// File A with other missing method name in chain should have errors
-		assertIssues("A" -> #["(Error, [5:19 - 5:28], Couldn't resolve reference to IdentifiableElement 'myMethodC'.)"]);
+		assertIssues2("A" -> #["(Error, [5:19 - 5:28], Couldn't resolve reference to IdentifiableElement 'myMethodC'.)"]);
 
 		changeNonOpenedFile("C", TransitiveInheritMemberTestFiles.C());
 		joinServerRequests();
@@ -525,7 +525,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 		changeNonOpenedFile("CaseSensitiveCallee", CaseSensitiveTestFiles.calleeChanged());
 		joinServerRequests();
 		// File Caller with other missing method name in chain should have errors
-		assertIssues("CaseSensitiveCaller" -> #["(Error, [5:14 - 5:22], Couldn't resolve reference to IdentifiableElement 'mymethod'.)"]);
+		assertIssues2("CaseSensitiveCaller" -> #["(Error, [5:14 - 5:22], Couldn't resolve reference to IdentifiableElement 'mymethod'.)"]);
 
 		changeNonOpenedFile("CaseSensitiveCallee", CaseSensitiveTestFiles.callee());
 		joinServerRequests();
@@ -557,7 +557,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 		joinServerRequests();
 		// File SubCallee should have one error
 		// File Caller with field not static anymore should have errors
-		assertIssues(
+		assertIssues2(
 			"SubCallee" -> #[
 				"(Error, [9:7 - 9:20], The non-static member myStaticField cannot be accessed from a static context.)"
 			],
@@ -575,7 +575,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 		joinServerRequests();
 		// File Caller with getter static now should have errors (1 for static access in non-static context + 1 any is not sub type of string)
 		// File Callee should have one error, because of wrong this access
-		assertIssues(
+		assertIssues2(
 			"Caller" -> #["(Error, [14:13 - 14:39], The accessor myPrivateNonStaticAccessor is write-only.)"],
 			"Callee" -> #["(Error, [26:15 - 26:38], The non-static member myPrivateNonStaticField cannot be accessed from a static context.)"]
 		);
@@ -617,7 +617,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 		changeNonOpenedFile("MyEnum", EnumTestFiles.myEnum_changed());
 		joinServerRequests();
 		// File MyEnumUser with old literal should have errors
-		assertIssues("MyEnumUser" -> #["(Error, [5:22 - 5:25], Couldn't resolve reference to IdentifiableElement 'ONE'.)"]);
+		assertIssues2("MyEnumUser" -> #["(Error, [5:22 - 5:25], Couldn't resolve reference to IdentifiableElement 'ONE'.)"]);
 
 		changeNonOpenedFile("MyEnum", EnumTestFiles.myEnum());
 		joinServerRequests();
@@ -649,7 +649,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 		changeNonOpenedFile("A", InheritanceTestFiles.AOtherMethodName());
 		joinServerRequests();
 		// File B should have errors as using old method name
-		assertIssues("B" -> #["(Error, [5:2 - 5:5], Couldn't resolve reference to IdentifiableElement 'foo'.)"]);
+		assertIssues2("B" -> #["(Error, [5:2 - 5:5], Couldn't resolve reference to IdentifiableElement 'foo'.)"]);
 
 		changeNonOpenedFile("A", InheritanceTestFiles.A());
 		joinServerRequests();

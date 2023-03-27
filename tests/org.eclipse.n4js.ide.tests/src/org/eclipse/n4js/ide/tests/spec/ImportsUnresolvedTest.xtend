@@ -34,7 +34,7 @@ class ImportsUnresolvedTest extends AbstractIdeTest {
 		// The module specifier looks like a project import because its only segment denotes a project,
 		// but it is interpreted as a plain module specifier, because that project is NOT among the project
 		// dependencies defined in the package.json file.
-		assertIssues(
+		assertIssues2(
 			"Main" -> #[
 				"(Error, [0:16 - 0:30], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)"
 			]
@@ -57,7 +57,7 @@ class ImportsUnresolvedTest extends AbstractIdeTest {
 		// The module specifier looks like a complete module specifier, because its first segment denotes a project,
 		// but it is interpreted as a plain module specifier, because that project is NOT among the project
 		// dependencies defined in the package.json file.
-		assertIssues(
+		assertIssues2(
 			"Main" -> #[
 				"(Error, [0:16 - 0:45], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)"
 			]
@@ -81,7 +81,7 @@ class ImportsUnresolvedTest extends AbstractIdeTest {
 
 		// The module specifier is interpreted as a complete module specifier because its first segment denotes
 		// a project that is also among the project dependencies defined in the package.json file.
-		assertIssues(
+		assertIssues2(
 			"Main" -> #[
 				"(Error, [0:16 - 0:45], Cannot resolve complete module specifier (with project name as first segment): no matching module found.)"
 			]
@@ -105,7 +105,7 @@ class ImportsUnresolvedTest extends AbstractIdeTest {
 		);
 		startAndWaitForLspServer();
 
-		assertIssues(
+		assertIssues2(
 			"Main" -> #[
 				// This is the message we would like to see here:
 				// "(Error, [0:16 - 0:30], Cannot resolve project import: target project does not define a main module.)"
@@ -133,7 +133,7 @@ class ImportsUnresolvedTest extends AbstractIdeTest {
 		);
 		startAndWaitForLspServer();
 
-		assertIssues(
+		assertIssues2(
 			"Main" -> #[
 				"(Error, [0:16 - 0:30], Cannot resolve project import: no matching module found.)"
 			],

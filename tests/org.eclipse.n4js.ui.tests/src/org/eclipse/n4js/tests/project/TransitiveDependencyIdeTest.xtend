@@ -94,7 +94,7 @@ class TransitiveDependencyIdeTest extends ConvertedIdeTest {
 			'''
 		);
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"C" -> #[
 				"(Error, [0:18 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:40 - 1:41], Couldn't resolve reference to Type 'B'.)",
@@ -141,7 +141,7 @@ cleanBuildAndWait();
 			'''
 		);
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"C" -> #[
 				"(Error, [0:18 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:40 - 1:41], Couldn't resolve reference to Type 'B'.)",
@@ -187,7 +187,7 @@ cleanBuildAndWait();
 			'''
 		);
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"C" -> #[
 				"(Error, [0:18 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:40 - 1:41], Couldn't resolve reference to Type 'B'.)",
@@ -236,7 +236,7 @@ cleanBuildAndWait();
 
 // TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
-		assertIssues(
+		assertIssues2(
 			"C" -> #[
 				"(Error, [3:7 - 3:8], Couldn't resolve reference to IdentifiableElement 'm'.)"
 			]
@@ -292,7 +292,7 @@ cleanBuildAndWait();
 		joinServerRequests();
 // TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
-		assertIssues(
+		assertIssues2(
 			"C" -> #[
 				"(Error, [3:7 - 3:8], Couldn't resolve reference to IdentifiableElement 'm'.)"
 			]
@@ -345,7 +345,7 @@ cleanBuildAndWait();
 		joinServerRequests();
 // TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
-		assertIssues(
+		assertIssues2(
 			"D" -> #[
 				"(Error, [3:7 - 3:8], Couldn't resolve reference to IdentifiableElement 'm'.)"
 			]

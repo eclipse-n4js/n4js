@@ -189,7 +189,7 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 		if (config.expectedIssues == null) {
 			assertNoIssues();
 		} else {
-			assertIssues(config.expectedIssues);
+			assertIssues2(config.expectedIssues);
 		}
 
 		for (RenamePosition pos : config.positions) {

@@ -66,7 +66,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 		changeNonOpenedFile("A", '42' -> '"hello"');
 		joinServerRequests();
-		assertIssues("A" -> #[
+		assertIssues2("A" -> #[
 			'(Error, [1:18 - 1:19], "hello" is not a subtype of number.)'
 		]);
 
@@ -83,7 +83,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 		changeNonOpenedFile("A", '42' -> '"hello"');
 		joinServerRequests();
-		assertIssues("B" -> #[
+		assertIssues2("B" -> #[
 			'(Error, [1:18 - 1:19], "hello" is not a subtype of number.)'
 		]);
 
@@ -100,7 +100,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 		changeNonOpenedFile("A", '42' -> '"hello"');
 		joinServerRequests();
-		assertIssues("B" -> #[
+		assertIssues2("B" -> #[
 			'(Error, [1:18 - 1:19], "hello" is not a subtype of number.)'
 		]);
 
@@ -121,7 +121,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 		changeOpenedFile("A", '42' -> '"hello"');
 		joinServerRequests();
-		assertIssues("A" -> #[
+		assertIssues2("A" -> #[
 			'(Error, [1:18 - 1:19], "hello" is not a subtype of number.)'
 		]);
 
@@ -143,7 +143,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 		changeOpenedFile("A", '42' -> '"hello"');
 		joinServerRequests();
-		assertIssues("B" -> #[
+		assertIssues2("B" -> #[
 			'(Error, [1:18 - 1:19], "hello" is not a subtype of number.)'
 		]);
 
@@ -165,7 +165,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 		
 		saveOpenedFile("A");
 		joinServerRequests();
-		assertIssues("B" -> #[
+		assertIssues2("B" -> #[
 			'(Error, [1:18 - 1:19], "hello" is not a subtype of number.)'
 		]);
 	}
@@ -183,7 +183,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 		
 		openFile("B");
 		joinServerRequests();
-		assertIssues("B" -> #[
+		assertIssues2("B" -> #[
 			'(Error, [1:18 - 1:19], "hello" is not a subtype of number.)'
 		]);
 	}
@@ -203,13 +203,13 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 		closeFile("A");
 		joinServerRequests();
-		assertIssues("B" -> #[
+		assertIssues2("B" -> #[
 			'(Error, [1:18 - 1:19], "hello" is not a subtype of number.)'
 		]);
 
 		openFile("B");
 		joinServerRequests();
-		assertIssues("B" -> #[
+		assertIssues2("B" -> #[
 			'(Error, [1:18 - 1:19], "hello" is not a subtype of number.)'
 		]);
 	}
@@ -227,7 +227,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 		changeOpenedFile("A", '42' -> '"hello"');
 		joinServerRequests();
-		assertIssues("B" -> #[
+		assertIssues2("B" -> #[
 			'(Error, [1:18 - 1:19], "hello" is not a subtype of number.)'
 		]);
 
@@ -249,7 +249,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 		saveOpenedFile("A");
 		joinServerRequests();
-		assertIssues("B" -> #[
+		assertIssues2("B" -> #[
 			'(Error, [1:18 - 1:19], "hello" is not a subtype of number.)'
 		]);
 	}
@@ -267,7 +267,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 		openFile("B");
 		joinServerRequests();
-		assertIssues("B" -> #[
+		assertIssues2("B" -> #[
 			'(Error, [1:18 - 1:19], "hello" is not a subtype of number.)'
 		]);
 	}
@@ -287,13 +287,13 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 		closeFile("A");
 		joinServerRequests();
-		assertIssues("B" -> #[
+		assertIssues2("B" -> #[
 			'(Error, [1:18 - 1:19], "hello" is not a subtype of number.)'
 		]);
 
 		openFile("B");
 		joinServerRequests();
-		assertIssues("B" -> #[
+		assertIssues2("B" -> #[
 			'(Error, [1:18 - 1:19], "hello" is not a subtype of number.)'
 		]);
 	}
@@ -309,7 +309,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 		changeOpenedFile("A", '42' -> '"hello"');
 		joinServerRequests();
-		assertIssues("B" -> #[
+		assertIssues2("B" -> #[
 			'(Error, [1:18 - 1:19], "hello" is not a subtype of number.)'
 		]);
 
@@ -334,7 +334,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 		changeNonOpenedFile("A.d.ts", ': number' -> ': string');
 		joinServerRequests();
-		assertIssues("B" -> #[
+		assertIssues2("B" -> #[
 			'(Error, [1:18 - 1:19], string is not a subtype of number.)'
 		]);
 
@@ -371,7 +371,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 		changeNonOpenedFile("A.d.ts", ': number' -> ': string');
 		joinServerRequests();
-		assertIssues("Main" -> #[
+		assertIssues2("Main" -> #[
 			// what we don't want to see:
 			// "(Error, [0:xx - 0:xx], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)"
 			'(Error, [1:18 - 1:42], string is not a subtype of number.)'
@@ -400,7 +400,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 		changeNonOpenedFile("A.d.ts", ': number' -> ': string');
 		joinServerRequests();
-		assertIssues("B" -> #[
+		assertIssues2("B" -> #[
 			'(Error, [1:18 - 1:19], string is not a subtype of number.)'
 		]);
 
@@ -511,7 +511,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 // TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
 
-		assertIssues(
+		assertIssues2(
 			"Main" -> #[
 				"(Error, [2:16 - 2:32], number is not a subtype of string.)"
 			]

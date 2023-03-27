@@ -79,7 +79,7 @@ class NpmScopesIdeTest extends ConvertedIdeTest {
 		setContentsOfClientModule('''
 			import {A} from "Lib/A"              // <-- must *not* work (because module A not contained in non-scoped project "Lib")
 		''');
-		assertIssues(
+		assertIssues2(
 			"ClientModule" -> #[
 				"(Error, [0:16 - 0:23], Cannot resolve complete module specifier (with project name as first segment): no matching module found.)"
 			]
@@ -100,7 +100,7 @@ class NpmScopesIdeTest extends ConvertedIdeTest {
 		setContentsOfClientModule('''
 			import {B} from "@myScope/Lib/B"     // <-- must *not* work (because module B not contained in scoped project "@myScope/Lib")
 		''')
-		assertIssues(
+		assertIssues2(
 			"ClientModule" -> #[
 				"(Error, [0:16 - 0:32], Cannot resolve complete module specifier (with project name as first segment): no matching module found.)"
 			]

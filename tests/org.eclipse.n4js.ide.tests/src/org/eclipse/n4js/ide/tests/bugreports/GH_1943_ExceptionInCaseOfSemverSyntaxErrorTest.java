@@ -47,7 +47,7 @@ public class GH_1943_ExceptionInCaseOfSemverSyntaxErrorTest extends AbstractIdeT
 									}
 								""")));
 		startAndWaitForLspServer();
-		assertIssues(Pair.of(
+		assertIssues2(Pair.of(
 				"ProjectMain/" + PACKAGE_JSON, List.of(
 						"(Error, [10:19 - 10:21], Invalid version number \"^1..3\": no viable alternative at input '.'.)",
 						"(Error, [11:17 - 11:21], Invalid version number \"^.2.3\": no viable alternative at input '.'.)")));

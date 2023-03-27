@@ -54,7 +54,7 @@ class ImportPlainJsMainModuleTest extends AbstractIdeTest {
 			]
 		);
 		startAndWaitForLspServer();
-		assertIssues(
+		assertIssues2(
 			"N4jsModuleBad" -> #[
 				"(Error, [0:24 - 0:37], Cannot resolve project import: no matching module found.)"
 			]
@@ -231,7 +231,7 @@ class ImportPlainJsMainModuleTest extends AbstractIdeTest {
 			]
 		);
 		startAndWaitForLspServer();
-		assertIssues(
+		assertIssues2(
 			"N4jsModuleBad" -> #[
 				"(Error, [0:23 - 0:36], Cannot resolve project import: no matching module found.)",
 				"(Error, [1:22 - 1:25], Couldn't resolve reference to IdentifiableElement 'foo'.)"
@@ -482,7 +482,7 @@ class ImportPlainJsMainModuleTest extends AbstractIdeTest {
 			]
 		);
 		startAndWaitForLspServer();
-		assertIssues(
+		assertIssues2(
 			"N4jsModuleBad" -> #[
 				"(Error, [0:16 - 0:29], Cannot resolve project import: no matching module found.)",
 				"(Error, [1:16 - 1:19], Couldn't resolve reference to IdentifiableElement 'foo'.)"

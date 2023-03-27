@@ -99,7 +99,7 @@ class ImportPlainJsImplicitDepToTypeDefsTest extends AbstractIdeTest {
 			]
 		);
 		startAndWaitForLspServer();
-		assertIssues(
+		assertIssues2(
 			"N4jsModuleBad" -> #[
 				"(Error, [0:23 - 0:36], Cannot resolve project import: no matching module found.)",
 				"(Error, [1:22 - 1:25], Couldn't resolve reference to IdentifiableElement 'foo'.)"

@@ -46,11 +46,11 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 		val errorWithIncorrectMethodName = "MainModule" -> #[
 			"(Error, [1:16 - 1:17], Couldn't resolve reference to IdentifiableElement 'm'.)"
 		];
-		assertIssues(errorWithIncorrectMethodName);
+		assertIssues2(errorWithIncorrectMethodName);
 
 		changeFileOnDiskWithoutNotification("SomeModule", "mx()" -> "m()");
 
-		assertIssues(errorWithIncorrectMethodName);
+		assertIssues2(errorWithIncorrectMethodName);
 		executeCommand(N4JSCommandService.N4JS_REFRESH);
 		joinServerRequests();
 		assertNoIssues();
@@ -87,11 +87,11 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 		val errorWithIncorrectMethodName = "MainModule" -> #[
 			"(Error, [1:16 - 1:17], Couldn't resolve reference to IdentifiableElement 'm'.)"
 		];
-		assertIssues(errorWithIncorrectMethodName);
+		assertIssues2(errorWithIncorrectMethodName);
 
 		changeFileOnDiskWithoutNotification("SomeModule", "mx()" -> "m()");
 
-		assertIssues(errorWithIncorrectMethodName);
+		assertIssues2(errorWithIncorrectMethodName);
 		executeCommand(N4JSCommandService.N4JS_REFRESH);
 		joinServerRequests();
 		assertNoIssues();
@@ -128,11 +128,11 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 		val errorWithIncorrectMethodName = "MainModule" -> #[
 			"(Error, [1:16 - 1:17], Couldn't resolve reference to IdentifiableElement 'm'.)"
 		];
-		assertIssues(errorWithIncorrectMethodName);
+		assertIssues2(errorWithIncorrectMethodName);
 
 		changeFileOnDiskWithoutNotification("SomeModule", "mx()" -> "m()");
 
-		assertIssues(errorWithIncorrectMethodName);
+		assertIssues2(errorWithIncorrectMethodName);
 		executeCommand(N4JSCommandService.N4JS_REFRESH);
 		joinServerRequests();
 		assertNoIssues();
@@ -159,7 +159,7 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 			"(Error, [0:24 - 0:36], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 			"(Error, [1:4 - 1:13], Couldn't resolve reference to IdentifiableElement 'SomeClass'.)"
 		];
-		assertIssues(errorsWhenSomeModuleMissing);
+		assertIssues2(errorsWhenSomeModuleMissing);
 
 		val someModule = getProjectRoot("SomeProject").toPath.resolve("src").resolve("SomeModule.n4js");
 		Files.writeString(someModule, '''
@@ -168,7 +168,7 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 			}
 		''');
 
-		assertIssues(errorsWhenSomeModuleMissing);
+		assertIssues2(errorsWhenSomeModuleMissing);
 		executeCommand(N4JSCommandService.N4JS_REFRESH);
 		joinServerRequests();
 		assertNoIssues();
@@ -178,7 +178,7 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 		assertNoIssues();
 		executeCommand(N4JSCommandService.N4JS_REFRESH);
 		joinServerRequests();
-		assertIssues(errorsWhenSomeModuleMissing);
+		assertIssues2(errorsWhenSomeModuleMissing);
 	}
 
 	/**
@@ -214,14 +214,14 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 		assertNoIssues();
 		executeCommand(N4JSCommandService.N4JS_REFRESH);
 		joinServerRequests();
-		assertIssues("MainModule" -> #[
+		assertIssues2("MainModule" -> #[
 			"(Error, [0:24 - 0:36], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 			"(Error, [1:4 - 1:13], Couldn't resolve reference to IdentifiableElement 'SomeClass'.)"
 		]);
 
 		changeFileOnDiskWithoutNotification(packageJsonOfSomeProject, '"src_BAD"' -> '"src"');
 
-		assertIssues("MainModule" -> #[
+		assertIssues2("MainModule" -> #[
 			"(Error, [0:24 - 0:36], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 			"(Error, [1:4 - 1:13], Couldn't resolve reference to IdentifiableElement 'SomeClass'.)"
 		]);
@@ -261,14 +261,14 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 		val errorWhenDependencyMissing = "MainModule" -> #[
 			"(Error, [1:17 - 1:18], Couldn't resolve reference to IdentifiableElement 'm'.)"
 		];
-		assertIssues(errorWhenDependencyMissing);
+		assertIssues2(errorWhenDependencyMissing);
 
 		val packageJsonOfSomeProject2 = getPackageJsonFile("SomeProject2").toFileURI;
 		changeFileOnDiskWithoutNotification(packageJsonOfSomeProject2,
 			'"n4js-runtime": ""' -> '"n4js-runtime": "", "SomeProject1": ""'
 		);
 
-		assertIssues(errorWhenDependencyMissing);
+		assertIssues2(errorWhenDependencyMissing);
 		executeCommand(N4JSCommandService.N4JS_REFRESH);
 		joinServerRequests();
 		assertNoIssues();
@@ -280,7 +280,7 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 		assertNoIssues();
 		executeCommand(N4JSCommandService.N4JS_REFRESH);
 		joinServerRequests();
-		assertIssues(errorWhenDependencyMissing);
+		assertIssues2(errorWhenDependencyMissing);
 	}
 
 	@Test
@@ -310,11 +310,11 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 		val errorWhenSomeProject1Missing = "MainModule" -> #[
 			"(Error, [1:17 - 1:18], Couldn't resolve reference to IdentifiableElement 'm'.)"
 		];
-		assertIssues(errorWhenSomeProject1Missing);
+		assertIssues2(errorWhenSomeProject1Missing);
 
 		createMissingProject(getProjectRoot("SomeProject2").toPath.parent);
 
-		assertIssues(errorWhenSomeProject1Missing);
+		assertIssues2(errorWhenSomeProject1Missing);
 		executeCommand(N4JSCommandService.N4JS_REFRESH);
 		joinServerRequests();
 		assertNoIssues();
@@ -324,7 +324,7 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 		assertNoIssues();
 		executeCommand(N4JSCommandService.N4JS_REFRESH);
 		joinServerRequests();
-		assertIssues(errorWhenSomeProject1Missing);
+		assertIssues2(errorWhenSomeProject1Missing);
 	}
 
 	def private void createMissingProject(Path location) throws IOException {

@@ -236,6 +236,6 @@ public class GH_2004_ReviewImportedNamesComputationTest extends AbstractIdeTest 
 		// asserting that a clean and full build will produce the desired issue:
 		cleanBuildAndWait();
 		// if this fails, the test data or 'desiredIssueStr' is out-dated and must be adjusted
-		assertIssues(Pair.of(moduleName, List.of(desiredIssueStr)));
+		assertIssues2(Pair.of(moduleName, List.of(desiredIssueStr)));
 	}
 }

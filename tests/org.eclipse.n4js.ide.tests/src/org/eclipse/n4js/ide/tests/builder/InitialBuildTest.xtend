@@ -72,7 +72,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		testWorkspaceManager.createTestOnDisk(testData);
 		changeFileOnDiskWithoutNotification("SomeModule", "SomeClass" -> "SomeClassX");
 		startAndWaitForLspServer();
-		assertIssues("ClientModule" -> #[
+		assertIssues2("ClientModule" -> #[
 			"(Error, [0:8 - 0:17], Import of SomeClass cannot be resolved.)",
 			"(Error, [1:9 - 1:18], Couldn't resolve reference to Type 'SomeClass'.)"
 		]);
@@ -123,7 +123,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 				"(Error, [1:9 - 1:18], Couldn't resolve reference to Type 'SomeClass'.)"
 			]
 		];
-		assertIssues(errorsWithSomeModuleMissing);
+		assertIssues2(errorsWithSomeModuleMissing);
 
 		shutdownLspServer();
 
@@ -169,7 +169,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 				"(Error, [1:9 - 1:18], Couldn't resolve reference to Type 'SomeClass'.)"
 			]
 		];
-		assertIssues(errorsWithDependencyMissing);
+		assertIssues2(errorsWithDependencyMissing);
 
 		shutdownLspServer();
 
@@ -222,7 +222,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 				"(Error, [16:3 - 16:24], Project does not exist with project ID: ProviderProject.)"
 			]
 		];
-		assertIssues(errorsWithProviderProjectMissing);
+		assertIssues2(errorsWithProviderProjectMissing);
 
 		shutdownLspServer();
 

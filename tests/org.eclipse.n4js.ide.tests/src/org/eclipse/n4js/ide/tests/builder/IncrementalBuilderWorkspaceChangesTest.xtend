@@ -146,7 +146,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 
 		assertFalse("output file of module 'Other' should not exist", outputFile.exists());
 
-		assertIssues(expectedErrorsWhenOtherProjectIsMissing);
+		assertIssues2(expectedErrorsWhenOtherProjectIsMissing);
 
 		// recreate the package.json file
 		packageJsonFile.createNewFile();
@@ -157,7 +157,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		joinServerRequests();
 
 		assertFalse("output file of module 'Other' should not exist", outputFile.exists()); // package.json not saved yet
-		assertIssues(expectedErrorsWhenOtherProjectIsMissing); // package.json not saved yet, so still the original errors
+		assertIssues2(expectedErrorsWhenOtherProjectIsMissing); // package.json not saved yet, so still the original errors
 
 		saveOpenedFile(packageJsonFileURI);
 		joinServerRequests();
@@ -177,7 +177,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		deleteNonOpenedFile(packageJsonFile.toFileURI);
 		joinServerRequests();
 
-		assertIssues(expectedErrorsWhenOtherProjectIsMissing);
+		assertIssues2(expectedErrorsWhenOtherProjectIsMissing);
 	}
 
 	@Test
@@ -191,7 +191,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		deleteFolderNotContainingOpenFiles(otherProjectRoot, ".*"); // testing with more URIs in the 'didChangeWatchedFiles' notification than VSCode would send to assert robustness of server
 		joinServerRequests();
 
-		assertIssues(expectedErrorsWhenOtherProjectIsMissing);
+		assertIssues2(expectedErrorsWhenOtherProjectIsMissing);
 	}
 	
 	@Test
@@ -216,7 +216,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		saveOpenedFile(packageJsonFileURI);
 		joinServerRequests();
 		
-		assertIssues(#[
+		assertIssues2(#[
 			"MainProject/package.json" -> #[
 				'''(Warning, [1:9 - 1:25], As a convention the package name "RenamedProject" should match the name of the project folder "MainProject" on the file system.)'''
 			]
@@ -257,7 +257,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		saveOpenedFile(packageJsonFileURI);
 		joinServerRequests();
 		
-		assertIssues(#[
+		assertIssues2(#[
 			"MainProject/package.json" -> #[
 				'''(Warning, [1:9 - 1:25], As a convention the package name "RenamedProject" should match the name of the project folder "MainProject" on the file system.)'''
 			]
@@ -298,7 +298,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		saveOpenedFile(packageJsonOPFileURI);
 		joinServerRequests();
 		
-		assertIssues(#[
+		assertIssues2(#[
 			"OtherProject/package.json" -> #[
 				'''    (Warning, [1:9 - 1:25], As a convention the package name "RenamedProject" should match the name of the project folder "OtherProject" on the file system.)'''
 			],
@@ -323,7 +323,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		joinServerRequests();
 		
 
-		assertIssues(#[
+		assertIssues2(#[
 			"OtherProject/package.json" -> #[
 				'''(Warning, [1:9 - 1:25], As a convention the package name "RenamedProject" should match the name of the project folder "OtherProject" on the file system.)'''
 			]
@@ -441,7 +441,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		val sourceProjectName = dependency.key;
 		val targetProjectName = dependency.value;
 
-		assertIssues(originalErrors);
+		assertIssues2(originalErrors);
 
 		// add dependency from source project to target project (in package.json of source project)
 		val packageJsonFileURI = getPackageJsonFile(sourceProjectName).toFileURI;
@@ -452,7 +452,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		joinServerRequests();
 
 		if (targetIsN4JSProject) {
-			assertIssues(originalErrors); // changes in package.json not saved yet, so still the original errors
+			assertIssues2(originalErrors); // changes in package.json not saved yet, so still the original errors
 		} else {
 			// unfortunately we have an additional error in the open, non-saved package.json file when a dependency to a plain-JS-project is added
 			// (due to the optimization in ProjectDiscoveryHelper of hiding all unnecessary PLAINJS projects)
@@ -462,7 +462,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 					"(Error, [16:23 - 16:" + tpnLength + "], Project does not exist with project ID: " + targetProjectName + ".)"
 				]
 			];
-			assertIssues(errorsBeforeSaving); // changes in package.json not saved yet, so still the original errors + 1 error in the unsaved package.json editor
+			assertIssues2(errorsBeforeSaving); // changes in package.json not saved yet, so still the original errors + 1 error in the unsaved package.json editor
 		}
 
 		saveOpenedFile(packageJsonFileURI);
@@ -476,7 +476,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		saveOpenedFile(packageJsonFileURI);
 		joinServerRequests();
 
-		assertIssues(originalErrors); // back to original errors
+		assertIssues2(originalErrors); // back to original errors
 	}
 
 	@Test
@@ -493,7 +493,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 			"(Error, [0:25 - 0:32], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 			"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)"
 		];
-		assertIssues("Main" -> originalErrors);
+		assertIssues2("Main" -> originalErrors);
 
 		// create a second source folder with a file "Other" fixing Main's error but introducing a new error
 		val otherFile = new File(getProjectRoot(), "src2" + File.separator + "Other.n4js");
@@ -506,7 +506,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		''');
 
 		cleanBuildAndWait();
-		assertIssues("Main" -> originalErrors); // new source folder not registered in package.json yet, so still the original errors
+		assertIssues2("Main" -> originalErrors); // new source folder not registered in package.json yet, so still the original errors
 
 		// register new source folder in package.json
 		val packageJsonFileURI = getPackageJsonFile().toFileURI;
@@ -516,13 +516,13 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		);
 		joinServerRequests();
 
-		assertIssues("Main" -> originalErrors); // changes in package.json not saved yet, so still the original errors
+		assertIssues2("Main" -> originalErrors); // changes in package.json not saved yet, so still the original errors
 
 		saveOpenedFile(packageJsonFileURI);
 		joinServerRequests();
 
 		// now the original errors have gone away and a new error shows up
-		assertIssues("Other" -> #[ '(Error, [3:16 - 3:21], "bad" is not a subtype of number.)' ]);
+		assertIssues2("Other" -> #[ '(Error, [3:16 - 3:21], "bad" is not a subtype of number.)' ]);
 
 		changeOpenedFile(packageJsonFileURI,
 			'"src", "src2"' -> '"src"'
@@ -530,7 +530,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		saveOpenedFile(packageJsonFileURI);
 		joinServerRequests();
 
-		assertIssues("Main" -> originalErrors); // back to original errors
+		assertIssues2("Main" -> originalErrors); // back to original errors
 	}
 
 	@Test
@@ -548,7 +548,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 
 		startAndWaitForLspServer();
 
-		assertIssues(expectedErrorsWhenOtherProjectIsMissing);
+		assertIssues2(expectedErrorsWhenOtherProjectIsMissing);
 
 		// register new packages folder in package.json in yarn workspace root folder
 		val packageJsonFileURI = getPackageJsonFile(YARN_TEST_PROJECT).toFileURI;
@@ -558,7 +558,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		);
 		joinServerRequests();
 
-		assertIssues(expectedErrorsWhenOtherProjectIsMissing); // changes in package.json not saved yet, so still the original errors
+		assertIssues2(expectedErrorsWhenOtherProjectIsMissing); // changes in package.json not saved yet, so still the original errors
 
 		saveOpenedFile(packageJsonFileURI);
 		joinServerRequests();
@@ -575,6 +575,6 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		saveOpenedFile(packageJsonFileURI);
 		joinServerRequests();
 
-		assertIssues(expectedErrorsWhenOtherProjectIsMissing); // back to original errors
+		assertIssues2(expectedErrorsWhenOtherProjectIsMissing); // back to original errors
 	}
 }

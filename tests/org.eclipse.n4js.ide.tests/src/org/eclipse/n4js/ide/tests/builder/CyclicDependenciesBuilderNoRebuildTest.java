@@ -52,7 +52,7 @@ public class CyclicDependenciesBuilderNoRebuildTest extends AbstractIncrementalB
 		startAndWaitForLspServer();
 		joinServerRequests();
 
-		assertIssues(
+		assertIssues2(
 				Pair.of("P1/package.json", List.of(
 						"(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)")),
 				Pair.of("P2/package.json", List.of(
@@ -61,7 +61,7 @@ public class CyclicDependenciesBuilderNoRebuildTest extends AbstractIncrementalB
 		executeCommand(N4JSCommandService.N4JS_REFRESH);
 		joinServerRequests();
 
-		assertIssues(
+		assertIssues2(
 				Pair.of("P1/package.json", List.of(
 						"(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)")),
 				Pair.of("P2/package.json", List.of(

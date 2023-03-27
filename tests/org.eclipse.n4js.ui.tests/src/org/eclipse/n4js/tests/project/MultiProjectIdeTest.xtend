@@ -58,7 +58,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 			PROJECT2_NAME -> #[]
 		);
 		startAndWaitForLspServer();
-		assertIssues(
+		assertIssues2(
 			"C" -> #[
 				"(Error, [0:18 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:16 - 1:17], Couldn't resolve reference to Type 'D'.)"
@@ -70,7 +70,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 		''');
 		joinServerRequests();
 		// Same as above, errors are not resolved by just exporting class, it should be added as a dependency.
-		assertIssues(
+		assertIssues2(
 			"C" -> #[
 				"(Error, [0:18 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:16 - 1:17], Couldn't resolve reference to Type 'D'.)"
@@ -118,7 +118,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 			PROJECT2_NAME -> #[]
 		);
 		startAndWaitForLspServer();
-		assertIssues(
+		assertIssues2(
 			"C" -> #[
 				"(Error, [0:18 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:16 - 1:17], Couldn't resolve reference to Type 'D'.)"
@@ -126,7 +126,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 		);
 
 		addProjectToDependencies("thirdProject");
-		assertIssues(
+		assertIssues2(
 			"C" -> #[
 				"(Error, [0:18 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:16 - 1:17], Couldn't resolve reference to Type 'D'.)"
@@ -163,7 +163,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 			}
 		''');
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"C" -> #[
 				"(Error, [0:18 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:16 - 1:17], Couldn't resolve reference to Type 'D'.)"
@@ -198,7 +198,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 		val packageJsonContent = Files.readString(packageJsonFile.toPath)
 		deleteFile(packageJsonFile);
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"multiProjectTest.first/package.json" -> #[
 				"(Error, [16:3 - 16:32], Project does not exist with project ID: multiProjectTest.second.)"
 			],
@@ -275,7 +275,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 		changeNonOpenedFile(getPackageJsonFile(PROJECT1_NAME).toFileURI,
 			'''"projectType": "library"''' -> '''"projectType": "library", "requiredRuntimeLibraries": [ "«PROJECT2_NAME»" ]''');
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			PROJECT1_NAME + "/package.json" -> #[
 				"(Warning, [7:58 - 7:83], Project multiProjectTest.second of type library cannot be declared among the required runtime libraries.)"
 			]
@@ -284,7 +284,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 		changeNonOpenedFile(getPackageJsonFile(PROJECT2_NAME).toFileURI,
 			'''"projectType": "library"''' -> '''"projectType": "runtimeLibrary"''');
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			PROJECT2_NAME + "/package.json" -> #[
 				"(Warning, [16:3 - 16:21], Project n4js-runtime of type runtime environment cannot be declared among the dependencies or devDependencies.)"
 			]
@@ -293,7 +293,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 		changeNonOpenedFile(getPackageJsonFile(PROJECT2_NAME).toFileURI,
 			'''"projectType": "runtimeLibrary"''' -> '''"projectType": "library"''');
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			PROJECT1_NAME + "/package.json" -> #[
 				"(Warning, [7:58 - 7:83], Project multiProjectTest.second of type library cannot be declared among the required runtime libraries.)"
 			]
@@ -316,7 +316,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 		changeNonOpenedFile(getPackageJsonFile(PROJECT1_NAME).toFileURI,
 			'''"sources": {''' -> '''"sources": { "external": [ "ext" ],''');
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			PROJECT1_NAME + "/package.json" -> #[
 				"(Warning, [9:30 - 9:35], Source container path ext does not exist.)"
 			]
@@ -339,7 +339,7 @@ cleanBuildAndWait();
 		Assert.assertTrue('External folder \'ext\' should be missing', !extFolder.exists);
 // TODO GH-2059 should work without #cleanBuildAndWait()
 cleanBuildAndWait();
-		assertIssues(
+		assertIssues2(
 			PROJECT1_NAME + "/package.json" -> #[
 				"(Warning, [9:30 - 9:35], Source container path ext does not exist.)"
 			]

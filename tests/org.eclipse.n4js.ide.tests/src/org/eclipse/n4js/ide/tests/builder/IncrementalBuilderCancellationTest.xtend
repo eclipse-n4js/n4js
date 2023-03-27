@@ -279,7 +279,7 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 		
 		val uriMainClient = getFileURIFromModuleName("MainClientA");
 		startAndWaitForLspServer();
-		assertIssues(
+		assertIssues2(
 			"MainClientA" -> #[
 				"(Error, [0:18 - 0:31], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:4 - 1:7], Couldn't resolve reference to IdentifiableElement 'Cls'.)"]);
@@ -299,7 +299,7 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 		assertNull("expected cancellation to have happened, but it did not happen", cancelOnResource.get());
 		
 		// due to cancellation the errors still remain
-		assertIssues(
+		assertIssues2(
 			"MainClientA" -> #[
 				"(Error, [0:18 - 0:31], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:4 - 1:7], Couldn't resolve reference to IdentifiableElement 'Cls'.)"]);
@@ -314,7 +314,7 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 		joinServerRequests();
 		
 		
-		assertIssues(
+		assertIssues2(
 			"MainClientA" -> #[
 				"(Error, [0:18 - 0:31], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:4 - 1:7], Couldn't resolve reference to IdentifiableElement 'Cls'.)"],
@@ -368,7 +368,7 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 		joinServerRequests();
 		assertNull("expected cancellation to have happened, but it did not happen", cancelOnResource.get());
 
-		assertIssues(
+		assertIssues2(
 			"ClientModule1" -> #[
 				"(Error, [1:10 - 1:14], Couldn't resolve reference to IdentifiableElement 'meth'.)"
 			],

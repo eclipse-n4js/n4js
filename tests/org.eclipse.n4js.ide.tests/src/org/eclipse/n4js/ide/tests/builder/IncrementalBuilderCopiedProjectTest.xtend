@@ -48,7 +48,7 @@ class IncrementalBuilderCopiedProjectTest extends AbstractIncrementalBuilderTest
 
 		startAndWaitForLspServer();
 		assertProjectBuildOrder("[test-project/node_modules/lib, test-project/node_modules/n4js-runtime, test-project]");
-		assertIssues("MyModule" -> #["(Error, [0:0 - 0:11], Couldn't resolve reference to IdentifiableElement '_globalThis'.)"]);
+		assertIssues2("MyModule" -> #["(Error, [0:0 - 0:11], Couldn't resolve reference to IdentifiableElement '_globalThis'.)"]);
 		shutdownLspServer();
 		
 

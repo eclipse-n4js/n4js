@@ -91,7 +91,7 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 		testWorkspaceManager.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
-		assertIssues(defaultExpectedIssues);
+		assertIssues2(defaultExpectedIssues);
 	}
 
 	@Test
@@ -100,7 +100,7 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 		testWorkspaceManager.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
-		assertIssues(defaultExpectedIssues);
+		assertIssues2(defaultExpectedIssues);
 
 		// add a healing non-bare import to top of MainBad.n4js
 		changeNonOpenedFile("MainBad",
@@ -116,7 +116,7 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 				Pair.of("new C();", ""));
 		joinServerRequests();
 
-		assertIssues(defaultExpectedIssues);
+		assertIssues2(defaultExpectedIssues);
 	}
 
 	@Test
@@ -125,7 +125,7 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 		testWorkspaceManager.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
-		assertIssues(defaultExpectedIssues);
+		assertIssues2(defaultExpectedIssues);
 
 		// add a healing bare import to MainBad.n4js
 		changeNonOpenedFile("MainBad",
@@ -139,7 +139,7 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 				Pair.of("import \"C\";", ""));
 		joinServerRequests();
 
-		assertIssues(defaultExpectedIssues);
+		assertIssues2(defaultExpectedIssues);
 	}
 
 	// unused imports must not have a healing effect
@@ -149,14 +149,14 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 		testWorkspaceManager.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
-		assertIssues(defaultExpectedIssues);
+		assertIssues2(defaultExpectedIssues);
 
 		// add an unused healing non-bare import to top of MainBad.n4js
 		changeNonOpenedFile("MainBad",
 				Pair.of("// top of file", "import {C} from \"C\";"));
 		joinServerRequests();
 
-		assertIssues(
+		assertIssues2(
 				Pair.of("MainBad", List.of(
 						defaultExpectedIssueInMainBad, "(Warning, [0:9 - 0:10], The import of C is unused.)")));
 	}
@@ -168,7 +168,7 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 		testWorkspaceManager.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
-		assertIssues(defaultExpectedIssues);
+		assertIssues2(defaultExpectedIssues);
 
 		// add an unused healing non-bare import to top of MainBad.n4js
 		changeNonOpenedFile("MainBad",
@@ -176,7 +176,7 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 				Pair.of("// bottom of file", "export function foo(p: C) {}"));
 		joinServerRequests();
 
-		assertIssues(defaultExpectedIssues); // issue must *not* be gone
+		assertIssues2(defaultExpectedIssues); // issue must *not* be gone
 	}
 
 	// imports not retained at runtime must not have a healing effect
@@ -186,7 +186,7 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 		testWorkspaceManager.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
-		assertIssues(defaultExpectedIssues);
+		assertIssues2(defaultExpectedIssues);
 
 		// add an unused healing non-bare import to top of MainBad.n4js
 		changeNonOpenedFile("MainBad",
@@ -194,7 +194,7 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 				Pair.of("// bottom of file", "console.log(EnumInC.L1);"));
 		joinServerRequests();
 
-		assertIssues(defaultExpectedIssues); // issue must *not* be gone
+		assertIssues2(defaultExpectedIssues); // issue must *not* be gone
 	}
 
 	@Test
@@ -203,7 +203,7 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 		testWorkspaceManager.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
-		assertIssues(defaultExpectedIssues);
+		assertIssues2(defaultExpectedIssues);
 
 		// add additional usage of load-time dependency target B from within the cycle
 		changeNonOpenedFile("X",
@@ -264,7 +264,7 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 		testWorkspaceManager.createTestProjectOnDisk(testCodeWithLoadtimeCycle);
 		startAndWaitForLspServer();
 
-		assertIssues(
+		assertIssues2(
 				Pair.of("A", List.of(
 						"""
 								(Error, [0:17 - 0:20], Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
@@ -342,7 +342,7 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 										    Y.n4js --> X.n4js)
 										"""))));
 
-		assertIssues(expectedIssuesWithIllegalLoadtimeReferences);
+		assertIssues2(expectedIssuesWithIllegalLoadtimeReferences);
 
 		// comment out the runtime dependency X -> C
 		changeNonOpenedFile("X", Pair.of("import \"C\";", "// import \"C\";"));
@@ -354,7 +354,7 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 		changeNonOpenedFile("X", Pair.of("// import \"C\";", "import \"C\";"));
 		joinServerRequests();
 
-		assertIssues(expectedIssuesWithIllegalLoadtimeReferences);
+		assertIssues2(expectedIssuesWithIllegalLoadtimeReferences);
 	}
 
 	@Test
@@ -363,7 +363,7 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 		testWorkspaceManager.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
-		assertIssues(defaultExpectedIssues);
+		assertIssues2(defaultExpectedIssues);
 
 		// comment out the runtime dependency X -> C
 		changeNonOpenedFile("X", Pair.of("import \"C\";", "// import \"C\";"));
@@ -375,7 +375,7 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 		changeNonOpenedFile("X", Pair.of("// import \"C\";", "import \"C\";"));
 		joinServerRequests();
 
-		assertIssues(defaultExpectedIssues);
+		assertIssues2(defaultExpectedIssues);
 	}
 
 	@Test
@@ -384,12 +384,12 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 		testWorkspaceManager.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
-		assertIssues(defaultExpectedIssues);
+		assertIssues2(defaultExpectedIssues);
 
 		changeNonOpenedFile("B", Pair.of("extends A", ""));
 		joinServerRequests();
 
-		assertIssues(
+		assertIssues2(
 				Pair.of("MainBad", List.of()), // original issue should be gone
 				Pair.of("MainGood", List.of(
 						"(Error, [2:9 - 2:10], Couldn't resolve reference to IdentifiableElement 'm'.)")));
@@ -397,7 +397,7 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 		changeNonOpenedFile("B", Pair.of("class B ", "class B extends A "));
 		joinServerRequests();
 
-		assertIssues(defaultExpectedIssues); // original issue should have come back
+		assertIssues2(defaultExpectedIssues); // original issue should have come back
 	}
 
 	@Test
@@ -412,7 +412,7 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 							export { ClsA as ClsAViaB } from "A"
 						"""));
 		startAndWaitForLspServer();
-		assertIssues(
+		assertIssues2(
 				Pair.of("A", List.of(
 						"(Error, [1:1 - 2:0], Unsupported feature: separate export statements (add keyword 'export' directly before a class, interface, enum, function or variable declaration).)")),
 				Pair.of("B", List.of(
@@ -433,7 +433,7 @@ public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 							export { ClsA as ClsAViaB }
 						"""));
 		startAndWaitForLspServer();
-		assertIssues(
+		assertIssues2(
 				Pair.of("A", List.of(
 						"(Error, [2:1 - 3:0], Unsupported feature: separate export statements (add keyword 'export' directly before a class, interface, enum, function or variable declaration).)")),
 				Pair.of("B", List.of(

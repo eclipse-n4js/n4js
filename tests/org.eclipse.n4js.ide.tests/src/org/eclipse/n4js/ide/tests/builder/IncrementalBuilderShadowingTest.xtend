@@ -72,7 +72,7 @@ class IncrementalBuilderShadowingTest extends AbstractIdeTest {
 			"yarn-test-project/node_modules/n4js-runtime",
 			"yarn-test-project/node_modules/ProjectOther"
 		);
-		assertIssues(
+		assertIssues2(
 			"ModuleMain" -> #[
 				"(Error, [1:17 - 1:28], Couldn't resolve reference to IdentifiableElement 'mInPackages'.)"
 			]
@@ -101,7 +101,7 @@ class IncrementalBuilderShadowingTest extends AbstractIdeTest {
 			"yarn-test-project/node_modules/n4js-runtime",
 			"yarn-test-project/packages/ProjectOther"
 		);
-		assertIssues(
+		assertIssues2(
 			"ModuleMain" -> #[
 				"(Error, [2:17 - 2:31], Couldn't resolve reference to IdentifiableElement 'mInNodeModules'.)"
 			]
@@ -155,7 +155,7 @@ class IncrementalBuilderShadowingTest extends AbstractIdeTest {
 			"yarn-test-project/node_modules/n4js-runtime",
 			"yarn-test-project/packages/ProjectOther"
 		);
-		assertIssues(
+		assertIssues2(
 			"ModuleMain" -> #[
 				"(Error, [2:17 - 2:31], Couldn't resolve reference to IdentifiableElement 'mInNodeModules'.)"
 			]
@@ -174,7 +174,7 @@ class IncrementalBuilderShadowingTest extends AbstractIdeTest {
 			"yarn-test-project/node_modules/n4js-runtime",
 			"yarn-test-project/node_modules/ProjectOther"
 		);
-		assertIssues(
+		assertIssues2(
 			"ModuleMain" -> #[
 				"(Error, [1:17 - 1:28], Couldn't resolve reference to IdentifiableElement 'mInPackages'.)"
 			]

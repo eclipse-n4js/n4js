@@ -53,7 +53,7 @@ class IncrementalBuilderReexportTest extends AbstractIncrementalBuilderTest {
 		changeNonOpenedFile("Other1", "field: string" -> "field: number");
 		joinServerRequests();
 
-		assertIssues(
+		assertIssues2(
 			"Main" -> #[
 				"(Error, [2:16 - 2:31], number is not a subtype of string.)"
 			]
@@ -94,7 +94,7 @@ class IncrementalBuilderReexportTest extends AbstractIncrementalBuilderTest {
 		changeNonOpenedFile("Other1", "field: string" -> "field: number");
 		joinServerRequests();
 
-		assertIssues(
+		assertIssues2(
 			"Main" -> #[
 				"(Error, [2:16 - 2:31], number is not a subtype of string.)"
 			]
@@ -135,7 +135,7 @@ class IncrementalBuilderReexportTest extends AbstractIncrementalBuilderTest {
 		changeNonOpenedFile("Other1", "field: string" -> "field: number");
 		joinServerRequests();
 
-		assertIssues(
+		assertIssues2(
 			"Main" -> #[
 				"(Error, [2:16 - 2:33], number is not a subtype of string.)"
 			]
@@ -174,7 +174,7 @@ class IncrementalBuilderReexportTest extends AbstractIncrementalBuilderTest {
 		changeNonOpenedFile("Other1", "field: string" -> "field: number");
 		joinServerRequests();
 
-		assertIssues(
+		assertIssues2(
 			"Main" -> #[
 				"(Error, [2:16 - 2:31], number is not a subtype of string.)"
 			]
@@ -213,7 +213,7 @@ class IncrementalBuilderReexportTest extends AbstractIncrementalBuilderTest {
 		changeNonOpenedFile("Other1", "field: string" -> "field: number");
 		joinServerRequests();
 
-		assertIssues(
+		assertIssues2(
 			"Main" -> #[
 				"(Error, [2:16 - 2:37], number is not a subtype of string.)"
 			]
@@ -255,7 +255,7 @@ class IncrementalBuilderReexportTest extends AbstractIncrementalBuilderTest {
 		changeNonOpenedFile("Other2", "Cls1 as Cls" -> "Cls2 as Cls");
 		joinServerRequests();
 
-		assertIssues(
+		assertIssues2(
 			"Main" -> #[
 				"(Error, [2:16 - 2:31], number is not a subtype of string.)"
 			]
@@ -313,7 +313,7 @@ class IncrementalBuilderReexportTest extends AbstractIncrementalBuilderTest {
 // TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
 
-		assertIssues(
+		assertIssues2(
 			"Main" -> #[
 				"(Error, [2:16 - 2:31], number is not a subtype of string.)"
 			]
@@ -375,7 +375,7 @@ cleanBuildAndWait();
 // TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
 
-		assertIssues(
+		assertIssues2(
 			"Main" -> #[
 				"(Error, [2:16 - 2:31], number is not a subtype of string.)"
 			]
@@ -437,7 +437,7 @@ cleanBuildAndWait();
 // TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
 
-		assertIssues(
+		assertIssues2(
 			"Main" -> #[
 				"(Error, [2:16 - 2:33], number is not a subtype of string.)"
 			]
@@ -497,7 +497,7 @@ cleanBuildAndWait();
 // TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
 
-		assertIssues(
+		assertIssues2(
 			"Main" -> #[
 				"(Error, [2:16 - 2:31], number is not a subtype of string.)"
 			]
@@ -557,7 +557,7 @@ cleanBuildAndWait();
 // TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
 
-		assertIssues(
+		assertIssues2(
 			"Main" -> #[
 				"(Error, [2:16 - 2:37], number is not a subtype of string.)"
 			]
@@ -618,7 +618,7 @@ cleanBuildAndWait();
 		changeNonOpenedFile("Other2", "Cls1 as Cls" -> "Cls2 as Cls");
 		joinServerRequests();
 
-		assertIssues(
+		assertIssues2(
 			"Main" -> #[
 				"(Error, [2:16 - 2:31], number is not a subtype of string.)"
 			]

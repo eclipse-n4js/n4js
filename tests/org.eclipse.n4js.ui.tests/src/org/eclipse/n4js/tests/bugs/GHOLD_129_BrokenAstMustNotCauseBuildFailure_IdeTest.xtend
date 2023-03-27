@@ -28,7 +28,7 @@ public class GHOLD_129_BrokenAstMustNotCauseBuildFailure_IdeTest extends Convert
 	@Test
 	def void checkBrokenAstDoesNotCauseBuildFailure_ExpectValidationErrors() {
 		importProband(new File("probands", PROJECT_NAME));
-		assertIssues(
+		assertIssues2(
 			"BrokenAst_GHOLD_129" -> #[
 				"(Error, [11:0 - 13:1], Name missing in type declaration.)",
 				"(Error, [14:4 - 14:5], Couldn't resolve reference to IdentifiableElement 'A'.)"

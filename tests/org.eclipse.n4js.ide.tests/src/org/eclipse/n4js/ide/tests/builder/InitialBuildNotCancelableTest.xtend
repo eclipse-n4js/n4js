@@ -140,7 +140,7 @@ class InitialBuildNotCancelableTest extends AbstractIdeTest {
 		// at this point, the initial build has completed
 
 		// assert successful completion of initial build by ensuring the already fixed error has still shown up:
-		assertIssues("Main" -> #[
+		assertIssues2("Main" -> #[
 			"(Error, [1:12 - 1:13], Couldn't resolve reference to IdentifiableElement 'm'.)"
 		]);
 		didCheckResultOfInitialBuild.countDown();

@@ -53,7 +53,7 @@ public class GH_1951_ExceptionInOpenEditorsDueToStaleURIsTest extends AbstractId
 		joinServerRequests();
 		assertNoErrorsInLogOrOutput(); // before the fix it logged: "cannot install derived state in resource
 										// '.../A.n4js' without AST"
-		assertIssues(Pair.of(
+		assertIssues2(Pair.of(
 				"B", List.of(
 						"(Error, [0:17 - 0:20], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 						"(Error, [2:16 - 2:17], Couldn't resolve reference to Type 'A'.)")));
@@ -105,7 +105,7 @@ public class GH_1951_ExceptionInOpenEditorsDueToStaleURIsTest extends AbstractId
 		joinServerRequests();
 		assertNoErrorsInLogOrOutput(); // before the fix it logged: "cannot install derived state in resource
 										// '.../A.n4js' without AST"
-		assertIssues(Pair.of(
+		assertIssues2(Pair.of(
 				"Main1", List.of(
 						"(Error, [0:17 - 0:20], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 						"(Error, [3:16 - 3:17], Couldn't resolve reference to Type 'A'.)")),

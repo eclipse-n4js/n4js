@@ -87,7 +87,7 @@ class YarnWorkspacesPropertyTest extends AbstractIdeTest {
 		assertNotNull("project 'ProjectB' should have been discovered", workspaceConfig.findProjectByID("yarn-test-project/packages/ProjectB"));
 
 		// additional assertion to make sure every thing is working correctly:
-		assertIssues(
+		assertIssues2(
 			"B" -> #[
 				"(Error, [1:4 - 1:6], 42 is not a subtype of string.)"
 			]

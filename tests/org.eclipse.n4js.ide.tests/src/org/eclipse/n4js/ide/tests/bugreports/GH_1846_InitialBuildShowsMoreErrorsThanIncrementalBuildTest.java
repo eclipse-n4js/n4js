@@ -41,11 +41,11 @@ public class GH_1846_InitialBuildShowsMoreErrorsThanIncrementalBuildTest extends
 		List<Pair<String, List<String>>> expectedErrors = List.of(
 				Pair.of("A", List.of(
 						"(Error, [0:35 - 0:36], Couldn't resolve reference to Type 'X'.)")));
-		assertIssues(expectedErrors);
+		assertIssues2(expectedErrors);
 		assertStableState("Main", expectedErrors);
 
 		cleanBuildAndWait();
-		assertIssues(expectedErrors);
+		assertIssues2(expectedErrors);
 		assertStableState(List.of("A", "Main"), expectedErrors);
 	}
 
@@ -73,11 +73,11 @@ public class GH_1846_InitialBuildShowsMoreErrorsThanIncrementalBuildTest extends
 		List<Pair<String, List<String>>> expectedErrors = List.of(
 				Pair.of("A", List.of(
 						"(Error, [0:35 - 0:36], Couldn't resolve reference to Type 'X'.)")));
-		assertIssues(expectedErrors);
+		assertIssues2(expectedErrors);
 		assertStableState("Main", expectedErrors);
 
 		cleanBuildAndWait();
-		assertIssues(expectedErrors);
+		assertIssues2(expectedErrors);
 		assertStableState(List.of("A", "Main"), expectedErrors);
 	}
 
@@ -124,11 +124,11 @@ public class GH_1846_InitialBuildShowsMoreErrorsThanIncrementalBuildTest extends
 				Pair.of("IDataList", List.of(
 						"(Error, [0:9 - 0:24], Import of IDataCollection cannot be resolved.)",
 						"(Error, [2:43 - 2:58], Couldn't resolve reference to Type 'IDataCollection'.)")));
-		assertIssues(expectedErrors);
+		assertIssues2(expectedErrors);
 		assertStableState(List.of("MainA", "MainB"), expectedErrors);
 
 		cleanBuildAndWait();
-		assertIssues(expectedErrors);
+		assertIssues2(expectedErrors);
 		assertStableState(List.of("MainA", "MainB"), expectedErrors);
 	}
 
@@ -144,7 +144,7 @@ public class GH_1846_InitialBuildShowsMoreErrorsThanIncrementalBuildTest extends
 	private void assertStableState(String nameOfModuleToTouch, List<Pair<String, List<String>>> expectedErrors) {
 		openFile(nameOfModuleToTouch);
 		joinServerRequests();
-		assertIssues(expectedErrors);
+		assertIssues2(expectedErrors);
 
 		// apply a change that will alter the nameOfModuleToTouch's TModule (i.e. add exported element)
 		String codeToAppend = """
@@ -152,23 +152,23 @@ public class GH_1846_InitialBuildShowsMoreErrorsThanIncrementalBuildTest extends
 				""";
 		changeOpenedFile(nameOfModuleToTouch, str -> str + codeToAppend);
 		joinServerRequests();
-		assertIssues(expectedErrors);
+		assertIssues2(expectedErrors);
 
 		saveOpenedFile(nameOfModuleToTouch);
 		joinServerRequests();
-		assertIssues(expectedErrors);
+		assertIssues2(expectedErrors);
 
 		// undo the above change
 		changeOpenedFile(nameOfModuleToTouch, Pair.of(codeToAppend, ""));
 		joinServerRequests();
-		assertIssues(expectedErrors);
+		assertIssues2(expectedErrors);
 
 		saveOpenedFile(nameOfModuleToTouch);
 		joinServerRequests();
-		assertIssues(expectedErrors);
+		assertIssues2(expectedErrors);
 
 		closeFile(nameOfModuleToTouch);
 		joinServerRequests();
-		assertIssues(expectedErrors);
+		assertIssues2(expectedErrors);
 	}
 }

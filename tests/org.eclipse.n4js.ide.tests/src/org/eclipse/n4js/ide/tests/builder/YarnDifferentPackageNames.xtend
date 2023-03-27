@@ -65,7 +65,7 @@ class YarnDifferentPackageNames extends AbstractIncrementalBuilderTest {
 		testWorkspaceManager.createTestOnDisk(testData);
 		
 		startAndWaitForLspServer();
-		assertIssues("library-project/package.json" -> #[
+		assertIssues2("library-project/package.json" -> #[
 			"(Warning, [1:9 - 1:37], As a convention the package name \"library-project-other-name\" should match the name of the project folder \"library-project\" on the file system.)"]);
 		
 		assertOutputFileExists("main-project", "MainModule");

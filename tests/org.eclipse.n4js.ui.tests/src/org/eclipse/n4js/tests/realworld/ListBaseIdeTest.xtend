@@ -32,7 +32,7 @@ public class ListBaseIdeTest extends ConvertedIdeTest {
 	@Test
 	def void testListBase() throws Exception {
 		importProband(new File("probands", "ListBase"));
-		assertIssues(
+		assertIssues2(
 			"ListBase" -> #[
 				"(Warning, [62:17 - 62:37], Unnecessary cast from ChangeEvent to ChangeEvent)"
 			],

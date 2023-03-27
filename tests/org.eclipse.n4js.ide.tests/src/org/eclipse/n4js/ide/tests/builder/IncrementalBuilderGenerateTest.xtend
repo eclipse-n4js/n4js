@@ -393,7 +393,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertChanged();
-		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], any is not a subtype of number.)" ]);
+		assertIssues2("Main" -> #[ "(Error, [1:16 - 1:31], any is not a subtype of number.)" ]);
 
 		projectStateSnapshot.file.delete();
 
@@ -402,12 +402,12 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertExists(); // recreated
-		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]);
+		assertIssues2("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]);
 
 		cleanBuildAndWait();
 		assertFalse(outputFile.exists());
 		projectStateSnapshot.assertExists();
-		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]);
+		assertIssues2("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]);
 	}
 
 	@Test
@@ -427,14 +427,14 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertUnchanged(); // not updated, because Other.n4js not saved yet
-		assertIssues("Main" -> #[]); // not updated, because Other.n4js not saved yet
+		assertIssues2("Main" -> #[]); // not updated, because Other.n4js not saved yet
 
 		saveOpenedFile("Other");
 		joinServerRequests();
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertChanged();
-		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], any is not a subtype of number.)" ]);
+		assertIssues2("Main" -> #[ "(Error, [1:16 - 1:31], any is not a subtype of number.)" ]);
 
 		projectStateSnapshot.file.delete();
 
@@ -443,14 +443,14 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertNotExists(); // not recreated, because Other.n4js not saved yet
-		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], any is not a subtype of number.)" ]); // not updated, because Other.n4js not saved yet
+		assertIssues2("Main" -> #[ "(Error, [1:16 - 1:31], any is not a subtype of number.)" ]); // not updated, because Other.n4js not saved yet
 
 		saveOpenedFile("Other");
 		joinServerRequests();
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertExists(); // recreated
-		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]); // updated
+		assertIssues2("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]); // updated
 	}
 
 	@Test

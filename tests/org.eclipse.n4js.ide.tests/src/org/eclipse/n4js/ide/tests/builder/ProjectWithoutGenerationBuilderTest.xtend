@@ -59,7 +59,7 @@ class ProjectWithoutGenerationBuilderTest extends AbstractIdeTest {
 	def private void doTestSourceFilesAreValidated(ProjectType projectType, Optional<String> sourceFolder) {
 		createSampleProject(projectType, sourceFolder, true);
 		startAndWaitForLspServer();
-		assertIssues(
+		assertIssues2(
 			"Test.n4jsd" -> #[
 				"(Error, [1:0 - 1:7], Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files.)"
 			]

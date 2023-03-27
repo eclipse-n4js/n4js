@@ -62,7 +62,7 @@ public class ModuleCollisionSingleProjectTest extends AbstractIdeTest {
 
 		);
 
-		assertIssues(
+		assertIssues2(
 				Pair.of("src1/MyModule.n4js", List.of(
 						"(Error, [0:0 - 2:1], A duplicate module MyModule is also defined in test-project/src2/MyModule.n4js.)")),
 				Pair.of("src2/MyModule.n4js", List.of(
@@ -119,7 +119,7 @@ public class ModuleCollisionSingleProjectTest extends AbstractIdeTest {
 
 		);
 
-		assertIssues(
+		assertIssues2(
 				Pair.of("src1/MyModule.n4js", List.of(
 						"(Error, [0:0 - 2:1], A duplicate module MyModule is also defined in test-project/src2/MyModule.n4js; test-project/tst/MyModule.n4js.)")),
 				Pair.of("src2/MyModule.n4js", List.of(
@@ -175,7 +175,7 @@ public class ModuleCollisionSingleProjectTest extends AbstractIdeTest {
 
 		);
 
-		assertIssues(
+		assertIssues2(
 				Pair.of("src1/MyModule.n4js", List.of(
 						"(Error, [0:0 - 2:1], A duplicate module MyModule is also defined in test-project/src2/MyModule.n4jsd.)")),
 				Pair.of("src2/MyModule.n4jsd", List.of(
@@ -226,7 +226,7 @@ public class ModuleCollisionSingleProjectTest extends AbstractIdeTest {
 
 		);
 
-		assertIssues(
+		assertIssues2(
 				Pair.of("src1/MyModule.n4js", List.of(
 						"(Error, [0:0 - 2:1], A duplicate module MyModule is also defined in test-project/src2/MyModule.n4jsx.)")),
 				Pair.of("src2/MyModule.n4jsx", List.of(
@@ -277,7 +277,7 @@ public class ModuleCollisionSingleProjectTest extends AbstractIdeTest {
 
 		);
 
-		assertIssues(
+		assertIssues2(
 				Pair.of("src1/MyModule.n4js", List.of(
 						"(Error, [0:0 - 2:1], A duplicate module MyModule is also defined in test-project/ext/MyModule.js.)")),
 				Pair.of("src1/Client.n4js", List.of(
@@ -410,7 +410,7 @@ public class ModuleCollisionSingleProjectTest extends AbstractIdeTest {
 
 		);
 
-		assertIssues(
+		assertIssues2(
 				Pair.of("src1/MyModule.n4jsd", List.of(
 						"(Error, [0:0 - 0:40], A duplicate definition module MyModule for test-project/ext/MyModule.js is also defined in test-project/src1/MyModule.d.ts.)")));
 		// note that in this case, the import in Client.n4js will bind to MyModule.n4jsd
@@ -452,7 +452,7 @@ public class ModuleCollisionSingleProjectTest extends AbstractIdeTest {
 
 		);
 
-		assertIssues(
+		assertIssues2(
 				Pair.of("src1/MyModule.n4jsd", List.of(
 						"(Error, [0:0 - 0:40], A duplicate definition module MyModule for unknown js module is also defined in test-project/src1/MyModule.d.ts.)")),
 				Pair.of("src1/Client.n4js", List.of(
@@ -525,7 +525,7 @@ public class ModuleCollisionSingleProjectTest extends AbstractIdeTest {
 
 		);
 
-		assertIssues(
+		assertIssues2(
 				Pair.of("MyModule.n4jsd", List.of(
 						"(Error, [0:0 - 0:29], A duplicate module MyModule is also defined in test-project/src1/MyModule.cjs; test-project/src1/MyModule.js; test-project/src2/MyModule.cjs.)")));
 	}
@@ -539,7 +539,7 @@ public class ModuleCollisionSingleProjectTest extends AbstractIdeTest {
 				Pair.of("MyModule.n4jsd",
 						"export external const c: int;"));
 
-		assertIssues(
+		assertIssues2(
 				Pair.of("MyModule.n4jsd", List.of(
 						"(Error, [0:0 - 0:29], A duplicate module MyModule is also defined in test-project/src/MyModule.js; test-project/src/MyModule.jsx.)")));
 	}

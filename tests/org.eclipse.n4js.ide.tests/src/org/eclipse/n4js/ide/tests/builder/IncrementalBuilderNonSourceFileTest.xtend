@@ -40,7 +40,7 @@ class IncrementalBuilderNonSourceFileTest extends AbstractIncrementalBuilderTest
 
 		openFile(nonSourceModule);
 		joinServerRequests();
-		assertIssues( // but an open editor shows issues even in non-source files
+		assertIssues2( // but an open editor shows issues even in non-source files
 			"NonSourceModule" -> #[
 				"(Error, [0:18 - 0:20], 42 is not a subtype of string.)"
 			]

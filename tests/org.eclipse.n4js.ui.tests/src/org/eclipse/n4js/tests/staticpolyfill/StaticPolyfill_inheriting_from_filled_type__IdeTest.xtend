@@ -33,7 +33,7 @@ class StaticPolyfill_inheriting_from_filled_type__IdeTest extends AbstractStatic
 		createFile(cFilling, specStyle_Filling);
 		addSrc2ToSources();
 
-		assertIssues(
+		assertIssues2(
 			"src2/a/b/A.n4js" -> #[
 				"(Error, [3:30 - 3:31], Couldn't resolve reference to Type 'A'.)",
 				"(Error, [5:11 - 5:12], Final field b must be provided with an initializer or must be initialized in the constructor.)",
@@ -56,7 +56,7 @@ class StaticPolyfill_inheriting_from_filled_type__IdeTest extends AbstractStatic
 		createFile(cNextToFilling, idebug657_next_to_filling);
 		addSrc2ToSources();
 
-		assertIssues(
+		assertIssues2(
 			"src2/A.n4js" -> #[
 				"(Error, [3:33 - 3:37], Couldn't resolve reference to Type 'Poly'.)",
 				"(Error, [17:14 - 17:18], Couldn't resolve reference to IdentifiableElement 'test'.)",
@@ -92,7 +92,7 @@ class StaticPolyfill_inheriting_from_filled_type__IdeTest extends AbstractStatic
 		createFile(cFilling, idebug662_filling);
 		addSrc2ToSources();
 
-		assertIssues(
+		assertIssues2(
 			"src2/A.n4js" -> #[
 				"(Error, [4:53 - 4:57], Couldn't resolve reference to Type 'Poly'.)",
 				"(Error, [10:22 - 10:26], Couldn't resolve reference to IdentifiableElement 'unit'.)",
@@ -114,7 +114,7 @@ class StaticPolyfill_inheriting_from_filled_type__IdeTest extends AbstractStatic
 		createFile(cFilling, idebug681_filling);
 		addSrc2ToSources();
 
-		assertIssues(
+		assertIssues2(
 			"src2/A.n4js" -> #[
 				"(Error, [4:33 - 4:37], Couldn't resolve reference to Type 'Poly'.)",
 				"(Error, [6:34 - 6:41], Couldn't resolve reference to IdentifiableElement 'DataMap'.)",

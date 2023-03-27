@@ -1373,7 +1373,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * to issue list.
 	 */
 	@SafeVarargs
-	protected final void assertIssues(Pair<String, List<String>>... moduleNameToExpectedIssues) {
+	protected final void assertIssues2(Pair<String, List<String>>... moduleNameToExpectedIssues) {
 		assertIssues(convertModuleNamePairsToIdMap(moduleNameToExpectedIssues));
 	}
 
@@ -1381,7 +1381,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * Same as {@link #assertIssues(Map)}, accepting pairs from module name to issue list instead of a map from file URI
 	 * to issue list.
 	 */
-	protected final void assertIssues(Iterable<Pair<String, List<String>>> moduleNameToExpectedIssues) {
+	protected final void assertIssues2(Iterable<Pair<String, List<String>>> moduleNameToExpectedIssues) {
 		assertIssues(convertModuleNamePairsToIdMap(moduleNameToExpectedIssues));
 	}
 
@@ -1390,6 +1390,19 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * <code>false</code>.
 	 */
 	protected void assertIssues(Map<FileURI, List<String>> fileURIToExpectedIssues) {
+		assertIssues(fileURIToExpectedIssues, false);
+	}
+
+	/**
+	 * Same as {@link #assertIssues(Map, boolean)}, but with <code>withIgnoredIssues</code> always set to
+	 * <code>false</code>.
+	 */
+	protected void assertIssues2(Map<String, List<String>> moduleNameToExpectedIssues) {
+		Map<FileURI, List<String>> fileURIToExpectedIssues = new HashMap<>();
+		for (String moduleName : moduleNameToExpectedIssues.keySet()) {
+			FileURI uri = getFileURIFromModuleName(moduleName);
+			fileURIToExpectedIssues.put(uri, moduleNameToExpectedIssues.get(moduleName));
+		}
 		assertIssues(fileURIToExpectedIssues, false);
 	}
 
