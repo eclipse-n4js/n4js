@@ -415,9 +415,15 @@ public class TestWorkspaceManager {
 	@SafeVarargs
 	public final Project createTestYarnWorkspaceOnDisk(
 			Pair<String, ? extends List<? extends Pair<String, ? extends CharSequence>>>... projectsModulesContents) {
+		return createTestYarnWorkspaceOnDisk(Arrays.asList(projectsModulesContents));
+	}
+
+	/** Same as {@link #createTestOnDisk(Pair...)}, but <em>always</em> creates a yarn workspace. */
+	public final Project createTestYarnWorkspaceOnDisk(
+			Iterable<? extends Pair<String, ? extends List<? extends Pair<String, ? extends CharSequence>>>> projectsModulesContents) {
+
 		Map<String, Map<String, String>> projectsModulesContentsAsMap = new LinkedHashMap<>();
-		convertProjectsModulesContentsToMap(Arrays.asList(projectsModulesContents), projectsModulesContentsAsMap,
-				false);
+		convertProjectsModulesContentsToMap(projectsModulesContents, projectsModulesContentsAsMap, false);
 		return createTestYarnWorkspaceOnDisk(projectsModulesContentsAsMap);
 	}
 
