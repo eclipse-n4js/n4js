@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ide.dts.tests;
 
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -31,41 +32,41 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 
 	@Test
 	public void testNoTsconfig() {
-		List<Pair<String, List<Pair<String, String>>>> testData = List.of(
-				Pair.of(CFG_NODE_MODULES + "@types/mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("index.d.ts", """
+		Map<String, Map<String, String>> testData = Map.of(
+				CFG_NODE_MODULES + "@types/mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"index.d.ts", """
 									export class MyClass {
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "@types/mypackage",
 										"version": "0.0.1",
 										"main": "index.d.ts"
 									}
-								"""))),
-				Pair.of(CFG_NODE_MODULES + "mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("index.js", """
+								"""),
+				CFG_NODE_MODULES + "mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"index.js", """
 									export class MyClassJS {
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "mypackage",
 										"version": "0.0.1",
 										"main": "index.js"
 									}
-								"""))),
-				Pair.of("client", List.of(
-						Pair.of("module", """
+								"""),
+				"client", Map.of(
+						"module", """
 									import { MyClass } from "mypackage";
 									MyClass;
-								"""),
-						Pair.of(CFG_DEPENDENCIES, """
+								""",
+						CFG_DEPENDENCIES, """
 									mypackage, @types/mypackage
-								"""))));
+								"""));
 
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
@@ -77,41 +78,41 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 
 	@Test
 	public void testNoTsconfigNoFileExtension() {
-		List<Pair<String, List<Pair<String, String>>>> testData = List.of(
-				Pair.of(CFG_NODE_MODULES + "@types/mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("index.d.ts", """
+		Map<String, Map<String, String>> testData = Map.of(
+				CFG_NODE_MODULES + "@types/mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"index.d.ts", """
 									export class MyClass {
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "@types/mypackage",
 										"version": "0.0.1",
 										"main": "index"
 									}
-								"""))),
-				Pair.of(CFG_NODE_MODULES + "mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("index.js", """
+								"""),
+				CFG_NODE_MODULES + "mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"index.js", """
 									export class MyClassJS {
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "mypackage",
 										"version": "0.0.1",
 										"main": "index.js"
 									}
-								"""))),
-				Pair.of("client", List.of(
-						Pair.of("module", """
+								"""),
+				"client", Map.of(
+						"module", """
 									import { MyClass } from "mypackage";
 									MyClass;
-								"""),
-						Pair.of(CFG_DEPENDENCIES, """
+								""",
+						CFG_DEPENDENCIES, """
 									mypackage, @types/mypackage
-								"""))));
+								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
 		startAndWaitForLspServer();
@@ -122,46 +123,46 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 
 	@Test
 	public void testNoTsconfigClosure() {
-		List<Pair<String, List<Pair<String, String>>>> testData = List.of(
-				Pair.of(CFG_NODE_MODULES + "@types/mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("index.d.ts", """
+		Map<String, Map<String, String>> testData = Map.of(
+				CFG_NODE_MODULES + "@types/mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"index.d.ts", """
 									import * as I from "./imported.d.ts";
 									export class MyClass {
 									}
-								"""),
-						Pair.of("imported.d.ts", """
+								""",
+						"imported.d.ts", """
 									export class ImportedClass {
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "@types/mypackage",
 										"version": "0.0.1",
 										"main": "index.d.ts"
 									}
-								"""))),
-				Pair.of(CFG_NODE_MODULES + "mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("index.js", """
+								"""),
+				CFG_NODE_MODULES + "mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"index.js", """
 									export class MyClassJS {
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "mypackage",
 										"version": "0.0.1",
 										"main": "index.js"
 									}
-								"""))),
-				Pair.of("client", List.of(
-						Pair.of("module", """
+								"""),
+				"client", Map.of(
+						"module", """
 									import { ImportedClass } from "mypackage/imported";
 									ImportedClass;
-								"""),
-						Pair.of(CFG_DEPENDENCIES, """
+								""",
+						CFG_DEPENDENCIES, """
 									mypackage, @types/mypackage
-								"""))));
+								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
 		startAndWaitForLspServer();
@@ -172,45 +173,45 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 
 	@Test
 	public void testEmptyMainTypesFiles() {
-		List<Pair<String, List<Pair<String, String>>>> testData = List.of(
-				Pair.of(CFG_NODE_MODULES + "@types/mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("index.d.ts", """
+		Map<String, Map<String, String>> testData = Map.of(
+				CFG_NODE_MODULES + "@types/mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"index.d.ts", """
 									export class MyClass {
 									}
-								"""),
-						Pair.of("tsconfig.json", """
+								""",
+						"tsconfig.json", """
 									{
 									    "files": ["index.d.ts")
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "@types/mypackage",
 										"version": "0.0.1"
 									}
-								"""))),
-				Pair.of(CFG_NODE_MODULES + "mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("index.js", """
+								"""),
+				CFG_NODE_MODULES + "mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"index.js", """
 									export class MyClassJS {
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "mypackage",
 										"version": "0.0.1",
 										"main": "index.js"
 									}
-								"""))),
-				Pair.of("client", List.of(
-						Pair.of("module", """
+								"""),
+				"client", Map.of(
+						"module", """
 									import { MyClass } from "mypackage/index"; // complete import
 									MyClass;
-								"""),
-						Pair.of(CFG_DEPENDENCIES, """
+								""",
+						CFG_DEPENDENCIES, """
 									mypackage, @types/mypackage
-								"""))));
+								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
 		startAndWaitForLspServer();
@@ -221,48 +222,48 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 
 	@Test
 	public void testTsconfigFiles() {
-		List<Pair<String, List<Pair<String, String>>>> testData = List.of(
-				Pair.of(CFG_NODE_MODULES + "@types/mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("index.d.ts", """
+		Map<String, Map<String, String>> testData = Map.of(
+				CFG_NODE_MODULES + "@types/mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"index.d.ts", """
 									// empty
-								"""),
-						Pair.of("lib.d.ts", """
+								""",
+						"lib.d.ts", """
 									export class MyClass {
 									}
-								"""),
-						Pair.of("tsconfig.json", """
+								""",
+						"tsconfig.json", """
 									{
 									    "files": ["lib.d.ts")
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "@types/mypackage",
 										"version": "0.0.1"
 									}
-								"""))),
-				Pair.of(CFG_NODE_MODULES + "mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("index.js", """
+								"""),
+				CFG_NODE_MODULES + "mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"index.js", """
 									export class MyClassJS {
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "mypackage",
 										"version": "0.0.1",
 										"main": "index.js"
 									}
-								"""))),
-				Pair.of("client", List.of(
-						Pair.of("module", """
+								"""),
+				"client", Map.of(
+						"module", """
 									import { MyClass } from "mypackage/lib"; // complete import
 									MyClass;
-								"""),
-						Pair.of(CFG_DEPENDENCIES, """
+								""",
+						CFG_DEPENDENCIES, """
 									mypackage, @types/mypackage
-								"""))));
+								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
 		startAndWaitForLspServer();
@@ -273,44 +274,44 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 
 	@Test
 	public void testMissingTsconfigFiles() {
-		List<Pair<String, List<Pair<String, String>>>> testData = List.of(
-				Pair.of(CFG_NODE_MODULES + "@types/mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("index.d.ts", """
+		Map<String, Map<String, String>> testData = Map.of(
+				CFG_NODE_MODULES + "@types/mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"index.d.ts", """
 									// empty
-								"""),
-						Pair.of("lib.d.ts", """
+								""",
+						"lib.d.ts", """
 									export class MyClass {
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "@types/mypackage",
 										"main": "index.d.ts",
 										"version": "0.0.1"
 									}
-								"""))),
-				Pair.of(CFG_NODE_MODULES + "mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("index.js", """
+								"""),
+				CFG_NODE_MODULES + "mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"index.js", """
 									export class MyClassJS {
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "mypackage",
 										"version": "0.0.1",
 										"main": "index.js"
 									}
-								"""))),
-				Pair.of("client", List.of(
-						Pair.of("module", """
+								"""),
+				"client", Map.of(
+						"module", """
 									import { MyClass } from "mypackage/lib"; // complete import
 									MyClass;
-								"""),
-						Pair.of(CFG_DEPENDENCIES, """
+								""",
+						CFG_DEPENDENCIES, """
 									mypackage, @types/mypackage
-								"""))));
+								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
 		startAndWaitForLspServer();
@@ -323,46 +324,46 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 
 	@Test
 	public void testSameMainAndTsconfigFiles() {
-		List<Pair<String, List<Pair<String, String>>>> testData = List.of(
-				Pair.of(CFG_NODE_MODULES + "@types/mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("index.d.ts", """
+		Map<String, Map<String, String>> testData = Map.of(
+				CFG_NODE_MODULES + "@types/mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"index.d.ts", """
 									export class MyClass {
 									}
-								"""),
-						Pair.of("tsconfig.json", """
+								""",
+						"tsconfig.json", """
 									{
 									    "files": ["index.d.ts")
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "@types/mypackage",
 										"version": "0.0.1",
 										"main": "index.d.ts"
 									}
-								"""))),
-				Pair.of(CFG_NODE_MODULES + "mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("index.js", """
+								"""),
+				CFG_NODE_MODULES + "mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"index.js", """
 									export class MyClassJS {
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "mypackage",
 										"version": "0.0.1",
 										"main": "index.js"
 									}
-								"""))),
-				Pair.of("client", List.of(
-						Pair.of("module", """
+								"""),
+				"client", Map.of(
+						"module", """
 									import { MyClass } from "mypackage";
 									MyClass;
-								"""),
-						Pair.of(CFG_DEPENDENCIES, """
+								""",
+						CFG_DEPENDENCIES, """
 									mypackage, @types/mypackage
-								"""))));
+								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
 		startAndWaitForLspServer();
@@ -373,45 +374,45 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 
 	@Test
 	public void testIncludeExplicitInTsconfigFiles() {
-		List<Pair<String, List<Pair<String, String>>>> testData = List.of(
-				Pair.of(CFG_NODE_MODULES + "@types/mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("lib.d.ts", """
+		Map<String, Map<String, String>> testData = Map.of(
+				CFG_NODE_MODULES + "@types/mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"lib.d.ts", """
 									export class MyClass {
 									}
-								"""),
-						Pair.of("tsconfig.json", """
+								""",
+						"tsconfig.json", """
 									{
 									    "include": ["lib.d.ts")
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "@types/mypackage",
 										"version": "0.0.1",
 									}
-								"""))),
-				Pair.of(CFG_NODE_MODULES + "mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("index.js", """
+								"""),
+				CFG_NODE_MODULES + "mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"index.js", """
 									export class MyClassJS {
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "mypackage",
 										"version": "0.0.1",
 										"main": "index.js"
 									}
-								"""))),
-				Pair.of("client", List.of(
-						Pair.of("module", """
+								"""),
+				"client", Map.of(
+						"module", """
 									import { MyClass } from "mypackage/lib";
 									MyClass;
-								"""),
-						Pair.of(CFG_DEPENDENCIES, """
+								""",
+						CFG_DEPENDENCIES, """
 									mypackage, @types/mypackage
-								"""))));
+								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
 		startAndWaitForLspServer();
@@ -422,45 +423,45 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 
 	@Test
 	public void testIncludeGlobInTsconfigFiles() {
-		List<Pair<String, List<Pair<String, String>>>> testData = List.of(
-				Pair.of(CFG_NODE_MODULES + "@types/mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("lib.d.ts", """
+		Map<String, Map<String, String>> testData = Map.of(
+				CFG_NODE_MODULES + "@types/mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"lib.d.ts", """
 									export class MyClass {
 									}
-								"""),
-						Pair.of("tsconfig.json", """
+								""",
+						"tsconfig.json", """
 									{
 									    "include": ["*.d.ts")
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "@types/mypackage",
 										"version": "0.0.1",
 									}
-								"""))),
-				Pair.of(CFG_NODE_MODULES + "mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("index.js", """
+								"""),
+				CFG_NODE_MODULES + "mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"index.js", """
 									export class MyClassJS {
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "mypackage",
 										"version": "0.0.1",
 										"main": "index.js"
 									}
-								"""))),
-				Pair.of("client", List.of(
-						Pair.of("module", """
+								"""),
+				"client", Map.of(
+						"module", """
 									import { MyClass } from "mypackage/lib";
 									MyClass;
-								"""),
-						Pair.of(CFG_DEPENDENCIES, """
+								""",
+						CFG_DEPENDENCIES, """
 									mypackage, @types/mypackage
-								"""))));
+								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
 		startAndWaitForLspServer();
@@ -471,46 +472,46 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 
 	@Test
 	public void testExcludeInTsconfigFiles() {
-		List<Pair<String, List<Pair<String, String>>>> testData = List.of(
-				Pair.of(CFG_NODE_MODULES + "@types/mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("lib.d.ts", """
+		Map<String, Map<String, String>> testData = Map.of(
+				CFG_NODE_MODULES + "@types/mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"lib.d.ts", """
 									export class MyClass {
 									}
-								"""),
-						Pair.of("tsconfig.json", """
+								""",
+						"tsconfig.json", """
 									{
 									    "include": ["*.d.ts"],
 									    "exclude": ["lib.d.ts"]
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "@types/mypackage",
 										"version": "0.0.1",
 									}
-								"""))),
-				Pair.of(CFG_NODE_MODULES + "mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("index.js", """
+								"""),
+				CFG_NODE_MODULES + "mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"index.js", """
 									export class MyClassJS {
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "mypackage",
 										"version": "0.0.1",
 										"main": "index.js"
 									}
-								"""))),
-				Pair.of("client", List.of(
-						Pair.of("module", """
+								"""),
+				"client", Map.of(
+						"module", """
 									import { MyClass } from "mypackage/lib";
 									MyClass;
-								"""),
-						Pair.of(CFG_DEPENDENCIES, """
+								""",
+						CFG_DEPENDENCIES, """
 									mypackage, @types/mypackage
-								"""))));
+								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
 		startAndWaitForLspServer();
@@ -523,41 +524,41 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 
 	@Test
 	public void testNonStandardMain() {
-		List<Pair<String, List<Pair<String, String>>>> testData = List.of(
-				Pair.of(CFG_NODE_MODULES + "@types/mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("module.d.ts", """
+		Map<String, Map<String, String>> testData = Map.of(
+				CFG_NODE_MODULES + "@types/mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"module.d.ts", """
 									export class MyClass {
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "@types/mypackage",
 										"version": "0.0.1",
 										"main": "module.d.ts"
 									}
-								"""))),
-				Pair.of(CFG_NODE_MODULES + "mypackage", List.of(
-						Pair.of(CFG_SOURCE_FOLDER, "."),
-						Pair.of("index.js", """
+								"""),
+				CFG_NODE_MODULES + "mypackage", Map.of(
+						CFG_SOURCE_FOLDER, ".",
+						"index.js", """
 									export class MyClassJS {
 									}
-								"""),
-						Pair.of(PACKAGE_JSON, """
+								""",
+						PACKAGE_JSON, """
 									{
 										"name": "mypackage",
 										"version": "0.0.1",
 										"main": "index.js"
 									}
-								"""))),
-				Pair.of("client", List.of(
-						Pair.of("module", """
+								"""),
+				"client", Map.of(
+						"module", """
 									import { MyClass } from "mypackage";
 									MyClass;
-								"""),
-						Pair.of(CFG_DEPENDENCIES, """
+								""",
+						CFG_DEPENDENCIES, """
 									mypackage, @types/mypackage
-								"""))));
+								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
 		startAndWaitForLspServer();

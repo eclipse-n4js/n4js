@@ -12,12 +12,11 @@ package org.eclipse.n4js.ide.dts.tests;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
+import java.util.Map;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
 import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.Test;
 
 /**
@@ -25,12 +24,12 @@ import org.junit.Test;
 @SuppressWarnings("javadoc")
 public class TsConfigCreationTest extends AbstractIdeTest {
 
-	private static List<Pair<String, String>> testData = List.of(
-			Pair.of("SomeModule", """
+	private static Map<String, String> testData = Map.of(
+			"SomeModule", """
 						export public class SomeClass {
 						}
-					"""),
-			Pair.of(PACKAGE_JSON, """
+					""",
+			PACKAGE_JSON, """
 						{
 							"name": "%s",
 							"version": "0.0.1",
@@ -50,7 +49,7 @@ public class TsConfigCreationTest extends AbstractIdeTest {
 								}
 							}
 						}
-					""".formatted(DEFAULT_PROJECT_NAME)));
+					""".formatted(DEFAULT_PROJECT_NAME));
 
 	@Test
 	public void testCreateTSConfigFile() {

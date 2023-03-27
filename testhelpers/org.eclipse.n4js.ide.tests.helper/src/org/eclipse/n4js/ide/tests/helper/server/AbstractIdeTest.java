@@ -1378,6 +1378,14 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/**
+	 * Same as {@link #assertIssues(Map)}, accepting pairs from module name to issue list instead of a map from file URI
+	 * to issue list.
+	 */
+	protected final void assertIssues(Iterable<Pair<String, List<String>>> moduleNameToExpectedIssues) {
+		assertIssues(convertModuleNamePairsToIdMap(moduleNameToExpectedIssues));
+	}
+
+	/**
 	 * Same as {@link #assertIssues(Map, boolean)}, but with <code>withIgnoredIssues</code> always set to
 	 * <code>false</code>.
 	 */
@@ -1607,6 +1615,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	@SafeVarargs
 	private <T> Map<FileURI, T> convertModuleNamePairsToIdMap(Pair<String, T>... moduleNameToExpectedIssues) {
 		return Stream.of(moduleNameToExpectedIssues).collect(Collectors.toMap(
+				p -> getFileURIFromModuleName(p.getKey()), Pair::getValue));
+	}
+
+	private <T> Map<FileURI, T> convertModuleNamePairsToIdMap(Iterable<Pair<String, T>> moduleNameToExpectedIssues) {
+		return IterableExtensions.toList(moduleNameToExpectedIssues).stream().collect(Collectors.toMap(
 				p -> getFileURIFromModuleName(p.getKey()), Pair::getValue));
 	}
 
