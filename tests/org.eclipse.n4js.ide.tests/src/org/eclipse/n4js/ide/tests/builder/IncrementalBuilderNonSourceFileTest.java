@@ -8,28 +8,33 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests.builder
+package org.eclipse.n4js.ide.tests.builder;
 
-import java.io.File
-import org.junit.Test
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.n4js.workspace.locations.FileURI;
+import org.eclipse.xtext.xbase.lib.Pair;
+import org.junit.Test;
 
 /**
  * Test how the builder handles N4JS files that are NOT contained in a source folder.
  */
-class IncrementalBuilderNonSourceFileTest extends AbstractIncrementalBuilderTest {
+@SuppressWarnings("javadoc")
+public class IncrementalBuilderNonSourceFileTest extends AbstractIncrementalBuilderTest {
 
 	@Test
-	def void testValidationOfNonSourceFile() {
-		testWorkspaceManager.createTestProjectOnDisk(
-			"A" -> '''
-				console.log('hello');
-			'''
-		);
-		val projectRoot = getProjectRoot();
-		val nonSourceModule = new File(projectRoot, "NonSourceModule.n4js").toFileURI;
-		createFileOnDiskWithoutNotification(nonSourceModule, '''
-			let bad: string = 42; // error intended
-		''');
+	public void testValidationOfNonSourceFile() {
+		testWorkspaceManager.createTestProjectOnDisk(Map.of(
+				"A", """
+							console.log('hello');
+						"""));
+		File projectRoot = getProjectRoot();
+		FileURI nonSourceModule = toFileURI(new File(projectRoot, "NonSourceModule.n4js"));
+		createFileOnDiskWithoutNotification(nonSourceModule, """
+					let bad: string = 42; // error intended
+				""");
 
 		startAndWaitForLspServer();
 		assertNoIssues(); // initial build must not show issues in non-source files
@@ -41,10 +46,8 @@ class IncrementalBuilderNonSourceFileTest extends AbstractIncrementalBuilderTest
 		openFile(nonSourceModule);
 		joinServerRequests();
 		assertIssues2( // but an open editor shows issues even in non-source files
-			"NonSourceModule" -> #[
-				"(Error, [0:18 - 0:20], 42 is not a subtype of string.)"
-			]
-		);
+				Pair.of("NonSourceModule", List.of(
+						"(Error, [0:19 - 0:21], 42 is not a subtype of string.)")));
 
 		closeFile(nonSourceModule);
 		joinServerRequests();

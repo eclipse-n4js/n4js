@@ -8,80 +8,85 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests.builder
+package org.eclipse.n4js.ide.tests.builder;
 
-import org.junit.Test
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import static org.junit.Assert.*
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.n4js.workspace.locations.FileURI;
+import org.eclipse.xtext.xbase.lib.Pair;
+import org.junit.Test;
 
 /**
  * Tests generation of build artifacts (i.e. output files and <code>.n4js.projectstate</code> files).
  */
-class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
+@SuppressWarnings("javadoc")
+public class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 
-	private static val testDataWithDependency = #[
-		"Other" -> '''
-			export public class C {}
-		''',
-		"Main" -> '''
-			import {C} from "Other";
-			new C();
-		'''
-	];
+	private static Map<String, String> testDataWithDependency = Map.of(
+			"Other", """
+						export public class C {}
+					""",
+			"Main", """
+						import {C} from "Other";
+						new C();
+					""");
 
-	private static val testDataWithNodeModules = #[
-		CFG_NODE_MODULES + "OtherProject" + CFG_SRC + "Other" -> '''
-			export public class Other {
-				public m(): number { return undefined; }
-			}
-		''',
-		"Main" -> '''
-			import {Other} from "Other";
-			let n: number = new Other().m();
-		'''
-	];
+	private static Map<String, String> testDataWithNodeModules = Map.of(
+			CFG_NODE_MODULES + "OtherProject" + CFG_SRC + "Other", """
+						export public class Other {
+							public m(): number { return undefined; }
+						}
+					""",
+			"Main", """
+						import {Other} from "Other";
+						let n: number = new Other().m();
+					""");
 
 	@Test
-	def void testChangeInNonOpenedFile_whileWorkspaceIsInCleanState() {
-		testWorkspaceManager.createTestProjectOnDisk(
-			"C" -> '''export public class C {}'''
-		);
+	public void testChangeInNonOpenedFile_whileWorkspaceIsInCleanState() {
+		testWorkspaceManager.createTestProjectOnDisk(Map.of(
+				"C", "export public class C {}"));
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		val outputFileSnapshot = createSnapshotForOutputFile("C");
-		val projectStateSnapshot = createSnapshotForProjectStateFile();
+		FileSnapshot outputFileSnapshot = createSnapshotForOutputFile("C");
+		FileSnapshot projectStateSnapshot = createSnapshotForProjectStateFile();
 
 		// the event under test:
-		changeNonOpenedFile("C", ' C ' -> ' C1 ');
+		changeNonOpenedFile("C", Pair.of(" C ", " C1 "));
 		joinServerRequests();
 
-		outputFileSnapshot.assertChanged(); // change on disk occurred while workspace was in clean state, so re-generated immediately!
+		outputFileSnapshot.assertChanged(); // change on disk occurred while workspace was in clean state, so
+											// re-generated immediately!
 		projectStateSnapshot.assertChanged();
 	}
 
 	@Test
-	def void testChangeInNonOpenedFile_whileWorkspaceIsInDirtyState() {
-		testWorkspaceManager.createTestProjectOnDisk(
-			"C" -> '''export public class C {}''',
-			"D" -> '''export public class D {}'''
-		);
+	public void testChangeInNonOpenedFile_whileWorkspaceIsInDirtyState() {
+		testWorkspaceManager.createTestProjectOnDisk(Map.of(
+				"C", "export public class C {}",
+				"D", "export public class D {}"));
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		val outputFileSnapshot = createSnapshotForOutputFile("C");
-		val projectStateSnapshot = createSnapshotForProjectStateFile();
+		FileSnapshot outputFileSnapshot = createSnapshotForOutputFile("C");
+		FileSnapshot projectStateSnapshot = createSnapshotForProjectStateFile();
 
 		// put workspace into dirty state
 		openFile("D");
-		changeOpenedFile("D", ' D ' -> ' D1 ');
+		changeOpenedFile("D", Pair.of(" D ", " D1 "));
 		joinServerRequests();
 
 		outputFileSnapshot.assertUnchanged();
 		projectStateSnapshot.assertUnchanged();
 
 		// the event under test:
-		changeNonOpenedFile("C", ' C ' -> ' C1 ');
+		changeNonOpenedFile("C", Pair.of(" C ", " C1 "));
 		joinServerRequests();
 
 		outputFileSnapshot.assertChanged(); // even though workspace is in dirty state, C must already be regenerated
@@ -96,19 +101,18 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 	}
 
 	@Test
-	def void testChangeInOpenedFile() {
-		testWorkspaceManager.createTestProjectOnDisk(
-			"C" -> '''export public class C {}'''
-		);
+	public void testChangeInOpenedFile() {
+		testWorkspaceManager.createTestProjectOnDisk(Map.of(
+				"C", "export public class C {}"));
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		val outputFileSnapshot = createSnapshotForOutputFile("C");
-		val projectStateSnapshot = createSnapshotForProjectStateFile();
+		FileSnapshot outputFileSnapshot = createSnapshotForOutputFile("C");
+		FileSnapshot projectStateSnapshot = createSnapshotForProjectStateFile();
 
 		openFile("C");
 		joinServerRequests();
-		changeOpenedFile("C", ' C ' -> ' C1 ');
+		changeOpenedFile("C", Pair.of(" C ", " C1 "));
 		joinServerRequests();
 
 		outputFileSnapshot.assertUnchanged(); // still in dirty state, so nothing re-generated yet!
@@ -122,41 +126,40 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 	}
 
 	/**
-	 * Given two modules Main, Other with a dependency from Main to Other, this test asserts that a change in Other
-	 * that has an effect on Main's output code will appear in Main's output file the moment Other is saved (assuming
-	 * Other is the only file being open).
+	 * Given two modules Main, Other with a dependency from Main to Other, this test asserts that a change in Other that
+	 * has an effect on Main's output code will appear in Main's output file the moment Other is saved (assuming Other
+	 * is the only file being open).
 	 */
 	@Test
-	def void testChangeInOpenedFile_propagatesToOutputFileOfDependentModuleWhenSaved() {
-		testWorkspaceManager.createTestProjectOnDisk(
-			"Other" -> '''
-				// @StringBased
-				export public enum Color { RED, BLUE }
-			''',
-			"Main" -> '''
-				import {Color} from "Other";
-				let c = Color.RED;
-			'''
-		);
+	public void testChangeInOpenedFile_propagatesToOutputFileOfDependentModuleWhenSaved() {
+		testWorkspaceManager.createTestProjectOnDisk(Map.of(
+				"Other", """
+							// @StringBased
+							export public enum Color { RED, BLUE }
+						""",
+				"Main", """
+							import {Color} from "Other";
+							let c = Color.RED;
+						"""));
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		val mainOutputFileURI = getOutputFile("Main").toFileURI;
+		FileURI mainOutputFileURI = toFileURI(getOutputFile("Main"));
 
-		val otherOutputFileSnapshot = createSnapshotForOutputFile("Other");
-		val mainOutputFileSnapshot = createSnapshotForOutputFile("Main");
-		val projectStateSnapshot = createSnapshotForProjectStateFile();
+		FileSnapshot otherOutputFileSnapshot = createSnapshotForOutputFile("Other");
+		FileSnapshot mainOutputFileSnapshot = createSnapshotForOutputFile("Main");
+		FileSnapshot projectStateSnapshot = createSnapshotForProjectStateFile();
 
-		assertContentOfFileOnDisk(mainOutputFileURI, '''
-			[...]
-			let c = Color.RED;
-			[...]
-		''');
+		assertContentOfFileOnDisk(mainOutputFileURI, """
+					[...]
+					let c = Color.RED;
+					[...]
+				""");
 
 		openFile("Other");
 		joinServerRequests();
 
-		changeOpenedFile("Other", '// @StringBased' -> '@StringBased');
+		changeOpenedFile("Other", Pair.of("// @StringBased", "@StringBased"));
 		joinServerRequests();
 
 		assertNoIssues();
@@ -175,32 +178,31 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		projectStateSnapshot.assertChanged();
 
 		// ... and the enum literal should be represented as a plain string literal:
-		assertContentOfFileOnDisk(mainOutputFileURI, '''
-			[...]
-			let c = 'RED';
-			[...]
-		''');
+		assertContentOfFileOnDisk(mainOutputFileURI, """
+					[...]
+					let c = 'RED';
+					[...]
+				""");
 	}
 
 	@Test
-	def void testChangesInSeveralOpenedFiles_withoutDependency() {
-		testWorkspaceManager.createTestProjectOnDisk(
-			"C" -> '''export public class C {}''',
-			"D" -> '''export public class D {}'''
-		);
+	public void testChangesInSeveralOpenedFiles_withoutDependency() {
+		testWorkspaceManager.createTestProjectOnDisk(Map.of(
+				"C", "export public class C {}",
+				"D", "export public class D {}"));
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		val cOutputFileSnapshot = createSnapshotForOutputFile("C");
-		val dOutputFileSnapshot = createSnapshotForOutputFile("D");
-		val projectStateSnapshot = createSnapshotForProjectStateFile();
+		FileSnapshot cOutputFileSnapshot = createSnapshotForOutputFile("C");
+		FileSnapshot dOutputFileSnapshot = createSnapshotForOutputFile("D");
+		FileSnapshot projectStateSnapshot = createSnapshotForProjectStateFile();
 
 		openFile("C");
 		openFile("D");
 		joinServerRequests();
 
-		changeOpenedFile("C", 'C' -> 'C1');
-		changeOpenedFile("D", 'D' -> 'D1');
+		changeOpenedFile("C", Pair.of("C", "C1"));
+		changeOpenedFile("D", Pair.of("D", "D1"));
 		joinServerRequests();
 
 		assertNoIssues();
@@ -228,24 +230,23 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 	}
 
 	@Test
-	def void testChangesInSeveralOpenedFiles_withoutDependency_closeChangedFile() {
-		testWorkspaceManager.createTestProjectOnDisk(
-			"C" -> '''export public class C {}''',
-			"D" -> '''export public class D {}'''
-		);
+	public void testChangesInSeveralOpenedFiles_withoutDependency_closeChangedFile() {
+		testWorkspaceManager.createTestProjectOnDisk(Map.of(
+				"C", "export public class C {}",
+				"D", "export public class D {}"));
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		val cOutputFileSnapshot = createSnapshotForOutputFile("C");
-		val dOutputFileSnapshot = createSnapshotForOutputFile("D");
-		val projectStateSnapshot = createSnapshotForProjectStateFile();
+		FileSnapshot cOutputFileSnapshot = createSnapshotForOutputFile("C");
+		FileSnapshot dOutputFileSnapshot = createSnapshotForOutputFile("D");
+		FileSnapshot projectStateSnapshot = createSnapshotForProjectStateFile();
 
 		openFile("C");
 		openFile("D");
 		joinServerRequests();
 
-		changeOpenedFile("C", 'C' -> 'C1');
-		changeOpenedFile("D", 'D' -> 'D1');
+		changeOpenedFile("C", Pair.of("C", "C1"));
+		changeOpenedFile("D", Pair.of("D", "D1"));
 		joinServerRequests();
 
 		assertNoIssues();
@@ -275,24 +276,23 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 	}
 
 	@Test
-	def void testChangesInSeveralOpenedFiles_withDependency() {
+	public void testChangesInSeveralOpenedFiles_withDependency() {
 		testWorkspaceManager.createTestProjectOnDisk(testDataWithDependency);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		val otherOutputFileSnapshot = createSnapshotForOutputFile("Other");
-		val mainOutputFileSnapshot = createSnapshotForOutputFile("Main");
-		val projectStateSnapshot = createSnapshotForProjectStateFile();
+		FileSnapshot otherOutputFileSnapshot = createSnapshotForOutputFile("Other");
+		FileSnapshot mainOutputFileSnapshot = createSnapshotForOutputFile("Main");
+		FileSnapshot projectStateSnapshot = createSnapshotForProjectStateFile();
 
 		openFile("Other");
 		openFile("Main");
 		joinServerRequests();
 
-		changeOpenedFile("Other", 'C' -> 'C1');
+		changeOpenedFile("Other", Pair.of("C", "C1"));
 		changeOpenedFile("Main",
-			'{C}' -> '{C1}',
-			'new C(' -> 'new C1('
-		);
+				Pair.of("{C}", "{C1}"),
+				Pair.of("new C(", "new C1("));
 		joinServerRequests();
 
 		assertNoIssues();
@@ -305,7 +305,8 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 
 		// even though only one of the two changed files is saved,
 		// output artifacts should already be re-generated:
-		assertNoIssues(); // Main has an error on disk, but it is hidden by the open editor for Main using Other's dirty state!
+		assertNoIssues(); // Main has an error on disk, but it is hidden by the open editor for Main using Other's dirty
+							// state!
 		otherOutputFileSnapshot.assertUnchanged();
 		mainOutputFileSnapshot.assertNotExists(); // deleted, because it now has an error on disk
 		projectStateSnapshot.assertChanged();
@@ -320,24 +321,23 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 	}
 
 	@Test
-	def void testChangesInSeveralOpenedFiles_withDependency_reverseSaveOrder() {
+	public void testChangesInSeveralOpenedFiles_withDependency_reverseSaveOrder() {
 		testWorkspaceManager.createTestProjectOnDisk(testDataWithDependency);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		val otherOutputFileSnapshot = createSnapshotForOutputFile("Other");
-		val mainOutputFileSnapshot = createSnapshotForOutputFile("Main");
-		val projectStateSnapshot = createSnapshotForProjectStateFile();
+		FileSnapshot otherOutputFileSnapshot = createSnapshotForOutputFile("Other");
+		FileSnapshot mainOutputFileSnapshot = createSnapshotForOutputFile("Main");
+		FileSnapshot projectStateSnapshot = createSnapshotForProjectStateFile();
 
 		openFile("Other");
 		openFile("Main");
 		joinServerRequests();
 
-		changeOpenedFile("Other", 'C' -> 'C1');
+		changeOpenedFile("Other", Pair.of("C", "C1"));
 		changeOpenedFile("Main",
-			'{C}' -> '{C1}',
-			'new C(' -> 'new C1('
-		);
+				Pair.of("{C}", "{C1}"),
+				Pair.of("new C(", "new C1("));
 		joinServerRequests();
 
 		assertNoIssues();
@@ -350,7 +350,8 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 
 		// even though only one of the two changed files is saved,
 		// output artifacts should already be re-generated:
-		assertNoIssues(); // Main has an error on disk, but it is hidden by the open editor for Main using Other's dirty state!
+		assertNoIssues(); // Main has an error on disk, but it is hidden by the open editor for Main using Other's dirty
+							// state!
 		otherOutputFileSnapshot.assertChanged();
 		mainOutputFileSnapshot.assertNotExists(); // deleted, because it now has an error on disk
 		projectStateSnapshot.assertChanged();
@@ -365,124 +366,125 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 	}
 
 	@Test
-	def void testInNodeModules_noValidation() {
+	public void testInNodeModules_noValidation() {
 		testWorkspaceManager.createTestProjectOnDisk(testDataWithNodeModules);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		changeNonOpenedFile("Other", 'undefined' -> '"not a number"'); // provoke 1 error in "Other"
+		changeNonOpenedFile("Other", Pair.of("undefined", "\"not a number\"")); // provoke 1 error in "Other"
 		joinServerRequests();
-		
+
 		cleanBuildAndWait();
 		assertNoIssues(); // no validation in node_modules folders
 	}
 
 	@Test
-	def void testInNodeModules_changeInNonOpenedFile() {
+	public void testInNodeModules_changeInNonOpenedFile() {
 		testWorkspaceManager.createTestProjectOnDisk(testDataWithNodeModules);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		val outputFile = getOutputFile("OtherProject", "Other");
+		File outputFile = getOutputFile("OtherProject", "Other");
 		assertFalse(outputFile.exists());
 
-		val projectStateSnapshot = createSnapshotForProjectStateFile("OtherProject");
+		FileSnapshot projectStateSnapshot = createSnapshotForProjectStateFile("OtherProject");
 
-		changeNonOpenedFile("Other", ': number {' -> ': any {');
+		changeNonOpenedFile("Other", Pair.of(": number {", ": any {"));
 		joinServerRequests();
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertChanged();
-		assertIssues2("Main" -> #[ "(Error, [1:16 - 1:31], any is not a subtype of number.)" ]);
+		assertIssues2(Pair.of("Main", List.of("(Error, [1:17 - 1:32], any is not a subtype of number.)")));
 
-		projectStateSnapshot.file.delete();
+		projectStateSnapshot.getFile().delete();
 
-		changeNonOpenedFile("Other", ': any {' -> ': string {');
+		changeNonOpenedFile("Other", Pair.of(": any {", ": string {"));
 		joinServerRequests();
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertExists(); // recreated
-		assertIssues2("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]);
+		assertIssues2(Pair.of("Main", List.of("(Error, [1:17 - 1:32], string is not a subtype of number.)")));
 
 		cleanBuildAndWait();
 		assertFalse(outputFile.exists());
 		projectStateSnapshot.assertExists();
-		assertIssues2("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]);
+		assertIssues2(Pair.of("Main", List.of("(Error, [1:17 - 1:32], string is not a subtype of number.)")));
 	}
 
 	@Test
-	def void testInNodeModules_changeInOpenedFile() {
+	public void testInNodeModules_changeInOpenedFile() {
 		testWorkspaceManager.createTestProjectOnDisk(testDataWithNodeModules);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		val outputFile = getOutputFile("OtherProject", "Other");
+		File outputFile = getOutputFile("OtherProject", "Other");
 		assertFalse(outputFile.exists());
 
-		val projectStateSnapshot = createSnapshotForProjectStateFile("OtherProject");
+		FileSnapshot projectStateSnapshot = createSnapshotForProjectStateFile("OtherProject");
 
 		openFile("Other");
-		changeOpenedFile("Other", ': number {' -> ': any {');
+		changeOpenedFile("Other", Pair.of(": number {", ": any {"));
 		joinServerRequests();
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertUnchanged(); // not updated, because Other.n4js not saved yet
-		assertIssues2("Main" -> #[]); // not updated, because Other.n4js not saved yet
+		assertIssues2(Pair.of("Main", List.of())); // not updated, because Other.n4js not saved yet
 
 		saveOpenedFile("Other");
 		joinServerRequests();
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertChanged();
-		assertIssues2("Main" -> #[ "(Error, [1:16 - 1:31], any is not a subtype of number.)" ]);
+		assertIssues2(Pair.of("Main", List.of("(Error, [1:17 - 1:32], any is not a subtype of number.)")));
 
-		projectStateSnapshot.file.delete();
+		projectStateSnapshot.getFile().delete();
 
-		changeOpenedFile("Other", ': any {' -> ': string {');
+		changeOpenedFile("Other", Pair.of(": any {", ": string {"));
 		joinServerRequests();
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertNotExists(); // not recreated, because Other.n4js not saved yet
-		assertIssues2("Main" -> #[ "(Error, [1:16 - 1:31], any is not a subtype of number.)" ]); // not updated, because Other.n4js not saved yet
+		// not updated, because Other.n4js not saved yet
+		assertIssues2(Pair.of("Main", List.of("(Error, [1:17 - 1:32], any is not a subtype of number.)")));
 
 		saveOpenedFile("Other");
 		joinServerRequests();
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertExists(); // recreated
-		assertIssues2("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]); // updated
+		assertIssues2(Pair.of("Main", List.of("(Error, [1:17 - 1:32], string is not a subtype of number.)"))); // updated
 	}
 
 	@Test
-	def void testCleanAndRebuild() {
+	public void testCleanAndRebuild() {
 		testWorkspaceManager.createTestProjectOnDisk(testDataWithNodeModules);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		val outputFileInNodeModules = getOutputFile("OtherProject", "Other");
-		val outputFileInOrdinaryProject = getOutputFile("Main");
-		val projectStateInNodeModules = getProjectStateFile("OtherProject");
-		val projectStateInOrdinaryProject = getProjectStateFile();
+		File outputFileInNodeModules = getOutputFile("OtherProject", "Other");
+		File outputFileInOrdinaryProject = getOutputFile("Main");
+		File projectStateInNodeModules = getProjectStateFile("OtherProject");
+		File projectStateInOrdinaryProject = getProjectStateFile();
 
-		assertFalse(outputFileInNodeModules.exists);
-		assertTrue(outputFileInOrdinaryProject.exists);
-		assertTrue(projectStateInNodeModules.exists);
-		assertTrue(projectStateInOrdinaryProject.exists);
+		assertFalse(outputFileInNodeModules.exists());
+		assertTrue(outputFileInOrdinaryProject.exists());
+		assertTrue(projectStateInNodeModules.exists());
+		assertTrue(projectStateInOrdinaryProject.exists());
 
 		languageServer.getFrontend().clean();
 		joinServerRequests();
 
-		assertFalse(outputFileInNodeModules.exists);
-		assertFalse(outputFileInOrdinaryProject.exists);
-		assertFalse(projectStateInNodeModules.exists);
-		assertFalse(projectStateInOrdinaryProject.exists);
+		assertFalse(outputFileInNodeModules.exists());
+		assertFalse(outputFileInOrdinaryProject.exists());
+		assertFalse(projectStateInNodeModules.exists());
+		assertFalse(projectStateInOrdinaryProject.exists());
 
 		languageServer.getFrontend().reinitWorkspace();
 		joinServerRequests();
 
-		assertFalse(outputFileInNodeModules.exists);
-		assertTrue(outputFileInOrdinaryProject.exists);
-		assertTrue(projectStateInNodeModules.exists);
-		assertTrue(projectStateInOrdinaryProject.exists);
+		assertFalse(outputFileInNodeModules.exists());
+		assertTrue(outputFileInOrdinaryProject.exists());
+		assertTrue(projectStateInNodeModules.exists());
+		assertTrue(projectStateInOrdinaryProject.exists());
 	}
 }
