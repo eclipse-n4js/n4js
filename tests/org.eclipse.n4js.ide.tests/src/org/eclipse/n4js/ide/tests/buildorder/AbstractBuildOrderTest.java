@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,6 +44,10 @@ abstract class AbstractBuildOrderTest extends AbstractIdeTest {
 		test(buildOrder, Collections.emptyList(), projectsModulesContents);
 	}
 
+	final void test(String buildOrder, Map<String, Map<String, String>> projectsModulesContents) {
+		test(buildOrder, Collections.emptyList(), projectsModulesContents);
+	}
+
 	/**
 	 * @param buildOrder
 	 *            string of project names ordered in build order
@@ -51,6 +56,11 @@ abstract class AbstractBuildOrderTest extends AbstractIdeTest {
 	 */
 	@SafeVarargs
 	final void testProject(String buildOrder, Pair<String, ? extends CharSequence>... projectsModulesContents) {
+		initProject(projectsModulesContents);
+		assertBuildOrder(buildOrder, Collections.emptyList());
+	}
+
+	final void testProject(String buildOrder, Map<String, String> projectsModulesContents) {
 		initProject(projectsModulesContents);
 		assertBuildOrder(buildOrder, Collections.emptyList());
 	}
@@ -67,7 +77,13 @@ abstract class AbstractBuildOrderTest extends AbstractIdeTest {
 
 		init(projectsModulesContents);
 		assertBuildOrder(buildOrder, cycles);
+	}
 
+	final void test(String buildOrder, Collection<Collection<String>> cycles,
+			Map<String, Map<String, String>> projectsModulesContents) {
+
+		init(projectsModulesContents);
+		assertBuildOrder(buildOrder, cycles);
 	}
 
 	@SafeVarargs
@@ -76,8 +92,18 @@ abstract class AbstractBuildOrderTest extends AbstractIdeTest {
 		startAndWaitForLspServer();
 	}
 
+	final void init(Map<String, Map<String, String>> projectsModulesContents) {
+		testWorkspaceManager.createTestOnDisk(projectsModulesContents);
+		startAndWaitForLspServer();
+	}
+
 	@SafeVarargs
 	final void initProject(Pair<String, ? extends CharSequence>... projectsModulesContents) {
+		testWorkspaceManager.createTestProjectOnDisk(projectsModulesContents);
+		startAndWaitForLspServer();
+	}
+
+	final void initProject(Map<String, String> projectsModulesContents) {
 		testWorkspaceManager.createTestProjectOnDisk(projectsModulesContents);
 		startAndWaitForLspServer();
 	}
