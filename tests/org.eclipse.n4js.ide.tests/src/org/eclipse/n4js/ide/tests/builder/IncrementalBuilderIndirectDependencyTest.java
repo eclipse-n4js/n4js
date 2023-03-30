@@ -26,26 +26,26 @@ public class IncrementalBuilderIndirectDependencyTest extends AbstractIncrementa
 	public void testIndirectDependencyThroughInheritance() {
 		testWorkspaceManager.createTestProjectOnDisk(Map.of(
 				"A", """
-							export public class A {
-							    public m() {}
-							}
+						export public class A {
+						    public m() {}
+						}
 						""",
 				"B", """
-							import {A} from "A"
-							export public class B extends A {}
+						import {A} from "A"
+						export public class B extends A {}
 						""",
 				"Main", """
-							import {B} from "B"
-							new B().m();
+						import {B} from "B"
+						new B().m();
 						"""));
 		startAndWaitForLspServer();
 		cleanBuildAndWait();
 		openFile("A");
 
 		changeOpenedFile("A", """
-					//export public class A {
-					//    public m() {}
-					//}
+				//export public class A {
+				//    public m() {}
+				//}
 				""");
 		saveOpenedFile("A");
 		joinServerRequests();
@@ -58,9 +58,9 @@ public class IncrementalBuilderIndirectDependencyTest extends AbstractIncrementa
 						"(Error, [1:8 - 1:9], Couldn't resolve reference to IdentifiableElement 'm'.)")));
 
 		changeOpenedFile("A", """
-					export public class A {
-					    public m() {}
-					}
+				export public class A {
+				    public m() {}
+				}
 				""");
 		saveOpenedFile("A");
 		joinServerRequests();
@@ -71,15 +71,15 @@ public class IncrementalBuilderIndirectDependencyTest extends AbstractIncrementa
 	public void testIndirectDependencyThroughInferredTypeOfExportedVariable_Part1() {
 		testWorkspaceManager.createTestProjectOnDisk(Map.of(
 				"A", """
-							export public var a: string;
+						export public var a: string;
 						""",
 				"B", """
-							import {a} from "A"
-							export public var b = a;
+						import {a} from "A"
+						export public var b = a;
 						""",
 				"Main", """
-							import {b} from "B"
-							b.length;
+						import {b} from "B"
+						b.length;
 						"""));
 		startAndWaitForLspServer();
 		cleanBuildAndWait();
@@ -99,15 +99,15 @@ public class IncrementalBuilderIndirectDependencyTest extends AbstractIncrementa
 	public void testIndirectDependencyThroughInferredTypeOfExportedVariable_Part2() {
 		testWorkspaceManager.createTestProjectOnDisk(Map.of(
 				"A", """
-							export public var a: string;
+						export public var a: string;
 						""",
 				"B", """
-							import {a} from "A"
-							export public var b = a;
+						import {a} from "A"
+						export public var b = a;
 						""",
 				"Main", """
-							import {b} from "B"
-							b.length;
+						import {b} from "B"
+						b.length;
 						"""));
 		startAndWaitForLspServer();
 		cleanBuildAndWait();

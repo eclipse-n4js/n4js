@@ -34,36 +34,36 @@ public class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTes
 	private static Map<String, Map<String, String>> testData1 = Map.of(
 			"P1", Map.of(
 					"M1", """
-								export public class C1 {
-								}
+							export public class C1 {
+							}
 							"""),
 			"P2", Map.of(
 					"M2", """
-								import {C1} from "M1";
-								const x: C1 = null;
-								x;
+							import {C1} from "M1";
+							const x: C1 = null;
+							x;
 							""",
 					CFG_DEPENDENCIES, """
-								P1
+							P1
 							"""));
 
 	private static Map<String, Map<String, String>> testData2 = Map.of(
 			"P1", Map.of(
 					"M1", """
-								export public class C1 {
-								}
+							export public class C1 {
+							}
 							""",
 					CFG_DEPENDENCIES, """
-								P2
+							P2
 							"""),
 			"P2", Map.of(
 					"M2", """
-								import {C1} from "M1";
-								const x: C1 = null;
-								x;
+							import {C1} from "M1";
+							const x: C1 = null;
+							x;
 							""",
 					CFG_DEPENDENCIES, """
-								P1
+							P1
 							"""));
 
 	private static Path temporaryFolder;
