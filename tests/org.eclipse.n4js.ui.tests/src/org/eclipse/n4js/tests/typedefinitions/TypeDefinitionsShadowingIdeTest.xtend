@@ -52,7 +52,7 @@ public class TypeDefinitionsShadowingIdeTest extends ConvertedIdeTest {
 		importProband(new File(new File(PROBANDS, PROBANDS_SUBFOLDER), NEGATIVE_FIXTURE_FOLDER),
 			List.of(N4JSGlobals.N4JS_RUNTIME));
 		cleanBuildAndWait();
-		assertIssues(
+		assertIssues2(
 			"Client" -> #[
 				"(Error, [1:8 - 1:9], Import of A cannot be resolved.)",
 				"(Error, [5:14 - 5:15], Couldn't resolve reference to IdentifiableElement 'A'.)"

@@ -122,6 +122,35 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 
 	/** Call this method in a single-project, multi-file test. */
 	protected void testAtCursors(
+			Map<String, String> modulesSourcesBefore,
+			String newName,
+			Map<String, String> modulesExpectedSourcesAfter) {
+
+		testAtCursors(modulesSourcesBefore, newName, modulesExpectedSourcesAfter, null);
+	}
+
+	/** Call this method in a single-project, multi-file test. */
+	protected void testAtCursors(
+			Map<String, String> modulesSourcesBefore,
+			String newName,
+			Map<String, String> modulesExpectedSourcesAfter,
+			Pair<String, List<String>>[] expectedIssues) {
+
+		List<Pair<String, String>> modulesSourcesBeforePairList = new ArrayList<>();
+		List<Pair<String, String>> modulesExpectedSourcesAfterPairList = new ArrayList<>();
+
+		for (Map.Entry<String, String> e : modulesSourcesBefore.entrySet()) {
+			modulesSourcesBeforePairList.add(Pair.of(e.getKey(), e.getValue()));
+		}
+		for (Map.Entry<String, String> e : modulesExpectedSourcesAfter.entrySet()) {
+			modulesExpectedSourcesAfterPairList.add(Pair.of(e.getKey(), e.getValue()));
+		}
+
+		testAtCursors(modulesSourcesBeforePairList, newName, modulesExpectedSourcesAfterPairList, expectedIssues);
+	}
+
+	/** Call this method in a single-project, multi-file test. */
+	protected void testAtCursors(
 			Iterable<Pair<String, String>> modulesSourcesBefore,
 			String newName,
 			Iterable<Pair<String, String>> modulesExpectedSourcesAfter,
@@ -189,7 +218,7 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 		if (config.expectedIssues == null) {
 			assertNoIssues();
 		} else {
-			assertIssues(config.expectedIssues);
+			assertIssues2(config.expectedIssues);
 		}
 
 		for (RenamePosition pos : config.positions) {

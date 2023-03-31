@@ -73,7 +73,7 @@ class ContentAssistBugGH2204IdeTest extends AbstractIdeTest {
 			]
 		);
 		startAndWaitForLspServer();
-		assertIssues(#[
+		assertIssues2(#[
 			"N4jsModule" -> #[
 				"(Error, [2:2 - 2:3], Couldn't resolve reference to IdentifiableElement 's'.)"
 			]

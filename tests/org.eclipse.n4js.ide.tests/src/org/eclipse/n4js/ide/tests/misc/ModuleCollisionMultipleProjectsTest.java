@@ -42,7 +42,7 @@ public class ModuleCollisionMultipleProjectsTest extends AbstractIdeTest {
 
 						CFG_DEPENDENCIES, "P1, P2")));
 
-		assertIssues(
+		assertIssues2(
 				Pair.of("Client.n4js", List.of(
 						"(Error, [0:19 - 0:29], Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: yarn-test-project/packages/P1/src/MyModule.n4js, yarn-test-project/packages/P2/src/MyModule.n4js.)")));
 	}
@@ -67,7 +67,7 @@ public class ModuleCollisionMultipleProjectsTest extends AbstractIdeTest {
 
 						CFG_DEPENDENCIES, "P1, P2")));
 
-		assertIssues(
+		assertIssues2(
 				Pair.of("Client.n4js", List.of(
 						"(Error, [0:19 - 0:29], Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: yarn-test-project/packages/P1/src/MyModule.n4js, yarn-test-project/packages/P2/src/MyModule.n4jsd.)")));
 	}
@@ -92,7 +92,7 @@ public class ModuleCollisionMultipleProjectsTest extends AbstractIdeTest {
 
 						CFG_DEPENDENCIES, "P1, P2")));
 
-		assertIssues(
+		assertIssues2(
 				Pair.of("Client.n4js", List.of(
 						"(Error, [0:19 - 0:29], Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: yarn-test-project/packages/P1/src/MyModule.n4js, yarn-test-project/packages/P2/src/MyModule.n4jsx.)")));
 	}
@@ -113,7 +113,7 @@ public class ModuleCollisionMultipleProjectsTest extends AbstractIdeTest {
 
 						CFG_DEPENDENCIES, "P1, P2")));
 
-		assertIssues(
+		assertIssues2(
 				Pair.of("Client.n4js", List.of(
 						"(Error, [0:19 - 0:29], Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: yarn-test-project/packages/P1/src/MyModule.js, yarn-test-project/packages/P2/src/MyModule.n4jsd.)")));
 	}

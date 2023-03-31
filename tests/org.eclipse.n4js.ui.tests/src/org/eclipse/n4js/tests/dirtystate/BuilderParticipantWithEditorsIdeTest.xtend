@@ -145,7 +145,7 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 		deleteNonOpenedFile("Parent");
 		joinServerRequests();
 		// Editor of child should have error markers
-		assertIssues(
+		assertIssues2(
 			"Child" -> #[
 				"(Error, [0:46 - 0:66], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:34 - 1:53], Couldn't resolve reference to Type 'ParentObjectLiteral'.)",
@@ -187,7 +187,7 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 		assertNoIssues();
 
 		changeOpenedFile("BRole", RoleTestFiles.roleBChanged());
-		assertIssues(
+		assertIssues2(
 			"CRole" -> #["(Error, [6:7 - 6:16], Couldn't resolve reference to IdentifiableElement 'myMethodB'.)"]
 		);
 
@@ -232,7 +232,7 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 
 		changeOpenedFile("MyInterfaceFour", MemberTestFiles.myInterfaceFourChanged());
 		joinServerRequests();
-		assertIssues("MyClassOne" -> #["(Error, [5:35 - 5:47], Couldn't resolve reference to IdentifiableElement 'myMethodFour'.)"]);
+		assertIssues2("MyClassOne" -> #["(Error, [5:35 - 5:47], Couldn't resolve reference to IdentifiableElement 'myMethodFour'.)"]);
 
 		changeOpenedFile("MyInterfaceFour", MemberTestFiles.myInterfaceFour());
 		joinServerRequests();
@@ -273,7 +273,7 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 		changeOpenedFile("C", TransitiveInheritMemberTestFiles.CChanged());
 		joinServerRequests();
 		// Editor of A should have error markers because of missing method
-		assertIssues("A" -> #["(Error, [5:19 - 5:28], Couldn't resolve reference to IdentifiableElement 'myMethodC'.)"]);
+		assertIssues2("A" -> #["(Error, [5:19 - 5:28], Couldn't resolve reference to IdentifiableElement 'myMethodC'.)"]);
 
 		changeOpenedFile("C", TransitiveInheritMemberTestFiles.C());
 		joinServerRequests();
@@ -310,7 +310,7 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 		changeOpenedFile("CaseSensitiveCallee", CaseSensitiveTestFiles.calleeChanged());
 		joinServerRequests();
 		// Editor of Caller should have error markers because of missing method
-		assertIssues(
+		assertIssues2(
 			"CaseSensitiveCaller" -> #["(Error, [5:14 - 5:22], Couldn't resolve reference to IdentifiableElement 'mymethod'.)"]
 		);
 
@@ -350,7 +350,7 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 		changeOpenedFile("C", StaticTestFiles.C_changed());
 		joinServerRequests();
 		// Editor of A should have error markers because of missing method
-		assertIssues(
+		assertIssues2(
 			"A" -> #["(Error, [6:6 - 6:7], The non-static member d cannot be accessed from a static context.)"]
 		);
 

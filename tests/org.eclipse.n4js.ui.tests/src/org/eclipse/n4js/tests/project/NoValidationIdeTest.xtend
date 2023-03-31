@@ -130,7 +130,7 @@ class NoValidationIdeTest extends ConvertedIdeTest {
 		startAndWaitForLspServer();
 
 		// assert markers
-		assertIssues(
+		assertIssues2(
 			"Shadowed.n4jsd" -> #[
 				"(Error, [1:20 - 1:26], Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files.)"
 			]
@@ -143,7 +143,7 @@ class NoValidationIdeTest extends ConvertedIdeTest {
 			'''"library"''' -> '''"library", «moduleFilters»''');
 		joinServerRequests();
 
-		assertIssues(
+		assertIssues2(
 			DEFAULT_PROJECT_NAME+ "/package.json" -> #[
 				"(Error, [7:69 - 7:79], Module filters of type noValidate must not match N4JS modules/files.)"
 			]

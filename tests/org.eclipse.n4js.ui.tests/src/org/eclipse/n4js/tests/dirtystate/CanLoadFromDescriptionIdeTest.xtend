@@ -154,7 +154,7 @@ class CanLoadFromDescriptionIdeTest extends AbstractCanLoadFromDescriptionTest {
 		changeOpenedFile("C", sourceC_modify_c1);
 		joinServerRequests();
 		// editor for file A1 should now have exactly 1 expected error
-		assertIssues(
+		assertIssues2(
 			"A1" -> #["(Error, [3:17 - 3:19], int is not a subtype of string.)"]
 		);
 		
@@ -179,7 +179,7 @@ class CanLoadFromDescriptionIdeTest extends AbstractCanLoadFromDescriptionTest {
 
 		changeOpenedFile("D", sourceD_modify_d);
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"A2" -> #["(Error, [3:17 - 3:19], int is not a subtype of string.)"]
 		);
 		
@@ -210,7 +210,7 @@ class CanLoadFromDescriptionIdeTest extends AbstractCanLoadFromDescriptionTest {
 
 		changeOpenedFile("B1", sourceB1_modify_b1);
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"A1" -> #["(Error, [3:17 - 3:19], union{int,string} is not a subtype of string.)"]
 		);
 
@@ -229,7 +229,7 @@ class CanLoadFromDescriptionIdeTest extends AbstractCanLoadFromDescriptionTest {
 
 		changeOpenedFile("P", sourceP_modify_p);
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"A2" -> #[
 				"(Error, [4:18 - 4:19], int is not a subtype of string.)",
 				"(Error, [5:18 - 5:20], int is not a subtype of string.)"
@@ -256,7 +256,7 @@ class CanLoadFromDescriptionIdeTest extends AbstractCanLoadFromDescriptionTest {
 
 		changeOpenedFile("Q", sourceQ_modify_q);
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"A2" -> #["(Error, [5:18 - 5:20], union{int,string} is not a subtype of string.)"]
 		);
 

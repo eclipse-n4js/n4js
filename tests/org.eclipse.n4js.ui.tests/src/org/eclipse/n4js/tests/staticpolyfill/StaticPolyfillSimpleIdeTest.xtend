@@ -32,7 +32,7 @@ class StaticPolyfillSimpleIdeTest extends AbstractStaticPolyfillBuilderIdeTest {
 		createFile(cFilling, validContent_Filling);
 		addSrc2ToSources();
 
-		assertIssues(
+		assertIssues2(
 			"Poly" -> #[
 				"(Error, [2:30 - 2:31], Couldn't resolve reference to Type 'K'.)",
 				"(Error, [7:8 - 7:19], The constructor constructor must override or implement a constructor from a super class or interface.)",
@@ -62,7 +62,7 @@ class StaticPolyfillSimpleIdeTest extends AbstractStaticPolyfillBuilderIdeTest {
 		saveOpenedFile(cFilling);
 		joinServerRequests();
 
-		assertIssues(
+		assertIssues2(
 			"src2/a/b/Poly.n4js" -> #[
 				"(Error, [7:8 - 7:19], Signature of constructor of class K (line 7) does not conform to overridden constructor of class K: {function(number)} is not a subtype of {function(string)}.)"
 			]

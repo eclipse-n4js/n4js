@@ -1373,7 +1373,15 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * to issue list.
 	 */
 	@SafeVarargs
-	protected final void assertIssues(Pair<String, List<String>>... moduleNameToExpectedIssues) {
+	protected final void assertIssues2(Pair<String, List<String>>... moduleNameToExpectedIssues) {
+		assertIssues(convertModuleNamePairsToIdMap(moduleNameToExpectedIssues));
+	}
+
+	/**
+	 * Same as {@link #assertIssues(Map)}, accepting pairs from module name to issue list instead of a map from file URI
+	 * to issue list.
+	 */
+	protected final void assertIssues2(Iterable<Pair<String, List<String>>> moduleNameToExpectedIssues) {
 		assertIssues(convertModuleNamePairsToIdMap(moduleNameToExpectedIssues));
 	}
 
@@ -1382,6 +1390,19 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * <code>false</code>.
 	 */
 	protected void assertIssues(Map<FileURI, List<String>> fileURIToExpectedIssues) {
+		assertIssues(fileURIToExpectedIssues, false);
+	}
+
+	/**
+	 * Same as {@link #assertIssues(Map, boolean)}, but with <code>withIgnoredIssues</code> always set to
+	 * <code>false</code>.
+	 */
+	protected void assertIssues2(Map<String, List<String>> moduleNameToExpectedIssues) {
+		Map<FileURI, List<String>> fileURIToExpectedIssues = new HashMap<>();
+		for (String moduleName : moduleNameToExpectedIssues.keySet()) {
+			FileURI uri = getFileURIFromModuleName(moduleName);
+			fileURIToExpectedIssues.put(uri, moduleNameToExpectedIssues.get(moduleName));
+		}
 		assertIssues(fileURIToExpectedIssues, false);
 	}
 
@@ -1607,6 +1628,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	@SafeVarargs
 	private <T> Map<FileURI, T> convertModuleNamePairsToIdMap(Pair<String, T>... moduleNameToExpectedIssues) {
 		return Stream.of(moduleNameToExpectedIssues).collect(Collectors.toMap(
+				p -> getFileURIFromModuleName(p.getKey()), Pair::getValue));
+	}
+
+	private <T> Map<FileURI, T> convertModuleNamePairsToIdMap(Iterable<Pair<String, T>> moduleNameToExpectedIssues) {
+		return IterableExtensions.toList(moduleNameToExpectedIssues).stream().collect(Collectors.toMap(
 				p -> getFileURIFromModuleName(p.getKey()), Pair::getValue));
 	}
 
@@ -1851,4 +1877,5 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	protected ProcessResult runInNodejs(File workingDir, FileURI fileToRun, String... options) {
 		return new CliTools().nodejsRun(workingDir.toPath(), fileToRun.toPath(), options);
 	}
+
 }

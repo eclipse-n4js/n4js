@@ -82,7 +82,7 @@ class SingleProjectIdeTest extends ConvertedIdeTest {
 		addSrc2ToSources();
 // TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
-		assertIssues(
+		assertIssues2(
 			"C" -> #[
 				"(Error, [0:16 - 0:23], Couldn't resolve reference to Type 'Unknown'.)"
 			]
@@ -93,7 +93,7 @@ cleanBuildAndWait();
 	def void testFileInSrcWithError() throws Exception {
 		createFile("C", "class C extends Unknown {}");
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"C" -> #[
 				"(Error, [0:16 - 0:23], Couldn't resolve reference to Type 'Unknown'.)"
 			]
@@ -108,7 +108,7 @@ cleanBuildAndWait();
 		''');
 		joinServerRequests();
 
-		assertIssues(
+		assertIssues2(
 			"C" -> #[
 				"(Error, [0:18 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:16 - 1:17], Couldn't resolve reference to Type 'D'.)"
@@ -127,7 +127,7 @@ cleanBuildAndWait();
 		''');
 		joinServerRequests();
 
-		assertIssues(
+		assertIssues2(
 			"C" -> #[
 				"(Error, [0:18 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:16 - 1:17], Couldn't resolve reference to Type 'D'.)"
@@ -136,7 +136,7 @@ cleanBuildAndWait();
 		createFile(src2.appendSegment("D.n4js"), "export class D {}");
 		joinServerRequests();
 		// Same as above, src2 folder is not set as source folder yet.
-		assertIssues(
+		assertIssues2(
 			"C" -> #[
 				"(Error, [0:18 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:16 - 1:17], Couldn't resolve reference to Type 'D'.)"
@@ -232,7 +232,7 @@ cleanBuildAndWait();
 		removeSrc2FromSource();
 // TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
-		assertIssues(
+		assertIssues2(
 			"C" -> #[
 				"(Error, [0:18 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:16 - 1:17], Couldn't resolve reference to Type 'D'.)"
@@ -252,7 +252,7 @@ cleanBuildAndWait();
 		createFile(src2.appendSegment("D.n4js"), "export class D {}");
 		joinServerRequests();
 
-		assertIssues(
+		assertIssues2(
 			DEFAULT_PROJECT_NAME + "/package.json" -> #[
 				"(Warning, [12:16 - 12:22], Source container path src3 does not exist.)"
 			],
@@ -273,7 +273,7 @@ cleanBuildAndWait();
 		createFile("a/b/c/C", "export class C {}");
 		createFile("a/b/c/D", "import * as C from 'a/b/c/C'");
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"a/b/c/D" -> #[
 				"(Warning, [0:7 - 0:13], The import of * as C from a/b/c/C is unused.)"
 			]
@@ -288,7 +288,7 @@ cleanBuildAndWait();
 		addMainSrcToSources();
 // TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
-		assertIssues(
+		assertIssues2(
 			"D" -> #[
 				"(Warning, [0:7 - 0:13], The import of * as C from a/b/c/C is unused.)"
 			]
@@ -296,7 +296,7 @@ cleanBuildAndWait();
 
 		renameFile(mainSrc.appendSegments("a", "b"), "d");
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"D" -> #[
 				"(Error, [0:19 - 0:28], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)"
 			]
@@ -308,7 +308,7 @@ cleanBuildAndWait();
 		createFile("a/b/c/C", "export class C {}");
 		createFile("a/b/c/D", "import { C } from 'a/b/c/C'");
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"a/b/c/D" -> #[
 				"(Warning, [0:9 - 0:10], The import of C is unused.)"
 			]
@@ -323,7 +323,7 @@ cleanBuildAndWait();
 		addMainSrcToSources(); // note: using main/src as source folder, not main/src/x
 // TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
-		assertIssues(
+		assertIssues2(
 			"D" -> #[
 				"(Error, [0:18 - 0:27], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)"
 			]
@@ -334,7 +334,7 @@ cleanBuildAndWait();
 	def void testProjectDescriptionFileRemoved() throws Exception {
 		createFile("C", "class C extends Unknown {}");
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"C" -> #[
 				"(Error, [0:16 - 0:23], Couldn't resolve reference to Type 'Unknown'.)"
 			]
@@ -365,7 +365,7 @@ cleanBuildAndWait();
 		joinServerRequests();
 // TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
-		assertIssues(
+		assertIssues2(
 			"C" -> #[
 				"(Error, [0:16 - 0:23], Couldn't resolve reference to Type 'Unknown'.)"
 			]

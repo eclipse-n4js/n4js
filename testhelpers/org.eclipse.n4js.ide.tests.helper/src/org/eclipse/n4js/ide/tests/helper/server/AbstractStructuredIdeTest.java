@@ -210,6 +210,22 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * One module has to be selected using {@link TestWorkspaceManager#MODULE_SELECTOR}
 	 *
 	 * @param modulesContents
+	 *            map from module names to their contents
+	 */
+	protected Project test(Map<String, String> modulesContents, T t) {
+		List<Pair<String, String>> modulesContentsPairList = new ArrayList<>();
+		for (String name : modulesContents.keySet()) {
+			modulesContentsPairList.add(Pair.of(name, modulesContents.get(name)));
+		}
+		return test(modulesContentsPairList, t);
+	}
+
+	/**
+	 * Same as {@link #testWS(List, Object)}, but creates a default project with name {@link #DEFAULT_PROJECT_NAME}.
+	 * <p>
+	 * One module has to be selected using {@link TestWorkspaceManager#MODULE_SELECTOR}
+	 *
+	 * @param modulesContents
 	 *            pairs that map module names to their contents
 	 */
 	protected Project test(List<Pair<String, String>> modulesContents, T t) {

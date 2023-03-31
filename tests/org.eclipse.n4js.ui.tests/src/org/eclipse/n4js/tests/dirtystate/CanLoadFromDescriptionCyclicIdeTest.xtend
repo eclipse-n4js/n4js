@@ -146,7 +146,7 @@ class CanLoadFromDescriptionCyclicIdeTest extends AbstractCanLoadFromDescription
 
 		changeOpenedFile("A", sourceA_modify_a);
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"A" -> #["(Error, [9:32 - 9:33], int is not a subtype of string.)"]
 		);
 
@@ -165,7 +165,7 @@ class CanLoadFromDescriptionCyclicIdeTest extends AbstractCanLoadFromDescription
 
 		changeNonOpenedFile("X", sourceX_modify_x);
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"A" -> #["(Error, [9:32 - 9:33], int is not a subtype of string.)"]
 		);
 
@@ -180,7 +180,7 @@ class CanLoadFromDescriptionCyclicIdeTest extends AbstractCanLoadFromDescription
 
 		changeNonOpenedFile("A", sourceA_modify_a);
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"A" -> #["(Error, [9:32 - 9:33], int is not a subtype of string.)"]
 		);
 
@@ -196,7 +196,7 @@ class CanLoadFromDescriptionCyclicIdeTest extends AbstractCanLoadFromDescription
 
 		changeNonOpenedFile("X", sourceX_modify_x);
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"A" -> #["(Error, [9:32 - 9:33], int is not a subtype of string.)"]
 		);
 
@@ -261,7 +261,7 @@ class CanLoadFromDescriptionCyclicIdeTest extends AbstractCanLoadFromDescription
 
 		changeNonOpenedFile("P", sourceP_modify_p);
 		joinServerRequests();
-		assertIssues("P" -> #["(Error, [2:17 - 2:18], int is not a subtype of string.)"]);
+		assertIssues2("P" -> #["(Error, [2:17 - 2:18], int is not a subtype of string.)"]);
 
 		changeNonOpenedFile("P", sourceP);
 		joinServerRequests();
@@ -283,7 +283,7 @@ class CanLoadFromDescriptionCyclicIdeTest extends AbstractCanLoadFromDescription
 
 		changeOpenedFile("P", sourceP_modify_p);
 		joinServerRequests();
-		assertIssues(
+		assertIssues2(
 			"P" -> #["(Error, [2:17 - 2:18], int is not a subtype of string.)"]
 		);
 		assertFromSource("P", expectedFromSource);

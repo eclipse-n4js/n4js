@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -415,9 +416,15 @@ public class TestWorkspaceManager {
 	@SafeVarargs
 	public final Project createTestYarnWorkspaceOnDisk(
 			Pair<String, ? extends List<? extends Pair<String, ? extends CharSequence>>>... projectsModulesContents) {
+		return createTestYarnWorkspaceOnDisk(Arrays.asList(projectsModulesContents));
+	}
+
+	/** Same as {@link #createTestOnDisk(Pair...)}, but <em>always</em> creates a yarn workspace. */
+	public final Project createTestYarnWorkspaceOnDisk(
+			Iterable<? extends Pair<String, ? extends List<? extends Pair<String, ? extends CharSequence>>>> projectsModulesContents) {
+
 		Map<String, Map<String, String>> projectsModulesContentsAsMap = new LinkedHashMap<>();
-		convertProjectsModulesContentsToMap(Arrays.asList(projectsModulesContents), projectsModulesContentsAsMap,
-				false);
+		convertProjectsModulesContentsToMap(projectsModulesContents, projectsModulesContentsAsMap, false);
 		return createTestYarnWorkspaceOnDisk(projectsModulesContentsAsMap);
 	}
 
@@ -513,7 +520,27 @@ public class TestWorkspaceManager {
 		Folder sourceFolder = project.createSourceFolder(
 				customSourceFolderName != null ? customSourceFolderName.toString() : DEFAULT_SOURCE_FOLDER);
 
-		for (String moduleName : modulesContents.keySet()) {
+		ArrayList<String> moduleNames = new ArrayList<>(modulesContents.keySet());
+		Collections.sort(moduleNames, (n1, n2) -> {
+			if (n1 == null) {
+				return 1;
+			}
+			if (n2 == null) {
+				return -1;
+			}
+			if (n1.contains(CFG_DEPENDENCIES) && !n2.contains(CFG_DEPENDENCIES)) {
+				return 1;
+			} else if (!n1.contains(CFG_DEPENDENCIES) && n2.contains(CFG_DEPENDENCIES)) {
+				return -1;
+			}
+			int nmCount1 = n1.split(CFG_NODE_MODULES).length;
+			int nmCount2 = n2.split(CFG_NODE_MODULES).length;
+			if (nmCount1 != nmCount2) {
+				return nmCount1 - nmCount2;
+			}
+			return n1.compareTo(n2);
+		});
+		for (String moduleName : moduleNames) {
 			String contents = modulesContents.get(moduleName).toString();
 
 			if (moduleName.equals(CFG_DEPENDENCIES)) {
