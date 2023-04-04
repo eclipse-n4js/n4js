@@ -40,6 +40,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.Assert;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -250,6 +251,7 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 				.prepareRename(prepareRenameParams).get();
 		if (result1 == null || (result1.getLeft() == null && result1.getRight() == null)) {
 			fail("element cannot be renamed", sourceBefore, pos);
+			return;
 		}
 
 		RenameParams renameParams = new RenameParams();
@@ -271,9 +273,11 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 				if (actualSourceAfter == null) {
 					fail("expected changes in module '" + moduleName
 							+ "' but rename did not lead to any changes in this module", sourceBefore, pos);
+					return;
 				} else if (!actualSourceAfter.equals(expectedSourceAfter)) {
 					fail("rename led to incorrect source code changes in module '" + moduleName + "'", sourceBefore,
 							pos, expectedSourceAfter, actualSourceAfter);
+					return;
 				}
 				checkedFileURIs.add(changedFileURI);
 			}
@@ -285,6 +289,7 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 			if (!checkedFileURIs.contains(changedFileURI)) {
 				fail("rename led to unexpected changes in file '" + changedFileURI.getName() + "'", sourceBefore, pos,
 						null, actualSourceAfter);
+				return;
 			}
 		}
 	}
@@ -363,7 +368,11 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 			sb.append('\n');
 			sb.append(actualCodeAfter.trim());
 		}
-		Assert.assertEquals(sb.toString(), expectedCodeAfter, actualCodeAfter);
+		if (Objects.equal(expectedCodeAfter, actualCodeAfter)) {
+			Assert.fail(sb.toString());
+		} else {
+			Assert.assertEquals(sb.toString(), expectedCodeAfter, actualCodeAfter);
+		}
 	}
 
 	private String insertCursorSymbol(String source, RenamePosition pos) {
