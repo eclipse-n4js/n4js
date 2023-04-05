@@ -61,8 +61,8 @@ import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
@@ -233,6 +233,11 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 
 		int offset = rtc.getDocument().getOffSet(params.getPosition());
 		EObject element = eObjectAtOffsetHelper.resolveElementAt(rtc.getResource(), offset);
+		EObject type = N4JSASTUtils.getCorrespondingTypeModelElement(element);
+		if (type != null) {
+			element = type;
+		}
+
 		if (element instanceof FunctionTypeExprOrRef) {
 			FunctionTypeExprOrRef fRef = (FunctionTypeExprOrRef) element;
 			element = fRef.getFunctionType();
@@ -326,8 +331,8 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 			CallHierarchyOutgoingCallsParams params, CancelIndicator ci) {
 
 		EObject element = resolveElement(rtc, params.getItem().getSelectionRange());
-		List<FunctionDefinition> funDefs = new ArrayList<>();
 
+		List<FunctionDefinition> funDefs = new ArrayList<>();
 		if (element instanceof TMethod) {
 			TMethod method = (TMethod) element;
 			EObject parentContainer = element.eContainer();
@@ -416,6 +421,11 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 
 		int offset = rtc.getDocument().getOffSet(params.getPosition());
 		EObject element = eObjectAtOffsetHelper.resolveElementAt(rtc.getResource(), offset);
+		EObject type = N4JSASTUtils.getCorrespondingTypeModelElement(element);
+		if (type != null) {
+			element = type;
+		}
+
 		if (element instanceof TypeRef) {
 			TypeRef tRef = (TypeRef) element;
 			element = tRef.getDeclaredType();
@@ -478,10 +488,6 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 
 		EObject element = resolveElement(rtc, params.getItem().getSelectionRange());
 
-		if (element instanceof N4TypeDeclaration) {
-			N4TypeDeclaration typeDecl = (N4TypeDeclaration) element;
-			element = typeDecl.getDefinedType();
-		}
 		List<TypeHierarchyItem> superTypesTHI = new ArrayList<>();
 		if (element instanceof TClassifier) {
 			TClassifier tClassifier = (TClassifier) element;
@@ -506,6 +512,10 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 
 		int offset = rtc.getDocument().getOffSet(selRange.getStart());
 		EObject element = eObjectAtOffsetHelper.resolveElementAt(resource, offset);
+		EObject type = N4JSASTUtils.getCorrespondingTypeModelElement(element);
+		if (type != null) {
+			element = type;
+		}
 		return element;
 	}
 

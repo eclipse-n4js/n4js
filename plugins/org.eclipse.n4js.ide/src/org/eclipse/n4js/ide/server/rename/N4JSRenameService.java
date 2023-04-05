@@ -96,11 +96,16 @@ public class N4JSRenameService extends RenameService2 {
 		if (originImport != null) {
 			return originImport;
 		}
-		EObject result = super.getElementWithIdentifierAt(resource, offset);
+
+		EObject result = eObjectAtOffsetHelper.resolveElementAt(resource, offset);
 		if (result != null) {
 			if (N4Scheme.isFromResourceWithN4Scheme(result) || isFromResourceInNodeModules(result)) {
 				return null;
 			}
+		}
+		EObject type = N4JSASTUtils.getCorrespondingTypeModelElement(result);
+		if (type != null) {
+			result = type;
 		}
 		return result;
 	}

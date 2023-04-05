@@ -25,6 +25,7 @@ import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.server.util.SymbolKindUtil;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.utils.PolyfillUtils;
@@ -77,6 +78,10 @@ public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 		EObject element = eObjectAtOffsetHelper.resolveElementAt(resource, offset);
 		if (element == null) {
 			return Collections.emptyList();
+		}
+		EObject type = N4JSASTUtils.getCorrespondingTypeModelElement(element);
+		if (type != null) {
+			element = type;
 		}
 
 		List<Location> locations = new ArrayList<>();

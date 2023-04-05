@@ -22,7 +22,6 @@ import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
-import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
@@ -37,7 +36,6 @@ public class N4JSEObjectAtOffsetHelper extends EObjectAtOffsetHelper {
 	@Override
 	public EObject resolveElementAt(XtextResource resource, int offset) {
 		EObject result = super.resolveElementAt(resource, offset);
-
 		if (result instanceof LiteralOrComputedPropertyName) {
 			result = result.eContainer();
 		}
@@ -63,12 +61,6 @@ public class N4JSEObjectAtOffsetHelper extends EObjectAtOffsetHelper {
 			result = findBetterMatch(result, offset,
 					((GenericDeclaration) result).getTypeVars(),
 					N4JSPackage.eINSTANCE.getN4TypeVariable_Name());
-		}
-
-		EObject type = N4JSASTUtils.getCorrespondingTypeModelElement(result);
-		if (type != null
-				&& !(type instanceof TFormalParameter)) {
-			result = type;
 		}
 
 		return result;
