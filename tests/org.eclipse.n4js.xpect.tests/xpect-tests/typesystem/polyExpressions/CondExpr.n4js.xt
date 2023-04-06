@@ -20,13 +20,20 @@ class J implements I {
     public mfj : number;
 }
 
+let b : boolean = true;
+
+
 // XPECT type of 'k1' --> ~Object with { i: ~I }
 const k1 : ~Object with {i: ~I} = {i : new J()};
 
 // XPECT type of 'k2' --> ~Object with { i: ~I }
-// XPECT warnings --> "Dispensable use of conditional expression. The expression 'true' always evaluates to true, so only the left-hand side will ever be evaluated." at "true"
-const k2 : ~Object with {i: ~I} = true ? {i : new J()} : undefined;
+const k2 : ~Object with {i: ~I} = b ? {i : new J()} : undefined;
 
 // XPECT type of 'k3' --> ~Object with { i: ~I }
-// XPECT warnings --> "Dispensable use of conditional expression. The expression 'true' always evaluates to true, so only the left-hand side will ever be evaluated." at "true"
-const k3 : ~Object with {i: ~I} = true ? {i : new J()} : null;
+const k3 : ~Object with {i: ~I} = b ? {i : new J()} : null;
+
+
+
+
+// XPECT type of 'kk1' --> ~Object with { i: ~I }
+const kk1 : ~Object with {i: ~I} = b ? b ? {i : new J()} : undefined : null;
