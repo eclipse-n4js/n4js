@@ -17,6 +17,7 @@ import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.ArrowFunction
+import org.eclipse.n4js.n4JS.ConditionalExpression
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
@@ -41,7 +42,9 @@ import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
@@ -94,9 +97,23 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 				true
 			ObjectLiteral:
 				obj.propertyAssignments.exists[isPoly]
+			ConditionalExpression: {
+				val boolean trueIsPoly = isPoly(obj.trueExpression);
+				val boolean trueAllowsPoly = allowsPoly(obj.trueExpression);
+				val boolean falseAllowsPoly = allowsPoly(obj.falseExpression);
+				val boolean falseIsPoly = isPoly(obj.falseExpression);
+				
+				(trueIsPoly && falseAllowsPoly) || (falseIsPoly && trueAllowsPoly)
+			}
 			default:
 				false
 		}
+	}
+	
+	def boolean allowsPoly(Expression obj) {
+		val RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(obj);
+		return N4JSLanguageUtils.isUndefinedLiteral(G, obj)
+				|| N4JSLanguageUtils.isNullLiteral(G, obj);
 	}
 
 	/**
@@ -161,6 +178,8 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 				directParent.eContainer as ArrayLiteral // return the ArrayLiteral as parent (not the ArrayElement)
 			PropertyNameValuePair case directParent.expression === poly:
 				directParent // return the PropertyNameValuePair as parent (not the ObjectLiteral)
+			ConditionalExpression:
+				directParent
 			PropertyGetterDeclaration:
 				null // getters never have nested poly expressions
 			PropertySetterDeclaration:

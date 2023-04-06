@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
+import org.eclipse.n4js.n4JS.ConditionalExpression
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionExpression
@@ -224,6 +225,20 @@ package class PolyProcessor extends AbstractPolyProcessor {
 					functionExpressionProcessor.processFunctionExpression(G, expr, expectedTypeRef, infCtx, cache)
 				ParameterizedCallExpression:
 					callExpressionProcessor.processCallExpression(G, expr, expectedTypeRef, infCtx, cache)
+				ConditionalExpression:
+					if (isPoly(expr.trueExpression)) {
+						val TypeRef typeRef = processExpr(G, expr.trueExpression, expectedTypeRef, infCtx, cache);
+						// store a copy of the inferred type also at the conditional expression node
+						infCtx.onSolved([ solution | cache.storeType(expr, TypeUtils.copy(cache.getTypeFailSafe(expr.trueExpression))) ]);
+						typeRef;
+					} else if (isPoly(expr.falseExpression)) {
+						val TypeRef typeRef = processExpr(G, expr.falseExpression, expectedTypeRef, infCtx, cache);
+						// store a copy of the inferred type also at the conditional expression node
+						infCtx.onSolved([ solution | cache.storeType(expr, TypeUtils.copy(cache.getTypeFailSafe(expr.falseExpression))) ]);
+						typeRef;
+					} else {
+						throw new IllegalArgumentException("missing case in #processExpr() for poly expression: " + expr)
+					}
 				default:
 					throw new IllegalArgumentException("missing case in #processExpr() for poly expression: " + expr)
 			};
