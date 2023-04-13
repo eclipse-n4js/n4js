@@ -111,9 +111,11 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 	}
 	
 	def boolean allowsPoly(Expression obj) {
+		if (obj === null) {
+			return false;
+		}
 		val RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(obj);
-		return N4JSLanguageUtils.isUndefinedLiteral(G, obj)
-				|| N4JSLanguageUtils.isNullLiteral(G, obj);
+		return N4JSLanguageUtils.isUndefinedLiteral(G, obj) || N4JSLanguageUtils.isNullLiteral(G, obj);
 	}
 
 	/**
