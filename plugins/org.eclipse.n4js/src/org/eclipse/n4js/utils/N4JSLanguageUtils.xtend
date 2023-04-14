@@ -478,6 +478,13 @@ public class N4JSLanguageUtils {
 	}
 
 	/**
+	 * Tells if given expression denotes the value 'null'.
+	 */
+	def static boolean isNullLiteral(RuleEnvironment G, Expression expr) {
+		return (expr instanceof NullLiteral);
+	}
+
+	/**
 	 * Tells if given object is a <em>type model element</em>, i.e. is contained below a {@link TModule} element.
 	 * <p>
 	 * Note that it is not possible to tell AST nodes from type model elements only based on the object's type, because
