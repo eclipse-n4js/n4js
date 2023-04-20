@@ -24,9 +24,9 @@ let k2c = <number>fun1();
 
 
 
-function <T=string> fun2(param: T) : T {
-	// X PECT type of 'param' --> T
-	return param;
+function <T=string> fun2(param: T) : void {
+	// XPECT type of 'param' --> T
+	param;
 }
 // XPECT noerrors -->
 fun2("s");
@@ -37,7 +37,10 @@ fun2(3);
 
 class C {
 	<T=string> method1(): T { return null; }
-	<T=string> method2(p: T): void { }
+	<T=string> method2(param: T): void {
+		// XPECT type of 'param' --> T
+		param;
+	}
 }
 
 let cls = new C();
