@@ -56,63 +56,47 @@ class OptionalTypeParameterParserTest extends AbstractParserTest {
 	}
 
 	@Test
-	def void testInvalid01() {
+	def void testGenericFuncWithDefaultTypeArg() {
 		val script = '''
 			function <T=any> foo() {}
-		'''.parseESWithError;
+		'''.parseESSuccessfully;
 
 		assertOptionalTypeParam(script.scriptElements.head as FunctionDeclaration);
-
-		val res = script.eResource;
-		assertEquals(1, res.errors.size);
-		assertEquals("Only type parameters of classes, interfaces, and type aliases may be declared optional.", res.errors.head.message);
 	}
 
 	@Test
-	def void testInvalid02() {
+	def void testGenericMethodWithDefaultTypeArg() {
 		val script = '''
 			class Cls {
 				<T=any> method() {}
 			}
-		'''.parseESWithError;
+		'''.parseESSuccessfully;
 
 		assertOptionalTypeParam((script.scriptElements.head as N4ClassDeclaration).ownedMembersRaw.head as N4MethodDeclaration);
-
-		val res = script.eResource;
-		assertEquals(1, res.errors.size);
-		assertEquals("Only type parameters of classes, interfaces, and type aliases may be declared optional.", res.errors.head.message);
 	}
 
 	@Test
-	def void testInvalid03() {
+	def void testGenericFuncTypeExprWithDefaultTypeArg() {
 		val script = '''
 			let fn: {function<T=any>(p:T):T};
-		'''.parseESWithError;
+		'''.parseESSuccessfully;
 
 		val funTypeExpr = script.eAllContents.filter(FunctionTypeExpression).head;
 		assertNotNull(funTypeExpr);
 		assertOptionalTypeParam(funTypeExpr.ownedTypeVars);
-
-		val res = script.eResource;
-		assertEquals(1, res.errors.size);
-		assertEquals("Only type parameters of classes, interfaces, and type aliases may be declared optional.", res.errors.head.message);
 	}
 
 	@Test
-	def void testInvalid04() {
+	def void testGenericMethodInObjectLitWithDefaultTypeArg() {
 		val script = '''
 			let obj: ~Object with {
 				<T=any> m(p:T):T;
 			};
-		'''.parseESWithError;
+		'''.parseESSuccessfully;
 
 		val tStructMethod = script.eAllContents.filter(ParameterizedTypeRefStructural).head.astStructuralMembers.head as TStructMethod;
 		assertNotNull(tStructMethod);
 		assertOptionalTypeParam(tStructMethod.typeVars);
-
-		val res = script.eResource;
-		assertEquals(1, res.errors.size);
-		assertEquals("Only type parameters of classes, interfaces, and type aliases may be declared optional.", res.errors.head.message);
 	}
 
 	def private void assertOptionalTypeParam(GenericDeclaration genDecl) {
