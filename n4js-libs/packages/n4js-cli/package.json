@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@types/node": "^16",
-    "@types/debug": "*",
+    "@types/debug": "4.1.7",
     "follow-redirects": "1.14.9",
     "decompress": "4.2.1",
     "debug": "~4.3.1",
