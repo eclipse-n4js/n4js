@@ -1613,7 +1613,7 @@ class NewExpression extends Expression, ParameterizedAccess {
 abstract class ParameterizedAccess {
 	contains TypeReferenceNode<TypeRef>[] typeArgs
 	/**
-	 * Returns <code>true<code> if the expression has type arguments.
+	 * Returns <code>true<code> iff the expression has explicit type arguments. Note that default type arguments are not respected.
 	 */
 	op boolean isParameterized() {
 		return !typeArgs.isEmpty
