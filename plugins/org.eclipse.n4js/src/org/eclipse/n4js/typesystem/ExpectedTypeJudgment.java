@@ -262,7 +262,7 @@ import com.google.inject.Inject;
 						} else {
 							final RuleEnvironment G2 = wrap(G);
 
-							typeSystemHelper.addSubstitutions(G2, expr, F);
+							typeSystemHelper.addSubstitutions(G2, expr, F, true);
 
 							if (expr.getTarget() instanceof SuperLiteral) {
 								// required only in case of super(...) referring to a ctor with a parameter of type

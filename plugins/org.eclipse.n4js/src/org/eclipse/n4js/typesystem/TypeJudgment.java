@@ -1112,7 +1112,7 @@ import com.google.inject.Inject;
 					// record that we are inferring the type of expr
 					final RuleEnvironment G2 = wrap(G);
 					G2.put(guardKey, F.getReturnTypeRef());
-					typeSystemHelper.addSubstitutions(G2, expr, F);
+					typeSystemHelper.addSubstitutions(G2, expr, F, false);
 
 					// get the return type of F
 					if (expr.eContainer() instanceof AwaitExpression

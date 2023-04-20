@@ -12,6 +12,7 @@ package org.eclipse.n4js.ts.types.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -111,6 +112,21 @@ public class TypeModelUtils {
 	 * @see TypeModelUtils#toString()
 	 */
 	public static EList<TypeArgument> getTypeArgsWithDefaults(Type declType, EList<TypeArgument> declTypeArgs) {
+		return getTypeArgsWithDefaults(declType, declTypeArgs, Function.identity());
+	}
+
+	/** Convenient method for {@link #getTypeArgsWithDefaults(Type, EList)} */
+	public static EList<TypeArgument> getTypeArgsWithDefaults(FunctionTypeExprOrRef signatureTypeRef,
+			List<? extends TypeArgument> declTypeArgs, Function<TypeRef, TypeRef> mapDefaultTypeArg) {
+
+		EList<TypeArgument> elist = XcoreCollectionLiterals.<TypeArgument> newBasicEList();
+		elist.addAll(declTypeArgs);
+		return getTypeArgsWithDefaults(signatureTypeRef.getDeclaredType(), elist, mapDefaultTypeArg);
+	}
+
+	private static EList<TypeArgument> getTypeArgsWithDefaults(Type declType, EList<TypeArgument> declTypeArgs,
+			Function<TypeRef, TypeRef> mapDefaultTypeArg) {
+
 		if (declType != null && declType.isGeneric()) {
 			int declTypeArgsCount = declTypeArgs.size();
 			EList<TypeVariable> typeParams = declType.getTypeVars();
@@ -123,6 +139,7 @@ public class TypeModelUtils {
 					} else {
 						// will be 'null' if type parameter #i isn't optional
 						TypeRef defArg = typeParams.get(i).getDefaultArgument();
+						defArg = mapDefaultTypeArg.apply(defArg);
 
 						if (defArg == null) {
 							// no type argument given in declTypeArgs for non-optional type parameter #i
@@ -137,14 +154,5 @@ public class TypeModelUtils {
 			}
 		}
 		return declTypeArgs;
-	}
-
-	/** Convenient method for {@link #getTypeArgsWithDefaults(Type, EList)} */
-	public static EList<TypeArgument> getTypeArgsWithDefaults(FunctionTypeExprOrRef signatureTypeRef,
-			List<? extends TypeArgument> declTypeArgs) {
-
-		EList<TypeArgument> elist = XcoreCollectionLiterals.<TypeArgument> newBasicEList();
-		elist.addAll(declTypeArgs);
-		return getTypeArgsWithDefaults(signatureTypeRef.getDeclaredType(), elist);
 	}
 }

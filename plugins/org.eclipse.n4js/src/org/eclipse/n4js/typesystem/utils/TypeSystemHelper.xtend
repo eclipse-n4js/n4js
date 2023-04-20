@@ -114,10 +114,10 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 
 
 	def void addSubstitutions(RuleEnvironment G, TypeRef typeRef) {
-		genericsComputer.addSubstitutions(G,typeRef)
+		genericsComputer.addSubstitutions(G, typeRef)
 	}
-	def void addSubstitutions(RuleEnvironment G, ParameterizedCallExpression callExpr, FunctionTypeExprOrRef targetTypeRef) {
-		genericsComputer.addSubstitutions(G,callExpr,targetTypeRef)
+	def void addSubstitutions(RuleEnvironment G, ParameterizedCallExpression callExpr, FunctionTypeExprOrRef targetTypeRef, boolean defaultsTypeArgsToAny) {
+		genericsComputer.addSubstitutions(G, callExpr, targetTypeRef, defaultsTypeArgsToAny)
 	}
 	def void addSubstitutions(RuleEnvironment G, NewExpression newExpr, TMethod constructSignature) {
 		genericsComputer.addSubstitutions(G, newExpr, constructSignature);
