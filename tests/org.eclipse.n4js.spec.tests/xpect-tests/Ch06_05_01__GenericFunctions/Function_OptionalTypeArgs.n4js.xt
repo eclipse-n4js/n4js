@@ -11,37 +11,43 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
-/*
-class C<T=string> {
-	field: T;
-}
-
-let cls = new C();
-// X PECT type of 'fld' --> string
-let fld = cls.field;
-//*/
    
-   
-function <T=string> fun2() : T {
+function <T=string> fun1() : T {
 	return undefined;
 }
-
 // XPECT type of 'k2a' --> string
-let k2a = fun2();
+let k2a = fun1();
+// XPECT type of 'k2b' --> string
+let k2b = <string>fun1();
+// XPECT type of 'k2c' --> number
+let k2c = <number>fun1();
 
-/*
-// X PECT type of 'k2b' --> number
-let k2b = <number>fun2();
 
 
-function <T=string> fun1(param: T) : T {
+function <T=string> fun2(param: T) : T {
 	// X PECT type of 'param' --> T
 	return param;
 }
+// XPECT noerrors -->
+fun2("s");
+// XPECT noerrors -->
+fun2(3);
 
-// X PECT noerrors -->
-fun1("s");
-// X PECT noerrors -->
-fun1(3);
 
-*/
+
+class C {
+	<T=string> method1(): T { return null; }
+	<T=string> method2(p: T): void { }
+}
+
+let cls = new C();
+// XPECT type of 'rtn1' --> string
+let rtn1 = cls.method1();
+// XPECT type of 'rtn2' --> string
+let rtn2 = cls.<string>method1();
+// XPECT type of 'rtn3' --> number
+let rtn3 = cls.<number>method1();
+// XPECT noerrors -->
+cls.method2("s");
+// XPECT noerrors -->
+cls.method2(3);
