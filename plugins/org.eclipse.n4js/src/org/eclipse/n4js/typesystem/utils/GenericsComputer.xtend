@@ -44,12 +44,14 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.util.TypeExtensions
+import org.eclipse.n4js.ts.types.util.TypeModelUtils
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.types.utils.TypeCompareHelper
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.utils.DeclMergingHelper
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.RecursionGuard
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
@@ -259,7 +261,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	 * @param paExpr
 	 */
 	def void addSubstitutions(RuleEnvironment G, ParameterizedPropertyAccessExpression paExpr) {
-		if (paExpr.parameterized) {
+		if (paExpr.parameterized) { // Note: Default type args not checked
 			val prop = paExpr.property;
 			if(prop instanceof Type) {
 				val typeArgs = paExpr.typeArgs.map[typeRef].toList;
@@ -302,8 +304,8 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 		}
 
 		if (targetTypeRef.generic) {
-			val typeArgs = if (paramAccessExpr.parameterized) {
-				paramAccessExpr.typeArgs.map[typeRef].toList
+			val List<? extends TypeArgument> typeArgs = if (!N4JSLanguageUtils.isPoly(targetTypeRef, paramAccessExpr)) {
+				TypeModelUtils.getTypeArgsWithDefaults(targetTypeRef, paramAccessExpr.typeArgs.map([ta|ta.typeRef]))
 			} else if (isCallExpr) {
 				ASTMetaInfoUtils.getInferredTypeArgs(paramAccessExpr as ParameterizedCallExpression) ?: #[]
 			};

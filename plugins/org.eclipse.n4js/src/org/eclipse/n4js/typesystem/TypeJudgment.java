@@ -1053,7 +1053,7 @@ import com.google.inject.Inject;
 				propTypeRef = anyTypeRefDynamic(G2);
 			} else {
 				propTypeRef = ts.type(wrap(G2), prop);
-				if (expr.isParameterized()) {
+				if (expr.isParameterized() || !propTypeRef.getTypeArgsWithDefaults().isEmpty()) {
 					typeSystemHelper.addSubstitutions(G2, expr);
 				}
 			}
@@ -1112,6 +1112,7 @@ import com.google.inject.Inject;
 					// record that we are inferring the type of expr
 					final RuleEnvironment G2 = wrap(G);
 					G2.put(guardKey, F.getReturnTypeRef());
+					typeSystemHelper.addSubstitutions(G2, expr, F);
 
 					// get the return type of F
 					if (expr.eContainer() instanceof AwaitExpression
@@ -1128,7 +1129,6 @@ import com.google.inject.Inject;
 						T = rtr != null ? rtr : anyTypeRef(G);
 					}
 
-					typeSystemHelper.addSubstitutions(G2, expr, F);
 					T = ts.substTypeVariables(G2, T);
 					if (T == null) {
 						return unknown();
