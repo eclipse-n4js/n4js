@@ -1837,22 +1837,13 @@ class ASTStructureValidator {
 
 		}
 	}
+
 	def private dispatch void validateASTStructure(
 		N4TypeVariable model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
 		Constraints constraints
 	) {
-		if (model.optional) {
-			if (!N4JSLanguageUtils.isValidLocationForOptionalTypeParameter(model.eContainer, model.eContainmentFeature)) {
-				producer.node = NodeModelUtils.findNodesForFeature(model, N4JSPackage.eINSTANCE.n4TypeVariable_DeclaredDefaultArgumentNode).head;
-				producer.addDiagnostic(
-					new DiagnosticMessage(IssueCodes.messageForAST_INVALID_OPTIONAL_TYPE_PARAMS,
-						IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS),
-						IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS))
-			}
-		}
-
 		recursiveValidateASTStructure(
 			model,
 			producer,
@@ -1867,16 +1858,6 @@ class ASTStructureValidator {
 		Set<LabelledStatement> validLabels,
 		Constraints constraints
 	) {
-		if (model.optional) {
-			if (!N4JSLanguageUtils.isValidLocationForOptionalTypeParameter(model.eContainer, model.eContainmentFeature)) {
-				producer.node = NodeModelUtils.findNodesForFeature(model, TypesPackage.eINSTANCE.typeVariable_DefaultArgument).head;
-				producer.addDiagnostic(
-					new DiagnosticMessage(IssueCodes.messageForAST_INVALID_OPTIONAL_TYPE_PARAMS,
-						IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS),
-						IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS))
-			}
-		}
-
 		recursiveValidateASTStructure(
 			model,
 			producer,

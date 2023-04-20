@@ -18,7 +18,6 @@ import java.util.Properties
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSGlobals
@@ -1439,16 +1438,6 @@ public class N4JSLanguageUtils {
 	def static boolean isValidLocationForAwait(EObject astNode) {
 		val containingFunDef = EcoreUtil2.getContainerOfType(astNode, FunctionDefinition);
 		return containingFunDef !== null && containingFunDef.async;
-	}
-
-	/** Tells whether the given AST node and EReference is a valid location for an optional type parameter. */
-	def static boolean isValidLocationForOptionalTypeParameter(EObject astNode, EReference reference) {
-		// for now, type parameters may be optional only in class, interface, and type alias declarations
-		// (not in function/method declarations or in FunctionTypeExpression or TStructMethod):
-		// FIXME: Remove this method
-//		return reference === N4JSPackage.Literals.GENERIC_DECLARATION__TYPE_VARS
-//			&& (astNode instanceof N4ClassifierDefinition || astNode instanceof N4TypeAliasDeclaration);
-		return true;
 	}
 
 	/** Tells whether the given type may be referenced structurally, i.e. with modifiers '~', '~~', '~r~', etc. */

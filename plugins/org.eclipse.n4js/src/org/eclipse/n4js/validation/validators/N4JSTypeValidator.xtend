@@ -900,9 +900,6 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		if (genDecl.typeVars.empty) {
 			return; // nothing to check
 		}
-		if (!N4JSLanguageUtils.isValidLocationForOptionalTypeParameter(genDecl, N4JSPackage.Literals.GENERIC_DECLARATION__TYPE_VARS)) {
-			return; // avoid duplicate error messages
-		}
 		if (holdsOptionalTypeParameterNotFollowedByMandatory(genDecl)) {
 			if (holdsDefaultArgumentsContainValidReferences(genDecl)) {
 				holdsDefaultArgumentsComplyToBounds(genDecl);
