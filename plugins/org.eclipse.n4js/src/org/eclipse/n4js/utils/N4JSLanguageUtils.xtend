@@ -1473,7 +1473,7 @@ public class N4JSLanguageUtils {
 	}
 	
 	def static boolean isPoly(FunctionTypeExprOrRef signatureTypeRef, ParameterizedAccess pAccess) {
-		if (signatureTypeRef === null || signatureTypeRef.declaredType === null || !signatureTypeRef.generic) {
+		if (signatureTypeRef === null || !signatureTypeRef.generic) {
 			return false;
 		}
 		
