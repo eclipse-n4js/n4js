@@ -23,7 +23,7 @@
     "src"
   ],
   "devDependencies": {
-    "mocha": "^10.2.0"
+    "mocha": "^8.4.0"
   },
   "dependencies": {
     "@types/node": "^16",
