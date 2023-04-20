@@ -46,17 +46,14 @@ import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
-import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
-import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
-import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.NamespaceElement
@@ -64,6 +61,7 @@ import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.NullLiteral
 import org.eclipse.n4js.n4JS.NumericLiteral
 import org.eclipse.n4js.n4JS.ObjectLiteral
+import org.eclipse.n4js.n4JS.ParameterizedAccess
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyAssignment
@@ -1447,8 +1445,10 @@ public class N4JSLanguageUtils {
 	def static boolean isValidLocationForOptionalTypeParameter(EObject astNode, EReference reference) {
 		// for now, type parameters may be optional only in class, interface, and type alias declarations
 		// (not in function/method declarations or in FunctionTypeExpression or TStructMethod):
-		return reference === N4JSPackage.Literals.GENERIC_DECLARATION__TYPE_VARS
-			&& (astNode instanceof N4ClassifierDefinition || astNode instanceof N4TypeAliasDeclaration);
+		// FIXME: Remove this method
+//		return reference === N4JSPackage.Literals.GENERIC_DECLARATION__TYPE_VARS
+//			&& (astNode instanceof N4ClassifierDefinition || astNode instanceof N4TypeAliasDeclaration);
+		return true;
 	}
 
 	/** Tells whether the given type may be referenced structurally, i.e. with modifiers '~', '~~', '~r~', etc. */
@@ -1481,5 +1481,21 @@ public class N4JSLanguageUtils {
 	/** Returns true iff the given AST element is a dynamic import */
 	def static boolean isDynamicImportCall(EObject astElement) {
 		return getDynamicImportArguments(astElement).present;
+	}
+	
+	def static boolean isPoly(FunctionTypeExprOrRef signatureTypeRef, ParameterizedAccess pAccess) {
+		if (signatureTypeRef === null || signatureTypeRef.declaredType === null || !signatureTypeRef.generic) {
+			return false;
+		}
+		
+		for (var i=0; i<signatureTypeRef.typeVars.size; i++) {
+			val dtVar = signatureTypeRef.typeVars.get(i);
+			if (dtVar.defaultArgument === null && pAccess.typeArgs.size <= i) {
+				// we need either a default type argument or an explicit type argument
+				return true;
+			}
+		}
+		// all type variables are defined either by default or by explicit type arguments
+		return false;
 	}
 }

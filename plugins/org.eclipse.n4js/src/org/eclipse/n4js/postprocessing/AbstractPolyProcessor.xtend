@@ -84,7 +84,7 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 				val callable = tsh.getCallableTypeRef(G, targetTypeRef);
 				if (callable !== null && callable.signatureTypeRef.present) {
 					val signatureTypeRef = callable.signatureTypeRef.get();
-					signatureTypeRef.generic && obj.typeArgs.size < signatureTypeRef.typeVars.size
+					N4JSLanguageUtils.isPoly(signatureTypeRef, obj)
 				} else {
 					false
 				}
