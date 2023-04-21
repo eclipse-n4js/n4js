@@ -1836,6 +1836,12 @@ class ASTStructureValidator {
 					IssueCodes.AST_BINARY_LOGICAL_EXPRESSION_MISSING_PART))
 
 		}
+		recursiveValidateASTStructure(
+			model,
+			producer,
+			validLabels,
+			constraints
+		);
 	}
 
 	def private dispatch void validateASTStructure(
