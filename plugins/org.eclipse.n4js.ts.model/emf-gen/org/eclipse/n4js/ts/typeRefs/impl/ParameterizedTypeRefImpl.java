@@ -29,7 +29,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
 
 import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
@@ -46,6 +45,8 @@ import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypingStrategy;
+
+import org.eclipse.n4js.ts.types.util.TypeModelUtils;
 
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 
@@ -450,30 +451,7 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 */
 	@Override
 	public EList<TypeArgument> getTypeArgsWithDefaults() {
-		final Type declType = this.getDeclaredType();
-		if (((declType != null) && declType.isGeneric())) {
-			final EList<TypeArgument> declTypeArgs = this.getDeclaredTypeArgs();
-			final int declTypeArgsCount = declTypeArgs.size();
-			final EList<TypeVariable> typeParams = declType.getTypeVars();
-			final int typeParamCount = typeParams.size();
-			if ((typeParamCount > declTypeArgsCount)) {
-				final TypeArgument[] args = new TypeArgument[typeParamCount];
-				for (int i = 0; (i < typeParamCount); i++) {
-					if ((i < declTypeArgsCount)) {
-						args[i] = declTypeArgs.get(i);
-					}
-					else {
-						final TypeRef defArg = typeParams.get(i).getDefaultArgument();
-						if ((defArg == null)) {
-							return declTypeArgs;
-						}
-						args[i] = defArg;
-					}
-				}
-				return XcoreCollectionLiterals.<TypeArgument>newImmutableEList(args);
-			}
-		}
-		return this.getDeclaredTypeArgs();
+		return TypeModelUtils.getTypeArgsWithDefaults(this.getDeclaredType(), this.getDeclaredTypeArgs());
 	}
 
 	/**

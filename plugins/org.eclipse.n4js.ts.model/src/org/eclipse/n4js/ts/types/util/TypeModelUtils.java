@@ -12,12 +12,20 @@ package org.eclipse.n4js.ts.types.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 
@@ -89,5 +97,62 @@ public class TypeModelUtils {
 	public static boolean isStructural(TypingStrategy typingStrategy) {
 		return typingStrategy != null && typingStrategy != TypingStrategy.NOMINAL
 				&& typingStrategy != TypingStrategy.DEFAULT;
+	}
+
+	/**
+	 * Returns all type arguments: those given in this type reference as well as default arguments of <em>optional</em>
+	 * type parameters for which the argument is omitted.
+	 * <p>
+	 * If a type argument is missing in this type reference for a <em>mandatory</em> type parameter (i.e. this type
+	 * reference is a {@link ParameterizedTypeRef#isRaw() raw type reference}) then nothing will be added and only the
+	 * type arguments actually given in this type reference will be returned (i.e. same return value as
+	 * {@link ParameterizedTypeRef#getDeclaredTypeArgs() #getDeclaredTypeArgs()}). This is to ensure consistent behavior
+	 * of this method and {@code #getDeclaredTypeArgs()} with respect to raw type references.
+	 *
+	 * @see TypeModelUtils#toString()
+	 */
+	public static EList<TypeArgument> getTypeArgsWithDefaults(Type declType, EList<TypeArgument> declTypeArgs) {
+		return getTypeArgsWithDefaults(declType, declTypeArgs, Function.identity());
+	}
+
+	/** Convenient method for {@link #getTypeArgsWithDefaults(Type, EList)} */
+	public static EList<TypeArgument> getTypeArgsWithDefaults(FunctionTypeExprOrRef signatureTypeRef,
+			List<? extends TypeArgument> declTypeArgs, Function<TypeRef, TypeRef> mapDefaultTypeArg) {
+
+		EList<TypeArgument> elist = XcoreCollectionLiterals.<TypeArgument> newBasicEList();
+		elist.addAll(declTypeArgs);
+		return getTypeArgsWithDefaults(signatureTypeRef.getDeclaredType(), elist, mapDefaultTypeArg);
+	}
+
+	private static EList<TypeArgument> getTypeArgsWithDefaults(Type declType, EList<TypeArgument> declTypeArgs,
+			Function<TypeRef, TypeRef> mapDefaultTypeArg) {
+
+		if (declType != null && declType.isGeneric()) {
+			int declTypeArgsCount = declTypeArgs.size();
+			EList<TypeVariable> typeParams = declType.getTypeVars();
+			int typeParamCount = typeParams.size();
+			if (typeParamCount > declTypeArgsCount) {
+				TypeArgument[] args = new TypeArgument[typeParamCount];
+				for (var i = 0; i < typeParamCount; i++) {
+					if (i < declTypeArgsCount) {
+						args[i] = declTypeArgs.get(i);
+					} else {
+						// will be 'null' if type parameter #i isn't optional
+						TypeRef defArg = typeParams.get(i).getDefaultArgument();
+						defArg = mapDefaultTypeArg.apply(defArg);
+
+						if (defArg == null) {
+							// no type argument given in declTypeArgs for non-optional type parameter #i
+							// --> we have a raw type reference and want this method to behave consistently
+							// with #getDeclaredTypeArgs() (see above)
+							return declTypeArgs;
+						}
+						args[i] = defArg;
+					}
+				}
+				return XcoreCollectionLiterals.<TypeArgument> newImmutableEList(args);
+			}
+		}
+		return declTypeArgs;
 	}
 }

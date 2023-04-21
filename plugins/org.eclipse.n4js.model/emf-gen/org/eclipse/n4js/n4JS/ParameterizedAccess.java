@@ -50,7 +50,7 @@ public interface ParameterizedAccess extends EObject {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Returns <code>true<code> if the expression has type arguments.
+	 * Returns <code>true<code> iff the expression has explicit type arguments. Note that default type arguments are not respected.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated

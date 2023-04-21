@@ -61,9 +61,8 @@ package class PolyProcessor_CallExpression extends AbstractPolyProcessor {
 		if (callable === null || !callable.signatureTypeRef.present)
 			return TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
 		val sigTypeRef = callable.signatureTypeRef.get();
-		val isPoly = sigTypeRef.generic && callExpr.typeArgs.size < sigTypeRef.typeVars.size;
 
-		if (!isPoly) {
+		if (!N4JSLanguageUtils.isPoly(sigTypeRef, callExpr)) {
 			val result = ts.type(G, callExpr);
 			// do not store in cache (TypeProcessor responsible for storing types of non-poly expressions in cache)
 			return result;
