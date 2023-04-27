@@ -30,7 +30,6 @@ import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.resource.N4JSCache;
 import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.scoping.utils.ImportSpecifierUtil;
 import org.eclipse.n4js.scoping.utils.MainModuleAwareSelectableBasedScope;
 import org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope;
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils;
@@ -277,7 +276,8 @@ public class DeclMergingHelper {
 
 			resultSet.addAll(findAndResolve(ctxPieScope, context, elemQN, elemPrj));
 
-			ModuleSpecifierForm importType = ImportSpecifierUtil.computeImportType(elemQN, false, elemPrj);
+			// ModuleSpecifierForm importType = ImportSpecifierUtil.computeImportType(elemQN, false, elemPrj);
+			ModuleSpecifierForm importType = ctxPieScope.computeImportType(elemQN, elemPrj);
 			if (importType != ModuleSpecifierForm.PLAIN) {
 				// means that the qn of element is shadowed by a project import
 				resultSet.addAll(findAndResolve(ctxPieScope, context, elemQN));
