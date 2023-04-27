@@ -311,6 +311,9 @@ public class XtMethods {
 
 	/** Implementation for {@link XtIdeTest#type(XtMethodData)} */
 	public String getTypeString(EObject eobject, boolean expectedType, boolean withAliasResolution) {
+		if (eobject == null) {
+			return "No element found at given region";
+		}
 		if (eobject instanceof LiteralOrComputedPropertyName) {
 			eobject = eobject.eContainer();
 		}
