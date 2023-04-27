@@ -76,6 +76,12 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	@Inject
 	private DeclMergingHelper declMergingHelper;
 
+
+	/** Convenience for {@link #addSubstitutions(RuleEnvironment, TypeRef, RecursionGuard)} */
+	def void addSubstitutions(RuleEnvironment G, TypeRef typeRef) {
+		addSubstitutions(G, typeRef, null);
+	}
+
 	/**
 	 * Given a type reference to a generic type G where type variables are already bound, e.g.,
 	 * G&lt;A,B>, this method adds to the given rule environment the mappings for the type variables
@@ -93,25 +99,25 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	 * </pre>
 	 * this function will add the mappings T -> A, U -> B, V -> C.
 	 */
-	def void addSubstitutions(RuleEnvironment G, TypeRef typeRef) {
+	def void addSubstitutions(RuleEnvironment G, TypeRef typeRef, RecursionGuard<TypeAlias> guard) {
 		val declType = typeRef.declaredType;
 		if(typeRef instanceof ExistentialTypeRef) {
 			val wildcard = typeRef.wildcard;
 			if (wildcard !== null) {
 				val wildcardUB = ts.upperBound(G, wildcard);
-				addSubstitutions(G, wildcardUB);
+				addSubstitutions(G, wildcardUB, guard);
 			}
 		}
 		else if(typeRef instanceof BoundThisTypeRef) {
 			val actualThisTypeRef = typeRef.actualThisTypeRef;
 			if (actualThisTypeRef !== null) {
-				addSubstitutions(G, actualThisTypeRef);
+				addSubstitutions(G, actualThisTypeRef, guard);
 			}
 		}
 		else if(typeRef instanceof ComposedTypeRef) {
 			for (tRef : typeRef.typeRefs) {
 				if (tRef !== null) {
-					addSubstitutions(G, tRef);
+					addSubstitutions(G, tRef, guard);
 				}
 			}
 		}
@@ -119,13 +125,16 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 			primAddSubstitutions(G, typeRef);
 			val actualTypeRef = declType.typeRef;
 			if (actualTypeRef !== null && actualTypeRef.declaredType !== declType) {
-				addSubstitutions(G, actualTypeRef);
+				val guardOrNew = if (guard === null) new RecursionGuard<TypeAlias>() else guard;
+				if (guardOrNew.tryNext(declType)) {
+					addSubstitutions(G, actualTypeRef, guardOrNew);
+				}
 			}
 		}
 		else if(declType instanceof TypeVariable) {
 			val currBound = declType.declaredUpperBound;
 			if(currBound !== null) {
-				addSubstitutions(G, currBound);
+				addSubstitutions(G, currBound, guard);
 			}
 		}
 		else if(declType instanceof TClassifier) {
