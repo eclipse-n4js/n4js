@@ -277,10 +277,10 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 			for (ParserRuleContext childCtx : children) {
 				DtsTypeRefBuilder subTypeRefBuilder = newTypeRefBuilder();
 				TypeRef childTypeRef = subTypeRefBuilder.doConsume(childCtx);
-				if (childTypeRef != null) {
+				if (subTypeRefBuilder.returnTypeRefWasOptional()) {
+					returnTypeRefIsOptional = true;
+				} else if (childTypeRef != null) {
 					typeRefs.add(childTypeRef);
-				} else {
-					returnTypeRefIsOptional |= subTypeRefBuilder.returnTypeRefWasOptional();
 				}
 			}
 
@@ -513,7 +513,10 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 						// at this point we know that the current 'void' reference is part of a composed type in a
 						// return type ref and will be omitted
 						returnTypeRefWasOptional = true;
-						return null;
+						// return null;
+						return createUndefinedTypeRef();
+					} else {
+						// return createUndefinedTypeRef();
 					}
 				}
 			}

@@ -170,6 +170,11 @@ public abstract class AbstractDtsBuilderWithHelpers<T extends ParserRuleContext,
 		return createAnyPlusTypeRef();
 	}
 
+	/** @return a new {@code undefined} type reference. */
+	protected final ParameterizedTypeRef createUndefinedTypeRef() {
+		return ParserContextUtils.createUndefinedTypeRef(resource);
+	}
+
 	/** @return a new {@code boolean} type reference. */
 	protected final ParameterizedTypeRef createBooleanTypeRef() {
 		return ParserContextUtils.createBooleanTypeRef(resource);
