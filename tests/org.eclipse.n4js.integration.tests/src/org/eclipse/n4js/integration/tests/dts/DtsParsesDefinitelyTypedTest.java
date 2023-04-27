@@ -73,7 +73,7 @@ public class DtsParsesDefinitelyTypedTest {
 		cliTools.setInheritIO(true);
 		cliTools.gitHardReset("https://github.com/DefinitelyTyped/DefinitelyTyped.git", targetDir, "master", true);
 
-		assertParseCounts(targetDir, 29000, 1000, 0);
+		assertParseCounts(targetDir, 30000, 1000, 0);
 	}
 
 	/**

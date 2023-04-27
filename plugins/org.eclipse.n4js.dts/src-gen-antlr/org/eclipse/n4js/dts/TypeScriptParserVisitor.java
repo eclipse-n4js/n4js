@@ -1,4 +1,4 @@
-// Generated from /Users/marcusmews/Eclipses/ECL2/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
+// Generated from /Users/marcusmews/Eclipses/ECL3/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -226,6 +226,12 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitInferTypeRef(TypeScriptParser.InferTypeRefContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#templateStringTypeRef}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTemplateStringTypeRef(TypeScriptParser.TemplateStringTypeRefContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#typeAliasDeclaration}.
 	 * @param ctx the parse tree

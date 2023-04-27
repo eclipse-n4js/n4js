@@ -140,6 +140,7 @@ primaryTypeExpression:
     | queryTypeRef
     | importTypeRef
     | inferTypeRef
+    | templateStringTypeRef
     | typeRefWithModifiers
     | parenthesizedTypeRef
     );
@@ -238,6 +239,10 @@ propertyAccessExpressionInTypeRef
 
 inferTypeRef:
 	Infer typeReferenceName
+;
+
+templateStringTypeRef:
+	templateStringLiteral
 ;
 
 typeAliasDeclaration
