@@ -276,7 +276,6 @@ public class DeclMergingHelper {
 
 			resultSet.addAll(findAndResolve(ctxPieScope, context, elemQN, elemPrj));
 
-			// ModuleSpecifierForm importType = ImportSpecifierUtil.computeImportType(elemQN, false, elemPrj);
 			ModuleSpecifierForm importType = ctxPieScope.computeImportType(elemQN, elemPrj);
 			if (importType != ModuleSpecifierForm.PLAIN) {
 				// means that the qn of element is shadowed by a project import
