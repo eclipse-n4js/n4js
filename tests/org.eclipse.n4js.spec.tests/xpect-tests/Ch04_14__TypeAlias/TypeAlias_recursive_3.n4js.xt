@@ -13,7 +13,11 @@
 
 
 
-// XPECT noerrors -->
+// XPECT errors --> "Cyclic type alias declaration: B -> A." at "A"
 type A<T> = B | string;
 
+/* XPECT errors ---
+	"Cyclic type alias declaration: A -> B." at "B"
+	"Incorrect number of type arguments for type alias A: expected 1, got 0." at "A"
+--- */
 type B = A | number;
