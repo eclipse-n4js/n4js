@@ -666,6 +666,11 @@ public class ParserContextUtils {
 	}
 
 	/** @return a new {@code boolean} type reference. */
+	public static ParameterizedTypeRef createUndefinedTypeRef(LazyLinkingResource resource) {
+		return createParameterizedTypeRef(resource, "undefined", false);
+	}
+
+	/** @return a new {@code boolean} type reference. */
 	public static ParameterizedTypeRef createBooleanTypeRef(LazyLinkingResource resource) {
 		return createParameterizedTypeRef(resource, "boolean", false);
 	}
