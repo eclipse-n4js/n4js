@@ -9,8 +9,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import * as fs_lib from "fs";
-import glob from "glob";
+import { sync } from "glob";
+import { mkdirSync } from "fs";
 
 export const PACKAGE_JSON = "package.json";
 
@@ -74,12 +74,12 @@ function doLog(kind: LogKind, msg: string) {
 
 
 export function resolveGlobPattern(pathWithGlob: string): string[] {
-	return glob.sync(pathWithGlob, {});
+	return sync(pathWithGlob, {});
 }
 
 
 export function mkdirs(path: string) {
-	fs_lib.mkdirSync(path, { recursive: true });
+	mkdirSync(path, { recursive: true });
 }
 
 

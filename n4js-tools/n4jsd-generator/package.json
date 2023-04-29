@@ -15,17 +15,18 @@
   },
   "dependencies": {
     "@types/node": "^16",
+    "@types/glob": "7.2.0",
     "glob": "~7.2.0",
-    "n4js-runtime": "~0.32.2",
-    "n4js-runtime-es2015": "~0.32.2",
-    "n4js-runtime-esnext": "~0.32.2",
+    "n4js-runtime": "~0.34.5",
+    "n4js-runtime-es2015": "~0.34.5",
+    "n4js-runtime-esnext": "~0.34.5",
     "typescript": "~4.4.4"
   },
   "devDependencies": {
-    "n4js-cli": "~0.32.2",
-    "n4js-mangelhaft-cli": "~0.32.2",
-    "org.eclipse.n4js.mangelhaft": "~0.32.2",
-    "org.eclipse.n4js.mangelhaft.assert": "~0.32.2"
+    "n4js-cli": "~0.34.5",
+    "n4js-mangelhaft-cli": "~0.34.5",
+    "org.eclipse.n4js.mangelhaft": "~0.34.5",
+    "org.eclipse.n4js.mangelhaft.assert": "~0.34.5"
   },
   "n4js": {
     "projectType": "library",
