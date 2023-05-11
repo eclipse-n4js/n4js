@@ -198,7 +198,7 @@ public class XtMethods {
 		List<EObject> refs = findReferenceHelper.findReferences(eObj, eObject.eResource().getResourceSet());
 		ArrayList<String> result = Lists.newArrayList();
 		for (EObject ref : refs) {
-			if (ref instanceof PropertyNameOwner) {
+			if (ref instanceof PropertyNameOwner && ((PropertyNameOwner) ref).getDeclaredName() != null) {
 				ref = ((PropertyNameOwner) ref).getDeclaredName();
 			}
 

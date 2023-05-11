@@ -13,6 +13,7 @@ package org.eclipse.n4js.scoping;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.resource.N4JSResource;
@@ -137,7 +138,7 @@ public class ExportedElementsCollector {
 	 *
 	 *            In such a case, the members of the type of variable {@code c} are directly available as exported
 	 *            elements and computing those members requires an instance of {@link MemberAccess} to be passed to
-	 *            {@link MemberScopingHelper#createMemberScope(TypeRef, MemberAccess, boolean, boolean, boolean)
+	 *            {@link MemberScopingHelper#createMemberScope(TypeRef, EObject, boolean, boolean, boolean)
 	 *            MemberScopingHelper}. If this argument is absent, support for this special case will be turned off.
 	 */
 	public Iterable<IEObjectDescription> getExportedElements(AbstractNamespace namespace, N4JSResource contextResource,
