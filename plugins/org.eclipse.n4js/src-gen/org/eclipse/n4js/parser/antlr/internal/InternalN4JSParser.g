@@ -35905,59 +35905,101 @@ ruleBindingProperty returns [EObject current=null]
 }:
 	(
 		(
-			(
-				((
+			((
+				(
 					(
 						(
-							ruleLiteralOrComputedPropertyName
+							((
+								ruleIdentifierName
+							)
+							)=>
+							(
+								ruleIdentifierName
+							)
+						)
+						    |
+						(
+							(
+								ruleLiteralOrComputedPropertyName
+							)
 						)
 					)
 					Colon
 				)
-				)=>
+				(
+					(
+						ruleBindingElement
+					)
+				)
+			)
+			)=>
+			(
 				(
 					(
 						(
-							{
-								newCompositeNode(grammarAccess.getBindingPropertyAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_0_0_0());
-							}
-							lv_declaredName_0_0=ruleLiteralOrComputedPropertyName
-							{
-								if ($current==null) {
-									$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
+							((
+								ruleIdentifierName
+							)
+							)=>
+							(
+								{
+									if ($current==null) {
+										$current = createModelElement(grammarAccess.getBindingPropertyRule());
+									}
 								}
-								set(
-									$current,
-									"declaredName",
-									lv_declaredName_0_0,
-									"org.eclipse.n4js.N4JS.LiteralOrComputedPropertyName");
-								afterParserOrEnumRuleCall();
-							}
+								{
+									newCompositeNode(grammarAccess.getBindingPropertyAccess().getPropertyIdentifiableElementCrossReference_0_0_0_0_0_0());
+								}
+								ruleIdentifierName
+								{
+									afterParserOrEnumRuleCall();
+								}
+							)
+						)
+						    |
+						(
+							(
+								{
+									newCompositeNode(grammarAccess.getBindingPropertyAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_0_0_1_0());
+								}
+								lv_declaredName_1_0=ruleLiteralOrComputedPropertyName
+								{
+									if ($current==null) {
+										$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
+									}
+									set(
+										$current,
+										"declaredName",
+										lv_declaredName_1_0,
+										"org.eclipse.n4js.N4JS.LiteralOrComputedPropertyName");
+									afterParserOrEnumRuleCall();
+								}
+							)
 						)
 					)
-					otherlv_1=Colon
+					otherlv_2=Colon
 					{
-						newLeafNode(otherlv_1, grammarAccess.getBindingPropertyAccess().getColonKeyword_0_0_0_1());
+						newLeafNode(otherlv_2, grammarAccess.getBindingPropertyAccess().getColonKeyword_0_0_0_1());
 					}
 				)
-			)
-			(
 				(
-					{
-						newCompositeNode(grammarAccess.getBindingPropertyAccess().getValueBindingElementParserRuleCall_0_1_0());
-					}
-					lv_value_2_0=ruleBindingElement
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
+					(
+						{
+							newCompositeNode(grammarAccess.getBindingPropertyAccess().getValueBindingElementParserRuleCall_0_0_1_0());
 						}
-						set(
-							$current,
-							"value",
-							lv_value_2_0,
-							"org.eclipse.n4js.N4JS.BindingElement");
-						afterParserOrEnumRuleCall();
-					}
+						lv_value_3_0=ruleBindingElement
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
+							}
+							set(
+								$current,
+								"value",
+								lv_value_3_0,
+								"org.eclipse.n4js.N4JS.BindingElement");
+							afterParserOrEnumRuleCall();
+						}
+					)
 				)
 			)
 		)
@@ -35967,7 +36009,7 @@ ruleBindingProperty returns [EObject current=null]
 				{
 					newCompositeNode(grammarAccess.getBindingPropertyAccess().getValueSingleNameBindingParserRuleCall_1_0());
 				}
-				lv_value_3_0=ruleSingleNameBinding
+				lv_value_4_0=ruleSingleNameBinding
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
@@ -35975,7 +36017,7 @@ ruleBindingProperty returns [EObject current=null]
 					set(
 						$current,
 						"value",
-						lv_value_3_0,
+						lv_value_4_0,
 						"org.eclipse.n4js.N4JS.SingleNameBinding");
 					afterParserOrEnumRuleCall();
 				}
@@ -35995,59 +36037,101 @@ norm1_BindingProperty returns [EObject current=null]
 }:
 	(
 		(
-			(
-				((
+			((
+				(
 					(
 						(
-							norm1_LiteralOrComputedPropertyName
+							((
+								ruleIdentifierName
+							)
+							)=>
+							(
+								ruleIdentifierName
+							)
+						)
+						    |
+						(
+							(
+								norm1_LiteralOrComputedPropertyName
+							)
 						)
 					)
 					Colon
 				)
-				)=>
+				(
+					(
+						norm1_BindingElement
+					)
+				)
+			)
+			)=>
+			(
 				(
 					(
 						(
-							{
-								newCompositeNode(grammarAccess.getBindingPropertyAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_0_0_0());
-							}
-							lv_declaredName_0_0=norm1_LiteralOrComputedPropertyName
-							{
-								if ($current==null) {
-									$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
+							((
+								ruleIdentifierName
+							)
+							)=>
+							(
+								{
+									if ($current==null) {
+										$current = createModelElement(grammarAccess.getBindingPropertyRule());
+									}
 								}
-								set(
-									$current,
-									"declaredName",
-									lv_declaredName_0_0,
-									"org.eclipse.n4js.N4JS.LiteralOrComputedPropertyName");
-								afterParserOrEnumRuleCall();
-							}
+								{
+									newCompositeNode(grammarAccess.getBindingPropertyAccess().getPropertyIdentifiableElementCrossReference_0_0_0_0_0_0());
+								}
+								ruleIdentifierName
+								{
+									afterParserOrEnumRuleCall();
+								}
+							)
+						)
+						    |
+						(
+							(
+								{
+									newCompositeNode(grammarAccess.getBindingPropertyAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_0_0_1_0());
+								}
+								lv_declaredName_1_0=norm1_LiteralOrComputedPropertyName
+								{
+									if ($current==null) {
+										$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
+									}
+									set(
+										$current,
+										"declaredName",
+										lv_declaredName_1_0,
+										"org.eclipse.n4js.N4JS.LiteralOrComputedPropertyName");
+									afterParserOrEnumRuleCall();
+								}
+							)
 						)
 					)
-					otherlv_1=Colon
+					otherlv_2=Colon
 					{
-						newLeafNode(otherlv_1, grammarAccess.getBindingPropertyAccess().getColonKeyword_0_0_0_1());
+						newLeafNode(otherlv_2, grammarAccess.getBindingPropertyAccess().getColonKeyword_0_0_0_1());
 					}
 				)
-			)
-			(
 				(
-					{
-						newCompositeNode(grammarAccess.getBindingPropertyAccess().getValueBindingElementParserRuleCall_0_1_0());
-					}
-					lv_value_2_0=norm1_BindingElement
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
+					(
+						{
+							newCompositeNode(grammarAccess.getBindingPropertyAccess().getValueBindingElementParserRuleCall_0_0_1_0());
 						}
-						set(
-							$current,
-							"value",
-							lv_value_2_0,
-							"org.eclipse.n4js.N4JS.BindingElement");
-						afterParserOrEnumRuleCall();
-					}
+						lv_value_3_0=norm1_BindingElement
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
+							}
+							set(
+								$current,
+								"value",
+								lv_value_3_0,
+								"org.eclipse.n4js.N4JS.BindingElement");
+							afterParserOrEnumRuleCall();
+						}
+					)
 				)
 			)
 		)
@@ -36057,7 +36141,7 @@ norm1_BindingProperty returns [EObject current=null]
 				{
 					newCompositeNode(grammarAccess.getBindingPropertyAccess().getValueSingleNameBindingParserRuleCall_1_0());
 				}
-				lv_value_3_0=norm1_SingleNameBinding
+				lv_value_4_0=norm1_SingleNameBinding
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
@@ -36065,7 +36149,7 @@ norm1_BindingProperty returns [EObject current=null]
 					set(
 						$current,
 						"value",
-						lv_value_3_0,
+						lv_value_4_0,
 						"org.eclipse.n4js.N4JS.SingleNameBinding");
 					afterParserOrEnumRuleCall();
 				}

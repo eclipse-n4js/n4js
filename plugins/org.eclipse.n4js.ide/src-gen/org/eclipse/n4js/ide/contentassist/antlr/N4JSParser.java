@@ -105,6 +105,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getN4MethodDeclarationAccess().getAlternatives_0_0_4(), "rule__N4MethodDeclaration__Alternatives_0_0_4");
 			builder.put(grammarAccess.getBindingPatternAccess().getAlternatives(), "rule__BindingPattern__Alternatives");
 			builder.put(grammarAccess.getBindingPropertyAccess().getAlternatives(), "rule__BindingProperty__Alternatives");
+			builder.put(grammarAccess.getBindingPropertyAccess().getAlternatives_0_0_0_0(), "rule__BindingProperty__Alternatives_0_0_0_0");
 			builder.put(grammarAccess.getBindingElementImplAccess().getAlternatives(), "rule__BindingElementImpl__Alternatives");
 			builder.put(grammarAccess.getLiteralOrComputedPropertyNameAccess().getAlternatives(), "rule__LiteralOrComputedPropertyName__Alternatives");
 			builder.put(grammarAccess.getJSXElementAccess().getAlternatives_3(), "rule__JSXElement__Alternatives_3");
@@ -1041,8 +1042,9 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getArrayBindingPatternAccess().getElementsAssignment_3_1_1(), "rule__ArrayBindingPattern__ElementsAssignment_3_1_1");
 			builder.put(grammarAccess.getArrayBindingPatternAccess().getElementsAssignment_3_1_2(), "rule__ArrayBindingPattern__ElementsAssignment_3_1_2");
 			builder.put(grammarAccess.getArrayBindingPatternAccess().getElementsAssignment_3_2_1(), "rule__ArrayBindingPattern__ElementsAssignment_3_2_1");
-			builder.put(grammarAccess.getBindingPropertyAccess().getDeclaredNameAssignment_0_0_0_0(), "rule__BindingProperty__DeclaredNameAssignment_0_0_0_0");
-			builder.put(grammarAccess.getBindingPropertyAccess().getValueAssignment_0_1(), "rule__BindingProperty__ValueAssignment_0_1");
+			builder.put(grammarAccess.getBindingPropertyAccess().getPropertyAssignment_0_0_0_0_0(), "rule__BindingProperty__PropertyAssignment_0_0_0_0_0");
+			builder.put(grammarAccess.getBindingPropertyAccess().getDeclaredNameAssignment_0_0_0_0_1(), "rule__BindingProperty__DeclaredNameAssignment_0_0_0_0_1");
+			builder.put(grammarAccess.getBindingPropertyAccess().getValueAssignment_0_0_1(), "rule__BindingProperty__ValueAssignment_0_0_1");
 			builder.put(grammarAccess.getBindingPropertyAccess().getValueAssignment_1(), "rule__BindingProperty__ValueAssignment_1");
 			builder.put(grammarAccess.getSingleNameBindingAccess().getVarDeclAssignment(), "rule__SingleNameBinding__VarDeclAssignment");
 			builder.put(grammarAccess.getBindingRestElementAccess().getRestAssignment_0(), "rule__BindingRestElement__RestAssignment_0");

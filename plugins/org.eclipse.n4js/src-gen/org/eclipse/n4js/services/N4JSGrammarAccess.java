@@ -11045,11 +11045,15 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
 		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
 		private final Group cGroup_0_0_0 = (Group)cGroup_0_0.eContents().get(0);
-		private final Assignment cDeclaredNameAssignment_0_0_0_0 = (Assignment)cGroup_0_0_0.eContents().get(0);
-		private final RuleCall cDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_0_0_0 = (RuleCall)cDeclaredNameAssignment_0_0_0_0.eContents().get(0);
+		private final Alternatives cAlternatives_0_0_0_0 = (Alternatives)cGroup_0_0_0.eContents().get(0);
+		private final Assignment cPropertyAssignment_0_0_0_0_0 = (Assignment)cAlternatives_0_0_0_0.eContents().get(0);
+		private final CrossReference cPropertyIdentifiableElementCrossReference_0_0_0_0_0_0 = (CrossReference)cPropertyAssignment_0_0_0_0_0.eContents().get(0);
+		private final RuleCall cPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_0_0_0_0_1 = (RuleCall)cPropertyIdentifiableElementCrossReference_0_0_0_0_0_0.eContents().get(1);
+		private final Assignment cDeclaredNameAssignment_0_0_0_0_1 = (Assignment)cAlternatives_0_0_0_0.eContents().get(1);
+		private final RuleCall cDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_0_0_1_0 = (RuleCall)cDeclaredNameAssignment_0_0_0_0_1.eContents().get(0);
 		private final Keyword cColonKeyword_0_0_0_1 = (Keyword)cGroup_0_0_0.eContents().get(1);
-		private final Assignment cValueAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
-		private final RuleCall cValueBindingElementParserRuleCall_0_1_0 = (RuleCall)cValueAssignment_0_1.eContents().get(0);
+		private final Assignment cValueAssignment_0_0_1 = (Assignment)cGroup_0_0.eContents().get(1);
+		private final RuleCall cValueBindingElementParserRuleCall_0_0_1_0 = (RuleCall)cValueAssignment_0_0_1.eContents().get(0);
 		private final Assignment cValueAssignment_1 = (Assignment)cAlternatives.eContents().get(1);
 		private final RuleCall cValueSingleNameBindingParserRuleCall_1_0 = (RuleCall)cValueAssignment_1.eContents().get(0);
 		
@@ -11060,38 +11064,70 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		// * segment, e.g. { prop: newVar: TypeOfNewVar }.
 		// */
 		//BindingProperty <Yield, AllowType>:
-		//      =>(declaredName=LiteralOrComputedPropertyName<Yield> ':') value=BindingElement<Yield>
+		//    =>(
+		//          (
+		//              (=>property=[types::IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName<Yield>) ':'
+		//          )
+		//          value=BindingElement<Yield>
+		//    )
 		//    | value=SingleNameBinding<Yield,AllowType>
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//  =>(declaredName=LiteralOrComputedPropertyName<Yield> ':') value=BindingElement<Yield>
+		//=>(
+		//      (
+		//          (=>property=[types::IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName<Yield>) ':'
+		//      )
+		//      value=BindingElement<Yield>
+		//)
 		//| value=SingleNameBinding<Yield,AllowType>
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
-		//=>(declaredName=LiteralOrComputedPropertyName<Yield> ':') value=BindingElement<Yield>
+		//=>(
+		//      (
+		//          (=>property=[types::IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName<Yield>) ':'
+		//      )
+		//      value=BindingElement<Yield>
+		//)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//=>(declaredName=LiteralOrComputedPropertyName<Yield> ':')
+		//(
+		//    (=>property=[types::IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName<Yield>) ':'
+		//)
+		//value=BindingElement<Yield>
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
-		//declaredName=LiteralOrComputedPropertyName<Yield> ':'
+		//(
+		//    (=>property=[types::IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName<Yield>) ':'
+		//)
 		public Group getGroup_0_0_0() { return cGroup_0_0_0; }
 		
+		//(=>property=[types::IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName<Yield>)
+		public Alternatives getAlternatives_0_0_0_0() { return cAlternatives_0_0_0_0; }
+		
+		//=>property=[types::IdentifiableElement|IdentifierName]
+		public Assignment getPropertyAssignment_0_0_0_0_0() { return cPropertyAssignment_0_0_0_0_0; }
+		
+		//[types::IdentifiableElement|IdentifierName]
+		public CrossReference getPropertyIdentifiableElementCrossReference_0_0_0_0_0_0() { return cPropertyIdentifiableElementCrossReference_0_0_0_0_0_0; }
+		
+		//IdentifierName
+		public RuleCall getPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_0_0_0_0_1() { return cPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_0_0_0_0_1; }
+		
 		//declaredName=LiteralOrComputedPropertyName<Yield>
-		public Assignment getDeclaredNameAssignment_0_0_0_0() { return cDeclaredNameAssignment_0_0_0_0; }
+		public Assignment getDeclaredNameAssignment_0_0_0_0_1() { return cDeclaredNameAssignment_0_0_0_0_1; }
 		
 		//LiteralOrComputedPropertyName<Yield>
-		public RuleCall getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_0_0_0() { return cDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_0_0_0; }
+		public RuleCall getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_0_0_1_0() { return cDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_0_0_1_0; }
 		
 		//':'
 		public Keyword getColonKeyword_0_0_0_1() { return cColonKeyword_0_0_0_1; }
 		
 		//value=BindingElement<Yield>
-		public Assignment getValueAssignment_0_1() { return cValueAssignment_0_1; }
+		public Assignment getValueAssignment_0_0_1() { return cValueAssignment_0_0_1; }
 		
 		//BindingElement<Yield>
-		public RuleCall getValueBindingElementParserRuleCall_0_1_0() { return cValueBindingElementParserRuleCall_0_1_0; }
+		public RuleCall getValueBindingElementParserRuleCall_0_0_1_0() { return cValueBindingElementParserRuleCall_0_0_1_0; }
 		
 		//value=SingleNameBinding<Yield,AllowType>
 		public Assignment getValueAssignment_1() { return cValueAssignment_1; }
@@ -15668,7 +15704,12 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	// * segment, e.g. { prop: newVar: TypeOfNewVar }.
 	// */
 	//BindingProperty <Yield, AllowType>:
-	//      =>(declaredName=LiteralOrComputedPropertyName<Yield> ':') value=BindingElement<Yield>
+	//    =>(
+	//          (
+	//              (=>property=[types::IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName<Yield>) ':'
+	//          )
+	//          value=BindingElement<Yield>
+	//    )
 	//    | value=SingleNameBinding<Yield,AllowType>
 	//;
 	public BindingPropertyElements getBindingPropertyAccess() {

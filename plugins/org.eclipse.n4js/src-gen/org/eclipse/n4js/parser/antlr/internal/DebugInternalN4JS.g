@@ -8920,13 +8920,30 @@ norm1_ArrayBindingPattern:
 ruleBindingProperty:
 	(
 		(
-			(ruleLiteralOrComputedPropertyName
+			((
+				(
+					(ruleIdentifierName
+					)=>
+					ruleIdentifierName
+				)
+				    |
+				ruleLiteralOrComputedPropertyName
+			)
 			':'
+			ruleBindingElement
 			)=>
-			ruleLiteralOrComputedPropertyName
+			(
+				(
+					(ruleIdentifierName
+					)=>
+					ruleIdentifierName
+				)
+				    |
+				ruleLiteralOrComputedPropertyName
+			)
 			':'
+			ruleBindingElement
 		)
-		ruleBindingElement
 		    |
 		ruleSingleNameBinding
 	)
@@ -8936,13 +8953,30 @@ ruleBindingProperty:
 norm1_BindingProperty:
 	(
 		(
-			(norm1_LiteralOrComputedPropertyName
+			((
+				(
+					(ruleIdentifierName
+					)=>
+					ruleIdentifierName
+				)
+				    |
+				norm1_LiteralOrComputedPropertyName
+			)
 			':'
+			norm1_BindingElement
 			)=>
-			norm1_LiteralOrComputedPropertyName
+			(
+				(
+					(ruleIdentifierName
+					)=>
+					ruleIdentifierName
+				)
+				    |
+				norm1_LiteralOrComputedPropertyName
+			)
 			':'
+			norm1_BindingElement
 		)
-		norm1_BindingElement
 		    |
 		norm1_SingleNameBinding
 	)
