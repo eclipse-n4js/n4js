@@ -24,6 +24,11 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.InternalEObject
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.n4JS.Argument
+import org.eclipse.n4js.n4JS.ArrayBindingPattern
+import org.eclipse.n4js.n4JS.BindingElement
+import org.eclipse.n4js.n4JS.BindingProperty
+import org.eclipse.n4js.n4JS.DestructNode
+import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.IdentifierRef
@@ -67,6 +72,7 @@ import org.eclipse.n4js.scoping.utils.MergedScope
 import org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope
 import org.eclipse.n4js.scoping.utils.ScopeSnapshotHelper
 import org.eclipse.n4js.scoping.utils.SourceElementExtensions
+import org.eclipse.n4js.scoping.utils.UberParentScope
 import org.eclipse.n4js.scoping.validation.ContextAwareTypeScopeValidator
 import org.eclipse.n4js.scoping.validation.ScopeInfo
 import org.eclipse.n4js.scoping.validation.VeeScopeValidator
@@ -269,6 +275,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			NamedImportSpecifier					: return scope_ImportedElement(context, reference)
 			ExportDeclaration						: return scope_ImportedModule(context, reference)
 			IdentifierRef							: return scope_IdentifierRef_id(context, reference)
+			BindingProperty							: return scope_BindingProperty_property(context, reference)
 			ParameterizedPropertyAccessExpression	: return scope_PropertyAccessExpression_property(context, reference)
 			N4FieldAccessor							: {
 				val container = EcoreUtil2.getContainerOfType(context, N4ClassifierDefinition);
@@ -597,6 +604,58 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 	}
 
+
+	/**
+	 * Called from getScope(), binds a property reference.
+	 */
+	private def IScope scope_BindingProperty_property(BindingProperty bindingProperty, EReference ref) {
+		var TypeRef cTypeRef = null;
+		val destNodeTop = DestructNode.unify(DestructureUtils.getTop(bindingProperty));
+		val parentDestNode = destNodeTop?.findNodeOrParentForElement(bindingProperty, true);
+		if (parentDestNode !== null) {
+			val G = newRuleEnvironment(bindingProperty);
+			val parentAstElem = parentDestNode.astElement;
+			if (parentAstElem instanceof BindingProperty) {
+				if (parentAstElem.property !== null) {
+					cTypeRef = ts.type(G, parentAstElem.property);
+				}
+			} else if (parentAstElem instanceof BindingElement && parentAstElem.eContainer instanceof ArrayBindingPattern) {
+				val parent2DestNode = destNodeTop?.findNodeOrParentForElement(parentAstElem, true);
+				if (parent2DestNode !== null) {
+					var TypeRef arrayType = null;
+					val parent2AstElem = parent2DestNode.astElement;
+					if (parent2AstElem instanceof BindingProperty) {
+						if (parent2AstElem.property !== null) {
+							arrayType = ts.type(G, parent2AstElem.property);
+						}
+					} else {
+						arrayType = ts.type(G, parent2DestNode.assignedElem);
+					}
+					
+					val idx = parent2DestNode.nestedNodes.indexOf(parentDestNode);
+					if (arrayType !== null && arrayType.typeArgsWithDefaults.size > idx && G.isIterableN(arrayType)) {
+						val typeArg = arrayType.typeArgsWithDefaults.get(idx);
+						if (typeArg instanceof TypeRef) {
+							cTypeRef = typeArg;
+						}
+					}
+				}
+			} else {
+				// fallback
+				cTypeRef = ts.type(G, parentDestNode.assignedElem);
+			}
+			if (DestructureUtils.isTopOfDestructuringForStatement(parentDestNode.astElement) && cTypeRef.isArrayLike) {
+				tsh.addSubstitutions(G, cTypeRef);
+				cTypeRef = ts.substTypeVariables(G, cTypeRef.declaredType.elementType);
+			}
+		}
+		
+		if (cTypeRef !== null) {
+			return new UberParentScope("scope_BindingProperty_property", createScopeForMemberAccess(cTypeRef, bindingProperty), new DynamicPseudoScope());
+		}
+		return new DynamicPseudoScope();
+	}
+
 	/*
 	 * In <pre>receiver.property</pre>, binds "property".
 	 *
@@ -649,7 +708,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return result;
 	}
 
-	private def IScope createScopeForMemberAccess(TypeRef targetTypeRef, MemberAccess context) {
+	private def IScope createScopeForMemberAccess(TypeRef targetTypeRef, EObject context) {
 		val staticAccess = targetTypeRef instanceof TypeTypeRef;
 		val structFieldInitMode = targetTypeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
 		val checkVisibility = true;

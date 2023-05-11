@@ -157,6 +157,12 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 			val errMsg = new StringBuffer;
 			val propTypeRef = destructureHelper.getPropertyTypeForNode(G, valueTypePerNode.get(parentNode), parentMemberScope, node.propName, errMsg);
 			if(errMsg.length>0) {
+				val astElement = node.astElement;
+				if (astElement instanceof BindingProperty && !(astElement as BindingProperty).isSingleNameBinding) {
+					// handled elsewhere: var {fieldPublic: a, fieldPrivate: b} = cls;
+					return true;
+				}
+			
 				val msg = getMessageForDESTRUCT_PROP_WITH_ERROR(node.propName, errMsg.toString.trim.trimSuffix('.'));
 				val astNodeOfPropName = node.getEObjectAndFeatureForPropName();
 				addIssue(msg, astNodeOfPropName.key, astNodeOfPropName.value, DESTRUCT_PROP_WITH_ERROR);
@@ -264,6 +270,16 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 						addIssue(msg, astElem, N4JSPackage.eINSTANCE.propertyNameValuePair_Expression, DESTRUCT_TYPE_ERROR_PATTERN)
 					BindingProperty:
 						addIssue(msg, astElem, N4JSPackage.eINSTANCE.bindingProperty_Value, DESTRUCT_TYPE_ERROR_PATTERN)
+					VariableBinding:
+						addIssue(msg, astElem, N4JSPackage.eINSTANCE.variableBinding_Pattern, DESTRUCT_TYPE_ERROR_PATTERN)
+					AssignmentExpression:
+						addIssue(msg, astElem, N4JSPackage.eINSTANCE.assignmentExpression_Lhs, DESTRUCT_TYPE_ERROR_PATTERN)
+					ForStatement case !astElem.varDeclsOrBindings.empty:
+						addIssue(msg, astElem, N4JSPackage.eINSTANCE.variableDeclarationContainer_VarDeclsOrBindings, DESTRUCT_TYPE_ERROR_PATTERN)
+					ForStatement case astElem.initExpr !== null:
+						addIssue(msg, astElem, N4JSPackage.eINSTANCE.forStatement_InitExpr, DESTRUCT_TYPE_ERROR_PATTERN)
+					ForStatement case astElem.expression !== null:
+						addIssue(msg, astElem, N4JSPackage.eINSTANCE.iterationStatement_Expression, DESTRUCT_TYPE_ERROR_PATTERN)
 					default:
 						addIssue(msg, astElem, DESTRUCT_TYPE_ERROR_PATTERN)
 				}

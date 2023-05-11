@@ -227,19 +227,19 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 
 	private void checkValue(EObject value, Resource localResource, Predicate<URI> targetURIs, EObject sourceCandidate,
 			URI sourceURI, EReference ref, Acceptor acceptor) {
-		EObject instanceOrProxy = toValidInstanceOrNull(localResource, targetURIs,
-				value);
 
+		EObject instanceOrProxy = toValidInstanceOrNull(localResource, targetURIs, value);
 		if (instanceOrProxy != null) {
 			URI refURI = EcoreUtil2.getPlatformResourceOrNormalizedURI(instanceOrProxy);
-			// CUSTOM BEHAVIOR: handle composed members
+			// CUSTOM BEHAVIOR: check for and handle composed members
 			if (referenceHasBeenFound(targetURIs, refURI, instanceOrProxy)) {
-				sourceURI = (sourceURI == null) ? EcoreUtil2
-						.getPlatformResourceOrNormalizedURI(sourceCandidate) : sourceURI;
+				sourceURI = (sourceURI == null)
+						? EcoreUtil2.getPlatformResourceOrNormalizedURI(sourceCandidate)
+						: sourceURI;
+
 				acceptor.accept(sourceCandidate, sourceURI, ref, -1, instanceOrProxy, refURI);
 			}
 		}
-
 	}
 
 	private boolean referenceHasBeenFound(Predicate<URI> targetURIs, URI refURI, EObject instanceOrProxy) {
@@ -247,12 +247,9 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 		// If the EObject is a composed member, we compare the target URIs with the URIs of the constituent members.
 		if (instanceOrProxy instanceof TMember && ((TMember) instanceOrProxy).isComposed()) {
 			TMember member = (TMember) instanceOrProxy;
-			if (member.isComposed()) {
-				for (TMember constituentMember : member.getConstituentMembers()) {
-					URI constituentReffURI = EcoreUtil2
-							.getPlatformResourceOrNormalizedURI(constituentMember);
-					result = result || targetURIs.apply(constituentReffURI);
-				}
+			for (TMember constituentMember : member.getConstituentMembers()) {
+				URI constituentReffURI = EcoreUtil2.getPlatformResourceOrNormalizedURI(constituentMember);
+				result = result || targetURIs.apply(constituentReffURI);
 			}
 		} else {
 			// Standard case
