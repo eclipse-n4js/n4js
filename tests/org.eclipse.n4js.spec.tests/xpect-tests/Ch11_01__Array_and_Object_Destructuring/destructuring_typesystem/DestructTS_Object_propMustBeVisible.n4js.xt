@@ -25,7 +25,7 @@ import { Cls } from "Ch11_01__Array_and_Object_Destructuring/destructuring_types
 var cls : Cls;
 
 
-// public and project should be ok  XPECT errors --> "Property named "fieldPrivate" is not readable: The field fieldPrivate is not visible." at "fieldPrivate"
+// public and project should be ok  XPECT errors --> "The field fieldPrivate is not visible." at "fieldPrivate"
 var {fieldPublic:a1, fieldProject:b1, fieldPrivate:c1} = cls;
 // public and project should be ok  XPECT errors --> "Property named "fieldPrivate" is not readable: The field fieldPrivate is not visible." at "fieldPrivate"
 ({fieldPublic:a1, fieldProject:b1, fieldPrivate:c1} = cls);

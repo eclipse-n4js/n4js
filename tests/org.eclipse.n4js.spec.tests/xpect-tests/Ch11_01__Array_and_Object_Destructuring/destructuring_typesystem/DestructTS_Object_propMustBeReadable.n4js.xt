@@ -18,5 +18,5 @@ class C {
 
 var c : C;
 
-// XPECT errors --> "Property named "setter" is not readable: The accessor setter is write-only." at "setter"
+// XPECT errors --> "The accessor setter is write-only." at "setter"
 var {setter: a} = c;
