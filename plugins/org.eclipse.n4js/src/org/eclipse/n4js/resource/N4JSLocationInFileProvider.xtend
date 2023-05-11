@@ -83,6 +83,10 @@ class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 					return toZeroBasedRegion(adapter);
 				}
 			}
+		} else if (obj instanceof TMember && !(obj as TMember).constituentMembers.empty) {
+			val tMember = obj as TMember;
+			val fst = tMember.constituentMembers.get(0);
+			return super.doGetTextRegion(fst.astElement, query);
 		} else {
 			return super.doGetTextRegion(obj, query);
 		}
