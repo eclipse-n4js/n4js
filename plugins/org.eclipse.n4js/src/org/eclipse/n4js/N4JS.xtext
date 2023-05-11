@@ -1530,7 +1530,12 @@ ArrayBindingPattern <Yield> returns ArrayBindingPattern:
  * segment, e.g. { prop: newVar: TypeOfNewVar }.
  */
 BindingProperty <Yield, AllowType>:
-	  =>(declaredName=LiteralOrComputedPropertyName<Yield> ':') value=BindingElement<Yield>
+	=>(
+	  	(
+	  		(=>property=[types::IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName<Yield>) ':'
+	  	)
+	  	value=BindingElement<Yield>
+	)
 	| value=SingleNameBinding<Yield,AllowType>
 ;
 
