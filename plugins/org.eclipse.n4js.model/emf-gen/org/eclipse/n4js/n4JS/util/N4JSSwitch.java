@@ -1814,6 +1814,7 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				BindingProperty bindingProperty = (BindingProperty)theEObject;
 				T1 result = caseBindingProperty(bindingProperty);
 				if (result == null) result = casePropertyNameOwner(bindingProperty);
+				if (result == null) result = caseMemberAccess(bindingProperty);
 				if (result == null) result = caseNamedElement(bindingProperty);
 				if (result == null) result = defaultCase(theEObject);
 				return result;

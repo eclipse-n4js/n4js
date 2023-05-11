@@ -7373,8 +7373,28 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getBindingProperty_Value() {
+	public EReference getBindingProperty_Property() {
 		return (EReference)bindingPropertyEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getBindingProperty_PropertyAsText() {
+		return (EAttribute)bindingPropertyEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getBindingProperty_Value() {
+		return (EReference)bindingPropertyEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -7395,6 +7415,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EOperation getBindingProperty__IsValidName() {
 		return bindingPropertyEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getBindingProperty__IsSingleNameBinding() {
+		return bindingPropertyEClass.getEOperations().get(2);
 	}
 
 	/**
@@ -8611,9 +8641,12 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(arrayBindingPatternEClass, ARRAY_BINDING_PATTERN__ELEMENTS);
 
 		bindingPropertyEClass = createEClass(BINDING_PROPERTY);
+		createEReference(bindingPropertyEClass, BINDING_PROPERTY__PROPERTY);
+		createEAttribute(bindingPropertyEClass, BINDING_PROPERTY__PROPERTY_AS_TEXT);
 		createEReference(bindingPropertyEClass, BINDING_PROPERTY__VALUE);
 		createEOperation(bindingPropertyEClass, BINDING_PROPERTY___GET_NAME);
 		createEOperation(bindingPropertyEClass, BINDING_PROPERTY___IS_VALID_NAME);
+		createEOperation(bindingPropertyEClass, BINDING_PROPERTY___IS_SINGLE_NAME_BINDING);
 
 		bindingElementEClass = createEClass(BINDING_ELEMENT);
 		createEAttribute(bindingElementEClass, BINDING_ELEMENT__REST);
@@ -8972,6 +9005,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		objectBindingPatternEClass.getESuperTypes().add(this.getBindingPattern());
 		arrayBindingPatternEClass.getESuperTypes().add(this.getBindingPattern());
 		bindingPropertyEClass.getESuperTypes().add(this.getPropertyNameOwner());
+		bindingPropertyEClass.getESuperTypes().add(this.getMemberAccess());
 		bindingElementEClass.getESuperTypes().add(this.getControlFlowElement());
 		jsxTextEClass.getESuperTypes().add(this.getJSXChild());
 		jsxExpressionEClass.getESuperTypes().add(this.getJSXChild());
@@ -9964,11 +9998,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getArrayBindingPattern_Elements(), this.getBindingElement(), null, "elements", null, 0, -1, ArrayBindingPattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(bindingPropertyEClass, BindingProperty.class, "BindingProperty", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getBindingProperty_Property(), theTypesPackage.getIdentifiableElement(), null, "property", null, 0, 1, BindingProperty.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBindingProperty_PropertyAsText(), theEcorePackage.getEString(), "propertyAsText", null, 0, 1, BindingProperty.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getBindingProperty_Value(), this.getBindingElement(), null, "value", null, 0, 1, BindingProperty.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getBindingProperty__GetName(), theEcorePackage.getEString(), "getName", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getBindingProperty__IsValidName(), theEcorePackage.getEBoolean(), "isValidName", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getBindingProperty__IsSingleNameBinding(), theEcorePackage.getEBoolean(), "isSingleNameBinding", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(bindingElementEClass, BindingElement.class, "BindingElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getBindingElement_Rest(), theEcorePackage.getEBoolean(), "rest", null, 0, 1, BindingElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

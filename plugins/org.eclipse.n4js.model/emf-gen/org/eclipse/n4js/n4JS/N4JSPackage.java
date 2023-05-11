@@ -16626,13 +16626,40 @@ public interface N4JSPackage extends EPackage {
 	int BINDING_PROPERTY__DECLARED_NAME = PROPERTY_NAME_OWNER__DECLARED_NAME;
 
 	/**
+	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BINDING_PROPERTY__COMPOSED_MEMBER_CACHE = PROPERTY_NAME_OWNER_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Property</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BINDING_PROPERTY__PROPERTY = PROPERTY_NAME_OWNER_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Property As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BINDING_PROPERTY__PROPERTY_AS_TEXT = PROPERTY_NAME_OWNER_FEATURE_COUNT + 2;
+
+	/**
 	 * The feature id for the '<em><b>Value</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BINDING_PROPERTY__VALUE = PROPERTY_NAME_OWNER_FEATURE_COUNT + 0;
+	int BINDING_PROPERTY__VALUE = PROPERTY_NAME_OWNER_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>Binding Property</em>' class.
@@ -16641,7 +16668,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BINDING_PROPERTY_FEATURE_COUNT = PROPERTY_NAME_OWNER_FEATURE_COUNT + 1;
+	int BINDING_PROPERTY_FEATURE_COUNT = PROPERTY_NAME_OWNER_FEATURE_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Has Computed Property Name</em>' operation.
@@ -16671,13 +16698,22 @@ public interface N4JSPackage extends EPackage {
 	int BINDING_PROPERTY___IS_VALID_NAME = PROPERTY_NAME_OWNER_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Is Single Name Binding</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BINDING_PROPERTY___IS_SINGLE_NAME_BINDING = PROPERTY_NAME_OWNER_OPERATION_COUNT + 2;
+
+	/**
 	 * The number of operations of the '<em>Binding Property</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BINDING_PROPERTY_OPERATION_COUNT = PROPERTY_NAME_OWNER_OPERATION_COUNT + 2;
+	int BINDING_PROPERTY_OPERATION_COUNT = PROPERTY_NAME_OWNER_OPERATION_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.BindingElementImpl <em>Binding Element</em>}' class.
@@ -23274,6 +23310,28 @@ public interface N4JSPackage extends EPackage {
 	EClass getBindingProperty();
 
 	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.BindingProperty#getProperty <em>Property</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Property</em>'.
+	 * @see org.eclipse.n4js.n4JS.BindingProperty#getProperty()
+	 * @see #getBindingProperty()
+	 * @generated
+	 */
+	EReference getBindingProperty_Property();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.BindingProperty#getPropertyAsText <em>Property As Text</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Property As Text</em>'.
+	 * @see org.eclipse.n4js.n4JS.BindingProperty#getPropertyAsText()
+	 * @see #getBindingProperty()
+	 * @generated
+	 */
+	EAttribute getBindingProperty_PropertyAsText();
+
+	/**
 	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.BindingProperty#getValue <em>Value</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -23303,6 +23361,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getBindingProperty__IsValidName();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.BindingProperty#isSingleNameBinding() <em>Is Single Name Binding</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Single Name Binding</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.BindingProperty#isSingleNameBinding()
+	 * @generated
+	 */
+	EOperation getBindingProperty__IsSingleNameBinding();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.BindingElement <em>Binding Element</em>}'.
@@ -28689,6 +28757,22 @@ public interface N4JSPackage extends EPackage {
 		EClass BINDING_PROPERTY = eINSTANCE.getBindingProperty();
 
 		/**
+		 * The meta object literal for the '<em><b>Property</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference BINDING_PROPERTY__PROPERTY = eINSTANCE.getBindingProperty_Property();
+
+		/**
+		 * The meta object literal for the '<em><b>Property As Text</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute BINDING_PROPERTY__PROPERTY_AS_TEXT = eINSTANCE.getBindingProperty_PropertyAsText();
+
+		/**
 		 * The meta object literal for the '<em><b>Value</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -28711,6 +28795,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation BINDING_PROPERTY___IS_VALID_NAME = eINSTANCE.getBindingProperty__IsValidName();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Single Name Binding</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation BINDING_PROPERTY___IS_SINGLE_NAME_BINDING = eINSTANCE.getBindingProperty__IsSingleNameBinding();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.BindingElementImpl <em>Binding Element</em>}' class.
