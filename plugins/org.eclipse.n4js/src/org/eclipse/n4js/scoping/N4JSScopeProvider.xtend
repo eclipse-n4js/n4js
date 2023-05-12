@@ -633,7 +633,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 					}
 					
 					val idx = parent2DestNode.nestedNodes.indexOf(parentDestNode);
-					if (arrayType !== null && arrayType.typeArgsWithDefaults.size > idx && G.isIterableN(arrayType)) {
+					if (arrayType !== null && arrayType.typeArgsWithDefaults.size > idx && G.isIterableN(arrayType) && arrayType.eResource !== null) {
 						val typeArg = arrayType.typeArgsWithDefaults.get(idx);
 						if (typeArg instanceof TypeRef) {
 							cTypeRef = typeArg;
