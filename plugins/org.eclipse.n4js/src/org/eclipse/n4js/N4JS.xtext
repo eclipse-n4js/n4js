@@ -773,7 +773,7 @@ PropertyNameValuePair <Yield>:
 	=> (
 		{PropertyNameValuePair}
 		declaredTypeRefNode=TypeReferenceWithModifiersNode?
-		declaredName=LiteralOrComputedPropertyName<Yield>
+		(=> property=[types::IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName<Yield>)
 		(declaredOptional?='?')?
 		':'
 	)
