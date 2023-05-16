@@ -12771,6 +12771,48 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+rule__PropertyNameValuePair__Alternatives_0_0_2
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getPropertyNameValuePairAccess().getPropertyAssignment_0_0_2_0()); }
+		(rule__PropertyNameValuePair__PropertyAssignment_0_0_2_0)
+		{ after(grammarAccess.getPropertyNameValuePairAccess().getPropertyAssignment_0_0_2_0()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameAssignment_0_0_2_1()); }
+		(rule__PropertyNameValuePair__DeclaredNameAssignment_0_0_2_1)
+		{ after(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameAssignment_0_0_2_1()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+norm1_PropertyNameValuePair__Alternatives_0_0_2
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getPropertyNameValuePairAccess().getPropertyAssignment_0_0_2_0()); }
+		(norm1_PropertyNameValuePair__PropertyAssignment_0_0_2_0)
+		{ after(grammarAccess.getPropertyNameValuePairAccess().getPropertyAssignment_0_0_2_0()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameAssignment_0_0_2_1()); }
+		(norm1_PropertyNameValuePair__DeclaredNameAssignment_0_0_2_1)
+		{ after(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameAssignment_0_0_2_1()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 rule__LeftHandSideExpression__Alternatives_1_3
 	@init {
 		int stackSize = keepStackSize();
@@ -43611,9 +43653,9 @@ rule__PropertyNameValuePair__Group_0_0__2__Impl
 	}
 :
 (
-	{ before(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameAssignment_0_0_2()); }
-	(rule__PropertyNameValuePair__DeclaredNameAssignment_0_0_2)
-	{ after(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameAssignment_0_0_2()); }
+	{ before(grammarAccess.getPropertyNameValuePairAccess().getAlternatives_0_0_2()); }
+	(rule__PropertyNameValuePair__Alternatives_0_0_2)
+	{ after(grammarAccess.getPropertyNameValuePairAccess().getAlternatives_0_0_2()); }
 )
 ;
 finally {
@@ -43827,9 +43869,9 @@ norm1_PropertyNameValuePair__Group_0_0__2__Impl
 	}
 :
 (
-	{ before(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameAssignment_0_0_2()); }
-	(norm1_PropertyNameValuePair__DeclaredNameAssignment_0_0_2)
-	{ after(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameAssignment_0_0_2()); }
+	{ before(grammarAccess.getPropertyNameValuePairAccess().getAlternatives_0_0_2()); }
+	(norm1_PropertyNameValuePair__Alternatives_0_0_2)
+	{ after(grammarAccess.getPropertyNameValuePairAccess().getAlternatives_0_0_2()); }
 )
 ;
 finally {
@@ -87051,15 +87093,34 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__PropertyNameValuePair__DeclaredNameAssignment_0_0_2
+rule__PropertyNameValuePair__PropertyAssignment_0_0_2_0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_0()); }
+		{ before(grammarAccess.getPropertyNameValuePairAccess().getPropertyIdentifiableElementCrossReference_0_0_2_0_0()); }
+		(
+			{ before(grammarAccess.getPropertyNameValuePairAccess().getPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_2_0_0_1()); }
+			ruleIdentifierName
+			{ after(grammarAccess.getPropertyNameValuePairAccess().getPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_2_0_0_1()); }
+		)
+		{ after(grammarAccess.getPropertyNameValuePairAccess().getPropertyIdentifiableElementCrossReference_0_0_2_0_0()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__PropertyNameValuePair__DeclaredNameAssignment_0_0_2_1
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_1_0()); }
 		ruleLiteralOrComputedPropertyName
-		{ after(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_0()); }
+		{ after(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_1_0()); }
 	)
 ;
 finally {
@@ -87115,15 +87176,34 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-norm1_PropertyNameValuePair__DeclaredNameAssignment_0_0_2
+norm1_PropertyNameValuePair__PropertyAssignment_0_0_2_0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_0()); }
+		{ before(grammarAccess.getPropertyNameValuePairAccess().getPropertyIdentifiableElementCrossReference_0_0_2_0_0()); }
+		(
+			{ before(grammarAccess.getPropertyNameValuePairAccess().getPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_2_0_0_1()); }
+			ruleIdentifierName
+			{ after(grammarAccess.getPropertyNameValuePairAccess().getPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_2_0_0_1()); }
+		)
+		{ after(grammarAccess.getPropertyNameValuePairAccess().getPropertyIdentifiableElementCrossReference_0_0_2_0_0()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+norm1_PropertyNameValuePair__DeclaredNameAssignment_0_0_2_1
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_1_0()); }
 		norm1_LiteralOrComputedPropertyName
-		{ after(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_0()); }
+		{ after(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_1_0()); }
 	)
 ;
 finally {

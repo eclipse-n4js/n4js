@@ -35,6 +35,7 @@ import org.eclipse.n4js.n4JS.TypedElement;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
+import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TStructField;
 
 /**
@@ -46,6 +47,8 @@ import org.eclipse.n4js.ts.types.TStructField;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyNameValuePairImpl#getDeclaredTypeRefNode <em>Declared Type Ref Node</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyNameValuePairImpl#getProperty <em>Property</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyNameValuePairImpl#getPropertyAsText <em>Property As Text</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyNameValuePairImpl#getDefinedField <em>Defined Field</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyNameValuePairImpl#isDeclaredOptional <em>Declared Optional</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyNameValuePairImpl#getExpression <em>Expression</em>}</li>
@@ -63,6 +66,36 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 	 * @ordered
 	 */
 	protected TypeReferenceNode<TypeRef> declaredTypeRefNode;
+
+	/**
+	 * The cached value of the '{@link #getProperty() <em>Property</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getProperty()
+	 * @generated
+	 * @ordered
+	 */
+	protected IdentifiableElement property;
+
+	/**
+	 * The default value of the '{@link #getPropertyAsText() <em>Property As Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPropertyAsText()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String PROPERTY_AS_TEXT_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getPropertyAsText() <em>Property As Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPropertyAsText()
+	 * @generated
+	 * @ordered
+	 */
+	protected String propertyAsText = PROPERTY_AS_TEXT_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getDefinedField() <em>Defined Field</em>}' reference.
@@ -166,6 +199,69 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.PROPERTY_NAME_VALUE_PAIR__DECLARED_TYPE_REF_NODE, newDeclaredTypeRefNode, newDeclaredTypeRefNode));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public IdentifiableElement getProperty() {
+		if (property != null && property.eIsProxy()) {
+			InternalEObject oldProperty = (InternalEObject)property;
+			property = (IdentifiableElement)eResolveProxy(oldProperty);
+			if (property != oldProperty) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.PROPERTY_NAME_VALUE_PAIR__PROPERTY, oldProperty, property));
+			}
+		}
+		return property;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public IdentifiableElement basicGetProperty() {
+		return property;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setProperty(IdentifiableElement newProperty) {
+		IdentifiableElement oldProperty = property;
+		property = newProperty;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.PROPERTY_NAME_VALUE_PAIR__PROPERTY, oldProperty, property));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getPropertyAsText() {
+		return propertyAsText;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setPropertyAsText(String newPropertyAsText) {
+		String oldPropertyAsText = propertyAsText;
+		propertyAsText = newPropertyAsText;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.PROPERTY_NAME_VALUE_PAIR__PROPERTY_AS_TEXT, oldPropertyAsText, propertyAsText));
 	}
 
 	/**
@@ -357,6 +453,11 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 		switch (featureID) {
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__DECLARED_TYPE_REF_NODE:
 				return getDeclaredTypeRefNode();
+			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__PROPERTY:
+				if (resolve) return getProperty();
+				return basicGetProperty();
+			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__PROPERTY_AS_TEXT:
+				return getPropertyAsText();
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__DEFINED_FIELD:
 				if (resolve) return getDefinedField();
 				return basicGetDefinedField();
@@ -379,6 +480,12 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 		switch (featureID) {
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__DECLARED_TYPE_REF_NODE:
 				setDeclaredTypeRefNode((TypeReferenceNode<TypeRef>)newValue);
+				return;
+			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__PROPERTY:
+				setProperty((IdentifiableElement)newValue);
+				return;
+			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__PROPERTY_AS_TEXT:
+				setPropertyAsText((String)newValue);
 				return;
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__DEFINED_FIELD:
 				setDefinedField((TStructField)newValue);
@@ -404,6 +511,12 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__DECLARED_TYPE_REF_NODE:
 				setDeclaredTypeRefNode((TypeReferenceNode<TypeRef>)null);
 				return;
+			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__PROPERTY:
+				setProperty((IdentifiableElement)null);
+				return;
+			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__PROPERTY_AS_TEXT:
+				setPropertyAsText(PROPERTY_AS_TEXT_EDEFAULT);
+				return;
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__DEFINED_FIELD:
 				setDefinedField((TStructField)null);
 				return;
@@ -427,6 +540,10 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 		switch (featureID) {
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__DECLARED_TYPE_REF_NODE:
 				return declaredTypeRefNode != null;
+			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__PROPERTY:
+				return property != null;
+			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__PROPERTY_AS_TEXT:
+				return PROPERTY_AS_TEXT_EDEFAULT == null ? propertyAsText != null : !PROPERTY_AS_TEXT_EDEFAULT.equals(propertyAsText);
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__DEFINED_FIELD:
 				return definedField != null;
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__DECLARED_OPTIONAL:
@@ -547,7 +664,9 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (declaredOptional: ");
+		result.append(" (propertyAsText: ");
+		result.append(propertyAsText);
+		result.append(", declaredOptional: ");
 		result.append(declaredOptional);
 		result.append(')');
 		return result.toString();

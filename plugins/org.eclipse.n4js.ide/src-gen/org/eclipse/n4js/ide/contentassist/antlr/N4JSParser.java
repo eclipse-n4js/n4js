@@ -77,6 +77,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getAnnotatedPropertyAssignmentAccess().getAlternatives_1(), "rule__AnnotatedPropertyAssignment__Alternatives_1");
 			builder.put(grammarAccess.getAnnotatedPropertyAssignmentAccess().getAlternatives_1_3_0_0_3(), "rule__AnnotatedPropertyAssignment__Alternatives_1_3_0_0_3");
 			builder.put(grammarAccess.getPropertyMethodDeclarationAccess().getAlternatives_0_0_4(), "rule__PropertyMethodDeclaration__Alternatives_0_0_4");
+			builder.put(grammarAccess.getPropertyNameValuePairAccess().getAlternatives_0_0_2(), "rule__PropertyNameValuePair__Alternatives_0_0_2");
 			builder.put(grammarAccess.getLeftHandSideExpressionAccess().getAlternatives_1_3(), "rule__LeftHandSideExpression__Alternatives_1_3");
 			builder.put(grammarAccess.getMemberExpressionAccess().getAlternatives(), "rule__MemberExpression__Alternatives");
 			builder.put(grammarAccess.getMemberExpressionAccess().getAlternatives_1_3_3(), "rule__MemberExpression__Alternatives_1_3_3");
@@ -874,7 +875,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredNameAssignment_0_0_4_0_1(), "rule__PropertyMethodDeclaration__DeclaredNameAssignment_0_0_4_0_1");
 			builder.put(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredNameAssignment_0_0_4_1_0(), "rule__PropertyMethodDeclaration__DeclaredNameAssignment_0_0_4_1_0");
 			builder.put(grammarAccess.getPropertyNameValuePairAccess().getDeclaredTypeRefNodeAssignment_0_0_1(), "rule__PropertyNameValuePair__DeclaredTypeRefNodeAssignment_0_0_1");
-			builder.put(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameAssignment_0_0_2(), "rule__PropertyNameValuePair__DeclaredNameAssignment_0_0_2");
+			builder.put(grammarAccess.getPropertyNameValuePairAccess().getPropertyAssignment_0_0_2_0(), "rule__PropertyNameValuePair__PropertyAssignment_0_0_2_0");
+			builder.put(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameAssignment_0_0_2_1(), "rule__PropertyNameValuePair__DeclaredNameAssignment_0_0_2_1");
 			builder.put(grammarAccess.getPropertyNameValuePairAccess().getDeclaredOptionalAssignment_0_0_3(), "rule__PropertyNameValuePair__DeclaredOptionalAssignment_0_0_3");
 			builder.put(grammarAccess.getPropertyNameValuePairAccess().getExpressionAssignment_1(), "rule__PropertyNameValuePair__ExpressionAssignment_1");
 			builder.put(grammarAccess.getPropertyNameValuePairSingleNameAccess().getDeclaredTypeRefNodeAssignment_0(), "rule__PropertyNameValuePairSingleName__DeclaredTypeRefNodeAssignment_0");

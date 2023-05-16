@@ -6784,13 +6784,31 @@ public interface N4JSPackage extends EPackage {
 	int PROPERTY_NAME_VALUE_PAIR__DECLARED_TYPE_REF_NODE = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Property</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_NAME_VALUE_PAIR__PROPERTY = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Property As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_NAME_VALUE_PAIR__PROPERTY_AS_TEXT = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 2;
+
+	/**
 	 * The feature id for the '<em><b>Defined Field</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_NAME_VALUE_PAIR__DEFINED_FIELD = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 1;
+	int PROPERTY_NAME_VALUE_PAIR__DEFINED_FIELD = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Declared Optional</b></em>' attribute.
@@ -6799,7 +6817,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_NAME_VALUE_PAIR__DECLARED_OPTIONAL = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 2;
+	int PROPERTY_NAME_VALUE_PAIR__DECLARED_OPTIONAL = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -6808,7 +6826,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_NAME_VALUE_PAIR__EXPRESSION = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 3;
+	int PROPERTY_NAME_VALUE_PAIR__EXPRESSION = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of structural features of the '<em>Property Name Value Pair</em>' class.
@@ -6817,7 +6835,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_NAME_VALUE_PAIR_FEATURE_COUNT = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 4;
+	int PROPERTY_NAME_VALUE_PAIR_FEATURE_COUNT = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -6954,6 +6972,24 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME__DECLARED_TYPE_REF_NODE = PROPERTY_NAME_VALUE_PAIR__DECLARED_TYPE_REF_NODE;
+
+	/**
+	 * The feature id for the '<em><b>Property</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME__PROPERTY = PROPERTY_NAME_VALUE_PAIR__PROPERTY;
+
+	/**
+	 * The feature id for the '<em><b>Property As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME__PROPERTY_AS_TEXT = PROPERTY_NAME_VALUE_PAIR__PROPERTY_AS_TEXT;
 
 	/**
 	 * The feature id for the '<em><b>Defined Field</b></em>' reference.
@@ -20360,6 +20396,28 @@ public interface N4JSPackage extends EPackage {
 	EClass getPropertyNameValuePair();
 
 	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.PropertyNameValuePair#getProperty <em>Property</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Property</em>'.
+	 * @see org.eclipse.n4js.n4JS.PropertyNameValuePair#getProperty()
+	 * @see #getPropertyNameValuePair()
+	 * @generated
+	 */
+	EReference getPropertyNameValuePair_Property();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.PropertyNameValuePair#getPropertyAsText <em>Property As Text</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Property As Text</em>'.
+	 * @see org.eclipse.n4js.n4JS.PropertyNameValuePair#getPropertyAsText()
+	 * @see #getPropertyNameValuePair()
+	 * @generated
+	 */
+	EAttribute getPropertyNameValuePair_PropertyAsText();
+
+	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.PropertyNameValuePair#getDefinedField <em>Defined Field</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -26313,6 +26371,22 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EClass PROPERTY_NAME_VALUE_PAIR = eINSTANCE.getPropertyNameValuePair();
+
+		/**
+		 * The meta object literal for the '<em><b>Property</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PROPERTY_NAME_VALUE_PAIR__PROPERTY = eINSTANCE.getPropertyNameValuePair_Property();
+
+		/**
+		 * The meta object literal for the '<em><b>Property As Text</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROPERTY_NAME_VALUE_PAIR__PROPERTY_AS_TEXT = eINSTANCE.getPropertyNameValuePair_PropertyAsText();
 
 		/**
 		 * The meta object literal for the '<em><b>Defined Field</b></em>' reference feature.

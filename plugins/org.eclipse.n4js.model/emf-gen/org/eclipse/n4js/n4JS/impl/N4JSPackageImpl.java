@@ -4523,7 +4523,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getPropertyNameValuePair_DefinedField() {
+	public EReference getPropertyNameValuePair_Property() {
 		return (EReference)propertyNameValuePairEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -4533,7 +4533,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getPropertyNameValuePair_DeclaredOptional() {
+	public EAttribute getPropertyNameValuePair_PropertyAsText() {
 		return (EAttribute)propertyNameValuePairEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -4543,8 +4543,28 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getPropertyNameValuePair_Expression() {
+	public EReference getPropertyNameValuePair_DefinedField() {
 		return (EReference)propertyNameValuePairEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getPropertyNameValuePair_DeclaredOptional() {
+		return (EAttribute)propertyNameValuePairEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getPropertyNameValuePair_Expression() {
+		return (EReference)propertyNameValuePairEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -8275,6 +8295,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(propertyAssignmentAnnotationListEClass, PROPERTY_ASSIGNMENT_ANNOTATION_LIST___GET_DEFINED_MEMBER);
 
 		propertyNameValuePairEClass = createEClass(PROPERTY_NAME_VALUE_PAIR);
+		createEReference(propertyNameValuePairEClass, PROPERTY_NAME_VALUE_PAIR__PROPERTY);
+		createEAttribute(propertyNameValuePairEClass, PROPERTY_NAME_VALUE_PAIR__PROPERTY_AS_TEXT);
 		createEReference(propertyNameValuePairEClass, PROPERTY_NAME_VALUE_PAIR__DEFINED_FIELD);
 		createEAttribute(propertyNameValuePairEClass, PROPERTY_NAME_VALUE_PAIR__DECLARED_OPTIONAL);
 		createEReference(propertyNameValuePairEClass, PROPERTY_NAME_VALUE_PAIR__EXPRESSION);
@@ -9503,6 +9525,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getPropertyAssignmentAnnotationList__GetDefinedMember(), theTypesPackage.getTStructMember(), "getDefinedMember", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(propertyNameValuePairEClass, PropertyNameValuePair.class, "PropertyNameValuePair", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getPropertyNameValuePair_Property(), theTypesPackage.getIdentifiableElement(), null, "property", null, 0, 1, PropertyNameValuePair.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPropertyNameValuePair_PropertyAsText(), theEcorePackage.getEString(), "propertyAsText", null, 0, 1, PropertyNameValuePair.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPropertyNameValuePair_DefinedField(), theTypesPackage.getTStructField(), null, "definedField", null, 0, 1, PropertyNameValuePair.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPropertyNameValuePair_DeclaredOptional(), theEcorePackage.getEBoolean(), "declaredOptional", null, 0, 1, PropertyNameValuePair.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPropertyNameValuePair_Expression(), this.getExpression(), null, "expression", null, 0, 1, PropertyNameValuePair.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
