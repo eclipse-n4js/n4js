@@ -25,7 +25,9 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.PropertyAssignment;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
@@ -35,6 +37,7 @@ import org.eclipse.n4js.n4JS.TypedElement;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
+import org.eclipse.n4js.ts.types.ComposedMemberCache;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TStructField;
 
@@ -47,6 +50,7 @@ import org.eclipse.n4js.ts.types.TStructField;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyNameValuePairImpl#getDeclaredTypeRefNode <em>Declared Type Ref Node</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyNameValuePairImpl#getComposedMemberCache <em>Composed Member Cache</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyNameValuePairImpl#getProperty <em>Property</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyNameValuePairImpl#getPropertyAsText <em>Property As Text</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyNameValuePairImpl#getDefinedField <em>Defined Field</em>}</li>
@@ -66,6 +70,16 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 	 * @ordered
 	 */
 	protected TypeReferenceNode<TypeRef> declaredTypeRefNode;
+
+	/**
+	 * The cached value of the '{@link #getComposedMemberCache() <em>Composed Member Cache</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getComposedMemberCache()
+	 * @generated
+	 * @ordered
+	 */
+	protected ComposedMemberCache composedMemberCache;
 
 	/**
 	 * The cached value of the '{@link #getProperty() <em>Property</em>}' reference.
@@ -199,6 +213,46 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.PROPERTY_NAME_VALUE_PAIR__DECLARED_TYPE_REF_NODE, newDeclaredTypeRefNode, newDeclaredTypeRefNode));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ComposedMemberCache getComposedMemberCache() {
+		if (composedMemberCache != null && composedMemberCache.eIsProxy()) {
+			InternalEObject oldComposedMemberCache = (InternalEObject)composedMemberCache;
+			composedMemberCache = (ComposedMemberCache)eResolveProxy(oldComposedMemberCache);
+			if (composedMemberCache != oldComposedMemberCache) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.PROPERTY_NAME_VALUE_PAIR__COMPOSED_MEMBER_CACHE, oldComposedMemberCache, composedMemberCache));
+			}
+		}
+		return composedMemberCache;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ComposedMemberCache basicGetComposedMemberCache() {
+		return composedMemberCache;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setComposedMemberCache(ComposedMemberCache newComposedMemberCache) {
+		ComposedMemberCache oldComposedMemberCache = composedMemberCache;
+		composedMemberCache = newComposedMemberCache;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.PROPERTY_NAME_VALUE_PAIR__COMPOSED_MEMBER_CACHE, oldComposedMemberCache, composedMemberCache));
 	}
 
 	/**
@@ -403,6 +457,21 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 	 * @generated
 	 */
 	@Override
+	public String getName() {
+		String _propertyAsText = this.getPropertyAsText();
+		boolean _tripleNotEquals = (_propertyAsText != null);
+		if (_tripleNotEquals) {
+			return this.getPropertyAsText();
+		}
+		return super.getName();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public TypeRef getDeclaredTypeRef() {
 		TypeReferenceNode<TypeRef> _declaredTypeRefNode = this.getDeclaredTypeRefNode();
 		TypeRef _typeRef = null;
@@ -453,6 +522,9 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 		switch (featureID) {
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__DECLARED_TYPE_REF_NODE:
 				return getDeclaredTypeRefNode();
+			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__COMPOSED_MEMBER_CACHE:
+				if (resolve) return getComposedMemberCache();
+				return basicGetComposedMemberCache();
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__PROPERTY:
 				if (resolve) return getProperty();
 				return basicGetProperty();
@@ -480,6 +552,9 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 		switch (featureID) {
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__DECLARED_TYPE_REF_NODE:
 				setDeclaredTypeRefNode((TypeReferenceNode<TypeRef>)newValue);
+				return;
+			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__COMPOSED_MEMBER_CACHE:
+				setComposedMemberCache((ComposedMemberCache)newValue);
 				return;
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__PROPERTY:
 				setProperty((IdentifiableElement)newValue);
@@ -511,6 +586,9 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__DECLARED_TYPE_REF_NODE:
 				setDeclaredTypeRefNode((TypeReferenceNode<TypeRef>)null);
 				return;
+			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__COMPOSED_MEMBER_CACHE:
+				setComposedMemberCache((ComposedMemberCache)null);
+				return;
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__PROPERTY:
 				setProperty((IdentifiableElement)null);
 				return;
@@ -540,6 +618,8 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 		switch (featureID) {
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__DECLARED_TYPE_REF_NODE:
 				return declaredTypeRefNode != null;
+			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__COMPOSED_MEMBER_CACHE:
+				return composedMemberCache != null;
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__PROPERTY:
 				return property != null;
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__PROPERTY_AS_TEXT:
@@ -572,6 +652,12 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 				default: return -1;
 			}
 		}
+		if (baseClass == MemberAccess.class) {
+			switch (derivedFeatureID) {
+				case N4JSPackage.PROPERTY_NAME_VALUE_PAIR__COMPOSED_MEMBER_CACHE: return N4JSPackage.MEMBER_ACCESS__COMPOSED_MEMBER_CACHE;
+				default: return -1;
+			}
+		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -593,6 +679,12 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 				default: return -1;
 			}
 		}
+		if (baseClass == MemberAccess.class) {
+			switch (baseFeatureID) {
+				case N4JSPackage.MEMBER_ACCESS__COMPOSED_MEMBER_CACHE: return N4JSPackage.PROPERTY_NAME_VALUE_PAIR__COMPOSED_MEMBER_CACHE;
+				default: return -1;
+			}
+		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
@@ -603,8 +695,15 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == NamedElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.NAMED_ELEMENT___GET_NAME: return N4JSPackage.PROPERTY_NAME_VALUE_PAIR___GET_NAME;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
 		if (baseClass == PropertyNameOwner.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.PROPERTY_NAME_OWNER___GET_NAME: return N4JSPackage.PROPERTY_NAME_VALUE_PAIR___GET_NAME;
 				case N4JSPackage.PROPERTY_NAME_OWNER___IS_VALID_NAME: return N4JSPackage.PROPERTY_NAME_VALUE_PAIR___IS_VALID_NAME;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
@@ -613,6 +712,7 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 			switch (baseOperationID) {
 				case N4JSPackage.PROPERTY_ASSIGNMENT___GET_DEFINED_MEMBER: return N4JSPackage.PROPERTY_NAME_VALUE_PAIR___GET_DEFINED_MEMBER;
 				case N4JSPackage.PROPERTY_ASSIGNMENT___IS_VALID_NAME: return N4JSPackage.PROPERTY_NAME_VALUE_PAIR___IS_VALID_NAME;
+				case N4JSPackage.PROPERTY_ASSIGNMENT___GET_NAME: return N4JSPackage.PROPERTY_NAME_VALUE_PAIR___GET_NAME;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -631,6 +731,11 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 				default: return -1;
 			}
 		}
+		if (baseClass == MemberAccess.class) {
+			switch (baseOperationID) {
+				default: return -1;
+			}
+		}
 		return super.eDerivedOperationID(baseOperationID, baseClass);
 	}
 
@@ -646,6 +751,8 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 				return getDefinedMember();
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR___IS_VALID_NAME:
 				return isValidName();
+			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR___GET_NAME:
+				return getName();
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR___GET_DECLARED_TYPE_REF:
 				return getDeclaredTypeRef();
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR___GET_DECLARED_TYPE_REF_IN_AST:

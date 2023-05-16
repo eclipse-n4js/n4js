@@ -4593,6 +4593,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getPropertyNameValuePair__GetName() {
+		return propertyNameValuePairEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getPropertyNameValuePairSingleName() {
 		return propertyNameValuePairSingleNameEClass;
 	}
@@ -8302,6 +8312,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(propertyNameValuePairEClass, PROPERTY_NAME_VALUE_PAIR__EXPRESSION);
 		createEOperation(propertyNameValuePairEClass, PROPERTY_NAME_VALUE_PAIR___GET_DEFINED_MEMBER);
 		createEOperation(propertyNameValuePairEClass, PROPERTY_NAME_VALUE_PAIR___IS_VALID_NAME);
+		createEOperation(propertyNameValuePairEClass, PROPERTY_NAME_VALUE_PAIR___GET_NAME);
 
 		propertyNameValuePairSingleNameEClass = createEClass(PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME);
 		createEOperation(propertyNameValuePairSingleNameEClass, PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME___GET_IDENTIFIER_REF);
@@ -8905,6 +8916,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		propertyNameValuePairEClass.getESuperTypes().add(this.getAnnotablePropertyAssignment());
 		propertyNameValuePairEClass.getESuperTypes().add(this.getTypedElement());
 		propertyNameValuePairEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
+		propertyNameValuePairEClass.getESuperTypes().add(this.getMemberAccess());
 		propertyNameValuePairSingleNameEClass.getESuperTypes().add(this.getPropertyNameValuePair());
 		propertyMethodDeclarationEClass.getESuperTypes().add(this.getAnnotablePropertyAssignment());
 		propertyMethodDeclarationEClass.getESuperTypes().add(this.getMethodDeclaration());
@@ -9534,6 +9546,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getPropertyNameValuePair__GetDefinedMember(), theTypesPackage.getTStructField(), "getDefinedMember", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getPropertyNameValuePair__IsValidName(), theEcorePackage.getEBoolean(), "isValidName", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getPropertyNameValuePair__GetName(), theEcorePackage.getEString(), "getName", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(propertyNameValuePairSingleNameEClass, PropertyNameValuePairSingleName.class, "PropertyNameValuePairSingleName", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

@@ -34,7 +34,7 @@ import org.eclipse.n4js.ts.types.TypableElement;
  * @model
  * @generated
  */
-public interface PropertyNameValuePair extends AnnotablePropertyAssignment, TypedElement, TypableElement {
+public interface PropertyNameValuePair extends AnnotablePropertyAssignment, TypedElement, TypableElement, MemberAccess {
 	/**
 	 * Returns the value of the '<em><b>Property</b></em>' reference.
 	 * <!-- begin-user-doc -->
@@ -167,5 +167,13 @@ public interface PropertyNameValuePair extends AnnotablePropertyAssignment, Type
 	 * @generated
 	 */
 	boolean isValidName();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	String getName();
 
 } // PropertyNameValuePair

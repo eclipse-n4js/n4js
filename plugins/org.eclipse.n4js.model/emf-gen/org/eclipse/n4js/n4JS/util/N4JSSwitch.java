@@ -852,6 +852,7 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				T1 result = casePropertyNameValuePair(propertyNameValuePair);
 				if (result == null) result = caseAnnotablePropertyAssignment(propertyNameValuePair);
 				if (result == null) result = caseTypedElement(propertyNameValuePair);
+				if (result == null) result = caseMemberAccess(propertyNameValuePair);
 				if (result == null) result = casePropertyAssignment(propertyNameValuePair);
 				if (result == null) result = caseTypeProvidingElement(propertyNameValuePair);
 				if (result == null) result = caseAnnotableElement(propertyNameValuePair);
@@ -868,6 +869,7 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = casePropertyNameValuePair(propertyNameValuePairSingleName);
 				if (result == null) result = caseAnnotablePropertyAssignment(propertyNameValuePairSingleName);
 				if (result == null) result = caseTypedElement(propertyNameValuePairSingleName);
+				if (result == null) result = caseMemberAccess(propertyNameValuePairSingleName);
 				if (result == null) result = casePropertyAssignment(propertyNameValuePairSingleName);
 				if (result == null) result = caseTypeProvidingElement(propertyNameValuePairSingleName);
 				if (result == null) result = caseAnnotableElement(propertyNameValuePairSingleName);
