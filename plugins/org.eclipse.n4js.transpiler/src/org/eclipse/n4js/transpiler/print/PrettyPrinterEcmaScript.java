@@ -741,6 +741,9 @@ import com.google.common.base.Strings;
 		if (original.getDeclaredName() != null) {
 			processPropertyName(original);
 			write(": ");
+		} else if (original.getPropertyAsText() != null) {
+			write(original.getPropertyAsText());
+			write(": ");
 		} else {
 			// FIXME PNVP without name only legal in destructuring pattern!!
 		}
