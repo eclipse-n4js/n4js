@@ -1403,7 +1403,7 @@ enum PropertyNameKind {
 	computed
 }
 
-class PropertyNameValuePair extends AnnotablePropertyAssignment, TypedElement, TypableElement {
+class PropertyNameValuePair extends AnnotablePropertyAssignment, TypedElement, TypableElement, MemberAccess {
 	refers IdentifiableElement property
 	transient String propertyAsText
 	refers transient TStructField definedField
@@ -1423,6 +1423,12 @@ class PropertyNameValuePair extends AnnotablePropertyAssignment, TypedElement, T
 			return false
 		}
 		return true
+	}
+	op String getName() {
+		if (propertyAsText !== null) {
+			return propertyAsText;
+		}
+		return super.getName();
 	}
 }
 
