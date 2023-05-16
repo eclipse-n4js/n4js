@@ -117,6 +117,7 @@ import org.eclipse.xtext.scoping.impl.AbstractScopeProvider
 import org.eclipse.xtext.scoping.impl.IDelegatingScopeProvider
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.n4JS.PropertyNameValuePair
 
 /**
  * This class contains custom scoping description.
@@ -276,6 +277,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			ExportDeclaration						: return scope_ImportedModule(context, reference)
 			IdentifierRef							: return scope_IdentifierRef_id(context, reference)
 			BindingProperty							: return scope_BindingProperty_property(context, reference)
+			PropertyNameValuePair					: return scope_PropertyNameValuePair_property(context, reference)
 			ParameterizedPropertyAccessExpression	: return scope_PropertyAccessExpression_property(context, reference)
 			N4FieldAccessor							: {
 				val container = EcoreUtil2.getContainerOfType(context, N4ClassifierDefinition);
@@ -604,16 +606,27 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 	}
 
-
 	/**
 	 * Called from getScope(), binds a property reference.
 	 */
 	private def IScope scope_BindingProperty_property(BindingProperty bindingProperty, EReference ref) {
+		return scope_DestructPattern_property(bindingProperty, ref);
+	}
+
+
+	/**
+	 * Called from getScope(), binds a property reference.
+	 */
+	private def IScope scope_PropertyNameValuePair_property(PropertyNameValuePair pnvPair, EReference ref) {
+		return scope_DestructPattern_property(pnvPair, ref);
+	}
+
+	private def IScope scope_DestructPattern_property(EObject propertyContainer, EReference ref) {
 		var TypeRef cTypeRef = null;
-		val destNodeTop = DestructNode.unify(DestructureUtils.getTop(bindingProperty));
-		val parentDestNode = destNodeTop?.findNodeOrParentForElement(bindingProperty, true);
+		val destNodeTop = DestructNode.unify(DestructureUtils.getTop(propertyContainer));
+		val parentDestNode = destNodeTop?.findNodeOrParentForElement(propertyContainer, true);
 		if (parentDestNode !== null) {
-			val G = newRuleEnvironment(bindingProperty);
+			val G = newRuleEnvironment(propertyContainer);
 			val parentAstElem = parentDestNode.astElement;
 			if (parentAstElem instanceof BindingProperty) {
 				if (parentAstElem.property !== null) {
@@ -651,7 +664,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 		
 		if (cTypeRef !== null) {
-			return new UberParentScope("scope_BindingProperty_property", createScopeForMemberAccess(cTypeRef, bindingProperty), new DynamicPseudoScope());
+			return new UberParentScope("scope_BindingProperty_property", createScopeForMemberAccess(cTypeRef, propertyContainer), new DynamicPseudoScope());
 		}
 		return new DynamicPseudoScope();
 	}
