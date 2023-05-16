@@ -1404,6 +1404,8 @@ enum PropertyNameKind {
 }
 
 class PropertyNameValuePair extends AnnotablePropertyAssignment, TypedElement, TypableElement {
+	refers IdentifiableElement property
+	transient String propertyAsText
 	refers transient TStructField definedField
 	boolean declaredOptional
 	/*
