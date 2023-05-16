@@ -4456,7 +4456,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ) | 
 	 *         (
 	 *             declaredTypeRefNode=TypeReferenceWithModifiersNode? 
-	 *             declaredName=LiteralOrComputedPropertyName 
+	 *             (property=[IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName) 
 	 *             declaredOptional?='?'? 
 	 *             expression=AssignmentExpression
 	 *         )
@@ -22644,7 +22644,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         declaredTypeRefNode=TypeReferenceWithModifiersNode? 
-	 *         declaredName=LiteralOrComputedPropertyName 
+	 *         (property=[IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName) 
 	 *         declaredOptional?='?'? 
 	 *         expression=AssignmentExpression
 	 *     )

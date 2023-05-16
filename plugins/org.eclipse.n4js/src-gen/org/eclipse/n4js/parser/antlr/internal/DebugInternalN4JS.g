@@ -3183,7 +3183,15 @@ rulePropertyAssignment:
 		(
 			(ruleTypeReferenceWithModifiersNode
 			?
-			ruleLiteralOrComputedPropertyName
+			(
+				(
+					(ruleIdentifierName
+					)=>
+					ruleIdentifierName
+				)
+				    |
+				ruleLiteralOrComputedPropertyName
+			)
 			'?'
 			?
 			':'
@@ -3379,7 +3387,15 @@ norm1_PropertyAssignment:
 		(
 			(ruleTypeReferenceWithModifiersNode
 			?
-			norm1_LiteralOrComputedPropertyName
+			(
+				(
+					(ruleIdentifierName
+					)=>
+					ruleIdentifierName
+				)
+				    |
+				norm1_LiteralOrComputedPropertyName
+			)
 			'?'
 			?
 			':'
@@ -4118,14 +4134,30 @@ rulePropertyNameValuePair:
 	(
 		(ruleTypeReferenceWithModifiersNode
 		?
-		ruleLiteralOrComputedPropertyName
+		(
+			(
+				(ruleIdentifierName
+				)=>
+				ruleIdentifierName
+			)
+			    |
+			ruleLiteralOrComputedPropertyName
+		)
 		'?'
 		?
 		':'
 		)=>
 		ruleTypeReferenceWithModifiersNode
 		?
-		ruleLiteralOrComputedPropertyName
+		(
+			(
+				(ruleIdentifierName
+				)=>
+				ruleIdentifierName
+			)
+			    |
+			ruleLiteralOrComputedPropertyName
+		)
 		'?'
 		?
 		':'
@@ -4138,14 +4170,30 @@ norm1_PropertyNameValuePair:
 	(
 		(ruleTypeReferenceWithModifiersNode
 		?
-		norm1_LiteralOrComputedPropertyName
+		(
+			(
+				(ruleIdentifierName
+				)=>
+				ruleIdentifierName
+			)
+			    |
+			norm1_LiteralOrComputedPropertyName
+		)
 		'?'
 		?
 		':'
 		)=>
 		ruleTypeReferenceWithModifiersNode
 		?
-		norm1_LiteralOrComputedPropertyName
+		(
+			(
+				(ruleIdentifierName
+				)=>
+				ruleIdentifierName
+			)
+			    |
+			norm1_LiteralOrComputedPropertyName
+		)
 		'?'
 		?
 		':'

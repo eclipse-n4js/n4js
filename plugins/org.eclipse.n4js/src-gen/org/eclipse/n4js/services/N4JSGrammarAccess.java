@@ -6076,8 +6076,12 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Action cPropertyNameValuePairAction_0_0_0 = (Action)cGroup_0_0.eContents().get(0);
 		private final Assignment cDeclaredTypeRefNodeAssignment_0_0_1 = (Assignment)cGroup_0_0.eContents().get(1);
 		private final RuleCall cDeclaredTypeRefNodeTypeReferenceWithModifiersNodeParserRuleCall_0_0_1_0 = (RuleCall)cDeclaredTypeRefNodeAssignment_0_0_1.eContents().get(0);
-		private final Assignment cDeclaredNameAssignment_0_0_2 = (Assignment)cGroup_0_0.eContents().get(2);
-		private final RuleCall cDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_0 = (RuleCall)cDeclaredNameAssignment_0_0_2.eContents().get(0);
+		private final Alternatives cAlternatives_0_0_2 = (Alternatives)cGroup_0_0.eContents().get(2);
+		private final Assignment cPropertyAssignment_0_0_2_0 = (Assignment)cAlternatives_0_0_2.eContents().get(0);
+		private final CrossReference cPropertyIdentifiableElementCrossReference_0_0_2_0_0 = (CrossReference)cPropertyAssignment_0_0_2_0.eContents().get(0);
+		private final RuleCall cPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_2_0_0_1 = (RuleCall)cPropertyIdentifiableElementCrossReference_0_0_2_0_0.eContents().get(1);
+		private final Assignment cDeclaredNameAssignment_0_0_2_1 = (Assignment)cAlternatives_0_0_2.eContents().get(1);
+		private final RuleCall cDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_1_0 = (RuleCall)cDeclaredNameAssignment_0_0_2_1.eContents().get(0);
 		private final Assignment cDeclaredOptionalAssignment_0_0_3 = (Assignment)cGroup_0_0.eContents().get(3);
 		private final Keyword cDeclaredOptionalQuestionMarkKeyword_0_0_3_0 = (Keyword)cDeclaredOptionalAssignment_0_0_3.eContents().get(0);
 		private final Keyword cColonKeyword_0_0_4 = (Keyword)cGroup_0_0.eContents().get(4);
@@ -6088,7 +6092,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    => (
 		//        {PropertyNameValuePair}
 		//        declaredTypeRefNode=TypeReferenceWithModifiersNode?
-		//        declaredName=LiteralOrComputedPropertyName<Yield>
+		//        (=> property=[types::IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName<Yield>)
 		//        (declaredOptional?='?')?
 		//        ':'
 		//    )
@@ -6099,7 +6103,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//=> (
 		//    {PropertyNameValuePair}
 		//    declaredTypeRefNode=TypeReferenceWithModifiersNode?
-		//    declaredName=LiteralOrComputedPropertyName<Yield>
+		//    (=> property=[types::IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName<Yield>)
 		//    (declaredOptional?='?')?
 		//    ':'
 		//)
@@ -6109,7 +6113,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//=> (
 		//    {PropertyNameValuePair}
 		//    declaredTypeRefNode=TypeReferenceWithModifiersNode?
-		//    declaredName=LiteralOrComputedPropertyName<Yield>
+		//    (=> property=[types::IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName<Yield>)
 		//    (declaredOptional?='?')?
 		//    ':'
 		//)
@@ -6117,7 +6121,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		
 		//{PropertyNameValuePair}
 		//declaredTypeRefNode=TypeReferenceWithModifiersNode?
-		//declaredName=LiteralOrComputedPropertyName<Yield>
+		//(=> property=[types::IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName<Yield>)
 		//(declaredOptional?='?')?
 		//':'
 		public Group getGroup_0_0() { return cGroup_0_0; }
@@ -6131,11 +6135,23 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//TypeReferenceWithModifiersNode
 		public RuleCall getDeclaredTypeRefNodeTypeReferenceWithModifiersNodeParserRuleCall_0_0_1_0() { return cDeclaredTypeRefNodeTypeReferenceWithModifiersNodeParserRuleCall_0_0_1_0; }
 		
+		//(=> property=[types::IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName<Yield>)
+		public Alternatives getAlternatives_0_0_2() { return cAlternatives_0_0_2; }
+		
+		//=> property=[types::IdentifiableElement|IdentifierName]
+		public Assignment getPropertyAssignment_0_0_2_0() { return cPropertyAssignment_0_0_2_0; }
+		
+		//[types::IdentifiableElement|IdentifierName]
+		public CrossReference getPropertyIdentifiableElementCrossReference_0_0_2_0_0() { return cPropertyIdentifiableElementCrossReference_0_0_2_0_0; }
+		
+		//IdentifierName
+		public RuleCall getPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_2_0_0_1() { return cPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_2_0_0_1; }
+		
 		//declaredName=LiteralOrComputedPropertyName<Yield>
-		public Assignment getDeclaredNameAssignment_0_0_2() { return cDeclaredNameAssignment_0_0_2; }
+		public Assignment getDeclaredNameAssignment_0_0_2_1() { return cDeclaredNameAssignment_0_0_2_1; }
 		
 		//LiteralOrComputedPropertyName<Yield>
-		public RuleCall getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_0() { return cDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_0; }
+		public RuleCall getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_1_0() { return cDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_1_0; }
 		
 		//(declaredOptional?='?')?
 		public Assignment getDeclaredOptionalAssignment_0_0_3() { return cDeclaredOptionalAssignment_0_0_3; }
@@ -14050,7 +14066,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    => (
 	//        {PropertyNameValuePair}
 	//        declaredTypeRefNode=TypeReferenceWithModifiersNode?
-	//        declaredName=LiteralOrComputedPropertyName<Yield>
+	//        (=> property=[types::IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName<Yield>)
 	//        (declaredOptional?='?')?
 	//        ':'
 	//    )
