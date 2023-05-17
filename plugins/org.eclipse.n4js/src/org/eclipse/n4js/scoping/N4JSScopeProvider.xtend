@@ -646,7 +646,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 					}
 					
 					val idx = parent2DestNode.nestedNodes.indexOf(parentDestNode);
-					if (arrayType !== null && arrayType.typeArgsWithDefaults.size > idx && G.isIterableN(arrayType) && arrayType.eResource !== null) {
+					if (arrayType !== null && arrayType.typeArgsWithDefaults.size > idx && G.isIterableN(arrayType)) {
 						val typeArg = arrayType.typeArgsWithDefaults.get(idx);
 						if (typeArg instanceof TypeRef) {
 							cTypeRef = typeArg;
@@ -663,7 +663,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			}
 		}
 		
-		if (cTypeRef !== null) {
+		if (cTypeRef !== null && cTypeRef.eResource !== null) {
 			return new UberParentScope("scope_BindingProperty_property", createScopeForMemberAccess(cTypeRef, propertyContainer), new DynamicPseudoScope());
 		}
 		return new DynamicPseudoScope();

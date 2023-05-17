@@ -250,6 +250,11 @@ class PropertyNameOwnerTest {
 				assertEquals(expectedName, node.propertyAsText);
 				assertNull(node.declaredName);
 				assertEquals(expectedName, node.name);
+			} else if (node instanceof PropertyNameValuePair) {
+				assertNotNull(node.property);
+				assertEquals(expectedName, node.propertyAsText);
+				assertNull(node.declaredName);
+				assertEquals(expectedName, node.name);
 			} else {
 				assertSame(expectedKind, node.declaredName.kind);
 				assertEquals(expectedName, node.declaredName.literalName);
