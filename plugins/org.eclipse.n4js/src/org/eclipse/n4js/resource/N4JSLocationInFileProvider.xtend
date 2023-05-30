@@ -19,6 +19,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.PropertyNameOwner
+import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TFormalParameter
@@ -87,6 +88,9 @@ class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 			val tMember = obj as TMember;
 			val fst = tMember.constituentMembers.get(0);
 			return super.doGetTextRegion(fst.astElement, query);
+			// FIXME: write test case
+		} else if (obj instanceof PropertyNameValuePair && (obj as PropertyNameValuePair).property !== null) {
+			return super.getFullTextRegion(obj, N4JSPackage.eINSTANCE.propertyNameValuePair_Property, 0);
 		} else {
 			return super.doGetTextRegion(obj, query);
 		}
