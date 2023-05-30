@@ -88,7 +88,6 @@ class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 			val tMember = obj as TMember;
 			val fst = tMember.constituentMembers.get(0);
 			return super.doGetTextRegion(fst.astElement, query);
-			// FIXME: write test case
 		} else if (obj instanceof PropertyNameValuePair && (obj as PropertyNameValuePair).property !== null) {
 			return super.getFullTextRegion(obj, N4JSPackage.eINSTANCE.propertyNameValuePair_Property, 0);
 		} else {
