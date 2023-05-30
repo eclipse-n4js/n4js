@@ -18,5 +18,9 @@
 
 let aaa, propB;
 
-// XPECT findReferences at propA --> referenceFinder/destructuring/object_literal_assign - propA : aaa - 22
+/* XPECT findReferences at propA ---
+referenceFinder/destructuring/object_literal_assign - propA:1 - 26,
+referenceFinder/destructuring/object_literal_assign - propA : aaa - 26
+---
+*/
 ({propA : aaa, propB } = {propA:1, propB:2});
