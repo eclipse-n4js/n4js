@@ -18,5 +18,5 @@
 
 let aaa, propB;
 
-// XPECT findReferences at propA --> referenceFinder/enum/D - ColorEnum.RED - 2
+// XPECT findReferences at propA --> referenceFinder/destructuring/object_literal_assign - propA : aaa - 22
 ({propA : aaa, propB } = {propA:1, propB:2});
