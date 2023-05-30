@@ -118,6 +118,8 @@ import org.eclipse.xtext.scoping.impl.IDelegatingScopeProvider
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
+import org.eclipse.n4js.n4JS.ObjectLiteral
+import org.eclipse.n4js.types.utils.TypeUtils
 
 /**
  * This class contains custom scoping description.
@@ -625,8 +627,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		var TypeRef cTypeRef = null;
 		val destNodeTop = DestructNode.unify(DestructureUtils.getTop(propertyContainer));
 		val parentDestNode = destNodeTop?.findNodeOrParentForElement(propertyContainer, true);
+		val G = newRuleEnvironment(propertyContainer);
+		
 		if (parentDestNode !== null) {
-			val G = newRuleEnvironment(propertyContainer);
 			val parentAstElem = parentDestNode.astElement;
 			if (parentAstElem instanceof BindingProperty) {
 				if (parentAstElem.property !== null) {
@@ -663,8 +666,15 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			}
 		}
 		
+		if (cTypeRef === null && propertyContainer instanceof PropertyNameValuePair && propertyContainer.eContainer instanceof ObjectLiteral) {
+			val objLit = propertyContainer.eContainer as ObjectLiteral;
+			if (objLit.definedType !== null) {
+				cTypeRef = TypeUtils.createTypeRef(objLit.definedType);
+			}
+		}
+		
 		if (cTypeRef !== null) {
-			return new UberParentScope("scope_BindingProperty_property", createScopeForMemberAccess(cTypeRef, propertyContainer), new DynamicPseudoScope());
+			return new UberParentScope("scope_DestructPattern_property", createScopeForMemberAccess(cTypeRef, propertyContainer), new DynamicPseudoScope());
 		}
 		return new DynamicPseudoScope();
 	}
