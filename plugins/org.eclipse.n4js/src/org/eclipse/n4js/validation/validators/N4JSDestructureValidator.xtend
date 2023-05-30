@@ -162,6 +162,10 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 					// handled elsewhere: var {fieldPublic: a, fieldPrivate: b} = cls;
 					return true;
 				}
+				if (astElement instanceof PropertyNameValuePair && (astElement as PropertyNameValuePair).property !== null) {
+					// handled elsewhere: {fieldPublic: a, fieldPrivate: b} = cls;
+					return true;
+				}
 			
 				val msg = getMessageForDESTRUCT_PROP_WITH_ERROR(node.propName, errMsg.toString.trim.trimSuffix('.'));
 				val astNodeOfPropName = node.getEObjectAndFeatureForPropName();
