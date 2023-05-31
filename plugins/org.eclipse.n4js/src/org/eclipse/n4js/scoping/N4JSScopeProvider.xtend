@@ -51,8 +51,10 @@ import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.NamedExportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NewExpression
+import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
+import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.TypeDefiningElement
@@ -81,6 +83,7 @@ import org.eclipse.n4js.tooling.react.ReactHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
@@ -95,6 +98,7 @@ import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
@@ -117,9 +121,6 @@ import org.eclipse.xtext.scoping.impl.AbstractScopeProvider
 import org.eclipse.xtext.scoping.impl.IDelegatingScopeProvider
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.n4JS.PropertyNameValuePair
-import org.eclipse.n4js.n4JS.ObjectLiteral
-import org.eclipse.n4js.types.utils.TypeUtils
 
 /**
  * This class contains custom scoping description.
@@ -656,6 +657,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 						}
 					}
 				}
+			} else if (parentDestNode.assignedElem instanceof TypeDefiningElement && (parentDestNode.assignedElem as TypeDefiningElement).definedType !== null) {
+				cTypeRef = TypeUtils.createTypeRef((parentDestNode.assignedElem as TypeDefiningElement).definedType);
 			} else {
 				// fallback
 				cTypeRef = ts.type(G, parentDestNode.assignedElem);
@@ -673,10 +676,28 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			}
 		}
 		
-		if (cTypeRef !== null) {
+		if (cTypeRef !== null && isContained(cTypeRef)) {
 			return new UberParentScope("scope_DestructPattern_property", createScopeForMemberAccess(cTypeRef, propertyContainer), new DynamicPseudoScope());
 		}
 		return new DynamicPseudoScope();
+	}
+	
+	private def boolean isContained(TypeRef tRef) {
+		if (tRef.eResource !== null) {
+			// type ref is contained
+			return true;
+		}
+		if (tRef instanceof ParameterizedTypeRefStructural) {
+			if (!tRef.astStructuralMembers.empty || !tRef.genStructuralMembers.empty) {
+				// type ref is not contained, hence structural members are not contained
+				return false;
+			}
+		}
+		if (tRef.declaredType !== null && tRef.declaredType.eResource !== null) {
+			// nominal type (or similar) is contained
+			return true;
+		}
+		return false;
 	}
 
 	/*
