@@ -116,7 +116,7 @@ package class DestructureProcessor extends AbstractProcessor {
 		astProcessor.processSubtree(G_fresh, node, cache, 0); // note how we reset the indent level
 		cache.forwardProcessedSubTrees.add(node);
 		log(0, "===END of other identifiable sub-tree");
-		return cache.getType(node);
+		return cache.getType(G, node);
 	}
 
 	def boolean isForwardReferenceWhileTypingDestructuringPattern(EObject obj) {

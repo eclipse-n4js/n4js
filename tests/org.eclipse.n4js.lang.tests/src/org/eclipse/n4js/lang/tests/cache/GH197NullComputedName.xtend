@@ -14,6 +14,7 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.tests.parser.AbstractParserTest
 import org.eclipse.n4js.ts.types.TypableElement
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.junit.Test
 
 /**
@@ -77,7 +78,7 @@ class GH197NullComputedName extends AbstractParserTest {
 		val allTypableASTNodes = script.eAllContents.filter(TypableElement);
 		// The type of each typable element must have been cached 
 		while (allTypableASTNodes.hasNext) {
-			cache.getType(allTypableASTNodes.next); // will throw exception in case of cache miss
+			cache.getType(RuleEnvironmentExtensions.newRuleEnvironment(script), allTypableASTNodes.next); // will throw exception in case of cache miss
 		}
 	}
 }
