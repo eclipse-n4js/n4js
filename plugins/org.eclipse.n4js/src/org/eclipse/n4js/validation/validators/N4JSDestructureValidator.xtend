@@ -13,6 +13,8 @@ package org.eclipse.n4js.validation.validators
 import com.google.common.base.Optional
 import com.google.inject.Inject
 import java.util.Map
+import java.util.Set
+import java.util.concurrent.atomic.AtomicReference
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.ArrayBindingPattern
 import org.eclipse.n4js.n4JS.ArrayLiteral
@@ -27,6 +29,7 @@ import org.eclipse.n4js.n4JS.ObjectBindingPattern
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.VariableBinding
+import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.PrimitiveType
@@ -154,17 +157,21 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 		if(node.propName!==null && parentMemberScope!==null) {
 			// property names in object destructuring patterns constitute a property access without
 			// a PropertyAccessExpression in the AST -> make sure property exists & is visible
-			val errMsg = new StringBuffer;
-			val propTypeRef = destructureHelper.getPropertyTypeForNode(G, valueTypePerNode.get(parentNode), parentMemberScope, node.propName, errMsg);
+			val mDescRef = new AtomicReference<AbstractDescriptionWithError>();
+			val propTypeRef = destructureHelper.getPropertyTypeForNode(G, valueTypePerNode.get(parentNode), parentMemberScope, node.propName, mDescRef);
+			val errMsg = if (mDescRef.get() === null) "" else mDescRef.get().message;
 			if(errMsg.length>0) {
 				val astElement = node.astElement;
-				if (astElement instanceof BindingProperty && !(astElement as BindingProperty).isSingleNameBinding) {
-					// handled elsewhere: var {fieldPublic: a, fieldPrivate: b} = cls;
-					return true;
-				}
-				if (astElement instanceof PropertyNameValuePair && (astElement as PropertyNameValuePair).property !== null) {
-					// handled elsewhere: {fieldPublic: a, fieldPrivate: b} = cls;
-					return true;
+				val issueCode = mDescRef.get().issueCode;
+				if (Set.of(VIS_ILLEGAL_MEMBER_ACCESS, VIS_WRONG_READ_WRITE_ACCESS).contains(issueCode)) {
+					if (astElement instanceof BindingProperty && !(astElement as BindingProperty).isSingleNameBinding) {
+						// handled elsewhere: var {fieldPublic: a, fieldPrivate: b} = cls;
+						return true;
+					}
+					if (astElement instanceof PropertyNameValuePair && (astElement as PropertyNameValuePair).property !== null) {
+						// handled elsewhere: {fieldPublic: a, fieldPrivate: b} = cls;
+						return true;
+					}
 				}
 			
 				val msg = getMessageForDESTRUCT_PROP_WITH_ERROR(node.propName, errMsg.toString.trim.trimSuffix('.'));

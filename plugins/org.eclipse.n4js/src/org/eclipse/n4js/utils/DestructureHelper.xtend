@@ -16,6 +16,7 @@ import com.google.inject.Singleton
 import java.util.ArrayList
 import java.util.Map
 import java.util.Set
+import java.util.concurrent.atomic.AtomicReference
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.DestructNode
@@ -215,14 +216,14 @@ class DestructureHelper {
 	 *              a string buffer where the error message will be stored in case the property exists but is not readable
 	 *              or <code>null</code> if the caller is not interested in receiving error messages.
 	 */
-	public def TypeRef getPropertyTypeForNode(RuleEnvironment G, TypeRef parentValueTypeRef, IScope parentMemberScope, String propName, StringBuffer errorMessage) {
+	public def TypeRef getPropertyTypeForNode(RuleEnvironment G, TypeRef parentValueTypeRef, IScope parentMemberScope, String propName, AtomicReference<AbstractDescriptionWithError> mDescRef) {
 		if(parentValueTypeRef===null || parentMemberScope===null) {
 			return null;
 		}
 		val mDesc = parentMemberScope.getSingleElement(QualifiedName.create(propName));
 		if(mDesc instanceof AbstractDescriptionWithError) {
-			if(errorMessage!==null) {
-				errorMessage.append(mDesc.message);
+			if(mDescRef!==null) {
+				mDescRef.set(mDesc);
 			}
 		}
 		val m = mDesc?.getEObjectOrProxy();
