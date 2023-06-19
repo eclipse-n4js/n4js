@@ -146,7 +146,10 @@ public class DestructNode {
 	 * Returns the node with the given <code>astElement</code> or its parent node.
 	 */
 	def DestructNode findNodeOrParentForElement(EObject astElement, boolean returnParent) {
-		if (this.astElement === astElement) {
+		val reprAstElem = if (astElement instanceof BindingElement && astElement.eContainer instanceof BindingProperty)
+				astElement.eContainer else astElement;
+
+		if (this.astElement === reprAstElem) {
 			if (returnParent) {
 				return null;
 			}
@@ -156,13 +159,13 @@ public class DestructNode {
 			return null;
 		}
 		for (nested : this.nestedNodes) {
-			if (nested.astElement === astElement) {
+			if (nested.astElement === reprAstElem) {
 				if (returnParent) {
 					return this;
 				}
 				return nested;
 			}
-			val resNested = nested.findNodeOrParentForElement(astElement, returnParent);
+			val resNested = nested.findNodeOrParentForElement(reprAstElem, returnParent);
 			if (resNested !== null) {
 				return resNested;
 			}
