@@ -23,13 +23,25 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.n4js.n4JS.BindingElement;
+import org.eclipse.n4js.n4JS.DestructNode;
+import org.eclipse.n4js.n4JS.DestructureUtils;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
+import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TypableElement;
+import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.typesystem.N4JSTypeSystem;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.utils.ContainerTypesHelper;
+import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.ReferenceFinder;
 import org.eclipse.xtext.findReferences.TargetURIs;
@@ -60,6 +72,12 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 
 	@Inject
 	private LinkingHelper linkingHelper;
+
+	@Inject
+	private N4JSTypeSystem typeSystem;
+
+	@Inject
+	private ContainerTypesHelper containerTypesHelper;
 
 	@Override
 	protected void findReferencesInDescription(TargetURIs targetURIs, IResourceDescription resourceDescription,
@@ -188,11 +206,25 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 								if (!childElement.eIsProxy()) {
 									findLocalReferencesFromElement(targetURIs, childElement, localResource, acceptor);
 								}
+
+								if (childElement instanceof PropertyNameValuePairSingleName) {
+									// special case to find references to destructuring cases like:
+									// const { fieldF } = new C(); // where class C { fieldF : string = "init"; }
+									checkValue(childElement, localResource, targetURIs, sourceCandidate, sourceURI,
+											ref, acceptor);
+								}
 							}
 						} else {
 							EObject childElement = (EObject) value;
 							if (!childElement.eIsProxy()) {
 								findLocalReferencesFromElement(targetURIs, childElement, localResource, acceptor);
+
+								if (value instanceof BindingElement && ((BindingElement) value).getVarDecl() != null) {
+									// special case to find references to destructuring cases like:
+									// const { fieldF } = new C(); // where class C { fieldF : string = "init"; }
+									checkValue((EObject) value, localResource, targetURIs, sourceCandidate, sourceURI,
+											ref, acceptor);
+								}
 							}
 						}
 					} else if (!ref.isContainer()
@@ -205,8 +237,7 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 								InternalEList<EObject> values = (InternalEList<EObject>) value;
 								for (int i = 0; i < values.size(); ++i) {
 									checkValue(values.basicGet(i), localResource, targetURIs, sourceCandidate,
-											sourceURI, ref,
-											acceptor);
+											sourceURI, ref, acceptor);
 								}
 							} else {
 								checkValue((EObject) value, localResource, targetURIs, sourceCandidate, sourceURI, ref,
@@ -243,19 +274,43 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 	}
 
 	private boolean referenceHasBeenFound(Predicate<URI> targetURIs, URI refURI, EObject instanceOrProxy) {
-		boolean result = false;
-		// If the EObject is a composed member, we compare the target URIs with the URIs of the constituent members.
 		if (instanceOrProxy instanceof TMember && ((TMember) instanceOrProxy).isComposed()) {
+			// If the EObject is a composed member, we compare the target URIs with the URIs of the constituent members.
+			boolean result = false;
 			TMember member = (TMember) instanceOrProxy;
 			for (TMember constituentMember : member.getConstituentMembers()) {
-				URI constituentReffURI = EcoreUtil2.getPlatformResourceOrNormalizedURI(constituentMember);
-				result = result || targetURIs.apply(constituentReffURI);
+				URI constituentRefURI = EcoreUtil2.getPlatformResourceOrNormalizedURI(constituentMember);
+				result = result || targetURIs.apply(constituentRefURI);
 			}
-		} else {
-			// Standard case
-			result = targetURIs.apply(refURI);
+			return result;
+
+		} else if (instanceOrProxy instanceof PropertyNameValuePairSingleName
+				|| instanceOrProxy instanceof BindingElement) {
+
+			// If the EObject is a variable in a destructuring, we add that variable
+			DestructNode destructNode = DestructureUtils.getCorrespondingDestructNode(instanceOrProxy);
+
+			if (destructNode != null && destructNode.getAssignedElem() != null) {
+				TypableElement assignedElem = destructNode.getAssignedElem();
+				TypeRef type = typeSystem.type(RuleEnvironmentExtensions.newRuleEnvironment(assignedElem),
+						assignedElem);
+				MemberCollector memberCollector = containerTypesHelper.fromContext(assignedElem);
+				Type declaredType = type.getDeclaredType();
+				if (declaredType instanceof ContainerType<?>) {
+					String name = destructNode.getPropName();
+					TMember member = memberCollector.findMember((ContainerType<?>) declaredType, name, true, false);
+					if (member == null) {
+						member = memberCollector.findMember((ContainerType<?>) declaredType, name, false, false);
+					}
+					if (member != null) {
+						URI memberRefURI = EcoreUtil2.getPlatformResourceOrNormalizedURI(member);
+						return targetURIs.apply(memberRefURI);
+					}
+				}
+			}
 		}
-		return result;
+		// Standard case
+		return targetURIs.apply(refURI);
 	}
 
 	/** Tells whether the given object is an IdentifierRef pointing to the alias of a named import. */
