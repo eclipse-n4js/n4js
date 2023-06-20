@@ -197,6 +197,21 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 			for (EReference ref : sourceCandidate.eClass().getEAllReferences()) {
 				Object value = sourceCandidate.eGet(ref, false);
 				if (sourceCandidate.eIsSet(ref) && value != null) {
+
+					if (sourceCandidate instanceof PropertyNameValuePairSingleName && value instanceof EObject) {
+						// special case to find references to destructuring cases like:
+						// const { fieldF } = new C(); // where class C { fieldF : string = "init"; }
+						checkValue((EObject) value, localResource, targetURIs, sourceCandidate, sourceURI,
+								ref, acceptor);
+					}
+					if (sourceCandidate instanceof BindingElement
+							&& ((BindingElement) sourceCandidate).getVarDecl() != null && value instanceof EObject) {
+						// special case to find references to destructuring cases like:
+						// const { fieldF } = new C(); // where class C { fieldF : string = "init"; }
+						checkValue((EObject) value, localResource, targetURIs, sourceCandidate, sourceURI,
+								ref, acceptor);
+					}
+
 					if (ref.isContainment()) {
 						if (ref.isMany()) {
 							@SuppressWarnings("unchecked")
@@ -211,20 +226,6 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 							EObject childElement = (EObject) value;
 							if (!childElement.eIsProxy()) {
 								findLocalReferencesFromElement(targetURIs, childElement, localResource, acceptor);
-
-								if (value instanceof BindingElement && ((BindingElement) value).getVarDecl() != null) {
-									// special case to find references to destructuring cases like:
-									// const { fieldF } = new C(); // where class C { fieldF : string = "init"; }
-									checkValue(childElement, localResource, targetURIs, sourceCandidate, sourceURI,
-											ref, acceptor);
-								}
-
-								if (childElement.eContainer() instanceof PropertyNameValuePairSingleName) {
-									// special case to find references to destructuring cases like:
-									// const { fieldF } = new C(); // where class C { fieldF : string = "init"; }
-									checkValue(childElement, localResource, targetURIs, sourceCandidate, sourceURI,
-											ref, acceptor);
-								}
 							}
 						}
 					} else if (!ref.isContainer()
@@ -263,7 +264,7 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 		if (instanceOrProxy != null) {
 			URI refURI = EcoreUtil2.getPlatformResourceOrNormalizedURI(instanceOrProxy);
 			// CUSTOM BEHAVIOR: check for and handle composed members
-			if (referenceHasBeenFound(targetURIs, refURI, instanceOrProxy)) {
+			if (referenceHasBeenFound(targetURIs, sourceCandidate, ref, refURI, instanceOrProxy)) {
 				sourceURI = (sourceURI == null)
 						? EcoreUtil2.getPlatformResourceOrNormalizedURI(sourceCandidate)
 						: sourceURI;
@@ -273,7 +274,9 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 		}
 	}
 
-	private boolean referenceHasBeenFound(Predicate<URI> targetURIs, URI refURI, EObject instanceOrProxy) {
+	private boolean referenceHasBeenFound(Predicate<URI> targetURIs, EObject sourceCandidate, EReference ref,
+			URI refURI, EObject instanceOrProxy) {
+
 		if (instanceOrProxy instanceof TMember && ((TMember) instanceOrProxy).isComposed()) {
 			// If the EObject is a composed member, we compare the target URIs with the URIs of the constituent members.
 			boolean result = false;
@@ -284,8 +287,11 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 			}
 			return result;
 
-		} else if (instanceOrProxy.eContainer() instanceof PropertyNameValuePairSingleName
-				|| instanceOrProxy instanceof BindingElement) {
+		} else if ((sourceCandidate instanceof PropertyNameValuePairSingleName
+				&& ref == N4JSPackage.eINSTANCE.getPropertyNameValuePair_Expression())
+				||
+				(sourceCandidate instanceof BindingElement
+						&& ref == N4JSPackage.eINSTANCE.getBindingElement_VarDecl())) {
 
 			// If the EObject is a variable in a destructuring, we add that variable
 			DestructNode destructNode = DestructureUtils.getCorrespondingDestructNode(instanceOrProxy);
