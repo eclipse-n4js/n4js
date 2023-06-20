@@ -18,7 +18,7 @@
 
 
 /* XPECT findReferences at donkey ---
-referenceFinder/destructuring/object_literal - donkey: bar3 - 25,
+referenceFinder/destructuring/object_literal - donkey - 25,
 referenceFinder/destructuring/object_literal - donkey: null - 25
 ---
 */

@@ -30,5 +30,5 @@ c.field;
 	referenceFinder/destructuring/C - c.field - 28,
 	referenceFinder/destructuring/C - field - 34
 ---*/
-// XPECT findReferences at fld2 -->
+// XPECT findReferences at fld2 --> referenceFinder/destructuring/C - fld2 - 34
 const {field : fld2 } = c; // this reference to 'field' is not found
