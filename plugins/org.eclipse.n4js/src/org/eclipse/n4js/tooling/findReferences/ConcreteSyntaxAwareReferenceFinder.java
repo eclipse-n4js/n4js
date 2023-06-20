@@ -206,13 +206,6 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 								if (!childElement.eIsProxy()) {
 									findLocalReferencesFromElement(targetURIs, childElement, localResource, acceptor);
 								}
-
-								if (childElement instanceof PropertyNameValuePairSingleName) {
-									// special case to find references to destructuring cases like:
-									// const { fieldF } = new C(); // where class C { fieldF : string = "init"; }
-									checkValue(childElement, localResource, targetURIs, sourceCandidate, sourceURI,
-											ref, acceptor);
-								}
 							}
 						} else {
 							EObject childElement = (EObject) value;
@@ -222,7 +215,14 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 								if (value instanceof BindingElement && ((BindingElement) value).getVarDecl() != null) {
 									// special case to find references to destructuring cases like:
 									// const { fieldF } = new C(); // where class C { fieldF : string = "init"; }
-									checkValue((EObject) value, localResource, targetURIs, sourceCandidate, sourceURI,
+									checkValue(childElement, localResource, targetURIs, sourceCandidate, sourceURI,
+											ref, acceptor);
+								}
+
+								if (childElement.eContainer() instanceof PropertyNameValuePairSingleName) {
+									// special case to find references to destructuring cases like:
+									// const { fieldF } = new C(); // where class C { fieldF : string = "init"; }
+									checkValue(childElement, localResource, targetURIs, sourceCandidate, sourceURI,
 											ref, acceptor);
 								}
 							}
@@ -284,7 +284,7 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 			}
 			return result;
 
-		} else if (instanceOrProxy instanceof PropertyNameValuePairSingleName
+		} else if (instanceOrProxy.eContainer() instanceof PropertyNameValuePairSingleName
 				|| instanceOrProxy instanceof BindingElement) {
 
 			// If the EObject is a variable in a destructuring, we add that variable

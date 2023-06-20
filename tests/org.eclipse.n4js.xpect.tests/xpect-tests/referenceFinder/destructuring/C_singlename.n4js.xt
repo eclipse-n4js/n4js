@@ -24,7 +24,7 @@ class C {
 
   /* XPECT findReferences at fieldB ---
       referenceFinder/destructuring/C_singlename - c.fieldB - 34,
-      referenceFinder/destructuring/C_singlename - { fieldB } - 49
+      referenceFinder/destructuring/C_singlename - fieldB - 49
   ---*/
   fieldB: string = "hallo";
 }
