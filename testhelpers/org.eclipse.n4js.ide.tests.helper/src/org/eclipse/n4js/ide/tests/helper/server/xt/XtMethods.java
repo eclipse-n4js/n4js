@@ -205,21 +205,21 @@ public class XtMethods {
 			ICompositeNode srcNode = NodeModelUtils.getNode(ref);
 			int line = srcNode.getStartLine();
 
-			String moduleName;
+			String moduleName = "(unknown resource)";
 			if (ref.eResource() instanceof N4JSResource) {
 				N4JSResource n4jsResource = (N4JSResource) ref.eResource();
 				moduleName = n4jsResource.getModule().getQualifiedName();
-			} else {
-				moduleName = "(unknown resource)";
 			}
 
 			String text = NodeModelUtils.getTokenText(srcNode);
 			if (ref instanceof GenericDeclaration) {
 				text = ((GenericDeclaration) ref).getDefinedType().getName();
 			}
+			if (ref instanceof BindingProperty && ((BindingProperty) ref).getProperty() != null) {
+				text = ((BindingProperty) ref).getPropertyAsText();
+			}
 
 			String resultText = moduleName + " - " + text + " - " + line;
-
 			result.add(resultText);
 		}
 
