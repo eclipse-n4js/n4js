@@ -32,7 +32,7 @@ class A {
 
 let ab: A | B = new A();
 
-/* XPECT renameRefactoring at foo to 'bar' ---
+/* XPECT renameRefactoring at 'foo' to 'bar' ---
 (...)
    *\/
   import {B} from "B";

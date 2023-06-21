@@ -36,7 +36,7 @@ let ab: A | B = new A();
 let a : A = new A();
 a.foo;
 
-/* XPECT renameRefactoring at foo to 'bar' ---
+/* XPECT renameRefactoring at 'foo' to 'bar' ---
 (...)
    *   NumberFour AG - Initial API and implementation
    *\/

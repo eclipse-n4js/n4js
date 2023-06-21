@@ -22,7 +22,7 @@
 
    END_SETUP
 */
-/* XPECT renameRefactoring at f1 to 'f3' ---
+/* XPECT renameRefactoring at 'f1' to 'f3' ---
 (...)
    * Contributors:
    *   NumberFour AG - Initial API and implementation

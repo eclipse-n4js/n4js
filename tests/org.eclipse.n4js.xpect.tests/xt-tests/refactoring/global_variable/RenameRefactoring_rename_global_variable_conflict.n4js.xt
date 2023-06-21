@@ -24,7 +24,7 @@
 */
 
 
-/* XPECT renameRefactoring at myVar to 'foo' ---
+/* XPECT renameRefactoring at 'myVar' to 'foo' ---
 Problem in RenameRefactoringTestProject/src/RenameRefactoring_rename_global_variable_conflict.n4js.xt: Another element in the same scope with name 'foo' already exists
 ---
 */ 

@@ -24,7 +24,7 @@
 */
 
 
-/* XPECT renameRefactoring at myVar to 'bar' ---
+/* XPECT renameRefactoring at 'myVar' to 'bar' ---
 (...)
    * Contributors:
    *   NumberFour AG - Initial API and implementation

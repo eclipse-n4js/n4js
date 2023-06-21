@@ -23,7 +23,7 @@
    END_SETUP
 */
 
-/* XPECT renameRefactoring at A to '%/&@' ---
+/* XPECT renameRefactoring at 'A' to '%/&@' ---
 no viable alternative at input '%'
 ---   
 */ 

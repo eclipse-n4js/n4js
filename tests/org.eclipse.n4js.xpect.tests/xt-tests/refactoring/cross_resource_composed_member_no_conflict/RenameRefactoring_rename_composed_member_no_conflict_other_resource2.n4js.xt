@@ -32,7 +32,7 @@ class A {
 
 let ab: A | B = new A();
 
-/* XPECT renameRefactoring at foo to 'bar' resource 'B.n4js' ---
+/* XPECT renameRefactoring at 'foo' to 'bar' resource 'B.n4js' ---
 public [foo|bar]() {}
 ---
 */

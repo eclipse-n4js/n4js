@@ -30,7 +30,7 @@ bar;
 
 console.log(foo);
 
-/* XPECT renameRefactoring at foo to 'newFoo' ---
+/* XPECT renameRefactoring at 'foo' to 'newFoo' ---
 (...)
    *\/
   let bar = 42;

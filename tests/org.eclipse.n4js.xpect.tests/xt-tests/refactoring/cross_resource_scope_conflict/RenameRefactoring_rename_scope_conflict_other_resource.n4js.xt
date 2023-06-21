@@ -26,7 +26,7 @@
 
 import {B} from "B";
 
-/* XPECT renameRefactoring at B to 'C' ---
+/* XPECT renameRefactoring at 'B' to 'C' ---
 Problem in RenameRefactoringTestProject/src/B.n4js: Another element in the same scope with name 'C' already exists
 ---
 */

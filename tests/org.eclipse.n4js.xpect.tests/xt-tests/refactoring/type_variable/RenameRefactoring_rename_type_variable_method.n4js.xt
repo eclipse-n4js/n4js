@@ -25,7 +25,7 @@
 
 class A<T> {
 	public x: T;
-	/* XPECT renameRefactoring at E to 'F' ---
+	/* XPECT renameRefactoring at 'E' to 'F' ---
 	public <[E|F]> foo(e: [E|F]) {
 	---
 	*/

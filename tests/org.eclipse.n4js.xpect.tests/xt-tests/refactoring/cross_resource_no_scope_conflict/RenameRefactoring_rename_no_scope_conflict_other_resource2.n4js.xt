@@ -26,7 +26,7 @@
 
 import {B} from "B";
 
-/* XPECT renameRefactoring at B to 'D' resource 'B.n4js' ---
+/* XPECT renameRefactoring at 'B' to 'D' resource 'B.n4js' ---
 export public class [B|D] {
 ---
 */

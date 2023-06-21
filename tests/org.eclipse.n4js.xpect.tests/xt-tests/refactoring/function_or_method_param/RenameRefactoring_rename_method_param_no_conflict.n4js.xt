@@ -25,7 +25,7 @@
 
 
 class A {
-	/* XPECT renameRefactoring at p1 to 'p3' ---
+	/* XPECT renameRefactoring at 'p1' to 'p3' ---
 	(...)
 	   *   NumberFour AG - Initial API and implementation
 	   *\/
