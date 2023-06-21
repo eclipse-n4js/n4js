@@ -15,6 +15,7 @@ import static org.eclipse.n4js.N4JSGlobals.OUTPUT_FILE_PREAMBLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +25,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -35,6 +39,7 @@ import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
+import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.helper.CliTools;
@@ -49,6 +54,7 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils;
+import org.eclipse.n4js.tests.codegen.Folder;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.utils.Strings;
@@ -57,6 +63,8 @@ import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.XtextResource;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
@@ -243,6 +251,9 @@ public class XtIdeTest extends AbstractIdeTest {
 		case "generated_dts":
 			generated_dts(testMethodData);
 			break;
+		case "renameRefactoring":
+			renameRefactoring(testMethodData);
+			break;
 		case "scope":
 			scope(testMethodData);
 			break;
@@ -258,6 +269,7 @@ public class XtIdeTest extends AbstractIdeTest {
 		case "typeArgs":
 			typeArgs(testMethodData);
 			break;
+
 		// flow graph test methods
 		case "allBranches":
 			allBranches(testMethodData);
@@ -531,6 +543,71 @@ public class XtIdeTest extends AbstractIdeTest {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "linkedPathname", "at");
 		String pathName = xtMethods.getLinkedPathname(ocr);
 		assertEquals(data.expectation, pathName);
+	}
+
+	/**
+	 * Performs a rename refactoring at a given location. Usage:
+	 *
+	 * <pre>
+	 * // Xpect renameRefactoring at '&ltOLD_NAME&gt' to '&ltNEW_NAME&gt' resource '&ltRESOURCE_NAME&gt' --&gt;
+	 * // &ltNEWCODE_OR_PROBLEMS&gt
+	 * </pre>
+	 *
+	 * {@code resource} is optional.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void renameRefactoring(XtMethodData data) throws InterruptedException, ExecutionException {
+		FileURI uri = getFileURIFromModuleName(xtData.workspace.moduleNameOfXtFile);
+		Position pos = eobjProvider.checkAndGetPosition(data, "renameRefactoring", "at");
+		String newName = eobjProvider.checkAndGetArgAfter(data, "renameRefactoring", "at", "to");
+		Preconditions.checkState(newName != null);
+		String optResource = eobjProvider.checkAndGetArgAfter(data, "renameRefactoring", "at", "to", "resource");
+		if (com.google.common.base.Strings.isNullOrEmpty(optResource)) {
+			optResource = uri.toString();
+		}
+		FileURI assertResource = getFileURIFromModuleName(optResource);
+
+		WorkspaceEdit workspaceEdit = callRename(uri.toString(), pos.getLine(), pos.getCharacter(), newName);
+		if (workspaceEdit == null) {
+			fail("element cannot be renamed");
+			return;
+		}
+
+		Map<FileURI, String> fileURI2ActualSourceBefore = new LinkedHashMap<>();
+		Map<String, Map<String, String>> projectsModulesSourcesBefore = new LinkedHashMap<>();
+		for (Project prj : xtData.workspace.getAllProjects()) {
+			Map<String, String> modulesSourcesBefore = new LinkedHashMap<>();
+			projectsModulesSourcesBefore.put(prj.getName(), modulesSourcesBefore);
+
+			for (Folder srcFld : prj.getSourceFolders()) {
+				for (org.eclipse.n4js.tests.codegen.Module mdl : srcFld.getModules()) {
+					String moduleName = mdl.getName();
+					String contents = mdl.getContents();
+					modulesSourcesBefore.put(moduleName, contents);
+					fileURI2ActualSourceBefore.put(getFileURIFromModuleName(moduleName), contents);
+				}
+			}
+		}
+
+		Set<FileURI> unknownURIs = new LinkedHashSet<>();
+		Map<FileURI, String> fileURI2ActualSourceAfter = applyWorkspaceEdit(projectsModulesSourcesBefore,
+				workspaceEdit, unknownURIs);
+
+		if (!unknownURIs.isEmpty()) {
+			fail("rename led to text edits in unknown URIs: " + Joiner.on(", ").join(unknownURIs));
+		}
+
+		String XPCT_PATTERN = "\\/\\*\\s+XPECT.+---(.|\\s)+---\\s*\\*\\/";
+
+		for (FileURI file : fileURI2ActualSourceAfter.keySet()) {
+			if (Objects.equal(assertResource, file)) {
+				String contentsBefore = fileURI2ActualSourceBefore.get(file).replaceAll(XPCT_PATTERN, "");
+				String contentsAfter = fileURI2ActualSourceAfter.get(file).replaceAll(XPCT_PATTERN, "");
+
+				String[] diffRanges = Strings.diffRange(contentsBefore, contentsAfter, true);
+				assertEquals(data.expectation, diffRanges[1].trim());
+			}
+		}
 	}
 
 	/**

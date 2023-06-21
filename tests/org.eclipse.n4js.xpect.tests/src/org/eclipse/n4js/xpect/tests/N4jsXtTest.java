@@ -32,6 +32,6 @@ public class N4jsXtTest {
 
 	@XtFolder
 	static String getFolder() {
-		return "xt-tests/dts-import";
+		return "xt-tests";
 	}
 }

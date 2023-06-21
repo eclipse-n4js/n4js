@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt.tests;
 
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodData;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodData;
 import org.junit.Test;
 
 /**
@@ -31,7 +31,7 @@ public class DefinitionTest extends AbstractXtParentRunnerTest {
 				+ "testRunFinished");
 		assertResults(
 				"Passed: definition~0: test-1 〔probands/Definition/Definition.n4js.xt〕\n"
-						+ "Failed: definition~1: test-2 〔probands/Definition/Definition.n4js.xt〕. expected:<[wrong expectation]> but was:<[(test-project/src/Definition.n4js, [28:0 - 28:13])]>");
+						+ "Failed: definition~1: test-2 〔probands/Definition/Definition.n4js.xt〕. expected:<[wrong expectation]> but was:<[(test-project/src/Definition.n4js, [21:4 - 21:6])]>");
 	}
 
 }

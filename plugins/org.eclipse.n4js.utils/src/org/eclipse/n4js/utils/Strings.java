@@ -208,4 +208,51 @@ abstract public class Strings {
 		}
 		return result.toString();
 	}
+
+	/**
+	 * Strips the equal parts at the beginning and end of two given strings.
+	 *
+	 * @param fullLines
+	 *            iff true the result strings start and end at full lines, otherwise they start and end at the
+	 *            first/last character that is different
+	 */
+	public static String[] diffRange(String strA, String strB, boolean fullLines) {
+		if (strA == null || strB == null) {
+			return new String[] { strA, strB };
+		}
+		int idxStart = 0;
+		int idxEndOffset = 1;
+		while (strA.charAt(idxStart) == strB.charAt(idxStart) && idxStart < strA.length() - 1) {
+			idxStart++;
+		}
+		while (strA.charAt(strA.length() - idxEndOffset) == strB.charAt(strB.length() - idxEndOffset)
+				&& idxEndOffset < Math.min(strA.length(), strB.length()) - 1) {
+
+			idxEndOffset++;
+		}
+		int idxEndA = strA.length() - idxEndOffset;
+		int idxEndB = strB.length() - idxEndOffset;
+		if (fullLines) {
+			while (strA.charAt(idxStart) != '\n' && idxStart > 0) {
+				idxStart--;
+			}
+			while (strA.charAt(idxEndA) != '\n' && idxEndA < strA.length() - 1) {
+				idxEndA++;
+			}
+			while (strB.charAt(idxEndB) != '\n' && idxEndB < strB.length() - 1) {
+				idxEndB++;
+			}
+		}
+		int idxStartA = idxStart;
+		int idxStartB = idxStart;
+		if (strA.charAt(idxStartA) == '\n') {
+			idxStartA++;
+		}
+		if (strB.charAt(idxStartB) == '\n') {
+			idxStartB++;
+		}
+		String rangeA = strA.substring(idxStartA, idxEndA);
+		String rangeB = strB.substring(idxStartB, idxEndB);
+		return new String[] { rangeA, rangeB };
+	}
 }
