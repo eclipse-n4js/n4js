@@ -27,13 +27,10 @@
 import {B} from "B";
 
 /* XPECT renameRefactoring at 'B' to 'D' ---
-(...)
-   * Contributors:
-   *   NumberFour AG - Initial API and implementation
-   *\/
-| import {[B|D]} from "B";
-| class A extends [B|D] {
-  }
+import {D} from "B";
+
+
+class A extends D {
 ---
 */
 class A extends B {

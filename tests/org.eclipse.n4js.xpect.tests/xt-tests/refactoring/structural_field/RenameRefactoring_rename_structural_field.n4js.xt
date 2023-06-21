@@ -23,12 +23,8 @@
    END_SETUP
 */
 /* XPECT renameRefactoring at 'f1' to 'f3' ---
-(...)
-   * Contributors:
-   *   NumberFour AG - Initial API and implementation
-   *\/
-| let v: ~Object with {[f1|f3]: int, f2: string};
-| v.[f1|f3];
+let v: ~Object with {f3: int, f2: string};
+v.f3;
 ---   
 */
 let v: ~Object with {f1: int, f2: string};

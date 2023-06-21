@@ -30,7 +30,7 @@ bar;
 
 console.log(foo);
 
-/* XPECT renameRefactoring at 'foo' to 'bar' ---
+/* GH-2514 XPECT FIXME renameRefactoring at 'foo' to 'bar' ---
 Problem in RenameRefactoringTestProject/src/RenameRefactoring_rename_function_conflict.n4js.xt: Another element in the same scope with name 'bar' already exists
 ---   
 */

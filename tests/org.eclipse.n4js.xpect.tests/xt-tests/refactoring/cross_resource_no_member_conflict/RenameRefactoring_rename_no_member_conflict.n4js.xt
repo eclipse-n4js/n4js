@@ -29,7 +29,7 @@ import {B} from "B";
 class A extends B {
 	public bar() {
 	/* XPECT renameRefactoring at 'y' to 'u' ---
-		this.[y|u];
+		this.u;
 	---
 	*/
 		this.y;

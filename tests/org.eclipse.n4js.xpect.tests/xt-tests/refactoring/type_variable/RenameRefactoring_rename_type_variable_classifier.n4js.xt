@@ -24,13 +24,8 @@
 */
 
 /* XPECT renameRefactoring at 'T' to 'E' ---
-(...)
-   * Contributors:
-   *   NumberFour AG - Initial API and implementation
-   *\/
-| class A<[T|E]> {
-| 	public x : [T|E]; 
-  } 
+class A<E> {
+	public x : E;
 ---
 */
 class A<T> {

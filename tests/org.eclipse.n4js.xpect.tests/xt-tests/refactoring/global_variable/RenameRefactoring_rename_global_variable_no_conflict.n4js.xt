@@ -25,14 +25,9 @@
 
 
 /* XPECT renameRefactoring at 'myVar' to 'bar' ---
-(...)
-   * Contributors:
-   *   NumberFour AG - Initial API and implementation
-   *\/
-| export public var [myVar|bar]: int = 42;
-| console.log([myVar|bar]);
-  function foo() {
-  }
+export public var bar: int = 42;
+
+console.log(bar);
 ---
 */ 
 export public var myVar: int = 42;

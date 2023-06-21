@@ -31,12 +31,10 @@ bar;
 console.log(foo);
 
 /* XPECT renameRefactoring at 'foo' to 'newFoo' ---
-(...)
-   *\/
-  let bar = 42;
-  bar;
-| console.log([foo|newFoo]);
-| function [foo|newFoo]() {}
+console.log(newFoo);
+
+
+function newFoo() {}
 ---   
 */
 function foo() {}

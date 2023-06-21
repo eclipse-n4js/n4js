@@ -25,19 +25,19 @@
 
 class A {
 /* XPECT renameRefactoring at 'foo' to 'bar' ---
-(...)
-   *   NumberFour AG - Initial API and implementation
-   *\/
-  class A {
-| 	public [foo|bar]: int
-  }
-  class B {
-  	public foo: int
-  }
-  let ab: A | B = new A();
-  let a : A = new A();
-| a.[foo|bar];
-  ab.foo;
+public bar: int
+}
+
+class B {
+	public foo: int
+}
+
+let ab: A | B = new A();
+
+let a : A = new A();
+a.bar;
+
+ab.bar;
 ---
 */
 	public foo: int

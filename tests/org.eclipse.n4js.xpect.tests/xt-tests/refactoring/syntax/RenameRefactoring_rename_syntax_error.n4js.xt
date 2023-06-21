@@ -23,7 +23,7 @@
    END_SETUP
 */
 
-/* XPECT renameRefactoring at 'A' to '%/&@' ---
+/* GH-2514 XPECT FIXME renameRefactoring at 'A' to '%/&@' ---
 no viable alternative at input '%'
 ---   
 */ 

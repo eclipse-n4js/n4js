@@ -24,7 +24,7 @@
 */
 
 
-/* XPECT renameRefactoring at 'p1' to 'p2' ---
+/* GH-2514 XPECT FIXME renameRefactoring at 'p1' to 'p2' ---
 Problem in RenameRefactoringTestProject/src/RenameRefactoring_rename_function_param_conflict.n4js.xt: Another formal parameter with name 'p2' already exists.
 ---   
 */

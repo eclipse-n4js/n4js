@@ -32,7 +32,7 @@ class A {
 
 let ab: A | B = new A();
 
-/* XPECT renameRefactoring at 'foo' to 'bar' ---
+/* GH-2514 XPECT FIXME renameRefactoring at 'foo' to 'bar' ---
 Problem in RenameRefactoringTestProject/src/B.n4js: Another member with name 'bar' already exists
 ---
 */

@@ -33,14 +33,13 @@ class A {
 let ab: A | B = new A();
 
 /* XPECT renameRefactoring at 'foo' to 'bar' ---
-(...)
-   *\/
-  import {B} from "B";
-  class A {
-| 	public [foo|bar]() {}
-  }
-  let ab: A | B = new A();
-| ab.[foo|bar];
+public bar() {}
+}
+
+let ab: A | B = new A();
+
+
+ab.bar;
 ---
 */
 ab.foo;

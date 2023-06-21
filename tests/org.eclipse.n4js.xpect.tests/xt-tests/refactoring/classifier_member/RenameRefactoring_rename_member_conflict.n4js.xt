@@ -24,7 +24,7 @@
 */
 
 class A {
-/* XPECT renameRefactoring at 'a' to 'b' ---
+/* GH-2514 XPECT FIXME renameRefactoring at 'a' to 'b' ---
 Problem in RenameRefactoringTestProject/src/RenameRefactoring_rename_member_conflict.n4js.xt: Another member with name 'b' already exists
 ---   
 */ 

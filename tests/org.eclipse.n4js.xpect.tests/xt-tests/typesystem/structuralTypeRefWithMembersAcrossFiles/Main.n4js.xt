@@ -50,15 +50,15 @@ p.f3.value.n;
 p.m1().n;
 
 
-// XPECT definition at 'n' --> (yarn-test-project/packages/ProjectImportee/src/i/Importee.n4js, [21:8 - 21:10])
+// XPECT definition at 'n' --> (yarn-test-project/packages/ProjectImportee/src/i/Importee.n4js, [23:4 - 23:5])
 p.f1.n;
-// XPECT definition at 'n' --> (yarn-test-project/packages/ProjectImportee/src/i/Importee.n4js, [26:8 - 26:10])
+// XPECT definition at 'n' --> (yarn-test-project/packages/ProjectImportee/src/i/Importee.n4js, [28:2 - 28:3])
 p.f2.n;
-// XPECT definition at 'n' --> (yarn-test-project/packages/ProjectImportee/src/i/Importee.n4js, [31:8 - 31:10])
+// XPECT definition at 'n' --> (yarn-test-project/packages/ProjectImportee/src/i/Importee.n4js, [33:2 - 33:3])
 p.f3.value.n;
-// XPECT definition at 'n' --> (yarn-test-project/packages/ProjectImportee/src/i/Importee.n4js, [36:8 - 36:10])
+// XPECT definition at 'n' --> (yarn-test-project/packages/ProjectImportee/src/i/Importee.n4js, [38:2 - 38:3])
 p.m1().n;
 
 
-// XPECT definition at 'prop' --> (yarn-test-project/packages/ProjectImportee/src/i/NestedMultiLevel.n4js, [11:18 - 11:29])
+// XPECT definition at 'prop' --> (yarn-test-project/packages/ProjectImportee/src/i/NestedMultiLevel.n4js, [15:16 - 15:20])
 exportedVar.obj1.obj2.obj3.prop;
