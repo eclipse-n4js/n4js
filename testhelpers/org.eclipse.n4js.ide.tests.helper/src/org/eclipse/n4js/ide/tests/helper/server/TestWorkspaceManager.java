@@ -333,7 +333,7 @@ public class TestWorkspaceManager {
 	 *             when no module or multiple modules are found for the given name, or some other error occurred.
 	 */
 	public FileURI getFileURIFromModuleName(String moduleName) {
-		if (moduleName.startsWith("file:///")) {
+		if (moduleName != null && moduleName.startsWith("file:///")) {
 			moduleName = moduleName.substring("file://".length());
 		}
 		// special case for package.json files:
