@@ -23,15 +23,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.eclipse.lsp4j.Position;
-import org.eclipse.lsp4j.PrepareRenameDefaultBehavior;
-import org.eclipse.lsp4j.PrepareRenameParams;
-import org.eclipse.lsp4j.PrepareRenameResult;
-import org.eclipse.lsp4j.Range;
-import org.eclipse.lsp4j.RenameParams;
-import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
-import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractRenameTest.RenameTestConfiguration;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.workspace.locations.FileURI;
@@ -234,34 +226,21 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 		FileURI fileURI = getFileURIFromModuleName(pos.moduleName);
 		String uriStr = fileURI.toString();
 
-		// ensure the file with URI 'fileURI' is open and is the only opened file
-		if (!getOpenFiles().equals(Collections.singleton(fileURI))) {
-			closeAllFiles();
-			joinServerRequests();
-			openFile(fileURI);
-			joinServerRequests();
-		}
-
 		String sourceBefore = config.projectsModulesSourcesBefore.get(pos.projectName).get(pos.moduleName);
 
-		PrepareRenameParams prepareRenameParams = new PrepareRenameParams();
-		prepareRenameParams.setTextDocument(new TextDocumentIdentifier(uriStr));
-		prepareRenameParams.setPosition(new Position(pos.line, pos.column));
-		Either<Range, Either<PrepareRenameResult, PrepareRenameDefaultBehavior>> result1 = languageServer
-				.prepareRename(prepareRenameParams).get();
-		if (result1 == null || (result1.getLeft() == null && result1.getRight() == null)) {
+		WorkspaceEdit workspaceEdit = callRename(uriStr, pos.line, pos.column, config.newName);
+		if (workspaceEdit == null) {
 			fail("element cannot be renamed", sourceBefore, pos);
 			return;
 		}
 
-		RenameParams renameParams = new RenameParams();
-		renameParams.setTextDocument(new TextDocumentIdentifier(uriStr));
-		renameParams.setPosition(new Position(pos.line, pos.column));
-		renameParams.setNewName(config.newName);
-		WorkspaceEdit workspaceEdit = languageServer.rename(renameParams).get();
-
+		Set<FileURI> unknownURIs = new LinkedHashSet<>();
 		Map<FileURI, String> fileURI2ActualSourceAfter = applyWorkspaceEdit(config.projectsModulesSourcesBefore,
-				workspaceEdit, pos, config);
+				workspaceEdit, unknownURIs);
+
+		if (!unknownURIs.isEmpty()) {
+			fail("rename led to text edits in unknown URIs: " + Joiner.on(", ").join(unknownURIs), null, null);
+		}
 
 		Set<FileURI> checkedFileURIs = new LinkedHashSet<>();
 		for (Map<String, String> moduleName2ExpectedSourceAfter : config.projectsModulesExpectedSourcesAfter.values()) {
@@ -292,54 +271,6 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 				return;
 			}
 		}
-	}
-
-	/** Unchanged modules are not included in the returned map. */
-	private Map<FileURI, String> applyWorkspaceEdit(Map<String, Map<String, String>> projectsModulesSourcesBefore,
-			WorkspaceEdit edit, RenamePosition pos, RenameTestConfiguration config) {
-
-		Map<FileURI, List<TextEdit>> fileURI2TextEdits = new LinkedHashMap<>();
-		for (Entry<String, List<TextEdit>> entry : edit.getChanges().entrySet()) {
-			String uriStr = entry.getKey();
-			List<TextEdit> textEdits = entry.getValue();
-			FileURI fileURI = getFileURIFromURIString(uriStr);
-			fileURI2TextEdits.put(fileURI, textEdits);
-		}
-
-		Map<FileURI, String> fileURI2ActualSourceAfter = new LinkedHashMap<>();
-		for (Entry<String, Map<String, String>> entry1 : projectsModulesSourcesBefore.entrySet()) {
-			String projectName = entry1.getKey();
-			Map<String, String> moduleName2SourceBefore = entry1.getValue();
-			if (projectName.startsWith("#")) {
-				// ignore entries with special information, e.g. TestWorkspaceManager#NODE_MODULES
-				continue;
-			}
-			for (Entry<String, String> entry2 : moduleName2SourceBefore.entrySet()) {
-				String moduleName = entry2.getKey();
-				String sourceBefore = entry2.getValue();
-				if (moduleName.startsWith("#")) {
-					// ignore entries with special information, e.g. TestWorkspaceManager#DEPENDENCIES
-					continue;
-				}
-				FileURI fileURI = getFileURIFromModuleName(moduleName);
-				List<TextEdit> textEdits = fileURI2TextEdits.get(fileURI);
-				if (textEdits != null) {
-					String actualSourceAfter = applyTextEdits(sourceBefore, textEdits);
-					fileURI2ActualSourceAfter.put(fileURI, actualSourceAfter);
-				} else {
-					// no changes in this file -> ignore
-				}
-			}
-		}
-
-		Set<FileURI> unknownURIs = new LinkedHashSet<>(fileURI2TextEdits.keySet());
-		unknownURIs.removeAll(fileURI2ActualSourceAfter.keySet());
-		if (!unknownURIs.isEmpty()) {
-			String sourceBefore = config.projectsModulesSourcesBefore.get(pos.projectName).get(pos.moduleName);
-			fail("rename led to text edits in unknown URIs: " + Joiner.on(", ").join(unknownURIs), sourceBefore, pos);
-		}
-
-		return fileURI2ActualSourceAfter;
 	}
 
 	private void fail(String msg, String sourceBefore, RenamePosition pos) {

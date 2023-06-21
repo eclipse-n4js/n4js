@@ -20,7 +20,7 @@ class B {
 
 
 var b0 : B = new B();
-// test-1 XPECT FIXME definition at 'b0' --> (test-project/src/FIXME.n4js, [23:0 - 23:13])
+// test-1 XPECT FIXME definition at 'b0' --> (test-project/src/FIXME.n4js, [21:4 - 21:6])
 b0.methodB();
 
 

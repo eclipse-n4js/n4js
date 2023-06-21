@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -66,7 +68,11 @@ import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.Position;
+import org.eclipse.lsp4j.PrepareRenameDefaultBehavior;
+import org.eclipse.lsp4j.PrepareRenameParams;
+import org.eclipse.lsp4j.PrepareRenameResult;
 import org.eclipse.lsp4j.Range;
+import org.eclipse.lsp4j.RenameParams;
 import org.eclipse.lsp4j.ResourceOperation;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
@@ -1751,6 +1757,86 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 				.completion(completionParams);
 
 		return future;
+	}
+
+	/**
+	 * Calls endpoint {@code textDocument/rename} of LSP server
+	 *
+	 * Returns a workspace edit iff the symbol was renamed, otherwise null
+	 */
+	protected WorkspaceEdit callRename(String fileURI, int line, int column, String newName)
+			throws InterruptedException, ExecutionException {
+
+		// ensure the file with URI 'fileURI' is open and is the only opened file
+		if (!getOpenFiles().equals(Collections.singleton(getFileURIFromURIString(fileURI)))) {
+			closeAllFiles();
+			joinServerRequests();
+			openFile(fileURI);
+			joinServerRequests();
+		}
+
+		PrepareRenameParams prepareRenameParams = new PrepareRenameParams();
+		prepareRenameParams.setTextDocument(new TextDocumentIdentifier(fileURI));
+		prepareRenameParams.setPosition(new Position(line, column));
+		Either<Range, Either<PrepareRenameResult, PrepareRenameDefaultBehavior>> result1 = languageServer
+				.prepareRename(prepareRenameParams).get();
+		if (result1 == null || (result1.getLeft() == null && result1.getRight() == null)) {
+			return null;
+		}
+
+		RenameParams renameParams = new RenameParams();
+		renameParams.setTextDocument(new TextDocumentIdentifier(fileURI));
+		renameParams.setPosition(new Position(line, column));
+		renameParams.setNewName(newName);
+		WorkspaceEdit workspaceEdit = languageServer.rename(renameParams).get();
+
+		return workspaceEdit;
+	}
+
+	/** Unchanged modules are not included in the returned map. */
+	protected Map<FileURI, String> applyWorkspaceEdit(Map<String, Map<String, String>> projectsModulesSourcesBefore,
+			WorkspaceEdit edit, Set<FileURI> unknownURIs) {
+
+		Map<FileURI, List<TextEdit>> fileURI2TextEdits = new LinkedHashMap<>();
+		for (Entry<String, List<TextEdit>> entry : edit.getChanges().entrySet()) {
+			String uriStr = entry.getKey();
+			List<TextEdit> textEdits = entry.getValue();
+			FileURI fileURI = getFileURIFromURIString(uriStr);
+			fileURI2TextEdits.put(fileURI, textEdits);
+		}
+
+		Map<FileURI, String> fileURI2ActualSourceAfter = new LinkedHashMap<>();
+		for (Entry<String, Map<String, String>> entry1 : projectsModulesSourcesBefore.entrySet()) {
+			String projectName = entry1.getKey();
+			Map<String, String> moduleName2SourceBefore = entry1.getValue();
+			if (projectName.startsWith("#")) {
+				// ignore entries with special information, e.g. TestWorkspaceManager#NODE_MODULES
+				continue;
+			}
+			for (Entry<String, String> entry2 : moduleName2SourceBefore.entrySet()) {
+				String moduleName = entry2.getKey();
+				String sourceBefore = entry2.getValue();
+				if (moduleName.startsWith("#")) {
+					// ignore entries with special information, e.g. TestWorkspaceManager#DEPENDENCIES
+					continue;
+				}
+				FileURI fileURI = getFileURIFromModuleName(moduleName);
+				List<TextEdit> textEdits = fileURI2TextEdits.get(fileURI);
+				if (textEdits != null) {
+					String actualSourceAfter = applyTextEdits(sourceBefore, textEdits);
+					fileURI2ActualSourceAfter.put(fileURI, actualSourceAfter);
+				} else {
+					// no changes in this file -> ignore
+				}
+			}
+		}
+
+		if (unknownURIs != null) {
+			unknownURIs.addAll(fileURI2TextEdits.keySet());
+			unknownURIs.removeAll(fileURI2ActualSourceAfter.keySet());
+		}
+
+		return fileURI2ActualSourceAfter;
 	}
 
 	/** Runs the given file (with its parent folder as working directory) in node.js and asserts the output. */

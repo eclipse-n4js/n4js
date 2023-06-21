@@ -118,7 +118,7 @@ public class XtFileData {
 				curOffset += lineLengths[line], line++) {
 
 			if (curOffset + lineLengths[line] > offset) {
-				int character = curOffset + lineLengths[line] - offset;
+				int character = offset - curOffset;
 				return new Position(line, character);
 			}
 		}
