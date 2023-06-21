@@ -239,12 +239,20 @@ abstract public class Strings {
 			while (strA.charAt(idxEndA) != '\n' && idxEndA < strA.length() - 1) {
 				idxEndA++;
 			}
-			while (strA.charAt(idxEndB) != '\n' && idxEndB < strA.length() - 1) {
+			while (strB.charAt(idxEndB) != '\n' && idxEndB < strB.length() - 1) {
 				idxEndB++;
 			}
 		}
-		String rangeA = strA.substring(idxStart + 1, idxEndA);
-		String rangeB = strB.substring(idxStart + 1, idxEndB);
+		int idxStartA = idxStart;
+		int idxStartB = idxStart;
+		if (strA.charAt(idxStartA) == '\n') {
+			idxStartA++;
+		}
+		if (strB.charAt(idxStartB) == '\n') {
+			idxStartB++;
+		}
+		String rangeA = strA.substring(idxStartA, idxEndA);
+		String rangeB = strB.substring(idxStartB, idxEndB);
 		return new String[] { rangeA, rangeB };
 	}
 }

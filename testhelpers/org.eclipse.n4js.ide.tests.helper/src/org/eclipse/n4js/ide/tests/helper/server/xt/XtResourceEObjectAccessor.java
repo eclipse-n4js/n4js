@@ -104,16 +104,6 @@ public class XtResourceEObjectAccessor {
 
 	private int checkAndGetOffset(XtMethodData data, String methodName, String optionalLocation) {
 		String optionalLocationStr = checkAndGetArgAfter(data, methodName, optionalLocation);
-		// if (data.args.length() > 1) {
-		// Preconditions.checkArgument(data.args.startsWith(optionalLocation + " "));
-		// String rest = data.args.substring(optionalLocation.length()).trim();
-		// Preconditions.checkArgument(rest.startsWith("'"));
-		// int idxEnd = 1;
-		// while (rest.charAt(++idxEnd) != '\'') {
-		// Preconditions.checkState(idxEnd < rest.length());
-		// }
-		// optionalLocationStr = rest.substring(1, idxEnd);
-		// }
 		return getOffset(data.offset, optionalLocationStr);
 	}
 
@@ -133,9 +123,10 @@ public class XtResourceEObjectAccessor {
 				String someArg = parseArgument(args);
 				args = args.substring(someArg.length() + 2).trim();
 			}
-			if (keyword != null) {
-				Preconditions.checkArgument(args.startsWith(keyword));
+			if (keyword != null && args.startsWith(keyword)) {
 				args = args.substring(keyword.length()).trim();
+			} else {
+				return null;
 			}
 		}
 

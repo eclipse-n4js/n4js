@@ -549,15 +549,23 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Performs a rename refactoring at a given location. Usage:
 	 *
 	 * <pre>
-	 * // Xpect renameRefactoring at '&ltOLD_NAME&gt' to 'NEW_NAME' --&gt; &ltNEWCODE_OR_PROBLEMS&gt
+	 * // Xpect renameRefactoring at '&ltOLD_NAME&gt' to '&ltNEW_NAME&gt' resource '&ltRESOURCE_NAME&gt' --&gt;
+	 * // &ltNEWCODE_OR_PROBLEMS&gt
 	 * </pre>
 	 *
+	 * {@code resource} is optional.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void renameRefactoring(XtMethodData data) throws InterruptedException, ExecutionException {
 		FileURI uri = getFileURIFromModuleName(xtData.workspace.moduleNameOfXtFile);
 		Position pos = eobjProvider.checkAndGetPosition(data, "renameRefactoring", "at");
 		String newName = eobjProvider.checkAndGetArgAfter(data, "renameRefactoring", "at", "to");
+		Preconditions.checkState(newName != null);
+		String optResource = eobjProvider.checkAndGetArgAfter(data, "renameRefactoring", "at", "to", "resource");
+		if (com.google.common.base.Strings.isNullOrEmpty(optResource)) {
+			optResource = uri.toString();
+		}
+		FileURI assertResource = getFileURIFromModuleName(optResource);
 
 		WorkspaceEdit workspaceEdit = callRename(uri.toString(), pos.getLine(), pos.getCharacter(), newName);
 		if (workspaceEdit == null) {
@@ -589,10 +597,13 @@ public class XtIdeTest extends AbstractIdeTest {
 			fail("rename led to text edits in unknown URIs: " + Joiner.on(", ").join(unknownURIs));
 		}
 
+		String XPCT_PATTERN = "\\/\\*\\s+XPECT.+---(.|\\s)+---\\s*\\*\\/";
+
 		for (FileURI file : fileURI2ActualSourceAfter.keySet()) {
-			if (Objects.equal(uri, file)) {
-				String contentsBefore = fileURI2ActualSourceBefore.get(file);
-				String contentsAfter = fileURI2ActualSourceAfter.get(file);
+			if (Objects.equal(assertResource, file)) {
+				String contentsBefore = fileURI2ActualSourceBefore.get(file).replaceAll(XPCT_PATTERN, "");
+				String contentsAfter = fileURI2ActualSourceAfter.get(file).replaceAll(XPCT_PATTERN, "");
+
 				String[] diffRanges = Strings.diffRange(contentsBefore, contentsAfter, true);
 				assertEquals(data.expectation, diffRanges[1].trim());
 			}
