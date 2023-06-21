@@ -21,10 +21,12 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.lsp4j.Location;
+import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.RenameParams;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
@@ -247,11 +249,17 @@ public class N4JSRenameService extends RenameService2 {
 				&& eRef != N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression_Property()
 				&& eRef != N4JSPackage.eINSTANCE.getLabelRef_Label()
 				&& eRef != N4JSPackage.eINSTANCE.getJSXPropertyAttribute_Property()
+				&& eRef != N4JSPackage.eINSTANCE.getBindingElement_VarDecl()
+				&& eRef != N4JSPackage.eINSTANCE.getBindingProperty_Property()
+				&& eRef != N4JSPackage.eINSTANCE.getPropertyNameValuePair_Expression()
+				&& eRef != N4JSPackage.eINSTANCE.getPropertyNameValuePair_Property()
 				&& eRef != TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType()) {
 			return null;
 		}
 
-		if (context instanceof IdentifierRef && eRef == N4JSPackage.eINSTANCE.getIdentifierRef_Id()) {
+		if (eRef == N4JSPackage.eINSTANCE.getIdentifierRef_Id()
+				&& context instanceof IdentifierRef) {
+
 			ImportSpecifier originImport = ((IdentifierRef) context).getOriginImport();
 			if (originImport instanceof NamedImportSpecifier) { // including DefaultImportSpecifier
 				boolean isImportedViaAlias = ((NamedImportSpecifier) originImport).getAlias() != null;
@@ -259,8 +267,8 @@ public class N4JSRenameService extends RenameService2 {
 					return null;
 				}
 			}
-		} else if (context instanceof DefaultImportSpecifier
-				&& eRef == N4JSPackage.eINSTANCE.getNamedImportSpecifier_ImportedElement()) {
+		} else if (eRef == N4JSPackage.eINSTANCE.getNamedImportSpecifier_ImportedElement()
+				&& context instanceof DefaultImportSpecifier) {
 			return null;
 		}
 
@@ -268,8 +276,25 @@ public class N4JSRenameService extends RenameService2 {
 		if (location == null) {
 			return null;
 		}
-		TextEdit edit = new TextEdit(location.getRange(), newName);
-		return edit;
+
+		if (eRef == N4JSPackage.eINSTANCE.getPropertyNameValuePair_Expression()) {
+			Range range = new Range(location.getRange().getStart(), location.getRange().getStart());
+			location = new Location(location.getUri(), range);
+			return new TextEdit(location.getRange(), newName + " : ");
+		}
+
+		if (eRef == N4JSPackage.eINSTANCE.getBindingElement_VarDecl()
+				&& context.eContainer() instanceof BindingProperty) {
+
+			BindingProperty parent = (BindingProperty) context.eContainer();
+			if (parent.isSingleNameBinding()) {
+				Range range = new Range(location.getRange().getStart(), location.getRange().getStart());
+				location = new Location(location.getUri(), range);
+				return new TextEdit(location.getRange(), newName + " : ");
+			}
+		}
+
+		return new TextEdit(location.getRange(), newName);
 	}
 
 	/**
