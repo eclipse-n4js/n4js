@@ -17,6 +17,7 @@ import org.eclipse.n4js.ide.tests.helper.server.AbstractStructuredIdeTest;
 import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 
 /**
  * Utility to retrieve offset, position, or {@link IEObjectCoveringRegion} from a resource
@@ -61,7 +62,7 @@ public class XtResourceEObjectAccessor {
 
 	/**
 	 * Searches for a {@link Position} starting behind the given {@link XtMethodData}. In case the method expects an
-	 * location argument (such as 'at' or 'of), the search starts behind the given location string.
+	 * location argument (such as 'at' or 'of'), the search starts behind the given location string.
 	 *
 	 * Checks that the grammar of the given method conforms to: {@code <METHOD NAME> '<arg1>' <VALUE>}.
 	 *
@@ -75,7 +76,7 @@ public class XtResourceEObjectAccessor {
 
 	/**
 	 * Searches for an {@link EObject} starting behind the given {@link XtMethodData}. In case the method expects an
-	 * location argument (such as 'at' or 'of), the search starts behind the given location string.
+	 * location argument (such as 'at' or 'of'), the search starts behind the given location string.
 	 *
 	 * Checks that the grammar of the given method conforms to: {@code <METHOD NAME> '<arg1>' <VALUE>}.
 	 *
@@ -90,17 +91,64 @@ public class XtResourceEObjectAccessor {
 		return new EObjectCoveringRegion(resource, eObject, offset, structuralFeature);
 	}
 
-	private int checkAndGetOffset(XtMethodData data, String checkArg1, String optionalLocation) {
-		Preconditions.checkArgument(data.name.equals(checkArg1));
-		String optionalLocationStr = null;
-		if (data.args.length() > 1) {
-			Preconditions.checkArgument(data.args.startsWith(optionalLocation + " "));
-			String rest = data.args.substring(optionalLocation.length()).trim();
-			Preconditions.checkArgument(rest.startsWith("'"));
-			Preconditions.checkArgument(rest.endsWith("'"));
-			optionalLocationStr = rest.substring(1, rest.length() - 1);
-		}
+	/**
+	 * Parses the given data string and skips all given keywords and arguments in between. Returns the argument stated
+	 * behind the last given keyword, or null otherwise. Arguments are supposed to be escaped using '.
+	 *
+	 * @return the argument after the last given keyword
+	 */
+	public String checkAndGetArgAfter(XtMethodData data, String methodName, String... optKeyword) {
+		Preconditions.checkArgument(data.name.equals(methodName));
+		return parseLastArgument(data, optKeyword);
+	}
+
+	private int checkAndGetOffset(XtMethodData data, String methodName, String optionalLocation) {
+		String optionalLocationStr = checkAndGetArgAfter(data, methodName, optionalLocation);
+		// if (data.args.length() > 1) {
+		// Preconditions.checkArgument(data.args.startsWith(optionalLocation + " "));
+		// String rest = data.args.substring(optionalLocation.length()).trim();
+		// Preconditions.checkArgument(rest.startsWith("'"));
+		// int idxEnd = 1;
+		// while (rest.charAt(++idxEnd) != '\'') {
+		// Preconditions.checkState(idxEnd < rest.length());
+		// }
+		// optionalLocationStr = rest.substring(1, idxEnd);
+		// }
 		return getOffset(data.offset, optionalLocationStr);
+	}
+
+	private String parseLastArgument(XtMethodData data, String... optKeyword) {
+		if (Strings.isNullOrEmpty(data.args)) {
+			return null;
+		}
+
+		String args = data.args.trim();
+		if (optKeyword == null || optKeyword.length == 0) {
+			return parseArgument(args);
+		}
+
+		// skip args and keywords
+		for (String keyword : optKeyword) {
+			while (args.startsWith("'")) {
+				String someArg = parseArgument(args);
+				args = args.substring(someArg.length() + 2).trim();
+			}
+			if (keyword != null) {
+				Preconditions.checkArgument(args.startsWith(keyword));
+				args = args.substring(keyword.length()).trim();
+			}
+		}
+
+		return parseArgument(args);
+	}
+
+	private String parseArgument(String argumentPlusRest) {
+		Preconditions.checkArgument(argumentPlusRest.startsWith("'"));
+		int idxEnd = 1;
+		while (argumentPlusRest.charAt(++idxEnd) != '\'') {
+			Preconditions.checkState(idxEnd < argumentPlusRest.length());
+		}
+		return argumentPlusRest.substring(1, idxEnd);
 	}
 
 	private int getOffset(int searchFromOffset, String optionalLocationStr) {
