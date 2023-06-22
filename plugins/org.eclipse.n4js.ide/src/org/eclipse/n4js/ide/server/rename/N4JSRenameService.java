@@ -35,8 +35,10 @@ import org.eclipse.n4js.n4JS.N4JSMetaModelUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
+import org.eclipse.n4js.n4JS.PropertyNameValuePair;
 import org.eclipse.n4js.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
+import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.xtext.ide.server.ResourceTaskContext;
 import org.eclipse.n4js.xtext.ide.server.ResourceTaskManager;
@@ -281,6 +283,13 @@ public class N4JSRenameService extends RenameService2 {
 			Range range = new Range(location.getRange().getStart(), location.getRange().getStart());
 			location = new Location(location.getUri(), range);
 			return new TextEdit(location.getRange(), newName + " : ");
+		}
+		if (eRef == N4JSPackage.eINSTANCE.getPropertyNameValuePair_Property()) {
+			PropertyNameValuePair pnvp = (PropertyNameValuePair) context;
+			if (pnvp.getProperty() instanceof SyntaxRelatedTElement
+					&& ((SyntaxRelatedTElement) pnvp.getProperty()).getAstElement() == pnvp) {
+				return null;
+			}
 		}
 
 		if (eRef == N4JSPackage.eINSTANCE.getBindingElement_VarDecl()
