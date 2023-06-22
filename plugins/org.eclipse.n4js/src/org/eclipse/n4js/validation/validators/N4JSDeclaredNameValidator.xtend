@@ -80,6 +80,7 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.validation.IssueCodes.*
+import org.eclipse.n4js.n4JS.PropertyNameValuePair
 
 /**
  */
@@ -716,6 +717,10 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 
 		if (eo instanceof IdentifiableElement) {
 			return TypesPackage.Literals.IDENTIFIABLE_ELEMENT__NAME;
+		}
+
+		if (eo instanceof PropertyNameValuePair && (eo as PropertyNameValuePair).property !== null) {
+			return N4JSPackage.Literals.PROPERTY_NAME_VALUE_PAIR__PROPERTY;
 		}
 
 		if (eo instanceof PropertyAssignment) {

@@ -741,6 +741,9 @@ import com.google.common.base.Strings;
 		if (original.getDeclaredName() != null) {
 			processPropertyName(original);
 			write(": ");
+		} else if (original.getPropertyAsText() != null) {
+			write(original.getPropertyAsText());
+			write(": ");
 		} else {
 			// FIXME PNVP without name only legal in destructuring pattern!!
 		}
@@ -1131,12 +1134,19 @@ import com.google.common.base.Strings;
 
 	@Override
 	public Boolean caseBindingProperty(BindingProperty original) {
-		if (original.getDeclaredName() == null) {
+		if (original.getDeclaredName() == null && original.getPropertyAsText() == null) {
 			// single-name binding
 			process(original.getValue().getVarDecl());
 		} else {
-			processPropertyName(original);
-			write(": ");
+			if (original.getDeclaredName() != null) {
+				processPropertyName(original.getDeclaredName());
+				write(": ");
+			} else if (original.getPropertyAsText() != null) {
+				write(original.getPropertyAsText());
+				write(": ");
+			} else {
+				throw new IllegalArgumentException("missing property name");
+			}
 			process(original.getValue());
 		}
 		return DONE;

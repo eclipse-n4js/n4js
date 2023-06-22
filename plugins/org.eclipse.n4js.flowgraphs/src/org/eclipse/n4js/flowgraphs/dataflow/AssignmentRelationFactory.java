@@ -170,7 +170,7 @@ public class AssignmentRelationFactory {
 				ArrayLiteral al = (ArrayLiteral) fsExpr;
 				EObject rootOfDestrNode = DestructureUtils.getRoot(cfe);
 				for (ArrayElement arrElem : al.getElements()) {
-					dNode = DestructNode.unify(rootOfDestrNode, arrElem.getExpression());
+					dNode = DestructNode.unify(fs, rootOfDestrNode, arrElem.getExpression());
 					findInDestructNodes(assgns, dNode);
 				}
 			}
@@ -194,7 +194,7 @@ public class AssignmentRelationFactory {
 				ArrayLiteral al = (ArrayLiteral) fsExpr;
 				EObject rootOfDestrNode = DestructureUtils.getRoot(cfe);
 				for (ArrayElement arrElem : al.getElements()) {
-					dNode = DestructNode.unify(rootOfDestrNode, arrElem.getExpression());
+					dNode = DestructNode.unify(fs, rootOfDestrNode, arrElem.getExpression());
 					findInDestructNodes(assgns, dNode);
 				}
 			}

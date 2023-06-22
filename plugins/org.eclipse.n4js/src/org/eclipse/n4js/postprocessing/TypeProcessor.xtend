@@ -130,6 +130,8 @@ public class TypeProcessor extends AbstractProcessor {
 					// -> ignore here, because polyProcessor will deal with it when processing the parent poly expression
 					log(indentLevel,
 						"deferred (nested in poly expression --> will be inferred during inference of outer poly expression)");
+						
+					cache.nonEntryPolyProcessorNodes.add(node);
 
 					return; // return only required to avoid confusing logging of cache.getFailSafe(node) below
 				}
@@ -341,7 +343,7 @@ public class TypeProcessor extends AbstractProcessor {
 					return resultFromCache;
 				}
 			} else if (cache.isFullyProcessed) {
-				return cache.getType(obj); // will throw exception in case of cache miss
+				return cache.getType(G, obj); // will throw exception in case of cache miss
 			}
 		} else {
 			// a non-typable AST node OR some entity in the TModule for which obj.isTypeModelElement returns false
@@ -417,7 +419,7 @@ public class TypeProcessor extends AbstractProcessor {
 			} else {
 				// in case of a legal, *non*-cyclic forward reference, we can assume that the subtree below 'node'
 				// has now been processed, which means node's type is now in the typing cache
-				return cache.getType(node);
+				return cache.getType(G, node);
 			}
 		} else {
 			val msg = "*#*#*#*#*#* ILLEGAL FORWARD REFERENCE to " + node + " in " + node.eResource?.URI;

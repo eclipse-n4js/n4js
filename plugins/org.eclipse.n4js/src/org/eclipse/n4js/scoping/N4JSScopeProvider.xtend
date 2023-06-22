@@ -24,6 +24,11 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.InternalEObject
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.n4JS.Argument
+import org.eclipse.n4js.n4JS.ArrayBindingPattern
+import org.eclipse.n4js.n4JS.BindingElement
+import org.eclipse.n4js.n4JS.BindingProperty
+import org.eclipse.n4js.n4JS.DestructNode
+import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.IdentifierRef
@@ -46,8 +51,10 @@ import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.NamedExportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NewExpression
+import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
+import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.TypeDefiningElement
@@ -67,6 +74,7 @@ import org.eclipse.n4js.scoping.utils.MergedScope
 import org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope
 import org.eclipse.n4js.scoping.utils.ScopeSnapshotHelper
 import org.eclipse.n4js.scoping.utils.SourceElementExtensions
+import org.eclipse.n4js.scoping.utils.UberParentScope
 import org.eclipse.n4js.scoping.validation.ContextAwareTypeScopeValidator
 import org.eclipse.n4js.scoping.validation.ScopeInfo
 import org.eclipse.n4js.scoping.validation.VeeScopeValidator
@@ -75,6 +83,7 @@ import org.eclipse.n4js.tooling.react.ReactHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
@@ -89,6 +98,7 @@ import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
@@ -269,6 +279,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			NamedImportSpecifier					: return scope_ImportedElement(context, reference)
 			ExportDeclaration						: return scope_ImportedModule(context, reference)
 			IdentifierRef							: return scope_IdentifierRef_id(context, reference)
+			BindingProperty							: return scope_BindingProperty_property(context, reference)
+			PropertyNameValuePair					: return scope_PropertyNameValuePair_property(context, reference)
 			ParameterizedPropertyAccessExpression	: return scope_PropertyAccessExpression_property(context, reference)
 			N4FieldAccessor							: {
 				val container = EcoreUtil2.getContainerOfType(context, N4ClassifierDefinition);
@@ -597,6 +609,97 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 	}
 
+	/**
+	 * Called from getScope(), binds a property reference.
+	 */
+	private def IScope scope_BindingProperty_property(BindingProperty bindingProperty, EReference ref) {
+		return scope_DestructPattern_property(bindingProperty, ref);
+	}
+
+
+	/**
+	 * Called from getScope(), binds a property reference.
+	 */
+	private def IScope scope_PropertyNameValuePair_property(PropertyNameValuePair pnvPair, EReference ref) {
+		return scope_DestructPattern_property(pnvPair, ref);
+	}
+
+	private def IScope scope_DestructPattern_property(EObject propertyContainer, EReference ref) {
+		var TypeRef cTypeRef = null;
+		val destNodeTop = DestructNode.unify(DestructureUtils.getTop(propertyContainer));
+		val parentDestNode = destNodeTop?.findNodeOrParentForElement(propertyContainer, true);
+		val G = newRuleEnvironment(propertyContainer);
+		
+		if (parentDestNode !== null) {
+			val parentAstElem = parentDestNode.astElement;
+			if (parentAstElem instanceof BindingProperty) {
+				if (parentAstElem.property !== null) {
+					cTypeRef = ts.type(G, parentAstElem.property);
+				}
+			} else if (parentAstElem instanceof BindingElement && parentAstElem.eContainer instanceof ArrayBindingPattern) {
+				val parent2DestNode = destNodeTop?.findNodeOrParentForElement(parentAstElem, true);
+				if (parent2DestNode !== null) {
+					var TypeRef arrayType = null;
+					val parent2AstElem = parent2DestNode.astElement;
+					if (parent2AstElem instanceof BindingProperty) {
+						if (parent2AstElem.property !== null) {
+							arrayType = ts.type(G, parent2AstElem.property);
+						}
+					} else {
+						arrayType = ts.type(G, parent2DestNode.assignedElem);
+					}
+					
+					val idx = parent2DestNode.nestedNodes.indexOf(parentDestNode);
+					if (arrayType !== null && arrayType.typeArgsWithDefaults.size > idx && G.isIterableN(arrayType) && arrayType.eResource !== null) {
+						val typeArg = arrayType.typeArgsWithDefaults.get(idx);
+						if (typeArg instanceof TypeRef) {
+							cTypeRef = typeArg;
+						}
+					}
+				}
+			} else if (parentDestNode.assignedElem instanceof TypeDefiningElement && (parentDestNode.assignedElem as TypeDefiningElement).definedType !== null) {
+				cTypeRef = TypeUtils.createTypeRef((parentDestNode.assignedElem as TypeDefiningElement).definedType);
+			} else {
+				// fallback
+				cTypeRef = ts.type(G, parentDestNode.assignedElem);
+			}
+			if (DestructureUtils.isTopOfDestructuringForStatement(parentDestNode.astElement) && cTypeRef.isArrayLike) {
+				tsh.addSubstitutions(G, cTypeRef);
+				cTypeRef = ts.substTypeVariables(G, cTypeRef.declaredType.elementType);
+			}
+		}
+		
+		if (cTypeRef === null && propertyContainer instanceof PropertyNameValuePair && propertyContainer.eContainer instanceof ObjectLiteral) {
+			val objLit = propertyContainer.eContainer as ObjectLiteral;
+			if (objLit.definedType !== null) {
+				cTypeRef = TypeUtils.createTypeRef(objLit.definedType);
+			}
+		}
+		
+		if (cTypeRef !== null && isContained(cTypeRef)) {
+			return new UberParentScope("scope_DestructPattern_property", createScopeForMemberAccess(cTypeRef, propertyContainer), new DynamicPseudoScope());
+		}
+		return new DynamicPseudoScope();
+	}
+	
+	private def boolean isContained(TypeRef tRef) {
+		if (tRef.eResource !== null) {
+			// type ref is contained
+			return true;
+		}
+		if (tRef instanceof ParameterizedTypeRefStructural) {
+			if (!tRef.astStructuralMembers.empty || !tRef.genStructuralMembers.empty) {
+				// type ref is not contained, hence structural members are not contained
+				return false;
+			}
+		}
+		if (tRef.declaredType !== null && tRef.declaredType.eResource !== null) {
+			// nominal type (or similar) is contained
+			return true;
+		}
+		return false;
+	}
+
 	/*
 	 * In <pre>receiver.property</pre>, binds "property".
 	 *
@@ -649,7 +752,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return result;
 	}
 
-	private def IScope createScopeForMemberAccess(TypeRef targetTypeRef, MemberAccess context) {
+	private def IScope createScopeForMemberAccess(TypeRef targetTypeRef, EObject context) {
 		val staticAccess = targetTypeRef instanceof TypeTypeRef;
 		val structFieldInitMode = targetTypeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
 		val checkVisibility = true;

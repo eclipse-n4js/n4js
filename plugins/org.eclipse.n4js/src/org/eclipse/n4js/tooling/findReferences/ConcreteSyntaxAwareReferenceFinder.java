@@ -23,13 +23,26 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.n4js.n4JS.BindingElement;
+import org.eclipse.n4js.n4JS.BindingProperty;
+import org.eclipse.n4js.n4JS.DestructNode;
+import org.eclipse.n4js.n4JS.DestructureUtils;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
+import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TypableElement;
+import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.typesystem.N4JSTypeSystem;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.utils.ContainerTypesHelper;
+import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.ReferenceFinder;
 import org.eclipse.xtext.findReferences.TargetURIs;
@@ -60,6 +73,12 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 
 	@Inject
 	private LinkingHelper linkingHelper;
+
+	@Inject
+	private N4JSTypeSystem typeSystem;
+
+	@Inject
+	private ContainerTypesHelper containerTypesHelper;
 
 	@Override
 	protected void findReferencesInDescription(TargetURIs targetURIs, IResourceDescription resourceDescription,
@@ -179,6 +198,21 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 			for (EReference ref : sourceCandidate.eClass().getEAllReferences()) {
 				Object value = sourceCandidate.eGet(ref, false);
 				if (sourceCandidate.eIsSet(ref) && value != null) {
+
+					if (sourceCandidate instanceof PropertyNameValuePairSingleName && value instanceof EObject) {
+						// special case to find references to destructuring cases like:
+						// const { fieldF } = new C(); // where class C { fieldF : string = "init"; }
+						checkValue((EObject) value, localResource, targetURIs, sourceCandidate, sourceURI,
+								ref, acceptor);
+					}
+					if (sourceCandidate instanceof BindingElement
+							&& ((BindingElement) sourceCandidate).getVarDecl() != null && value instanceof EObject) {
+						// special case to find references to destructuring cases like:
+						// const { fieldF } = new C(); // where class C { fieldF : string = "init"; }
+						checkValue((EObject) value, localResource, targetURIs, sourceCandidate, sourceURI,
+								ref, acceptor);
+					}
+
 					if (ref.isContainment()) {
 						if (ref.isMany()) {
 							@SuppressWarnings("unchecked")
@@ -205,8 +239,7 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 								InternalEList<EObject> values = (InternalEList<EObject>) value;
 								for (int i = 0; i < values.size(); ++i) {
 									checkValue(values.basicGet(i), localResource, targetURIs, sourceCandidate,
-											sourceURI, ref,
-											acceptor);
+											sourceURI, ref, acceptor);
 								}
 							} else {
 								checkValue((EObject) value, localResource, targetURIs, sourceCandidate, sourceURI, ref,
@@ -227,38 +260,81 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 
 	private void checkValue(EObject value, Resource localResource, Predicate<URI> targetURIs, EObject sourceCandidate,
 			URI sourceURI, EReference ref, Acceptor acceptor) {
-		EObject instanceOrProxy = toValidInstanceOrNull(localResource, targetURIs,
-				value);
 
+		EObject instanceOrProxy = toValidInstanceOrNull(localResource, targetURIs, value);
 		if (instanceOrProxy != null) {
 			URI refURI = EcoreUtil2.getPlatformResourceOrNormalizedURI(instanceOrProxy);
-			// CUSTOM BEHAVIOR: handle composed members
-			if (referenceHasBeenFound(targetURIs, refURI, instanceOrProxy)) {
-				sourceURI = (sourceURI == null) ? EcoreUtil2
-						.getPlatformResourceOrNormalizedURI(sourceCandidate) : sourceURI;
+			// CUSTOM BEHAVIOR: check for and handle composed members
+			if (referenceHasBeenFound(targetURIs, sourceCandidate, ref, refURI, instanceOrProxy)) {
+				sourceURI = (sourceURI == null)
+						? EcoreUtil2.getPlatformResourceOrNormalizedURI(sourceCandidate)
+						: sourceURI;
+
 				acceptor.accept(sourceCandidate, sourceURI, ref, -1, instanceOrProxy, refURI);
 			}
 		}
-
 	}
 
-	private boolean referenceHasBeenFound(Predicate<URI> targetURIs, URI refURI, EObject instanceOrProxy) {
-		boolean result = false;
-		// If the EObject is a composed member, we compare the target URIs with the URIs of the constituent members.
+	private boolean referenceHasBeenFound(Predicate<URI> targetURIs, EObject sourceCandidate, EReference ref,
+			URI refURI, EObject instanceOrProxy) {
+
 		if (instanceOrProxy instanceof TMember && ((TMember) instanceOrProxy).isComposed()) {
+			// If the EObject is a composed member, we compare the target URIs with the URIs of the constituent members.
+			boolean result = false;
 			TMember member = (TMember) instanceOrProxy;
-			if (member.isComposed()) {
-				for (TMember constituentMember : member.getConstituentMembers()) {
-					URI constituentReffURI = EcoreUtil2
-							.getPlatformResourceOrNormalizedURI(constituentMember);
-					result = result || targetURIs.apply(constituentReffURI);
+			for (TMember constituentMember : member.getConstituentMembers()) {
+				URI constituentRefURI = EcoreUtil2.getPlatformResourceOrNormalizedURI(constituentMember);
+				result = result || targetURIs.apply(constituentRefURI);
+			}
+			return result;
+		}
+
+		URI memberRefURI = null;
+		if ((sourceCandidate instanceof PropertyNameValuePairSingleName
+				&& ref == N4JSPackage.eINSTANCE.getPropertyNameValuePair_Expression())) {
+
+			memberRefURI = getMemberRefURIInDestructuring(instanceOrProxy);
+		}
+
+		if (sourceCandidate instanceof BindingElement && sourceCandidate.eContainer() instanceof BindingProperty) {
+			BindingElement bElem = (BindingElement) sourceCandidate;
+			BindingProperty bProp = (BindingProperty) sourceCandidate.eContainer();
+			if (bProp.isSingleNameBinding() && bElem.getVarDecl() != null &&
+					ref == N4JSPackage.eINSTANCE.getBindingElement_VarDecl()) {
+
+				memberRefURI = getMemberRefURIInDestructuring(instanceOrProxy);
+			}
+		}
+
+		if (memberRefURI == null) {
+			// Standard case
+			memberRefURI = refURI;
+		}
+
+		return targetURIs.apply(memberRefURI);
+	}
+
+	private URI getMemberRefURIInDestructuring(EObject instanceOrProxy) {
+		// If the EObject is a variable in a destructuring, we add that variable
+		DestructNode destructNode = DestructureUtils.getCorrespondingDestructNode(instanceOrProxy);
+		if (destructNode != null && destructNode.getAssignedElem() != null) {
+			TypableElement assignedElem = destructNode.getAssignedElem();
+			TypeRef type = typeSystem.type(RuleEnvironmentExtensions.newRuleEnvironment(assignedElem),
+					assignedElem);
+			MemberCollector memberCollector = containerTypesHelper.fromContext(assignedElem);
+			Type declaredType = type.getDeclaredType();
+			if (declaredType instanceof ContainerType<?>) {
+				String name = destructNode.getPropName();
+				TMember member = memberCollector.findMember((ContainerType<?>) declaredType, name, true, false);
+				if (member == null) {
+					member = memberCollector.findMember((ContainerType<?>) declaredType, name, false, false);
+				}
+				if (member != null) {
+					return EcoreUtil2.getPlatformResourceOrNormalizedURI(member);
 				}
 			}
-		} else {
-			// Standard case
-			result = targetURIs.apply(refURI);
 		}
-		return result;
+		return null;
 	}
 
 	/** Tells whether the given object is an IdentifierRef pointing to the alias of a named import. */

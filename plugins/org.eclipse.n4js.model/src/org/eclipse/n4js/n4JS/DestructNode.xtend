@@ -17,6 +17,7 @@ import java.util.stream.Stream
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.xtend.lib.annotations.Data
 
 /**
@@ -56,7 +57,7 @@ public class DestructNode {
 	VariableDeclaration varDecl;
 	DestructNode[] nestedNodes; // nested pattern that will be bound/assigned (or 'null' iff 'varName' is non-null)
 	Expression defaultExpr;
-	EObject assignedElem; // can be an Expression or an IdentifiableElement (in case of Getter/Setter/Method)
+	TypableElement assignedElem; // can be an Expression or an IdentifiableElement (in case of Getter/Setter/Method)
 	boolean rest;
 
 	/**
@@ -118,8 +119,12 @@ public class DestructNode {
 					astElement -> N4JSPackage.eINSTANCE.propertyNameValuePair_Expression
 				BindingProperty case astElement.declaredName !== null:
 					astElement -> N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName
+				BindingProperty case astElement.property !== null:
+					astElement -> N4JSPackage.eINSTANCE.bindingProperty_Property
 				BindingProperty case astElement.value?.varDecl?.name !== null:
 					astElement.value.varDecl -> N4JSPackage.eINSTANCE.abstractVariable_Name
+				PropertyNameValuePair case astElement.property !== null:
+					astElement -> N4JSPackage.eINSTANCE.propertyNameValuePair_Property
 				PropertyNameOwner:
 					astElement -> N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName
 				default:
@@ -134,7 +139,38 @@ public class DestructNode {
 	 * Returns the node with the given <code>astElement</code>.
 	 */
 	def DestructNode findNodeForElement(EObject astElement) {
-		stream.filter[it.astElement === astElement].findFirst.orElse(null)
+		return findNodeOrParentForElement(astElement, false);
+	}
+
+	/**
+	 * Returns the node with the given <code>astElement</code> or its parent node.
+	 */
+	def DestructNode findNodeOrParentForElement(EObject astElement, boolean returnParent) {
+		val reprAstElem = if (astElement instanceof BindingElement && astElement.eContainer instanceof BindingProperty)
+				astElement.eContainer else astElement;
+
+		if (this.astElement === reprAstElem) {
+			if (returnParent) {
+				return null;
+			}
+			return this;
+		}
+		if (this.nestedNodes === null) {
+			return null;
+		}
+		for (nested : this.nestedNodes) {
+			if (nested.astElement === reprAstElem) {
+				if (returnParent) {
+					return this;
+				}
+				return nested;
+			}
+			val resNested = nested.findNodeOrParentForElement(reprAstElem, returnParent);
+			if (resNested !== null) {
+				return resNested;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -161,9 +197,9 @@ public class DestructNode {
 	 * Returns a unified copy of the given destructuring pattern or <code>null</code> if it is invalid.
 	 * This is helpful because these patterns can appear in very different forms and locations within the AST.
 	 */
-	public static def DestructNode unify(EObject lhs, Expression rhs) {
+	public static def DestructNode unify(EObject astElem, EObject lhs, Expression rhs) {
 			new DestructNode(
-				lhs, // astElement
+				astElem, // astElement
 				null, // propName
 				null, // varRef
 				null, // varDecl
@@ -182,7 +218,7 @@ public class DestructNode {
 		if (binding !== null && binding.pattern !== null // note: binding.expression is mandatory in variable statements but optional in for..in/of statements
 			&& (binding.expression !== null || binding.eContainer instanceof ForStatement
 		)) {
-			unify(binding.pattern, binding.expression);
+			unify(binding, binding.pattern, binding.expression);
 		}
 	}
 
@@ -190,11 +226,11 @@ public class DestructNode {
 	 * Returns a unified copy of the given destructuring pattern or <code>null</code> if it is invalid.
 	 * This is helpful because these patterns can appear in very different forms and locations within the AST.
 	 */
-	public static def DestructNode unify(AssignmentExpression expr) {
-		if (expr !== null && expr.lhs !== null && expr.rhs !== null
-			&& DestructureUtils.isTopOfDestructuringAssignment(expr)
+	public static def DestructNode unify(AssignmentExpression assignExpr) {
+		if (assignExpr !== null && assignExpr.lhs !== null && assignExpr.rhs !== null
+			&& DestructureUtils.isTopOfDestructuringAssignment(assignExpr)
 		) {
-			unify(expr.lhs, expr.rhs);
+			unify(assignExpr, assignExpr.lhs, assignExpr.rhs);
 		}
 	}
 
@@ -202,49 +238,65 @@ public class DestructNode {
 	 * Returns a unified copy of the given destructuring pattern or <code>null</code> if it is invalid.
 	 * This is helpful because these patterns can appear in very different forms and locations within the AST.
 	 */
-	public static def DestructNode unify(ForStatement stmnt) {
-		if (stmnt !== null && DestructureUtils.isTopOfDestructuringForStatement(stmnt)) {
-			val valueToBeDestructured = if (stmnt.forOf) {
-					stmnt.expression
-				} else if (stmnt.forIn) {
+	public static def DestructNode unify(ForStatement forStmnt) {
+		if (forStmnt !== null && DestructureUtils.isTopOfDestructuringForStatement(forStmnt)) {
+			val valueToBeDestructured = if (forStmnt.forOf) {
+					firstArrayElement(forStmnt.expression)
+				} else if (forStmnt.forIn) {
 					N4JSFactory.eINSTANCE.createStringLiteral() => [
 						value = ""
 					]
 				} else {
-					// impossible because #isDestructuringForStatement() returned true
+					// impossible because #isTopOfDestructuringForStatement() returned true
+					throw new IllegalStateException
+				};
+			val defaultExpression = if (forStmnt.forOf) {
+					forStmnt.expression
+				} else if (forStmnt.forIn) {
+					N4JSFactory.eINSTANCE.createStringLiteral() => [
+						value = ""
+					]
+				} else {
+					// impossible because #isTopOfDestructuringForStatement() returned true
 					throw new IllegalStateException
 				};
 
-			if (DestructureUtils.containsDestructuringPattern(stmnt)) {
+			if (DestructureUtils.containsDestructuringPattern(forStmnt)) {
 				// case: for(var [a,b] of arr) {}
-				val binding = stmnt.varDeclsOrBindings.filter(VariableBinding).head;
-				new DestructNode(
-					binding, // astElement
+				val binding = forStmnt.varDeclsOrBindings.filter(VariableBinding).head;
+				val rhs = firstArrayElement(forStmnt.expression);
+				return new DestructNode(
+					forStmnt, // astElement
 					null, // propName
 					null, // varRef
 					null, // varDecl
-					toEntries(binding.pattern, stmnt.expression), // nestedNodes
-					valueToBeDestructured, // defaultExpr
+					toEntries(binding.pattern, rhs), // nestedNodes
+					defaultExpression, // defaultExpr
 					valueToBeDestructured, // assignedExpr
 					false // rest
 				)
-			} else if (DestructureUtils.isObjectOrArrayLiteral(stmnt.getInitExpr())) {
+			} else if (DestructureUtils.isObjectOrArrayLiteral(forStmnt.getInitExpr())) {
 				// case: for([a,b] of arr) {}
-				new DestructNode(
-					stmnt.initExpr, // astElement
+				return new DestructNode(
+					forStmnt, // astElement
 					null, // propName
 					null, // varRef
 					null, // varDecl
-					toEntries(stmnt.initExpr, null), // nestedNodes
-					valueToBeDestructured, // defaultExpr
-					valueToBeDestructured, // assignedExpr
+					toEntries(forStmnt.initExpr, null), // nestedNodes
+					defaultExpression, // defaultExpr
+					defaultExpression, // assignedExpr
 					false // rest
 				)
 			}
 		}
+		return null;
+	}
+	
+	private static def Expression firstArrayElement(Expression expr) {
+		return if (expr instanceof ArrayLiteral) expr.elements.head.expression else expr;
 	}
 
-	private static def DestructNode[] toEntries(EObject pattern, EObject rhs) {
+	private static def DestructNode[] toEntries(EObject pattern, TypableElement rhs) {
 
 		val Iterator<? extends EObject> patElemIter = switch (pattern) {
 			ArrayLiteral:
@@ -257,7 +309,7 @@ public class DestructNode {
 				pattern.properties.iterator
 		}
 
-		var Iterator<? extends EObject> rhsElemIter = switch (rhs) {
+		var Iterator<? extends TypableElement> rhsElemIter = switch (rhs) {
 			ArrayLiteral:
 				rhs.elements.iterator
 			ObjectLiteral:
@@ -287,8 +339,8 @@ public class DestructNode {
 		return nestedDNs;
 	}
 
-	private static def DestructNode toEntry(ArrayElement elem, EObject rhs) {
-		val EObject rhsExpr = if (rhs instanceof ArrayElement) rhs.expression else rhs;
+	private static def DestructNode toEntry(ArrayElement elem, TypableElement rhs) {
+		val TypableElement rhsExpr = if (rhs instanceof ArrayElement) rhs.expression else rhs;
 		val expr = elem.expression; // note: ArrayPadding will return null for getExpression()
 		if (expr instanceof AssignmentExpression)
 			toEntry(elem, null, expr.lhs, expr.rhs, elem.spread, rhsExpr)
@@ -296,8 +348,8 @@ public class DestructNode {
 			toEntry(elem, null, expr, null, elem.spread, rhsExpr)
 	}
 
-	private static def DestructNode toEntry(PropertyNameValuePair pa, EObject rhs) {
-		val EObject rhsExpr = if (rhs instanceof PropertyNameValuePair) rhs.expression else rhs;
+	private static def DestructNode toEntry(PropertyNameValuePair pa, TypableElement rhs) {
+		val TypableElement rhsExpr = if (rhs instanceof PropertyNameValuePair) rhs.expression else rhs;
 		val expr = pa.expression;
 		if (expr instanceof AssignmentExpression)
 			toEntry(pa, pa.name, expr.lhs, expr.rhs, false, rhsExpr)
@@ -305,8 +357,8 @@ public class DestructNode {
 			toEntry(pa, pa.name, expr, null, false, rhsExpr)
 	}
 
-	private static def DestructNode toEntry(BindingElement elem, EObject rhs) {
-		val EObject expr = if (rhs instanceof ArrayElement) rhs.expression else rhs;
+	private static def DestructNode toEntry(BindingElement elem, TypableElement rhs) {
+		val TypableElement expr = if (rhs instanceof ArrayElement) rhs.expression else rhs;
 
 		if (elem.varDecl !== null)
 			toEntry(elem, null, elem.varDecl, elem.varDecl.expression, elem.rest, expr)
@@ -316,7 +368,7 @@ public class DestructNode {
 			toEntry(elem, null, null, null, false, expr) // return dummy entry to not break indices
 	}
 
-	private static def DestructNode toEntry(BindingProperty prop, EObject rhs) {
+	private static def DestructNode toEntry(BindingProperty prop, TypableElement rhs) {
 		if (prop.value?.varDecl !== null) {
 			val expr = getPropertyAssignmentExpression(rhs);
 			toEntry(prop, prop.name, prop.value.varDecl, prop.value.varDecl.expression, false, expr)
@@ -336,7 +388,7 @@ public class DestructNode {
 	 *              a BindingPattern, ArrayLiteral, or ObjectLiteral)
 	 */
 	private static def DestructNode toEntry(EObject astElement, String propName, EObject bindingTarget,
-		Expression defaultExpr, boolean rest, EObject rhs) {
+		Expression defaultExpr, boolean rest, TypableElement rhs) {
 
 		if (bindingTarget === null) {
 			// no target -> create a padding node
@@ -359,7 +411,7 @@ public class DestructNode {
 	}
 
 	/** @return the expression or function of the given PropertyAssignment */
-	private static def EObject getPropertyAssignmentExpression(EObject rhs) {
+	private static def TypableElement getPropertyAssignmentExpression(TypableElement rhs) {
 		switch (rhs) {
 			PropertyGetterDeclaration:
 				return rhs.definedFunctionOrAccessor

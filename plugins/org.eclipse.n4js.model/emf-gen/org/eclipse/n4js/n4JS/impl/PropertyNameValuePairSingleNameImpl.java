@@ -23,6 +23,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.PropertyAssignment;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
+import org.eclipse.n4js.n4JS.PropertyNameValuePair;
 import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName;
 
 /**
@@ -119,6 +120,12 @@ public class PropertyNameValuePairSingleNameImpl extends PropertyNameValuePairIm
 		if (baseClass == PropertyAssignment.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.PROPERTY_ASSIGNMENT___GET_NAME: return N4JSPackage.PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME___GET_NAME;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		if (baseClass == PropertyNameValuePair.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.PROPERTY_NAME_VALUE_PAIR___GET_NAME: return N4JSPackage.PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME___GET_NAME;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}

@@ -344,7 +344,7 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 		if (expr === null) {
 			return; // broken AST
 		}
-		val exprTypeRef = cache.getType(expr); // must now be in cache, because we just processed arrFun's body
+		val exprTypeRef = cache.getType(G, expr); // must now be in cache, because we just processed arrFun's body
 		if (TypeUtils.isVoid(exprTypeRef)) {
 			// the actual type of 'expr' is void
 			if (arrFunTypeRef instanceof FunctionTypeExpression) {

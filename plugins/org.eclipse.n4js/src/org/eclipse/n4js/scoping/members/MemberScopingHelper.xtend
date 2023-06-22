@@ -91,7 +91,7 @@ class MemberScopingHelper {
 	 * @param structFieldInitMode
 	 *               see {@link AbstractMemberScope#structFieldInitMode}.
 	 */
-	public def IScope createMemberScope(TypeRef receiverTypeRef, MemberAccess context,
+	public def IScope createMemberScope(TypeRef receiverTypeRef, EObject context,
 		boolean checkVisibility, boolean staticAccess, boolean structFieldInitMode) {
 
 		val request = new MemberScopeRequest(receiverTypeRef, context, true, checkVisibility, staticAccess,

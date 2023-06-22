@@ -114,16 +114,16 @@ public abstract class DestructureUtils {
 		}
 		EObject parent = root.eContainer();
 		EObject parent2 = parent.eContainer();
-		if (parent2 instanceof ForStatement) {
+		if (parent2 instanceof ForStatement && isTopOfDestructuringForStatement(parent2)) {
 			return parent2;
 		}
-		if (parent instanceof VariableBinding) {
+		if (parent instanceof VariableBinding && isTopOfDestructuringVariableBinding(parent)) {
 			return parent;
 		}
-		if (parent instanceof AssignmentExpression) {
+		if (parent instanceof AssignmentExpression && isTopOfDestructuringAssignment(parent)) {
 			return parent;
 		}
-		if (parent instanceof ForStatement) {
+		if (parent instanceof ForStatement && isTopOfDestructuringForStatement(parent)) {
 			return parent;
 		}
 		return null;
@@ -134,6 +134,9 @@ public abstract class DestructureUtils {
 	 *         within a destructuring pattern, or null.
 	 */
 	public static EObject getRepresentingElement(EObject eobj) {
+		if (isRepresentingElement(eobj)) {
+			return eobj;
+		}
 		EObject currEO = eobj;
 		int i = 0;
 		while (currEO != null) {
@@ -276,7 +279,7 @@ public abstract class DestructureUtils {
 	public static boolean isRepresentingElement(EObject eobj) {
 		boolean isRepresentingElement = false;
 		isRepresentingElement |= eobj instanceof ArrayElement;
-		isRepresentingElement |= eobj instanceof VariableBinding;
+		// isRepresentingElement |= eobj instanceof VariableBinding; // FIXME: remove
 		isRepresentingElement |= eobj instanceof BindingElement;
 		isRepresentingElement |= eobj instanceof BindingPattern;
 		isRepresentingElement |= eobj instanceof BindingProperty;

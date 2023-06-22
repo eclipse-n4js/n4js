@@ -59,6 +59,7 @@ import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.*
 import static org.eclipse.n4js.ts.types.TypingStrategy.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.StaticPolyfillValidatorExtension.*
+import org.eclipse.n4js.n4JS.PropertyNameValuePair
 
 /**
  * superfluous properties in {@code @Spec} constructor.
@@ -202,7 +203,9 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 				if (containingClassifier instanceof TInterface) {
 					if (N4JSLanguageUtils.builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation(containingClassifier)) {
 						val message = getMessageForCLF_SPEC_BUILT_IN_OR_PROVIDED_BY_RUNTIME_OR_EXTENAL_WITHOUT_N4JS_ANNOTATION(field.name, containingClassifier.name);
-						addIssue(message, property.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_SPEC_BUILT_IN_OR_PROVIDED_BY_RUNTIME_OR_EXTENAL_WITHOUT_N4JS_ANNOTATION);
+						val feature = if ((property.astElement as PropertyNameValuePair).property === null) PROPERTY_NAME_OWNER__DECLARED_NAME
+										else N4JSPackage.eINSTANCE.propertyNameValuePair_Property;
+						addIssue(message, property.astElement, feature, CLF_SPEC_BUILT_IN_OR_PROVIDED_BY_RUNTIME_OR_EXTENAL_WITHOUT_N4JS_ANNOTATION);
 					}
 				}
 			}

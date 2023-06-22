@@ -234,8 +234,7 @@ class PropertyNameOwnerTest {
 		// PART 1: check the AST node
 		val node = script.eAllContents.filter(propOwnerType).head;
 		assertNotNull("no property name owner found of type: " + propOwnerType.getName(), node);
-		if (expectedKind === PropertyNameKind.IDENTIFIER
-			|| expectedKind === PropertyNameKind.STRING
+		if (expectedKind === PropertyNameKind.STRING
 			|| expectedKind === PropertyNameKind.NUMBER) {
 
 			assertSame(expectedKind, node.declaredName.kind);
@@ -244,6 +243,26 @@ class PropertyNameOwnerTest {
 			assertNull(node.declaredName.expression);
 			assertEquals(expectedName, node.name);
 
+		} else if(expectedKind === PropertyNameKind.IDENTIFIER) {
+			
+			if (node instanceof BindingProperty) {
+				assertNotNull(node.property);
+				assertEquals(expectedName, node.propertyAsText);
+				assertNull(node.declaredName);
+				assertEquals(expectedName, node.name);
+			} else if (node instanceof PropertyNameValuePair) {
+				assertNotNull(node.property);
+				assertEquals(expectedName, node.propertyAsText);
+				assertNull(node.declaredName);
+				assertEquals(expectedName, node.name);
+			} else {
+				assertSame(expectedKind, node.declaredName.kind);
+				assertEquals(expectedName, node.declaredName.literalName);
+				assertNull(node.declaredName.computedName);
+				assertNull(node.declaredName.expression);
+				assertEquals(expectedName, node.name);
+			}
+			
 		} else if(expectedKind === PropertyNameKind.COMPUTED) {
 
 			assertSame(PropertyNameKind.COMPUTED, node.declaredName.kind);
@@ -255,8 +274,10 @@ class PropertyNameOwnerTest {
 		} else {
 			throw new IllegalArgumentException();
 		}
+
 		// PART 2: check name of the corresponding type model element
-		if(!(node instanceof BindingProperty)) { // does not apply to binding properties (do not have a TModule element)
+		if (!(node instanceof BindingProperty)) {
+			// does not apply to binding properties (do not have a TModule element)
 			val element = N4JSASTUtils.getCorrespondingTypeModelElement(node);
 			assertNotNull(element);
 			assertTrue(element instanceof IdentifiableElement);

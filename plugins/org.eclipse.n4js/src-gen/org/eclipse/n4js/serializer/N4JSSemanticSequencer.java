@@ -4456,7 +4456,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ) | 
 	 *         (
 	 *             declaredTypeRefNode=TypeReferenceWithModifiersNode? 
-	 *             declaredName=LiteralOrComputedPropertyName 
+	 *             (property=[IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName) 
 	 *             declaredOptional?='?'? 
 	 *             expression=AssignmentExpression
 	 *         )
@@ -8153,7 +8153,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BindingProperty returns BindingProperty
 	 *
 	 * Constraint:
-	 *     ((declaredName=LiteralOrComputedPropertyName value=BindingElement) | value=SingleNameBinding)
+	 *     (((property=[IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName) value=BindingElement) | value=SingleNameBinding)
 	 * </pre>
 	 */
 	protected void sequence_BindingProperty(ISerializationContext context, BindingProperty semanticObject) {
@@ -22644,7 +22644,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         declaredTypeRefNode=TypeReferenceWithModifiersNode? 
-	 *         declaredName=LiteralOrComputedPropertyName 
+	 *         (property=[IdentifiableElement|IdentifierName] | declaredName=LiteralOrComputedPropertyName) 
 	 *         declaredOptional?='?'? 
 	 *         expression=AssignmentExpression
 	 *     )

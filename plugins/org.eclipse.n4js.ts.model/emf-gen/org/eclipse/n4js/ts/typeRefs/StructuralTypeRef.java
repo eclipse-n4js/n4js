@@ -75,7 +75,7 @@ public interface StructuralTypeRef extends EObject {
 	 * This occurs in a situation like this:
 	 * <pre>
 	 * class C { ... }
-	 * var ~C with { number n; } myC_withN;
+	 * var myC_withN : ~C with { number n; };
 	 * </pre>
 	 * Members should <b>never</b> be added to this property, except by the parser (in file N4JS.xtext).
 	 * <!-- end-model-doc -->

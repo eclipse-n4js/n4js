@@ -101,6 +101,7 @@ import static org.eclipse.n4js.ts.typeRefs.TypeRefsPackage.Literals.PARAMETERIZE
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.emf.ecore.EStructuralFeature
 
 /**
  * Class for validating the N4JS types.
@@ -597,17 +598,20 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			for (property : inputMembers) {
 				if (!expectedMembers.contains(property.name)) {
 					var astElement = property.astElement;
+					var EStructuralFeature feature = null;
 					if (astElement instanceof PropertyNameValuePair) {
 						if (astElement.declaredName !== null) {
 							astElement = astElement.declaredName;
+						} else if ((astElement as PropertyNameValuePair).property !== null) {
+							feature = N4JSPackage.eINSTANCE.propertyNameValuePair_Property;
 						}
 					}
 					if (isSpecArgument) {
 						val message = getMessageForCLF_SPEC_SUPERFLUOUS_PROPERTIES(property.name, typeRef.typeRefAsString);
-						addIssue(message, astElement, CLF_SPEC_SUPERFLUOUS_PROPERTIES);
+						addIssue(message, astElement, feature, CLF_SPEC_SUPERFLUOUS_PROPERTIES);
 					} else if (!expectedMembersPlusNotAccessibles.contains(property.name)) {
 						val message = getMessageForCLF_SUPERFLUOUS_PROPERTIES(property.name, typeRef.typeRefAsString, lhsName);
-						addIssue(message, astElement, CLF_SUPERFLUOUS_PROPERTIES);
+						addIssue(message, astElement, feature, CLF_SUPERFLUOUS_PROPERTIES);
 					}
 				}
 			};

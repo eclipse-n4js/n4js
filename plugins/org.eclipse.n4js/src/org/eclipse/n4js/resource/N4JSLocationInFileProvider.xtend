@@ -19,6 +19,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.PropertyNameOwner
+import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TFormalParameter
@@ -33,6 +34,9 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.DefaultLocationInFileProvider
 import org.eclipse.xtext.resource.ILocationInFileProviderExtension
 import org.eclipse.xtext.util.ITextRegion
+import org.eclipse.xtext.resource.ILocationInFileProviderExtension.RegionDescription
+import java.util.List
+import org.eclipse.emf.ecore.EReference
 
 /**
  * A location in file provider that is aware of inferred types. The location
@@ -41,11 +45,19 @@ import org.eclipse.xtext.util.ITextRegion
 class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 
 	override getFullTextRegion(EObject element) {
-		return super.getFullTextRegion(convertToSource(element));
+		val srcObj = convertToSource(element);
+		if (srcObj === null) {
+			return null;
+		}
+		return super.getFullTextRegion(srcObj);
 	}
 
 	override getFullTextRegion(EObject owner, EStructuralFeature feature, int indexInList) {
-		return super.getFullTextRegion(convertToSource(owner), feature, indexInList);
+		val srcObj = convertToSource(owner);
+		if (srcObj === null) {
+			return null;
+		}
+		return super.getFullTextRegion(srcObj, feature, indexInList);
 	}
 
 	override getSignificantTextRegion(EObject element) {
@@ -60,20 +72,37 @@ class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 				return super.getSignificantTextRegion(element, N4JSPackage.eINSTANCE.getNamespaceImportSpecifier_Alias(), -1);
 			}
 		}
-		return super.getSignificantTextRegion(convertToSource(element));
+		val srcObj = convertToSource(element);
+		if (srcObj === null) {
+			return null;
+		}
+		return super.getSignificantTextRegion(srcObj);
 	}
 
 	override getSignificantTextRegion(EObject owner, EStructuralFeature feature, int indexInList) {
-		return super.getSignificantTextRegion(convertToSource(owner), feature, indexInList);
+		val srcObj = convertToSource(owner);
+		if (srcObj === null) {
+			return null;
+		}
+		return super.getSignificantTextRegion(srcObj, feature, indexInList);
 	}
 
 	override getTextRegion(EObject object, EStructuralFeature feature, int indexInList,
 		ILocationInFileProviderExtension.RegionDescription query) {
-		return super.getTextRegion(convertToSource(object), feature, indexInList, query);
+			
+		val srcObj = convertToSource(object);
+		if (srcObj === null) {
+			return null;
+		}
+		return super.getTextRegion(srcObj, feature, indexInList, query);
 	}
 
 	override getTextRegion(EObject object, ILocationInFileProviderExtension.RegionDescription query) {
-		return super.getTextRegion(convertToSource(object), query);
+		val srcObj = convertToSource(object);
+		if (srcObj === null) {
+			return null;
+		}
+		return super.getTextRegion(srcObj, query);
 	}
 	
 	override protected ITextRegion doGetTextRegion(EObject obj, /* @NonNull */ RegionDescription query) {
@@ -83,6 +112,12 @@ class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 					return toZeroBasedRegion(adapter);
 				}
 			}
+		} else if (obj instanceof TMember && !(obj as TMember).constituentMembers.empty) {
+			val tMember = obj as TMember;
+			val fst = tMember.constituentMembers.get(0);
+			return super.doGetTextRegion(fst.astElement, query);
+		} else if (obj instanceof PropertyNameValuePair && (obj as PropertyNameValuePair).property !== null) {
+			return super.getFullTextRegion(obj, N4JSPackage.eINSTANCE.propertyNameValuePair_Property, 0);
 		} else {
 			return super.doGetTextRegion(obj, query);
 		}
@@ -139,5 +174,23 @@ class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 			return N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName;
 		}
 		return super.getIdentifierFeature(obj);
+	}
+	
+	
+	override protected ITextRegion getLocationOfContainmentReference(EObject owner, EReference feature,
+			int indexInList, RegionDescription query) {
+				
+		var EObject referencedElement = null;
+		if (feature.isMany()) {
+			val List<?> values = owner.eGet(feature) as List<?>;
+			if (indexInList >= values.size()) {
+				referencedElement = owner;
+			} else if (indexInList >= 0) {
+				referencedElement = values.get(indexInList) as EObject;
+			}
+		} else {
+			referencedElement = owner.eGet(feature) as EObject;
+		}
+		return getTextRegion(referencedElement, query);
 	}
 }

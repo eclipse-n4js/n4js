@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
@@ -26,6 +27,7 @@ import org.eclipse.n4js.n4JS.LabelRef;
 import org.eclipse.n4js.n4JS.ModuleRef;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
+import org.eclipse.n4js.n4JS.PropertyNameValuePair;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.parser.conversion.AbstractN4JSStringValueConverter.BadEscapementException;
 import org.eclipse.n4js.parser.conversion.N4JSValueConverterException;
@@ -40,8 +42,6 @@ import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.validation.ASTStructureValidator;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.AbstractRule;
-import org.eclipse.xtext.Action;
-import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.GrammarUtil;
@@ -205,42 +205,6 @@ public class N4JSLinker extends LazyLinker {
 	}
 
 	/**
-	 * TODO remove after update to new Xtext (the below modification will probably added to Xtext 2.9.1)
-	 *
-	 * @return true, if the parent node could contain cross references to the same semantic element as the given node.
-	 */
-	@Override
-	protected boolean shouldCheckParentNode(INode node) {
-		EObject grammarElement = node.getGrammarElement();
-		if (grammarElement instanceof AbstractElement) {
-			ICompositeNode parent = node.getParent();
-			if (parent != null) {
-				if (!parent.hasDirectSemanticElement()) {
-					Assignment assignment = GrammarUtil.containingAssignment(grammarElement);
-					// original code in super method:
-					// return assignment == null;
-					// modification:
-					if (assignment == null) {
-						ParserRule rule = (ParserRule) GrammarUtil.containingRule(grammarElement);
-						if (rule.isFragment()) {
-							return false;
-						}
-						return true;
-					}
-					// (end of modification)
-				}
-				if (grammarElement instanceof Action) {
-					ParserRule rule = (ParserRule) GrammarUtil.containingRule(grammarElement);
-					if (rule.isFragment()) {
-						return parent.getGrammarElement() instanceof RuleCall;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * Creates a proxy instance that will later on allow to lazily resolve the semantically referenced instance for the
 	 * given {@link CrossReference xref}.
 	 */
@@ -332,6 +296,10 @@ public class N4JSLinker extends LazyLinker {
 			((LabelRef) obj).setLabelAsText((String) value);
 		} else if (obj instanceof ParameterizedPropertyAccessExpression && value instanceof String) {
 			((ParameterizedPropertyAccessExpression) obj).setPropertyAsText((String) value);
+		} else if (obj instanceof BindingProperty && value instanceof String) {
+			((BindingProperty) obj).setPropertyAsText((String) value);
+		} else if (obj instanceof PropertyNameValuePair) {
+			((PropertyNameValuePair) obj).setPropertyAsText((String) value);
 		} else if (obj instanceof ModuleRef && value instanceof String) {
 			((ModuleRef) obj).setModuleSpecifierAsText((String) value);
 		} else if (obj instanceof NamedImportSpecifier && value instanceof String) {
@@ -377,6 +345,10 @@ public class N4JSLinker extends LazyLinker {
 			((LabelRef) obj).setLabelAsText(null);
 		} else if (obj instanceof ParameterizedPropertyAccessExpression) {
 			((ParameterizedPropertyAccessExpression) obj).setPropertyAsText(null);
+		} else if (obj instanceof BindingProperty) {
+			((BindingProperty) obj).setPropertyAsText(null);
+		} else if (obj instanceof PropertyNameValuePair) {
+			((PropertyNameValuePair) obj).setPropertyAsText(null);
 		} else if (obj instanceof ParameterizedTypeRef) {
 			((ParameterizedTypeRef) obj).setDeclaredTypeAsText(null);
 		} else if (obj instanceof NamespaceLikeRef) {

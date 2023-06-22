@@ -233,12 +233,16 @@ class ASTStructureAssertionExtension {
 	}
 
 	def assertPropertyNameValuePair(String phase, ObjectLiteral objectLiteral, String expectedName,
-		PropertyNameKind expectedKind, String expectedValue, (PropertyNameValuePair)=>Object valueCalculation) {
-		val propertyNameValuePair = objectLiteral.propertyAssignments.filter(PropertyNameValuePair).filter[
-			it.name == expectedName].head
+		PropertyNameKind expectedKind, String expectedValue, (PropertyNameValuePair)=>Object valueCalculation
+	) {
+		val propertyNameValuePair = objectLiteral.propertyAssignments.filter(PropertyNameValuePair).filter[it.name == expectedName].head
 		assertNotNull(phase + ": Property assignment should be found for name " + expectedName, propertyNameValuePair)
-		assertEquals(phase + ": expected property kind", propertyNameValuePair.declaredName.kind, expectedKind)
 		assertEquals(phase + ": expected value", expectedValue, valueCalculation.apply(propertyNameValuePair))
+		if (expectedKind === PropertyNameKind.IDENTIFIER) {
+			assertNotNull(propertyNameValuePair.property)
+		} else {
+			assertEquals(phase + ": expected property kind", propertyNameValuePair.declaredName.kind, expectedKind)
+		}
 	}
 
 	def stringLiteralValueCalculation(String phase) {

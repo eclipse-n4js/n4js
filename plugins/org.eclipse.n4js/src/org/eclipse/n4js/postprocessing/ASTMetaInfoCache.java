@@ -37,6 +37,7 @@ import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -129,13 +130,17 @@ public final class ASTMetaInfoCache {
 	 * <p>
 	 * Returns the actual type of the given astNode as stored in the cache. Throws exception if not available.
 	 */
-	public TypeRef getType(TypableElement astNode) {
+	public TypeRef getType(RuleEnvironment G, TypableElement astNode) {
 		final TypeRef result = getTypeFailSafe(astNode);
 		if (result == null) {
 			if (resource.isFullyProcessed() && resource.getPostProcessingThrowable() != null) {
 				// post processing was attempted but failed, so we expect the cache to be incompletely filled
 				// -> do not throw exception in this case, because it is a follow-up issue
 				return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+			}
+			if (nonEntryPolyProcessorNodes.contains(astNode)) {
+				// forward reference could not be typed since it was within a poly-processor node
+				return RuleEnvironmentExtensions.anyTypeRef(G);
 			}
 			throw UtilN4.reportError(new IllegalStateException("cache miss: no actual type in cache for AST node: "
 					+ astNode + " in resource: " + resource.getURI()));
@@ -155,6 +160,7 @@ public final class ASTMetaInfoCache {
 			throw new IllegalArgumentException("astNode must be from this resource");
 		}
 		TypeRef oldValue = actualTypes.put(astNode, actualType);
+		nonEntryPolyProcessorNodes.remove(astNode);
 		if (oldValue != null) {
 			throw UtilN4.reportError(new IllegalStateException(
 					"cache collision: multiple actual types put into cache for AST node: " + astNode +
@@ -248,6 +254,7 @@ public final class ASTMetaInfoCache {
 
 	/* package */ final Set<EObject> forwardProcessedSubTrees = new LinkedHashSet<>();
 	/* package */ final Set<EObject> astNodesCurrentlyBeingTyped = new LinkedHashSet<>();
+	/* package */ final Set<EObject> nonEntryPolyProcessorNodes = new LinkedHashSet<>();
 	/* package */ final Queue<EObject> postponedSubTrees = new LinkedList<>(); // using LinkedList as FIFO queue, here
 	/* package */ final Set<IdentifiableElement> elementsReferencedAtRuntime = new LinkedHashSet<>();
 	/* package */ final Set<TModule> modulesReferencedAtLoadtimeForInheritance = new LinkedHashSet<>();

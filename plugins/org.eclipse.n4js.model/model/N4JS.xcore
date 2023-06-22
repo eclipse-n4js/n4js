@@ -1403,7 +1403,9 @@ enum PropertyNameKind {
 	computed
 }
 
-class PropertyNameValuePair extends AnnotablePropertyAssignment, TypedElement, TypableElement {
+class PropertyNameValuePair extends AnnotablePropertyAssignment, TypedElement, TypableElement, MemberAccess {
+	refers IdentifiableElement property
+	transient String propertyAsText
 	refers transient TStructField definedField
 	boolean declaredOptional
 	/*
@@ -1421,6 +1423,12 @@ class PropertyNameValuePair extends AnnotablePropertyAssignment, TypedElement, T
 			return false
 		}
 		return true
+	}
+	op String getName() {
+		if (propertyAsText !== null) {
+			return propertyAsText;
+		}
+		return super.getName();
 	}
 }
 
@@ -1709,7 +1717,7 @@ class ParameterizedPropertyAccessExpression extends ExpressionWithTarget, Member
 	refers IdentifiableElement property
 	transient String propertyAsText
 	/**
-	 * Returns iff this expression is allowed to appear on the LHS of an expression.
+	 * Returns true iff this expression is allowed to appear on the LHS of an expression.
 	 */
 	op boolean isValidSimpleAssignmentTarget() {
 		return !isOrHasTargetWithOptionalChaining();
@@ -2583,13 +2591,24 @@ class ArrayBindingPattern extends BindingPattern {
 	contains BindingElement[] elements
 }
 
-class BindingProperty extends PropertyNameOwner {
+class BindingProperty extends PropertyNameOwner, MemberAccess {
+	refers IdentifiableElement property
+	transient String propertyAsText
 	contains BindingElement value
 	op String getName() {
-		super.getName() ?: value?.varDecl?.name
+		if (propertyAsText !== null) {
+			return propertyAsText;
+		}
+		if (super.getName() !== null) {
+			return super.getName();
+		}
+		return value?.varDecl?.name
 	}
 	op boolean isValidName() {
 		true
+	}
+	op boolean isSingleNameBinding() {
+		return propertyAsText === null && declaredName === null;
 	}
 }
 

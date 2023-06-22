@@ -15693,7 +15693,19 @@ rulePropertyAssignment returns [EObject current=null]
 				)?
 				(
 					(
-						ruleLiteralOrComputedPropertyName
+						((
+							ruleIdentifierName
+						)
+						)=>
+						(
+							ruleIdentifierName
+						)
+					)
+					    |
+					(
+						(
+							ruleLiteralOrComputedPropertyName
+						)
 					)
 				)
 				(
@@ -15992,7 +16004,19 @@ norm1_PropertyAssignment returns [EObject current=null]
 				)?
 				(
 					(
-						norm1_LiteralOrComputedPropertyName
+						((
+							ruleIdentifierName
+						)
+						)=>
+						(
+							ruleIdentifierName
+						)
+					)
+					    |
+					(
+						(
+							norm1_LiteralOrComputedPropertyName
+						)
 					)
 				)
 				(
@@ -18058,7 +18082,19 @@ rulePropertyNameValuePair returns [EObject current=null]
 				)?
 				(
 					(
-						ruleLiteralOrComputedPropertyName
+						((
+							ruleIdentifierName
+						)
+						)=>
+						(
+							ruleIdentifierName
+						)
+					)
+					    |
+					(
+						(
+							ruleLiteralOrComputedPropertyName
+						)
 					)
 				)
 				(
@@ -18098,40 +18134,63 @@ rulePropertyNameValuePair returns [EObject current=null]
 				)?
 				(
 					(
-						{
-							newCompositeNode(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_0());
-						}
-						lv_declaredName_2_0=ruleLiteralOrComputedPropertyName
-						{
-							if ($current==null) {
-								$current = createModelElementForParent(grammarAccess.getPropertyNameValuePairRule());
+						((
+							ruleIdentifierName
+						)
+						)=>
+						(
+							{
+								if ($current==null) {
+									$current = createModelElement(grammarAccess.getPropertyNameValuePairRule());
+								}
 							}
-							set(
-								$current,
-								"declaredName",
-								lv_declaredName_2_0,
-								"org.eclipse.n4js.N4JS.LiteralOrComputedPropertyName");
-							afterParserOrEnumRuleCall();
-						}
+							{
+								newCompositeNode(grammarAccess.getPropertyNameValuePairAccess().getPropertyIdentifiableElementCrossReference_0_0_2_0_0());
+							}
+							ruleIdentifierName
+							{
+								afterParserOrEnumRuleCall();
+							}
+						)
+					)
+					    |
+					(
+						(
+							{
+								newCompositeNode(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_1_0());
+							}
+							lv_declaredName_3_0=ruleLiteralOrComputedPropertyName
+							{
+								if ($current==null) {
+									$current = createModelElementForParent(grammarAccess.getPropertyNameValuePairRule());
+								}
+								set(
+									$current,
+									"declaredName",
+									lv_declaredName_3_0,
+									"org.eclipse.n4js.N4JS.LiteralOrComputedPropertyName");
+								afterParserOrEnumRuleCall();
+							}
+						)
 					)
 				)
 				(
 					(
-						lv_declaredOptional_3_0=QuestionMark
+						lv_declaredOptional_4_0=QuestionMark
 						{
-							newLeafNode(lv_declaredOptional_3_0, grammarAccess.getPropertyNameValuePairAccess().getDeclaredOptionalQuestionMarkKeyword_0_0_3_0());
+							newLeafNode(lv_declaredOptional_4_0, grammarAccess.getPropertyNameValuePairAccess().getDeclaredOptionalQuestionMarkKeyword_0_0_3_0());
 						}
 						{
 							if ($current==null) {
 								$current = createModelElement(grammarAccess.getPropertyNameValuePairRule());
 							}
-							setWithLastConsumed($current, "declaredOptional", lv_declaredOptional_3_0 != null, "?");
+							setWithLastConsumed($current, "declaredOptional", lv_declaredOptional_4_0 != null, "?");
 						}
 					)
 				)?
-				otherlv_4=Colon
+				otherlv_5=Colon
 				{
-					newLeafNode(otherlv_4, grammarAccess.getPropertyNameValuePairAccess().getColonKeyword_0_0_4());
+					newLeafNode(otherlv_5, grammarAccess.getPropertyNameValuePairAccess().getColonKeyword_0_0_4());
 				}
 			)
 		)
@@ -18140,7 +18199,7 @@ rulePropertyNameValuePair returns [EObject current=null]
 				{
 					newCompositeNode(grammarAccess.getPropertyNameValuePairAccess().getExpressionAssignmentExpressionParserRuleCall_1_0());
 				}
-				lv_expression_5_0=norm1_AssignmentExpression
+				lv_expression_6_0=norm1_AssignmentExpression
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getPropertyNameValuePairRule());
@@ -18148,7 +18207,7 @@ rulePropertyNameValuePair returns [EObject current=null]
 					set(
 						$current,
 						"expression",
-						lv_expression_5_0,
+						lv_expression_6_0,
 						"org.eclipse.n4js.N4JS.AssignmentExpression");
 					afterParserOrEnumRuleCall();
 				}
@@ -18178,7 +18237,19 @@ norm1_PropertyNameValuePair returns [EObject current=null]
 				)?
 				(
 					(
-						norm1_LiteralOrComputedPropertyName
+						((
+							ruleIdentifierName
+						)
+						)=>
+						(
+							ruleIdentifierName
+						)
+					)
+					    |
+					(
+						(
+							norm1_LiteralOrComputedPropertyName
+						)
 					)
 				)
 				(
@@ -18218,40 +18289,63 @@ norm1_PropertyNameValuePair returns [EObject current=null]
 				)?
 				(
 					(
-						{
-							newCompositeNode(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_0());
-						}
-						lv_declaredName_2_0=norm1_LiteralOrComputedPropertyName
-						{
-							if ($current==null) {
-								$current = createModelElementForParent(grammarAccess.getPropertyNameValuePairRule());
+						((
+							ruleIdentifierName
+						)
+						)=>
+						(
+							{
+								if ($current==null) {
+									$current = createModelElement(grammarAccess.getPropertyNameValuePairRule());
+								}
 							}
-							set(
-								$current,
-								"declaredName",
-								lv_declaredName_2_0,
-								"org.eclipse.n4js.N4JS.LiteralOrComputedPropertyName");
-							afterParserOrEnumRuleCall();
-						}
+							{
+								newCompositeNode(grammarAccess.getPropertyNameValuePairAccess().getPropertyIdentifiableElementCrossReference_0_0_2_0_0());
+							}
+							ruleIdentifierName
+							{
+								afterParserOrEnumRuleCall();
+							}
+						)
+					)
+					    |
+					(
+						(
+							{
+								newCompositeNode(grammarAccess.getPropertyNameValuePairAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_1_0());
+							}
+							lv_declaredName_3_0=norm1_LiteralOrComputedPropertyName
+							{
+								if ($current==null) {
+									$current = createModelElementForParent(grammarAccess.getPropertyNameValuePairRule());
+								}
+								set(
+									$current,
+									"declaredName",
+									lv_declaredName_3_0,
+									"org.eclipse.n4js.N4JS.LiteralOrComputedPropertyName");
+								afterParserOrEnumRuleCall();
+							}
+						)
 					)
 				)
 				(
 					(
-						lv_declaredOptional_3_0=QuestionMark
+						lv_declaredOptional_4_0=QuestionMark
 						{
-							newLeafNode(lv_declaredOptional_3_0, grammarAccess.getPropertyNameValuePairAccess().getDeclaredOptionalQuestionMarkKeyword_0_0_3_0());
+							newLeafNode(lv_declaredOptional_4_0, grammarAccess.getPropertyNameValuePairAccess().getDeclaredOptionalQuestionMarkKeyword_0_0_3_0());
 						}
 						{
 							if ($current==null) {
 								$current = createModelElement(grammarAccess.getPropertyNameValuePairRule());
 							}
-							setWithLastConsumed($current, "declaredOptional", lv_declaredOptional_3_0 != null, "?");
+							setWithLastConsumed($current, "declaredOptional", lv_declaredOptional_4_0 != null, "?");
 						}
 					)
 				)?
-				otherlv_4=Colon
+				otherlv_5=Colon
 				{
-					newLeafNode(otherlv_4, grammarAccess.getPropertyNameValuePairAccess().getColonKeyword_0_0_4());
+					newLeafNode(otherlv_5, grammarAccess.getPropertyNameValuePairAccess().getColonKeyword_0_0_4());
 				}
 			)
 		)
@@ -18260,7 +18354,7 @@ norm1_PropertyNameValuePair returns [EObject current=null]
 				{
 					newCompositeNode(grammarAccess.getPropertyNameValuePairAccess().getExpressionAssignmentExpressionParserRuleCall_1_0());
 				}
-				lv_expression_5_0=norm3_AssignmentExpression
+				lv_expression_6_0=norm3_AssignmentExpression
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getPropertyNameValuePairRule());
@@ -18268,7 +18362,7 @@ norm1_PropertyNameValuePair returns [EObject current=null]
 					set(
 						$current,
 						"expression",
-						lv_expression_5_0,
+						lv_expression_6_0,
 						"org.eclipse.n4js.N4JS.AssignmentExpression");
 					afterParserOrEnumRuleCall();
 				}
@@ -35905,59 +35999,101 @@ ruleBindingProperty returns [EObject current=null]
 }:
 	(
 		(
-			(
-				((
+			((
+				(
 					(
 						(
-							ruleLiteralOrComputedPropertyName
+							((
+								ruleIdentifierName
+							)
+							)=>
+							(
+								ruleIdentifierName
+							)
+						)
+						    |
+						(
+							(
+								ruleLiteralOrComputedPropertyName
+							)
 						)
 					)
 					Colon
 				)
-				)=>
+				(
+					(
+						ruleBindingElement
+					)
+				)
+			)
+			)=>
+			(
 				(
 					(
 						(
-							{
-								newCompositeNode(grammarAccess.getBindingPropertyAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_0_0_0());
-							}
-							lv_declaredName_0_0=ruleLiteralOrComputedPropertyName
-							{
-								if ($current==null) {
-									$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
+							((
+								ruleIdentifierName
+							)
+							)=>
+							(
+								{
+									if ($current==null) {
+										$current = createModelElement(grammarAccess.getBindingPropertyRule());
+									}
 								}
-								set(
-									$current,
-									"declaredName",
-									lv_declaredName_0_0,
-									"org.eclipse.n4js.N4JS.LiteralOrComputedPropertyName");
-								afterParserOrEnumRuleCall();
-							}
+								{
+									newCompositeNode(grammarAccess.getBindingPropertyAccess().getPropertyIdentifiableElementCrossReference_0_0_0_0_0_0());
+								}
+								ruleIdentifierName
+								{
+									afterParserOrEnumRuleCall();
+								}
+							)
+						)
+						    |
+						(
+							(
+								{
+									newCompositeNode(grammarAccess.getBindingPropertyAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_0_0_1_0());
+								}
+								lv_declaredName_1_0=ruleLiteralOrComputedPropertyName
+								{
+									if ($current==null) {
+										$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
+									}
+									set(
+										$current,
+										"declaredName",
+										lv_declaredName_1_0,
+										"org.eclipse.n4js.N4JS.LiteralOrComputedPropertyName");
+									afterParserOrEnumRuleCall();
+								}
+							)
 						)
 					)
-					otherlv_1=Colon
+					otherlv_2=Colon
 					{
-						newLeafNode(otherlv_1, grammarAccess.getBindingPropertyAccess().getColonKeyword_0_0_0_1());
+						newLeafNode(otherlv_2, grammarAccess.getBindingPropertyAccess().getColonKeyword_0_0_0_1());
 					}
 				)
-			)
-			(
 				(
-					{
-						newCompositeNode(grammarAccess.getBindingPropertyAccess().getValueBindingElementParserRuleCall_0_1_0());
-					}
-					lv_value_2_0=ruleBindingElement
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
+					(
+						{
+							newCompositeNode(grammarAccess.getBindingPropertyAccess().getValueBindingElementParserRuleCall_0_0_1_0());
 						}
-						set(
-							$current,
-							"value",
-							lv_value_2_0,
-							"org.eclipse.n4js.N4JS.BindingElement");
-						afterParserOrEnumRuleCall();
-					}
+						lv_value_3_0=ruleBindingElement
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
+							}
+							set(
+								$current,
+								"value",
+								lv_value_3_0,
+								"org.eclipse.n4js.N4JS.BindingElement");
+							afterParserOrEnumRuleCall();
+						}
+					)
 				)
 			)
 		)
@@ -35967,7 +36103,7 @@ ruleBindingProperty returns [EObject current=null]
 				{
 					newCompositeNode(grammarAccess.getBindingPropertyAccess().getValueSingleNameBindingParserRuleCall_1_0());
 				}
-				lv_value_3_0=ruleSingleNameBinding
+				lv_value_4_0=ruleSingleNameBinding
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
@@ -35975,7 +36111,7 @@ ruleBindingProperty returns [EObject current=null]
 					set(
 						$current,
 						"value",
-						lv_value_3_0,
+						lv_value_4_0,
 						"org.eclipse.n4js.N4JS.SingleNameBinding");
 					afterParserOrEnumRuleCall();
 				}
@@ -35995,59 +36131,101 @@ norm1_BindingProperty returns [EObject current=null]
 }:
 	(
 		(
-			(
-				((
+			((
+				(
 					(
 						(
-							norm1_LiteralOrComputedPropertyName
+							((
+								ruleIdentifierName
+							)
+							)=>
+							(
+								ruleIdentifierName
+							)
+						)
+						    |
+						(
+							(
+								norm1_LiteralOrComputedPropertyName
+							)
 						)
 					)
 					Colon
 				)
-				)=>
+				(
+					(
+						norm1_BindingElement
+					)
+				)
+			)
+			)=>
+			(
 				(
 					(
 						(
-							{
-								newCompositeNode(grammarAccess.getBindingPropertyAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_0_0_0());
-							}
-							lv_declaredName_0_0=norm1_LiteralOrComputedPropertyName
-							{
-								if ($current==null) {
-									$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
+							((
+								ruleIdentifierName
+							)
+							)=>
+							(
+								{
+									if ($current==null) {
+										$current = createModelElement(grammarAccess.getBindingPropertyRule());
+									}
 								}
-								set(
-									$current,
-									"declaredName",
-									lv_declaredName_0_0,
-									"org.eclipse.n4js.N4JS.LiteralOrComputedPropertyName");
-								afterParserOrEnumRuleCall();
-							}
+								{
+									newCompositeNode(grammarAccess.getBindingPropertyAccess().getPropertyIdentifiableElementCrossReference_0_0_0_0_0_0());
+								}
+								ruleIdentifierName
+								{
+									afterParserOrEnumRuleCall();
+								}
+							)
+						)
+						    |
+						(
+							(
+								{
+									newCompositeNode(grammarAccess.getBindingPropertyAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_0_0_1_0());
+								}
+								lv_declaredName_1_0=norm1_LiteralOrComputedPropertyName
+								{
+									if ($current==null) {
+										$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
+									}
+									set(
+										$current,
+										"declaredName",
+										lv_declaredName_1_0,
+										"org.eclipse.n4js.N4JS.LiteralOrComputedPropertyName");
+									afterParserOrEnumRuleCall();
+								}
+							)
 						)
 					)
-					otherlv_1=Colon
+					otherlv_2=Colon
 					{
-						newLeafNode(otherlv_1, grammarAccess.getBindingPropertyAccess().getColonKeyword_0_0_0_1());
+						newLeafNode(otherlv_2, grammarAccess.getBindingPropertyAccess().getColonKeyword_0_0_0_1());
 					}
 				)
-			)
-			(
 				(
-					{
-						newCompositeNode(grammarAccess.getBindingPropertyAccess().getValueBindingElementParserRuleCall_0_1_0());
-					}
-					lv_value_2_0=norm1_BindingElement
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
+					(
+						{
+							newCompositeNode(grammarAccess.getBindingPropertyAccess().getValueBindingElementParserRuleCall_0_0_1_0());
 						}
-						set(
-							$current,
-							"value",
-							lv_value_2_0,
-							"org.eclipse.n4js.N4JS.BindingElement");
-						afterParserOrEnumRuleCall();
-					}
+						lv_value_3_0=norm1_BindingElement
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
+							}
+							set(
+								$current,
+								"value",
+								lv_value_3_0,
+								"org.eclipse.n4js.N4JS.BindingElement");
+							afterParserOrEnumRuleCall();
+						}
+					)
 				)
 			)
 		)
@@ -36057,7 +36235,7 @@ norm1_BindingProperty returns [EObject current=null]
 				{
 					newCompositeNode(grammarAccess.getBindingPropertyAccess().getValueSingleNameBindingParserRuleCall_1_0());
 				}
-				lv_value_3_0=norm1_SingleNameBinding
+				lv_value_4_0=norm1_SingleNameBinding
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getBindingPropertyRule());
@@ -36065,7 +36243,7 @@ norm1_BindingProperty returns [EObject current=null]
 					set(
 						$current,
 						"value",
-						lv_value_3_0,
+						lv_value_4_0,
 						"org.eclipse.n4js.N4JS.SingleNameBinding");
 					afterParserOrEnumRuleCall();
 				}
