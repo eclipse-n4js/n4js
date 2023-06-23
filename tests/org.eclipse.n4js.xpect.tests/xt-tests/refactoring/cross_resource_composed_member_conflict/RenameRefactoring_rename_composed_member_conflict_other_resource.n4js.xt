@@ -32,8 +32,8 @@ class A {
 
 let ab: A | B = new A();
 
-/* GH-2514 XPECT FIXME renameRefactoring at 'foo' to 'bar' ---
-Problem in RenameRefactoringTestProject/src/B.n4js: Another member with name 'bar' already exists
+/* XPECT renameRefactoring at 'foo' to 'bar' ---
+13: Problem in RenameRefactoringTestProject/src/B.n4js: Another member with name 'bar' already exists
 ---
 */
 ab.foo;

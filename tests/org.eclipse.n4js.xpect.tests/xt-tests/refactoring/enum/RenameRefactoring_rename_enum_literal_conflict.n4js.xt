@@ -29,8 +29,8 @@ enum E {
 }
 
 let e: E;
-/* GH-2514 XPECT FIXME renameRefactoring at 'BLUE' to 'RED' ---
-Problem in RenameRefactoringTestProject/src/RenameRefactoring_rename_enum_literal_conflict.n4js.xt: Another enum literal with name 'RED' already exists.
+/* XPECT renameRefactoring at 'BLUE' to 'RED' ---
+11: Problem in RenameRefactoringTestProject/src/RenameRefactoring_rename_enum_literal_conflict.n4js: Another enum literal with name 'RED' already exists.
 ---   
 */
 E.BLUE;
