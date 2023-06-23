@@ -187,9 +187,8 @@ public class N4JSRenameService extends RenameService2 {
 				? ((TMember) element).getConstituentMembers()
 				: Collections.singletonList(element);
 
-		renameValidator.check(newName, element, actualElements);
-
 		for (EObject actualElement : actualElements) {
+			renameValidator.check(newName, actualElement);
 			TextEdit edit = computeRenameEditForElement(actualElement, newName);
 			if (edit != null) {
 				edits.put(actualElement.eResource().getURI().toString(), edit);
@@ -205,6 +204,11 @@ public class N4JSRenameService extends RenameService2 {
 			if (obj == null || res == null || resURI == null) {
 				return;
 			}
+			Object target = obj.eGet(reference.getEReference());
+			if (target instanceof EObject) {
+				renameValidator.check(newName, (EObject) target);
+			}
+
 			TextEdit edit = computeRenameEditForReference(obj, reference.getEReference(), reference.getIndexInList(),
 					newName);
 			if (edit != null) {

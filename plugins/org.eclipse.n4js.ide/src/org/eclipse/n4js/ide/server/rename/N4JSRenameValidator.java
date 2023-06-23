@@ -20,8 +20,8 @@ import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
-import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.scoping.N4JSScopeProvider;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
@@ -54,27 +54,21 @@ public class N4JSRenameValidator {
 	/**
 	 * @param element
 	 *            to be renamed
-	 * @param references
-	 *            referencedElements to be renamed
 	 */
-	public void check(String newName, EObject element, List<? extends EObject> references)
-			throws ResponseErrorException {
-
+	public void check(String newName, EObject element) throws ResponseErrorException {
 		checkDuplicateName(element, newName);
-		for (EObject ref : references) {
-			checkDuplicateName(ref, newName);
-		}
 	}
 
 	private void checkDuplicateName(EObject context, String newName) {
-		if (context instanceof N4FieldDeclaration) {
-			checkDuplicateMember((N4FieldDeclaration) context, newName);
+		if (context instanceof N4MemberDeclaration) {
+			checkDuplicateMember((N4MemberDeclaration) context, newName);
 		}
-
+		if (context instanceof TMember) {
+			checkDuplicateMember((TMember) context, newName);
+		}
 		if (context instanceof TEnumLiteral) {
 			checkDuplicateEnum((TEnum) ((TEnumLiteral) context).eContainer(), newName);
 		}
-
 		if (context instanceof FormalParameter) {
 			FormalParameter fpar = (FormalParameter) context;
 			FunctionDefinition method = (FunctionDefinition) fpar.eContainer();
@@ -99,6 +93,27 @@ public class N4JSRenameValidator {
 		}
 	}
 
+	/** Check duplicate members */
+	private void checkDuplicateMember(N4MemberDeclaration member, String newName) {
+		checkDuplicateMember(member.getDefinedTypeElement(), newName);
+	}
+
+	/** Check duplicate members */
+	private void checkDuplicateMember(TMember member, String newName) {
+		ContainerType<? extends TMember> container = member.getContainingType();
+		if (container != null) {
+			MemberCollector memberCollector = this.containerTypesHelper.fromContext(container);
+			List<TMember> membersWithName = memberCollector.members(container).stream()
+					.filter(m -> m != member && m.getName().equals(newName))
+					.collect(Collectors.toList());
+
+			if (membersWithName.size() > 0) {
+				throwResponseError(member, 13,
+						"Another member with name '" + newName + "' already exists");
+			}
+		}
+	}
+
 	/** Check duplicate enum literals */
 	private void checkDuplicateEnum(TEnum enumeration, String newName) {
 		boolean duplicateFound = enumeration.getLiterals().stream()
@@ -118,22 +133,6 @@ public class N4JSRenameValidator {
 		if (fparsWithName.size() > 0) {
 			throwResponseError(fpar, 12,
 					"Another formal parameter with name '" + newName + "' already exists.");
-		}
-	}
-
-	/** Check duplicate members */
-	private void checkDuplicateMember(N4FieldDeclaration member, String newName) {
-		ContainerType<? extends TMember> container = member.getDefinedTypeElement().getContainingType();
-		if (container != null) {
-			MemberCollector memberCollector = this.containerTypesHelper.fromContext(container);
-			List<TMember> membersWithName = memberCollector.members(container).stream()
-					.filter(m -> m != member && m.getName().equals(newName))
-					.collect(Collectors.toList());
-
-			if (membersWithName.size() > 0) {
-				throwResponseError(member, 13,
-						"Another member with name '" + newName + "' already exists");
-			}
 		}
 	}
 

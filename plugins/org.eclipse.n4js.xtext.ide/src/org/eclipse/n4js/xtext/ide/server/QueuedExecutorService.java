@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -128,6 +129,10 @@ public class QueuedExecutorService {
 					}
 				});
 				result.complete(actualResult);
+			} catch (ResponseErrorException t) {
+				// do not log as an exception since test cases monitor log-output for exceptions
+				LOG.warn(t.getResponseError().getMessage());
+				result.completeExceptionally(t);
 			} catch (Throwable t) {
 				if (operationCanceledManager.isOperationCanceledException(t)) {
 					result.doCancel();
