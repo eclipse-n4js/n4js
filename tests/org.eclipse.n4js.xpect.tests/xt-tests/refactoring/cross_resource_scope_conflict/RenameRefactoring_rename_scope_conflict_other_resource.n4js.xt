@@ -26,8 +26,8 @@
 
 import {B} from "B";
 
-/* GH-2514 XPECT FIXME renameRefactoring at 'B' to 'C' ---
-Problem in RenameRefactoringTestProject/src/B.n4js: Another element in the same scope with name 'C' already exists
+/* XPECT renameRefactoring at 'B' to 'C' ---
+10: Problem in RenameRefactoringTestProject/src/B.n4js: Another element in the same scope with name 'C' already exists
 ---
 */
 class A extends B {

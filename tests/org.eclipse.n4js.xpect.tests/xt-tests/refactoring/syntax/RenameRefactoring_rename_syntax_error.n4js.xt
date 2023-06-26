@@ -23,8 +23,8 @@
    END_SETUP
 */
 
-/* GH-2514 XPECT FIXME renameRefactoring at 'A' to '%/&@' ---
-no viable alternative at input '%'
+/* XPECT renameRefactoring at 'A' to '%/&@' ---
+14: Invalid new name: no viable alternative at input '%'
 ---   
 */ 
 class A { }
