@@ -25,8 +25,8 @@
 
 
 class A {
-	/* GH-2514 XPECT FIXME renameRefactoring at 'p1' to 'p2' ---
-	Problem in RenameRefactoringTestProject/src/RenameRefactoring_rename_method_param_conflict.n4js.xt: Another formal parameter with name 'p2' already exists.
+	/* XPECT renameRefactoring at 'p1' to 'p2' ---
+	12: Problem in RenameRefactoringTestProject/src/RenameRefactoring_rename_method_param_conflict.n4js: Another formal parameter with name 'p2' already exists.
 	---   
 	*/
 	public bar(p1, p2) {}	
