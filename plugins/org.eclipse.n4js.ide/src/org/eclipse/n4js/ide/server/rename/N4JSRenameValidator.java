@@ -23,6 +23,7 @@ import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
+import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.scoping.N4JSScopeProvider;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
@@ -85,8 +86,15 @@ public class N4JSRenameValidator {
 		}
 		if (context instanceof FormalParameter) {
 			FormalParameter fpar = (FormalParameter) context;
-			FunctionDefinition method = (FunctionDefinition) fpar.eContainer();
-			checkDuplicateFormalParam(fpar, method.getFpars(), newName);
+			EObject parent = fpar.eContainer();
+			if (parent instanceof FunctionDefinition) {
+				FunctionDefinition method = (FunctionDefinition) parent;
+				checkDuplicateFormalParam(fpar, method.getFpars(), newName);
+			}
+			if (parent instanceof N4SetterDeclaration) {
+				N4SetterDeclaration method = (N4SetterDeclaration) parent;
+				checkDuplicateFormalParam(fpar, List.of(method.getFpar()), newName);
+			}
 		}
 
 		// Check name conflicts in variable environment scope using Scope for ContentAssist
