@@ -86,6 +86,9 @@ public class N4JSRenameService extends RenameService2 {
 	private DocumentExtensions documentExtensions;
 
 	@Inject
+	private N4JSRenameValidator renameValidator;
+
+	@Inject
 	private IResourceServiceProvider.Registry resourceServiceProviderRegistry;
 
 	// #################################################################################################################
@@ -168,6 +171,8 @@ public class N4JSRenameService extends RenameService2 {
 		return result;
 	}
 
+	// ResponseErrorException
+
 	/**
 	 * Create text edits for renaming the given element and all references pointing to it and create a workspace edit
 	 * from them.
@@ -181,7 +186,9 @@ public class N4JSRenameService extends RenameService2 {
 		List<? extends EObject> actualElements = element instanceof TMember && ((TMember) element).isComposed()
 				? ((TMember) element).getConstituentMembers()
 				: Collections.singletonList(element);
+
 		for (EObject actualElement : actualElements) {
+			renameValidator.check(newName, actualElement);
 			TextEdit edit = computeRenameEditForElement(actualElement, newName);
 			if (edit != null) {
 				edits.put(actualElement.eResource().getURI().toString(), edit);
@@ -197,6 +204,11 @@ public class N4JSRenameService extends RenameService2 {
 			if (obj == null || res == null || resURI == null) {
 				return;
 			}
+			Object target = obj.eGet(reference.getEReference());
+			if (target instanceof EObject) {
+				renameValidator.check(newName, (EObject) target);
+			}
+
 			TextEdit edit = computeRenameEditForReference(obj, reference.getEReference(), reference.getIndexInList(),
 					newName);
 			if (edit != null) {
@@ -236,8 +248,7 @@ public class N4JSRenameService extends RenameService2 {
 		}
 		Location location = nameFeature != null ? documentExtensions.newLocation(element, nameFeature, -1) : null;
 		if (location != null) {
-			TextEdit edit = new TextEdit(location.getRange(), newName);
-			return edit;
+			return new TextEdit(location.getRange(), newName);
 		}
 		return null;
 	}
