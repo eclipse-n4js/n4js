@@ -40,7 +40,9 @@ import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.WorkspaceEdit;
+import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.helper.CliTools;
 import org.eclipse.n4js.cli.helper.CliTools.CliException;
@@ -567,45 +569,57 @@ public class XtIdeTest extends AbstractIdeTest {
 		}
 		FileURI assertResource = getFileURIFromModuleName(optResource);
 
-		WorkspaceEdit workspaceEdit = callRename(uri.toString(), pos.getLine(), pos.getCharacter(), newName);
-		if (workspaceEdit == null) {
-			fail("element cannot be renamed");
-			return;
-		}
+		try {
+			WorkspaceEdit workspaceEdit = callRename(uri.toString(), pos.getLine(), pos.getCharacter(), newName);
+			if (workspaceEdit == null) {
+				fail("element cannot be renamed");
+				return;
+			}
 
-		Map<FileURI, String> fileURI2ActualSourceBefore = new LinkedHashMap<>();
-		Map<String, Map<String, String>> projectsModulesSourcesBefore = new LinkedHashMap<>();
-		for (Project prj : xtData.workspace.getAllProjects()) {
-			Map<String, String> modulesSourcesBefore = new LinkedHashMap<>();
-			projectsModulesSourcesBefore.put(prj.getName(), modulesSourcesBefore);
+			Map<FileURI, String> fileURI2ActualSourceBefore = new LinkedHashMap<>();
+			Map<String, Map<String, String>> projectsModulesSourcesBefore = new LinkedHashMap<>();
+			for (Project prj : xtData.workspace.getAllProjects()) {
+				Map<String, String> modulesSourcesBefore = new LinkedHashMap<>();
+				projectsModulesSourcesBefore.put(prj.getName(), modulesSourcesBefore);
 
-			for (Folder srcFld : prj.getSourceFolders()) {
-				for (org.eclipse.n4js.tests.codegen.Module mdl : srcFld.getModules()) {
-					String moduleName = mdl.getName();
-					String contents = mdl.getContents();
-					modulesSourcesBefore.put(moduleName, contents);
-					fileURI2ActualSourceBefore.put(getFileURIFromModuleName(moduleName), contents);
+				for (Folder srcFld : prj.getSourceFolders()) {
+					for (org.eclipse.n4js.tests.codegen.Module mdl : srcFld.getModules()) {
+						String moduleName = mdl.getName();
+						String contents = mdl.getContents();
+						modulesSourcesBefore.put(moduleName, contents);
+						fileURI2ActualSourceBefore.put(getFileURIFromModuleName(moduleName), contents);
+					}
 				}
 			}
-		}
 
-		Set<FileURI> unknownURIs = new LinkedHashSet<>();
-		Map<FileURI, String> fileURI2ActualSourceAfter = applyWorkspaceEdit(projectsModulesSourcesBefore,
-				workspaceEdit, unknownURIs);
+			Set<FileURI> unknownURIs = new LinkedHashSet<>();
+			Map<FileURI, String> fileURI2ActualSourceAfter = applyWorkspaceEdit(projectsModulesSourcesBefore,
+					workspaceEdit, unknownURIs);
 
-		if (!unknownURIs.isEmpty()) {
-			fail("rename led to text edits in unknown URIs: " + Joiner.on(", ").join(unknownURIs));
-		}
+			if (!unknownURIs.isEmpty()) {
+				fail("rename led to text edits in unknown URIs: " + Joiner.on(", ").join(unknownURIs));
+			}
 
-		String XPCT_PATTERN = "\\/\\*\\s+XPECT.+---(.|\\s)+---\\s*\\*\\/";
+			String XPCT_PATTERN = "\\/\\*\\s+XPECT.+---(.|\\s)+---\\s*\\*\\/";
 
-		for (FileURI file : fileURI2ActualSourceAfter.keySet()) {
-			if (Objects.equal(assertResource, file)) {
-				String contentsBefore = fileURI2ActualSourceBefore.get(file).replaceAll(XPCT_PATTERN, "");
-				String contentsAfter = fileURI2ActualSourceAfter.get(file).replaceAll(XPCT_PATTERN, "");
+			for (FileURI file : fileURI2ActualSourceAfter.keySet()) {
+				if (Objects.equal(assertResource, file)) {
+					String contentsBefore = fileURI2ActualSourceBefore.get(file).replaceAll(XPCT_PATTERN, "");
+					String contentsAfter = fileURI2ActualSourceAfter.get(file).replaceAll(XPCT_PATTERN, "");
 
-				String[] diffRanges = Strings.diffRange(contentsBefore, contentsAfter, true);
-				assertEquals(data.expectation, diffRanges[1].trim());
+					String[] diffRanges = Strings.diffRange(contentsBefore, contentsAfter, true);
+					assertEquals(data.expectation, diffRanges[1].trim());
+				}
+			}
+
+		} catch (ExecutionException ee) {
+			if (ee.getCause() instanceof ResponseErrorException) {
+				ResponseErrorException ree = (ResponseErrorException) ee.getCause();
+				ResponseError re = ree.getResponseError();
+				String errMsg = re.getCode() + ": " + re.getMessage();
+				assertEquals(data.expectation, errMsg);
+			} else {
+				throw ee;
 			}
 		}
 	}
