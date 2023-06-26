@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.server.rename;
 
+import java.io.StringReader;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,11 +31,20 @@ import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
+import org.eclipse.n4js.utils.languages.N4LanguageUtils;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
+import org.eclipse.xtext.Grammar;
+import org.eclipse.xtext.GrammarUtil;
+import org.eclipse.xtext.ParserRule;
+import org.eclipse.xtext.parser.IParseResult;
+import org.eclipse.xtext.parser.IParser;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.service.GrammarProvider;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 /**
@@ -51,11 +61,15 @@ public class N4JSRenameValidator {
 	@Inject
 	private WorkspaceAccess workspaceAccess;
 
+	@Inject
+	private GrammarProvider grammarProvider;
+
 	/**
 	 * @param element
 	 *            to be renamed
 	 */
 	public void check(String newName, EObject element) throws ResponseErrorException {
+		checkNewName(newName);
 		checkDuplicateName(element, newName);
 	}
 
@@ -91,6 +105,40 @@ public class N4JSRenameValidator {
 						"Another element in the same scope with name '" + newName + "' already exists");
 			}
 		}
+	}
+
+	private void checkNewName(String newName) {
+		// N4JS already contains N4JSX grammar
+		IParser parser = N4LanguageUtils.getServiceForContext("n4js", IParser.class).get();
+		Grammar grammar = this.getTypeExpressionsGrammar();
+		ParserRule parserRule = (ParserRule) GrammarUtil.findRuleForName(grammar,
+				"org.eclipse.n4js.TypeExpressions.IdentifierName");
+
+		// Parse the new name using the IdentifierName rule of the parser
+		IParseResult parseResult = parser.parse(parserRule, new StringReader(newName));
+		if (parseResult.hasSyntaxErrors()) {
+			String parseErrorMessages = Joiner.on("\n").join(Iterables.transform(parseResult.getSyntaxErrors(),
+					(node) -> node.getSyntaxErrorMessage().getMessage()));
+
+			throwResponseError(null, 14,
+					"Invalid new name: " + parseErrorMessages);
+		}
+	}
+
+	private Grammar getTypeExpressionsGrammar() {
+		Grammar grammar = grammarProvider.getGrammar(this);
+		while (grammar != null) {
+			if ("org.eclipse.n4js.TypeExpressions".equals(grammar.getName())) {
+				return grammar;
+			}
+			List<Grammar> grammars = grammar.getUsedGrammars();
+			if (!grammars.isEmpty()) {
+				grammar = grammars.iterator().next();
+			} else {
+				return null;
+			}
+		}
+		return grammar;
 	}
 
 	/** Check duplicate members */
@@ -137,15 +185,20 @@ public class N4JSRenameValidator {
 	}
 
 	private void throwResponseError(EObject context, int code, String msg) {
-		throwResponseError(context, context.eResource().getURI(), code, msg);
+		URI uri = context == null ? null : context.eResource().getURI();
+		throwResponseError(context, uri, code, msg);
 	}
 
 	private void throwResponseError(EObject context, URI uri, int code, String msg) {
-		String prefix = "Problem in " + trimPlatformPart(context, uri) + ": ";
+		String relPathStr = trimPlatformPart(context, uri);
+		String prefix = relPathStr == null ? "" : "Problem in " + relPathStr + ": ";
 		throw new ResponseErrorException(new ResponseError(code, prefix + msg, null));
 	}
 
 	private String trimPlatformPart(EObject context, URI uri) {
+		if (context == null || uri == null) {
+			return null;
+		}
 		N4JSWorkspaceConfigSnapshot workspaceConfig = workspaceAccess.getWorkspaceConfig(context);
 		Path relPath = workspaceConfig.makeWorkspaceRelative(uri);
 		return relPath.toString();
