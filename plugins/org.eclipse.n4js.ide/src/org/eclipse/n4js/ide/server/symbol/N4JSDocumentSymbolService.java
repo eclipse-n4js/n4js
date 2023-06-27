@@ -25,11 +25,16 @@ import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.server.util.SymbolKindUtil;
+import org.eclipse.n4js.n4JS.BindingElement;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
+import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName;
+import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.utils.PolyfillUtils;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.xtext.ide.server.symbol.XDocumentSymbolService;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
@@ -39,12 +44,15 @@ import org.eclipse.xtext.ide.server.DocumentExtensions;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.util.TextRegion;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 
 import com.google.common.collect.Lists;
@@ -71,14 +79,31 @@ public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 	private IResourceServiceProvider.Registry resourceServiceProviderRegistry;
 	@Inject
 	private HierarchicalDocumentSymbolService hierarchicalDocumentSymbolService;
+	@Inject
+	private FindReferenceHelper findReferenceHelper;
 
 	@Override
 	public List<? extends Location> getDefinitions(XtextResource resource, int offset,
 			IReferenceFinder.IResourceAccess resourceAccess, CancelIndicator cancelIndicator) {
+
+		INode node = eObjectAtOffsetHelper.getCrossReferenceNode(resource, new TextRegion(offset, 0));
+		EObject elemAtOffset = node == null ? null : NodeModelUtils.findActualSemanticObjectFor(node);
+
 		EObject element = eObjectAtOffsetHelper.resolveElementAt(resource, offset);
 		if (element == null) {
 			return Collections.emptyList();
 		}
+		if (element instanceof VariableDeclaration && element.eContainer() instanceof BindingElement) {
+			BindingElement parent = (BindingElement) element.eContainer();
+			element = findReferenceHelper.getMemberInDestructuring(parent);
+		}
+
+		if (elemAtOffset != null && elemAtOffset.eContainer() instanceof PropertyNameValuePairSingleName
+				&& elemAtOffset == elemAtOffset.eContainer()
+						.eGet(N4JSPackage.eINSTANCE.getPropertyNameValuePair_Expression())) {
+			element = findReferenceHelper.getMemberInDestructuring(elemAtOffset);
+		}
+
 		EObject type = N4JSASTUtils.getCorrespondingTypeModelElement(element);
 		if (type != null) {
 			element = type;
