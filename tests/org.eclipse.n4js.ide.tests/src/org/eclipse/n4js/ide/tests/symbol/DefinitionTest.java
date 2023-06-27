@@ -63,6 +63,23 @@ public class DefinitionTest extends AbstractDefinitionTest {
 
 	/***/
 	@Test
+	public void testDefinition_destruct_decl() throws Exception {
+		testAtCursor(
+				"class C { fieldA : string}\n const {field<|>A} = new C();",
+				"(test-project/src/MyModule.n4js, [0:10 - 0:16])");
+	}
+
+	/***/
+	@Test
+	public void testDefinition_destruct_assign() throws Exception {
+		testAtCursor(
+				"class C { fieldA : string}\nlet fieldA = undefined;\n({field<|>A} = new C());",
+				"(test-project/src/MyModule.n4js, [0:10 - 0:16])\n"
+						+ "(test-project/src/MyModule.n4js, [1:4 - 1:10])");
+	}
+
+	/***/
+	@Test
 	public void testDefinition_04() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(Collections.emptyMap());
 		startAndWaitForLspServer();
