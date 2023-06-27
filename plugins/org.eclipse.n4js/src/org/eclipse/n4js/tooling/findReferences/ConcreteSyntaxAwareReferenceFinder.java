@@ -25,8 +25,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.n4js.n4JS.BindingElement;
 import org.eclipse.n4js.n4JS.BindingProperty;
-import org.eclipse.n4js.n4JS.DestructNode;
-import org.eclipse.n4js.n4JS.DestructureUtils;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -34,15 +32,8 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.ts.types.TypableElement;
-import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
-import org.eclipse.n4js.utils.ContainerTypesHelper;
-import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
+import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.ReferenceFinder;
 import org.eclipse.xtext.findReferences.TargetURIs;
@@ -75,10 +66,7 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 	private LinkingHelper linkingHelper;
 
 	@Inject
-	private N4JSTypeSystem typeSystem;
-
-	@Inject
-	private ContainerTypesHelper containerTypesHelper;
+	private FindReferenceHelper findReferenceHelper;
 
 	@Override
 	protected void findReferencesInDescription(TargetURIs targetURIs, IResourceDescription resourceDescription,
@@ -293,7 +281,7 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 		if ((sourceCandidate instanceof PropertyNameValuePairSingleName
 				&& ref == N4JSPackage.eINSTANCE.getPropertyNameValuePair_Expression())) {
 
-			memberRefURI = getMemberRefURIInDestructuring(instanceOrProxy);
+			memberRefURI = findReferenceHelper.getMemberRefURIInDestructuring(instanceOrProxy);
 		}
 
 		if (sourceCandidate instanceof BindingElement && sourceCandidate.eContainer() instanceof BindingProperty) {
@@ -302,7 +290,7 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 			if (bProp.isSingleNameBinding() && bElem.getVarDecl() != null &&
 					ref == N4JSPackage.eINSTANCE.getBindingElement_VarDecl()) {
 
-				memberRefURI = getMemberRefURIInDestructuring(instanceOrProxy);
+				memberRefURI = findReferenceHelper.getMemberRefURIInDestructuring(instanceOrProxy);
 			}
 		}
 
@@ -312,29 +300,6 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 		}
 
 		return targetURIs.apply(memberRefURI);
-	}
-
-	private URI getMemberRefURIInDestructuring(EObject instanceOrProxy) {
-		// If the EObject is a variable in a destructuring, we add that variable
-		DestructNode destructNode = DestructureUtils.getCorrespondingDestructNode(instanceOrProxy);
-		if (destructNode != null && destructNode.getAssignedElem() != null) {
-			TypableElement assignedElem = destructNode.getAssignedElem();
-			TypeRef type = typeSystem.type(RuleEnvironmentExtensions.newRuleEnvironment(assignedElem),
-					assignedElem);
-			MemberCollector memberCollector = containerTypesHelper.fromContext(assignedElem);
-			Type declaredType = type.getDeclaredType();
-			if (declaredType instanceof ContainerType<?>) {
-				String name = destructNode.getPropName();
-				TMember member = memberCollector.findMember((ContainerType<?>) declaredType, name, true, false);
-				if (member == null) {
-					member = memberCollector.findMember((ContainerType<?>) declaredType, name, false, false);
-				}
-				if (member != null) {
-					return EcoreUtil2.getPlatformResourceOrNormalizedURI(member);
-				}
-			}
-		}
-		return null;
 	}
 
 	/** Tells whether the given object is an IdentifierRef pointing to the alias of a named import. */

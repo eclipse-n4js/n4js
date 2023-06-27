@@ -18,9 +18,19 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.n4JS.DestructNode;
+import org.eclipse.n4js.n4JS.DestructureUtils;
 import org.eclipse.n4js.tooling.findReferences.SimpleResourceAccess;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TypableElement;
+import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.typesystem.N4JSTypeSystem;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.findReferences.TargetURICollector;
 import org.eclipse.xtext.findReferences.TargetURIs;
@@ -31,11 +41,13 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
 
 /**
  * Helper class to find references.
  */
 @SuppressWarnings("restriction")
+@Singleton
 public class FindReferenceHelper {
 
 	@Inject
@@ -49,6 +61,12 @@ public class FindReferenceHelper {
 
 	@Inject
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
+
+	@Inject
+	private N4JSTypeSystem typeSystem;
+
+	@Inject
+	private ContainerTypesHelper containerTypesHelper;
 
 	/** @return all references to the given declaration. Respect editor states. */
 	public List<EObject> findReferences(EObject declaration, ResourceSet resourceSet) {
@@ -71,6 +89,37 @@ public class FindReferenceHelper {
 		referenceFinder.findReferences(targets, resource, acceptor, null);
 
 		return acceptor.results;
+	}
+
+	/** @return the member uri ref the given destructured element may refer to. */
+	public URI getMemberRefURIInDestructuring(EObject instanceOrProxy) {
+		TMember member = getMemberInDestructuring(instanceOrProxy);
+		if (member != null) {
+			return EcoreUtil2.getPlatformResourceOrNormalizedURI(member);
+		}
+		return null;
+	}
+
+	/** @return the member the given destructured element may refer to. */
+	public TMember getMemberInDestructuring(EObject instanceOrProxy) {
+		// If the EObject is a variable in a destructuring, we add that variable
+		DestructNode destructNode = DestructureUtils.getCorrespondingDestructNode(instanceOrProxy);
+		if (destructNode != null && destructNode.getAssignedElem() != null) {
+			TypableElement assignedElem = destructNode.getAssignedElem();
+			TypeRef type = typeSystem.type(RuleEnvironmentExtensions.newRuleEnvironment(assignedElem),
+					assignedElem);
+			MemberCollector memberCollector = containerTypesHelper.fromContext(assignedElem);
+			Type declaredType = type.getDeclaredType();
+			if (declaredType instanceof ContainerType<?>) {
+				String name = destructNode.getPropName();
+				TMember member = memberCollector.findMember((ContainerType<?>) declaredType, name, true, false);
+				if (member == null) {
+					member = memberCollector.findMember((ContainerType<?>) declaredType, name, false, false);
+				}
+				return member;
+			}
+		}
+		return null;
 	}
 
 	private EObject getDeclaration(EObject declaration) {
@@ -118,5 +167,4 @@ public class FindReferenceHelper {
 			// We don't care about those in Xpect test.
 		}
 	}
-
 }
