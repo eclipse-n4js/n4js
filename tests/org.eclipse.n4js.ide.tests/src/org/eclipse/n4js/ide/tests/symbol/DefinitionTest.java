@@ -74,7 +74,8 @@ public class DefinitionTest extends AbstractDefinitionTest {
 	public void testDefinition_destruct_assign() throws Exception {
 		testAtCursor(
 				"class C { fieldA : string}\nlet fieldA = undefined;\n({field<|>A} = new C());",
-				"(test-project/src/MyModule.n4js, [0:10 - 0:16])");
+				"(test-project/src/MyModule.n4js, [0:10 - 0:16])\n"
+						+ "(test-project/src/MyModule.n4js, [1:4 - 1:10])");
 	}
 
 	/***/

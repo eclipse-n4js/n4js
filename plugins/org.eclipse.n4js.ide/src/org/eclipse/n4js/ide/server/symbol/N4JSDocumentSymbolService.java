@@ -39,7 +39,6 @@ import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.xtext.ide.server.symbol.XDocumentSymbolService;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
-import org.eclipse.xtext.findReferences.TargetURIs;
 import org.eclipse.xtext.ide.server.DocumentExtensions;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
@@ -98,20 +97,30 @@ public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 			element = findReferenceHelper.getMemberInDestructuring(parent);
 		}
 
-		if (elemAtOffset != null && elemAtOffset.eContainer() instanceof PropertyNameValuePairSingleName
-				&& elemAtOffset == elemAtOffset.eContainer()
-						.eGet(N4JSPackage.eINSTANCE.getPropertyNameValuePair_Expression())) {
-			element = findReferenceHelper.getMemberInDestructuring(elemAtOffset);
-		}
-
 		EObject type = N4JSASTUtils.getCorrespondingTypeModelElement(element);
 		if (type != null) {
 			element = type;
 		}
 
 		List<Location> locations = new ArrayList<>();
-		TargetURIs targetURIs = collectTargetURIs(element);
-		for (URI targetURI : targetURIs) {
+
+		if (elemAtOffset != null && elemAtOffset.eContainer() instanceof PropertyNameValuePairSingleName
+				&& elemAtOffset == elemAtOffset.eContainer()
+						.eGet(N4JSPackage.eINSTANCE.getPropertyNameValuePair_Expression())) {
+
+			EObject elementInDestructuring = findReferenceHelper.getMemberInDestructuring(elemAtOffset);
+			addLocations(resourceAccess, cancelIndicator, elementInDestructuring, locations);
+		}
+
+		addLocations(resourceAccess, cancelIndicator, element, locations);
+
+		return locations;
+	}
+
+	private void addLocations(IReferenceFinder.IResourceAccess resourceAccess, CancelIndicator cancelIndicator,
+			EObject element, List<Location> locations) {
+
+		for (URI targetURI : collectTargetURIs(element)) {
 			operationCanceledManager.checkCanceled(cancelIndicator);
 			doRead(resourceAccess, targetURI, (EObject obj) -> {
 				Location location = resourceServiceProviderRegistry
@@ -122,7 +131,6 @@ public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 				}
 			});
 		}
-		return locations;
 	}
 
 	@Override
