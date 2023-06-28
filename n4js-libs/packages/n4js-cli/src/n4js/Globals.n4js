@@ -10,11 +10,15 @@
  */
 
 import * as path from "path";
+import * as url from "url";
+
 
 
 export public const JAVA_DEFAULT = "java";
 export public const JAVA_VM_XMX = "-Xmx";
 export public const JAVA_VM_XMX_DEFAULT = "4096m";
+
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 export public const BIN_DIR = path.resolve(__dirname, "..", "bin");
 export public const RESOURCES_DIR = path.resolve(__dirname, "..", "resources");
