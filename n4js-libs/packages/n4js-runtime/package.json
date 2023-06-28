@@ -41,6 +41,7 @@
     "n4jside",
     "n4js-ide"
   ],
+  "type": "module",
   "n4js": {
     "projectType": "library",
     "vendorId": "org.eclipse.n4js",

@@ -7,7 +7,7 @@
   "internalVersion": "2019-03-15T08:46:12Z",
   "description": "N4JS compiler and command line tools.",
   "scripts": {
-    "postinstall": "node -r esm ./npm-postinstall.js",
+    "postinstall": "node ./npm-postinstall.js",
     "test": "mocha tests"
   },
   "main": "src-gen/index.js",
@@ -37,6 +37,7 @@
     "n4js-runtime-es2015": "^0.1.0",
     "n4js-runtime-esnext": "^0.1.0"
   },
+  "type": "module",
   "n4js": {
     "projectType": "library",
     "vendorId": "org.eclipse.n4js",
