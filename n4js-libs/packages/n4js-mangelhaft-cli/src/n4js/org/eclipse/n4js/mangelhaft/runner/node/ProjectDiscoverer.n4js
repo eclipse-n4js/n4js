@@ -11,7 +11,7 @@
 
 import * as lib_path from "path";
 import * as lib_fs from "fs";
-import Minimatch from "minimatch";
+import { minimatch } from "minimatch";
 import * as lib_glob from "glob";
 
 
@@ -71,7 +71,7 @@ function getWorkspacesGlobs(yarnworkspaceDir:string, subprojectDir: string) : st
         // is yarn workspaces project
         const relativePath = lib_path.relative(yarnworkspaceDir, subprojectDir);
         for (const workspacesEntry of workspaces) {
-            if (relativePath === '' || Minimatch(relativePath, workspacesEntry)) {
+            if (relativePath === '' || minimatch(relativePath, workspacesEntry)) {
                 return workspaces; 
             }
         }
