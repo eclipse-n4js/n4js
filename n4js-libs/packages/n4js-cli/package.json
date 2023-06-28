@@ -8,7 +8,7 @@
   "description": "N4JS compiler and command line tools.",
   "scripts": {
     "postinstall": "node -r esm ./npm-postinstall.js",
-    "test": "mocha -r esm tests"
+    "test": "mocha tests"
   },
   "main": "src-gen/index.js",
   "bin": {
@@ -23,7 +23,7 @@
     "src"
   ],
   "devDependencies": {
-    "mocha": "^8.4.0"
+    "mocha": "^10.2.0"
   },
   "dependencies": {
     "@types/node": "^16",

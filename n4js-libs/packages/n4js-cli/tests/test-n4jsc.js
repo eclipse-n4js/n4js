@@ -8,7 +8,10 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import * as cli from "../src-gen/index.js";
+//import * as cli from "../src-gen/index.js";
+
+require = require("esm")(module);
+const cli = require("../src-gen/index.js");
 
 describe("n4jsc", function() {
     describe("#call", function() {
