@@ -14,5 +14,7 @@ lib
 nohup.out
 .DS_Store
 src-gen/**/*.map
+src-gen/ExtensionProvider.mjs
+dist/**/*.*
 *.vsix
 package-lock.json

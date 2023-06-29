@@ -3,3 +3,4 @@
 node_modules/n4js-cli/bin/
 !node_modules/n4js-cli/bin/n4jsc.js
 !node_modules/n4js-cli/bin/n4jsc.jar
+src/**
