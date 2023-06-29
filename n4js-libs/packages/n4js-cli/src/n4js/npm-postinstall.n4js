@@ -10,13 +10,13 @@
  */
 
 import * as lib_jreProvider from "JreProvider";
-import * as log+ from "npmlog";
+import {info} from "npmlog";
 
 
 const NPM_NAME = process.env.npm_package_name ?? "n4js-cli";
 const NPM_VERSION = process.env.npm_package_version ? "@"+process.env.npm_package_version : "";
 const LOG_NAME = NPM_NAME + NPM_VERSION;
-const LOG_FN = (text: string) => {log.info(LOG_NAME, text);}
+const LOG_FN = (text: string) => {info(LOG_NAME, text);}
 
 
 
