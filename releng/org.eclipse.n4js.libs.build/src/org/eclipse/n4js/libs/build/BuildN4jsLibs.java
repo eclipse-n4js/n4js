@@ -99,6 +99,9 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 		println("==== STEP 2/5: installing dependencies of " + N4JS_LIBS_FOLDER_NAME);
 		installDependencies(n4jsLibsRootPath);
 
+		Path bin_n4jsc = n4jsLibsRootPath.resolve(NODE_MODULES).resolve(".bin/n4jsc");
+		println("File " + bin_n4jsc.toString() + " exists: " + Files.exists(bin_n4jsc));
+
 		// step 2: compile projects under top-level folder "n4js-libs"
 		println("==== STEP 3/5: compiling code under top-level folder \"" + N4JS_LIBS_FOLDER_NAME
 				+ "\" in n4js repository");
