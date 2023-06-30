@@ -102,8 +102,17 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 		Path bin_n4jsc = n4jsLibsRootPath.resolve(NODE_MODULES).resolve(".bin/n4jsc");
 		println("File " + bin_n4jsc.toString() + " exists: " + Files.exists(bin_n4jsc));
 		if (!Files.exists(bin_n4jsc)) {
-			println("Files in " + bin_n4jsc.getParent().toString());
-			Files.list(bin_n4jsc.getParent()).forEach((p) -> System.out.println("  - " + p));
+			List<Path> locations = List.of(bin_n4jsc.getParent(),
+					n4jsLibsRootPath.resolve(NODE_MODULES),
+					n4jsLibsRootPath.resolve(NODE_MODULES).resolve("n4js-cli"),
+					n4jsLibsRootPath.resolve(NODE_MODULES).resolve("n4js-cli/src-gen"));
+
+			for (Path location : locations) {
+				if (Files.exists(location)) {
+					println("Files in " + location.toString());
+					Files.list(location).forEach((p) -> System.out.println("  - " + p));
+				}
+			}
 		}
 
 		// step 2: compile projects under top-level folder "n4js-libs"
