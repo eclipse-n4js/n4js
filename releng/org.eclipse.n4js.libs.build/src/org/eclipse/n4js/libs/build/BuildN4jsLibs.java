@@ -82,11 +82,11 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 		final Path n4jsLibsRootPath = n4jsRootPath.resolve(N4JS_LIBS_FOLDER_NAME);
 
 		// step 1: clean
-		println("==== STEP 1a/5: removing all node_modules folders below top-level folder \"" + N4JS_LIBS_FOLDER_NAME
+		println("==== STEP 1a/4: removing all node_modules folders below top-level folder \"" + N4JS_LIBS_FOLDER_NAME
 				+ "\" in n4js repository:");
 		removeNodeModulesFolders(n4jsLibsRootPath);
 
-		println("==== STEP 1b/5: deleting index-bundled.js from " + N4JS_RUNTIME);
+		println("==== STEP 1b/4: deleting index-bundled.js from " + N4JS_RUNTIME);
 		final Path indexBundledJS = n4jsLibsRootPath.resolve("packages").resolve(N4JS_RUNTIME.getRawName())
 				.resolve("index-bundled.js");
 		if (Files.deleteIfExists(indexBundledJS)) {
@@ -96,7 +96,7 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 		}
 
 		// step 2: install dependencies
-		println("==== STEP 2/5: installing dependencies of " + N4JS_LIBS_FOLDER_NAME);
+		println("==== STEP 2/4: installing dependencies of " + N4JS_LIBS_FOLDER_NAME);
 		installDependencies(n4jsLibsRootPath);
 
 		Path bin_n4jsc = n4jsLibsRootPath.resolve(NODE_MODULES).resolve(".bin/n4jsc");
@@ -116,15 +116,12 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 		}
 
 		// step 2: compile projects under top-level folder "n4js-libs"
-		println("==== STEP 3/5: compiling code under top-level folder \"" + N4JS_LIBS_FOLDER_NAME
+		println("==== STEP 3/4: compiling code under top-level folder \"" + N4JS_LIBS_FOLDER_NAME
 				+ "\" in n4js repository");
 		compile(n4jsLibsRootPath);
 
-		println("==== STEP 4/5: bundling " + N4JS_RUNTIME + " (and converting it to CommonJS)");
-		bundleN4jsRuntime(n4jsLibsRootPath);
-
 		// step 3: deploy n4jsc.jar (optional)
-		println("==== STEP 5/5: deploying \"" + N4JSC_JAR + "\" to \"" + N4JS_CLI + "\" (optional)");
+		println("==== STEP 4/4: deploying \"" + N4JSC_JAR + "\" to \"" + N4JS_CLI + "\" (optional)");
 		deployN4jscJar(n4jsRootPath);
 
 		println("==== BUILD N4JS-LIBS finished ====");
@@ -198,12 +195,6 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 			Throwables.throwIfUnchecked(e);
 			throw new RuntimeException(e);
 		}
-	}
-
-	private static void bundleN4jsRuntime(Path n4jsLibsRootPath) {
-		CliTools cliTools = new CliTools();
-		cliTools.setInheritIO(true);
-		cliTools.yarnRun(n4jsLibsRootPath, "workspace", "n4js-runtime", "run", "bundle");
 	}
 
 	private static void deployN4jscJar(Path n4jsRootPath) throws IOException {
