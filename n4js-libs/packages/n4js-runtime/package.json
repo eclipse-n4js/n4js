@@ -21,9 +21,6 @@
     "src-gen",
     "n4jsglobals.d.ts"
   ],
-  "devDependencies": {
-    "esbuild": "0.14.3"
-  },
   "dependencies": {
     "n4js-runtime-es2015": "^0.1.0",
     "n4js-runtime-esnext": "^0.1.0"
