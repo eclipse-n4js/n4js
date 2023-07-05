@@ -25,8 +25,8 @@ import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult";
 import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy";
 import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
 import {findPackageJson} from "org/eclipse/n4js/mangelhaft/util/npm";
+import {Module} from "node:module";
 import * as lib_path from "path";
-import {rekwire} from "org/eclipse/n4js/mangelhaft/util/rekwire";
 
 const MAX_GROUPS_PER_TEST_BATCH = 10;
 
@@ -142,7 +142,7 @@ export public class TestController {
             try {
                 const mod = `${info.origin}/${moduleName}.js`;
                 groupModule = await import(mod);
-                info.filePath = rekwire.resolve(mod);
+                info.filePath = Module.createRequire(import.meta.url).resolve(mod);
             } catch (exc) { // find package.json
                 const packageJsonPath = findPackageJson(process.cwd());
                 if (!packageJsonPath || readJsonFile(packageJsonPath).name !== info.origin) {

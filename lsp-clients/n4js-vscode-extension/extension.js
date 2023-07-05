@@ -14,14 +14,13 @@
 // The following two modules cannot be imported using ES6 imports.
 // Hence this wrapper loads them using require and passes them to the extensionProvider.
 
+// import {getActivate, getDeactivate} from "./src-gen/ExtensionProvider.mjs";
+
+const ExtensionProvider = require("./dist/ExtensionProvider.js");
 const vscode = require("vscode");
 const vscodeLC = require("vscode-languageclient");
 
-require = require("esm")(module);
-
-const extensionProvider = require("./src-gen/ExtensionProvider.js");
-
 module.exports = {
-    activate: extensionProvider.getActivate(vscode, vscodeLC),
-    deactivate: extensionProvider.getDeactivate(vscode, vscodeLC)
+    activate: ExtensionProvider.getActivate(vscode, vscodeLC),
+    deactivate: ExtensionProvider.getDeactivate(vscode, vscodeLC)
 }

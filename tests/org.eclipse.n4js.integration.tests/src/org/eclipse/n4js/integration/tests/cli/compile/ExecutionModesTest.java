@@ -30,6 +30,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -85,6 +86,7 @@ public class ExecutionModesTest extends AbstractCliCompileTest {
 	}
 
 	@Test
+	@Ignore("currently no need to support '-r esm'")
 	public void testExecuteWithEsmLibrary() throws IOException {
 		// the proband is configured for native ESM, so we have to ...
 		// A) patch the package.json:

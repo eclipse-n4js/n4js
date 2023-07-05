@@ -13,7 +13,6 @@
 "use strict";
 
 
-// TODO GH-2044: Remove this file
-require = require("esm")(module);
-require("../src-gen/n4jsc.js");
-
+// This file is necessary since the target file below might not exist
+// at the very moment yarn creates the symbolic link
+import("../src-gen/n4jsc.js");

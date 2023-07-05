@@ -18,7 +18,7 @@
     "color": "#BFCFDF"
   },
   "engines": {
-    "vscode": "^1.48.0"
+    "vscode": "^1.74.0"
   },
   "categories": [
     "Programming Languages"
@@ -28,7 +28,7 @@
     "onLanguage:javascriptreact",
     "onLanguage:typescriptreact"
   ],
-  "main": "./extension",
+  "main": "./extension.js",
   "contributes": {
     "languages": [
       {
@@ -215,8 +215,10 @@
     }
   },
   "devDependencies": {
+    "@vscode/vsce": "2.19.0",
     "json": "11.0.0",
-    "@vscode/vsce": "2.18.0"
+		"webpack": "^5.88.0",
+		"webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "@types/node": "^16",
@@ -226,7 +228,11 @@
     "npmlog": "7.0.1",
     "vscode-languageclient": "8.1.0"
   },
-  "scripts": {},
+  "type": "commonjs",
+  "scripts": {
+		"vscode:prepublish": "webpack --mode production",
+    "webpack": "webpack --mode production"
+  },
   "n4js": {
     "projectType": "library",
     "sources": {

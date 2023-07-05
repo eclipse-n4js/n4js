@@ -1,4 +1,0 @@
-// esm TODO remove once import.meta is available in n4js
-export public const rekwire: ~Function with {
-    resolve: (string) => string
-};

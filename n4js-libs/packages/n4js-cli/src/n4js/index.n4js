@@ -11,10 +11,10 @@
 
 
 import * as childProcess from "child_process";
-import * as npmlog+ from "npmlog";
 import * as path from "path";
 import * as fs from "fs";
 import * as url from "url";
+import npmlog from "npmlog";
 import debug from "debug";
 import {JAVA_VM_XMX, N4JS_CLI_CONFIG, BIN_DIR} from "Globals";
 import {getJavaCommand, downloadFile, toValidUrl} from "JreProvider";
@@ -23,7 +23,7 @@ import {N4jscArguments} from "N4jscArguments";
 
 const debugLog = debug("n4js-cli");
 const logFn: {function(string)} = (text: string) => {debugLog(text);};
-
+const npmlog_info = (msg : string) => npmlog.info("", msg);
 
 @StringBased
 export public enum Goal {
@@ -88,7 +88,7 @@ export public function n4jsc(
  *
  * Used from bin/n4jsc.js
  */
- export public async function runN4jscSync(log: {function(string)} = npmlog.info) {
+ export public async function runN4jscSync(log: {function(string)} = npmlog_info) {
     const args = N4jscArguments.fromProcess(log);
     try {
         let exitCode : int = await runN4jsc(args, log);
@@ -108,7 +108,7 @@ export public function n4jsc(
  * the globally available Java will be used. Java XmX option will be
  * set to 4GB if not set already.
  */
-export public function runN4jsc(args: N4jscArguments, log: {function(string)} = npmlog.info) : Promise<int, ?> {
+export public function runN4jsc(args: N4jscArguments, log: {function(string)} = npmlog_info) : Promise<int, ?> {
     let spawnOptions: childProcess.SpawnOptions = { stdio: "inherit", env: Object.assign({ NODEJS_PATH: process.argv[0] }, process.env)};
     let n4jscProcess: Promise<childProcess.ChildProcess,?> = createN4JSProcess(args, spawnOptions, log);
     let promise: Promise<int, ?> = new Promise<int, int>((resolve, reject) => {
@@ -150,7 +150,7 @@ export public async function n4jscProcess(
  * the globally available Java will be used. Java Xmx vm option will
  * overwritten iff defined in environment variable JAVA_TOOL_OPTIONS.
  */
-export public async function createN4JSProcess(args: N4jscArguments, spawnOptions: childProcess.SpawnOptions, log: {function(string)} = npmlog.info) : childProcess.ChildProcess {
+export public async function createN4JSProcess(args: N4jscArguments, spawnOptions: childProcess.SpawnOptions, log: {function(string)} = npmlog_info) : childProcess.ChildProcess {
     const modifedArgs = await modifyArgs(args, log);
     const java = getJavaCommand();
     return childProcess.spawn(java, modifedArgs.toArray(), spawnOptions);
