@@ -24,6 +24,7 @@ import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.Keyword;
+import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.ContentAssistContextFactory;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.PartialContentAssistContextFactory;
@@ -70,6 +71,14 @@ public class N4JSContentAssistContextFactory extends PartialContentAssistContext
 			AbstractElement terminal = ((Assignment) element).getTerminal();
 			if (terminal instanceof CrossReference) {
 				org.eclipse.xtext.TypeRef type = ((CrossReference) terminal).getType();
+				EClassifier classifier = type != null ? type.getClassifier() : null;
+				if (classifier != null) {
+					return N4JSMetaModelUtils.isContributingContentAssistProposals(classifier);
+				}
+			}
+			if (terminal instanceof RuleCall) {
+				RuleCall ruleCall = (RuleCall) terminal;
+				org.eclipse.xtext.TypeRef type = ruleCall.getRule().getType();
 				EClassifier classifier = type != null ? type.getClassifier() : null;
 				if (classifier != null) {
 					return N4JSMetaModelUtils.isContributingContentAssistProposals(classifier);

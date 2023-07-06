@@ -109,6 +109,7 @@ public class N4JSMetaModelUtils {
 			}
 		}
 		resultBuilder.add(TypesPackage.eINSTANCE.getTModule());
+		resultBuilder.add(N4JSPackage.eINSTANCE.getN4MemberDeclaration());
 		cachedAllEClassesContributingContentAssistProposals = resultBuilder.build();
 	}
 
