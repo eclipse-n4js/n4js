@@ -69,8 +69,13 @@ public class XtResourceEObjectAccessor {
 	 * @return {@link EObject} with offset for the given {@link XtMethodData}
 	 */
 	public Position checkAndGetPosition(XtMethodData data, String methodName, String arg1) {
-		int offset = checkAndGetOffset(data, methodName, arg1);
+		String optionalLocationStr = checkAndGetArgAfter(data, methodName, arg1);
+		int offset = getOffset(data.offset, optionalLocationStr);
 		Position position = xtData.getPosition(offset);
+		if (position == null) {
+			Preconditions.checkState(false, "Position not found for string: " + optionalLocationStr);
+			// exception thrown above
+		}
 		return position;
 	}
 
@@ -85,7 +90,8 @@ public class XtResourceEObjectAccessor {
 	public IEObjectCoveringRegion checkAndGetObjectCoveringRegion(XtMethodData data, String methodName,
 			String arg1) {
 
-		int offset = checkAndGetOffset(data, methodName, arg1);
+		String optionalLocationStr = checkAndGetArgAfter(data, methodName, arg1);
+		int offset = getOffset(data.offset, optionalLocationStr);
 		EObject eObject = XtResourceUtil.findEObject(resource, offset, 0);
 		EStructuralFeature structuralFeature = XtResourceUtil.findStructuralFeature(resource, offset);
 		return new EObjectCoveringRegion(resource, eObject, offset, structuralFeature);
@@ -100,11 +106,6 @@ public class XtResourceEObjectAccessor {
 	public String checkAndGetArgAfter(XtMethodData data, String methodName, String... optKeyword) {
 		Preconditions.checkArgument(data.name.equals(methodName));
 		return parseLastArgument(data, optKeyword);
-	}
-
-	private int checkAndGetOffset(XtMethodData data, String methodName, String optionalLocation) {
-		String optionalLocationStr = checkAndGetArgAfter(data, methodName, optionalLocation);
-		return getOffset(data.offset, optionalLocationStr);
 	}
 
 	private String parseLastArgument(XtMethodData data, String... optKeyword) {

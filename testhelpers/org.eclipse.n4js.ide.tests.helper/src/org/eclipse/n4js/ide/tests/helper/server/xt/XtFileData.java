@@ -114,16 +114,21 @@ public class XtFileData {
 
 	/** @return the position computed from the given offset */
 	public Position getPosition(int offset) {
-		for (int curOffset = 0, line = 0; line < lineLengths.length && curOffset < offset; //
-				curOffset += lineLengths[line], line++) {
+		for (int lineStartOffset = 0, line = 0; line < lineLengths.length && lineStartOffset < offset; //
+				lineStartOffset += lineLengths[line], line++) {
 
-			if (curOffset + lineLengths[line] > offset) {
-				int character = offset - curOffset;
+			int lineEndOffset = lineStartOffset + lineLengths[line];
+
+			if (lineEndOffset == offset) {
+				int character = offset - lineStartOffset - 1;
+				return new Position(line, character);
+			}
+			if (lineEndOffset > offset) {
+				int character = offset - lineStartOffset;
 				return new Position(line, character);
 			}
 		}
-
-		return new Position(lineLengths.length - 1, lineLengths[lineLengths.length - 1]);
+		return null;
 	}
 
 	/** @return the offset computed from the given #{@link Position} */

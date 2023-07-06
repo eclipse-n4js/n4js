@@ -636,6 +636,22 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		openFiles.put(fileURI, new OpenFileInfo(content));
 	}
 
+	/** Opens a file in case it is not opened. */
+	protected void ensureOpenFile(String moduleName) {
+		ensureOpenFile(getFileURIFromModuleName(moduleName));
+	}
+
+	/** Opens a file in case it is not opened. */
+	protected void ensureOpenFile(FileURI fileURI) {
+		// ensure the file with URI 'fileURI' is open and is the only opened file
+		if (!getOpenFiles().contains(fileURI)) {
+			closeAllFiles();
+			joinServerRequests();
+			openFile(fileURI);
+			joinServerRequests();
+		}
+	}
+
 	/** Closes all currently open files. */
 	protected void closeAllFiles() {
 		for (FileURI fileURI : new ArrayList<>(openFiles.keySet())) {
