@@ -22,7 +22,7 @@
 	public foo(): void {
 
 	}
- 	// XPECT contentAssistList at 'f<|>' proposals not --> foo(): void 
+ 	// XPECT completion at 'f<|>' contains not --> foo(): void 
  	f
  }
  
@@ -31,7 +31,7 @@
 	public foo(): void {
 
 	}
- 	// XPECT contentAssistList at 'f<|>' proposals not --> foo(): void 
+ 	// XPECT completion at 'f<|>' contains not --> foo(): void 
  	public f
  }
  
@@ -41,6 +41,6 @@
 
 	}
 	@Override
- 	// XPECT contentAssistList at 'f<|>' proposals not --> foo(): void 
+ 	// XPECT completion at 'f<|>' contains not --> foo(): void 
  	public f
  }

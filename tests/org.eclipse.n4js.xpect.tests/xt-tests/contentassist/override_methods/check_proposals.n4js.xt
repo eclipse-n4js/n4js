@@ -17,18 +17,18 @@
 	public foo() {}
 }
  class B extends A {
- 	// XPECT contentAssistList at 'f<|>' proposals contains --> foo(): void 
+ 	// XPECT completionList at 'f<|>' contains --> foo(): void 
  	f
  }
  
  class B1 extends A {
- 	// XPECT contentAssistList at 'f<|>' proposals contains --> foo(): void 
+ 	// XPECT completionList at 'f<|>' contains --> foo(): void 
  	public f	
  }
  
  class B2 extends A {
  	@Override
- 	// XPECT contentAssistList at 'f<|>' proposals contains --> foo(): void 
+ 	// XPECT completionList at 'f<|>' contains --> foo(): void 
  	public f	
  }
  

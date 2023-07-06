@@ -21,7 +21,7 @@ class A {
 
 class B1 extends A {
 	
-	/* XPECT contentAssist at 'f<|>' apply 'foo' ---
+	/* XPECT completion at 'f' apply 'foo' ---
 	   + @Override 
 	   | [|public] f[|oo(): int {]
 	   + 	
@@ -30,7 +30,7 @@ class B1 extends A {
 	 */
 	f
 	
-	/* XPECT cotentAssist at 'b<|>' apply 'bar' ---
+	/* XPECT completion at 'b' apply 'bar' ---
 	   + @Override
 	   | [|public async] b[|ar(): int {]
 	   + 
@@ -41,7 +41,7 @@ class B1 extends A {
 }
 
 class B2 extends A {
-	/* XPECT contentAssist at 'f<|>' apply 'foo' ---
+	/* XPECT completion at 'f' apply 'foo' ---
 	   + @Override 
 	   | public f[|oo(): int {]
 	   + 	
@@ -52,7 +52,8 @@ class B2 extends A {
 }
 
 class B3 extends A {
-	/* XPECT contentAssist at 'f<|>' apply 'foo' ---
+	// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
+	/* XPECT completion at 'f' apply 'foo' ---
 	   @Override 
 	   | public f[|oo(): int {]
 	   + 	
@@ -64,7 +65,8 @@ class B3 extends A {
 }
 
 class B4 extends A {
-	/* XPECT contentAssist at 'f<|>' apply 'foo' ---
+	// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
+	/* XPECT completion at 'f' apply 'foo' ---
 	    @Override 
 	   | [|public] f[|oo(): int {]
 	   + 	

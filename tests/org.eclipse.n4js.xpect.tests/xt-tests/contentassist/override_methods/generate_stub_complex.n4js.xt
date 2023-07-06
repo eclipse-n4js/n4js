@@ -69,7 +69,7 @@ abstract class A1 {
 }
 
 class B extends A {
-/* XPECT contentAssist at 'f<|>' apply 'fooSimple(): void' ---
+/* XPECT completion at 'f<|>' apply 'fooSimple(): void' ---
 <...>
 @Override
 fooSimple(): void {
@@ -81,7 +81,7 @@ f
 }
 
 abstract class B0 extends A1 {
-/* XPECT contentAssist at 'f<|>' apply 'foo1Abstract(): void' ---
+/* XPECT completion at 'f<|>' apply 'foo1Abstract(): void' ---
 <...>
 @Override
 <...>
@@ -94,7 +94,7 @@ f
 }
 
 class B1 extends A {
-/* XPECT contentAssist at 'f<|>' apply 'foo1AccessModifier(): void' ---
+/* XPECT completion at 'f<|>' apply 'foo1AccessModifier(): void' ---
 <...>
 @Override
 <...>
@@ -107,7 +107,7 @@ f
 }
 
 class B2 extends A {
-/* XPECT contentAssist at 'f<|>' apply 'foo2FormalParameter(p: string): void' ---
+/* XPECT completion at 'f<|>' apply 'foo2FormalParameter(p: string): void' ---
 <...>
 @Override
 <...>
@@ -120,7 +120,7 @@ public f
 }
 
 class B3 extends A {
-/* XPECT contentAssist at 'f<|>' apply 'foo3WithReturn(): String' ---
+/* XPECT completion at 'f<|>' apply 'foo3WithReturn(): String' ---
 <...>
 @Override
 <...>
@@ -135,7 +135,7 @@ public f
 
 class B4 extends A { 
 @Override
-/* XPECT contentAssist at 'f<|>' apply 'foo4FParAndReturn(p: string): String' ---
+/* XPECT completion at 'f<|>' apply 'foo4FParAndReturn(p: string): String' ---
 <...>
 @Override
 <...>
@@ -150,7 +150,7 @@ f
 
 class B5 extends A { 
 @Override
-/* XPECT contentAssist at 'f<|>' apply 'foo5Generic(): E' ---
+/* XPECT completion at 'f<|>' apply 'foo5Generic(): E' ---
 <...>
 @Override
 <...>
@@ -165,7 +165,7 @@ f
 
 class B6 extends A { 
 @Override
-/* XPECT contentAssist at 'f<|>' apply 'foo6Async(): void' ---
+/* XPECT completion at 'f<|>' apply 'foo6Async(): void' ---
 <...>
 @Override
 <...>
@@ -179,7 +179,7 @@ public f
 
 class B7 extends A { 
 @Override
-/* XPECT contentAssist at 'f<|>' apply 'foo7Static(): void' ---
+/* XPECT completion at 'f<|>' apply 'foo7Static(): void' ---
 <...>
 @Override
 <...>
@@ -193,7 +193,7 @@ public f
 
 class B8 extends A { 
 @Override
-/* XPECT contentAssist at 'f<|>' apply 'foo8MultiParamAndReturn(p1: string, p2: int): String' ---
+/* XPECT completion at 'f<|>' apply 'foo8MultiParamAndReturn(p1: string, p2: int): String' ---
 <...>
 @Override
 <...>
@@ -207,7 +207,7 @@ f
 }
 
 class B9 extends A {
-/* XPECT contentAssist at 'g<|>' apply 'gen(p: int): void' ---
+/* XPECT completion at 'g<|>' apply 'gen(p: int): void' ---
 <...>
 @Override
 <...>
@@ -220,7 +220,7 @@ g
 }
 
 class B10 extends A {
-/* XPECT contentAssist at 'u<|>' apply 'unionTypeMethod(): string | int' ---
+/* XPECT completion at 'u<|>' apply 'unionTypeMethod(): string | int' ---
 <...>
 @Override
 <...>
@@ -234,7 +234,7 @@ u
 }
 
 class B11 extends A {
-/* XPECT contentAssist at 'i<|>' apply 'intersectionTypeMethod(): string & int' ---
+/* XPECT completion at 'i<|>' apply 'intersectionTypeMethod(): string & int' ---
 <...>
 @Override
 <...>
@@ -248,7 +248,7 @@ i
 }
 
 class B12 extends A {
-/* XPECT contentAssist at 'i<|>' apply 'iterable2ReturnTypeMethod(): [string, int]' ---
+/* XPECT completion at 'i<|>' apply 'iterable2ReturnTypeMethod(): [string, int]' ---
 <...>
 @Override
 <...>
@@ -262,7 +262,7 @@ i
 }
 
 class B13 extends A {
-/* XPECT contentAssist at 'i<|>' apply 'iterable3ReturnTypeMethod(): [string, int, string]' ---
+/* XPECT completion at 'i<|>' apply 'iterable3ReturnTypeMethod(): [string, int, string]' ---
 <...>
 @Override
 <...>
@@ -277,7 +277,7 @@ i
 
 class B14 extends A { 
 @Override
-/* XPECT contentAssist at 'f<|>' apply 'fooArray(p: string): Array<string>' ---
+/* XPECT completion at 'f<|>' apply 'fooArray(p: string): Array<string>' ---
 <...>
 @Override
 <...>
@@ -292,7 +292,7 @@ f
 
 class B15OverrideBuiltInMethod extends A { 
 @Override
-/* XPECT contentAssist at 'f<|>' apply 'freeze(obj: T): T' ---
+/* XPECT completion at 'f<|>' apply 'freeze(obj: T): T' ---
 <...>
 @Override
 <...>
@@ -306,7 +306,7 @@ f
 }
 
 class B16 extends A {
-/* XPECT contentAssist at 'f<|>' apply 'fooVariadic(...p: string): string' ---
+/* XPECT completion at 'f<|>' apply 'fooVariadic(...p: string): string' ---
 <...>
 @Override
 <...>
@@ -321,7 +321,7 @@ f
 
 class B17 extends A { 
 @Override
-/* XPECT contentAssist at 'f<|>' apply 'fooWildcard(p: string): Array<?>' ---
+/* XPECT completion at 'f<|>' apply 'fooWildcard(p: string): Array<?>' ---
 <...>
 @Override
 <...>
@@ -336,7 +336,7 @@ f
 
 class B18 extends A { 
 @Override
-/* XPECT contentAssist at 'f<|>' apply 'fooNestedTypes1(): Array<Array<([string, int] & number)>>' ---
+/* XPECT completion at 'f<|>' apply 'fooNestedTypes1(): Array<Array<([string, int] & number)>>' ---
 <...>
 @Override
 <...>
@@ -351,7 +351,7 @@ f
 
 class B19 extends A { 
 @Override
-/* XPECT contentAssist at 'f<|>' apply 'fooNestedTypes2(): Generator<Generator<(int | int), int, int>, int, int>' ---
+/* XPECT completion at 'f<|>' apply 'fooNestedTypes2(): Generator<Generator<(int | int), int, int>, int, int>' ---
 <...>
 @Override
 <...>
@@ -366,7 +366,7 @@ f
 
 class B20 extends A { 
 @Override
-/* XPECT contentAssist at 'f<|>' apply 'fooNestedTypes3(): (string & string) | int' ---
+/* XPECT completion at 'f<|>' apply 'fooNestedTypes3(): (string & string) | int' ---
 <...>
 @Override
 <...>
