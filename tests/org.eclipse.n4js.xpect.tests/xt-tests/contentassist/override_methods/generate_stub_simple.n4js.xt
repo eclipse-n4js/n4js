@@ -9,18 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4ide.spec.tests.N4JSXpectPluginUITest
-
- 	Workspace {
-		JavaProject "N4JSXPECTTests" {
-			Folder "src" {
-				ThisFile {}
-			}
-			Folder "src-gen" {}
-			File "package.json" { from="../../test-config/package.json" }
-		}
-	}
-
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
    END_SETUP
  */
 
