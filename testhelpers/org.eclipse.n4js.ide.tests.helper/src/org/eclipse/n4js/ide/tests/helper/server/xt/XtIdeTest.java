@@ -39,6 +39,7 @@ import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
+import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
@@ -430,8 +431,12 @@ public class XtIdeTest extends AbstractIdeTest {
 
 		} else if (applyId != null) {
 			for (CompletionItem item : items) {
-				if (Objects.equal(containsId, item.getLabel())) {
-					assertEquals(data.expectation, item.getInsertText());
+				if (Objects.equal(applyId, item.getLabel())) {
+					TextEdit textEdit = item.getTextEdit().getLeft();
+					String actualSourceAfter = applyTextEdits(xtData.content, List.of(textEdit));
+					String[] diffRanges = Strings.diffRange(xtData.content, actualSourceAfter, true);
+					assertEquals(data.expectationRaw, diffRanges[1].trim());
+
 					return; // test passes
 				}
 			}
