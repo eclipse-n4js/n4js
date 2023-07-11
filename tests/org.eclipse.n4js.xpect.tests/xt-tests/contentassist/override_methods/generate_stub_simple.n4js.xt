@@ -21,7 +21,7 @@ class A {
 
 class B1 extends A {
 	
-	/* XPECT completion at 'f' apply 'foo(): int' ---
+	/* XPECT completion at 'f' apply 'foo' ---
 @Override
 public foo(): int {
 	// TODO Auto-generated method stub
@@ -31,7 +31,7 @@ public foo(): int {
 	 */
 	f
 	
-	/* XPECT completion at 'b' apply 'async bar(): Promise<int,?>' ---
+	/* XPECT completion at 'b' apply 'bar' ---
 @Override
 public async bar(): Promise<int,?> {
 	// TODO Auto-generated method stub
@@ -42,7 +42,7 @@ public async bar(): Promise<int,?> {
 }
 
 class B2 extends A {
-	/* XPECT completion at 'f' apply 'foo(): int' ---
+	/* XPECT completion at 'f' apply 'foo' ---
 @Override
 public foo(): int {
 	// TODO Auto-generated method stub
@@ -54,7 +54,7 @@ public foo(): int {
 
 class B3 extends A {
 	// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
-	/* XPECT completion at 'f' apply 'foo(): int' ---
+	/* XPECT completion at 'f' apply 'foo' ---
 public foo(): int {
 	// TODO Auto-generated method stub
 	return super.foo();
@@ -66,7 +66,7 @@ public foo(): int {
 
 class B4 extends A {
 	// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
-	/* XPECT completion at 'f' apply 'foo(): int' ---
+	/* XPECT completion at 'f' apply 'foo' ---
 public foo(): int {
 	// TODO Auto-generated method stub
 	return super.foo();

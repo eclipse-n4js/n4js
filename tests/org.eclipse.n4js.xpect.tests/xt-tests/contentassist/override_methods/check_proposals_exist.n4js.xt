@@ -13,34 +13,35 @@
    END_SETUP
  */
  
- class A {
+class A {
 	public foo() {}
 }
 
- class B extends A {
- 	@Override
+class B extends A {
+	@Override
 	public foo(): void {
 
 	}
- 	// XPECT completion at 'f<|>' contains not --> foo(): void 
- 	f
- }
- 
- class B1 extends A {
- 	@Override
+	// XPECT completion at 'f' contains not 'foo'
+	f
+}
+
+class B1 extends A {
+	@Override
 	public foo(): void {
 
 	}
- 	// XPECT completion at 'f<|>' contains not --> foo(): void 
- 	public f
- }
+	// XPECT completion at 'f' contains not 'foo'
+	public f
+}
  
- class B2 extends A {
- 	@Override
+class B2 extends A {
+	@Override
 	public foo(): void {
 
 	}
 	@Override
- 	// XPECT completion at 'f<|>' contains not --> foo(): void 
- 	public f
- }
+	// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
+	// XPECT completion at 'f' contains not 'foo'
+	public f
+}

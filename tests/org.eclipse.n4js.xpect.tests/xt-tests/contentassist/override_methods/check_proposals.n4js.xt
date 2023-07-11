@@ -17,18 +17,19 @@
 	public foo() {}
 }
  class B extends A {
- 	// XPECT completionList at 'f<|>' contains --> foo(): void 
+ 	// XPECT completion at 'f' contains 'foo'
  	f
  }
  
  class B1 extends A {
- 	// XPECT completionList at 'f<|>' contains --> foo(): void 
+ 	// XPECT completion at 'f' contains 'foo'
  	public f	
  }
  
  class B2 extends A {
  	@Override
- 	// XPECT completionList at 'f<|>' contains --> foo(): void 
+	// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
+ 	// XPECT completion at 'f' contains 'foo'
  	public f	
  }
  
