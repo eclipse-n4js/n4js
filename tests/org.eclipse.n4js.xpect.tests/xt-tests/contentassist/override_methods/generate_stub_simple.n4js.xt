@@ -55,7 +55,6 @@ public foo(): int {
 class B3 extends A {
 	// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
 	/* XPECT completion at 'f' apply 'foo(): int' ---
-@Override
 public foo(): int {
 	// TODO Auto-generated method stub
 	return super.foo();
@@ -68,7 +67,6 @@ public foo(): int {
 class B4 extends A {
 	// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
 	/* XPECT completion at 'f' apply 'foo(): int' ---
-@Override
 public foo(): int {
 	// TODO Auto-generated method stub
 	return super.foo();
