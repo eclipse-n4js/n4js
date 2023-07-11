@@ -13,6 +13,7 @@ import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.n4js.xtext.ide.editor.contentassist.N4JSContentAssistEntry;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
 import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor;
@@ -104,6 +105,7 @@ public class XContentAssistService {
 	 */
 	protected CompletionItem toCompletionItem(ContentAssistEntry entry, int caretOffset,
 			Position caretPosition, Document document) {
+
 		CompletionItem result = new CompletionItem();
 		String label = null;
 		if (entry.getLabel() != null) {
@@ -149,6 +151,10 @@ public class XContentAssistService {
 			result.setInsertTextFormat(InsertTextFormat.Snippet);
 		}
 		result.setKind(translateKind(entry));
+		if (entry instanceof N4JSContentAssistEntry) {
+			N4JSContentAssistEntry n4cae = (N4JSContentAssistEntry) entry;
+			result.setFilterText(n4cae.getFilterText());
+		}
 		return result;
 	}
 
