@@ -1,0 +1,78 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+class A {
+	public field1: int;
+	public field2: string;
+	public otherField1: int = 0;
+	public otherField2: string = "s";
+}
+
+class B1 extends A {
+	
+	/* XPECT completion at 'f' apply 'foo' ---
+@Override
+public foo(): int {
+	// TODO Auto-generated method stub
+	return super.foo();
+}
+	   ---
+	 */
+	f
+	
+	/* XPECT completion at 'b' apply 'bar' ---
+@Override
+public async bar(): Promise<int,?> {
+	// TODO Auto-generated method stub
+	return null;
+}
+	 */
+	b
+}
+
+class B2 extends A {
+	/* XPECT completion at 'f' apply 'foo' ---
+@Override
+public foo(): int {
+	// TODO Auto-generated method stub
+	return super.foo();
+}
+	 */
+	public f
+}
+
+class B3 extends A {
+	// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
+	/* XPECT completion at 'f' apply 'foo' ---
+public foo(): int {
+	// TODO Auto-generated method stub
+	return super.foo();
+}
+	 */
+	@Override
+	public f
+}
+
+class B4 extends A {
+	// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
+	/* XPECT completion at 'f' apply 'foo' ---
+public foo(): int {
+	// TODO Auto-generated method stub
+	return super.foo();
+}
+	 */
+	@Override
+	f
+}
