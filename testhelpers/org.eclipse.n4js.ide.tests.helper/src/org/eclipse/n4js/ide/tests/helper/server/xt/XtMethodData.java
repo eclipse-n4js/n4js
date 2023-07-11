@@ -15,7 +15,6 @@ import java.io.Serializable;
 import org.junit.runner.Description;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
 
 /**
  * Meta data to describe a test method
@@ -55,8 +54,6 @@ public class XtMethodData implements Serializable, Comparable<XtMethodData> {
 	/** Constructor */
 	public XtMethodData(String fileName, String comment, String name, String args, int count, String expectation,
 			String expectationRaw, int offset, boolean isFixme, boolean isIgnore) {
-
-		Preconditions.checkArgument(!expectationRaw.contains("\r"), "Test file must not contain \\r");
 
 		this.fileName = fileName;
 		this.comment = comment.trim();

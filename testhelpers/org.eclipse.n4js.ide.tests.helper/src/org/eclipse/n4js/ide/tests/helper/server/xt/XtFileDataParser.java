@@ -36,6 +36,7 @@ import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.UtilN4;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Sets;
 
@@ -50,6 +51,7 @@ public class XtFileDataParser {
 	/** Parses the contents of the given file */
 	static public XtFileData parse(File xtFile) throws IOException {
 		String xtFileContent = Files.readString(xtFile.toPath());
+		Preconditions.checkArgument(!xtFileContent.contains("\r"), "Test file must not contain \\r");
 
 		String setupStr = getXtSetupString(xtFileContent);
 		XtSetupParseResult setupParseResult = XtSetupParser.parse(xtFile, setupStr, xtFileContent);

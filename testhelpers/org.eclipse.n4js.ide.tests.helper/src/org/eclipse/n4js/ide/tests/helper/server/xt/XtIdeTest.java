@@ -431,7 +431,7 @@ public class XtIdeTest extends AbstractIdeTest {
 
 		} else if (applyId != null) {
 			for (CompletionItem item : items) {
-				if (Objects.equal(applyId, item.getLabel())) {
+				if (Objects.equal(applyId, item.getFilterText())) {
 					ArrayList<TextEdit> list = new ArrayList<>();
 					List<TextEdit> addEdits = item.getAdditionalTextEdits();
 					if (addEdits != null) {
@@ -449,7 +449,7 @@ public class XtIdeTest extends AbstractIdeTest {
 
 		} else if (containsNotId != null) {
 			for (CompletionItem item : items) {
-				if (Objects.equal(containsId, item.getLabel())) {
+				if (Objects.equal(containsId, item.getFilterText())) {
 					fail(containsNotId + " found in:\n" + allItemsStr);
 				}
 			}
@@ -457,7 +457,7 @@ public class XtIdeTest extends AbstractIdeTest {
 
 		} else if (containsId != null) {
 			for (CompletionItem item : items) {
-				if (Objects.equal(containsId, item.getLabel())) {
+				if (Objects.equal(containsId, item.getFilterText())) {
 					return; // test passes
 				}
 			}

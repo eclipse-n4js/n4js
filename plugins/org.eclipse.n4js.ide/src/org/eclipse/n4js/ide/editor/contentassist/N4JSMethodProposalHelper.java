@@ -38,6 +38,7 @@ import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.utils.nodemodel.NodeModelUtilsN4;
+import org.eclipse.n4js.xtext.ide.editor.contentassist.N4JSContentAssistEntry;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
 import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalPriorities;
@@ -145,7 +146,7 @@ class N4JSMethodProposalHelper {
 				methodBody = EMPTY_METHOD_BODY;
 			} else {
 				StringBuilder strb = new StringBuilder();
-				strb.append(Strings.join(",", fp -> fp.getName(), method.getFpars()));
+				strb.append(Strings.join(", ", fp -> fp.getName(), method.getFpars()));
 				String methodReturnBody;
 				if (!method.getFpars().isEmpty() &&
 						!method.getFpars().get(method.getFpars().size() - 1).isVariadic()) {
@@ -188,7 +189,7 @@ class N4JSMethodProposalHelper {
 
 	private String getMethodMemberAsString(TMethod methodMember) {
 		StringBuilder strb = new StringBuilder();
-		String fparsStr = Strings.join(",", fp -> fp.getFormalParameterAsString(), methodMember.getFpars());
+		String fparsStr = Strings.join(", ", fp -> fp.getFormalParameterAsString(), methodMember.getFpars());
 		strb.append(methodMember.getName());
 		strb.append("(");
 		strb.append(fparsStr);
@@ -241,7 +242,7 @@ class N4JSMethodProposalHelper {
 			strb.append("async ");
 		}
 		if (methodMember.isGeneric()) {
-			String typeVarsStr = Strings.join(",", tv -> tv.getTypeAsString(), methodMember.getTypeVars());
+			String typeVarsStr = Strings.join(", ", tv -> tv.getTypeAsString(), methodMember.getTypeVars());
 			strb.append("<").append(typeVarsStr).append("> ");
 		}
 		if (methodMember.isDeclaredGenerator()) {
@@ -255,15 +256,13 @@ class N4JSMethodProposalHelper {
 	private ContentAssistEntry createMethodCompletionProposal(String proposal, String methodName,
 			String prefix, TMethod method) {
 
-		// FIXME: use #filterText to give only method name
-		// FIXME: use #additionalTextEdits to split up if range spans over multiple lines
-
-		ContentAssistEntry entry = new ContentAssistEntry();
+		N4JSContentAssistEntry entry = new N4JSContentAssistEntry();
 		entry.setProposal(proposal);
 		entry.setPrefix(prefix);
 		entry.setKind(ContentAssistEntry.KIND_METHOD);
 		entry.setLabel(method.getFunctionAsString());
 		entry.setDescription("Override " + method.getContainingType().getName() + "#" + methodName);
+		entry.setFilterText(method.getName());
 
 		return entry;
 	}

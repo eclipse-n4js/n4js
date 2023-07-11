@@ -135,7 +135,9 @@ public class XtResourceEObjectAccessor {
 	}
 
 	private String parseArgument(String argumentPlusRest) {
-		Preconditions.checkArgument(argumentPlusRest.startsWith("'"));
+		if (!argumentPlusRest.startsWith("'")) {
+			return null;
+		}
 		int idxEnd = 1;
 		while (argumentPlusRest.charAt(++idxEnd) != '\'') {
 			Preconditions.checkState(idxEnd < argumentPlusRest.length());
