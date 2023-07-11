@@ -92,7 +92,7 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 	private ContentAssistDataCollectors dataCollectors;
 
 	@Inject
-	private N4JSMethodProposalHelper methodProposalHelper;
+	private N4JSProposalHelper proposalHelper;
 
 	@Override
 	public void createProposals(Collection<ContentAssistContext> contexts, IIdeContentProposalAcceptor acceptor) {
@@ -174,7 +174,7 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 	protected void _createProposals(RuleCall ruleCall, ContentAssistContext context,
 			IIdeContentProposalAcceptor acceptor) {
 
-		methodProposalHelper.complete_Method(context.getCurrentModel(), acceptor);
+		proposalHelper.complete(context.getCurrentModel(), acceptor);
 	}
 
 	/**

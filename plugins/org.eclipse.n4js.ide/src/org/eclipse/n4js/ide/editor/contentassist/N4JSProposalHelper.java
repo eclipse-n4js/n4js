@@ -27,8 +27,10 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.AnyType;
+import org.eclipse.n4js.ts.types.FieldAccessor;
 import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TClass;
+import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.Type;
@@ -52,7 +54,7 @@ import com.google.inject.Inject;
  * CTRL + space. If only one method matches the prefix, it will be completed automatically. Otherwise, you can choose
  * from a proposal list and confirm your choice with Enter.
  */
-class N4JSMethodProposalHelper {
+class N4JSProposalHelper {
 	static final String OVERRIDE_ANNOTATION = AnnotationDefinition.OVERRIDE.name;
 	static final String INTERNAL_ANNOTATION = AnnotationDefinition.INTERNAL.name;
 	static final String EMPTY_METHOD_BODY = " {\n\n}";
@@ -68,14 +70,14 @@ class N4JSMethodProposalHelper {
 	 * This method activates the Content Assist to propose and complete methods inherited by a superclass based on a
 	 * specific prefix.
 	 */
-	public void complete_Method(EObject model, IIdeContentProposalAcceptor acceptor) {
+	public void complete(EObject model, IIdeContentProposalAcceptor acceptor) {
 
 		if (model instanceof N4FieldDeclaration) {
 			MemberCollector memberCollector = containerTypesHelper.fromContext(model);
 			EObject n4classdeclaration = model.eContainer();
 			if (n4classdeclaration instanceof N4ClassDeclaration) {
 				Type tclass = ((N4ClassDeclaration) n4classdeclaration).getDefinedType();
-				completeMethodDeclarationFromField((N4FieldDeclaration) model, memberCollector, tclass, acceptor);
+				buildProposals((N4FieldDeclaration) model, memberCollector, tclass, acceptor);
 
 			}
 		} else
@@ -87,35 +89,15 @@ class N4JSMethodProposalHelper {
 				Type tclass = ((N4ClassDeclaration) n4classdeclaration).getDefinedType();
 				EObject n4FieldDeclaration = model.eContainer();
 				if (n4FieldDeclaration instanceof N4FieldDeclaration) {
-					completeMethodDeclarationFromField((N4FieldDeclaration) n4FieldDeclaration, memberCollector, tclass,
+					buildProposals((N4FieldDeclaration) n4FieldDeclaration, memberCollector, tclass,
 							acceptor);
 				}
 			}
 		}
 	}
 
-	private boolean isAccessInternal(TMethod methodMember) {
-		String accessModifier = methodMember.getMemberAccessModifier().toString();
-		int length = accessModifier.length();
-		return (length >= 8) && accessModifier.substring(length - 8, length).equals("Internal");
-	}
-
-	private String getAccessModifier(TMethod methodMember) {
-		String accessModifier = methodMember.getMemberAccessModifier().toString();
-		if (isAccessInternal(methodMember)) {
-			// remove appended "Internal" keyword, which is appended to the access modifier
-			return accessModifier.substring(0, accessModifier.length() - 8);
-		} else {
-			return accessModifier;
-		}
-	}
-
-	private boolean showAccessModifier(TMethod methodMember) {
-		return !getAccessModifier(methodMember).equalsIgnoreCase(N4Modifier.PROJECT.getName());
-	}
-
-	protected void completeMethodDeclarationFromField(N4FieldDeclaration n4FieldDecl,
-			ContainerTypesHelper.MemberCollector memberCollector, Type tclass, IIdeContentProposalAcceptor acceptor) {
+	private void buildProposals(N4FieldDeclaration n4FieldDecl, ContainerTypesHelper.MemberCollector memberCollector,
+			Type tclass, IIdeContentProposalAcceptor acceptor) {
 
 		MemberList<TMember> implementedMembers = memberCollector.allMembers((TClass) tclass, false, false, false);
 
@@ -123,53 +105,62 @@ class N4JSMethodProposalHelper {
 		for (TMember member : memberCollector.inheritedMembers((TClass) tclass)) {
 			if (!implementedMembersNames.contains(member.getMemberAsString())) {
 				if (!member.isDeclaredFinal() && !member.getName().equals("constructor")) {
-					buildMethodCompletionProposal(acceptor, n4FieldDecl, member);
+					delegateProposal(acceptor, n4FieldDecl, member);
 				}
 			}
 		}
 	}
 
-	private void buildMethodCompletionProposal(IIdeContentProposalAcceptor acceptor,
-			N4FieldDeclaration n4FieldDecl, TMember member) {
+	private void delegateProposal(IIdeContentProposalAcceptor acceptor, N4FieldDeclaration n4FieldDecl,
+			TMember member) {
 
 		if (member instanceof TMethod) {
-			EList<TAnnotation> annotations = member.getAnnotations();
-			TMethod method = (TMethod) member;
-			String methodBody;
-			String annotationString = addAnnotations(annotations);
-			String returnType = getReturnTypeAsString(method);
-			String methodMemberAsString = getMethodMemberAsString(method);
-
-			if ((method.isDeclaredGenerator() &&
-					!(method.getReturnTypeRef().getTypeArgsWithDefaults().get(1).getDeclaredType() instanceof AnyType))
-					|| returnType.equalsIgnoreCase(": void")) {
-				methodBody = EMPTY_METHOD_BODY;
-			} else {
-				StringBuilder strb = new StringBuilder();
-				strb.append(Strings.join(", ", fp -> fp.getName(), method.getFpars()));
-				String methodReturnBody;
-				if (!method.getFpars().isEmpty() &&
-						!method.getFpars().get(method.getFpars().size() - 1).isVariadic()) {
-					methodReturnBody = "\treturn super." + method.getName() + "(" + strb.toString() + ");\n}";
-				} else if (method.isDeclaredAsync() || (!method.getFpars().isEmpty() &&
-						method.getFpars().get(method.getFpars().size() - 1).isVariadic())) {
-					methodReturnBody = "\treturn null;\n}";
-				} else {
-					methodReturnBody = "\treturn super." + method.getName() + "();\n}";
-				}
-				methodBody = AUTO_GENERATED_METHOD_BODY_START + methodReturnBody;
-			}
-
-			String proposalString = getProposalString(method, annotationString, methodBody);
-
-			ICompositeNode node = NodeModelUtils.getNode(n4FieldDecl);
-			String tokenText = NodeModelUtilsN4.getTokenTextWithHiddenTokens(node).trim();
-
-			// current cursor position
-			ContentAssistEntry proposal = createMethodCompletionProposal(proposalString, methodMemberAsString,
-					tokenText, method);
-			acceptor.accept(proposal, proposalPriorities.getDefaultPriority(proposal));
+			buildMethodProposal(acceptor, n4FieldDecl, (TMethod) member);
 		}
+		if (member instanceof TField) {
+
+		}
+		if (member instanceof FieldAccessor) {
+
+		}
+	}
+
+	private void buildMethodProposal(IIdeContentProposalAcceptor acceptor, N4FieldDeclaration n4FieldDecl,
+			TMethod method) {
+
+		EList<TAnnotation> annotations = method.getAnnotations();
+		String methodBody;
+		String annotationString = addAnnotations(annotations);
+		String returnType = getReturnTypeAsString(method);
+		String methodMemberAsString = getMethodMemberAsString(method);
+
+		if ((method.isDeclaredGenerator() &&
+				!(method.getReturnTypeRef().getTypeArgsWithDefaults().get(1).getDeclaredType() instanceof AnyType))
+				|| returnType.equalsIgnoreCase(": void")) {
+			methodBody = EMPTY_METHOD_BODY;
+		} else {
+			StringBuilder strb = new StringBuilder();
+			strb.append(Strings.join(", ", fp -> fp.getName(), method.getFpars()));
+			String methodReturnBody;
+			if (!method.getFpars().isEmpty() &&
+					!method.getFpars().get(method.getFpars().size() - 1).isVariadic()) {
+
+				methodReturnBody = "\treturn super." + method.getName() + "(" + strb.toString() + ");\n}";
+			} else if (method.isDeclaredAsync() || (!method.getFpars().isEmpty() &&
+					method.getFpars().get(method.getFpars().size() - 1).isVariadic())) {
+
+				methodReturnBody = "\treturn null;\n}";
+			} else {
+				methodReturnBody = "\treturn super." + method.getName() + "();\n}";
+			}
+			methodBody = AUTO_GENERATED_METHOD_BODY_START + methodReturnBody;
+		}
+
+		String proposalString = getProposalString(method, annotationString, methodBody);
+		ICompositeNode node = NodeModelUtils.getNode(n4FieldDecl);
+		String tokenText = NodeModelUtilsN4.getTokenTextWithHiddenTokens(node).trim();
+		ContentAssistEntry proposal = createMethodProposal(proposalString, methodMemberAsString, tokenText, method);
+		acceptor.accept(proposal, proposalPriorities.getDefaultPriority(proposal));
 	}
 
 	private String addAnnotations(EList<TAnnotation> annotations) {
@@ -253,7 +244,27 @@ class N4JSMethodProposalHelper {
 		return strb.toString();
 	}
 
-	private ContentAssistEntry createMethodCompletionProposal(String proposal, String methodName,
+	private boolean showAccessModifier(TMethod methodMember) {
+		return !getAccessModifier(methodMember).equalsIgnoreCase(N4Modifier.PROJECT.getName());
+	}
+
+	private boolean isAccessInternal(TMethod methodMember) {
+		String accessModifier = methodMember.getMemberAccessModifier().toString();
+		int length = accessModifier.length();
+		return (length >= 8) && accessModifier.substring(length - 8, length).equals("Internal");
+	}
+
+	private String getAccessModifier(TMethod methodMember) {
+		String accessModifier = methodMember.getMemberAccessModifier().toString();
+		if (isAccessInternal(methodMember)) {
+			// remove appended "Internal" keyword, which is appended to the access modifier
+			return accessModifier.substring(0, accessModifier.length() - 8);
+		} else {
+			return accessModifier;
+		}
+	}
+
+	private ContentAssistEntry createMethodProposal(String proposal, String methodName,
 			String prefix, TMethod method) {
 
 		N4JSContentAssistEntry entry = new N4JSContentAssistEntry();
