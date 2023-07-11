@@ -120,7 +120,19 @@ public class XContentAssistService {
 		} else {
 			prefix = "";
 		}
-		Position prefixPosition = document.getPosition(caretOffset - prefix.length());
+		int prefixOffset = caretOffset - prefix.length();
+		Position prefixPosition = document.getPosition(prefixOffset);
+		if (prefixPosition.getLine() < caretPosition.getLine()) {
+			// LSP spec: The text edit's range as well as both ranges from an insert
+			// replace edit must be a [single line] and they must contain the position
+			// at which completion has been requested.
+
+			prefixPosition.setLine(caretPosition.getLine());
+			prefixPosition.setCharacter(0);
+			int length = prefix.length() - caretPosition.getCharacter();
+			ReplaceRegion rr = new ReplaceRegion(new TextRegion(prefixOffset, length), "");
+			entry.getTextReplacements().add(rr);
+		}
 		result.setTextEdit(Either.forLeft(new TextEdit(new Range(prefixPosition, caretPosition), entry.getProposal())));
 		if (!entry.getTextReplacements().isEmpty()) {
 			if (result.getAdditionalTextEdits() == null) {
