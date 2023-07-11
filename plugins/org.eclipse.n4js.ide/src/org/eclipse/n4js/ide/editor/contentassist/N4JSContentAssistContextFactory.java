@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.N4JSMetaModelUtils;
+import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.AbstractRule;
@@ -80,7 +81,9 @@ public class N4JSContentAssistContextFactory extends PartialContentAssistContext
 				RuleCall ruleCall = (RuleCall) terminal;
 				org.eclipse.xtext.TypeRef type = ruleCall.getRule().getType();
 				EClassifier classifier = type != null ? type.getClassifier() : null;
-				if (classifier != null) {
+				if (classifier == N4JSPackage.eINSTANCE.getN4Modifier()) {
+					return true;
+				} else if (classifier != null) {
 					return N4JSMetaModelUtils.isContributingContentAssistProposals(classifier);
 				}
 			}
