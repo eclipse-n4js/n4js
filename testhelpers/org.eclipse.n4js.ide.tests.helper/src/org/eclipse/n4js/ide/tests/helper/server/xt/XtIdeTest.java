@@ -432,8 +432,13 @@ public class XtIdeTest extends AbstractIdeTest {
 		} else if (applyId != null) {
 			for (CompletionItem item : items) {
 				if (Objects.equal(applyId, item.getLabel())) {
-					TextEdit textEdit = item.getTextEdit().getLeft();
-					String actualSourceAfter = applyTextEdits(xtData.content, List.of(textEdit));
+					ArrayList<TextEdit> list = new ArrayList<>();
+					List<TextEdit> addEdits = item.getAdditionalTextEdits();
+					if (addEdits != null) {
+						list.addAll(addEdits);
+					}
+					list.add(item.getTextEdit().getLeft());
+					String actualSourceAfter = applyTextEdits(xtData.content, list);
 					String[] diffRanges = Strings.diffRange(xtData.content, actualSourceAfter, true);
 					assertEquals(data.expectationRaw, diffRanges[1].trim());
 
