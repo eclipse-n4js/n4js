@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ide.editor.contentassist;
 
+import static org.eclipse.n4js.types.utils.TypeUtils.isAny;
+import static org.eclipse.n4js.types.utils.TypeUtils.isVoid;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.toSet;
 import static org.eclipse.xtext.xbase.lib.ListExtensions.map;
 
@@ -18,23 +20,22 @@ import java.util.Set;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.AnnotationDefinition;
+import org.eclipse.n4js.ide.server.util.SymbolKindUtil;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
-import org.eclipse.n4js.n4JS.N4Modifier;
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.Wildcard;
-import org.eclipse.n4js.ts.types.AnyType;
 import org.eclipse.n4js.ts.types.FieldAccessor;
+import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TField;
+import org.eclipse.n4js.ts.types.TGetter;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TMemberWithAccessModifier;
 import org.eclipse.n4js.ts.types.TMethod;
+import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.UndefinedType;
 import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
@@ -57,8 +58,9 @@ import com.google.inject.Inject;
 class N4JSProposalHelper {
 	static final String OVERRIDE_ANNOTATION = AnnotationDefinition.OVERRIDE.name;
 	static final String INTERNAL_ANNOTATION = AnnotationDefinition.INTERNAL.name;
-	static final String EMPTY_METHOD_BODY = " {\n\n}";
-	static final String AUTO_GENERATED_METHOD_BODY_START = " {\n\t// TODO Auto-generated method stub\n";
+	static final String AUTO_GENERATED_STUB = "\t// TODO Auto-generated stub\n";
+	static final String EMPTY_METHOD_BODY = " {\n" + AUTO_GENERATED_STUB + "\n}";
+	static final String AUTO_GENERATED_METHOD_BODY_START = " {\n" + AUTO_GENERATED_STUB;
 
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
@@ -118,34 +120,27 @@ class N4JSProposalHelper {
 			buildMethodProposal(acceptor, n4FieldDecl, (TMethod) member);
 		}
 		if (member instanceof TField) {
-
+			buildFieldProposal(acceptor, n4FieldDecl, (TField) member);
 		}
 		if (member instanceof FieldAccessor) {
-
+			buildAccessorProposal(acceptor, n4FieldDecl, (FieldAccessor) member);
 		}
 	}
 
-	private void buildMethodProposal(IIdeContentProposalAcceptor acceptor, N4FieldDeclaration n4FieldDecl,
+	private void buildMethodProposal(IIdeContentProposalAcceptor acceptor, N4FieldDeclaration location,
 			TMethod method) {
 
-		EList<TAnnotation> annotations = method.getAnnotations();
-		String methodBody;
-		String annotationString = addAnnotations(annotations);
-		String returnType = getReturnTypeAsString(method);
-		String methodMemberAsString = getMethodMemberAsString(method);
+		TypeRef retTRef = method.getReturnTypeRef();
+		String methodBody = EMPTY_METHOD_BODY;
+		if (!isVoid(retTRef) &&
+				!(method.isDeclaredGenerator() && isAny(retTRef.getTypeArgsWithDefaults().get(1)))) {
 
-		if ((method.isDeclaredGenerator() &&
-				!(method.getReturnTypeRef().getTypeArgsWithDefaults().get(1).getDeclaredType() instanceof AnyType))
-				|| returnType.equalsIgnoreCase(": void")) {
-			methodBody = EMPTY_METHOD_BODY;
-		} else {
-			StringBuilder strb = new StringBuilder();
-			strb.append(Strings.join(", ", fp -> fp.getName(), method.getFpars()));
+			String params = Strings.join(", ", fp -> fp.getName(), method.getFpars());
 			String methodReturnBody;
 			if (!method.getFpars().isEmpty() &&
 					!method.getFpars().get(method.getFpars().size() - 1).isVariadic()) {
 
-				methodReturnBody = "\treturn super." + method.getName() + "(" + strb.toString() + ");\n}";
+				methodReturnBody = "\treturn super." + method.getName() + "(" + params + ");\n}";
 			} else if (method.isDeclaredAsync() || (!method.getFpars().isEmpty() &&
 					method.getFpars().get(method.getFpars().size() - 1).isVariadic())) {
 
@@ -156,14 +151,142 @@ class N4JSProposalHelper {
 			methodBody = AUTO_GENERATED_METHOD_BODY_START + methodReturnBody;
 		}
 
-		String proposalString = getProposalString(method, annotationString, methodBody);
-		ICompositeNode node = NodeModelUtils.getNode(n4FieldDecl);
-		String tokenText = NodeModelUtilsN4.getTokenTextWithHiddenTokens(node).trim();
-		ContentAssistEntry proposal = createMethodProposal(proposalString, methodMemberAsString, tokenText, method);
+		StringBuilder strb = new StringBuilder();
+		if (isAccessInternal(method)) {
+			strb.append("@" + INTERNAL_ANNOTATION + "\n");
+		}
+		strb.append(getAnnotations(method.getAnnotations()));
+		if (showAccessModifier(method)) {
+			strb.append(getAccessModifier(method).getLiteral() + " ");
+		}
+		if (method.isDeclaredStatic()) {
+			strb.append("static ");
+		}
+		if (method.isDeclaredAsync()) {
+			strb.append("async ");
+		}
+		if (method.isGeneric()) {
+			String typeVarsStr = Strings.join(", ", tv -> tv.getTypeAsString(), method.getTypeVars());
+			strb.append("<").append(typeVarsStr).append("> ");
+		}
+		if (method.isDeclaredGenerator()) {
+			strb.append("*");
+		}
+		String methodMemberAsString = getSignatureAsString(method);
+		strb.append(methodMemberAsString);
+		strb.append(methodBody);
+		String proposalString = strb.toString();
+
+		ContentAssistEntry proposal = createProposal(location, proposalString, methodMemberAsString, method);
 		acceptor.accept(proposal, proposalPriorities.getDefaultPriority(proposal));
 	}
 
-	private String addAnnotations(EList<TAnnotation> annotations) {
+	private String getSignatureAsString(TMethod methodMember) {
+		StringBuilder strb = new StringBuilder();
+		String fparsStr = Strings.join(", ", fp -> fp.getFormalParameterAsString(), methodMember.getFpars());
+		strb.append(methodMember.getName());
+		strb.append("(");
+		strb.append(fparsStr);
+		strb.append(")");
+		strb.append(getAsReturnType(methodMember.getReturnTypeRef()));
+		if (methodMember.isReturnValueOptional()) {
+			strb.append('?');
+		}
+		return strb.toString();
+	}
+
+	private void buildFieldProposal(IIdeContentProposalAcceptor acceptor, N4FieldDeclaration location, TField field) {
+		StringBuilder strb = new StringBuilder();
+		if (isAccessInternal(field)) {
+			strb.append("@" + INTERNAL_ANNOTATION + "\n");
+		}
+		strb.append(getAnnotations(field.getAnnotations()));
+		if (showAccessModifier(field)) {
+			strb.append(getAccessModifier(field).getLiteral() + " ");
+		}
+		if (field.isDeclaredStatic()) {
+			strb.append("static ");
+		}
+		strb.append(field.getName());
+		if (field.isOptional()) {
+			strb.append('?');
+		}
+		if (field.getTypeRef() != null) {
+			strb.append(" : ");
+			strb.append(field.getTypeRef().getTypeRefAsString());
+		}
+		if (field.getAstElement() instanceof N4FieldDeclaration) {
+			N4FieldDeclaration superDecl = (N4FieldDeclaration) field.getAstElement();
+			if (superDecl.getExpression() != null) {
+				strb.append(" = undefined; // TODO Auto-generated initializer");
+			}
+		}
+		String proposalString = strb.toString();
+
+		ContentAssistEntry proposal = createProposal(location, proposalString, field.getName(), field);
+		acceptor.accept(proposal, proposalPriorities.getDefaultPriority(proposal));
+	}
+
+	private void buildAccessorProposal(IIdeContentProposalAcceptor acceptor, N4FieldDeclaration location,
+			FieldAccessor accessor) {
+
+		String signatureAsString = getSignatureAsString(accessor);
+
+		String type = null;
+		String body = null;
+		if (accessor instanceof TGetter) {
+			type = "get ";
+			String methodReturnBody = "\treturn super." + accessor.getName() + ";\n}";
+			body = AUTO_GENERATED_METHOD_BODY_START + methodReturnBody;
+		}
+		if (accessor instanceof TSetter) {
+			type = "set ";
+			TSetter setter = (TSetter) accessor;
+			body = " {\n" + AUTO_GENERATED_STUB
+					+ "\tsuper." + accessor.getName() + " = " + setter.getFpar().getName() + ";\n}";
+		}
+
+		StringBuilder strb = new StringBuilder();
+		if (isAccessInternal(accessor)) {
+			strb.append("@" + INTERNAL_ANNOTATION + "\n");
+		}
+		strb.append(getAnnotations(accessor.getAnnotations()));
+		if (showAccessModifier(accessor)) {
+			strb.append(getAccessModifier(accessor).getLiteral() + " ");
+		}
+		if (accessor.isDeclaredStatic()) {
+			strb.append("static ");
+		}
+
+		strb.append(type);
+		strb.append(accessor.getName());
+		strb.append(signatureAsString);
+		strb.append(body);
+		String proposalString = strb.toString();
+
+		ContentAssistEntry proposal = createProposal(location, proposalString, signatureAsString, accessor);
+		acceptor.accept(proposal, proposalPriorities.getDefaultPriority(proposal));
+	}
+
+	private String getSignatureAsString(FieldAccessor accessor) {
+		StringBuilder strb = new StringBuilder();
+		if (accessor.isOptional()) {
+			strb.append('?');
+		}
+		strb.append("(");
+		if (accessor instanceof TSetter) {
+			TSetter setter = (TSetter) accessor;
+			strb.append(setter.getFpar().getFormalParameterAsString());
+		}
+		strb.append(")");
+		if (accessor instanceof TGetter) {
+			TGetter getter = (TGetter) accessor;
+			strb.append(getAsReturnType(getter.getTypeRef()));
+		}
+		return strb.toString();
+	}
+
+	private String getAnnotations(EList<TAnnotation> annotations) {
 		boolean hasOverride = false;
 		String proposalString = "";
 		for (TAnnotation annotation : annotations) {
@@ -178,102 +301,49 @@ class N4JSProposalHelper {
 		return proposalString;
 	}
 
-	private String getMethodMemberAsString(TMethod methodMember) {
-		StringBuilder strb = new StringBuilder();
-		String fparsStr = Strings.join(", ", fp -> fp.getFormalParameterAsString(), methodMember.getFpars());
-		strb.append(methodMember.getName());
-		strb.append("(");
-		strb.append(fparsStr);
-		strb.append(")");
-		strb.append(getReturnTypeAsString(methodMember));
-		if (methodMember.isReturnValueOptional()) {
-			strb.append('?');
-		}
-		return strb.toString();
-	}
-
 	/**
 	 * Resolves the simplified return type of a given method recursively and returns it as string.
-	 *
-	 * @param methodMember
-	 *            a method of a class
 	 */
-	private String getReturnTypeAsString(TMethod methodMember) {
-		boolean topLevel = true;
-		boolean async = methodMember.isDeclaredAsync();
-		boolean generator = methodMember.isDeclaredGenerator();
-		TypeRef returnTypeRef = methodMember.getReturnTypeRef();
-		EList<TypeArgument> typeArgs = returnTypeRef.getTypeArgsWithDefaults();
-
-		if (topLevel && (generator || async && (typeArgs.get(1).getDeclaredType() instanceof AnyType ||
-				typeArgs.get(1) instanceof Wildcard))) {
-			var firstReturnTypeArg = typeArgs.get(0);
-			if (firstReturnTypeArg instanceof ParameterizedTypeRef) {
-				if (firstReturnTypeArg.getDeclaredType() instanceof UndefinedType) {
-					return ": void";
-				}
-			}
-		}
-		return ": " + returnTypeRef.getTypeRefAsString();
+	private String getAsReturnType(TypeRef typeRef) {
+		return ": " + typeRef.getTypeRefAsString();
 	}
 
-	private String getProposalString(TMethod methodMember, String annotString, String methodBody) {
-		StringBuilder strb = new StringBuilder();
-		if (isAccessInternal(methodMember)) {
-			strb.append("@" + INTERNAL_ANNOTATION + "\n");
-		}
-		strb.append(annotString);
-		if (showAccessModifier(methodMember)) {
-			strb.append(getAccessModifier(methodMember) + " ");
-		}
-		if (methodMember.isDeclaredStatic()) {
-			strb.append("static ");
-		}
-		if (methodMember.isDeclaredAsync()) {
-			strb.append("async ");
-		}
-		if (methodMember.isGeneric()) {
-			String typeVarsStr = Strings.join(", ", tv -> tv.getTypeAsString(), methodMember.getTypeVars());
-			strb.append("<").append(typeVarsStr).append("> ");
-		}
-		if (methodMember.isDeclaredGenerator()) {
-			strb.append("*");
-		}
-		strb.append(getMethodMemberAsString(methodMember));
-		strb.append(methodBody);
-		return strb.toString();
+	private boolean showAccessModifier(TMemberWithAccessModifier member) {
+		MemberAccessModifier accessModifier = member.getMemberAccessModifier();
+		return accessModifier != MemberAccessModifier.PROJECT;
 	}
 
-	private boolean showAccessModifier(TMethod methodMember) {
-		return !getAccessModifier(methodMember).equalsIgnoreCase(N4Modifier.PROJECT.getName());
+	private boolean isAccessInternal(TMemberWithAccessModifier member) {
+		MemberAccessModifier accessModifier = member.getMemberAccessModifier();
+		return accessModifier == MemberAccessModifier.PROTECTED_INTERNAL
+				|| accessModifier == MemberAccessModifier.PUBLIC_INTERNAL;
 	}
 
-	private boolean isAccessInternal(TMethod methodMember) {
-		String accessModifier = methodMember.getMemberAccessModifier().toString();
-		int length = accessModifier.length();
-		return (length >= 8) && accessModifier.substring(length - 8, length).equals("Internal");
-	}
-
-	private String getAccessModifier(TMethod methodMember) {
-		String accessModifier = methodMember.getMemberAccessModifier().toString();
-		if (isAccessInternal(methodMember)) {
-			// remove appended "Internal" keyword, which is appended to the access modifier
-			return accessModifier.substring(0, accessModifier.length() - 8);
-		} else {
+	private MemberAccessModifier getAccessModifier(TMemberWithAccessModifier member) {
+		MemberAccessModifier accessModifier = member.getMemberAccessModifier();
+		switch (accessModifier) {
+		case PROTECTED_INTERNAL:
+			return MemberAccessModifier.PROTECTED;
+		case PUBLIC_INTERNAL:
+			return MemberAccessModifier.PUBLIC;
+		default:
 			return accessModifier;
 		}
 	}
 
-	private ContentAssistEntry createMethodProposal(String proposal, String methodName,
-			String prefix, TMethod method) {
+	private ContentAssistEntry createProposal(N4FieldDeclaration location, String proposal, String signature,
+			TMember member) {
+
+		ICompositeNode node = NodeModelUtils.getNode(location);
+		String prefix = NodeModelUtilsN4.getTokenTextWithHiddenTokens(node).trim();
 
 		N4JSContentAssistEntry entry = new N4JSContentAssistEntry();
 		entry.setProposal(proposal);
 		entry.setPrefix(prefix);
-		entry.setKind(ContentAssistEntry.KIND_METHOD);
-		entry.setLabel(method.getFunctionAsString());
-		entry.setDescription("Override " + method.getContainingType().getName() + "#" + methodName);
-		entry.setFilterText(method.getName());
+		entry.setKind(SymbolKindUtil.getKind(member.eClass()));
+		entry.setLabel(member.getMemberAsString());
+		entry.setDescription("Override " + member.getContainingType().getName() + "#" + signature);
+		entry.setFilterText(member.getName());
 
 		return entry;
 	}
