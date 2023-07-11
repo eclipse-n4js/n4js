@@ -24,7 +24,10 @@ import org.eclipse.n4js.ide.server.util.SymbolKindUtil;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.FieldAccessor;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.TAnnotation;
@@ -36,6 +39,7 @@ import org.eclipse.n4js.ts.types.TMemberWithAccessModifier;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.UndefinedType;
 import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
@@ -132,7 +136,7 @@ class N4JSProposalHelper {
 
 		TypeRef retTRef = method.getReturnTypeRef();
 		String methodBody = EMPTY_METHOD_BODY;
-		if (!isVoid(retTRef) &&
+		if (!isVoid(retTRef) && !isReturningVoid(method) &&
 				!(method.isDeclaredGenerator() && isAny(retTRef.getTypeArgsWithDefaults().get(1)))) {
 
 			String params = Strings.join(", ", fp -> fp.getName(), method.getFpars());
@@ -181,15 +185,19 @@ class N4JSProposalHelper {
 		acceptor.accept(proposal, proposalPriorities.getDefaultPriority(proposal));
 	}
 
-	private String getSignatureAsString(TMethod methodMember) {
+	private String getSignatureAsString(TMethod member) {
 		StringBuilder strb = new StringBuilder();
-		String fparsStr = Strings.join(", ", fp -> fp.getFormalParameterAsString(), methodMember.getFpars());
-		strb.append(methodMember.getName());
+		String fparsStr = Strings.join(", ", fp -> fp.getFormalParameterAsString(), member.getFpars());
+		strb.append(member.getName());
 		strb.append("(");
 		strb.append(fparsStr);
 		strb.append(")");
-		strb.append(getAsReturnType(methodMember.getReturnTypeRef()));
-		if (methodMember.isReturnValueOptional()) {
+		if (isReturningVoid(member)) {
+			strb.append(": void");
+		} else {
+			strb.append(getAsReturnType(member.getReturnTypeRef()));
+		}
+		if (member.isReturnValueOptional()) {
 			strb.append('?');
 		}
 		return strb.toString();
@@ -299,6 +307,23 @@ class N4JSProposalHelper {
 			proposalString += "@" + OVERRIDE_ANNOTATION + "\n";
 		}
 		return proposalString;
+	}
+
+	private boolean isReturningVoid(TMethod method) {
+		boolean async = method.isDeclaredAsync();
+		boolean generator = method.isDeclaredGenerator();
+		TypeRef returnTypeRef = method.getReturnTypeRef();
+		EList<TypeArgument> typeArgs = returnTypeRef.getTypeArgsWithDefaults();
+
+		if (generator || async && (isAny(typeArgs.get(1)) || typeArgs.get(1) instanceof Wildcard)) {
+			var firstReturnTypeArg = typeArgs.get(0);
+			if (firstReturnTypeArg instanceof ParameterizedTypeRef) {
+				if (firstReturnTypeArg.getDeclaredType() instanceof UndefinedType) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

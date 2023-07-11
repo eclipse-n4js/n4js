@@ -72,6 +72,7 @@ class B extends A {
 /* XPECT completion at 'f' apply 'fooSimple' ---
 @Override
 fooSimple(): void {
+	// TODO Auto-generated stub
 
 }
 --- */
@@ -82,6 +83,7 @@ abstract class B0 extends A1 {
 /* XPECT completion at 'f' apply 'foo1Abstract' ---
 @Override
 public foo1Abstract(): void {
+	// TODO Auto-generated stub
 
 }
 --- */
@@ -92,6 +94,7 @@ class B1 extends A {
 /* XPECT completion at 'f' apply 'foo1AccessModifier' ---
 @Override
 public foo1AccessModifier(): void {
+	// TODO Auto-generated stub
 
 }
 --- */
@@ -102,6 +105,7 @@ class B2 extends A {
 /* XPECT completion at 'f' apply 'foo2FormalParameter' ---
 @Override
 public foo2FormalParameter(p: string): void {
+	// TODO Auto-generated stub
 
 }
 --- */
@@ -112,7 +116,7 @@ class B3 extends A {
 /* XPECT completion at 'f' apply 'foo3WithReturn' ---
 @Override
 public foo3WithReturn(): String {
-	// TODO Auto-generated method stub
+	// TODO Auto-generated stub
 	return super.foo3WithReturn();
 }
 --- */
@@ -124,7 +128,7 @@ class B4 extends A {
 // XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
 /* XPECT completion at 'f' apply 'foo4FParAndReturn' ---
 public foo4FParAndReturn(p: string): String {
-	// TODO Auto-generated method stub
+	// TODO Auto-generated stub
 	return super.foo4FParAndReturn(p);
 }  
 --- */
@@ -136,7 +140,7 @@ class B5 extends A {
 // XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
 /* XPECT completion at 'f' apply 'foo5Generic' ---
 public <E> foo5Generic(): E {
-	// TODO Auto-generated method stub
+	// TODO Auto-generated stub
 	return super.foo5Generic();
 } 
 --- */
@@ -148,6 +152,7 @@ class B6 extends A {
 // XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
 /* XPECT completion at 'f' apply 'foo6Async' ---
 public async foo6Async(): void {
+	// TODO Auto-generated stub
 
 }  
 --- */
@@ -159,6 +164,7 @@ class B7 extends A {
 // XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
 /* XPECT completion at 'f' apply 'foo7Static' ---
 public static foo7Static(): void {
+	// TODO Auto-generated stub
 
 } 
 --- */
@@ -170,7 +176,7 @@ class B8 extends A {
 // XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
 /* XPECT completion at 'f' apply 'foo8MultiParamAndReturn' ---
 public foo8MultiParamAndReturn(p1: string, p2: int): String {
-	// TODO Auto-generated method stub
+	// TODO Auto-generated stub
 	return super.foo8MultiParamAndReturn(p1, p2);
 }  
 --- */
@@ -181,6 +187,7 @@ class B9 extends A {
 /* XPECT completion at 'g' apply 'gen' ---
 @Override
 public *gen(p: int): void {
+	// TODO Auto-generated stub
 
 }
 --- */
@@ -191,7 +198,7 @@ class B10 extends A {
 /* XPECT completion at 'u' apply 'unionTypeMethod' ---
 @Override
 public unionTypeMethod(): union{string,int} {
-	// TODO Auto-generated method stub
+	// TODO Auto-generated stub
 	return super.unionTypeMethod();
 }
 --- */
@@ -202,7 +209,7 @@ class B11 extends A {
 /* XPECT completion at 'i' apply 'intersectionTypeMethod' ---
 @Override
 public intersectionTypeMethod(): intersection{string,int} {
-	// TODO Auto-generated method stub
+	// TODO Auto-generated stub
 	return super.intersectionTypeMethod();
 }
 --- */
@@ -213,7 +220,7 @@ class B12 extends A {
 /* XPECT completion at 'i' apply 'iterable2ReturnTypeMethod' ---
 @Override
 protected iterable2ReturnTypeMethod(): Array2<string,int> {
-	// TODO Auto-generated method stub
+	// TODO Auto-generated stub
 	return super.iterable2ReturnTypeMethod();
 }
 --- */
@@ -224,7 +231,7 @@ class B13 extends A {
 /* XPECT completion at 'i' apply 'iterable3ReturnTypeMethod' ---
 @Override
 protected iterable3ReturnTypeMethod(): Array3<string,int,string> {
-	// TODO Auto-generated method stub
+	// TODO Auto-generated stub
 	return super.iterable3ReturnTypeMethod();
 }
 --- */
@@ -236,7 +243,7 @@ class B14 extends A {
 // XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
 /* XPECT completion at 'f' apply 'fooArray' ---
 public fooArray(p: string): Array<string> {
-	// TODO Auto-generated method stub
+	// TODO Auto-generated stub
 	return super.fooArray(p);
 }  
 --- */
@@ -248,7 +255,7 @@ class B15OverrideBuiltInMethod extends A {
 // XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
 /* XPECT completion at 'f' apply 'freeze' ---
 public static <T extends Object> freeze(obj: T): T {
-	// TODO Auto-generated method stub
+	// TODO Auto-generated stub
 	return super.freeze(obj);
 }  
 --- */
@@ -259,7 +266,7 @@ class B16 extends A {
 /* XPECT completion at 'f' apply 'fooVariadic' ---
 @Override
 public fooVariadic(...p: string): string {
-	// TODO Auto-generated method stub
+	// TODO Auto-generated stub
 	return null;
 }
 --- */
@@ -271,7 +278,7 @@ class B17 extends A {
 // XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
 /* XPECT completion at 'f' apply 'fooWildcard' ---
 public fooWildcard(p: string): Array<?> {
-	// TODO Auto-generated method stub
+	// TODO Auto-generated stub
 	return super.fooWildcard(p);
 }  
 --- */
@@ -283,7 +290,7 @@ class B18 extends A {
 // XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
 /* XPECT completion at 'f' apply 'fooNestedTypes1' ---
 public fooNestedTypes1(): Array<Array<intersection{Array2<string,int>,number}>> {
-	// TODO Auto-generated method stub
+	// TODO Auto-generated stub
 	return super.fooNestedTypes1();
 }  
 --- */
@@ -295,7 +302,7 @@ class B19 extends A {
 // XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
 /* XPECT completion at 'f' apply 'fooNestedTypes2' ---
 public fooNestedTypes2(): Generator<Generator<union{int,int},int,int>,int,int> {
-	// TODO Auto-generated method stub
+	// TODO Auto-generated stub
 	return super.fooNestedTypes2();
 }  
 --- */
@@ -307,7 +314,7 @@ class B20 extends A {
 // XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
 /* XPECT completion at 'f' apply 'fooNestedTypes3' ---
 public fooNestedTypes3(): union{intersection{string,string},int} {
-	// TODO Auto-generated method stub
+	// TODO Auto-generated stub
 	return super.fooNestedTypes3();
 }  
 --- */
