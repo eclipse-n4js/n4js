@@ -20,59 +20,37 @@ class A {
 	public otherField2: string = "s";
 }
 
-class B1 extends A {
+class B0 extends A {
 	
-	/* XPECT completion at 'f' apply 'foo' ---
+	/* XPECT completion at 'f' apply 'field1' ---
 @Override
-public foo(): int {
-	// TODO Auto-generated method stub
-	return super.foo();
-}
+public field1 : int
 	   ---
 	 */
 	f
-	
-	/* XPECT completion at 'b' apply 'bar' ---
-@Override
-public async bar(): Promise<int,?> {
-	// TODO Auto-generated method stub
-	return null;
 }
+
+class B1 extends A {
+	/* XPECT completion at 'f' apply 'field2' ---
+@Override
+public field2 : string
 	 */
-	b
+	f
 }
 
 class B2 extends A {
-	/* XPECT completion at 'f' apply 'foo' ---
+	/* XPECT completion at 'oF' apply 'otherField1' ---
 @Override
-public foo(): int {
-	// TODO Auto-generated method stub
-	return super.foo();
-}
+public otherField1 : int = undefined; // TODO Auto-generated initializer
 	 */
-	public f
+	public oF
 }
 
 class B3 extends A {
-	// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
-	/* XPECT completion at 'f' apply 'foo' ---
-public foo(): int {
-	// TODO Auto-generated method stub
-	return super.foo();
-}
+	// XPECT errors --> "The field oF must override or implement a field from a super class or interface." at "oF" 
+	/* XPECT completion at 'oF' apply 'otherField2' ---
+public otherField2 : string = undefined; // TODO Auto-generated initializer
 	 */
 	@Override
-	public f
-}
-
-class B4 extends A {
-	// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
-	/* XPECT completion at 'f' apply 'foo' ---
-public foo(): int {
-	// TODO Auto-generated method stub
-	return super.foo();
-}
-	 */
-	@Override
-	f
+	public oF
 }
