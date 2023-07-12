@@ -1,0 +1,82 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+class A {
+	public set x(val : int) {}
+	public get x() : int { return 0; }
+	public set y(val : string) {}
+	public get y() : string { return "s"; }
+}
+
+class B0 extends A {
+	
+	/* XPECT errors ---
+	"The field B0.x cannot reduce the visibility of setter A.x." at "x" 
+	"Type of field B0.x does not conform to overridden getter A.x: any is not a subtype of int." at "x" 
+	--- */  
+	/* XPECT completion at 'x' apply 'x' ---
+@Override
+public get x(): int {
+	// TODO Auto-generated stub
+	return super.x;
+}
+	   ---
+	 */
+	x
+}
+
+class B1 extends A {
+	/* XPECT errors ---
+	"The field B1.x cannot reduce the visibility of setter A.x." at "x" 
+	"Type of field B1.x does not conform to overridden getter A.x: any is not a subtype of int." at "x" 
+	--- */ 
+	/* XPECT completion at 'x' apply 'x' ---
+@Override
+public get x(): int {
+	// TODO Auto-generated stub
+	return super.x;
+}
+	 */
+	x
+}
+
+class B2 extends A {
+	/* XPECT errors ---
+	"The field B2.y overriding getter A.y and setter A.y must be annotated with @Override." at "y" 
+	"Type of field B2.y does not conform to overridden getter A.y: any is not a subtype of string." at "y"
+	--- */ 
+	/* XPECT completion at 'y' apply 'y' ---
+@Override
+public get y(): string {
+	// TODO Auto-generated stub
+	return super.y;
+}
+	 */
+	public y
+}
+
+class B3 extends A {
+	/* XPECT errors ---
+	"Type of field B3.y does not conform to overridden getter A.y: any is not a subtype of string." at "y"
+	--- */ 
+	/* XPECT completion at 'y' apply 'y' ---
+public get y(): string {
+	// TODO Auto-generated stub
+	return super.y;
+}
+	 */
+	@Override
+	public y
+}
