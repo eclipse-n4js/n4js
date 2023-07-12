@@ -37,12 +37,12 @@ function test3Fun() {
 function test4Fun1() { console.log("test4Fun1"); }
 function test4Fun2() {
 	var test4Fun1 = function() { console.log("test4Fun2.test4Fun1"); };
-	/* XPECT! scopeWithPosition at '|test4Fun1();' ---
+	/* XPECT ! scopeWithPosition at '|test4Fun1();' ---
 		test4Fun1 - 39, !test4Fun1 - T37, test1FunVar - 14, ...
 	---*/
 	test4Fun1();
 	// found during IDE-1852: XPECT FIXME noerrors
-	/* XPECT! scopeWithPosition at 'this.|test4Fun1();' ---
+	/* XPECT ! scopeWithPosition at 'this.|test4Fun1();' ---
 		!test4Fun1 - 39, !test4Fun1 - T37, ...
 	---*/
  	this.test4Fun1();
@@ -53,29 +53,29 @@ function test5Fun2() {
 	var test5Fun1 = function() { console.log("test5Fun2.test5Fun1"); };
 	var test5Fun2inner = function () {
 		var test5Fun1 = function() { console.log("test5Fun2.test5Fun2.test5Fun1"); };
-		/* XPECT! scopeWithPosition at '|test5Fun1();' ---
+		/* XPECT ! scopeWithPosition at '|test5Fun1();' ---
 			test5Fun1 - 54, !test5Fun1 - T50, !test5Fun1 - 52, test1FunVar - 14, ...
 		---*/
 		test5Fun1();
 		// found during IDE-1852: XPECT FIXME noerrors
-		/* XPECT! scopeWithPosition at 'this.|test5Fun1();' ---
+		/* XPECT ! scopeWithPosition at 'this.|test5Fun1();' ---
 		 	!test5Fun1 - 54, !test5Fun1 - T50, !test5Fun1 - 52, ...
 		---*/
 		this.test5Fun1();
 	}
 
-	/* XPECT! scopeWithPosition at '|test5Fun1();' ---
+	/* XPECT ! scopeWithPosition at '|test5Fun1();' ---
 		!test5Fun1 - 54, !test5Fun1 - T50, test5Fun1 - 52, test1FunVar - 14, ...
 	---*/
 	test5Fun1();
 
 	// found during IDE-1852: XPECT FIXME noerrors
-	/* XPECT! scopeWithPosition at 'this.|test5Fun1();' ---
+	/* XPECT ! scopeWithPosition at 'this.|test5Fun1();' ---
 	 	!test5Fun1 - 54, !test5Fun1 - T50, !test5Fun1 - 52, ...
 	---*/
 	this.test5Fun1();
 
-	/* XPECT! scopeWithPosition at 'test5Fun2();' ---
+	/* XPECT ! scopeWithPosition at 'test5Fun2();' ---
 		test5Fun2 - 53, !test5Fun2 - T51, ...
 	---*/
 	test5Fun2();
