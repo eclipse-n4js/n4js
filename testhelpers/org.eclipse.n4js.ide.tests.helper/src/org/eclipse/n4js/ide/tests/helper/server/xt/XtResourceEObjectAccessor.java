@@ -147,8 +147,9 @@ public class XtResourceEObjectAccessor {
 
 	private int getOffset(int searchFromOffset, String optionalLocationStr) {
 		int offset;
-		if (optionalLocationStr != null) {
-			int relOffset = optionalLocationStr.contains(CURSOR) ? optionalLocationStr.indexOf(CURSOR) : 0;
+		if (!Strings.isNullOrEmpty(optionalLocationStr)) {
+			int relOffset = optionalLocationStr.contains(CURSOR) ? optionalLocationStr.indexOf(CURSOR)
+					: optionalLocationStr.length() - 1;
 			String locationStr = optionalLocationStr.replace(CURSOR, "");
 			int absOffset = skipCommentsAndWhitespace(xtData.content, locationStr, searchFromOffset);
 			offset = absOffset + relOffset;
