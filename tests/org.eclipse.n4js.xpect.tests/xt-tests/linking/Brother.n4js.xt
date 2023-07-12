@@ -49,11 +49,11 @@ export class Brother {
 	project getChild() : Child { return null; }
 }
 var brother : Brother = new Brother();
-// XPECT linkedFragment at 'getSister()' --> /1/@types.0/@ownedMembers.0
+// XPECT linkedFragment at 'getS<|>ister()' --> /1/@types.0/@ownedMembers.0
 brother.getSister()
-// XPECT linkedFragment at 'getBrother()' --> Sister.n4js#/1/@types.0/@ownedMembers.0
+// XPECT linkedFragment at 'getB<|>rother()' --> Sister.n4js#/1/@types.0/@ownedMembers.0
 brother.getSister().getBrother();
 
 var sister : SisterObject = new SisterObject();
-// XPECT linkedFragment at 'getBrother()' --> Sister.n4js#/1/@types.0/@ownedMembers.0
+// XPECT linkedFragment at 'getB<|>rother()' --> Sister.n4js#/1/@types.0/@ownedMembers.0
 brother = sister.getBrother();
