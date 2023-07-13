@@ -177,8 +177,6 @@ public class N4JSRenameService extends RenameService2 {
 		return result;
 	}
 
-	// ResponseErrorException
-
 	/**
 	 * Create text edits for renaming the given element and all references pointing to it and create a workspace edit
 	 * from them.
@@ -337,11 +335,11 @@ public class N4JSRenameService extends RenameService2 {
 			return originImport;
 		}
 
-		// return eObjectAtOffsetHelper.resolveElementAt(resource, offset);
-		return findElem(resource, offset);
+		return findElement(resource, offset);
 	}
 
-	private EObject findElem(XtextResource xtextResource, int offset) {
+	/** Aligned to RenameService2#doPrepareRename() */
+	private EObject findElement(XtextResource xtextResource, int offset) {
 		ICompositeNode rootNode = null;
 		if (xtextResource != null) {
 			IParseResult parseResult = xtextResource.getParseResult();
