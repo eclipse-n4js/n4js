@@ -417,6 +417,7 @@ public class XtMethods {
 	private LinkedHashSet<String> getScopeWithResourceString(IEObjectCoveringRegion ocr,
 			Function<IEObjectDescription, String> toString) {
 
+		Assert.assertNotNull(ocr.getEStructuralFeature());
 		IScope scope = scopeProvider.getScope(ocr.getEObject(), (EReference) ocr.getEStructuralFeature());
 		IScope scopeWithoutErrors = new FilteringScope(scope,
 				desc -> !IEObjectDescriptionWithError.isErrorDescription(desc));

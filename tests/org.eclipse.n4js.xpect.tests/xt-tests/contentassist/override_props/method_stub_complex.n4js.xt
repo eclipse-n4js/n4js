@@ -1,0 +1,322 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+ 
+class A {
+	fooSimple() {}
+	public foo1AccessModifier() {}
+	public foo2FormalParameter(p: string) {}
+	public foo3WithReturn(): String {
+		return null;
+	}
+	public foo4FParAndReturn(p: string): String {
+		return null;
+	}
+	public <E> foo5Generic(): E {
+		return null;
+	}
+	public async foo6Async() {}
+	public static foo7Static() {}
+	public *gen(p: int) {}
+	public unionTypeMethod(): string | int {
+		return null;
+	}
+	public intersectionTypeMethod(): string & int {
+		return null;
+	}
+	protected iterable2ReturnTypeMethod(): [string, int] {
+		return null;
+	}
+	protected iterable3ReturnTypeMethod(): [string, int, string] {
+		return null;
+	}
+	public foo8MultiParamAndReturn(p1: string, p2: int): String {
+		return null;
+	}
+	public fooArray(p: string): Array<string> {
+		return null;
+	}
+	public fooVariadic(...p: string): string {
+        return null;
+    }
+    public fooWildcard(p: string): Array<?> {
+		return null;
+	}
+	public fooNestedTypes1(): Array<Array<([string, int] & number)>> {
+		return null;
+	}
+	public fooNestedTypes2(): Generator<Generator<(int | int), int, int>, int, int> {
+		return null;
+	}
+	public fooNestedTypes3(): (string & string) | int {
+		return null;
+	}
+}
+
+abstract class A1 {
+	public abstract foo1Abstract() 
+}
+
+class B extends A {
+/* XPECT completion at 'f' apply 'fooSimple' ---
+@Override
+fooSimple(): void {
+	// TODO Auto-generated stub
+
+}
+--- */
+f
+}
+
+abstract class B0 extends A1 {
+/* XPECT completion at 'f' apply 'foo1Abstract' ---
+@Override
+public foo1Abstract(): void {
+	// TODO Auto-generated stub
+
+}
+--- */
+f
+}
+
+class B1 extends A {
+/* XPECT completion at 'f' apply 'foo1AccessModifier' ---
+@Override
+public foo1AccessModifier(): void {
+	// TODO Auto-generated stub
+
+}
+--- */
+f
+}
+
+class B2 extends A {
+/* XPECT completion at 'f' apply 'foo2FormalParameter' ---
+@Override
+public foo2FormalParameter(p: string): void {
+	// TODO Auto-generated stub
+
+}
+--- */
+public f
+}
+
+class B3 extends A {
+/* XPECT completion at 'f' apply 'foo3WithReturn' ---
+@Override
+public foo3WithReturn(): String {
+	// TODO Auto-generated stub
+	return super.foo3WithReturn();
+}
+--- */
+public f
+}
+
+class B4 extends A { 
+@Override
+// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
+/* XPECT completion at 'f' apply 'foo4FParAndReturn' ---
+public foo4FParAndReturn(p: string): String {
+	// TODO Auto-generated stub
+	return super.foo4FParAndReturn(p);
+}  
+--- */
+f 
+}
+
+class B5 extends A { 
+@Override
+// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
+/* XPECT completion at 'f' apply 'foo5Generic' ---
+public <E> foo5Generic(): E {
+	// TODO Auto-generated stub
+	return super.foo5Generic();
+} 
+--- */
+f 
+}
+
+class B6 extends A { 
+@Override
+// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
+/* XPECT completion at 'f' apply 'foo6Async' ---
+public async foo6Async(): void {
+	// TODO Auto-generated stub
+
+}  
+--- */
+public f 
+}
+
+class B7 extends A { 
+@Override
+// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
+/* XPECT completion at 'f' apply 'foo7Static' ---
+public static foo7Static(): void {
+	// TODO Auto-generated stub
+
+} 
+--- */
+public f 
+}
+
+class B8 extends A { 
+@Override
+// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
+/* XPECT completion at 'f' apply 'foo8MultiParamAndReturn' ---
+public foo8MultiParamAndReturn(p1: string, p2: int): String {
+	// TODO Auto-generated stub
+	return super.foo8MultiParamAndReturn(p1, p2);
+}  
+--- */
+f 
+}
+
+class B9 extends A {
+/* XPECT completion at 'g' apply 'gen' ---
+@Override
+public *gen(p: int): void {
+	// TODO Auto-generated stub
+
+}
+--- */
+g
+}
+
+class B10 extends A {
+/* XPECT completion at 'u' apply 'unionTypeMethod' ---
+@Override
+public unionTypeMethod(): union{string,int} {
+	// TODO Auto-generated stub
+	return super.unionTypeMethod();
+}
+--- */
+u
+}
+
+class B11 extends A {
+/* XPECT completion at 'i' apply 'intersectionTypeMethod' ---
+@Override
+public intersectionTypeMethod(): intersection{string,int} {
+	// TODO Auto-generated stub
+	return super.intersectionTypeMethod();
+}
+--- */
+i
+}
+
+class B12 extends A {
+/* XPECT completion at 'i' apply 'iterable2ReturnTypeMethod' ---
+@Override
+protected iterable2ReturnTypeMethod(): Array2<string,int> {
+	// TODO Auto-generated stub
+	return super.iterable2ReturnTypeMethod();
+}
+--- */
+i
+}
+
+class B13 extends A {
+/* XPECT completion at 'i' apply 'iterable3ReturnTypeMethod' ---
+@Override
+protected iterable3ReturnTypeMethod(): Array3<string,int,string> {
+	// TODO Auto-generated stub
+	return super.iterable3ReturnTypeMethod();
+}
+--- */
+i
+}
+
+class B14 extends A { 
+@Override
+// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
+/* XPECT completion at 'f' apply 'fooArray' ---
+public fooArray(p: string): Array<string> {
+	// TODO Auto-generated stub
+	return super.fooArray(p);
+}  
+--- */
+f 
+}
+
+class B15OverrideBuiltInMethod extends A { 
+@Override
+// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
+/* XPECT completion at 'f' apply 'freeze' ---
+public static <T extends Object> freeze(obj: T): T {
+	// TODO Auto-generated stub
+	return super.freeze(obj);
+}  
+--- */
+f 
+}
+
+class B16 extends A {
+/* XPECT completion at 'f' apply 'fooVariadic' ---
+@Override
+public fooVariadic(...p: string): string {
+	// TODO Auto-generated stub
+	return null;
+}
+--- */
+f
+}
+
+class B17 extends A { 
+@Override
+// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
+/* XPECT completion at 'f' apply 'fooWildcard' ---
+public fooWildcard(p: string): Array<?> {
+	// TODO Auto-generated stub
+	return super.fooWildcard(p);
+}  
+--- */
+f 
+}
+
+class B18 extends A { 
+@Override
+// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
+/* XPECT completion at 'f' apply 'fooNestedTypes1' ---
+public fooNestedTypes1(): Array<Array<intersection{Array2<string,int>,number}>> {
+	// TODO Auto-generated stub
+	return super.fooNestedTypes1();
+}  
+--- */
+f 
+}
+
+class B19 extends A { 
+@Override
+// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
+/* XPECT completion at 'f' apply 'fooNestedTypes2' ---
+public fooNestedTypes2(): Generator<Generator<union{int,int},int,int>,int,int> {
+	// TODO Auto-generated stub
+	return super.fooNestedTypes2();
+}  
+--- */
+f 
+}
+
+class B20 extends A { 
+@Override
+// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f" 
+/* XPECT completion at 'f' apply 'fooNestedTypes3' ---
+public fooNestedTypes3(): union{intersection{string,string},int} {
+	// TODO Auto-generated stub
+	return super.fooNestedTypes3();
+}  
+--- */
+f 
+}

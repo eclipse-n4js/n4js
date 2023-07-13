@@ -32,6 +32,7 @@ import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.GrammarUtil;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ParserRule;
+import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
@@ -89,6 +90,9 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 
 	@Inject
 	private ContentAssistDataCollectors dataCollectors;
+
+	@Inject
+	private N4JSProposalHelper proposalHelper;
 
 	@Override
 	public void createProposals(Collection<ContentAssistContext> contexts, IIdeContentProposalAcceptor acceptor) {
@@ -163,9 +167,14 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 			IIdeContentProposalAcceptor acceptor) {
 
 		AbstractElement terminal = assignment.getTerminal();
-		if (terminal instanceof CrossReference) {
-			createProposals(terminal, context, acceptor);
-		}
+		createProposals(terminal, context, acceptor);
+	}
+
+	@Override
+	protected void _createProposals(RuleCall ruleCall, ContentAssistContext context,
+			IIdeContentProposalAcceptor acceptor) {
+
+		proposalHelper.complete(context.getCurrentModel(), acceptor);
 	}
 
 	/**

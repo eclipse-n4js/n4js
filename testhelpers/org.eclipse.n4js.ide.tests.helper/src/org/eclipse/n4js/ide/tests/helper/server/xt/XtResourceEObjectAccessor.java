@@ -50,11 +50,11 @@ public class XtResourceEObjectAccessor {
 	 * @return {@link EObject} with offset for a given offset in this resource.
 	 */
 	public IEObjectCoveringRegion getObjectCoveringRegion(int searchFromOffset, String optionalLocationStr) {
-		int offset = getOffset(searchFromOffset, optionalLocationStr);
+		int offset = getOffset(searchFromOffset, optionalLocationStr, false);
 		if (offset < 0) {
 			return null;
 		}
-		int length = optionalLocationStr == null ? 0 : optionalLocationStr.length();
+		int length = optionalLocationStr == null ? 0 : lengthWithoutCursor(optionalLocationStr);
 		EObject eObject = XtResourceUtil.findEObject(resource, offset, length);
 		EStructuralFeature structuralFeature = XtResourceUtil.findStructuralFeature(resource, offset);
 		return new EObjectCoveringRegion(resource, eObject, offset, structuralFeature);
@@ -69,8 +69,13 @@ public class XtResourceEObjectAccessor {
 	 * @return {@link EObject} with offset for the given {@link XtMethodData}
 	 */
 	public Position checkAndGetPosition(XtMethodData data, String methodName, String arg1) {
-		int offset = checkAndGetOffset(data, methodName, arg1);
+		String optionalLocationStr = checkAndGetArgAfter(data, methodName, arg1);
+		int offset = getOffset(data.offset, optionalLocationStr, true);
 		Position position = xtData.getPosition(offset);
+		if (position == null) {
+			Preconditions.checkState(false, "Position not found for string: " + optionalLocationStr);
+			// exception thrown above
+		}
 		return position;
 	}
 
@@ -85,7 +90,11 @@ public class XtResourceEObjectAccessor {
 	public IEObjectCoveringRegion checkAndGetObjectCoveringRegion(XtMethodData data, String methodName,
 			String arg1) {
 
-		int offset = checkAndGetOffset(data, methodName, arg1);
+		String optionalLocationStr = checkAndGetArgAfter(data, methodName, arg1);
+		int offset = getOffset(data.offset, optionalLocationStr, false);
+		if (offset < 0) {
+			return null;
+		}
 		EObject eObject = XtResourceUtil.findEObject(resource, offset, 0);
 		EStructuralFeature structuralFeature = XtResourceUtil.findStructuralFeature(resource, offset);
 		return new EObjectCoveringRegion(resource, eObject, offset, structuralFeature);
@@ -100,11 +109,6 @@ public class XtResourceEObjectAccessor {
 	public String checkAndGetArgAfter(XtMethodData data, String methodName, String... optKeyword) {
 		Preconditions.checkArgument(data.name.equals(methodName));
 		return parseLastArgument(data, optKeyword);
-	}
-
-	private int checkAndGetOffset(XtMethodData data, String methodName, String optionalLocation) {
-		String optionalLocationStr = checkAndGetArgAfter(data, methodName, optionalLocation);
-		return getOffset(data.offset, optionalLocationStr);
 	}
 
 	private String parseLastArgument(XtMethodData data, String... optKeyword) {
@@ -134,7 +138,9 @@ public class XtResourceEObjectAccessor {
 	}
 
 	private String parseArgument(String argumentPlusRest) {
-		Preconditions.checkArgument(argumentPlusRest.startsWith("'"));
+		if (!argumentPlusRest.startsWith("'")) {
+			return null;
+		}
 		int idxEnd = 1;
 		while (argumentPlusRest.charAt(++idxEnd) != '\'') {
 			Preconditions.checkState(idxEnd < argumentPlusRest.length());
@@ -142,10 +148,17 @@ public class XtResourceEObjectAccessor {
 		return argumentPlusRest.substring(1, idxEnd);
 	}
 
-	private int getOffset(int searchFromOffset, String optionalLocationStr) {
+	private int getOffset(int searchFromOffset, String optionalLocationStr, boolean atEnd) {
 		int offset;
-		if (optionalLocationStr != null) {
-			int relOffset = optionalLocationStr.contains(CURSOR) ? optionalLocationStr.indexOf(CURSOR) : 0;
+		if (!Strings.isNullOrEmpty(optionalLocationStr)) {
+			int relOffset = 0;
+			if (atEnd) {
+				relOffset = lengthWithoutCursor(optionalLocationStr) - 1;
+			} else if (optionalLocationStr.contains(CURSOR)) {
+				relOffset = optionalLocationStr.indexOf(CURSOR);
+			}
+			relOffset = Math.max(0, relOffset);
+
 			String locationStr = optionalLocationStr.replace(CURSOR, "");
 			int absOffset = skipCommentsAndWhitespace(xtData.content, locationStr, searchFromOffset);
 			offset = absOffset + relOffset;
@@ -153,6 +166,14 @@ public class XtResourceEObjectAccessor {
 			offset = skipCommentsAndWhitespace(xtData.content, null, searchFromOffset);
 		}
 		return offset;
+	}
+
+	private int lengthWithoutCursor(String str) {
+		int length = str.length();
+		if (str.contains(CURSOR)) {
+			length -= CURSOR.length();
+		}
+		return length;
 	}
 
 	private int skipCommentsAndWhitespace(String content, String str, int startOffset) {

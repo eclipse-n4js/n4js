@@ -51,13 +51,19 @@ import org.eclipse.xtext.findReferences.ReferenceAcceptor;
 import org.eclipse.xtext.ide.server.DocumentExtensions;
 import org.eclipse.xtext.ide.server.rename.RenameService2;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolService;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.ILeafNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
@@ -170,8 +176,6 @@ public class N4JSRenameService extends RenameService2 {
 
 		return result;
 	}
-
-	// ResponseErrorException
 
 	/**
 	 * Create text edits for renaming the given element and all references pointing to it and create a workspace edit
@@ -331,7 +335,42 @@ public class N4JSRenameService extends RenameService2 {
 			return originImport;
 		}
 
-		return eObjectAtOffsetHelper.resolveElementAt(resource, offset);
+		return findElement(resource, offset);
+	}
+
+	/** Aligned to RenameService2#doPrepareRename() */
+	private EObject findElement(XtextResource xtextResource, int offset) {
+		ICompositeNode rootNode = null;
+		if (xtextResource != null) {
+			IParseResult parseResult = xtextResource.getParseResult();
+			if (parseResult != null) {
+				rootNode = parseResult.getRootNode();
+			}
+		}
+		if (rootNode == null) {
+			return null;
+		}
+
+		EObject element = null;
+		int candidateOffset = offset;
+		do {
+			element = getElementWithIdentifierAt(xtextResource, candidateOffset);
+			if (element != null && !element.eIsProxy()) {
+				ILeafNode leaf = NodeModelUtils.findLeafNodeAtOffset(rootNode, candidateOffset);
+				if (leaf != null) {
+					String convertedNameValue = getConvertedValue(leaf.getGrammarElement(), leaf);
+					String elementName = getElementName(element);
+					if (!Strings.isEmpty(convertedNameValue) && !Strings.isEmpty(elementName)
+							&& Objects.equal(convertedNameValue, elementName)) {
+
+						return element;
+					}
+				}
+			}
+			candidateOffset = (candidateOffset - 1);
+		} while (((candidateOffset >= 0) && ((candidateOffset + 1) >= offset)));
+
+		return null;
 	}
 
 	/** Returns the {@link EStructuralFeature feature} that represents the given element's name. */

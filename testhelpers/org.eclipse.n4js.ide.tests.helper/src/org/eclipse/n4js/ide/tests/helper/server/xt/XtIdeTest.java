@@ -39,6 +39,7 @@ import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
+import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
@@ -402,24 +403,66 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Calls LSP endpoint 'completion'.
 	 *
 	 * <pre>
-	 * // Xpect completion at '&ltLOCATION&gt' --&gt; &ltCOMPLETIONS&gt
+	 * // Xpect completion at '&ltLOCATION&gt' [apply '&ltPROPOSAL&gt'] --&gt; &ltCOMPLETIONS&gt
+	 * // Xpect completion at '&ltLOCATION&gt' [contains [not] '&ltPROPOSAL&gt'] --&gt; &ltCOMPLETIONS&gt
 	 * </pre>
 	 *
-	 * COMPLETIONS is a comma separated list.
+	 * {@code apply}, {@code contains}, and {@code not} are optional.<br/>
+	 * COMPLETIONS is a comma separated list.<br/>
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void completion(XtMethodData data) throws InterruptedException, ExecutionException {
 		Position position = eobjProvider.checkAndGetPosition(data, "completion", "at");
 		FileURI uri = getFileURIFromModuleName(xtData.workspace.moduleNameOfXtFile);
+		String applyId = eobjProvider.checkAndGetArgAfter(data, "completion", "at", "apply");
+		String containsNotId = eobjProvider.checkAndGetArgAfter(data, "completion", "at", "contains not");
+		String containsId = eobjProvider.checkAndGetArgAfter(data, "completion", "at", "contains");
 
+		ensureOpenFile(xtData.workspace.moduleNameOfXtFile);
 		CompletableFuture<Either<List<CompletionItem>, CompletionList>> future = callCompletion(
 				uri.toString(), position.getLine(), position.getCharacter());
-
 		Either<List<CompletionItem>, CompletionList> result = future.get();
 		List<CompletionItem> items = result.isLeft() ? result.getLeft() : result.getRight().getItems();
+		String allItemsStr = Strings.join("\n", item -> item.getLabel(), items);
 
-		List<String> ciItems = Lists.transform(items, ci -> getStringLSP4J().toString(ci));
-		assertEqualIterables(data.expectation, ciItems);
+		if (applyId == null && containsNotId == null && containsId == null) {
+			List<String> ciItems = Lists.transform(items, ci -> getStringLSP4J().toString(ci));
+			assertEqualIterables(data.expectation, ciItems);
+
+		} else if (applyId != null) {
+			for (CompletionItem item : items) {
+				if (Objects.equal(applyId, item.getFilterText())) {
+					ArrayList<TextEdit> list = new ArrayList<>();
+					List<TextEdit> addEdits = item.getAdditionalTextEdits();
+					if (addEdits != null) {
+						list.addAll(addEdits);
+					}
+					list.add(item.getTextEdit().getLeft());
+					String actualSourceAfter = applyTextEdits(xtData.content, list);
+					String[] diffRanges = Strings.diffRange(xtData.content, actualSourceAfter, true);
+					assertEquals(data.expectationRaw, diffRanges[1].trim());
+
+					return; // test passes
+				}
+			}
+			fail(applyId + " not found in:\n" + allItemsStr);
+
+		} else if (containsNotId != null) {
+			for (CompletionItem item : items) {
+				if (Objects.equal(containsId, item.getFilterText())) {
+					fail(containsNotId + " found in:\n" + allItemsStr);
+				}
+			}
+			return; // test passes
+
+		} else if (containsId != null) {
+			for (CompletionItem item : items) {
+				if (Objects.equal(containsId, item.getFilterText())) {
+					return; // test passes
+				}
+			}
+			fail(containsId + " not found in:\n" + allItemsStr);
+		}
 	}
 
 	/**

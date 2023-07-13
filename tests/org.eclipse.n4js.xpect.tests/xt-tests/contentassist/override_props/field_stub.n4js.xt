@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+class A {
+	public field1: int;
+	public field2: string;
+	public otherField1: int = 0;
+	public otherField2: string = "s";
+}
+
+class B0 extends A {
+	
+	/* XPECT completion at 'f' apply 'field1' ---
+@Override
+public field1 : int
+	   ---
+	 */
+	f
+}
+
+class B1 extends A {
+	/* XPECT completion at 'f' apply 'field2' ---
+@Override
+public field2 : string
+	 */
+	f
+}
+
+class B2 extends A {
+	/* XPECT completion at 'oF' apply 'otherField1' ---
+@Override
+public otherField1 : int = undefined; // TODO Auto-generated initializer
+	 */
+	public oF
+}
+
+class B3 extends A {
+	// XPECT errors --> "The field oF must override or implement a field from a super class or interface." at "oF" 
+	/* XPECT completion at 'oF' apply 'otherField2' ---
+public otherField2 : string = undefined; // TODO Auto-generated initializer
+	 */
+	@Override
+	public oF
+}
