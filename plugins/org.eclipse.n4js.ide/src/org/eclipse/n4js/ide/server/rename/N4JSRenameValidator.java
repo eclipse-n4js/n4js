@@ -29,6 +29,7 @@ import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
+import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
@@ -83,6 +84,9 @@ public class N4JSRenameValidator {
 		}
 		if (context instanceof TEnumLiteral) {
 			checkDuplicateEnum((TEnum) ((TEnumLiteral) context).eContainer(), newName);
+		}
+		if (context instanceof TFormalParameter) {
+			context = ((TFormalParameter) context).getAstElement();
 		}
 		if (context instanceof FormalParameter) {
 			FormalParameter fpar = (FormalParameter) context;

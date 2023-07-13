@@ -24,7 +24,7 @@
 */
 
 enum E {
-/* XPECT renameRefactoring at 'B<|>LUE' to 'YELLOW' ---
+/* XPECT renameRefactoring at 'BL<|>UE' to 'YELLOW' ---
 YELLOW,
 	RED
 }
