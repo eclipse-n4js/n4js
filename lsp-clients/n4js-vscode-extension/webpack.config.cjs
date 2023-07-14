@@ -7,6 +7,7 @@
 
 'use strict';
 
+const webpack = require('webpack');
 const path = require('path');
 // const url = require('url');
 // import * as path from "path";
@@ -50,8 +51,29 @@ const config = {
                     }
                 }
             }]
-        }]
+        }],
+        parser: {
+            javascript: {
+                importMeta: false,
+            },
+        },
     },
+    plugins: [
+        // the following hack mitigates missing 'import.meta.url' property in commonjs
+        new webpack.DefinePlugin({
+            'import.meta.url': "'file://' + require('path').resolve(__dirname, '..', 'node_modules', 'n4js-cli', 'src-gen', 'index.js')"
+        }),
+    ],
+    optimization: {
+        minimize: false
+    }
+
+    
+    // node: {
+    //     global: false,
+    //     __filename: false,
+    //     __dirname: false,
+    // },
 }
 
 // export default config;
