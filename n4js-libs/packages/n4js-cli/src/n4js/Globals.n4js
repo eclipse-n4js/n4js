@@ -18,10 +18,10 @@ export public const JAVA_DEFAULT = "java";
 export public const JAVA_VM_XMX = "-Xmx";
 export public const JAVA_VM_XMX_DEFAULT = "4096m";
 
-const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+const DIRNAME = path.dirname(url.fileURLToPath(import.meta.url));
 
-export public const BIN_DIR = path.resolve(__dirname, "..", "bin");
-export public const RESOURCES_DIR = path.resolve(__dirname, "..", "resources");
+export public const BIN_DIR = path.resolve(DIRNAME, "..", "bin");
+export public const RESOURCES_DIR = path.resolve(DIRNAME, "..", "resources");
 export public const JRE_DIR = path.resolve(BIN_DIR, "jre");
 export public const N4JSC_JAR = path.resolve(BIN_DIR, "n4jsc.jar");
 export public const N4JS_CLI_CONFIG = "n4js-cli.config";
