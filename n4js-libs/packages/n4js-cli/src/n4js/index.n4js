@@ -248,19 +248,14 @@ export public function findN4jscJarValue(workingDir: string, log: {function(stri
  * The first occurrence is returned, or null otherwise.
  */
 export public function findN4jscliConfig(workingDir : string) : string {
-    let dir = path.resolve(workingDir);
+    const dir = path.resolve(workingDir);
 
     // search in parent folders
-    while (true) {
-        if (dir.length < 2) {
-            return null;
-        }
-        const pathN4jscliConfig = path.resolve(dir, N4JS_CLI_CONFIG);
+    for (let tmpDir = dir, lastDir = null; tmpDir != lastDir; lastDir = tmpDir, tmpDir = path.basename(tmpDir)) {
+        const pathN4jscliConfig = path.resolve(tmpDir, N4JS_CLI_CONFIG);
         if (fs.existsSync(pathN4jscliConfig)) {
             return pathN4jscliConfig;
         }
-
-        dir = path.dirname(dir);
     }
 
     // search in direct child folders (not recursively)
