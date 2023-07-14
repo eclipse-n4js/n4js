@@ -257,7 +257,7 @@ public class ProjectImportEnablingScope implements IScope {
 					if (descr.getEObjectURI() != null) {
 						URI uri = descr.getEObjectURI().trimFragment();
 						URI relUri = uri.deresolve(workspaceConfigSnapshot.getPath());
-						Path relPath = Path.of(relUri.toFileString());
+						Path relPath = URIUtils.toPath(relUri);
 						relPath = relPath.subpath(1, relPath.getNameCount());
 						matchingModules += relPath.toString();
 					} else {
