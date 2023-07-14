@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -55,8 +56,8 @@ public class WorkspaceConfigSnapshot extends Snapshot {
 
 	/** Getter for the root path. */
 	public Path makeWorkspaceRelative(URI containedUri) {
-		Path p = Path.of(getPath().toFileString());
-		return p.relativize(Path.of(containedUri.toFileString()));
+		Path p = URIUtils.toPath(getPath());
+		return p.relativize(URIUtils.toPath(containedUri));
 	}
 
 	/** Tells whether this workspace is empty, i.e. does not contain any projects. */

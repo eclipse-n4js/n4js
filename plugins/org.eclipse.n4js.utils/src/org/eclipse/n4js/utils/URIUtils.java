@@ -302,6 +302,9 @@ public class URIUtils {
 	 * <code>null</code>.
 	 * <p>
 	 * Same as {@link URI#toFileString()}, but returns a {@link File} instance instead of a string.
+	 * <p>
+	 * <b>Attention:</b> Do not use {@link Path#of(String, String...)} since it cannot parse windows paths such as
+	 * {@code \\\c:\}.
 	 */
 	static public File toFile(URI uri) {
 		return uri != null && uri.isFile() ? new File(uri.toFileString()) : null;

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.workspace;
 
+import java.io.File;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -353,7 +354,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 			if (pd.getMainModule() != null) {
 				String mainModule = pd.getMainModule();
 				for (String srcPath : sourceContainerPaths) {
-					String mainModulePath = Path.of(srcPath, mainModule).toString();
+					String mainModulePath = new File(srcPath, mainModule).toString();
 					URI main = URI.createFileURI(mainModulePath).resolve(getPath());
 
 					if (URIUtils.toFile(main).isFile()) {
@@ -370,7 +371,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 					continue;
 				}
 				for (String srcPath : sourceContainerPaths) {
-					String mainModulePath = Path.of(srcPath, pe.getMainModule().toString("/")).toString();
+					String mainModulePath = new File(srcPath, pe.getMainModule().toString("/")).toString();
 					URI expMain = URI.createFileURI(mainModulePath).resolve(getPath());
 					if (URIUtils.toFile(expMain).isFile()) {
 						startUris.add(expMain);
@@ -402,7 +403,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 			}
 
 			LOOP_ALL: for (URI someUri : getAllContents(fileSystemScanner)) {
-				Path somePath = Path.of(someUri.deresolve(getPath()).toFileString());
+				Path somePath = URIUtils.toPath(someUri.deresolve(getPath()));
 				for (Path file : files) {
 					if (Objects.equals(file, somePath)) {
 						startUris.add(someUri);
