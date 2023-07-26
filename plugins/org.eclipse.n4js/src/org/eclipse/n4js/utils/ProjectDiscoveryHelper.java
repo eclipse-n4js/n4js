@@ -182,6 +182,10 @@ public class ProjectDiscoveryHelper {
 			} else {
 				// Is a stand-alone npm project
 				addIfNotPlainjs(wsRoot, wsRoot, pdCache, allProjectDirs);
+				ProjectDescription pd = getOrCreateProjectDescription(wsRoot, wsRoot, pdCache);
+				if (pd != null) {
+					allProjectDirs.add(wsRoot);
+				}
 			}
 		}
 	}

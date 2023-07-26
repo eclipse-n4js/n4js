@@ -91,8 +91,10 @@ public class ConcurrentIndex {
 			workspaceConfig = initialWorkspaceConfig;
 		}
 		ImmutableSet<String> removedProjectIDs = removedProjectIDsBuilder.build();
-		notifyListeners(initialWorkspaceConfig, ImmutableMap.of(),
-				ImmutableList.copyOf(initialWorkspaceConfig.getProjects()), removedProjectIDs);
+		if (!initialWorkspaceConfig.getProjects().isEmpty() || !removedProjectIDs.isEmpty()) {
+			notifyListeners(initialWorkspaceConfig, ImmutableMap.of(),
+					ImmutableList.copyOf(initialWorkspaceConfig.getProjects()), removedProjectIDs);
+		}
 	}
 
 	/** Removes all projects and their indices. */

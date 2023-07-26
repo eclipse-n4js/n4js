@@ -400,8 +400,7 @@ public class PackageJsonHelper {
 			boolean applyDefaultValues,
 			String defaultProjectName, String valueOfTopLevelPropertyMain) {
 
-		if (!target.hasN4JSNature()
-				&& (target.getProjectType() == null || target.getProjectType() == ProjectType.PLAINJS)) {
+		if (target.getProjectType() == null || target.getProjectType() == ProjectType.PLAINJS) {
 			if (applyDefaultValues) {
 				applyPlainJSDefaults(target, defaultProjectName);
 			}
@@ -546,13 +545,10 @@ public class PackageJsonHelper {
 	 */
 	private void applyN4JSDefaults(ProjectDescriptionBuilder target, String defaultProjectName) {
 
-		if (target.getProjectType() == null) {
+		if (!target.hasN4JSNature() || target.getProjectType() == null) {
 			// for non-N4JS projects, and if the project type is unset, enforce the default project type, i.e.
 			// project type 'PLAINJS':
-			ProjectType pType = target.hasN4JSNature()
-					? ProjectType.LIBRARY
-					: parseProjectType((String) PROJECT_TYPE.defaultValue);
-			target.setProjectType(pType);
+			target.setProjectType(parseProjectType((String) PROJECT_TYPE.defaultValue));
 		}
 		if (target.getPackageName() == null) {
 			target.setPackageName(defaultProjectName);
