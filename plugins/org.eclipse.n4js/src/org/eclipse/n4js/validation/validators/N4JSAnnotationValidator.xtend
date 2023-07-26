@@ -60,6 +60,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 
 /**
  * Annotation validation rules for N4JS.
@@ -392,6 +393,13 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 			addIssue(getMessageForANN_DISALLOWED_IN_NONDEFINTION_FILE(annotation.name), annotation, ANNOTATION__NAME,
 				ANN_DISALLOWED_IN_NONDEFINTION_FILE);
 			return;
+		}
+		if (element instanceof ExportDeclaration 
+			&& (element as ExportDeclaration).exportedElement instanceof N4InterfaceDeclaration
+			&& ((element as ExportDeclaration).exportedElement as N4InterfaceDeclaration).typingStrategy === TypingStrategy.STRUCTURAL
+			) {
+				addIssue(getMessageForANN_DISALLOWED_ON_SHAPES(annotation.name), annotation, ANNOTATION__NAME,
+					ANN_DISALLOWED_ON_SHAPES);
 		}
 	}
 
