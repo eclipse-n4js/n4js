@@ -86,12 +86,30 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator implements
 	// cf. IDEBUG-174
 	def private getInternalCheckNoFieldInitizializer(N4InterfaceDeclaration n4Interface) {
 		if (n4Interface.typingStrategy === TypingStrategy.STRUCTURAL) {
-			n4Interface.ownedFields.forEach [ f |
+			for (f : n4Interface.ownedFields) {
 				if (f.expression !== null) {
 					addIssue(IssueCodes.getMessageForITF_NO_FIELD_INITIALIZER(f.name, n4Interface.name), f.expression,
 						IssueCodes.ITF_NO_FIELD_INITIALIZER)
 				}
-			]
+			}
+			for (m : n4Interface.ownedMethods) {
+				if (m.body !== null) {
+					addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Methods"), m.body,
+						IssueCodes.ITF_NO_PROPERTY_BODY)
+				}
+			}
+			for (g : n4Interface.ownedGetters) {
+				if (g.body !== null) {
+					addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Getters"), g.body,
+						IssueCodes.ITF_NO_PROPERTY_BODY)
+				}
+			}
+			for (s : n4Interface.ownedSetters) {
+				if (s.body !== null) {
+					addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Setters"), s.body,
+						IssueCodes.ITF_NO_PROPERTY_BODY)
+				}
+			}
 		}
 	}
 

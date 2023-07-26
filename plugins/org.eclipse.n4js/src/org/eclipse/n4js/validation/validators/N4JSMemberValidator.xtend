@@ -323,8 +323,8 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	private def boolean holdsConstructorInInterfaceDoesNotHaveBody(TMethod constructor) {
 		if (constructor.containingType instanceof TInterface && !constructor.hasNoBody) {
-			addIssue(getMessageForITF_CONSTRUCTOR_BODY, constructor.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME,
-				ITF_CONSTRUCTOR_BODY);
+			addIssue(getMessageForITF_NO_PROPERTY_BODY("Constructors"), constructor.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME,
+				ITF_NO_PROPERTY_BODY);
 			return false;
 		}
 		return true;
