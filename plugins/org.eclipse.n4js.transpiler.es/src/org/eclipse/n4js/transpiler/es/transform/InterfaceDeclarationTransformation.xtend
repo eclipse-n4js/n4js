@@ -54,6 +54,7 @@ import org.eclipse.n4js.transpiler.es.assistants.DelegationAssistant
 import org.eclipse.n4js.transpiler.es.assistants.ReflectionAssistant
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.ts.types.TInterface
+import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.ResourceNameComputer
@@ -91,6 +92,11 @@ class InterfaceDeclarationTransformation extends Transformation {
 	}
 
 	def private void transformInterfaceDecl(N4InterfaceDeclaration ifcDecl) {
+		if (ifcDecl.typingStrategy === TypingStrategy.STRUCTURAL) {
+			// structural interfaces are shapes, i.e. do only exist at compile time
+			remove(ifcDecl);
+			return;
+		}
 		val ifcSTE = findSymbolTableEntryForElement(ifcDecl, true);
 
 		// add 'Symbol.hasInstance' function for supporting the 'instanceof' operator
