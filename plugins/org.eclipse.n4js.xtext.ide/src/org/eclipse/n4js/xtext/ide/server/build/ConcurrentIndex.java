@@ -91,10 +91,8 @@ public class ConcurrentIndex {
 			workspaceConfig = initialWorkspaceConfig;
 		}
 		ImmutableSet<String> removedProjectIDs = removedProjectIDsBuilder.build();
-		if (!initialWorkspaceConfig.getProjects().isEmpty() || !removedProjectIDs.isEmpty()) {
-			notifyListeners(initialWorkspaceConfig, ImmutableMap.of(),
-					ImmutableList.copyOf(initialWorkspaceConfig.getProjects()), removedProjectIDs);
-		}
+		notifyListeners(initialWorkspaceConfig, ImmutableMap.of(),
+				ImmutableList.copyOf(initialWorkspaceConfig.getProjects()), removedProjectIDs);
 	}
 
 	/** Removes all projects and their indices. */
@@ -172,7 +170,8 @@ public class ConcurrentIndex {
 				}
 			}
 
-			newWorkspaceConfig = configSnapshotFactory.update(workspaceConfig, changedProjectsCpy, removedProjectIDsCpy);
+			newWorkspaceConfig = configSnapshotFactory.update(workspaceConfig, changedProjectsCpy,
+					removedProjectIDsCpy);
 
 			workspaceConfig = newWorkspaceConfig;
 		}
