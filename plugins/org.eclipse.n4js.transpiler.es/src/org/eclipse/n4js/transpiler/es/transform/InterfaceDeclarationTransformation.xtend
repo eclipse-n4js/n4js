@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4JS.BinaryLogicalExpression
 import org.eclipse.n4js.n4JS.BooleanLiteral
 import org.eclipse.n4js.n4JS.CastExpression
 import org.eclipse.n4js.n4JS.CommaExpression
+import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
@@ -94,7 +95,8 @@ class InterfaceDeclarationTransformation extends Transformation {
 	def private void transformInterfaceDecl(N4InterfaceDeclaration ifcDecl) {
 		if (ifcDecl.typingStrategy === TypingStrategy.STRUCTURAL) {
 			// structural interfaces are shapes, i.e. do only exist at compile time
-			remove(ifcDecl);
+			val ifcOrParent = ifcDecl.eContainer instanceof ExportDeclaration ? ifcDecl.eContainer : ifcDecl;
+			remove(ifcOrParent);
 			return;
 		}
 		val ifcSTE = findSymbolTableEntryForElement(ifcDecl, true);

@@ -37,6 +37,7 @@ import org.eclipse.n4js.types.utils.TypeUtils
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.transpiler.utils.TranspilerUtils.*
+import org.eclipse.n4js.ts.types.TypingStrategy
 
 /**
  * Transforms {@link N4ClassDeclaration}s into a constructor function and a <code>$makeClass</code> call.
@@ -153,7 +154,11 @@ class ClassDeclarationTransformation extends Transformation {
 		// filter out some of the directly implemented interfaces:
 		val directlyImplementedInterfacesFiltered = interfaces.filter[ifcSTE|
 			val tIfc = ifcSTE.originalTarget;
-			if(tIfc instanceof TInterface) {
+			if (tIfc instanceof TInterface) {
+				if (tIfc.typingStrategy === TypingStrategy.STRUCTURAL) {
+					return false;
+				}
+				
 				return !TypeUtils.isBuiltIn(tIfc) // built-in types are not defined in Api/Impl projects -> no patching required
 					&& !(typeAssistant.inN4JSD(tIfc) && !AnnotationDefinition.N4JS.hasAnnotation(tIfc)) // interface in .n4jsd file only patched in if marked @N4JS
 			}

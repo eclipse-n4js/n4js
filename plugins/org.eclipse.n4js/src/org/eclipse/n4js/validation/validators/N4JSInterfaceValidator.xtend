@@ -94,19 +94,23 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator implements
 			}
 			for (m : n4Interface.ownedMethods) {
 				if (m.body !== null) {
-					addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Methods"), m.body,
-						IssueCodes.ITF_NO_PROPERTY_BODY)
+					if (m.isCallSignature || m.isConstructSignature) {
+						// specialized validation: N4JSMemberValidator#holdsCallConstructSignatureConstraints()
+					} else {
+						addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Methods", "structural "), m.body,
+							IssueCodes.ITF_NO_PROPERTY_BODY)
+					}
 				}
 			}
 			for (g : n4Interface.ownedGetters) {
 				if (g.body !== null) {
-					addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Getters"), g.body,
+					addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Getters", "structural "), g.body,
 						IssueCodes.ITF_NO_PROPERTY_BODY)
 				}
 			}
 			for (s : n4Interface.ownedSetters) {
 				if (s.body !== null) {
-					addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Setters"), s.body,
+					addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Setters", "structural "), s.body,
 						IssueCodes.ITF_NO_PROPERTY_BODY)
 				}
 			}

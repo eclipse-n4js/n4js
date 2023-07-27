@@ -468,7 +468,6 @@ export external public class N4ApiNotImplementedError extends Error {  }
  * <li>breaking circular dependencies</li>
  * </ul>
  */
-@N4JS
 export external public interface ~N4Provider<out T> {
 
 	/**

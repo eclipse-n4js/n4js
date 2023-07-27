@@ -1351,10 +1351,21 @@ public class N4JSLanguageUtils {
 						|| typableElem instanceof TFunction;
 		return isValueOnly;
 	}
-	
+
+	/**
+	 * @see {@link N4JSLanguageUtils#builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation(TInterface)}
+	 */
+	def static boolean builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation(TMember member) {
+		if (member.eContainer instanceof TInterface) {
+			return builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation(member.eContainer as TInterface);
+		}
+		return false;
+	}	
 
 	/**
 	 * Check if the interface is built-in or an external without N4JS annotation.
+	 * 
+	 * Note: GHOLD388
 	 *
 	 * @param tinf
 	 *            The interface.

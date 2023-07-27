@@ -222,7 +222,11 @@ class ClassConstructorAssistant extends TransformationAssistant {
 	}
 
 	def private Statement[] createInstanceFieldInitCode(N4ClassDeclaration classDecl, SpecInfo specInfo, SymbolTableEntry specObjSTE, Set<N4FieldDeclaration> fieldsWithExplicitDefinition) {
-		val allFields = classDecl.ownedFields.filter[!isStatic && !isConsumedFromInterface].toList;
+		val allFields = classDecl.ownedFields.filter[
+			!isStatic
+			&& !isConsumedFromInterface
+			&& !builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation(state.info.getOriginalDefinedMember(it))
+		].toList;
 		if(specInfo!==null) {
 			// we have a spec-parameter -> we are in a spec-style constructor
 			val result = <Statement>newArrayList;
