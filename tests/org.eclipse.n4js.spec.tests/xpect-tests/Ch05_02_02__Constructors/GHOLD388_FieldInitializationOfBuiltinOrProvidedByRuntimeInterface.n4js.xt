@@ -16,6 +16,6 @@ class MyIteratorEntry<T> implements IteratorEntry<T> { // IteratorEntry is provi
 
 	public constructor(@Spec spec:~i~this) {}
 }
-// XPECT warnings --> "done is a property of built-in / provided by runtime / external without @N4JS annotation interface IteratorEntry and can not be initialized in Spec constructor." at "done"
+// XPECT warnings --> "done is a property of a built-in, provided by runtime, or external module without @N4JS annotation. Hence the interface IteratorEntry can not be initialized in a spec constructor." at "done"
 let m = new MyIteratorEntry<string>({done: false, nr: 42});
 console.log(m);

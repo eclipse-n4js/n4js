@@ -61,6 +61,7 @@ export external public class MyTypeError extends TypeError {}
 export external public class MyURIError extends URIError {}
 export external public class MyJSON extends JSON {}
 
+// XPECT errors --> "Only nominal interfaces can be annotated with @N4JS." at "N4JS"
 @N4JS
 export public interface ~Interface1 {}
 

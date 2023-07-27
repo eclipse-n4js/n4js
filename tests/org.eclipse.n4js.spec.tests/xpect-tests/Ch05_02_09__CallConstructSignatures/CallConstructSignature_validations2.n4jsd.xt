@@ -49,6 +49,7 @@ export let o: ~Object with {
 // ------------------------------------------------------------------------------------------------------------------------
 // @N4JS
 
+// XPECT errors --> "Only nominal interfaces can be annotated with @N4JS." at "N4JS"
 @N4JS
 export external interface ~I1 {
 
@@ -123,9 +124,9 @@ export external class C3 {
 	// XPECT errors --> "Duplicate call signature." at "(): number;"
 	(): number;
 
-	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 127) duplicates method new (line 129)." at "new"
+	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 128) duplicates method new (line 130)." at "new"
 	new(): SomeCls;
-	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 129) duplicates method new (line 127)." at "new"
+	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 130) duplicates method new (line 128)." at "new"
 	new(): SomeCls;
 }
 

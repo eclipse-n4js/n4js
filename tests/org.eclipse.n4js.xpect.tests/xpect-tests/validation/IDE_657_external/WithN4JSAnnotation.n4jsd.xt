@@ -48,6 +48,7 @@ export external public interface MyRole3 {}
 @N4JS
 export external public interface MyRole4 extends MyRole3 {}
 
+// XPECT errors --> "Only nominal interfaces can be annotated with @N4JS." at "N4JS"
 @N4JS
 export public interface ~Interface1 {}
 
