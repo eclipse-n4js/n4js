@@ -76,13 +76,12 @@ class MemberPatchingTransformation extends Transformation {
 				// InterfaceDeclarationTransformation#createInstanceFieldInitializationFunction(N4InterfaceDeclaration, SymbolTableEntry)
 			}
 		}
-			
+
 		for(field : cmoft.fieldsPurelyMixedInNotOverridingAccessor) {
-			val member = _N4MemberDecl(field);
-			ifcDecl.ownedMembersRaw += member;
-			state.info.setOriginalDefinedMember(member, field);
-			if (!cmoft.inlinedMembersFromShapes.contains(field)) {
-				state.info.markAsConsumedFromInterface(member);
+			if (cmoft.inlinedMembersFromShapes.contains(field)) {
+				val member = _N4MemberDecl(field);
+				ifcDecl.ownedMembersRaw += member;
+				state.info.setOriginalDefinedMember(member, field);
 			}
 		}
 	}
