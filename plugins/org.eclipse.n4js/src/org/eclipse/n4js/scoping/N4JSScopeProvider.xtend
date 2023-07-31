@@ -813,7 +813,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 		var result = parentOrNull;
 		val resource = script.eResource as N4JSResource;
-		val mergedTModules = declMergingHelper.getMergedElements(resource, script.module); // can be empty
+		val mergedTModules = declMergingHelper.getMergedElements(resource, script.module).toList(); // can be empty
 		if (mergedTModules.size > 1) {
 			Collections.sort(mergedTModules, Comparator.comparing([(it as InternalEObject).eProxyURI], new URIUtils.URIComparator()));
 		}

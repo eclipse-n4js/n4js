@@ -15,6 +15,7 @@ import static java.util.Collections.emptyList;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,6 +40,8 @@ public class ConcreteMembersOrderedForTranspiler {
 	/* package */ final List<TMember> concreteInheritedMembers;
 	/** members, maybe defined in interfaces mixed in */
 	public final List<TMember> ownedAndMixedInConcreteMembers;
+	/** members from shapes in the type hierarchy. Includes transitive members. */
+	public final Set<TMember> inlinedMembersFromShapes;
 	/** accessors not overridden by fields */
 	public final List<AccessorTuple> concreteAccessorTuples;
 	/** fields overriding accessors */
@@ -57,6 +60,9 @@ public class ConcreteMembersOrderedForTranspiler {
 
 		List<TMember> ownedAndMixedInConcreteMembers = state.memberCollector
 				.computeOwnedAndMixedInConcreteMembers(type);
+
+		Set<TMember> inlinedMembersFromShapes = new LinkedHashSet<>(state.memberCollector
+				.computeInlinedMembersFromShapes(type));
 
 		List<AccessorTuple> concreteAccessorTuples = getConcreteFieldAccessors(ownedAndMixedInConcreteMembers,
 				concreteInheritedMembers);
@@ -77,6 +83,7 @@ public class ConcreteMembersOrderedForTranspiler {
 		return new ConcreteMembersOrderedForTranspiler(
 				concreteInheritedMembers,
 				ownedAndMixedInConcreteMembers,
+				inlinedMembersFromShapes,
 				concreteAccessorTuples,
 				fieldsOverridingAccessors,
 				fieldsPurelyMixedInNotOverridingAccessor);
@@ -84,10 +91,13 @@ public class ConcreteMembersOrderedForTranspiler {
 
 	private ConcreteMembersOrderedForTranspiler(
 			List<TMember> concreteInheritedMembers, List<TMember> ownedAndMixedInConcreteMembers,
+			Set<TMember> inlinedMembersFromShapes,
 			List<AccessorTuple> concreteAccessorTuples, MemberList<TField> fieldsOverridingAccessors,
 			MemberList<TField> fieldsPurelyMixedInNotOverridingAccessor) {
+
 		this.concreteInheritedMembers = concreteInheritedMembers;
 		this.ownedAndMixedInConcreteMembers = ownedAndMixedInConcreteMembers;
+		this.inlinedMembersFromShapes = inlinedMembersFromShapes;
 		this.concreteAccessorTuples = concreteAccessorTuples;
 		this.fieldsOverridingAccessors = fieldsOverridingAccessors;
 		this.fieldsPurelyMixedInNotOverridingAccessor = fieldsPurelyMixedInNotOverridingAccessor;

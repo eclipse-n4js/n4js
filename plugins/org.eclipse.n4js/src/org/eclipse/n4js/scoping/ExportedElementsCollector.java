@@ -12,6 +12,7 @@ package org.eclipse.n4js.scoping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -150,7 +151,7 @@ public class ExportedElementsCollector {
 		doCollectElements(namespace, info);
 
 		if (DeclMergingUtils.mayBeMerged(namespace)) {
-			List<AbstractNamespace> mergedNamespaces = declMergingHelper.getMergedElements(info.contextResource,
+			Set<AbstractNamespace> mergedNamespaces = declMergingHelper.getMergedElements(info.contextResource,
 					namespace);
 			for (AbstractNamespace mergedNamespace : mergedNamespaces) {
 				doCollectElements(mergedNamespace, info);
@@ -193,7 +194,7 @@ public class ExportedElementsCollector {
 				if (info.tryNext(exportedModule)) {
 					doCollectElements(exportedModule, info);
 					if (DeclMergingUtils.mayBeMerged(exportedModule)) {
-						List<AbstractNamespace> mergedNamespaces = declMergingHelper.getMergedElements(
+						Set<AbstractNamespace> mergedNamespaces = declMergingHelper.getMergedElements(
 								info.contextResource, exportedModule);
 						for (AbstractNamespace mergedNamespace : mergedNamespaces) {
 							doCollectElements(mergedNamespace, info);
