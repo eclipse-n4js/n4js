@@ -122,7 +122,7 @@ public class XContentAssistService {
 		} else {
 			prefix = "";
 		}
-		int prefixOffset = caretOffset - prefix.length();
+		int prefixOffset = Math.max(0, caretOffset - prefix.length());
 		Position prefixPosition = document.getPosition(prefixOffset);
 		if (prefixPosition.getLine() < caretPosition.getLine()) {
 			// LSP spec: The text edit's range as well as both ranges from an insert
