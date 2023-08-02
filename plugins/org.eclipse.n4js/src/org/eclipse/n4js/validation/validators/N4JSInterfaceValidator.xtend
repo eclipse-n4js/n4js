@@ -29,6 +29,11 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.validation.validators.StaticPolyfillValidatorExtension.*
+import org.eclipse.n4js.n4JS.N4FieldDeclaration
+import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.N4SetterDeclaration
+import org.eclipse.n4js.n4JS.N4GetterDeclaration
+import org.eclipse.n4js.n4JS.N4Modifier
 
 /**
  */
@@ -86,32 +91,39 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator implements
 	// cf. IDEBUG-174
 	def private getInternalCheckNoFieldInitizializer(N4InterfaceDeclaration n4Interface) {
 		if (n4Interface.typingStrategy === TypingStrategy.STRUCTURAL) {
-			for (f : n4Interface.ownedFields) {
-				if (f.expression !== null) {
-					addIssue(IssueCodes.getMessageForITF_NO_FIELD_INITIALIZER(f.name, n4Interface.name), f.expression,
-						IssueCodes.ITF_NO_FIELD_INITIALIZER)
-				}
-			}
-			for (m : n4Interface.ownedMethods) {
-				if (m.body !== null) {
-					if (m.isCallSignature || m.isConstructSignature) {
-						// specialized validation: N4JSMemberValidator#holdsCallConstructSignatureConstraints()
-					} else {
-						addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Methods", "structural "), m.body,
-							IssueCodes.ITF_NO_PROPERTY_BODY)
+			for (member : n4Interface.ownedMembers) {
+				if (member instanceof N4FieldDeclaration) {
+					if (member.expression !== null) {
+						addIssue(IssueCodes.getMessageForITF_NO_FIELD_INITIALIZER(member.name, n4Interface.name),
+							member.expression, IssueCodes.ITF_NO_FIELD_INITIALIZER)
 					}
 				}
-			}
-			for (g : n4Interface.ownedGetters) {
-				if (g.body !== null) {
-					addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Getters", "structural "), g.body,
-						IssueCodes.ITF_NO_PROPERTY_BODY)
+				if (member instanceof N4MethodDeclaration) {
+					if (member.body !== null) {
+						if (member.isCallSignature || member.isConstructSignature) {
+							// specialized validation: N4JSMemberValidator#holdsCallConstructSignatureConstraints()
+						} else {
+							addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Methods", "structural "),
+								member.body, IssueCodes.ITF_NO_PROPERTY_BODY)
+						}
+					}
 				}
-			}
-			for (s : n4Interface.ownedSetters) {
-				if (s.body !== null) {
-					addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Setters", "structural "), s.body,
-						IssueCodes.ITF_NO_PROPERTY_BODY)
+				if (member instanceof N4GetterDeclaration) {
+					if (member.body !== null) {
+						addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Getters", "structural "),
+							member.body, IssueCodes.ITF_NO_PROPERTY_BODY)
+					}
+				}
+				if (member instanceof N4SetterDeclaration) {
+					if (member.body !== null) {
+						addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Setters", "structural "),
+							member.body, IssueCodes.ITF_NO_PROPERTY_BODY)
+					}
+				}
+				
+				if (!member.declaredModifiers.contains(N4Modifier.PUBLIC)) {
+					addIssue(IssueCodes.getMessageForITF_PROPERTY_MISSING_PUBLIC(member.name, n4Interface.name),
+						member, IssueCodes.ITF_PROPERTY_MISSING_PUBLIC)
 				}
 			}
 		}
