@@ -1,0 +1,156 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+
+// XPECT errors --> "Unsupported feature: class expressions." at "C1" 
+/* XPECT completion at '@' ---
+   After, AfterAll, Before, BeforeAll, Bind, Binder, Configurable,
+   ContainsIndexSignature, CovariantConstructor, Description, Enumerable,
+   ExcludeFromTestCatalog, ExportEquals, Final, Fixme, GenerateInjector,
+   Global, Group, IDEBUG, Ignore, IgnoreImplementation, Inject, Injected,
+   Internal, ModuleAugmentation, N4JS, Nfon, NumberBased, Observable,
+   Override, Parameter, Parameters, Polyfill, Promisifiable, ProvidedByRuntime,
+   Provides, ProvidesDefaultImplementation, ProvidesInitializer, Singleton,
+   Spec, StaticPolyfill, StaticPolyfillAware, StaticPolyfillModule, StringBased,
+   Test, TestAPI, This, Timeout, Transient, UseBinder, WithParentInjector, Writable
+--- */
+@
+class C1 {
+	public foo() {}
+}
+
+
+// XPECT errors --> "The annotation @A is not defined." at "A" 
+/* XPECT completion at '@' ---
+   After, AfterAll, Before, BeforeAll, Bind, Binder, Configurable,
+   ContainsIndexSignature, CovariantConstructor, Description, Enumerable,
+   ExcludeFromTestCatalog, ExportEquals, Final, Fixme, GenerateInjector,
+   Global, Group, IDEBUG, Ignore, IgnoreImplementation, Inject, Injected,
+   Internal, ModuleAugmentation, N4JS, Nfon, NumberBased, Observable,
+   Override, Parameter, Parameters, Polyfill, Promisifiable, ProvidedByRuntime,
+   Provides, ProvidesDefaultImplementation, ProvidesInitializer, Singleton,
+   Spec, StaticPolyfill, StaticPolyfillAware, StaticPolyfillModule, StringBased,
+   Test, TestAPI, This, Timeout, Transient, UseBinder, WithParentInjector, Writable
+--- */
+@A
+class C2 {
+	public foo() {}
+}
+
+
+class C3 {
+// XPECT errors --> "no viable alternative at input 'public'" at "public" 
+/* XPECT completion at '@' ---
+   After, AfterAll, Before, BeforeAll, Bind, Binder, Configurable,
+   ContainsIndexSignature, CovariantConstructor, Description, Enumerable,
+   ExcludeFromTestCatalog, ExportEquals, Final, Fixme, GenerateInjector,
+   Global, Group, IDEBUG, Ignore, IgnoreImplementation, Inject, Injected,
+   Internal, ModuleAugmentation, N4JS, Nfon, NumberBased, Observable,
+   Override, Parameter, Parameters, Polyfill, Promisifiable, ProvidedByRuntime,
+   Provides, ProvidesDefaultImplementation, ProvidesInitializer, Singleton,
+   Spec, StaticPolyfill, StaticPolyfillAware, StaticPolyfillModule, StringBased,
+   Test, TestAPI, This, Timeout, Transient, UseBinder, WithParentInjector, Writable
+--- */
+	@
+	public foo() {}
+}
+
+
+class C4 {
+// XPECT errors --> "The annotation @A is not defined." at "A" 
+/* XPECT completion at '@' ---
+   After, AfterAll, Before, BeforeAll, Bind, Binder, Configurable,
+   ContainsIndexSignature, CovariantConstructor, Description, Enumerable,
+   ExcludeFromTestCatalog, ExportEquals, Final, Fixme, GenerateInjector,
+   Global, Group, IDEBUG, Ignore, IgnoreImplementation, Inject, Injected,
+   Internal, ModuleAugmentation, N4JS, Nfon, NumberBased, Observable,
+   Override, Parameter, Parameters, Polyfill, Promisifiable, ProvidedByRuntime,
+   Provides, ProvidesDefaultImplementation, ProvidesInitializer, Singleton,
+   Spec, StaticPolyfill, StaticPolyfillAware, StaticPolyfillModule, StringBased,
+   Test, TestAPI, This, Timeout, Transient, UseBinder, WithParentInjector, Writable
+--- */
+	@A
+	public foo() {}
+}
+
+
+/* XPECT completion at '@' ---
+   After, AfterAll, Before, BeforeAll, Bind, Binder, Configurable,
+   ContainsIndexSignature, CovariantConstructor, Description, Enumerable,
+   ExcludeFromTestCatalog, ExportEquals, Final, Fixme, GenerateInjector,
+   Global, Group, IDEBUG, Ignore, IgnoreImplementation, Inject, Injected,
+   Internal, ModuleAugmentation, N4JS, Nfon, NumberBased, Observable,
+   Override, Parameter, Parameters, Polyfill, Promisifiable, ProvidedByRuntime,
+   Provides, ProvidesDefaultImplementation, ProvidesInitializer, Singleton,
+   Spec, StaticPolyfill, StaticPolyfillAware, StaticPolyfillModule, StringBased,
+   Test, TestAPI, This, Timeout, Transient, UseBinder, WithParentInjector, Writable
+--- */
+@
+interface I1 {
+	public foo() {}
+}
+
+
+/* XPECT completion at '@' ---
+   After, AfterAll, Before, BeforeAll, Bind, Binder, Configurable,
+   ContainsIndexSignature, CovariantConstructor, Description, Enumerable,
+   ExcludeFromTestCatalog, ExportEquals, Final, Fixme, GenerateInjector,
+   Global, Group, IDEBUG, Ignore, IgnoreImplementation, Inject, Injected,
+   Internal, ModuleAugmentation, N4JS, Nfon, NumberBased, Observable,
+   Override, Parameter, Parameters, Polyfill, Promisifiable, ProvidedByRuntime,
+   Provides, ProvidesDefaultImplementation, ProvidesInitializer, Singleton,
+   Spec, StaticPolyfill, StaticPolyfillAware, StaticPolyfillModule, StringBased,
+   Test, TestAPI, This, Timeout, Transient, UseBinder, WithParentInjector, Writable
+--- */
+@A
+interface I2 {
+	public foo() {}
+}
+
+
+interface I3 {
+// XPECT errors --> "no viable alternative at input 'public'" at "public" 
+/* XPECT completion at '@' ---
+   After, AfterAll, Before, BeforeAll, Bind, Binder, Configurable,
+   ContainsIndexSignature, CovariantConstructor, Description, Enumerable,
+   ExcludeFromTestCatalog, ExportEquals, Final, Fixme, GenerateInjector,
+   Global, Group, IDEBUG, Ignore, IgnoreImplementation, Inject, Injected,
+   Internal, ModuleAugmentation, N4JS, Nfon, NumberBased, Observable,
+   Override, Parameter, Parameters, Polyfill, Promisifiable, ProvidedByRuntime,
+   Provides, ProvidesDefaultImplementation, ProvidesInitializer, Singleton,
+   Spec, StaticPolyfill, StaticPolyfillAware, StaticPolyfillModule, StringBased,
+   Test, TestAPI, This, Timeout, Transient, UseBinder, WithParentInjector, Writable
+--- */
+	@
+	public foo() {}
+}
+
+
+interface I4 {
+// XPECT errors --> "The annotation @A is not defined." at "A" 
+/* XPECT completion at '@' ---
+   After, AfterAll, Before, BeforeAll, Bind, Binder, Configurable,
+   ContainsIndexSignature, CovariantConstructor, Description, Enumerable,
+   ExcludeFromTestCatalog, ExportEquals, Final, Fixme, GenerateInjector,
+   Global, Group, IDEBUG, Ignore, IgnoreImplementation, Inject, Injected,
+   Internal, ModuleAugmentation, N4JS, Nfon, NumberBased, Observable,
+   Override, Parameter, Parameters, Polyfill, Promisifiable, ProvidedByRuntime,
+   Provides, ProvidesDefaultImplementation, ProvidesInitializer, Singleton,
+   Spec, StaticPolyfill, StaticPolyfillAware, StaticPolyfillModule, StringBased,
+   Test, TestAPI, This, Timeout, Transient, UseBinder, WithParentInjector, Writable
+--- */
+	@A
+	public foo() {}
+}
