@@ -21,9 +21,11 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.ide.server.util.SymbolKindUtil;
+import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
+import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -46,6 +48,7 @@ import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.utils.nodemodel.NodeModelUtilsN4;
 import org.eclipse.n4js.xtext.ide.editor.contentassist.N4JSContentAssistEntry;
+import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
 import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalPriorities;
@@ -76,19 +79,37 @@ class N4JSProposalHelper {
 	 * This method activates the Content Assist to propose and complete methods inherited by a superclass based on a
 	 * specific prefix.
 	 */
-	public void complete(EObject model, IIdeContentProposalAcceptor acceptor) {
+	public void complete(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
+		EObject model = context.getCurrentModel();
 
+		// annotations
+		if ("@".equals(context.getPrefix())) {
+			for (AnnotationDefinition annDef : AnnotationDefinition.getAll()) {
+				ContentAssistEntry proposal = createProposal("", annDef);
+				acceptor.accept(proposal, proposalPriorities.getDefaultPriority(proposal));
+			}
+		} else if (context.getPreviousModel() instanceof Annotation) {
+			Annotation anno = (Annotation) context.getPreviousModel();
+			if (AnnotationDefinition.find(anno.getName()) == null) {
+				ICompositeNode node = NodeModelUtils.getNode(anno);
+
+				String prefix = NodeModelUtilsN4.getTokenTextWithHiddenTokens(node).trim();
+				for (AnnotationDefinition annDef : AnnotationDefinition.getAll()) {
+					ContentAssistEntry proposal = createProposal(prefix, annDef);
+					acceptor.accept(proposal, proposalPriorities.getDefaultPriority(proposal));
+				}
+			}
+		}
+
+		// overrides for properties from super types
 		if (model instanceof N4FieldDeclaration) {
 			MemberCollector memberCollector = containerTypesHelper.fromContext(model);
 			EObject n4classdeclaration = model.eContainer();
 			if (n4classdeclaration instanceof N4ClassDeclaration) {
 				Type tclass = ((N4ClassDeclaration) n4classdeclaration).getDefinedType();
 				buildProposals((N4FieldDeclaration) model, memberCollector, tclass, acceptor);
-
 			}
-		} else
-
-		if (model instanceof LiteralOrComputedPropertyName) {
+		} else if (model instanceof LiteralOrComputedPropertyName) {
 			MemberCollector memberCollector = containerTypesHelper.fromContext(model);
 			EObject n4classdeclaration = model.eContainer().eContainer();
 			if (n4classdeclaration instanceof N4ClassDeclaration) {
@@ -356,9 +377,7 @@ class N4JSProposalHelper {
 		}
 	}
 
-	private ContentAssistEntry createProposal(N4FieldDeclaration location, String proposal, String signature,
-			TMember member) {
-
+	private ContentAssistEntry createProposal(EObject location, String proposal, String signature, TMember member) {
 		ICompositeNode node = NodeModelUtils.getNode(location);
 		String prefix = NodeModelUtilsN4.getTokenTextWithHiddenTokens(node).trim();
 
@@ -369,6 +388,18 @@ class N4JSProposalHelper {
 		entry.setLabel(member.getMemberAsString());
 		entry.setDescription("Override " + member.getContainingType().getName() + "#" + signature);
 		entry.setFilterText(member.getName());
+
+		return entry;
+	}
+
+	private ContentAssistEntry createProposal(String prefix, AnnotationDefinition annotation) {
+		N4JSContentAssistEntry entry = new N4JSContentAssistEntry();
+		entry.setProposal(annotation.name);
+		entry.setPrefix(prefix);
+		entry.setKind(SymbolKindUtil.getKind(N4JSPackage.eINSTANCE.getAnnotation()));
+		entry.setLabel(annotation.name);
+		entry.setDescription("add @" + annotation.name + " annotation");
+		entry.setFilterText(annotation.name);
 
 		return entry;
 	}

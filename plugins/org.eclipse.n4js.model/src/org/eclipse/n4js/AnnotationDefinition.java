@@ -42,6 +42,7 @@ import static org.eclipse.n4js.ts.typeRefs.TypeRefsPackage.Literals.TYPE_REF;
 import static org.eclipse.xtext.EcoreUtil2.getContainerOfType;
 import static org.eclipse.xtext.util.SimpleAttributeResolver.newResolver;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -461,6 +462,13 @@ public final class AnnotationDefinition {
 	 */
 	public static AnnotationDefinition find(final String name) {
 		return DEFINED_ANNOTATIONS.get(name);
+	}
+
+	/**
+	 * Returns all annotations
+	 */
+	public static Collection<AnnotationDefinition> getAll() {
+		return DEFINED_ANNOTATIONS.values();
 	}
 
 	/**
