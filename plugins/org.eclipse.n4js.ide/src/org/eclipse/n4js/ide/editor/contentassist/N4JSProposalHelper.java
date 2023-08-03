@@ -83,10 +83,19 @@ class N4JSProposalHelper {
 		EObject model = context.getCurrentModel();
 
 		// annotations
-		if ("@".equals(context.getPrefix())) {
+		if ("@@".equals(context.getPrefix())) {
 			for (AnnotationDefinition annDef : AnnotationDefinition.getAll()) {
-				ContentAssistEntry proposal = createProposal("", annDef);
-				acceptor.accept(proposal, proposalPriorities.getDefaultPriority(proposal));
+				if (annDef.targets[0] == N4JSPackage.eINSTANCE.getScript()) {
+					ContentAssistEntry proposal = createProposal("", annDef);
+					acceptor.accept(proposal, proposalPriorities.getDefaultPriority(proposal));
+				}
+			}
+		} else if ("@".equals(context.getPrefix())) {
+			for (AnnotationDefinition annDef : AnnotationDefinition.getAll()) {
+				if (annDef.targets.length > 1 || annDef.targets[0] != N4JSPackage.eINSTANCE.getScript()) {
+					ContentAssistEntry proposal = createProposal("", annDef);
+					acceptor.accept(proposal, proposalPriorities.getDefaultPriority(proposal));
+				}
 			}
 		} else if (context.getPreviousModel() instanceof Annotation) {
 			Annotation anno = (Annotation) context.getPreviousModel();

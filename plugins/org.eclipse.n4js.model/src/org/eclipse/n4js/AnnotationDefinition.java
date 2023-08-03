@@ -60,6 +60,7 @@ import org.eclipse.n4js.utils.UtilN4;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 
 /**
  * Defined annotations, will be replaces (or at least extended) by system allowing customized annotations.
@@ -577,6 +578,12 @@ public final class AnnotationDefinition {
 		boolean argsVariadic = false;
 
 		AnnotationDefinitionBuilder targets(final EClass... _targets) {
+			if (_targets != null && _targets.length > 1) {
+				for (int i = 1; i < _targets.length; i++) {
+					// make sure that SCRIPT comes first. Used in N4JSProposalHelper.
+					Preconditions.checkArgument(_targets[i] != N4JSPackage.eINSTANCE.getScript());
+				}
+			}
 			this.targets = _targets;
 			return this;
 		}
