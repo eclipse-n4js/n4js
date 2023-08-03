@@ -14,8 +14,12 @@ import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.n4JS.N4FieldDeclaration
+import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TInterface
@@ -29,11 +33,6 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.validation.validators.StaticPolyfillValidatorExtension.*
-import org.eclipse.n4js.n4JS.N4FieldDeclaration
-import org.eclipse.n4js.n4JS.N4MethodDeclaration
-import org.eclipse.n4js.n4JS.N4SetterDeclaration
-import org.eclipse.n4js.n4JS.N4GetterDeclaration
-import org.eclipse.n4js.n4JS.N4Modifier
 
 /**
  */
@@ -119,11 +118,6 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator implements
 						addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Setters", "structural "),
 							member.body, IssueCodes.ITF_NO_PROPERTY_BODY)
 					}
-				}
-				
-				if (!member.declaredModifiers.contains(N4Modifier.PUBLIC)) {
-					addIssue(IssueCodes.getMessageForITF_PROPERTY_MISSING_PUBLIC(member.name, n4Interface.name),
-						member, IssueCodes.ITF_PROPERTY_MISSING_PUBLIC)
 				}
 			}
 		}
