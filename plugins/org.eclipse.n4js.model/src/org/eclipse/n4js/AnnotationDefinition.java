@@ -42,6 +42,7 @@ import static org.eclipse.n4js.ts.typeRefs.TypeRefsPackage.Literals.TYPE_REF;
 import static org.eclipse.xtext.EcoreUtil2.getContainerOfType;
 import static org.eclipse.xtext.util.SimpleAttributeResolver.newResolver;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,6 +60,7 @@ import org.eclipse.n4js.utils.UtilN4;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 
 /**
  * Defined annotations, will be replaces (or at least extended) by system allowing customized annotations.
@@ -464,6 +466,13 @@ public final class AnnotationDefinition {
 	}
 
 	/**
+	 * Returns all annotations
+	 */
+	public static Collection<AnnotationDefinition> getAll() {
+		return DEFINED_ANNOTATIONS.values();
+	}
+
+	/**
 	 * RetentionPolicy defines where and when the annotation is accessible, that is, in the AST, in the type model, or
 	 * at runtime. AST, TYPE, and RUNTIME are transitive, that is, RUNTIME includes AST and TYPE. In some rare cases an
 	 * annotation may be present at runtime but not in the type model---this is usually the case only if the information
@@ -569,6 +578,12 @@ public final class AnnotationDefinition {
 		boolean argsVariadic = false;
 
 		AnnotationDefinitionBuilder targets(final EClass... _targets) {
+			if (_targets != null && _targets.length > 1) {
+				for (int i = 1; i < _targets.length; i++) {
+					// make sure that SCRIPT comes first. Used in N4JSProposalHelper.
+					Preconditions.checkArgument(_targets[i] != N4JSPackage.eINSTANCE.getScript());
+				}
+			}
 			this.targets = _targets;
 			return this;
 		}

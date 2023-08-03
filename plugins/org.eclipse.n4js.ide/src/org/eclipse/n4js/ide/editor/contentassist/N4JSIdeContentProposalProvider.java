@@ -174,7 +174,7 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 	protected void _createProposals(RuleCall ruleCall, ContentAssistContext context,
 			IIdeContentProposalAcceptor acceptor) {
 
-		proposalHelper.complete(context.getCurrentModel(), acceptor);
+		proposalHelper.complete(context, acceptor);
 	}
 
 	/**

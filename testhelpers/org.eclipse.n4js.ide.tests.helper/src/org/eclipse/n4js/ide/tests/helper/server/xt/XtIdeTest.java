@@ -426,7 +426,7 @@ public class XtIdeTest extends AbstractIdeTest {
 		String allItemsStr = Strings.join("\n", item -> item.getLabel(), items);
 
 		if (applyId == null && containsNotId == null && containsId == null) {
-			List<String> ciItems = Lists.transform(items, ci -> getStringLSP4J().toString(ci));
+			List<String> ciItems = Lists.transform(items, ci -> ci.getLabel());
 			assertEqualIterables(data.expectation, ciItems);
 
 		} else if (applyId != null) {
