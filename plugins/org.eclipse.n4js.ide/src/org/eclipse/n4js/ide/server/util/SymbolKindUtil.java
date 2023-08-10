@@ -94,6 +94,9 @@ public class SymbolKindUtil {
 		if (N4JSPackage.eINSTANCE.getObjectLiteral() == eClass) {
 			return SymbolKind.Object;
 		}
+		if (N4JSPackage.eINSTANCE.getAnnotation() == eClass) {
+			return SymbolKind.Key;
+		}
 
 		if (TypesPackage.eINSTANCE.getTModule() == eClass) {
 			return SymbolKind.Module;
@@ -209,6 +212,12 @@ public class SymbolKindUtil {
 			return ContentAssistEntry.KIND_COLOR;
 		}
 		if (TypesPackage.eINSTANCE.getTNamespace() == eClass) {
+			return ContentAssistEntry.KIND_COLOR;
+		}
+		if (N4JSPackage.eINSTANCE.getAnnotation() == eClass) {
+			return ContentAssistEntry.KIND_COLOR;
+		}
+		if (TypesPackage.eINSTANCE.getTAnnotation() == eClass) {
 			return ContentAssistEntry.KIND_COLOR;
 		}
 		return ContentAssistEntry.KIND_TEXT;
