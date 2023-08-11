@@ -490,7 +490,7 @@ The type of an interface declaration `I` is of type `type{I}`:
 
 Interfaces are used to describe the public <<Acronyms,API>> of a classifier.
 The main requirement is that the instance of an interface, which must be an instance of a class since interfaces cannot have instances, provides all members declared in the interface.
-Thus, a (concrete) class implementing an interface must provide implementations for all the fields, methods, getters and setters of the interface (otherwise it the class must be declared abstract).
+Thus, a (concrete) class implementing an interface must provide implementations for all the fields, methods, getters and setters of the interface (otherwise the class must be declared abstract).
 The implementations have to be provided either directly in the class itself, through a superclass, or by the interface if the member has a default implementation.
 
 A field declaration in an interface denotes that all implementing classes can either provide a field of the same name and the same(!) type or corresponding field accessors.
@@ -508,6 +508,12 @@ For any interface `I`, the following must hold:
 
 . Interfaces may not be instantiated.
 . Interfaces cannot be set to final (with annotation @Final): $\neg I.final$.
+. Interfaces cannot contain a constructor (<<Req-IDE-56>>):
++
+[math]
+++++
+$\forall m \in I.member: m.name \neq 'constructor'$.
+++++
 . Members of an interface must not be declared private.
 The default access modifier in interfaces is the the type’s visibility or `project`, if the type’s visibility is `private`.
 . Members of an interface, except methods, must not be declared `@Final`:
@@ -518,7 +524,8 @@ The default access modifier in interfaces is the the type’s visibility or `pro
 ++++
 +
 NOTE: not allowing field accessors to be declared final was a deliberate decision, because it would complicate the internal handling of member redefinition; might be reconsidered at a later time
-. The literal may not be used in the initializer expression of a field of an interface. +
+. The literal may not be used in the initializer expression of a field of an interface.
++
 This restriction is required, because the order of implementation of these fields in an implementing class cannot be guaranteed.
 This applies to both instance and static fields in interfaces, but in case of static fields, `this` is also disallowed due to <<_static-members-of-interfaces>>.
 
@@ -532,9 +539,6 @@ Since <<Acronyms,IDL>> cite:[OMG14a] is used to describe these elements in speci
 constant data fields are an often-used technique there and they can be modeled in N4JS 1:1.
 
 // todo[IDE-1236]{check current implementation: fields and methods}
-
-As specified in <<Req-IDE-56>>, interfaces cannot contain a constructor i.e. +
-$\forall m \in I.ownedMethods: m.name \neq 'constructor'$.
 
 .Simple Interfaces
 [example]
@@ -590,7 +594,7 @@ For a given type
 by `C`, the following constraints must be true:
 
 .  Only classes can implement interfaces: `C` must be a Class.
-.  A class can only implement interfaces: $I_1, \dots, I_n$ must be interfaces.
+.  A class can only implement interfaces and shapes: $I_1, \dots, I_n$ must be interfaces or shapes.
 .  A class may not directly implement the same interface more than once: +
 $I_i=I_j \Rightarrow i=j$ for any $i,j \in \{1, \dots, n\}$.
 .  A class may (indirectly) implement the same interface $J$ more than once only if
@@ -604,6 +608,235 @@ Note that `M` need not be an owned member of $I_i$.
 --
 
 For default methods in interfaces, see <<_default-methods-in-interfaces>>.
+
+
+
+[.language-n4js]
+== Shapes / Structural Interfaces [[shapes]]
+
+Shapes -- also called structural interfaces -- are a ducktype version of (ordinary, i.e. nominal) N4JS interfaces.
+They are similar regarding their syntax and use cases.
+However, shapes only exist at compile time whereas nominal interfaces have runtime artifacts such as reflection information and initializer code.
+
+=== Definition of Shapes
+
+==== Syntax [[shapes-syntax]]
+
+The syntax of shapes differs only in the additional tilde character '~' written right before the interface's name.
+
+.Syntax N4 Shape Declaration
+[source,xtext]
+----
+N4InterfaceDeclaration <Yield>:
+    => (
+        {N4InterfaceDeclaration}
+        annotations+=Annotation*
+        (declaredModifiers+=N4Modifier)*
+        'interface' typingStrategy=TypingStrategyDefSiteOperator? '~'name=BindingIdentifier<Yield>?
+    )
+    TypeVariables?
+    InterfaceImplementsList?
+    Members<Yield>
+;
+
+fragment InterfaceImplementsList*:
+    'implements' superInterfaceRefs+=ParameterizedTypeRefNominal
+        (',' superInterfaceRefs+=ParameterizedTypeRefNominal)*
+;
+----
+
+
+
+==== Properties [[shapes-properties]]
+These are the additional properties of interfaces, which can be specified by the user:
+
+`superInterfaces`::
+Collection of interfaces extended by this interface; empty by default.
+Instead of `superInterfaces`, we simply write `interfaces`.
+
+
+==== Type Inference [[shapes-type-inference]]
+
+The type of an interface declaration `I` is of type `type{I}`:
+
+[math]
+++++
+\infer{\tee I: \type{type}\{I\}}{}
+++++
+
+
+==== Semantics [[shapes-semantics]]
+
+Shapes are used to describe the public structural <<Acronyms,API>> of a classifier or a part of it.
+Classes and interfaces do not need to specify to implement a shape explicitly.
+Due to the structural / ducktype nature of shapes their subtype relation to other types is checked structurally only.
+
+Since shapes have no representation at runtime they do not support field initializers, nor default methods/accessors, nor reflection information.
+Hence, all members of shapes are abstract and public.
+
+Iff a type $T$ is a shape, $T.defStructural$ is true.
+
+
+.Shapes
+[req,id=IDE-48S,version=1]
+--
+For any shape `S`, the following must hold:
+
+. Shapes may not be instantiated.
+. Shapes cannot be set to final (with annotation @Final): $\neg S.final$.
+. Shapes cannot contain a constructor:
++
+[math]
+++++
+$\forall m \in S.member: m.name \neq 'constructor'$.
+++++
+. Members of a shape must be non-static.
+. Members of a shape must be declared public.
+. Members of a shape must not be declared `@Final`:
++
+[math]
+++++
+\forall m \in S.member: \neq m.final 
+++++
+. Fields of a shape may not be initialized.
+. Methods and accessors of a shape may not have default implementations.
+.  Shapes cannot be used on the right hand side of the `instanceof` operator:
+$x\ \lstnfjs{instanceof}\ T \Rightarrow \lnot T.defStructural$
+.  A type $X$ is a subtype of a shape $T$ either
+..  if it contains all public, non-static members of that type
++
+[%hardbreaks]
+$  T.defStructural $
+$  \forall m \in T.members, m.acc=\lenum{public}, \neg m.static, m\neq T.ctor:$
+$  \hspace{1em} \exists m' \in X.members:$
+$  \hspace{2em} m'.acc=\lenum{public} \land \neg m'.static \land m'.name=m.name$
+$  \hspace{2em} \land \tee m' \subtype m$
+$  \infer{ \lspc \tee X \subtype T \lspc }{\hspace{2em} \land \mu(m)=\type{Field} \Rightarrow \tee m \subtype m'}$
+or
+..  if it explicitly extends or implements the shape.
++
+[math]
+++++
+\infer{\tee X \subtype T}{T.defStructural \spc {T \in X.superTypes^* }}
+++++
+..  A structurally defined type $T$ is implicitly derived
+from `Object` if no other type is specified. In particular, a structurally
+defined type must not be inherited from `N4Object`.
++
+$\infer{\tee T \subtype \lstnfjs{Object}}{T.defStructural}$
++
+$T.defStructural \Rightarrow \tee T \notsubtype \lstnfjs{N4Object} \land \lstnfjs{N4Object} \not\in T.superTypes^*$
+
+--
+
+
+.Simple Shapes
+[example]
+--
+The following example shows the syntax for defining shapes.
+The second interface extends the first one.
+Note that all members need to be defined `public`.
+
+[source,n4js]
+----
+interface ~I {
+    public foo(): void
+}
+interface ~I2 extends I {
+    public someText: string;
+    public bar(): void
+}
+----
+--
+
+
+.Declaration Site Structural Typing
+[example]
+====
+The following snippet demonstrates the effect of shapes by comparing them to nominal types: [[ex:declaration-site-structural-typing]]
+
+.Declaration Site Structural Typing
+[source,n4js]
+----
+interface ~Tilde { public x; public y; }  // shape
+interface Nominal { public x; public y; } // nominal interface
+class C { public x; public y;}            // nominal class
+class D extends C implements Tilde { }    // nominal class
+
+function f(p: Tilde) {}
+function g(p: Nominal) {}
+
+f(new C());         // ok
+f(new D());         // ok, D is a nominal subtype (as it implements Tilde)
+f({x:10,y:10});     // ok: Tilde is used with structural typing
+----
+
+====
+
+
+If a classifier `C` _implements_ a shape `S`, we say `S` is _explicitly implemented_ by `C` at definition/declaration site.
+Also if a classifier `C` is a subtype of a shape `S`, we say `S` is _implemented_ by `C`, as well.
+In case `c` explicitly implements `S`:
+. If `C` redefines members declared in `S`, we say that these members are _explicitly implemented_ by `C`.
+. Fields not redefined by `C` are _mixed into_ `C` with default initializations.
+. Methods and accessors must be implemented by `C` explicitly.
+. We all cases we call `C` the __implementor__.
+
+Besides the general constraints described in <<_common-semantics-of-classifiers>>, the following constraints must hold for extending or implementing interfaces:
+
+.Extending Shapes
+[req,id=IDE-49S,version=1]
+--
+For a given type
+`S`, and $\{SI_1,\dots, SI_n\}$ directly extended by `S`, the following constraints must be true:
+
+.  Shapes can extend shapes or structural interfaces, only: $S is Shape \rightarrow SI_1, \dots, SI_n$ must be shapes or structurally referenced interfaces.
+.  A shape may not directly extend the same shape more than once: +
+$S_i=S_j \to i=j$ for any
+$i,j \in \{1 \dots n\}$.
+.  A shape may (indirectly) extend the same shape $J$ more than once only if
+..  $J$ is not parameterized, or
+..  in all cases $J$ is extended with the same type arguments for all invariant type parameters. +
+Note that for type parameters of $J$ that are declared covariant or contravariant on definition site, different type arguments may be used.
+.  All members in $S_i$, $i \in \{1, \dots, n\}$, must be accessible from `S`: +
+$\forall i \in \{1, \dots, n\} : M \in S_i.members \land M.abstract \to $ `M` is accessible from `S`. +
+--
+
+.Implementing Shapes
+[req,id=IDE-50S,version=1]
+--
+
+For a given type
+`C`, and $\{S_1,\dots, S_n\}$ directly implemented
+by `C`, the following constraints must be true:
+
+.  Only classes can implement shapes: `C` must be a Class.
+.  A class can only implement interfaces and shapes: $S_1, \dots, S_n$ must be either interfaces or shapes.
+.  A class may not directly implement the same shape more than once: +
+$S_i=S_j \Rightarrow i=j$ for any $i,j \in \{1, \dots, n\}$.
+.  A class may (indirectly) implement the same shape $J$ more than once only if
+..  $J$ is not parameterized, or
+..  in all cases $J$ is implemented with the same type arguments for all invariant type parameters. +
+Note that for type parameters of $J$ that are declared covariant or contravariant on definition site, different type arguments may be used.
+.  All members in $S_i$, $i \in \{1, \dots, n\}$, must be accessible from `C`: +
+$\forall i \in \{1, \dots, n\} : M \in I_i.members \land M.abstract \to $ `M` is accessible from `C`. +
+--
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 [.language-n4js]
 == Generic Classifiers
