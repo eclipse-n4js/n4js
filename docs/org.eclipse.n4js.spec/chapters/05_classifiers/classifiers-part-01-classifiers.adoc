@@ -683,6 +683,7 @@ Iff a type $T$ is a shape, $T.defStructural$ is true.
 For any shape `S`, the following must hold:
 
 . Shapes may not be instantiated.
+. Shapes may only extend other shapes.
 . Shapes cannot be set to final (with annotation @Final): $\neg S.final$.
 . Shapes cannot contain a constructor:
 +

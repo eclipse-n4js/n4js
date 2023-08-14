@@ -124,18 +124,22 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator implements
 	}
 
 	def private internalCheckExtendedInterfaces(N4InterfaceDeclaration n4Interface) {
-		n4Interface.superInterfaceRefs.forEach[
-			val extendedTypeRef = it.typeRef;
+		for (superIfc : n4Interface.superInterfaceRefs) {
+			val extendedTypeRef = superIfc.typeRef;
 			val extendedType = extendedTypeRef?.declaredType
 			// note: in case extendedType.name===null, the type reference is completely invalid and other, more appropriate error messages have been created elsewhere
 			if(extendedType !== null && extendedType.name !== null) {
 
 				// extended type must be an interface
-				if (!(extendedType instanceof TInterface)) {
+				if (extendedType instanceof TInterface) {
+					if (extendedType.typingStrategy !== TypingStrategy.STRUCTURAL) {
+						addIssue(IssueCodes.getMessageForSTRCT_ITF_CANNOT_EXTEND_INTERFACE(), superIfc, null, IssueCodes.STRCT_ITF_CANNOT_EXTEND_INTERFACE)
+					}
+				} else {
 					if (extendedType instanceof PrimitiveType) {
 						if (!N4Scheme.isFromResourceWithN4Scheme(n4Interface)) { // primitive types may be extended in built-in types
 							val message = getMessageForCLF_EXTENDS_PRIMITIVE_GENERIC_TYPE(extendedType.name);
-							addIssue(message, it, null, CLF_EXTENDS_PRIMITIVE_GENERIC_TYPE)
+							addIssue(message, superIfc, null, CLF_EXTENDS_PRIMITIVE_GENERIC_TYPE)
 						}
 					} else if (RuleEnvironmentExtensions.isAnyDynamic(RuleEnvironmentExtensions.newRuleEnvironment(extendedType), extendedTypeRef)) {
 						// allow any+ as a supertype (motivated from type alias being any+ used in d.ts files
@@ -143,15 +147,15 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator implements
 					} else {
 						val message = IssueCodes.getMessageForCLF_WRONG_META_TYPE(n4Interface.description, "extend",
 							extendedType.description);
-						addIssue(message, it, null, IssueCodes.CLF_WRONG_META_TYPE)
+						addIssue(message, superIfc, null, IssueCodes.CLF_WRONG_META_TYPE)
 					}
 				}
 			} else if (extendedTypeRef !== null && extendedTypeRef.isAliasResolved) {
 				// not all aliases are illegal after "extends", but if we get to this point we have an illegal case:
 				val message = getMessageForCLF_WRONG_META_TYPE(n4Interface.description, "extend", extendedTypeRef.typeRefAsStringWithAliasResolution);
-				addIssue(message, it, null, CLF_WRONG_META_TYPE);
+				addIssue(message, superIfc, null, CLF_WRONG_META_TYPE);
 			}
-		]
+		}
 	}
 
 	def private boolean holdsNoCyclicInheritance(N4InterfaceDeclaration n4InterfaceDeclaration) {
