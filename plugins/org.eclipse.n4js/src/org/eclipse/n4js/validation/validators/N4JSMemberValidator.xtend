@@ -145,6 +145,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		holdsMinimalMemberAccessModifier(member);
+		internalCheckStaticFieldInShape(member)
 	}
 
 	@Check
@@ -275,6 +276,20 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 				val message = IssueCodes.getMessageForCLF_NO_FINAL_INTERFACE_MEMBER()
 				addIssue(message, member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME,
 					IssueCodes.CLF_NO_FINAL_INTERFACE_MEMBER)
+			}
+		}
+	}
+
+	def private void internalCheckStaticFieldInShape(TMember member) {
+		if (!member.isStatic) {
+			return;
+		}
+		val parent = member.eContainer;
+		if (parent instanceof TInterface) {
+			if (parent.typingStrategy === TypingStrategy.STRUCTURAL) {
+				val message = IssueCodes.getMessageForSTRCT_ITF_CANNOT_CONTAIN_STATIC_FIELDS();
+				addIssue(message, member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME,
+					IssueCodes.STRCT_ITF_CANNOT_CONTAIN_STATIC_FIELDS)
 			}
 		}
 	}

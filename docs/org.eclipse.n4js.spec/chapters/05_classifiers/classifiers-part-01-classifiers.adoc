@@ -612,7 +612,7 @@ For default methods in interfaces, see <<_default-methods-in-interfaces>>.
 
 
 [.language-n4js]
-== Shapes / Structural Interfaces [[shapes]]
+== Structural Interfaces (Shapes) [[shapes]]
 
 Shapes -- also called structural interfaces -- are a ducktype version of (ordinary, i.e. nominal) N4JS interfaces.
 They are similar regarding their syntax and use cases.
