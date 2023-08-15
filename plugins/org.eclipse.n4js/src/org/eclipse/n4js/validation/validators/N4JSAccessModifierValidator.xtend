@@ -62,6 +62,9 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.n4JS.N4MemberDeclaration
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
+import org.eclipse.n4js.n4JS.N4Modifier
 
 /**
  */
@@ -241,6 +244,18 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 			(parent instanceof TFunction && (parent as TFunction).returnTypeRef === typeRefInAST &&
 				!(parent instanceof TGetter)) ||
 			(parent instanceof FunctionTypeExpression && (parent as FunctionTypeExpression).returnTypeRef === typeRefInAST)
+	}
+
+	@Check
+	def checkShapeMembers(N4MemberDeclaration n4member) {
+		if (n4member.eContainer instanceof N4InterfaceDeclaration
+			&& (n4member.eContainer as N4InterfaceDeclaration).typingStrategy === TypingStrategy.STRUCTURAL
+			&& !n4member.declaredModifiers.contains(N4Modifier.PUBLIC)
+			&& !(n4member.eContainer as N4InterfaceDeclaration).declaredModifiers.contains(N4Modifier.PUBLIC)
+		) {
+			val msg = getMessageForSTRCT_ITF_MEMBER_MUST_BE_PUBLIC;
+			addIssue(msg, n4member, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName, STRCT_ITF_MEMBER_MUST_BE_PUBLIC);
+		}
 	}
 
 	@Check

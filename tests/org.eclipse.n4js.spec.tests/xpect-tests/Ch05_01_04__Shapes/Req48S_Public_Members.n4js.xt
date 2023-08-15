@@ -1,0 +1,35 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+interface ~I1 {
+	// XPECT warnings --> "Non-public members of structural interfaces are effectless." at "field"
+	field : string;
+	// XPECT warnings --> "Non-public members of structural interfaces are effectless." at "m1"
+	m1() : void;
+	// XPECT warnings --> "Non-public members of structural interfaces are effectless." at "setter1"
+	set setter1(v: int);
+	// XPECT warnings --> "Non-public members of structural interfaces are effectless." at "getter1"
+	get getter1() : int;
+}
+
+export public interface ~I2 {
+	// XPECT nowarnings -->
+	publicMember : string;
+}
+
+interface ~I3 {
+	// XPECT nowarnings -->
+	public publicMember : string;
+}
+

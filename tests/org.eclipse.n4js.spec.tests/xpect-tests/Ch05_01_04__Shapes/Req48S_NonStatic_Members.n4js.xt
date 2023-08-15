@@ -12,7 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 
-interface ~I {
+export public interface ~I {
 	// XPECT errors --> "Structural interfaces cannot contain static fields." at "sf1"
 	static sf1 : string;
 	// XPECT errors --> "The method sm1 may not be both static and abstract." at "sm1"
