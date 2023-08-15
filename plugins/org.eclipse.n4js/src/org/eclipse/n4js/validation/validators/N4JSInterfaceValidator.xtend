@@ -132,7 +132,9 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator implements
 
 				// extended type must be an interface
 				if (extendedType instanceof TInterface) {
-					if (extendedType.typingStrategy !== TypingStrategy.STRUCTURAL) {
+					if (n4Interface.typingStrategy === TypingStrategy.STRUCTURAL
+						&& extendedType.typingStrategy !== TypingStrategy.STRUCTURAL
+					) {
 						addIssue(IssueCodes.getMessageForSTRCT_ITF_CANNOT_EXTEND_INTERFACE(), superIfc, null, IssueCodes.STRCT_ITF_CANNOT_EXTEND_INTERFACE)
 					}
 				} else {
