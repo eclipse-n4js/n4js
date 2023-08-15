@@ -33,7 +33,9 @@ f(x);
 interface ~I{
 	public s : string;
 	public foo(p : number) : void
+	// XPECT warnings --> "Non-public members of structural interfaces are effectless." at "n"
 	n : number;
+	// XPECT warnings --> "Non-public members of structural interfaces are effectless." at "bar"
 	bar(p : string) : void
 }
 var y : I;

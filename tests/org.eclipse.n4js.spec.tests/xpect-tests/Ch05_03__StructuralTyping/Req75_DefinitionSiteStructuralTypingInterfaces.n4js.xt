@@ -23,7 +23,9 @@ import * as Ex from "Ch05_03__StructuralTyping/Externals";
 interface ~E{
 	public s : string;
 	public foo(p : number) : void
+	// XPECT warnings --> "Non-public members of structural interfaces are effectless." at "n"
 	n : number;
+	// XPECT warnings --> "Non-public members of structural interfaces are effectless." at "bar"
 	bar(p : string) : void
 }
 var x;
@@ -49,7 +51,6 @@ class SomeN4Object{
 }
 var someN4Object : SomeN4Object;
 
-// XPECT errors --> "All N4Objects must explicitly extend/implement definition site structural type E." at "someN4Object"
 f(someN4Object);
 
 

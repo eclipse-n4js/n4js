@@ -49,7 +49,6 @@ class SomeN4Object{
 }
 var someN4Object : SomeN4Object;
 
-// XPECT errors --> "All N4Objects must explicitly extend/implement definition site structural type E." at "someN4Object"
 f(someN4Object);
 
 
