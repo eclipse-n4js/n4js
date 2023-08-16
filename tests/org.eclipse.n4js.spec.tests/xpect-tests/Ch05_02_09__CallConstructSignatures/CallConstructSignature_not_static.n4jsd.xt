@@ -18,20 +18,13 @@
 
 export external class ResultCls {}
 
-// XPECT noerrors -->
 export external interface ~IfcCall {
-	public (p: string);
+	// XPECT errors --> "Members of external interfaces must not be static." at "public static (p: string);"
+	public static (p: string);
 }
-// XPECT noerrors -->
+
 export external interface ~IfcConstruct {
-	public new(p: string): ResultCls;
+	// XPECT errors --> "Members of external interfaces must not be static." at "new"
+	public static new(p: string): ResultCls;
 }
 
-export external interface ~SubIfcCall extends IfcCall {}
-export external interface ~SubIfcConstruct extends IfcConstruct {}
-
-// XPECT errors --> "An interface with a call or construct signature cannot be implemented by a class." at "SubIfcCall"
-export external class Cls1 implements SubIfcCall {}
-
-// XPECT errors --> "An interface with a call or construct signature cannot be implemented by a class." at "SubIfcConstruct"
-export external class Cls2 implements SubIfcConstruct {}

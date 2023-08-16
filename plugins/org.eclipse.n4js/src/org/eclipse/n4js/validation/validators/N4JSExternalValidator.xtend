@@ -341,7 +341,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	private def validateNoStaticMember(N4ClassifierDeclaration declaration, String classesOrRolesOrInterface) {
-		for (member : declaration.ownedMembers.filter[it.static]) {
+		for (member : declaration.ownedMembersRaw.filter[it.static]) {
 			val message = getMessageForCLF_EXT_NO_STATIC_MEMBER(classesOrRolesOrInterface)
 			addIssue(message, member, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_EXT_NO_STATIC_MEMBER)
 		}
