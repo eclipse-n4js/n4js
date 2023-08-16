@@ -19,10 +19,10 @@
 export external class ResultCls {}
 
 export external interface ~IfcCall {
-	(p: string);
+	public (p: string);
 }
 export external interface ~IfcConstruct {
-	new(p: string): ResultCls;
+	public new(p: string): ResultCls;
 }
 
 export external interface ~SubIfcCall extends IfcCall {}

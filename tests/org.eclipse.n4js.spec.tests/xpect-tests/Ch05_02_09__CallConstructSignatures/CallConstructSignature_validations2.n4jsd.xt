@@ -18,7 +18,7 @@ export external class SomeCls {}
 // ------------------------------------------------------------------------------------------------------------------------
 // positive cases:
 
-export external interface ~I {
+export external public interface ~I {
 
 	// XPECT noerrors -->
 	(): number;
@@ -51,7 +51,7 @@ export let o: ~Object with {
 
 // XPECT errors --> "Only nominal interfaces can be annotated with @N4JS." at "N4JS"
 @N4JS
-export external interface ~I1 {
+export external public interface ~I1 {
 
 	// XPECT errors --> "Call and construct signatures are not allowed in classifiers annotated with @N4JS." at "(): number;"
 	(): number;
@@ -78,7 +78,7 @@ export let o1: ~Object with {
 // ------------------------------------------------------------------------------------------------------------------------
 // bodies:
 
-export external interface ~I2 {
+export external public interface ~I2 {
 
 	// XPECT errors --> "Call and construct signatures must not have a body." at "(): number { return 0; }"
 	(): number { return 0; }
@@ -104,7 +104,7 @@ export let o2: ~Object with {
 // ------------------------------------------------------------------------------------------------------------------------
 // duplicates:
 
-export external interface ~I3 {
+export external public interface ~I3 {
 
 	// XPECT errors --> "Duplicate call signature." at "(): number;"
 	(): number;
@@ -147,7 +147,7 @@ export let o3: ~Object with {
 // ------------------------------------------------------------------------------------------------------------------------
 // void as return type
 
-export external interface ~I4a {
+export external public interface ~I4a {
 
 	// XPECT noerrors -->
 	();
@@ -156,7 +156,7 @@ export external interface ~I4a {
 	new();
 }
 
-export external interface ~I4b {
+export external public interface ~I4b {
 
 	// XPECT noerrors -->
 	(): void;
