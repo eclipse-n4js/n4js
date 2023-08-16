@@ -860,7 +860,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				return; 
 			case N4JSPackage.N4_METHOD_DECLARATION:
 				if (rule == grammarAccess.getN4MemberDeclarationRule()) {
-					sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeParameters(context, (N4MethodDeclaration) semanticObject); 
+					sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_MethodParamsReturnAndBody_N4CallSignatureDeclaration_N4MethodDeclaration_StrictFormalParameters_TypeParameters(context, (N4MethodDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getAnnotatedN4MemberDeclarationRule()) {
@@ -872,7 +872,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					return; 
 				}
 				else if (rule == grammarAccess.getN4CallSignatureDeclarationRule()) {
-					sequence_ColonSepDeclaredReturnTypeRef_MethodParamsReturnAndBody_StrictFormalParameters_TypeParameters(context, (N4MethodDeclaration) semanticObject); 
+					sequence_ColonSepDeclaredReturnTypeRef_MethodParamsReturnAndBody_N4CallSignatureDeclaration_StrictFormalParameters_TypeParameters(context, (N4MethodDeclaration) semanticObject); 
 					return; 
 				}
 				else break;
@@ -3815,7 +3815,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                         typeVars+=N4TypeVariable*
 	 *                     ) | 
 	 *                     (
-	 *                         (annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_3_0_0_0 | declaredModifiers+=N4Modifier+) 
+	 *                         (annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_3_0_0_0 | declaredModifiers+=N4Modifier+ | declaredModifiers+=N4Modifier+) 
 	 *                         typeVars+=N4TypeVariable 
 	 *                         typeVars+=N4TypeVariable*
 	 *                     )
@@ -3828,13 +3828,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             ) | 
 	 *             annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_3_0_0_0 | 
 	 *             (
-	 *                 (annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_3_0_0_0 | declaredModifiers+=N4Modifier+) 
+	 *                 (annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_3_0_0_0 | declaredModifiers+=N4Modifier+ | declaredModifiers+=N4Modifier+) 
 	 *                 typeVars+=N4TypeVariable 
 	 *                 typeVars+=N4TypeVariable* 
 	 *                 declaredAsync?='async' 
 	 *                 ((generator?='*' declaredName=LiteralOrComputedPropertyName) | declaredName=LiteralOrComputedPropertyName)
 	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier+ declaredAsync?='async' declaredName=LiteralOrComputedPropertyName)
+	 *             (declaredModifiers+=N4Modifier+ declaredAsync?='async' declaredName=LiteralOrComputedPropertyName) | 
+	 *             declaredModifiers+=N4Modifier+
 	 *         )? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
@@ -3842,7 +3843,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     )
 	 * </pre>
 	 */
-	protected void sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeParameters(ISerializationContext context, N4MethodDeclaration semanticObject) {
+	protected void sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_MethodParamsReturnAndBody_N4CallSignatureDeclaration_N4MethodDeclaration_StrictFormalParameters_TypeParameters(ISerializationContext context, N4MethodDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -9703,6 +9704,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
+	 *         declaredModifiers+=N4Modifier* 
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
@@ -9710,7 +9712,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     )
 	 * </pre>
 	 */
-	protected void sequence_ColonSepDeclaredReturnTypeRef_MethodParamsReturnAndBody_StrictFormalParameters_TypeParameters(ISerializationContext context, N4MethodDeclaration semanticObject) {
+	protected void sequence_ColonSepDeclaredReturnTypeRef_MethodParamsReturnAndBody_N4CallSignatureDeclaration_StrictFormalParameters_TypeParameters(ISerializationContext context, N4MethodDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
