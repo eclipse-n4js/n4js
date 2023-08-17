@@ -35,6 +35,6 @@
 }
 
 // XPECT errors --> "Polyfill for interface IArguments must be an interface, not a class." at "IArguments"
-@Polyfill export external public class ~IArguments extends IArguments {
+@Polyfill export external public class IArguments extends IArguments {
 	additionalMethod();
 }

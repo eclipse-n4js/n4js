@@ -29,7 +29,7 @@
 
 import * as React from "react/index";
 
-class ~Props  {
+class Props  {
 	public myProp: string;
 }
 

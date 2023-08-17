@@ -43,7 +43,7 @@ Pure function element
 import * as React from "react"
 import { replacer } from "replacer"
 
-class ~Props {
+class Props {
 	public myProp: string;
 }
 

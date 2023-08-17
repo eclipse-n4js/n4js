@@ -19,8 +19,8 @@ class C {}
 interface I{}
 interface J{}
 
-class ~X {}
-class ~Y {}
+interface ~X {}
+interface ~Y {}
 
 class G<T> {}
 class GG<T> extends G<T> {}

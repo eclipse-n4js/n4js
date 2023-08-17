@@ -11,7 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
-class ~T {
+class T {
 	public n : number;
 	public foo() {}
 	private s : string;
@@ -23,6 +23,6 @@ class X extends Object {
 }
 
 var x : X;
-var t : T;
+var t : ~T;
 // XPECT noerrors --> "X is not an N4Object." at "x"
 t = x;

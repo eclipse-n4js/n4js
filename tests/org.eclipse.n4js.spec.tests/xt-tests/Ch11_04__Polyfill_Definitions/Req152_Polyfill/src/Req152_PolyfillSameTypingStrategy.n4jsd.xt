@@ -33,8 +33,8 @@
 // for classes:
 
 @Polyfill
-// XPECT errors --> "Polyfill SomeClass cannot be declared definition-site structural, must be defined nominal just as the filled class." at "SomeClass"
-export external public class ~SomeClass extends SomeClass {
+// XPECT noerrors --> "Polyfill SomeClass cannot be declared definition-site structural, must be defined nominal just as the filled class." at "SomeClass"
+export external public class SomeClass extends SomeClass {
 	additionalMethod();
 }
 
