@@ -13,13 +13,13 @@
 
 
 export public interface ~I {
-	// XPECT errors --> "Structural interfaces cannot contain static fields." at "sf1"
+	// XPECT errors --> "Structural interfaces cannot contain static members." at "sf1"
 	static sf1 : string;
-	// XPECT errors --> "The method sm1 may not be both static and abstract." at "sm1"
+	// XPECT errors --> "Structural interfaces cannot contain static members." at "sm1"
 	static sm1() : void;
-	// XPECT errors --> "The setter setter1 may not be both static and abstract." at "setter1"
+	// XPECT errors --> "Structural interfaces cannot contain static members." at "setter1"
 	static set setter1(v: int);
-	// XPECT errors --> "The getter getter1 may not be both static and abstract." at "getter1"
+	// XPECT errors --> "Structural interfaces cannot contain static members." at "getter1"
 	static get getter1() : int;
 }
 

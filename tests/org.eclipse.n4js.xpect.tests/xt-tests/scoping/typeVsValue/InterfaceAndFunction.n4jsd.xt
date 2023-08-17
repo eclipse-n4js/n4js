@@ -20,5 +20,5 @@ external function <T>Set()
 	: Set<T>;
 
 external interface ~Set<T> { 
-    add(value: T): this;
+    public add(value: T): this;
 }

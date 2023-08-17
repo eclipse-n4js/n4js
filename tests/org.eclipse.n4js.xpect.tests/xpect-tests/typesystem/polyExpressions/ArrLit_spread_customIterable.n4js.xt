@@ -36,7 +36,7 @@ let v02: Array<? extends A> = [ b, ...iterableOfC ];
 // ========================================================================
 // using a custom Iterable:
 
-class ~MyIterable<T> {
+class MyIterable<T> {
 	public [Symbol.iterator](): Iterator<T> { return null; }
 }
 

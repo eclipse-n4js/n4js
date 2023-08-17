@@ -16,7 +16,7 @@ interface ~T {
 	public foo();
 	// XPECT errors --> "Members of interfaces must not be declared private." at "s"
 	private s : string;
-	// XPECT errors --> "Structural interfaces cannot contain static fields." at "N"
+	// XPECT errors --> "Structural interfaces cannot contain static members." at "N"
 	public static N : number;
 }
 

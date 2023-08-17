@@ -20,14 +20,14 @@ external function <T>Set(): Set<T>;
 
 // XPECT noerrors -->
 external interface ~Set<T> extends Collection.Indexed<T> { 
-    add(value: T): this;
+    public add(value: T): this;
 }
 
 external namespace Collection {
     function <T>Indexed(): Set<T>;
 
     interface ~Indexed<T> { 
-        sizeIndexed(): number;
+        public sizeIndexed(): number;
     }
     class ClsInNS<T> {}
 }

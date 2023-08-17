@@ -17,7 +17,7 @@ export external interface I1 {
 }
 
 export external interface ~I2 {
-	// XPECT errors --> "Members of external interfaces must not be static." at "field"
+	// XPECT errors --> "Structural interfaces cannot contain static members." at "field"
 	public static field:string;
 }
 
@@ -28,7 +28,7 @@ export external namespace NS {
 	}
 	
 	interface ~I2 {
-		// XPECT errors --> "Members of external interfaces must not be static." at "field"
+		// XPECT errors --> "Structural interfaces cannot contain static members." at "field"
 		public static field:string;
 	}
 }

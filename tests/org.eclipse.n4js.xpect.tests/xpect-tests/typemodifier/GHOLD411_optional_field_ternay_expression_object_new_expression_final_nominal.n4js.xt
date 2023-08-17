@@ -19,15 +19,15 @@ interface J {
     public m?: int;
 }
 
-class ~C { }
+class C { }
 
 @Final class F { }
 
 let i: I;
 let j: ~r~J;
 let b: boolean;
-let v: C = new C();
-const c: C = new C();
+let v: ~C = new C();
+const c: ~C = new C();
 
 //////// New expressions ///////
 // XPECT noerrors
@@ -42,7 +42,7 @@ i = b? undefined : undefined;
 // XPECT noerrors
 i = b?  c : c;
 
-// XPECT errors --> "C is not a structural subtype of I: missing getter optional." at "b? v : v"
+// XPECT errors --> "~C is not a structural subtype of I: missing getter optional." at "b? v : v"
 i = b? v : v;
 
 ////// Final nominal //////

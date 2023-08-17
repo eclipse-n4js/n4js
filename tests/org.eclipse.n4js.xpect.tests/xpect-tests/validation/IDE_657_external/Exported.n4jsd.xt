@@ -26,6 +26,6 @@ external interface ~Clonable {
 //	relaxed by IDEBUG-561:
 // XPECT noerrors --> "External elements have to be exported." at "I"
 interface ~I {
-	x : number;
-	y : number;
+	public x : number;
+	public y : number;
 }

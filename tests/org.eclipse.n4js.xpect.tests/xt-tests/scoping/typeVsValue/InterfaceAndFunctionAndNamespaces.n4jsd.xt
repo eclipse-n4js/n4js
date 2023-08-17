@@ -24,20 +24,20 @@ external function <T>Set(): Set<T>;
 "Function Collection duplicates namespace Collection (line 15)." at "Indexed"
 -- */
 external interface ~Set<T> extends Collection.Indexed<T> { // no errors regarding scoping here!
-    add(value: T): this;
+    public add(value: T): this;
 }
 
 // XPECT noerrors -->
 external function <T>List(): Set<T>;
 external interface ~List<T> extends Collection<T> { 
-    add(value: T): this;
+    public add(value: T): this;
 }
 
 external namespace Collection {
     function <T>Indexed(): Set<T>;
 
     interface ~Indexed<T> { 
-        sizeIndexed(): number;
+        public sizeIndexed(): number;
     }
 }
 
@@ -46,5 +46,5 @@ external function <T>Collection(): Set<T>;
 
 // XPECT errors --> "Interface Collection duplicates namespace Collection (line 36)." at "Collection"
 external interface ~Collection<T> { 
-    size(): number;
+    public size(): number;
 }

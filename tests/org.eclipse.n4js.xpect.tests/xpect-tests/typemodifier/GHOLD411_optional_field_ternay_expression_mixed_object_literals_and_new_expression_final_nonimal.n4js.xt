@@ -14,17 +14,18 @@ interface ~I {
 	public m?: int;
 }
 
-class ~C { }
+class C { }
 
 @Final class F { }
 
 let b: boolean;
-const cc: C = {}
+const cc: ~C = {}
 const f1 = new F();
 const f2: ~F = {};
 const i0: I = {};
 
-// XPECT errors --> "C is not a structural subtype of I: missing setter or field m." at "b? cc : new C()"
+
+// XPECT errors --> "union{~C,C} is not a subtype of I." at "b? cc : new C()"
 var t1: I = b? cc : new C()
 
 // XPECT errors --> "union{F,~Object} is not a subtype of I." at "b? f1 : {}"
@@ -37,8 +38,8 @@ var t3: I = b? f2 : {}
 var t4: I = b? i0 : {}
 
 
-// XPECT errors --> "C is not a structural subtype of I: missing setter or field m." at "cc || new C()"
-var b1: I = cc || new C() 
+// XPECT errors --> "union{~C,C} is not a subtype of I." at "cc || new C()"
+var b1: I = cc || new C()
 
 // XPECT errors --> "union{F,~Object} is not a subtype of I." at "f1 || {}"
 var b2: I = f1 || {}

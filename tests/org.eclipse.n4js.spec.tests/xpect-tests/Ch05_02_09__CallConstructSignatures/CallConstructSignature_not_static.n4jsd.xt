@@ -19,12 +19,12 @@
 export external class ResultCls {}
 
 export external interface ~IfcCall {
-	// XPECT errors --> "Members of external interfaces must not be static." at "public static (p: string);"
+	// XPECT errors --> "Structural interfaces cannot contain static members." at "public static (p: string);"
 	public static (p: string);
 }
 
 export external interface ~IfcConstruct {
-	// XPECT errors --> "Members of external interfaces must not be static." at "new"
+	// XPECT errors --> "Structural interfaces cannot contain static members." at "new"
 	public static new(p: string): ResultCls;
 }
 

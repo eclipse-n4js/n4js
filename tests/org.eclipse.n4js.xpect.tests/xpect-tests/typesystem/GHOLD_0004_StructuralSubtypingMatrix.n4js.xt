@@ -12,7 +12,6 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP  */
 
 class A { public f : string = "" }
-class ~SA { public f : string}
 
 // Tests for T <: Primitive
 {
@@ -47,11 +46,6 @@ class ~SA { public f : string}
 		let o : ~N4Object = new N4Object();
 		// ~N4Object without additional  members !<: Primitive XPECT issues --> "Structural type ~N4Object is not a subtype of non-structural type int." at "o"
 		let a : int = o;
-	}
-	{
-		
-		// ~N4Object with additional members !<: Primitive XPECT issues --> "Structural type SA is not a subtype of non-structural type int." at "new SA()"
-		let a : int = new SA();
 	}
 }
 // Tests for T <: Object
@@ -88,10 +82,6 @@ class ~SA { public f : string}
 		// ~N4Object without additional  members <: Object XPECT noerrors -->
 		let a : Object = o;
 	}
-	{
-		// ~N4Object with additional members <: Object XPECT noerrors -->
-		let b : Object = new SA();
-	}
 }
 // Tests for T <: N4Object
 {
@@ -126,10 +116,6 @@ class ~SA { public f : string}
 		let s_n4Object : ~N4Object = new N4Object();
 		// ~N4Object without additional  members !<: N4Object XPECT issues --> "Structural type ~N4Object is not a subtype of non-structural type N4Object." at "s_n4Object"
 		let n4Object : N4Object = s_n4Object;
-	}
-	{
-		// ~N4Object with additional members !<: N4Object XPECT issues --> "Structural type SA is not a subtype of non-structural type N4Object." at "new SA()"
-		let n4Object : N4Object = new SA();
 	}
 }
 // Tests for T <: ~Primitive
@@ -184,13 +170,6 @@ class ~SA { public f : string}
 		let p : ~string = s_n4o;
 	}
 	{
-		/* ~N4Object with additional members !<: ~Primitive XPECT issues ---
-			"SA is not a subtype of ~int." at "new SA()"
-			"Structural type operator ~ does not have any effect on primitive types." at "~int"
-		--- */
-		let i : ~int = new SA();
-	}
-	{
 		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
 		let s_int : ~int = 3;
 		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~string"
@@ -233,10 +212,6 @@ class ~SA { public f : string}
 		// ~N4Object without additional  members <: ~Object without additional members XPECT noerrors -->
 		let o : ~Object = s_n4o;
 	}
-	{
-		// ~N4Object with additional members <: ~Object without additional members XPECT noerrors -->
-		let i : ~Object = new SA();
-	}
 }
 // Tests for T <: ~Object with additional members
 {
@@ -272,10 +247,6 @@ class ~SA { public f : string}
 		// ~N4Object without additional  members !<: ~Object with additional members XPECT issues --> "~N4Object is not a structural subtype of ~Object with { f: string }: missing structural field f." at "s_n4o"
 		let o : ~Object with { f : string } = s_n4o;
 	}
-	{
-		// ~N4Object with additional members <: ~Object with additional members XPECT noerrors -->
-		let i : ~Object with { f : string } = new SA();
-	}
 }
 // Tests for T <: ~N4Object without additional  members
 {
@@ -309,10 +280,6 @@ class ~SA { public f : string}
 	{
 		// ~N4Object without additional  members <: ~N4Object without additional  members XPECT noerrors -->
 		let o : ~N4Object = new N4Object();
-	}
-	{
-		// ~N4Object with additional members <: ~N4Object without additional  members XPECT noerrors -->
-		let sn4O : ~N4Object = new SA();
 	}
 }
 // Tests for T <: ~N4Object with additional members
@@ -349,9 +316,5 @@ class ~SA { public f : string}
 		let sn4O : ~N4Object = new N4Object();
 		// ~N4Object without additional  members !<: ~N4Object with additional members XPECT issues --> "~N4Object is not a structural subtype of ~A: missing field f." at "sn4O"
 		let a : ~A = sn4O;
-	}
-	{
-		// ~N4Object with additional members <: ~N4Object with additional members XPECT noerrors -->
-		let a2 : ~SA = new A();
 	}
 }
