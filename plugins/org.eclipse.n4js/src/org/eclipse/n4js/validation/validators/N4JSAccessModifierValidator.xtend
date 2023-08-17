@@ -251,6 +251,7 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 		if (n4member.eContainer instanceof N4InterfaceDeclaration
 			&& (n4member.eContainer as N4InterfaceDeclaration).typingStrategy === TypingStrategy.STRUCTURAL
 			&& !n4member.declaredModifiers.contains(N4Modifier.PUBLIC)
+			&& !n4member.declaredModifiers.contains(N4Modifier.PRIVATE) // see: CLF_MINIMAL_ACCESSIBILITY_IN_INTERFACES
 			&& !(n4member.eContainer as N4InterfaceDeclaration).declaredModifiers.contains(N4Modifier.PUBLIC)
 		) {
 			val msg = getMessageForSTRCT_ITF_MEMBER_MUST_BE_PUBLIC;

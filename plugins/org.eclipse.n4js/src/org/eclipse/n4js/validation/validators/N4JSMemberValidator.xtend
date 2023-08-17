@@ -469,6 +469,16 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 				addIssue(getMessageForCLF_CALL_CONSTRUCT_SIG_DUPLICATE(kind), astNode, CLF_CALL_CONSTRUCT_SIG_DUPLICATE);
 				return false;
 			}
+			// constraint: private not allowed in interfaces
+			val definedMember = if (methodInAST.isLeft) {
+				methodInAST.getLeft.definedTypeElement
+			} else {
+				methodInAST.getRight.definedMember
+			};
+			val isPrivate = !holdsMinimalMemberAccessModifier(definedMember) //
+			if (isPrivate) {
+				return false;
+			}
 		}
 		if (isConstructSig) {
 			// constraint: only in classes
