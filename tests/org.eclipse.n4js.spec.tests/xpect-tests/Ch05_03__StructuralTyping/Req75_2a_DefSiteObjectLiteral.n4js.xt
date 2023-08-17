@@ -11,10 +11,12 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
-class ~T {
+interface ~T {
 	public n : number;
-	public foo() {}
+	public foo();
+	// XPECT errors --> "Members of interfaces must not be declared private." at "s"
 	private s : string;
+	// XPECT errors --> "Structural interfaces cannot contain static fields." at "N"
 	public static N : number;
 }
 

@@ -10,7 +10,7 @@
  */
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
-class ~A {
+class A {
 	foo() {}
 	bar() {
 		 // XPECT noerrors --> "this keyword always uses nominal type" at "foo"
@@ -18,6 +18,6 @@ class ~A {
 	}
 }
 
-var a : A;
-// XPECT errors --> "method foo is not available for structurally defined type A." at "foo"
+var a : ~A;
+// XPECT errors --> "method foo is not available for structurally referenced type ~A." at "foo"
 a.foo();

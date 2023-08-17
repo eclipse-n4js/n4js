@@ -9,14 +9,17 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+    ResourceSet {
+		ThisFile {}
+		File "Externals.n4jsd" {}
+	}
 
-class Party {
-	// XPECT noerrors -->
-    public ["@type"] : string = "some.type";
-}
+   END_SETUP
+ */
 
-var some_party : ~Party = {
-	// XPECT noerrors -->
-    ["@type"] : "whatever"
+
+// XPECT errors --> "Classes cannot be structural." at "~"
+class ~E {
+	public s : string;
 }

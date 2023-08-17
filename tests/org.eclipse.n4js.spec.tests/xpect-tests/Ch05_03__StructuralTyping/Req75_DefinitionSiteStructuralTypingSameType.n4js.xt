@@ -13,7 +13,7 @@
 
 // classes:
 
-class ~E{
+class E {
 	public s : string;
 	public foo(p : number) : void{};
 	private n : number;
@@ -30,7 +30,7 @@ f(x);
 
 // same setup for interface:
 
-interface ~I{
+interface ~I {
 	public s : string;
 	public foo(p : number) : void
 	// XPECT warnings --> "Non-public members of structural interfaces are effectless." at "n"

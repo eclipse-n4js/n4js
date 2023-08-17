@@ -15,7 +15,6 @@ class C {}
 class D extends C {}
 interface I {}
 enum Color { RED, GREEN, BLUE }
-class ~CS {}
 class G<T> {}
 
 //
@@ -68,9 +67,6 @@ class Test1<T> {
 
 	// XPECT noerrors --> ""
 	@Inject field13 : ~C;
-
-	// XPECT noerrors --> ""
-	@Inject field14 : CS;
 
 	// XPECT errors --> "Type T is not injectable at field15: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
 	@Inject field15 : T;
@@ -146,7 +142,7 @@ class C11 {}
 	@Provides c4(t : type{C}) : C4 { return null; }
 
 	// XPECT noerrors --> ""
-	@Provides c5(cs : ~CS) : C5 { return null; }
+	@Provides c5(c : ~C) : C5 { return null; }
 
 	// XPECT errors --> "Type Color is not injectable at color: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "color"
 	@Provides c6(color : Color) : C6 { return null; }

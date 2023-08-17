@@ -39,23 +39,6 @@ var t02 : ~UST2 = nt;
 
 
 
-//
-// def-site structural types
-//
-
-class ~DST1 {
-	public m() : A {return null}
-}
-class ~DST2 {
-	public m() : A? {}
-}
-
-// XPECT errors --> "NT is not a structural subtype of DST1: m failed: {function():void} is not a subtype of {function():A}." at "nt"
-var t11 : DST1 = nt;
-// XPECT noerrors -->
-var t12 : DST2 = nt;
-
-
 
 //
 // with-clause
