@@ -38,7 +38,7 @@ class N4_21_1_DefinitionSiteStructuralTypingClassesTest extends AbstractTypesyst
 				public s: string;
 				public foo(): void {}
 			}
-			class ~Structural{
+			class NonN4 extends Object {
 				public s: string;
 				public foo(): void {}
 			}
@@ -50,7 +50,7 @@ class N4_21_1_DefinitionSiteStructuralTypingClassesTest extends AbstractTypesyst
 				public s: string;
 			}
 			var nominal: Nominal;
-			var structural: Structural;
+			var structural: NonN4;
 			var a: A;
 			var b: B;
 		''')
@@ -73,7 +73,7 @@ class N4_21_1_DefinitionSiteStructuralTypingClassesTest extends AbstractTypesyst
 	@Test
 	def void testSubtypeSubclassSameTypeDeclared() {
 		val script = createAndValidateScript(JavaScriptVariant.n4js, '''
-			class ~Structural{
+			class Structural{
 				public s: string;
 				public foo(): void {}
 			}
@@ -85,7 +85,7 @@ class N4_21_1_DefinitionSiteStructuralTypingClassesTest extends AbstractTypesyst
 	}
 
 	/**
-	 * If this test failes, then we cannot
+	 * If this test fails, then we cannot
 	 * expect {@link #testSubtypeSubclassSameTypeInferred()} to succeed.
 	 */
 	@Test
@@ -108,7 +108,7 @@ class N4_21_1_DefinitionSiteStructuralTypingClassesTest extends AbstractTypesyst
 	@Test
 	def void testSubtypeSubclassSameTypeInferred() {
 		val script = createAndValidateScript(JavaScriptVariant.n4js, '''
-			class ~Structural{
+			class Structural{
 				public s: string;
 				public foo(): void {}
 			}
@@ -131,7 +131,7 @@ class N4_21_1_DefinitionSiteStructuralTypingClassesTest extends AbstractTypesyst
 				public s: string;
 				public foo(): void
 			}
-			external class ~Structural{
+			external class Structural{
 				public s: string;
 				public foo(): void
 			}
@@ -143,7 +143,7 @@ class N4_21_1_DefinitionSiteStructuralTypingClassesTest extends AbstractTypesyst
 				public s: string;
 			}
 			var nominal: Nominal;
-			var structural: Structural;
+			var structural: ~Structural;
 			var a: A;
 			var b: B;
 		''')

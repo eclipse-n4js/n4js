@@ -64,7 +64,7 @@ class N4_21_1_DefinitionSiteStructuralTypingInterfacesTest extends AbstractTypes
 		assertSubtype(G, b, nominal, false)
 
 		// N4Object do not work on definition site:
-		assertSubtype(G, a, structural, false)
+		assertSubtype(G, a, structural, true)
 		assertSubtype(G, b, structural, false)
 	}
 
