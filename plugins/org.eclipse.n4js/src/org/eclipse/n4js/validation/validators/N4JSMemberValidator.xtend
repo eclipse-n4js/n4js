@@ -112,6 +112,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		internalCheckNameStartsWithDollar
 		internalCheckAbstractAndFinal
 		internalCheckPrivateOrProjectWithInternalAnnotation(n4Member, it)
+		internalCheckStaticMemberInShape(it);
 	}
 
 	/*
@@ -145,7 +146,6 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		holdsMinimalMemberAccessModifier(member);
-		internalCheckStaticFieldInShape(member)
 	}
 
 	@Check
@@ -280,18 +280,20 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	def private void internalCheckStaticFieldInShape(TMember member) {
+	def private boolean internalCheckStaticMemberInShape(TMember member) {
 		if (!member.isStatic) {
-			return;
+			return true;
 		}
 		val parent = member.eContainer;
 		if (parent instanceof TInterface) {
 			if (parent.typingStrategy === TypingStrategy.STRUCTURAL) {
-				val message = IssueCodes.getMessageForSTRCT_ITF_CANNOT_CONTAIN_STATIC_FIELDS();
+				val message = IssueCodes.getMessageForSTRCT_ITF_CANNOT_CONTAIN_STATIC_MEMBERS();
 				addIssue(message, member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME,
-					IssueCodes.STRCT_ITF_CANNOT_CONTAIN_STATIC_FIELDS)
+					IssueCodes.STRCT_ITF_CANNOT_CONTAIN_STATIC_MEMBERS);
+				return false;
 			}
 		}
+		return true;
 	}
 
 	def private boolean holdsConstructorConstraints(TMethod method) {
@@ -475,7 +477,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			} else {
 				methodInAST.getRight.definedMember
 			};
-			val isPrivate = !holdsMinimalMemberAccessModifier(definedMember) //
+			val isPrivate = !holdsMinimalMemberAccessModifier(definedMember)
 			if (isPrivate) {
 				return false;
 			}
@@ -526,11 +528,14 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	 * Constraints 49: abstract methods/getters/setters must not be static and vice versa.
 	 */
 	def private boolean holdsAbstractMethodMustNotBeStatic(TMember member) {
-		val isExternal = member.eContainer instanceof TN4Classifier && (member.eContainer as TN4Classifier).external;
-		if (member.abstract && member.static && !isExternal) {
-			addIssue(getMessageForCLF_STATIC_ABSTRACT(member.keyword, member.name), member.astElement,
-				PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_STATIC_ABSTRACT)
-			return false;
+		val container = member.eContainer;
+		if (container instanceof TN4Classifier) {
+			val isStructural = container.typingStrategy === TypingStrategy.STRUCTURAL;
+			if (member.abstract && member.static && !container.external && !isStructural) {
+				addIssue(getMessageForCLF_STATIC_ABSTRACT(member.keyword, member.name), member.astElement,
+					PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_STATIC_ABSTRACT)
+				return false;
+			}
 		}
 		return true;
 	}

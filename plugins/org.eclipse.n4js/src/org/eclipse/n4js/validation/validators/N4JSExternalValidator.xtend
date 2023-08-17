@@ -270,9 +270,6 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 			validateClassifierIsExternal(exported, "interfaces")
 		}
 
-		if (N4JSLanguageUtils.isHollowElement(exported, jsVariantHelper)) {
-			validateNoStaticMember(exported, "interfaces");
-		}
 		validateNoObservableAtClassifier(eo, exported, "interfaces")
 		validateMembers(exported, "interfaces")
 	}
@@ -337,13 +334,6 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 			val message = getMessageForCLF_EXT_NO_OBSERV_ANNO(classesOrRolesOrInterface)
 			val eObjectToNameFeature = declaration.findNameFeature
 			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_NO_OBSERV_ANNO)
-		}
-	}
-
-	private def validateNoStaticMember(N4ClassifierDeclaration declaration, String classesOrRolesOrInterface) {
-		for (member : declaration.ownedMembersRaw.filter[it.static]) {
-			val message = getMessageForCLF_EXT_NO_STATIC_MEMBER(classesOrRolesOrInterface)
-			addIssue(message, member, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_EXT_NO_STATIC_MEMBER)
 		}
 	}
 
