@@ -243,12 +243,12 @@ export external public class Date {
 
 export external public type DateConstructor = constructor{Date};
 
-export external public class ~RegExpMatchArray extends Array<string> {
+export external public class RegExpMatchArray extends Array<string> {
 	public index?: number;
 	public input?: string;
 }
 
-export external public class ~RegExpExecArray extends Array<string> {
+export external public class RegExpExecArray extends Array<string> {
 	public index: number;
 	public input: string;
 }

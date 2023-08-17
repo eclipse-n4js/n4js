@@ -486,7 +486,7 @@ export external public const import : ~Object with {
     };
 
 @Final
-export external public class ~ImportMeta {
+export external public class ImportMeta {
     /** Location of entry point */
     @Final
     public url: string;
