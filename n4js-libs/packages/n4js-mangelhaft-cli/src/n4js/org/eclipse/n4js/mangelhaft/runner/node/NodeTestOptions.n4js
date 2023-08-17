@@ -13,7 +13,7 @@ import { XUnitReportSpec } from "org/eclipse/n4js/mangelhaft/reporter/xunit/XUni
 /**
  * All options of the test runner/compilation.
  */
-export default public class ~NodeTestOptions extends XUnitReportSpec {
+export default public class NodeTestOptions extends XUnitReportSpec {
     /**
      * Test catalog to be tested.
      */

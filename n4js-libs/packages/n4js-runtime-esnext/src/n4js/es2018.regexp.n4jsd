@@ -4,12 +4,12 @@
 @@Global @@ProvidedByRuntime
 
 @Polyfill
-export external public class ~RegExpMatchArray extends RegExpMatchArray {
+export external public class RegExpMatchArray extends RegExpMatchArray {
 	public groups?: ~Object+;
 }
 
 @Polyfill
-export external public class ~RegExpExecArray extends RegExpExecArray {
+export external public class RegExpExecArray extends RegExpExecArray {
 	public groups?: ~Object+;
 }
 

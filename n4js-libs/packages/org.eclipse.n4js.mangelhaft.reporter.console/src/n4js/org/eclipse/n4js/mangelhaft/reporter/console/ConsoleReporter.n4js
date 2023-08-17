@@ -17,7 +17,7 @@ import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult";
 import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy";
 import {TestStatus} from "org/eclipse/n4js/mangelhaft/types/TestStatus";
 
-export public class ~CliColor {
+export public class CliColor {
     public red(str: string): string {
         return str;
     }

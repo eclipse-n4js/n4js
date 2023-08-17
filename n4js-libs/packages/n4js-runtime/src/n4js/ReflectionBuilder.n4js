@@ -129,7 +129,7 @@ function createMembers(instanceProto: Object, staticProto, reflectionValues: Ref
         members.push(member);
     }
 
-    return {ownedMembers: ownedMembers, consumedMembers: consumedMembers};
+    return new MemberContainer({ownedMembers: ownedMembers, consumedMembers: consumedMembers});
 }
 
 function createMemberAnnotations(memberAnnotations: Object) {
@@ -196,7 +196,7 @@ function parseMemberString(memberString: string): MemberInfo {
     const name = memberString.substring(idxNameStart);
     const jsFunctionRef = ((name.startsWith(SYMBOL_IDENTIFIER_PREFIX)) ? (Symbol as any+)[name.substring(1)] : name);
 
-    return {memberString: memberString, name:name, kind:kind, isStatic: isUpperCase, isConsumed:isConsumed, jsFunctionRef:jsFunctionRef};
+    return new MemberInfo({memberString: memberString, name:name, kind:kind, isStatic: isUpperCase, isConsumed:isConsumed, jsFunctionRef:jsFunctionRef});
 }
 
 function createMember(instanceProto: any+, staticProto: any+, memberInfo: MemberInfo, annotations: any+) : N4Member {
@@ -414,16 +414,20 @@ class ReflectionValues {
     }
 }
 
-class ~MemberInfo {
+class MemberInfo {
     public memberString: string;
     public name: string;
     public kind: string;
     public isStatic: boolean;
     public isConsumed: boolean;
     public jsFunctionRef: string;
+    
+    constructor(@Spec params: ~i~this) { }
 }
 
-class ~MemberContainer {
+class MemberContainer {
     public ownedMembers: N4Member[];
     public consumedMembers: N4Member[];
+
+    constructor(@Spec params: ~i~this) { }
 }
