@@ -17,45 +17,45 @@
 
 // Just a variation on 05
 
-class ~C {
+class C {
 	public n : number;
 }
 
-class ~E extends C {}
+class E extends C {}
 
-class ~F extends C {
+class F extends C {
 	public foo () : void {};
 }
 
-class ~G<T extends C> {
+class G<T extends C> {
 	public f : ~T;
 }
 
-var e : E = {n: 3};
-var f1 : F = {n: 3, foo: function (){} };
+var e : ~E = {n: 3};
+var f1 : ~F = {n: 3, foo: function (){} };
 function bar () {};
 
 // E only has a field.
 // full object literal XPECT noerrors -->
-var e1 : G<E> = {f: {n:4}};
+var e1 : ~G<E> = {f: {n:4}};
 
 // partial object literal XPECT noerrors -->
-var e2 : G<E> = {f: e};
+var e2 : ~G<E> = {f: e};
 
 // F has a field and a method.
 // Both F and G are declared structural, there should be no problem. (cf. E)
 // full object literal (with function expression) XPECT noerrors -->
-var f1a : G<F> = {f: {n:4, foo: function (){}}};
+var f1a : ~G<F> = {f: {n:4, foo: function (){}}};
 
 // full object literal (with function) XPECT noerrors -->
-var f2 : G<F> = {f: {n:4, foo: bar}};
+var f2 : ~G<F> = {f: {n:4, foo: bar}};
 
 // partial object literal XPECT noerrors -->
-var f3 : G<F> = {f: f1};
+var f3 : ~G<F> = {f: f1};
 
-// full object literal with incomplete properties (n missing) XPECT errors --> "~Object with { f: ~Object with { foo: {function():void} } } is not a structural subtype of G<F>: f failed: ~Object with { foo: {function():void} } is not equal to F." at "{f: {foo: function () : void {}}}"
-var f4 : G<F> = {f: {foo: function () : void {}}};
+// full object literal with incomplete properties (n missing) XPECT errors --> "~Object with { f: ~Object with { foo: {function():void} } } is not a structural subtype of ~G<F>: f failed: ~Object with { foo: {function():void} } is not equal to ~F." at "{f: {foo: function () : void {}}}"
+var f4 : ~G<F> = {f: {foo: function () : void {}}};
 
 var fMissingN = {foo: function () : void {}};
-// partial object literal with incomplete properties (n missing) XPECT errors --> "~Object with { f: ~Object with { foo: {function():void} } } is not a structural subtype of G<F>: f failed: ~Object with { foo: {function():void} } is not equal to F." at "{f: fMissingN}"
-var f5 : G<F> = {f: fMissingN};
+// partial object literal with incomplete properties (n missing) XPECT errors --> "~Object with { f: ~Object with { foo: {function():void} } } is not a structural subtype of ~G<F>: f failed: ~Object with { foo: {function():void} } is not equal to ~F." at "{f: fMissingN}"
+var f5 : ~G<F> = {f: fMissingN};
