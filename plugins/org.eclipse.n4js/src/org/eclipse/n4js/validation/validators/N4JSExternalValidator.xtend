@@ -91,6 +91,17 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		if (! holdsExternalOnlyInDefinitionFile(clazz, "Classes")) {
 			return;
 		}
+		if (clazz.external && jsVariantHelper.isExternalMode(clazz)) {
+			val projectType = workspaceAccess.findProjectContaining(clazz)?.type;
+			if (projectType === ProjectType.DEFINITION) {
+				val superTypeRef = clazz.superClassRef;
+				if (superTypeRef === null) {
+					val message = getMessageForCLF_IN_DEFINITION_PRJ_NON_N4JS()
+					addIssue(message, clazz, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, CLF_IN_DEFINITION_PRJ_NON_N4JS)
+					return;
+				}
+			}
+		}
 	}
 
 	/**
@@ -107,6 +118,12 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 			if (!isStructural && !hasN4JSAnnotation) {
 				val message = getMessageForCLF_EXT_NOMI_INTF_MISSING_N4JS_ANNOTATION()
 				addIssue(message, interfaceDecl, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, CLF_EXT_NOMI_INTF_MISSING_N4JS_ANNOTATION)
+				return;
+			}
+			val projectType = workspaceAccess.findProjectContaining(interfaceDecl)?.type;
+			if (!isStructural && projectType === ProjectType.DEFINITION) {
+				val message = getMessageForITF_IN_DEFINITION_PRJ_NON_N4JS()
+				addIssue(message, interfaceDecl, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, ITF_IN_DEFINITION_PRJ_NON_N4JS)
 				return;
 			}
 		}

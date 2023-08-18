@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+   
+   Workspace {
+		Project "XDefinitionPrj" {
+			Folder "src" {
+				ThisFile {}
+			}
+			File "package.json" { from="Req50_Warning_In_DefinitionProjects.package.json" }
+		}
+	}
+   
+   END_SETUP
+ */
+
+
+
+
+
+// XPECT warnings --> "Class declarations in definition projects should extend Object explicitly." at "NominalClassN4"
+export external public class NominalClassN4 {}
+
+// XPECT errors --> "External nominal interface declaration is missing @N4JS annotation." at "NominalInterface1"
+export external public interface NominalInterface1 {}
+
+// XPECT warnings --> "Nominal interface declarations in definition projects should instead be structural (use ~)." at "NominalInterface2"
+@N4JS
+export external public interface NominalInterface2 {}
+
+
+// XPECT nowarnings
+export external public class NominalClassObj extends Object {}
+
+// XPECT nowarnings
+export external public interface ~Shape {}

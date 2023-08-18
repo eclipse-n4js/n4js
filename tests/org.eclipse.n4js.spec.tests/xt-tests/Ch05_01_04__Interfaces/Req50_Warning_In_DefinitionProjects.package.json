@@ -1,0 +1,13 @@
+{
+	"name": "XDefinitionPrj",
+	"version": "0.0.1",
+	"n4js": {
+		"projectType": "definition",
+		"defines": "X",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}
