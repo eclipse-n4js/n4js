@@ -183,8 +183,16 @@ public final class AnnotationDefinition {
 	/**
 	 * 11.1.1. Declaring externals
 	 */
+	@Deprecated
 	public final static AnnotationDefinition N4JS = define("N4JS")
 			.targets(N4_CLASS_DECLARATION, N4_INTERFACE_DECLARATION, EXPORT_DECLARATION)
+			.retention(RetentionPolicy.TYPE).end();
+
+	/**
+	 * 11.1.1. Declaring externals
+	 */
+	public final static AnnotationDefinition ECMASCRIPT = define("EcmaScript")
+			.targets(N4_CLASS_DECLARATION, EXPORT_DECLARATION)
 			.retention(RetentionPolicy.TYPE).end();
 
 	/**
@@ -529,6 +537,8 @@ public final class AnnotationDefinition {
 
 	/** Name of the annotation */
 	public final String name;
+	/** Description of the annotation */
+	public final String description;
 	/** Possible targets (AST node types) of the annotation, if empty annotation can be used everywhere */
 	public final EClass[] targets;
 	/** Possible wrong targets (AST node types) of the annotation for which a special error message is created. */
@@ -567,6 +577,7 @@ public final class AnnotationDefinition {
 
 	static class AnnotationDefinitionBuilder {
 		String name;
+		String description;
 		EClass[] targets;
 		String[] javaScriptVariants;
 		EClass[] targetsWithCustomError = {};
@@ -640,10 +651,14 @@ public final class AnnotationDefinition {
 			return this;
 		}
 
+		AnnotationDefinitionBuilder description(final String _description) {
+			this.description = _description;
+			return this;
+		}
+
 		AnnotationDefinition end() {
-			return new AnnotationDefinition(name, targets, targetsWithCustomError, javaScriptVariants,
-					transitive, repeatable, retention,
-					argtypes, argsOptional, argsVariadic);
+			return new AnnotationDefinition(name, description, targets, targetsWithCustomError, javaScriptVariants,
+					transitive, repeatable, retention, argtypes, argsOptional, argsVariadic);
 		}
 
 	}
@@ -651,14 +666,17 @@ public final class AnnotationDefinition {
 	/**
 	 * Creates a definition, called only ba {@link AnnotationDefinitionBuilder#end}
 	 */
-	private AnnotationDefinition(final String name, final EClass[] targets,
+	private AnnotationDefinition(final String name, final String description,
+			final EClass[] targets,
 			final EClass[] targetsWithCustomError,
 			final String[] javaScriptVariants,
 			final boolean transitive,
 			final boolean repeatable,
 			final RetentionPolicy retention,
 			final EClass[] argtypes, final boolean argsOptional, final boolean argsVariadic) {
+
 		this.name = name;
+		this.description = description;
 		this.targets = targets;
 		this.targetsWithCustomError = targetsWithCustomError;
 		this.javaScriptVariants = javaScriptVariants;
