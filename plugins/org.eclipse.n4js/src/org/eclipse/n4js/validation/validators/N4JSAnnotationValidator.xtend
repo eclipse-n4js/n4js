@@ -180,6 +180,8 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 					internalCheckStaticPolyfill(annotation)
 				case N4JS.name:
 					internalCheckN4JS(annotation)
+				case ECMASCRIPT.name:
+					internalCheckECMASCRIPT(annotation)
 				/*case TEST_GROUP.name,*/ // checked in internalCheckRepeatableAnnotations()
 				case TEST_METHOD.name,
 				case PARAMETERS.name,
@@ -400,6 +402,29 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 			) {
 				addIssue(getMessageForANN_DISALLOWED_ON_SHAPES(annotation.name), annotation, ANNOTATION__NAME,
 					ANN_DISALLOWED_ON_SHAPES);
+		}
+	}
+
+	/**
+	 * Check ECMASCRIPT annotation to be in definition file.
+	 */
+	private def internalCheckECMASCRIPT(Annotation annotation) {
+		val element = annotation.annotatedElement;
+		if (element === null) {
+			return;
+		}
+		if (!jsVariantHelper.isExternalMode(element)) {
+			addIssue(getMessageForANN_ONL_ALLOWED_AT_CLASSES_IN_N4JSD(annotation.name), annotation, ANNOTATION__NAME,
+				ANN_ONL_ALLOWED_AT_CLASSES_IN_N4JSD);
+			return;
+		}
+		if (element instanceof ExportDeclaration 
+			&& !((element as ExportDeclaration).exportedElement instanceof N4ClassDeclaration)
+			) {
+				
+			addIssue(getMessageForANN_ONL_ALLOWED_AT_CLASSES_IN_N4JSD(annotation.name), annotation, ANNOTATION__NAME,
+				ANN_ONL_ALLOWED_AT_CLASSES_IN_N4JSD);
+			return;
 		}
 	}
 
