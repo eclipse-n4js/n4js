@@ -82,6 +82,17 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	override register(EValidatorRegistrar registrar) {
 		// nop
 	}
+	
+	/**
+	 * Temporary validation
+	 */
+	@Check
+	def checkAnnotationsInN4JSDFile(Annotation annotation) {
+		if (AnnotationDefinition.N4JS.isAnnotation(annotation)) {
+			val message = getMessageForANN__N4JS_NO_EFFECT();
+			addIssue(message, annotation, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, ANN__N4JS_NO_EFFECT);
+		}
+	}
 
 	/**
 	 * @see N4Spec, 4.20. External Classes

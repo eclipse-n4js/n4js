@@ -59,6 +59,7 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.UtilN4;
 
 import com.google.common.base.Function;
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
@@ -870,6 +871,13 @@ public final class AnnotationDefinition {
 	 */
 	public boolean hasOwnedAnnotation(final AnnotableElement element) {
 		return getOwnedAnnotation(element) != null;
+	}
+
+	/**
+	 * Returns true iff the given annotation has the same name.
+	 */
+	public boolean isAnnotation(Annotation annotation) {
+		return Objects.equal(this.name, annotation.getName());
 	}
 
 	/**
