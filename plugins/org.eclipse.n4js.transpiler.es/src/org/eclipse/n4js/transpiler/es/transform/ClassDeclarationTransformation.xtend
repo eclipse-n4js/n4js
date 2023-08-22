@@ -158,9 +158,15 @@ class ClassDeclarationTransformation extends Transformation {
 				if (tIfc.typingStrategy === TypingStrategy.STRUCTURAL) {
 					return false;
 				}
+				if (TypeUtils.isBuiltIn(tIfc)) {
+					// built-in types are not defined in Api/Impl projects -> no patching required
+					return false;
+				}
+				if (!typeAssistant.inN4JSD(tIfc)) {
+					return true;
+				}
 				
-				return !TypeUtils.isBuiltIn(tIfc) // built-in types are not defined in Api/Impl projects -> no patching required
-					&& !(typeAssistant.inN4JSD(tIfc) && !AnnotationDefinition.N4JS.hasAnnotation(tIfc)) // interface in .n4jsd file only patched in if marked @N4JS
+				return AnnotationDefinition.N4JS.hasAnnotation(tIfc); // interface in .n4jsd file only patched in if marked @N4JS
 			}
 			return false;
 		];
