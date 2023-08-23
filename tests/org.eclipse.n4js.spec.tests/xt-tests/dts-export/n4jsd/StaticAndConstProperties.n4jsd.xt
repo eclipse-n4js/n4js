@@ -23,7 +23,6 @@ external class C {
     static get g(): number;
     static set s(v: number);
 }
-@N4JS
 external interface I {
 	static field1: any;
 	const field2: any;

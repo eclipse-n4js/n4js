@@ -13,27 +13,25 @@
 
 /* Test case for IDEBUG-561 relaxing visibility constraints in external definitions. */
 
-@N4JS
+
 export external public abstract class Base {
 	constructor();
 	public x() : void;
 }
 
-@N4JS @Internal
+@Internal
 // XPECT  noerrors --> "External classes have to be marked as public (and without @Internal)." at "BaseInternal"
 export external public abstract class BaseInternal {
 	@Internal public constructor();
 	public x() : void;
 }
 
-@N4JS
 // XPECT  noerrors --> "External elements have to be exported." at "BasePrivate"
 external abstract class BasePrivate {
 	constructor();
 	public x() : void;
 }
 
-@N4JS
 // XPECT  noerrors --> "External classes have to be marked as public (and without @Internal)." at "BaseProject"
 export external project abstract class BaseProject {
 	project constructor();
@@ -41,10 +39,10 @@ export external project abstract class BaseProject {
 }
 
 
-@N4JS export external public class A extends Base {}
-@N4JS export external public class Ainternal extends BaseInternal {}
-@N4JS export external public class Aprivate extends BasePrivate {}
-@N4JS export external public class Aproject extends BaseProject {}
+export external public class A extends Base {}
+export external public class Ainternal extends BaseInternal {}
+export external public class Aprivate extends BasePrivate {}
+export external public class Aproject extends BaseProject {}
 
 ///////// below a non-N4JS variant:
 

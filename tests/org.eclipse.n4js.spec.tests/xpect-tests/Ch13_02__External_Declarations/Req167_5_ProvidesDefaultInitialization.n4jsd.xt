@@ -11,13 +11,13 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
-@N4JS
+
 export external public interface I {
 	// XPECT noerrors --> "This is the correct application." at "foo"
 	@ProvidesInitializer foo;
 }
 
-@N4JS
+
 export external public class C {
 	// XPECT noerrors --> "This is the correct application." at "foo"
 	@ProvidesInitializer foo;

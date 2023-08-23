@@ -11,7 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
-@N4JS
+
 export external public interface I {
 	// XPECT noerrors --> "This is the correct application." at "foo"
 	@ProvidesDefaultImplementation foo()
@@ -39,7 +39,6 @@ export external public interface ~K {
 	@ProvidesDefaultImplementation set c(x)
 }
 
-@N4JS
 export external public class C {
 	// XPECT errors --> "@ProvidesDefaultImplementation must only be used in interfaces." at "foo"
 	@ProvidesDefaultImplementation foo()

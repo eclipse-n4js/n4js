@@ -13,6 +13,5 @@
 @@Global
 
 export external public class SomeClass {}
-export external public class ~SomeStructClass {}
 export external public interface SomeInterface {}
 export external public interface ~SomeStructInterface {}
