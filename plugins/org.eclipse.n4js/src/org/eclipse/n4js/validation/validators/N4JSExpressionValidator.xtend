@@ -140,6 +140,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.ts.types.util.TypeModelUtils
 
 /**
  */
@@ -719,7 +720,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			if (typeRef instanceof TypeTypeRef) {
 				val staticType = tsh.getStaticType(G, typeRef);
 				if (staticType instanceof TN4Classifier) {
-					if (staticType.typingStrategy !== TypingStrategy.DEFAULT
+					if (TypeModelUtils.isStructural(staticType.typingStrategy)
 						&& !(ResourceType.getResourceType(staticType) === ResourceType.DTS && staticType instanceof TClass)) {
 						val message = IssueCodes.
 							getMessageForTYS_INSTANCEOF_NOT_SUPPORTED_FOR_STRUCTURAL_TYPES(staticType.name);

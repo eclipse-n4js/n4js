@@ -452,9 +452,9 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 				addIssue(getMessageForCLF_CALL_CONSTRUCT_SIG_ONLY_IN_N4JSD, astNode, CLF_CALL_CONSTRUCT_SIG_ONLY_IN_N4JSD);
 				return false;
 			}
-			// constraint: not in classifiers with @N4JS
+			// constraint: only in shapes and EcmaScript classes
 			val owner = if (methodInAST.isLeft) methodInAST.getLeft.owner; // owners of TStructMethods are never annotated with @N4JS
-			if (owner !== null && AnnotationDefinition.N4JS.hasAnnotation(owner)) {
+			if (methodInAST.isLeft && !N4JSLanguageUtils.isShapeOrEcmaScript(owner)) {
 				addIssue(getMessageForCLF_CALL_CONSTRUCT_SIG_NOT_IN_N4JS, astNode, CLF_CALL_CONSTRUCT_SIG_NOT_IN_N4JS);
 				return false;
 			}

@@ -12,7 +12,6 @@ package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
 import java.util.List
-import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.GenericDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
@@ -31,13 +30,11 @@ import org.eclipse.n4js.transpiler.es.assistants.ClassifierAssistant
 import org.eclipse.n4js.transpiler.es.assistants.DelegationAssistant
 import org.eclipse.n4js.transpiler.es.assistants.ReflectionAssistant
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
-import org.eclipse.n4js.ts.types.TInterface
-import org.eclipse.n4js.types.utils.TypeUtils
+import org.eclipse.n4js.transpiler.utils.TranspilerUtils
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.transpiler.utils.TranspilerUtils.*
-import org.eclipse.n4js.ts.types.TypingStrategy
 
 /**
  * Transforms {@link N4ClassDeclaration}s into a constructor function and a <code>$makeClass</code> call.
@@ -152,25 +149,7 @@ class ClassDeclarationTransformation extends Transformation {
 
 		// the return value of this method is intended for default method patching; for this purpose, we have to
 		// filter out some of the directly implemented interfaces:
-		val directlyImplementedInterfacesFiltered = interfaces.filter[ifcSTE|
-			val tIfc = ifcSTE.originalTarget;
-			if (tIfc instanceof TInterface) {
-				if (tIfc.typingStrategy === TypingStrategy.STRUCTURAL) {
-					return false;
-				}
-				if (TypeUtils.isBuiltIn(tIfc)) {
-					// built-in types are not defined in Api/Impl projects -> no patching required
-					return false;
-				}
-				if (!typeAssistant.inN4JSD(tIfc)) {
-					return true;
-				}
-				
-				return AnnotationDefinition.N4JS.hasAnnotation(tIfc); // interface in .n4jsd file only patched in if marked @N4JS
-			}
-			return false;
-		];
-
+		val directlyImplementedInterfacesFiltered = TranspilerUtils.filterNominalInterfaces(interfaces);
 		return _ArrLit( directlyImplementedInterfacesFiltered.map[ _IdentRef(it) ] );
 	}
 }

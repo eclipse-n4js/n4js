@@ -17,7 +17,6 @@ import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TypesFactory
-import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 
@@ -100,15 +99,7 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 		tclass.declaredAbstract = classDecl.abstract;
 		tclass.declaredFinal = AnnotationDefinition.FINAL.hasAnnotation(classDecl);
 		tclass.observable = AnnotationDefinition.OBSERVABLE.hasAnnotation(classDecl);
-		tclass.declaredN4JS = AnnotationDefinition.N4JS.hasAnnotation(classDecl);
-
-		tclass.setTypingStrategy(
-			if (classDecl.typingStrategy === TypingStrategy.DEFAULT) {
-				TypingStrategy.DEFAULT;
-			} else { // STRUCTURAL_FIELD is not allowed on def site, but maybe we got a wrong input
-				TypingStrategy.STRUCTURAL;
-			}
-		);
+		tclass.declaredEcmaScript = AnnotationDefinition.ECMASCRIPT.hasAnnotation(classDecl);
 		
 		return tclass;
 	}
