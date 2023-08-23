@@ -48,7 +48,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isDeclaredAbstract <em>Declared Abstract</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isDeclaredN4JS <em>Declared N4JS</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isDeclaredEcmaScript <em>Declared Ecma Script</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isDeclaredFinal <em>Declared Final</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isDeclaredStaticPolyfill <em>Declared Static Polyfill</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isObservable <em>Observable</em>}</li>
@@ -80,24 +80,24 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	protected boolean declaredAbstract = DECLARED_ABSTRACT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isDeclaredN4JS() <em>Declared N4JS</em>}' attribute.
+	 * The default value of the '{@link #isDeclaredEcmaScript() <em>Declared Ecma Script</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isDeclaredN4JS()
+	 * @see #isDeclaredEcmaScript()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final boolean DECLARED_N4JS_EDEFAULT = false;
+	protected static final boolean DECLARED_ECMA_SCRIPT_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isDeclaredN4JS() <em>Declared N4JS</em>}' attribute.
+	 * The cached value of the '{@link #isDeclaredEcmaScript() <em>Declared Ecma Script</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isDeclaredN4JS()
+	 * @see #isDeclaredEcmaScript()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean declaredN4JS = DECLARED_N4JS_EDEFAULT;
+	protected boolean declaredEcmaScript = DECLARED_ECMA_SCRIPT_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #isDeclaredFinal() <em>Declared Final</em>}' attribute.
@@ -227,8 +227,8 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * @generated
 	 */
 	@Override
-	public boolean isDeclaredN4JS() {
-		return declaredN4JS;
+	public boolean isDeclaredEcmaScript() {
+		return declaredEcmaScript;
 	}
 
 	/**
@@ -237,11 +237,11 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * @generated
 	 */
 	@Override
-	public void setDeclaredN4JS(boolean newDeclaredN4JS) {
-		boolean oldDeclaredN4JS = declaredN4JS;
-		declaredN4JS = newDeclaredN4JS;
+	public void setDeclaredEcmaScript(boolean newDeclaredEcmaScript) {
+		boolean oldDeclaredEcmaScript = declaredEcmaScript;
+		declaredEcmaScript = newDeclaredEcmaScript;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TCLASS__DECLARED_N4JS, oldDeclaredN4JS, declaredN4JS));
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TCLASS__DECLARED_ECMA_SCRIPT, oldDeclaredEcmaScript, declaredEcmaScript));
 	}
 
 	/**
@@ -487,8 +487,8 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 		switch (featureID) {
 			case TypesPackage.TCLASS__DECLARED_ABSTRACT:
 				return isDeclaredAbstract();
-			case TypesPackage.TCLASS__DECLARED_N4JS:
-				return isDeclaredN4JS();
+			case TypesPackage.TCLASS__DECLARED_ECMA_SCRIPT:
+				return isDeclaredEcmaScript();
 			case TypesPackage.TCLASS__DECLARED_FINAL:
 				return isDeclaredFinal();
 			case TypesPackage.TCLASS__DECLARED_STATIC_POLYFILL:
@@ -515,8 +515,8 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 			case TypesPackage.TCLASS__DECLARED_ABSTRACT:
 				setDeclaredAbstract((Boolean)newValue);
 				return;
-			case TypesPackage.TCLASS__DECLARED_N4JS:
-				setDeclaredN4JS((Boolean)newValue);
+			case TypesPackage.TCLASS__DECLARED_ECMA_SCRIPT:
+				setDeclaredEcmaScript((Boolean)newValue);
 				return;
 			case TypesPackage.TCLASS__DECLARED_FINAL:
 				setDeclaredFinal((Boolean)newValue);
@@ -549,8 +549,8 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 			case TypesPackage.TCLASS__DECLARED_ABSTRACT:
 				setDeclaredAbstract(DECLARED_ABSTRACT_EDEFAULT);
 				return;
-			case TypesPackage.TCLASS__DECLARED_N4JS:
-				setDeclaredN4JS(DECLARED_N4JS_EDEFAULT);
+			case TypesPackage.TCLASS__DECLARED_ECMA_SCRIPT:
+				setDeclaredEcmaScript(DECLARED_ECMA_SCRIPT_EDEFAULT);
 				return;
 			case TypesPackage.TCLASS__DECLARED_FINAL:
 				setDeclaredFinal(DECLARED_FINAL_EDEFAULT);
@@ -581,8 +581,8 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 		switch (featureID) {
 			case TypesPackage.TCLASS__DECLARED_ABSTRACT:
 				return declaredAbstract != DECLARED_ABSTRACT_EDEFAULT;
-			case TypesPackage.TCLASS__DECLARED_N4JS:
-				return declaredN4JS != DECLARED_N4JS_EDEFAULT;
+			case TypesPackage.TCLASS__DECLARED_ECMA_SCRIPT:
+				return declaredEcmaScript != DECLARED_ECMA_SCRIPT_EDEFAULT;
 			case TypesPackage.TCLASS__DECLARED_FINAL:
 				return declaredFinal != DECLARED_FINAL_EDEFAULT;
 			case TypesPackage.TCLASS__DECLARED_STATIC_POLYFILL:
@@ -668,8 +668,8 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (declaredAbstract: ");
 		result.append(declaredAbstract);
-		result.append(", declaredN4JS: ");
-		result.append(declaredN4JS);
+		result.append(", declaredEcmaScript: ");
+		result.append(declaredEcmaScript);
 		result.append(", declaredFinal: ");
 		result.append(declaredFinal);
 		result.append(", declaredStaticPolyfill: ");

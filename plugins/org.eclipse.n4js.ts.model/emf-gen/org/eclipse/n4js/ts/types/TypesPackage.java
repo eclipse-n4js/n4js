@@ -6524,22 +6524,13 @@ public interface TypesPackage extends EPackage {
 	int TN4_CLASSIFIER__DYNAMIZABLE = TCLASSIFIER_FEATURE_COUNT + 5;
 
 	/**
-	 * The feature id for the '<em><b>Typing Strategy</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TN4_CLASSIFIER__TYPING_STRATEGY = TCLASSIFIER_FEATURE_COUNT + 6;
-
-	/**
 	 * The number of structural features of the '<em>TN4 Classifier</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER_FEATURE_COUNT = TCLASSIFIER_FEATURE_COUNT + 7;
+	int TN4_CLASSIFIER_FEATURE_COUNT = TCLASSIFIER_FEATURE_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -6812,13 +6803,22 @@ public interface TypesPackage extends EPackage {
 	int TN4_CLASSIFIER___IS_POLYFILL = TCLASSIFIER_OPERATION_COUNT + 5;
 
 	/**
+	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER___GET_TYPING_STRATEGY = TCLASSIFIER_OPERATION_COUNT + 6;
+
+	/**
 	 * The number of operations of the '<em>TN4 Classifier</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER_OPERATION_COUNT = TCLASSIFIER_OPERATION_COUNT + 6;
+	int TN4_CLASSIFIER_OPERATION_COUNT = TCLASSIFIER_OPERATION_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TClassImpl <em>TClass</em>}' class.
@@ -6993,15 +6993,6 @@ public interface TypesPackage extends EPackage {
 	int TCLASS__DYNAMIZABLE = TN4_CLASSIFIER__DYNAMIZABLE;
 
 	/**
-	 * The feature id for the '<em><b>Typing Strategy</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TCLASS__TYPING_STRATEGY = TN4_CLASSIFIER__TYPING_STRATEGY;
-
-	/**
 	 * The feature id for the '<em><b>Declared Abstract</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7011,13 +7002,13 @@ public interface TypesPackage extends EPackage {
 	int TCLASS__DECLARED_ABSTRACT = TN4_CLASSIFIER_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Declared N4JS</b></em>' attribute.
+	 * The feature id for the '<em><b>Declared Ecma Script</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS__DECLARED_N4JS = TN4_CLASSIFIER_FEATURE_COUNT + 1;
+	int TCLASS__DECLARED_ECMA_SCRIPT = TN4_CLASSIFIER_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Declared Final</b></em>' attribute.
@@ -7290,6 +7281,15 @@ public interface TypesPackage extends EPackage {
 	int TCLASS___GET_ELEMENT_TYPE = TN4_CLASSIFIER___GET_ELEMENT_TYPE;
 
 	/**
+	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS___GET_TYPING_STRATEGY = TN4_CLASSIFIER___GET_TYPING_STRATEGY;
+
+	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7534,15 +7534,6 @@ public interface TypesPackage extends EPackage {
 	int TINTERFACE__DYNAMIZABLE = TN4_CLASSIFIER__DYNAMIZABLE;
 
 	/**
-	 * The feature id for the '<em><b>Typing Strategy</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TINTERFACE__TYPING_STRATEGY = TN4_CLASSIFIER__TYPING_STRATEGY;
-
-	/**
 	 * The feature id for the '<em><b>Super Interface Refs</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7552,13 +7543,22 @@ public interface TypesPackage extends EPackage {
 	int TINTERFACE__SUPER_INTERFACE_REFS = TN4_CLASSIFIER_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Typing Strategy</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE__TYPING_STRATEGY = TN4_CLASSIFIER_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>TInterface</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TINTERFACE_FEATURE_COUNT = TN4_CLASSIFIER_FEATURE_COUNT + 1;
+	int TINTERFACE_FEATURE_COUNT = TN4_CLASSIFIER_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -7793,6 +7793,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TINTERFACE___IS_POLYFILL = TN4_CLASSIFIER___IS_POLYFILL;
+
+	/**
+	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE___GET_TYPING_STRATEGY = TN4_CLASSIFIER___GET_TYPING_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -16660,17 +16669,6 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTN4Classifier_Dynamizable();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TN4Classifier#getTypingStrategy <em>Typing Strategy</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Typing Strategy</em>'.
-	 * @see org.eclipse.n4js.ts.types.TN4Classifier#getTypingStrategy()
-	 * @see #getTN4Classifier()
-	 * @generated
-	 */
-	EAttribute getTN4Classifier_TypingStrategy();
-
-	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TN4Classifier#isPolyfill() <em>Is Polyfill</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16679,6 +16677,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTN4Classifier__IsPolyfill();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TN4Classifier#getTypingStrategy() <em>Get Typing Strategy</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Typing Strategy</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TN4Classifier#getTypingStrategy()
+	 * @generated
+	 */
+	EOperation getTN4Classifier__GetTypingStrategy();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TClass <em>TClass</em>}'.
@@ -16702,15 +16710,15 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTClass_DeclaredAbstract();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TClass#isDeclaredN4JS <em>Declared N4JS</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TClass#isDeclaredEcmaScript <em>Declared Ecma Script</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Declared N4JS</em>'.
-	 * @see org.eclipse.n4js.ts.types.TClass#isDeclaredN4JS()
+	 * @return the meta object for the attribute '<em>Declared Ecma Script</em>'.
+	 * @see org.eclipse.n4js.ts.types.TClass#isDeclaredEcmaScript()
 	 * @see #getTClass()
 	 * @generated
 	 */
-	EAttribute getTClass_DeclaredN4JS();
+	EAttribute getTClass_DeclaredEcmaScript();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TClass#isDeclaredFinal <em>Declared Final</em>}'.
@@ -16857,6 +16865,17 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getTInterface_SuperInterfaceRefs();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TInterface#getTypingStrategy <em>Typing Strategy</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Typing Strategy</em>'.
+	 * @see org.eclipse.n4js.ts.types.TInterface#getTypingStrategy()
+	 * @see #getTInterface()
+	 * @generated
+	 */
+	EAttribute getTInterface_TypingStrategy();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TInterface#isAbstract() <em>Is Abstract</em>}' operation.
@@ -19608,20 +19627,20 @@ public interface TypesPackage extends EPackage {
 		EAttribute TN4_CLASSIFIER__DYNAMIZABLE = eINSTANCE.getTN4Classifier_Dynamizable();
 
 		/**
-		 * The meta object literal for the '<em><b>Typing Strategy</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TN4_CLASSIFIER__TYPING_STRATEGY = eINSTANCE.getTN4Classifier_TypingStrategy();
-
-		/**
 		 * The meta object literal for the '<em><b>Is Polyfill</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EOperation TN4_CLASSIFIER___IS_POLYFILL = eINSTANCE.getTN4Classifier__IsPolyfill();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Typing Strategy</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TN4_CLASSIFIER___GET_TYPING_STRATEGY = eINSTANCE.getTN4Classifier__GetTypingStrategy();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TClassImpl <em>TClass</em>}' class.
@@ -19642,12 +19661,12 @@ public interface TypesPackage extends EPackage {
 		EAttribute TCLASS__DECLARED_ABSTRACT = eINSTANCE.getTClass_DeclaredAbstract();
 
 		/**
-		 * The meta object literal for the '<em><b>Declared N4JS</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Declared Ecma Script</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute TCLASS__DECLARED_N4JS = eINSTANCE.getTClass_DeclaredN4JS();
+		EAttribute TCLASS__DECLARED_ECMA_SCRIPT = eINSTANCE.getTClass_DeclaredEcmaScript();
 
 		/**
 		 * The meta object literal for the '<em><b>Declared Final</b></em>' attribute feature.
@@ -19762,6 +19781,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TINTERFACE__SUPER_INTERFACE_REFS = eINSTANCE.getTInterface_SuperInterfaceRefs();
+
+		/**
+		 * The meta object literal for the '<em><b>Typing Strategy</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TINTERFACE__TYPING_STRATEGY = eINSTANCE.getTInterface_TypingStrategy();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Abstract</b></em>' operation.

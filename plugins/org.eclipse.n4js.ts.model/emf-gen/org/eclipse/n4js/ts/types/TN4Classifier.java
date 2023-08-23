@@ -23,7 +23,6 @@ package org.eclipse.n4js.ts.types;
  *   <li>{@link org.eclipse.n4js.ts.types.TN4Classifier#isExternal <em>External</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TN4Classifier#isDeclaredNonStaticPolyfill <em>Declared Non Static Polyfill</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TN4Classifier#isDynamizable <em>Dynamizable</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.TN4Classifier#getTypingStrategy <em>Typing Strategy</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getTN4Classifier()
@@ -102,8 +101,14 @@ public interface TN4Classifier extends TClassifier, AccessibleTypeElement, Array
 	void setDynamizable(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Typing Strategy</b></em>' attribute.
-	 * The literals are from the enumeration {@link org.eclipse.n4js.ts.types.TypingStrategy}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isPolyfill();
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -111,32 +116,9 @@ public interface TN4Classifier extends TClassifier, AccessibleTypeElement, Array
 	 * Could be changed to structural but not to structural field.
 	 * The latter is only available on use site.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Typing Strategy</em>' attribute.
-	 * @see org.eclipse.n4js.ts.types.TypingStrategy
-	 * @see #setTypingStrategy(TypingStrategy)
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTN4Classifier_TypingStrategy()
-	 * @model unique="false"
-	 * @generated
-	 */
-	TypingStrategy getTypingStrategy();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TN4Classifier#getTypingStrategy <em>Typing Strategy</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Typing Strategy</em>' attribute.
-	 * @see org.eclipse.n4js.ts.types.TypingStrategy
-	 * @see #getTypingStrategy()
-	 * @generated
-	 */
-	void setTypingStrategy(TypingStrategy value);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	boolean isPolyfill();
+	TypingStrategy getTypingStrategy();
 
 } // TN4Classifier

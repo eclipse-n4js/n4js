@@ -10,12 +10,11 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
-import com.google.common.base.Objects;
-
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -23,21 +22,19 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 
-import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TNamespaceElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
-
-import org.eclipse.xtext.xbase.lib.Functions.Function1;
-
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
+import org.eclipse.n4js.ts.types.TypingStrategy;
 
 /**
  * <!-- begin-user-doc -->
@@ -48,6 +45,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TInterfaceImpl#getSuperInterfaceRefs <em>Super Interface Refs</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TInterfaceImpl#getTypingStrategy <em>Typing Strategy</em>}</li>
  * </ul>
  *
  * @generated
@@ -62,6 +60,26 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	 * @ordered
 	 */
 	protected EList<ParameterizedTypeRef> superInterfaceRefs;
+
+	/**
+	 * The default value of the '{@link #getTypingStrategy() <em>Typing Strategy</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTypingStrategy()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final TypingStrategy TYPING_STRATEGY_EDEFAULT = TypingStrategy.DEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getTypingStrategy() <em>Typing Strategy</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTypingStrategy()
+	 * @generated
+	 * @ordered
+	 */
+	protected TypingStrategy typingStrategy = TYPING_STRATEGY_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -101,6 +119,29 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	 * @generated
 	 */
 	@Override
+	public TypingStrategy getTypingStrategy() {
+		return typingStrategy;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setTypingStrategy(TypingStrategy newTypingStrategy) {
+		TypingStrategy oldTypingStrategy = typingStrategy;
+		typingStrategy = newTypingStrategy == null ? TYPING_STRATEGY_EDEFAULT : newTypingStrategy;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TINTERFACE__TYPING_STRATEGY, oldTypingStrategy, typingStrategy));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isAbstract() {
 		return true;
 	}
@@ -132,12 +173,8 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	 */
 	@Override
 	public boolean isHollow() {
-		return (this.isExternal() && (!IterableExtensions.<TAnnotation>exists(this.getAnnotations(), new Function1<TAnnotation, Boolean>() {
-			public Boolean apply(final TAnnotation it) {
-				String _name = it.getName();
-				return Boolean.valueOf(Objects.equal(_name, "N4JS"));
-			}
-		})));
+		TypingStrategy _typingStrategy = this.getTypingStrategy();
+		return (_typingStrategy == TypingStrategy.STRUCTURAL);
 	}
 
 	/**
@@ -164,6 +201,8 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 		switch (featureID) {
 			case TypesPackage.TINTERFACE__SUPER_INTERFACE_REFS:
 				return getSuperInterfaceRefs();
+			case TypesPackage.TINTERFACE__TYPING_STRATEGY:
+				return getTypingStrategy();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -181,6 +220,9 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 				getSuperInterfaceRefs().clear();
 				getSuperInterfaceRefs().addAll((Collection<? extends ParameterizedTypeRef>)newValue);
 				return;
+			case TypesPackage.TINTERFACE__TYPING_STRATEGY:
+				setTypingStrategy((TypingStrategy)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -196,6 +238,9 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 			case TypesPackage.TINTERFACE__SUPER_INTERFACE_REFS:
 				getSuperInterfaceRefs().clear();
 				return;
+			case TypesPackage.TINTERFACE__TYPING_STRATEGY:
+				setTypingStrategy(TYPING_STRATEGY_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -210,6 +255,8 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 		switch (featureID) {
 			case TypesPackage.TINTERFACE__SUPER_INTERFACE_REFS:
 				return superInterfaceRefs != null && !superInterfaceRefs.isEmpty();
+			case TypesPackage.TINTERFACE__TYPING_STRATEGY:
+				return typingStrategy != TYPING_STRATEGY_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -262,6 +309,22 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 				return isHollow();
 		}
 		return super.eInvoke(operationID, arguments);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuilder result = new StringBuilder(super.toString());
+		result.append(" (typingStrategy: ");
+		result.append(typingStrategy);
+		result.append(')');
+		return result.toString();
 	}
 
 } //TInterfaceImpl
