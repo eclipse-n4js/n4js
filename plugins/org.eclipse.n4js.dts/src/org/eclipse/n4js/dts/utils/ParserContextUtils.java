@@ -63,6 +63,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.LiteralAnnotationArgument;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.ModifiableElement;
+import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFactory;
@@ -296,6 +297,13 @@ public class ParserContextUtils {
 			elem.setAnnotationList(al);
 		}
 		al.getAnnotations().add(ann);
+	}
+
+	/** Add an <code>@EcmaScript()</code> annotation to the given script. */
+	public static void addAnnotationEcmaScript(N4ClassDeclaration classDecl) {
+		Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
+		ann.setName(AnnotationDefinition.ECMASCRIPT.name);
+		addAnnotation(classDecl, ann);
 	}
 
 	/** Sets the given element's "declared this type" by adding a {@code @This()} annotation. */
