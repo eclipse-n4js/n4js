@@ -538,7 +538,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 		scope = scopeSnapshotHelper.scopeForEObjects("buildLexicalEnvironmentScope", context, scope, false, scopeLists.flatten);
 
-		val scopeInfo = new ScopeInfo(scope, scope, new VeeScopeValidator(context, jsVariantHelper));
+		val scopeInfo = new ScopeInfo(scope, scope, new VeeScopeValidator(context));
 
 		return scopeInfo;
 	}

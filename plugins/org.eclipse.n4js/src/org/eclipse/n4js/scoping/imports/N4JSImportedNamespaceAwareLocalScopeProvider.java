@@ -25,7 +25,6 @@ import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.DeclMergingHelper;
-import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.resource.ISelectable;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.impl.ImportNormalizer;
@@ -42,9 +41,6 @@ public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamesp
 
 	@Inject
 	private DeclMergingHelper declMergingHelper;
-
-	@Inject
-	private JavaScriptVariantHelper jsVariantHelper;
 
 	/**
 	 * NOTE: for N4JS, 'context' is only used to retrieve the containing resource, and 'reference' will be one of:
@@ -117,7 +113,7 @@ public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamesp
 	protected ImportScope createImportScope(IScope parent, List<ImportNormalizer> namespaceResolvers,
 			ISelectable importFrom, EClass type, boolean ignoreCase) {
 		return new NonResolvingImportScope(namespaceResolvers, parent, importFrom, type, ignoreCase,
-				declMergingHelper, jsVariantHelper, Optional.absent());
+				declMergingHelper, Optional.absent());
 	}
 
 	/**
@@ -128,7 +124,7 @@ public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamesp
 		BuiltInTypeScope builtInTypeScope = contextResourceSet != null ? BuiltInTypeScope.get(contextResourceSet)
 				: null;
 		return new NonResolvingImportScope(namespaceResolvers, parent, importFrom, type, ignoreCase,
-				declMergingHelper, jsVariantHelper, Optional.fromNullable(builtInTypeScope));
+				declMergingHelper, Optional.fromNullable(builtInTypeScope));
 	}
 
 	@Override

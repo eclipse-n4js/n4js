@@ -21,7 +21,6 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.validation.IssueCodes;
-import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
@@ -31,16 +30,14 @@ import org.eclipse.xtext.resource.IEObjectDescription;
  * collects.
  */
 public class VeeScopeValidator implements IScopeValidator {
-	private final JavaScriptVariantHelper jsVariantHelper;
 	private final EObject context;
 	private final boolean contextIsExportedElementInNamedExportSpecifier;
 
 	/** See {@link VeeScopeValidator}. */
-	public VeeScopeValidator(EObject context, JavaScriptVariantHelper jsVariantHelper) {
+	public VeeScopeValidator(EObject context) {
 		if (context.eContainer() instanceof TypeReferenceNode<?>) {
 			context = context.eContainer();
 		}
-		this.jsVariantHelper = jsVariantHelper;
 		this.context = context;
 		this.contextIsExportedElementInNamedExportSpecifier = context.eContainer() instanceof NamedExportSpecifier
 				&& ((NamedExportSpecifier) context.eContainer()).getExportedElement() == context;
@@ -65,7 +62,7 @@ public class VeeScopeValidator implements IScopeValidator {
 		}
 		IdentifiableElement ie = (IdentifiableElement) eObjectOrProxy;
 
-		boolean isHollow = N4JSLanguageUtils.isHollowElement(ie, jsVariantHelper);
+		boolean isHollow = N4JSLanguageUtils.isHollowElement(ie);
 		return !isHollow;
 	}
 

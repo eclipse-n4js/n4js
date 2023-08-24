@@ -27,7 +27,6 @@ import org.eclipse.n4js.utils.DeclMergingUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.n4js.utils.collections.Iterables2;
-import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.ISelectable;
@@ -46,7 +45,6 @@ class NonResolvingImportScope extends ImportScope {
 	private List<ImportNormalizer> myNormalizers;
 	private final EClass myType;
 	private final DeclMergingHelper declMergingHelper;
-	private final JavaScriptVariantHelper jsVariantHelper;
 	private final Optional<BuiltInTypeScope> builtInTypeScope;
 
 	private final boolean includeHollows;
@@ -54,12 +52,12 @@ class NonResolvingImportScope extends ImportScope {
 
 	public NonResolvingImportScope(List<ImportNormalizer> namespaceResolvers, IScope parent, ISelectable importFrom,
 			EClass type, boolean ignoreCase,
-			DeclMergingHelper declMergingHelper, JavaScriptVariantHelper jsVariantHelper,
+			DeclMergingHelper declMergingHelper,
 			Optional<BuiltInTypeScope> builtInTypeScope) {
+
 		super(namespaceResolvers, parent, importFrom, type, ignoreCase);
 		this.myType = type;
 		this.declMergingHelper = declMergingHelper;
-		this.jsVariantHelper = jsVariantHelper;
 		this.builtInTypeScope = builtInTypeScope;
 
 		// derive the "include hollows/value-only-elements" configuration from the type
@@ -139,7 +137,7 @@ class NonResolvingImportScope extends ImportScope {
 		EObject elem = desc.getEObjectOrProxy();
 		if (elem != null && !elem.eIsProxy() && elem instanceof TExportableElement) {
 			boolean include = N4JSLanguageUtils.checkInclude((TExportableElement) elem, includeHollows,
-					includeValueOnlyElements, jsVariantHelper);
+					includeValueOnlyElements);
 			return include;
 		}
 		return true;

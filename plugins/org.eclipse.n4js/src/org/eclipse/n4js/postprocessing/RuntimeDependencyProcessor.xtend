@@ -11,7 +11,6 @@
 package org.eclipse.n4js.postprocessing
 
 import com.google.common.collect.Iterators
-import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.ArrayList
 import java.util.LinkedHashSet
@@ -36,7 +35,6 @@ import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.SCCUtils
-import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.EcoreUtil2
 
 /**
@@ -45,9 +43,6 @@ import org.eclipse.xtext.EcoreUtil2
  */
 @Singleton
 class RuntimeDependencyProcessor {
-
-	@Inject
-	private JavaScriptVariantHelper variantHelper;
 
 	/**
 	 * Invoked during AST traversal (and thus during main post-processing).
@@ -58,7 +53,7 @@ class RuntimeDependencyProcessor {
 				return; // re-exports are not harmful
 			}
 			val target = node.targetElement;
-			if (N4JSLanguageUtils.hasRuntimeRepresentation(target, variantHelper)) {
+			if (N4JSLanguageUtils.hasRuntimeRepresentation(target)) {
 				cache.elementsReferencedAtRuntime += target;
 				// in case of namespace imports, we also want to remember that the namespace was referenced at run time:
 				val targetRaw = node.id;
@@ -67,11 +62,11 @@ class RuntimeDependencyProcessor {
 				}
 			}
 		} else if (node instanceof N4ClassifierDeclaration) {
-			if (N4JSLanguageUtils.hasRuntimeRepresentation(node, variantHelper)) {
+			if (N4JSLanguageUtils.hasRuntimeRepresentation(node)) {
 				val targetTypeRefs = node.superClassifierRefs;
 				for (targetTypeRef : targetTypeRefs) {
 					val targetDeclType = targetTypeRef?.typeRef?.declaredType;
-					if (N4JSLanguageUtils.hasRuntimeRepresentation(targetDeclType, variantHelper)) {
+					if (N4JSLanguageUtils.hasRuntimeRepresentation(targetDeclType)) {
 						cache.elementsReferencedAtRuntime += targetDeclType;
 						// in case of namespace imports, we also want to remember that the namespace was referenced at run time:
 						val namespaceLikeType = targetTypeRef.typeRefInAST?.astNamespaceLikeRefs?.head?.declaredType;

@@ -43,7 +43,6 @@ import org.eclipse.n4js.utils.DeclMergingUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.RecursionGuard;
 import org.eclipse.n4js.utils.ResourceType;
-import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
@@ -67,9 +66,6 @@ public class ExportedElementsCollector {
 
 	@Inject
 	private VariableVisibilityChecker variableVisibilityChecker;
-
-	@Inject
-	private JavaScriptVariantHelper variantHelper;
 
 	@Inject
 	private MemberScopingHelper memberScopingHelper;
@@ -227,7 +223,7 @@ public class ExportedElementsCollector {
 	private void doCollectElement(String exportedName, TExportableElement exportedElem, CollectionInfo info) {
 
 		boolean include = N4JSLanguageUtils.checkInclude(exportedElem,
-				info.includeHollows, info.includeValueOnlyElements, variantHelper);
+				info.includeHollows, info.includeValueOnlyElements);
 
 		if (include) {
 			TypeVisibility visibility = isVisible(info.contextResource, exportedElem);

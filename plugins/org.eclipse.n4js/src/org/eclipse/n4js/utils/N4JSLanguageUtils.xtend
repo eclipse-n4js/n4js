@@ -121,6 +121,7 @@ import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable
+import org.eclipse.n4js.ts.types.util.TypeModelUtils
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.types.utils.TypeCompareUtils
 import org.eclipse.n4js.types.utils.TypeUtils
@@ -129,7 +130,6 @@ import org.eclipse.n4js.typesystem.utils.AllSuperTypesCollector
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.utils.SuperTypesMapper
-import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
@@ -141,7 +141,6 @@ import org.eclipse.xtext.scoping.IScope
 import static org.eclipse.n4js.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.types.util.TypeModelUtils
 
 /**
  * Intended for small, static utility methods that
@@ -1298,10 +1297,10 @@ public class N4JSLanguageUtils {
 	 * The implementation of this method does *NOT* rely on type model elements and can therefore be used
 	 * in early stages before the types builder has run and in the transpiler!
 	 */
-	def static boolean hasRuntimeRepresentation(N4TypeDeclaration typeDecl, JavaScriptVariantHelper javaScriptVariantHelper) {
+	def static boolean hasRuntimeRepresentation(N4TypeDeclaration typeDecl) {
 		val isNumberOrStringBasedEnum = typeDecl instanceof N4EnumDeclaration
 			&& getEnumKind(typeDecl as N4EnumDeclaration) !== EnumKind.Normal;
-		return typeDecl !== null && !isNumberOrStringBasedEnum && !isHollowElement(typeDecl, javaScriptVariantHelper);
+		return typeDecl !== null && !isNumberOrStringBasedEnum && !isHollowElement(typeDecl);
 	}
 
 	/**
@@ -1311,21 +1310,19 @@ public class N4JSLanguageUtils {
 	 * The implementation of this method does *NOT* rely on the AST and can therefore be used in resources
 	 * that were loaded from the Xtext index.
 	 */
-	def static boolean hasRuntimeRepresentation(IdentifiableElement element, JavaScriptVariantHelper javaScriptVariantHelper) {
+	def static boolean hasRuntimeRepresentation(IdentifiableElement element) {
 		val isNumberOrStringBasedEnum = element instanceof TEnum
 			&& getEnumKind(element as TEnum) !== EnumKind.Normal;
-		return element !== null && !isNumberOrStringBasedEnum && !isHollowElement(element, javaScriptVariantHelper);
+		return element !== null && !isNumberOrStringBasedEnum && !isHollowElement(element);
 	}
 
 	/**
 	 * Tells whether the given element should be included (usually in a scope), based on the given includeHollows /
 	 * includeValueOnlyElements configuration.
 	 */
-	def static boolean checkInclude(TExportableElement elem, boolean includeHollows, boolean includeValueOnlyElements,
-		JavaScriptVariantHelper variantHelper) {
-
-		val include = (includeHollows || !N4JSLanguageUtils.isHollowElement(elem, variantHelper))
-				&& (includeValueOnlyElements || !N4JSLanguageUtils.isValueOnlyElement(elem, variantHelper));
+	def static boolean checkInclude(TExportableElement elem, boolean includeHollows, boolean includeValueOnlyElements) {
+		val include = (includeHollows || !N4JSLanguageUtils.isHollowElement(elem))
+				&& (includeValueOnlyElements || !N4JSLanguageUtils.isValueOnlyElement(elem));
 		return include;
 	}
 
@@ -1336,7 +1333,7 @@ public class N4JSLanguageUtils {
 	 *
 	 * @return {@code true} iff the given element is hollow.
 	 */
-	def static boolean isHollowElement(TypableElement typableElem, JavaScriptVariantHelper javaScriptVariantHelper) {
+	def static boolean isHollowElement(TypableElement typableElem) {
 		val isHollow = typableElem instanceof NamespaceElement && (typableElem as NamespaceElement).isHollow
 						|| typableElem instanceof Type && (typableElem as Type).isHollow;
 		return isHollow;
@@ -1347,7 +1344,7 @@ public class N4JSLanguageUtils {
 	 *
 	 * @return true iff the given element is value-only.
 	 */
-	def static boolean isValueOnlyElement(TypableElement typableElem, JavaScriptVariantHelper javaScriptVariantHelper) {
+	def static boolean isValueOnlyElement(TypableElement typableElem) {
 		val isValueOnly = typableElem instanceof VariableDeclaration
 						|| typableElem instanceof TVariable
 						|| typableElem instanceof FunctionDefinition

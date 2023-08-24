@@ -16,6 +16,7 @@ export external public interface ~PropertyDescriptor {
 
 export external public interface ~PropertyDescriptorMap {}
 
+@EcmaScript
 export external public class Object {
 	public toString(): string;
 	public toLocaleString(): string;
@@ -54,6 +55,7 @@ export external public class Object {
 
 export external public type ObjectConstructor = constructor{Object};
 
+@EcmaScript
 export external public class Function {
 	public apply(thisArg: any, argArray: any = ): any;
 	public call(thisArg: any, ...argArray: any): any;
@@ -85,6 +87,7 @@ export external public interface ~IArguments {
 	callee: Function;
 }
 
+@EcmaScript
 export external public class String {
 	@Override
 	public toString(): string;
@@ -121,6 +124,7 @@ export external public class String {
 
 export external public type StringConstructor = constructor{String};
 
+@EcmaScript
 export external public class Boolean {
 	@Override
 	public valueOf(): boolean;
@@ -130,6 +134,7 @@ export external public class Boolean {
 
 export external public type BooleanConstructor = constructor{Boolean};
 
+@EcmaScript
 export external public class Number {
 	@Override
 	public toString(radix: number = ): string;
@@ -187,6 +192,7 @@ export external public class Math {
 	public static tan(x: number): number;
 }
 
+@EcmaScript
 export external public class Date {
 	@Override
 	public toString(): string;
@@ -253,6 +259,7 @@ export external public class RegExpExecArray extends Array<string> {
 	public input: string;
 }
 
+@EcmaScript
 export external public class RegExp {
 	public exec(string: string): RegExpExecArray;
 	public test(string: string): boolean;
@@ -287,6 +294,7 @@ export external public class RegExp {
 
 export external public type RegExpConstructor = constructor{RegExp};
 
+@EcmaScript
 export external public class Error {
 	public name: string;
 	public message: string;
@@ -297,6 +305,7 @@ export external public class Error {
 
 export external public type ErrorConstructor = constructor{Error};
 
+@EcmaScript
 export external public class EvalError extends Error {
 	public constructor(message: string = );
 	(message: string = ): EvalError;
@@ -304,6 +313,7 @@ export external public class EvalError extends Error {
 
 export external public type EvalErrorConstructor = constructor{EvalError};
 
+@EcmaScript
 export external public class RangeError extends Error {
 	public constructor(message: string = );
 	(message: string = ): RangeError;
@@ -311,6 +321,7 @@ export external public class RangeError extends Error {
 
 export external public type RangeErrorConstructor = constructor{RangeError};
 
+@EcmaScript
 export external public class ReferenceError extends Error {
 	public constructor(message: string = );
 	(message: string = ): ReferenceError;
@@ -318,6 +329,7 @@ export external public class ReferenceError extends Error {
 
 export external public type ReferenceErrorConstructor = constructor{ReferenceError};
 
+@EcmaScript
 export external public class SyntaxError extends Error {
 	public constructor(message: string = );
 	(message: string = ): SyntaxError;
@@ -325,6 +337,7 @@ export external public class SyntaxError extends Error {
 
 export external public type SyntaxErrorConstructor = constructor{SyntaxError};
 
+@EcmaScript
 export external public class TypeError extends Error {
 	public constructor(message: string = );
 	(message: string = ): TypeError;
@@ -332,6 +345,7 @@ export external public class TypeError extends Error {
 
 export external public type TypeErrorConstructor = constructor{TypeError};
 
+@EcmaScript
 export external public class URIError extends Error {
 	public constructor(message: string = );
 	(message: string = ): URIError;
@@ -350,6 +364,7 @@ export external public interface ~ConcatArray<T> {
 	slice(start: number = , end: number = ): Array<T>;
 }
 
+@EcmaScript
 export external public class Array<T> {
 	public length: number;
 	@Override
@@ -807,6 +822,7 @@ export external public type ReadonlyArray<T> = Array<T>;
  *
  * TODO in ES6 this is defined to be a property of the global object and a constructor function
  */
+@EcmaScript
 export external public class Symbol extends Object {
 
 	/**

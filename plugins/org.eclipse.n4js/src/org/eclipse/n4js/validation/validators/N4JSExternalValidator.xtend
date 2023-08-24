@@ -189,7 +189,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 				}
 
 				if (N4JSLanguageUtils.isShapeOrEcmaScript(owner)) {
-					val msg = getMessageForCLF_EXT_PROVIDES_IMPL_ONLY_IN_N4JS_INTERFACES(annodef.name, typeName);
+					val msg = getMessageForCLF_EXT_PROVIDES_IMPL_ONLY_IN_N4JS_INTERFACES(annodef.name);
 					addIssue(msg, memberDecl, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
 						CLF_EXT_PROVIDES_IMPL_ONLY_IN_N4JS_INTERFACES);
 					return;
@@ -397,7 +397,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private validateEcmaScriptClassDoesntExtendN4Object(N4ClassDeclaration exported, TClass superType) {
-		if (superType !== null && (!superType.isExternal || AnnotationDefinition.ECMASCRIPT.hasAnnotation(superType))) {
+		if (superType !== null && (!superType.isExternal || !AnnotationDefinition.ECMASCRIPT.hasAnnotation(superType))) {
 			val message = messageForCLF_EXT_NOT_ANNOTATED_EXTEND_N4OBJECT
 			val eObjectToNameFeature = exported.findNameFeature
 			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value,
