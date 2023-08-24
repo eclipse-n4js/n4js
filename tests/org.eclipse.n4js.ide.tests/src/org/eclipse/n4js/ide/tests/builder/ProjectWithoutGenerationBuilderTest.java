@@ -69,7 +69,7 @@ public class ProjectWithoutGenerationBuilderTest extends AbstractIdeTest {
 		startAndWaitForLspServer();
 		assertIssues2(
 				Pair.of("Test.n4jsd", List.of(
-						"(Error, [1:1 - 1:8], Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files.)")));
+						"(Error, [2:1 - 2:8], Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files.)")));
 	}
 
 	@Test
@@ -154,6 +154,7 @@ public class ProjectWithoutGenerationBuilderTest extends AbstractIdeTest {
 			String projectTypeKeyword = (projectType == DEFINITION) ? "definition" : "validation";
 			testWorkspaceManager.createTestProjectOnDisk(Map.of(
 					"Test.n4jsd", """
+								@EcmaScript
 								export external public class Cls {}
 								%s
 							""".formatted(withValidationErrorN4js),
