@@ -13,62 +13,61 @@
 
 export external public class MyClass {}
 
-@N4JS
+
 /* this rule was relaxed XPECT noerrors ---
-   "External classes annotated with @N4JS aren't allowed to extend a class without such annotation." at "MyClass2"
+   "External classes annotated with  aren't allowed to extend a class without such annotation." at "MyClass2"
  --- */
 export external public class MyClass2 extends MyClass {}
 
 export external public interface ~MyRole {}
 
-@N4JS
+
 /* this rule was relaxed XPECT noerrors ---
-   "External classes annotated with @N4JS aren't allowed to consume interfaces without such annotation." at "MyClass3"
+   "External classes annotated with  aren't allowed to consume interfaces without such annotation." at "MyClass3"
  --- */
 export external public class MyClass3 implements MyRole {}
 
-@N4JS
+
 export external public class MyClass4 extends N4Object {}
 
-@N4JS
+
 /* this rule was relaxed XPECT noerrors ---
-   "External classes annotated with @N4JS aren't allowed to extend a class without such annotation." at "MyClass5"
+   "External classes annotated with  aren't allowed to extend a class without such annotation." at "MyClass5"
  --- */
 export external public class MyClass5 extends String {}
 
-@N4JS
+
 /* this rule was relaxed XPECT noerrors ---
-   "External interfaces annotated with @N4JS aren't allowed to consume interfaces without such annotation." at "MyRole2"
+   "External interfaces annotated with  aren't allowed to consume interfaces without such annotation." at "MyRole2"
  --- */
 export external public interface MyRole2 extends MyRole {}
 
-@N4JS
+
 export external public interface MyRole3 {}
 
-@N4JS
+
 export external public interface MyRole4 extends MyRole3 {}
 
-// XPECT errors --> "Only nominal interfaces can be annotated with @N4JS." at "N4JS"
-@N4JS
+
 export public interface ~Interface1 {}
 
 export public interface ~Interface2 {}
 
-@N4JS
+
 export external public interface MyRole5 extends Interface1 {}
 
-@N4JS
+
 /* XPECT noerrors ---
-   "Interface is structural, that is ok. Not: External roles annotated with @N4JS aren't allowed to consume roles without such annotation." at "MyRole6"
+   "Interface is structural, that is ok. Not: External roles annotated with  aren't allowed to consume roles without such annotation." at "MyRole6"
  --- */
 export external public interface MyRole6 extends Interface2 {}
 
-@N4JS
+
 // IDE-1099 XPECT ! errors --> "For the given n4jsd file no corresponding external file resp. no matching implemented by expression can be found." at "MyClass6"
 export external public class MyClass6 implements Interface1 {}
 
-@N4JS
+
 /* XPECT noerrors ---
-   No error expected: "External classes annotated with @N4JS aren't allowed to consume roles without such annotation." at "MyClass7"
+   No error expected: "External classes annotated with  aren't allowed to consume roles without such annotation." at "MyClass7"
  --- */
 export external public class MyClass7 implements Interface2 {}

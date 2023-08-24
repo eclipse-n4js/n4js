@@ -29,7 +29,7 @@
 @@StaticPolyfillModule
 
 
-@N4JS @StaticPolyfill
+@StaticPolyfill
 // XPECT errors --> "Since static polyfill C is declared in an .n4jsd file, the filled type must also be declared in an .n4jsd file." at "C"
 export external public class C extends C {
 

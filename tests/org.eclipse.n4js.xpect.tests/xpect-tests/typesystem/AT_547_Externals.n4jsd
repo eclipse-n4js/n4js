@@ -9,6 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+@EcmaScript
 export external public class ExternalClass {
 }
 

@@ -11,7 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
-// XPECT errors --> "External nominal interface declaration is missing @N4JS annotation." at "I1"
+
 export external interface I1 {
 
 }
@@ -22,7 +22,7 @@ export external interface ~I2 {
 }
 
 export external namespace NS {
-	// XPECT errors --> "External nominal interface declaration is missing @N4JS annotation." at "I1"
+
 	interface I1 {
 	
 	}

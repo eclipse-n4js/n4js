@@ -36,7 +36,7 @@ declare class KD {
 /* XPECT ast ---
 Script: true
   ExportDeclaration: false, UNKNOWN
-   N4ClassDeclaration: [external, public], KE, ~
+   N4ClassDeclaration: [external, public], KE, ?~
     N4FieldDeclaration: [public], false
      TypeReferenceNode
       ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
@@ -89,10 +89,14 @@ Script: true
      FormalParameter: false, v, false
       TypeReferenceNode
        ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
+    AnnotationList
+     Annotation: EcmaScript
   ExportDeclaration: false, UNKNOWN
-   N4ClassDeclaration: [external, public], KD, ~
+   N4ClassDeclaration: [external, public], KD, ?~
     N4FieldDeclaration: [public], false
      TypeReferenceNode
       ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
      LiteralOrComputedPropertyName: false, identifier, field
+    AnnotationList
+     Annotation: EcmaScript
 --- */

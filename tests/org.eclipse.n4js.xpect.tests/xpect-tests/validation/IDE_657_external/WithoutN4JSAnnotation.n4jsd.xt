@@ -25,19 +25,16 @@ import * as N from "validation/IDE_657_external/WithoutN4JSAnnotationCompanion";
 // XPECT noerrors --> "non-n4js super type" at "MyObject"
 export external public class MyObject extends Object {}
 
-/* XPECT errors ---
-"External classes without annotation @N4JS aren't allowed to inherit from n4js classes." at "MyN4Object"
- --- */
+@EcmaScript
+// XPECT errors --> "External classes annotated with @EcmaScript are not allowed to inherit from n4js classes." at "MyN4Object"
 export external public class MyN4Object extends N4Object {}
 
-/* XPECT errors ---
-"External classes without annotation @N4JS aren't allowed to inherit from n4js classes." at "MyCompanionClass"
- --- */
+@EcmaScript
+// XPECT errors --> "External classes annotated with @EcmaScript are not allowed to inherit from n4js classes." at "MyCompanionClass"
 export external public class MyCompanionClass extends N.CompanionClass {}
 
-/* XPECT errors ---
-"External classes aren't allowed to consume a non external interface." at "MyCompanionClass2"
- --- */
+@EcmaScript
+// XPECT errors --> "External classes are not allowed to consume a non external interface." at "MyCompanionClass2"
 export external public class MyCompanionClass2 implements N.CompanionRole {}
 
 export external public interface ~MyRole {}
@@ -61,8 +58,8 @@ export external public class MyTypeError extends TypeError {}
 export external public class MyURIError extends URIError {}
 export external public class MyJSON extends JSON {}
 
-// XPECT errors --> "Only nominal interfaces can be annotated with @N4JS." at "N4JS"
-@N4JS
+
+
 export public interface ~Interface1 {}
 
 export public interface ~Interface2 {}
@@ -70,7 +67,6 @@ export public interface ~Interface2 {}
 export external public interface ~MyRole5 extends Interface1 {}
 export external public class MyClass5 implements Interface1 {}
 
-/* XPECT errors ---
-"External classes aren't allowed to consume a non external interface." at "MyClass6"
- --- */
+@EcmaScript
+// XPECT errors --> "External classes are not allowed to consume a non external interface." at "MyClass6"
 export external public class MyClass6 implements N.CompanionInterface1 {}

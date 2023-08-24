@@ -24,11 +24,13 @@ export type AC = C<string>;
 /* XPECT ast ---
 Script: true
   ExportDeclaration: false, UNKNOWN
-   N4ClassDeclaration: [external, public], C, ~
+   N4ClassDeclaration: [external, public], C, ?~
     N4FieldDeclaration: [public], false
      TypeReferenceNode
       ParameterizedTypeRef: OFF, false, false, T, ?~, false, false
      LiteralOrComputedPropertyName: false, identifier, field
+    AnnotationList
+     Annotation: EcmaScript
     N4TypeVariable: false, false, false, T
   ExportDeclaration: false, UNKNOWN
    N4TypeAliasDeclaration: [external, public], AC

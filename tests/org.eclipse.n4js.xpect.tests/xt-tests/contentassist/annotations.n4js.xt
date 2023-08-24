@@ -29,7 +29,7 @@
 --- */ 
 /* XPECT completion at '@' ---
    After, AfterAll, Before, BeforeAll, Bind, Binder, Configurable, ContainsIndexSignature,
-   CovariantConstructor, Description, Enumerable, ExcludeFromTestCatalog, Final, Fixme,
+   CovariantConstructor, Description, EcmaScript, Enumerable, ExcludeFromTestCatalog, Final, Fixme,
    GenerateInjector, Group, IDEBUG, Ignore, IgnoreImplementation, Inject, Injected, Internal,
    N4JS, Nfon, NumberBased, Observable, Override, Parameter, Parameters, Polyfill, Promisifiable,
    ProvidedByRuntime, Provides, ProvidesDefaultImplementation, ProvidesInitializer, Singleton,
@@ -45,7 +45,7 @@ class C1 {
 // XPECT errors --> "The annotation @A is not defined." at "A" 
 /* XPECT completion at '@' ---
    After, AfterAll, Before, BeforeAll, Bind, Binder, Configurable, ContainsIndexSignature,
-   CovariantConstructor, Description, Enumerable, ExcludeFromTestCatalog, Final, Fixme,
+   CovariantConstructor, Description, EcmaScript, Enumerable, ExcludeFromTestCatalog, Final, Fixme,
    GenerateInjector, Group, IDEBUG, Ignore, IgnoreImplementation, Inject, Injected, Internal,
    N4JS, Nfon, NumberBased, Observable, Override, Parameter, Parameters, Polyfill, Promisifiable,
    ProvidedByRuntime, Provides, ProvidesDefaultImplementation, ProvidesInitializer, Singleton,
@@ -62,7 +62,7 @@ class C3 {
 // XPECT errors --> "no viable alternative at input 'public'" at "public" 
 /* XPECT completion at '@' ---
    After, AfterAll, Before, BeforeAll, Bind, Binder, Configurable, ContainsIndexSignature,
-   CovariantConstructor, Description, Enumerable, ExcludeFromTestCatalog, Final, Fixme,
+   CovariantConstructor, Description, EcmaScript, Enumerable, ExcludeFromTestCatalog, Final, Fixme,
    GenerateInjector, Group, IDEBUG, Ignore, IgnoreImplementation, Inject, Injected, Internal,
    N4JS, Nfon, NumberBased, Observable, Override, Parameter, Parameters, Polyfill, Promisifiable,
    ProvidedByRuntime, Provides, ProvidesDefaultImplementation, ProvidesInitializer, Singleton,
@@ -78,7 +78,7 @@ class C4 {
 // XPECT errors --> "The annotation @A is not defined." at "A" 
 /* XPECT completion at '@' ---
    After, AfterAll, Before, BeforeAll, Bind, Binder, Configurable, ContainsIndexSignature,
-   CovariantConstructor, Description, Enumerable, ExcludeFromTestCatalog, Final, Fixme,
+   CovariantConstructor, Description, EcmaScript, Enumerable, ExcludeFromTestCatalog, Final, Fixme,
    GenerateInjector, Group, IDEBUG, Ignore, IgnoreImplementation, Inject, Injected, Internal,
    N4JS, Nfon, NumberBased, Observable, Override, Parameter, Parameters, Polyfill, Promisifiable,
    ProvidedByRuntime, Provides, ProvidesDefaultImplementation, ProvidesInitializer, Singleton,
@@ -92,7 +92,7 @@ class C4 {
 
 /* XPECT completion at '@' ---
    After, AfterAll, Before, BeforeAll, Bind, Binder, Configurable, ContainsIndexSignature,
-   CovariantConstructor, Description, Enumerable, ExcludeFromTestCatalog, Final, Fixme,
+   CovariantConstructor, Description, EcmaScript, Enumerable, ExcludeFromTestCatalog, Final, Fixme,
    GenerateInjector, Group, IDEBUG, Ignore, IgnoreImplementation, Inject, Injected, Internal,
    N4JS, Nfon, NumberBased, Observable, Override, Parameter, Parameters, Polyfill, Promisifiable,
    ProvidedByRuntime, Provides, ProvidesDefaultImplementation, ProvidesInitializer, Singleton,
@@ -107,7 +107,7 @@ interface I1 {
 
 /* XPECT completion at '@' ---
    After, AfterAll, Before, BeforeAll, Bind, Binder, Configurable, ContainsIndexSignature,
-   CovariantConstructor, Description, Enumerable, ExcludeFromTestCatalog, Final, Fixme,
+   CovariantConstructor, Description, EcmaScript, Enumerable, ExcludeFromTestCatalog, Final, Fixme,
    GenerateInjector, Group, IDEBUG, Ignore, IgnoreImplementation, Inject, Injected, Internal,
    N4JS, Nfon, NumberBased, Observable, Override, Parameter, Parameters, Polyfill, Promisifiable,
    ProvidedByRuntime, Provides, ProvidesDefaultImplementation, ProvidesInitializer, Singleton,
@@ -124,7 +124,7 @@ interface I3 {
 // XPECT errors --> "no viable alternative at input 'public'" at "public" 
 /* XPECT completion at '@' ---
    After, AfterAll, Before, BeforeAll, Bind, Binder, Configurable, ContainsIndexSignature,
-   CovariantConstructor, Description, Enumerable, ExcludeFromTestCatalog, Final, Fixme,
+   CovariantConstructor, Description, EcmaScript, Enumerable, ExcludeFromTestCatalog, Final, Fixme,
    GenerateInjector, Group, IDEBUG, Ignore, IgnoreImplementation, Inject, Injected, Internal,
    N4JS, Nfon, NumberBased, Observable, Override, Parameter, Parameters, Polyfill, Promisifiable,
    ProvidedByRuntime, Provides, ProvidesDefaultImplementation, ProvidesInitializer, Singleton,
@@ -140,7 +140,7 @@ interface I4 {
 // XPECT errors --> "The annotation @A is not defined." at "A" 
 /* XPECT completion at '@' ---
    After, AfterAll, Before, BeforeAll, Bind, Binder, Configurable, ContainsIndexSignature,
-   CovariantConstructor, Description, Enumerable, ExcludeFromTestCatalog, Final, Fixme,
+   CovariantConstructor, Description, EcmaScript, Enumerable, ExcludeFromTestCatalog, Final, Fixme,
    GenerateInjector, Group, IDEBUG, Ignore, IgnoreImplementation, Inject, Injected, Internal,
    N4JS, Nfon, NumberBased, Observable, Override, Parameter, Parameters, Polyfill, Promisifiable,
    ProvidedByRuntime, Provides, ProvidesDefaultImplementation, ProvidesInitializer, Singleton,
