@@ -11,7 +11,9 @@
 @@Global @@ProvidedByRuntime
 
 
-@Polyfill export external public class Number extends Number {
+@Polyfill
+@EcmaScript
+export external public class Number extends Number {
 	/**
 	 * Returns formatted number using locales and options as defined in 
 	 * NumberFormat of ECMA-402 (Internationalization API).

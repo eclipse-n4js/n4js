@@ -11,7 +11,9 @@
 @@Global @@ProvidedByRuntime
 
 
-@Polyfill export external public class Date extends Date {
+@Polyfill
+@EcmaScript
+export external public class Date extends Date {
 	/**
 	 * Returns formatted date time using locales and options as defined in 
 	 * DateTimeFormat of ECMA-402 (Internationalization API).

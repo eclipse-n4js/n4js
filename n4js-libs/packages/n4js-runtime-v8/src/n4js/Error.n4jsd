@@ -10,6 +10,8 @@
  */
 @@Global @@ProvidedByRuntime
 
-@Polyfill export external public class Error extends Error {
+@Polyfill
+@EcmaScript
+export external public class Error extends Error {
     @Override public stack?: string;
 }

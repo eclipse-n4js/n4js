@@ -4,6 +4,7 @@
 @@Global @@ProvidedByRuntime
 
 @Polyfill
+@EcmaScript
 export external public class Symbol extends Symbol {
 	public get description(): string;
 }

@@ -4,6 +4,7 @@
 @@Global @@ProvidedByRuntime
 
 @Polyfill
+@EcmaScript
 export external public class String extends String {
 	public padStart(maxLength: number, fillString: string = ): string;
 	public padEnd(maxLength: number, fillString: string = ): string;

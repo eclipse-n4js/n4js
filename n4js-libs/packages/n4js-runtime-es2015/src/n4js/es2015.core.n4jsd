@@ -4,6 +4,7 @@
 @@Global @@ProvidedByRuntime
 
 @Polyfill
+@EcmaScript
 export external public class Array<T> extends Array<T> {
 	public find(predicate: (T, int=, T[]=) => boolean, thisArg: Object=): T;
 	public findIndex(predicate: (value: T, index: number, obj: Array<T>)=>any+, thisArg: any = ): number;
@@ -14,14 +15,17 @@ export external public class Array<T> extends Array<T> {
 }
 
 @Polyfill
+@EcmaScript
 export external public class Date extends Date {}
 
 @Polyfill
+@EcmaScript
 export external public class Function extends Function {
 	public get name(): string;
 }
 
 @Polyfill
+@EcmaScript
 export external public class Math extends Math {
 	public static clz32(x: number): number;
 	public static imul(x: number, y: number): number;
@@ -43,6 +47,7 @@ export external public class Math extends Math {
 }
 
 @Polyfill
+@EcmaScript
 export external public class Number extends Number {
 	public static get EPSILON(): number;
 	public static isFinite(number: any+): boolean;
@@ -56,6 +61,7 @@ export external public class Number extends Number {
 }
 
 @Polyfill
+@EcmaScript
 export external public class Object extends Object {
 	public static assign(...args: any+): any+; // overloading not supported
 	public static getOwnPropertySymbols(o: any): Array<symbol>;
@@ -66,6 +72,7 @@ export external public class Object extends Object {
 }
 
 @Polyfill
+@EcmaScript
 export external public class RegExp extends RegExp {
 	public get flags(): string;
 	public get sticky(): boolean;
@@ -74,6 +81,7 @@ export external public class RegExp extends RegExp {
 }
 
 @Polyfill
+@EcmaScript
 export external public class String extends String {
 	public codePointAt(pos: number): number;
 	public includes(searchString: string, position: number = ): boolean;

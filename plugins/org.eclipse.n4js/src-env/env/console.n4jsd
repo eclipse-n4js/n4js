@@ -11,6 +11,7 @@
 
 @@Global @@ProvidedByRuntime
 
+@EcmaScript
 export external public class console {
 // see also https://developer.mozilla.org/en-US/docs/Web/API/console
 	/**

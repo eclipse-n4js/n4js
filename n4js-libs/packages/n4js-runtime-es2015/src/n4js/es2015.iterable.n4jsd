@@ -4,6 +4,7 @@
 @@Global @@ProvidedByRuntime
 
 @Polyfill
+@EcmaScript
 export external public class Symbol extends Symbol {}
 
 export external public interface ~IteratorYieldResult<TYield> {
@@ -19,6 +20,7 @@ export external public interface ~IteratorReturnResult<TReturn> {
 export external public type IteratorResult<T,TReturn> = IteratorYieldResult<T> | IteratorReturnResult<TReturn>;
 
 @Polyfill
+@EcmaScript
 export external public class Array<T> extends Array<T> {
 	public entries(): IterableIterator<[number,T]>;
 	public keys(): IterableIterator<number>;
@@ -30,6 +32,7 @@ export external public interface ~IArguments {
 }
 
 @Polyfill
+@EcmaScript
 export external public class Map<K,V> extends Map<K,V> {
 	public [Symbol.iterator](): IterableIterator<[K,V]>;
 	public entries(): IterableIterator<[K,V]>;
@@ -38,9 +41,11 @@ export external public class Map<K,V> extends Map<K,V> {
 }
 
 @Polyfill
+@EcmaScript
 export external public class WeakMap<K extends Object,V> extends WeakMap<K,V> {}
 
 @Polyfill
+@EcmaScript
 export external public class Set<T> extends Set<T> {
 	public [Symbol.iterator](): IterableIterator<T>;
 	public entries(): IterableIterator<[T,T]>;
@@ -49,12 +54,15 @@ export external public class Set<T> extends Set<T> {
 }
 
 @Polyfill
+@EcmaScript
 export external public class WeakSet<T extends Object> extends WeakSet<T> {}
 
 @Polyfill
+@EcmaScript
 export external public class String extends String {}
 
 @Polyfill
+@EcmaScript
 export external public class Int8Array extends Int8Array {
 	public [Symbol.iterator](): IterableIterator<number>;
 	public entries(): IterableIterator<[number,number]>;
@@ -63,6 +71,7 @@ export external public class Int8Array extends Int8Array {
 }
 
 @Polyfill
+@EcmaScript
 export external public class Uint8Array extends Uint8Array {
 	public [Symbol.iterator](): IterableIterator<number>;
 	public entries(): IterableIterator<[number,number]>;
@@ -71,6 +80,7 @@ export external public class Uint8Array extends Uint8Array {
 }
 
 @Polyfill
+@EcmaScript
 export external public class Uint8ClampedArray extends Uint8ClampedArray {
 	public [Symbol.iterator](): IterableIterator<number>;
 	public entries(): IterableIterator<[number,number]>;
@@ -79,6 +89,7 @@ export external public class Uint8ClampedArray extends Uint8ClampedArray {
 }
 
 @Polyfill
+@EcmaScript
 export external public class Int16Array extends Int16Array {
 	public [Symbol.iterator](): IterableIterator<number>;
 	public entries(): IterableIterator<[number,number]>;
@@ -87,6 +98,7 @@ export external public class Int16Array extends Int16Array {
 }
 
 @Polyfill
+@EcmaScript
 export external public class Uint16Array extends Uint16Array {
 	public [Symbol.iterator](): IterableIterator<number>;
 	public entries(): IterableIterator<[number,number]>;
@@ -95,6 +107,7 @@ export external public class Uint16Array extends Uint16Array {
 }
 
 @Polyfill
+@EcmaScript
 export external public class Int32Array extends Int32Array {
 	public [Symbol.iterator](): IterableIterator<number>;
 	public entries(): IterableIterator<[number,number]>;
@@ -103,6 +116,7 @@ export external public class Int32Array extends Int32Array {
 }
 
 @Polyfill
+@EcmaScript
 export external public class Uint32Array extends Uint32Array {
 	public [Symbol.iterator](): IterableIterator<number>;
 	public entries(): IterableIterator<[number,number]>;
@@ -111,6 +125,7 @@ export external public class Uint32Array extends Uint32Array {
 }
 
 @Polyfill
+@EcmaScript
 export external public class Float32Array extends Float32Array {
 	public [Symbol.iterator](): IterableIterator<number>;
 	public entries(): IterableIterator<[number,number]>;
@@ -119,6 +134,7 @@ export external public class Float32Array extends Float32Array {
 }
 
 @Polyfill
+@EcmaScript
 export external public class Float64Array extends Float64Array {
 	public [Symbol.iterator](): IterableIterator<number>;
 	public entries(): IterableIterator<[number,number]>;

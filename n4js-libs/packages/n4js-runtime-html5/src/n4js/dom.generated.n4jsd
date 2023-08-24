@@ -3087,6 +3087,7 @@ export external public interface ~CustomEvent<T=any> extends Event {
 
 export public var CustomEvent: ~Object with { <T> new(type: string, eventInitDict: CustomEventInit<T> = ): CustomEvent<T>; };
 
+@EcmaScript
 export external public class DOMException extends Error {
 	public get code(): number;
 	public get ABORT_ERR(): number;
@@ -6637,6 +6638,7 @@ export external public interface ~OscillatorNode extends AudioScheduledSourceNod
 
 export public var OscillatorNode: ~Object with { new(context: BaseAudioContext, options: OscillatorOptions = ): OscillatorNode; };
 
+@EcmaScript
 export external public class OverconstrainedError extends Error {
 	public get constraint(): string;
 	public constructor(constraint: string, message: string = );

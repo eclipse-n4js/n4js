@@ -10,7 +10,9 @@
  */
 @@Global @@ProvidedByRuntime
 
-@Polyfill export external public class console extends console {
+@Polyfill
+@EcmaScript
+export external public class console extends console {
     public static assert(boolean, message: string): void;
     public static dir(obj: any): void;
     public static time(name: string): void;

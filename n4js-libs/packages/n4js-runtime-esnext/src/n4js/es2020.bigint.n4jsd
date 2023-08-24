@@ -21,6 +21,7 @@ export external public interface ~BigIntToLocaleStringOptions {
 	compactDisplay?: string;
 }
 
+@EcmaScript
 export external public class BigInt {
 	@Override
 	public toString(radix: number = ): string;
@@ -36,6 +37,7 @@ export external public class BigInt {
 
 export external public type BigIntConstructor = constructor{BigInt};
 
+@EcmaScript
 export external public class BigInt64Array {
 	public get BYTES_PER_ELEMENT(): number;
 	public get buffer(): ArrayBufferLike;
@@ -81,6 +83,7 @@ export external public class BigInt64Array {
 
 export external public type BigInt64ArrayConstructor = constructor{BigInt64Array};
 
+@EcmaScript
 export external public class BigUint64Array {
 	public get BYTES_PER_ELEMENT(): number;
 	public get buffer(): ArrayBufferLike;
@@ -127,6 +130,7 @@ export external public class BigUint64Array {
 export external public type BigUint64ArrayConstructor = constructor{BigUint64Array};
 
 @Polyfill
+@EcmaScript
 export external public class DataView extends DataView {
 	public getBigInt64(byteOffset: number, littleEndian: boolean = ): any+;
 	public getBigUint64(byteOffset: number, littleEndian: boolean = ): any+;

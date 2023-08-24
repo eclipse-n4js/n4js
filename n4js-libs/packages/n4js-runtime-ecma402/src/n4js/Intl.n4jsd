@@ -19,7 +19,8 @@
  * 
  * @see https://www.ecma-international.org/ecma-402/4.0/
  */
- @Final
+@Final
+@EcmaScript
 export external public class Intl {
 	/**
 	 * Converts given list of locales to canonical forms as far as possible.
