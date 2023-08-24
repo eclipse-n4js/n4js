@@ -66,7 +66,7 @@ export external public interface ~I1 {
 @N4JS
 export external class C1 {
 
-	// XPECT errors --> "Call and construct signatures are not allowed in classifiers annotated with @N4JS." at "(): number;"
+	// XPECT errors --> "Call and construct signatures are not allowed in n4js classifiers. Use shapes or @EcmaScript." at "(): number;"
 	(): number;
 
 	// treated as an ordinary method with name "new" XPECT noerrors -->

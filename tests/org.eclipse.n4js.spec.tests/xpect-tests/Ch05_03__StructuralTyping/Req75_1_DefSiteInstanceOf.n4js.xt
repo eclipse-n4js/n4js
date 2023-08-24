@@ -18,5 +18,5 @@ interface ~T {
 
 var t;
 
-// XPECT errors --> "instanceof cannot be used with structurally defined type T." at "T"
+// XPECT errors --> "T cannot be used as a value." at "T"
 t instanceof T;

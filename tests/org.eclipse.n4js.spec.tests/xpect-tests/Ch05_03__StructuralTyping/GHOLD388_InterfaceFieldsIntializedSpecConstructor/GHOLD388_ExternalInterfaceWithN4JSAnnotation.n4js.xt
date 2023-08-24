@@ -30,8 +30,8 @@ class C implements J {
 let c:C = new C({n: "Hi"});
 console.log(c.n)
 
-// This test is intentionally disabled because it is difficult to test the case with @N4JS annotation.  
-// Interface J is annotated with @N4JS means that its implementation is provided by runtime.
+// This test is intentionally disabled because it is difficult to test the case with nominal interfaces.  
+// Nominal interfaces imply that their implementation is provided e.g. by runtime.
 /* X_PECT output --- 
 Hi
 --- */

@@ -40,7 +40,7 @@ function g(e : E) {
 }
 
 
-// XPECT errors --> "instanceof cannot be used with structurally defined type E." at "E"
+// XPECT errors --> "E cannot be used as a value." at "E"
 x instanceof E;
 
 class SomeN4Object{

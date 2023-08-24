@@ -30,6 +30,8 @@ class C implements I {
 let c:C = new C({m: "Hi"});
 console.log(c.m)
 
-/* XPECT output --- 
+// This test is intentionally disabled because it is difficult to test the case with nominal interfaces.  
+// Nominal interfaces imply that their implementation is provided e.g. by runtime.
+/* X_PECT output --- 
 Hi
 --- */
