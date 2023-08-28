@@ -96,7 +96,6 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		String nameOld = pdOld.getPackageName();
 		if (!Objects.equals(projectDescription.getPackageName(), nameOld)) {
 			// projectDescription = projectDescription.change().setName(nameOld).build();
-			System.out.println();
 		}
 		if (projectDescription.equals(pdOld)) {
 			return; // nothing changed

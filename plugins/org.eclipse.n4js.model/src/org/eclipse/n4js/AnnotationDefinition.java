@@ -188,6 +188,13 @@ public final class AnnotationDefinition {
 			.retention(RetentionPolicy.TYPE).end();
 
 	/**
+	 * 11.1.1. Declaring externals
+	 */
+	public final static AnnotationDefinition ECMASCRIPT = define("EcmaScript")
+			.targets(N4_CLASS_DECLARATION, EXPORT_DECLARATION)
+			.retention(RetentionPolicy.TYPE).end();
+
+	/**
 	 * 11.1.3. Implementation of External Declarations
 	 */
 	public final static AnnotationDefinition IGNORE_IMPLEMENTATION = define("IgnoreImplementation")
