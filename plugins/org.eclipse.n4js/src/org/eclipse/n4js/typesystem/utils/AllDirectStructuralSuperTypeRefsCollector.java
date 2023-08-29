@@ -63,6 +63,7 @@ public class AllDirectStructuralSuperTypeRefsCollector
 		return true;
 	}
 
+	/** Traverses only iff the current type is either a start type or if it is a structural type */
 	@Override
 	protected boolean process(ContainerType<?> currentType) {
 		super.process(currentType);
