@@ -200,6 +200,12 @@ public class N4JSJavaScriptVariantHelper extends BaseJavaScriptVariantHelper {
 		this.addEntry(EXT_JSX, IS_PLAIN_JS, true);
 		this.addEntry(EXT_DTS, IS_PLAIN_JS, false);
 
+		this.addEntry(EXT_N4JS, IS_DTS, false);
+		this.addEntry(EXT_N4JSD, IS_DTS, false);
+		this.addEntry(EXT_N4JSX, IS_DTS, false);
+		this.addEntry(EXT_JSX, IS_DTS, false);
+		this.addEntry(EXT_DTS, IS_DTS, true);
+
 		this.addEntry(EXT_N4JS, VARIANT_MODE_STRINGREP, EXT_N4JS);
 		this.addEntry(EXT_N4JSD, VARIANT_MODE_STRINGREP, EXT_N4JSD);
 		this.addEntry(EXT_N4JSX, VARIANT_MODE_STRINGREP, EXT_N4JSX);
