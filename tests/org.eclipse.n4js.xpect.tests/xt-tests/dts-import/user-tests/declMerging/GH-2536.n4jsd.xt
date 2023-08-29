@@ -15,14 +15,20 @@
 	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
 
 	File "TS.d.ts" {
-		export class Clash {
+		export class Clash implements I1 {
 		    cClashMethod(): number;
 		}
-		export class TSClass extends Clash {
+		export class TSClass extends Clash implements I2 {
 		    tsMethod(): string;
 		}
 		export interface Clash {
 		    iClashMethod(): number;
+		}
+		export interface I1 {
+		    i1Method(): number;
+		}
+		export interface I2 {
+		    i2Method(): number;
 		}
 	}
 
@@ -33,7 +39,8 @@
 import {TSClass} from "TS";
 
 
-// CLF_MISSING_IMPLEMENTATION_EXT XPECT noerrors -->
-// XPECT nowarnings -->
+
+// Attention: The warning must not include 'Clash.iClashMethod'!
+// XPECT warnings --> "External class TSClass2 must either be declared abstract or explicit declare method I2.i2Method and method I1.i1Method." at "TSClass2"
 export external public class TSClass2 extends TSClass {}
 
