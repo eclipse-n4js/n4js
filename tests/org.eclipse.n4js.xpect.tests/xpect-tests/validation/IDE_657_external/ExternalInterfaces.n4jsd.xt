@@ -11,24 +11,24 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
-// XPECT errors --> "External nominal interface declaration is missing @N4JS annotation." at "I1"
+
 export external interface I1 {
 
 }
 
 export external interface ~I2 {
-	// XPECT errors --> "Members of external interfaces must not be static." at "field"
+	// XPECT errors --> "Structural interfaces cannot contain static members." at "field"
 	public static field:string;
 }
 
 export external namespace NS {
-	// XPECT errors --> "External nominal interface declaration is missing @N4JS annotation." at "I1"
+
 	interface I1 {
 	
 	}
 	
 	interface ~I2 {
-		// XPECT errors --> "Members of external interfaces must not be static." at "field"
+		// XPECT errors --> "Structural interfaces cannot contain static members." at "field"
 		public static field:string;
 	}
 }

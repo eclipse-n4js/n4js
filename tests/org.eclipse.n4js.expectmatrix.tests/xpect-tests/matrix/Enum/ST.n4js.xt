@@ -18,7 +18,7 @@
 	b: "b"
 }
 
-class ~A<T> {
+class A<T> {
 	public t : T;
 
 	public f (tt : T) : T { return tt; }
@@ -33,7 +33,7 @@ class B<T> {
 // structural type for variable XPECT noerrors -->
 var a1 : ~A<SBEnum> = { t: SBEnum.a, f: function (tt : SBEnum) : SBEnum {return tt;} };
 
-// structural type for class XPECT noerrors -->
+// structural type for class XPECT errors --> "Structural type ~Object with { t: SBEnum; f: {function(SBEnum):SBEnum} } is not a subtype of non-structural type A<SBEnum>." at "{ t: SBEnum.a, f: function (tt : SBEnum) : SBEnum {return tt;} }"
 var a2 : A<SBEnum> = { t: SBEnum.a, f: function (tt : SBEnum) : SBEnum {return tt;} };
 
 // structural type for variable XPECT noerrors -->

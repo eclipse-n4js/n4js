@@ -4,4 +4,5 @@
 @@Global @@ProvidedByRuntime
 
 @Polyfill
+@EcmaScript
 export external public class Atomics extends Atomics {}

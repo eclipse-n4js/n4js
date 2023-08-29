@@ -18,7 +18,7 @@ export external class SomeCls {}
 // ------------------------------------------------------------------------------------------------------------------------
 // positive cases:
 
-export external interface ~I {
+export external public interface ~I {
 
 	// XPECT noerrors -->
 	(): number;
@@ -27,6 +27,7 @@ export external interface ~I {
 	new(): SomeCls;
 }
 
+@EcmaScript
 export external class C {
 
 	// XPECT noerrors -->
@@ -49,20 +50,23 @@ export let o: ~Object with {
 // ------------------------------------------------------------------------------------------------------------------------
 // @N4JS
 
+// XPECT warnings --> "This annotation is deprecated and has no effect." at "N4JS"
+// XPECT errors --> "Only nominal interfaces can be annotated with @N4JS." at "N4JS"
 @N4JS
-export external interface ~I1 {
+export external public interface ~I1 {
 
-	// XPECT errors --> "Call and construct signatures are not allowed in classifiers annotated with @N4JS." at "(): number;"
+	// XPECT noerrors --> "Call and construct signatures are not allowed in classifiers annotated with @N4JS." at "(): number;"
 	(): number;
 
-	// XPECT errors --> "Call and construct signatures are not allowed in classifiers annotated with @N4JS." at "new(): SomeCls;"
+	// XPECT noerrors --> "Call and construct signatures are not allowed in classifiers annotated with @N4JS." at "new(): SomeCls;"
 	new(): SomeCls;
 }
 
+// XPECT warnings --> "This annotation is deprecated and has no effect." at "N4JS"
 @N4JS
 export external class C1 {
 
-	// XPECT errors --> "Call and construct signatures are not allowed in classifiers annotated with @N4JS." at "(): number;"
+	// XPECT errors --> "Call and construct signatures are not allowed in n4js classifiers. Use shapes or @EcmaScript." at "(): number;"
 	(): number;
 
 	// treated as an ordinary method with name "new" XPECT noerrors -->
@@ -77,7 +81,7 @@ export let o1: ~Object with {
 // ------------------------------------------------------------------------------------------------------------------------
 // bodies:
 
-export external interface ~I2 {
+export external public interface ~I2 {
 
 	// XPECT errors --> "Call and construct signatures must not have a body." at "(): number { return 0; }"
 	(): number { return 0; }
@@ -86,6 +90,7 @@ export external interface ~I2 {
 	new(): SomeCls { return undefined; }
 }
 
+@EcmaScript
 export external class C2 {
 
 	// XPECT errors --> "Call and construct signatures must not have a body." at "(): number { return 0; }"
@@ -103,7 +108,7 @@ export let o2: ~Object with {
 // ------------------------------------------------------------------------------------------------------------------------
 // duplicates:
 
-export external interface ~I3 {
+export external public interface ~I3 {
 
 	// XPECT errors --> "Duplicate call signature." at "(): number;"
 	(): number;
@@ -116,6 +121,7 @@ export external interface ~I3 {
 	new(): SomeCls;
 }
 
+@EcmaScript
 export external class C3 {
 
 	// XPECT errors --> "Duplicate call signature." at "(): number;"
@@ -123,9 +129,9 @@ export external class C3 {
 	// XPECT errors --> "Duplicate call signature." at "(): number;"
 	(): number;
 
-	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 127) duplicates method new (line 129)." at "new"
+	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 133) duplicates method new (line 135)." at "new"
 	new(): SomeCls;
-	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 129) duplicates method new (line 127)." at "new"
+	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 135) duplicates method new (line 133)." at "new"
 	new(): SomeCls;
 }
 
@@ -146,7 +152,7 @@ export let o3: ~Object with {
 // ------------------------------------------------------------------------------------------------------------------------
 // void as return type
 
-export external interface ~I4a {
+export external public interface ~I4a {
 
 	// XPECT noerrors -->
 	();
@@ -155,7 +161,7 @@ export external interface ~I4a {
 	new();
 }
 
-export external interface ~I4b {
+export external public interface ~I4b {
 
 	// XPECT noerrors -->
 	(): void;
@@ -164,6 +170,7 @@ export external interface ~I4b {
 	new(): void;
 }
 
+@EcmaScript
 export external class C4a {
 
 	// XPECT noerrors -->
@@ -173,6 +180,7 @@ export external class C4a {
 	new();
 }
 
+@EcmaScript
 export external class C4b {
 
 	// XPECT noerrors -->

@@ -12,10 +12,12 @@ package org.eclipse.n4js.tests.typesbuilder
 
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.tests.parser.AbstractParserTest
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.TClass
+import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.junit.Test
 
@@ -49,7 +51,7 @@ class ClassDeclarationsTypeBuilderTest extends AbstractParserTest {
 	@Test
 	def void testClassDeclarationsWithSructuralTyping() {
 		val script = '''
-			public class ~C {}
+			public interface ~C {}
 			public class D {}
 		'''.parse
 		doTestClassDeclarationsWithSructuralTyping(script);
@@ -58,7 +60,7 @@ class ClassDeclarationsTypeBuilderTest extends AbstractParserTest {
 	@Test
 	def void testClassDeclarationsWithSructuralTypingAnnotated() {
 		val script = '''
-			@Deprectated public class ~C {}
+			@Deprectated public interface ~C {}
 			@Deprectated public class D {}
 		'''.parse
 		doTestClassDeclarationsWithSructuralTyping(script);
@@ -67,9 +69,9 @@ class ClassDeclarationsTypeBuilderTest extends AbstractParserTest {
 	def doTestClassDeclarationsWithSructuralTyping(Script script) {
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 
-		val cdecl = script.scriptElements.get(0) as N4ClassDeclaration
+		val cdecl = script.scriptElements.get(0) as N4InterfaceDeclaration
 		assertEquals("C", cdecl.getName)
-		val c = cdecl.definedType as TClass;
+		val c = cdecl.definedType as TInterface;
 		assertEquals("C", c.getName)
 		assertEquals(TypingStrategy.STRUCTURAL, c.typingStrategy)
 
@@ -77,6 +79,6 @@ class ClassDeclarationsTypeBuilderTest extends AbstractParserTest {
 		assertEquals("D", ddecl.getName)
 		val d = ddecl.definedType as TClass;
 		assertEquals("D", d.getName)
-		assertEquals(TypingStrategy.DEFAULT, d.typingStrategy)
+		assertEquals(TypingStrategy.NOMINAL, d.typingStrategy)
 	}
 }

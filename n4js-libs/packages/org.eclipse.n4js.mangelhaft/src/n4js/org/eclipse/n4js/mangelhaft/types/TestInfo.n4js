@@ -10,7 +10,7 @@
  */
  
  /** Describes given test class to be executed. */
-export public class ~TestInfo {
+export public class TestInfo {
     /** set in case class has been loaded from disk */
     public filePath?: string;
 

@@ -19,13 +19,13 @@ class Cls {
 	public field: string;
 }
 
-class ~ClsStruct {
+interface ~IfcStruct {
 	public field: string;
 }
 
 export let v1: ~Cls;
 export let v2: ~~Cls;
-export let v3: ClsStruct;
+export let v3: IfcStruct;
 export let v4: ~Object with {};
 export let v5: ~Object with {
 	fieldAdded: number;
@@ -46,12 +46,12 @@ export let v7: ~Cls with {
 declare class Cls {
 	public field: string;
 }
-declare class ClsStruct {
-	public field: string;
+declare interface IfcStruct {
+	field: string;
 }
 export let v1: Cls;
 export let v2: StructuralFields<Cls>;
-export let v3: ClsStruct;
+export let v3: IfcStruct;
 export let v4: Object;
 export let v5: {fieldAdded: number; get getterAdded(): number; set setterAdded(value: number); methodAdded(): void};
 export let v6: Cls;

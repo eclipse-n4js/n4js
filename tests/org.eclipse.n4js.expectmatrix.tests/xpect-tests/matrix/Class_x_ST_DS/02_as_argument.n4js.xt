@@ -15,22 +15,22 @@
 // As an argument //
 ////////////////////
 
-class ~A1 {
+class A1 {
 	public a : number;
 }
 
-class ~B2<T> extends A1 {
+class B2<T> extends A1 {
 	public s : T;
 }
 
 // structural as argument XPECT noerrors -->
-function h1 (b : A1) : number { return b.a; }
+function h1 (b : ~A1) : number { return b.a; }
 
 // function call with structural; return primitive XPECT type of t1 --> number
 var t1 = h1({a: 4});
 
 // structural parameterized as argument; primitive parameter XPECT noerrors -->
-function h2 (b : B2<string>) : string { return b.s; }
+function h2 (b : ~B2<string>) : string { return b.s; }
 
 // function call with structural parameterized; primitive parameter XPECT noerrors -->
 h2({a: 3, s: "b"});
@@ -39,10 +39,10 @@ h2({a: 3, s: "b"});
 var t2 = h2({a: 3, s: "b"});
 
 // structural parameterized as argument; structural parameter XPECT noerrors -->
-function h3 (b : B2<A1>) : A1 { return b.s; }
+function h3 (b : ~B2<~A1>) : ~A1 { return b.s; }
 
 // function call with structural parameterized; structural parameter XPECT noerrors -->
 h3({a: 3, s: {a: 4}});
 
-// function call with structural parameterized; return structural parameter XPECT type of t3 --> A1
+// function call with structural parameterized; return structural parameter XPECT type of t3 --> ~A1
 var t3 = h3({a: 3, s: {a: 4}});

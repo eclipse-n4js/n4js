@@ -11,7 +11,9 @@
 @@Global @@ProvidedByRuntime
 
 
-@Polyfill export external public class String extends String {
+@Polyfill
+@EcmaScript
+export external public class String extends String {
 
 	/**
 	 * Compares two stings uing using locales and options as defined in 

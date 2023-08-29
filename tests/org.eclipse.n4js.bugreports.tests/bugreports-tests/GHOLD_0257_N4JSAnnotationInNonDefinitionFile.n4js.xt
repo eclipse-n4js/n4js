@@ -10,6 +10,6 @@
  */
 
 /* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest END_SETUP  */
-// XPECT errors --> "The annotation @N4JS can only be applied in definition files." at "N4JS"
-@N4JS
+// XPECT errors --> "The annotation @EcmaScript may only be applied at classes in n4jsd files." at "EcmaScript"
+@EcmaScript
 export public class Test {}

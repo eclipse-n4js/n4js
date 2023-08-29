@@ -28,8 +28,11 @@ import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.ThisArgProvider;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
 import org.eclipse.n4js.transpiler.im.Script_IM;
+import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
+import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.types.utils.TypeUtils;
@@ -38,6 +41,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  */
@@ -228,6 +232,28 @@ public class TranspilerUtils {
 		default:
 			throw new IllegalStateException("expected given enum literal to belong to a number-/string-based enum");
 		}
+	}
+
+	public static Iterable<SymbolTableEntryOriginal> filterNominalInterfaces(
+			List<SymbolTableEntryOriginal> interfaces) {
+
+		Iterable<SymbolTableEntryOriginal> directlyImplementedInterfacesFiltered = IterableExtensions.filter(interfaces,
+				ifcSTE -> {
+					IdentifiableElement idElem = ifcSTE.getOriginalTarget();
+					if (idElem instanceof TInterface) {
+						TInterface tIfc = (TInterface) idElem;
+						if (tIfc.getTypingStrategy() == TypingStrategy.STRUCTURAL) {
+							return false;
+						}
+						if (TypeUtils.isBuiltIn(tIfc)) {
+							// built-in types are not defined in Api/Impl projects -> no patching required
+							return false;
+						}
+						return true;
+					}
+					return false;
+				});
+		return directlyImplementedInterfacesFiltered;
 	}
 
 	private static NumericLiteral enumLiteralToNumericLiteral(TEnumLiteral enumLiteral) {

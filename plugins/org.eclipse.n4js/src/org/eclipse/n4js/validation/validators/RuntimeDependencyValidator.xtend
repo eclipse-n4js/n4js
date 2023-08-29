@@ -11,7 +11,6 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.common.collect.Iterables
-import com.google.inject.Inject
 import java.util.HashSet
 import java.util.LinkedHashSet
 import java.util.List
@@ -26,7 +25,6 @@ import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
-import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -40,9 +38,6 @@ import static org.eclipse.n4js.utils.N4JSLanguageUtils.*
 class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 
 	private static final String INDENT = "    ";
-
-	@Inject
-	private JavaScriptVariantHelper javaScriptVariantHelper;
 
 	/**
 	 * NEEDED
@@ -174,7 +169,7 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 			return null;
 		}
 
-		if (!hasRuntimeRepresentation(target, javaScriptVariantHelper)) {
+		if (!hasRuntimeRepresentation(target)) {
 			return null;
 		}
 

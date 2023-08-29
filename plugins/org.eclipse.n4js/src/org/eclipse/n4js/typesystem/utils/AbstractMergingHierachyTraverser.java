@@ -28,8 +28,10 @@ import org.eclipse.n4js.utils.DeclMergingUtils;
  *
  */
 public abstract class AbstractMergingHierachyTraverser<ResultT> extends AbstractTypeHierachyTraverser<ResultT> {
-	private final N4JSResource contextResource;
-	private final DeclMergingHelper declMergingHelper;
+	/** Context resource */
+	protected final N4JSResource contextResource;
+	/** Declaration merging helper */
+	protected final DeclMergingHelper declMergingHelper;
 
 	/** Constructor */
 	public AbstractMergingHierachyTraverser(ContainerType<?> type, N4JSResource contextResource,

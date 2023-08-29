@@ -105,15 +105,6 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 			}
 		}
 
-		// 61, 2a)
-		if (!right.useSiteStructuralTyping && right.defSiteStructuralTyping) {
-			if (ts.subtypeSucceeded(G, left, G.n4ObjectTypeRef)) {
-				return failureDefSiteWithN4Object(
-					'All N4Objects must explicitly extend/implement definition site structural type ' +
-						right.typeRefAsString + '.');
-			}
-		}
-		
 		// check if we are dealing with structural primitive types
 		val primitiveSubtypingResult = isPrimitiveStructuralSubtype(G, left, right);
 		if (null !== primitiveSubtypingResult) {

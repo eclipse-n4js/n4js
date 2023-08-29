@@ -4,6 +4,7 @@
 @@Global @@ProvidedByRuntime
 
 @Polyfill
+@EcmaScript
 export external public class Symbol extends Symbol {}
 
 export external public interface ~AsyncIterableIterator<T> extends AsyncIterator<T> {

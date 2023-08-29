@@ -112,6 +112,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		internalCheckNameStartsWithDollar
 		internalCheckAbstractAndFinal
 		internalCheckPrivateOrProjectWithInternalAnnotation(n4Member, it)
+		internalCheckStaticMemberInShape(it);
 	}
 
 	/*
@@ -279,6 +280,22 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
+	def private boolean internalCheckStaticMemberInShape(TMember member) {
+		if (!member.isStatic) {
+			return true;
+		}
+		val parent = member.eContainer;
+		if (parent instanceof TInterface) {
+			if (parent.typingStrategy === TypingStrategy.STRUCTURAL) {
+				val message = IssueCodes.getMessageForSTRCT_ITF_CANNOT_CONTAIN_STATIC_MEMBERS();
+				addIssue(message, member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME,
+					IssueCodes.STRCT_ITF_CANNOT_CONTAIN_STATIC_MEMBERS);
+				return false;
+			}
+		}
+		return true;
+	}
+
 	def private boolean holdsConstructorConstraints(TMethod method) {
 		if (method.constructor) {
 			if (!holdsConstructorInInterfaceDoesNotHaveBody(method)) {
@@ -323,8 +340,8 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	private def boolean holdsConstructorInInterfaceDoesNotHaveBody(TMethod constructor) {
 		if (constructor.containingType instanceof TInterface && !constructor.hasNoBody) {
-			addIssue(getMessageForITF_CONSTRUCTOR_BODY, constructor.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME,
-				ITF_CONSTRUCTOR_BODY);
+			addIssue(getMessageForITF_NO_PROPERTY_BODY("Constructors", ""), constructor.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME,
+				ITF_NO_PROPERTY_BODY);
 			return false;
 		}
 		return true;
@@ -435,9 +452,9 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 				addIssue(getMessageForCLF_CALL_CONSTRUCT_SIG_ONLY_IN_N4JSD, astNode, CLF_CALL_CONSTRUCT_SIG_ONLY_IN_N4JSD);
 				return false;
 			}
-			// constraint: not in classifiers with @N4JS
+			// constraint: only in shapes and EcmaScript classes
 			val owner = if (methodInAST.isLeft) methodInAST.getLeft.owner; // owners of TStructMethods are never annotated with @N4JS
-			if (owner !== null && AnnotationDefinition.N4JS.hasAnnotation(owner)) {
+			if (methodInAST.isLeft && !N4JSLanguageUtils.isShapeOrEcmaScript(owner)) {
 				addIssue(getMessageForCLF_CALL_CONSTRUCT_SIG_NOT_IN_N4JS, astNode, CLF_CALL_CONSTRUCT_SIG_NOT_IN_N4JS);
 				return false;
 			}
@@ -452,6 +469,16 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			if (haveDuplicate) {
 				val kind = if (isCallSig) "call" else "construct";
 				addIssue(getMessageForCLF_CALL_CONSTRUCT_SIG_DUPLICATE(kind), astNode, CLF_CALL_CONSTRUCT_SIG_DUPLICATE);
+				return false;
+			}
+			// constraint: private not allowed in interfaces
+			val definedMember = if (methodInAST.isLeft) {
+				methodInAST.getLeft.definedTypeElement
+			} else {
+				methodInAST.getRight.definedMember
+			};
+			val isPrivate = !holdsMinimalMemberAccessModifier(definedMember)
+			if (isPrivate) {
 				return false;
 			}
 		}
@@ -501,11 +528,14 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	 * Constraints 49: abstract methods/getters/setters must not be static and vice versa.
 	 */
 	def private boolean holdsAbstractMethodMustNotBeStatic(TMember member) {
-		val isExternal = member.eContainer instanceof TN4Classifier && (member.eContainer as TN4Classifier).external;
-		if (member.abstract && member.static && !isExternal) {
-			addIssue(getMessageForCLF_STATIC_ABSTRACT(member.keyword, member.name), member.astElement,
-				PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_STATIC_ABSTRACT)
-			return false;
+		val container = member.eContainer;
+		if (container instanceof TN4Classifier) {
+			val isStructural = container.typingStrategy === TypingStrategy.STRUCTURAL;
+			if (member.abstract && member.static && !container.external && !isStructural) {
+				addIssue(getMessageForCLF_STATIC_ABSTRACT(member.keyword, member.name), member.astElement,
+					PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_STATIC_ABSTRACT)
+				return false;
+			}
 		}
 		return true;
 	}

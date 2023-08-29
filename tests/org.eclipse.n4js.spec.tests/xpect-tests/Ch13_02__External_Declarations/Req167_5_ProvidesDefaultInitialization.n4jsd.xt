@@ -11,13 +11,13 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
-@N4JS
+
 export external public interface I {
 	// XPECT noerrors --> "This is the correct application." at "foo"
 	@ProvidesInitializer foo;
 }
 
-@N4JS
+
 export external public class C {
 	// XPECT noerrors --> "This is the correct application." at "foo"
 	@ProvidesInitializer foo;
@@ -25,6 +25,6 @@ export external public class C {
 
 
 export external public interface ~K {
-	// XPECT errors --> "@ProvidesInitializer must only be used in classifiers annotated with @N4JS." at "foo"
+	// XPECT errors --> "@ProvidesInitializer must only be used in n4js interfaces or classes." at "foo"
 	@ProvidesInitializer foo;
 }

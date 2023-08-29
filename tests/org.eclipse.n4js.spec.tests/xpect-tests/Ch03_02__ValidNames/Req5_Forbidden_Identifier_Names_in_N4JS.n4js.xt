@@ -24,7 +24,7 @@ class A {
 	// XPECT errors --> "yield is a reserved identifier." at "yield"
 	private f = function yield() { };
 
-	// XPECT errors --> "static is a reserved identifier." at "static"
+	// XPECT errors --> "Call and construct signatures may only be used in .n4jsd files." at "private static() : void { }"
 	private static() : void { }
 }
 

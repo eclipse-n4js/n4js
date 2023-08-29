@@ -47,7 +47,7 @@ class ImportSpecifiersUtil {
 						return newArrayList(
 							new ImportProvidedElement(specifier.usedName, specifier.importedElementName,
 								specifier as ImportSpecifier,
-								N4JSLanguageUtils.isHollowElement(specifier.importedElement, jsVariantHelper)))
+								N4JSLanguageUtils.isHollowElement(specifier.importedElement)))
 					default:
 						return emptyList
 				}
@@ -75,7 +75,7 @@ class ImportSpecifiersUtil {
 			if (localNamesAdded.add(localName)) {
 				importProvidedElements.add(
 					new ImportProvidedElement(localName, exportDef.exportedName,
-						specifier, N4JSLanguageUtils.isHollowElement(exportDef.exportedElement, jsVariantHelper)));
+						specifier, N4JSLanguageUtils.isHollowElement(exportDef.exportedElement)));
 			}
 		]);
 

@@ -17,12 +17,12 @@
 { '@type': 'whatever' }
 --- */
 
-class ~Party {
+class Party {
     public ["@type"] : string = "some.type";
     public ["@typeValue"]? : string = "some.parameter";
 }
 
-var some_party : Party = {
+var some_party : ~Party = {
     ["@type"] : "whatever"
 }
 

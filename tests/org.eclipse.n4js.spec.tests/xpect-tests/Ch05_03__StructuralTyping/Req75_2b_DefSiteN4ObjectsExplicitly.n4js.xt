@@ -11,11 +11,13 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
-class ~T {
+interface ~T {
 	public n : number;
-	public foo() {}
+	public foo();
 }
-class X extends T {
+class X implements T {
+	@Override
+	public foo() {}
 }
 
 var x : X;

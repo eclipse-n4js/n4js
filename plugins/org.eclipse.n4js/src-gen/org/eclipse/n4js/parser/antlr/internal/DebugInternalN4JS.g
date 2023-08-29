@@ -7599,6 +7599,11 @@ ruleN4MemberDeclaration:
 		)
 		    |
 		(
+			(ruleN4CallSignatureDeclaration)=>
+			ruleN4CallSignatureDeclaration
+		)
+		    |
+		(
 			(ruleN4Modifier
 			*
 			ruleTypeParameters?
@@ -7614,8 +7619,6 @@ ruleN4MemberDeclaration:
 			)=>
 			ruleN4MethodDeclaration
 		)
-		    |
-		ruleN4CallSignatureDeclaration
 		    |
 		ruleN4FieldDeclaration
 	)
@@ -7788,6 +7791,11 @@ norm1_N4MemberDeclaration:
 		)
 		    |
 		(
+			(norm1_N4CallSignatureDeclaration)=>
+			norm1_N4CallSignatureDeclaration
+		)
+		    |
+		(
 			(ruleN4Modifier
 			*
 			ruleTypeParameters?
@@ -7803,8 +7811,6 @@ norm1_N4MemberDeclaration:
 			)=>
 			norm1_N4MethodDeclaration
 		)
-		    |
-		norm1_N4CallSignatureDeclaration
 		    |
 		norm1_N4FieldDeclaration
 	)
@@ -8410,6 +8416,8 @@ norm1_N4MethodDeclaration:
 
 // Rule N4CallSignatureDeclaration
 ruleN4CallSignatureDeclaration:
+	ruleN4Modifier
+	*
 	ruleTypeParameters?
 	ruleMethodParamsReturnAndBody
 	';'?
@@ -8417,6 +8425,8 @@ ruleN4CallSignatureDeclaration:
 
 // Rule N4CallSignatureDeclaration
 norm1_N4CallSignatureDeclaration:
+	ruleN4Modifier
+	*
 	ruleTypeParameters?
 	ruleMethodParamsReturnAndBody
 	';'?

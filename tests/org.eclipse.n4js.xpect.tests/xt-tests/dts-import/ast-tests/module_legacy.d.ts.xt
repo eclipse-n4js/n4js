@@ -31,13 +31,19 @@ Script: true
   ExportDeclaration: false, UNKNOWN
    N4NamespaceDeclaration: [public], parent
     ExportDeclaration: false, UNKNOWN
-     N4ClassDeclaration: [external, public], Cls1, ~
+     N4ClassDeclaration: [external, public], Cls1, ?~
+      AnnotationList
+       Annotation: EcmaScript
     ExportDeclaration: false, UNKNOWN
      N4NamespaceDeclaration: [public], child
       ExportDeclaration: false, UNKNOWN
-       N4ClassDeclaration: [external, public], Cls2, ~
+       N4ClassDeclaration: [external, public], Cls2, ?~
+        AnnotationList
+         Annotation: EcmaScript
       ExportDeclaration: false, UNKNOWN
        N4NamespaceDeclaration: [public], grandChild
         ExportDeclaration: false, UNKNOWN
-         N4ClassDeclaration: [external, public], Cls3, ~
+         N4ClassDeclaration: [external, public], Cls3, ?~
+          AnnotationList
+           Annotation: EcmaScript
 --- */

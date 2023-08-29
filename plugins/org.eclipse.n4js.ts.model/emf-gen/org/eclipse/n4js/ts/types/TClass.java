@@ -24,7 +24,7 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.TClass#isDeclaredAbstract <em>Declared Abstract</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.TClass#isDeclaredN4JS <em>Declared N4JS</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TClass#isDeclaredEcmaScript <em>Declared Ecma Script</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TClass#isDeclaredFinal <em>Declared Final</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TClass#isDeclaredStaticPolyfill <em>Declared Static Polyfill</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TClass#isObservable <em>Observable</em>}</li>
@@ -60,26 +60,26 @@ public interface TClass extends TN4Classifier {
 	void setDeclaredAbstract(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Declared N4JS</b></em>' attribute.
+	 * Returns the value of the '<em><b>Declared Ecma Script</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Declared N4JS</em>' attribute.
-	 * @see #setDeclaredN4JS(boolean)
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTClass_DeclaredN4JS()
+	 * @return the value of the '<em>Declared Ecma Script</em>' attribute.
+	 * @see #setDeclaredEcmaScript(boolean)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTClass_DeclaredEcmaScript()
 	 * @model unique="false"
 	 * @generated
 	 */
-	boolean isDeclaredN4JS();
+	boolean isDeclaredEcmaScript();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TClass#isDeclaredN4JS <em>Declared N4JS</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TClass#isDeclaredEcmaScript <em>Declared Ecma Script</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Declared N4JS</em>' attribute.
-	 * @see #isDeclaredN4JS()
+	 * @param value the new value of the '<em>Declared Ecma Script</em>' attribute.
+	 * @see #isDeclaredEcmaScript()
 	 * @generated
 	 */
-	void setDeclaredN4JS(boolean value);
+	void setDeclaredEcmaScript(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Declared Final</b></em>' attribute.

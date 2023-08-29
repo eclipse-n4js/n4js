@@ -30,7 +30,7 @@ let i: Iterable<?>;
 // XPECT noerrors -->
 [...i];
 
-class ~Cls {
+class Cls {
 	public [Symbol.iterator](): Iterator<number> { return null; }
 }
 // XPECT noerrors -->

@@ -28,13 +28,19 @@ export class Cls {
 /* XPECT ast ---
 Script: true
   ExportDeclaration: false, UNKNOWN
-   N4ClassDeclaration: [external, public], A, ~
+   N4ClassDeclaration: [external, public], A, ?~
+    AnnotationList
+     Annotation: EcmaScript
   ExportDeclaration: false, UNKNOWN
-   N4ClassDeclaration: [external, public], B, ~
+   N4ClassDeclaration: [external, public], B, ?~
+    AnnotationList
+     Annotation: EcmaScript
   ExportDeclaration: false, UNKNOWN
-   N4ClassDeclaration: [external, public], C, ~
+   N4ClassDeclaration: [external, public], C, ?~
+    AnnotationList
+     Annotation: EcmaScript
   ExportDeclaration: false, UNKNOWN
-   N4ClassDeclaration: [external, public], Cls, ~
+   N4ClassDeclaration: [external, public], Cls, ?~
     N4MethodDeclaration: false, [public], false
      FormalParameter: false, p, false
       TypeReferenceNode
@@ -65,4 +71,6 @@ Script: true
       ParameterizedTypeRef: OFF, false, false, any, ?~, true, false
      N4TypeVariable: false, false, false, T
      LiteralOrComputedPropertyName: false, identifier, method4
+    AnnotationList
+     Annotation: EcmaScript
 --- */

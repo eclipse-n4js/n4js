@@ -7,7 +7,8 @@ export external public interface ~AudioParam {
 	setValueCurveAtTime(values: Iterable<number>, startTime: number, duration: number): AudioParam;
 }
 
-export external public class ~AudioParamMap extends ReadonlyMap<string,AudioParam> {}
+@EcmaScript
+export external public class AudioParamMap extends ReadonlyMap<string,AudioParam> {}
 
 @Polyfill
 export external public interface ~BaseAudioContext extends BaseAudioContext {
@@ -67,7 +68,8 @@ export external public interface ~FileList extends FileList {
 	[Symbol.iterator](): IterableIterator<File>;
 }
 
-export external public class ~FontFaceSet extends Set<FontFace> {}
+@EcmaScript
+export external public class FontFaceSet extends Set<FontFace> {}
 
 @Polyfill
 export external public interface ~FormData extends FormData {
@@ -183,7 +185,8 @@ export external public interface ~PluginArray extends PluginArray {
 	[Symbol.iterator](): IterableIterator<Plugin>;
 }
 
-export external public class ~RTCStatsReport extends ReadonlyMap<string,any> {}
+@EcmaScript
+export external public class RTCStatsReport extends ReadonlyMap<string,any> {}
 
 @Polyfill
 export external public interface ~ReadableStream<R=any> extends ReadableStream<R> {

@@ -27,7 +27,6 @@ export external public const global: Object+;
 /**
  * Base class for all N4 reflective elements.
  */
-@N4JS
 export external public abstract class N4Element extends N4Object {
 
 	/**
@@ -63,7 +62,6 @@ export external public abstract class N4Element extends N4Object {
 /**
  * Base class for all reflective classes with a name.
  */
-@N4JS
 export external public abstract class N4NamedElement extends N4Element {
 	/**
 	 * The simple name of a named element.
@@ -74,7 +72,6 @@ export external public abstract class N4NamedElement extends N4Element {
 /**
  * Base class for all reflective classes describing a type (declaration).
  */
-@N4JS
 export external public abstract class N4Type extends N4NamedElement {
 	/**
 	 * The FQN of the type.
@@ -107,7 +104,6 @@ export external public abstract class N4Type extends N4NamedElement {
 /**
  * Base class for meta types of classes and interfaces.
  */
-@N4JS
 export external public abstract class N4Classifier extends N4Type {
 
 	/**
@@ -205,7 +201,7 @@ export external public abstract class N4Classifier extends N4Type {
 /**
  * Meta information of an n4 class.
  */
-@N4JS @Final
+@Final
 export external public class N4Class extends N4Classifier {
 
 	/**
@@ -218,7 +214,7 @@ export external public class N4Class extends N4Classifier {
 /**
  * Meta information of an n4 interface.
  */
-@N4JS @Final
+@Final
 export external public class N4Interface extends N4Classifier {
 	/**
 	 * Returns true if this N4Class describes an N4-interface declaration.
@@ -230,7 +226,6 @@ export external public class N4Interface extends N4Classifier {
 /**
  * Description of a member, that is a method or field.
  */
-@N4JS
 export external public abstract class N4Member extends N4NamedElement {
 	public get owner(): N4Classifier
 	public get isStatic(): boolean
@@ -239,7 +234,7 @@ export external public abstract class N4Member extends N4NamedElement {
 /**
  * Description of a method.
  */
-@N4JS @Final
+@Final
 export external public class N4Method extends N4Member {
 	public get jsFunction(): Function
 }
@@ -247,14 +242,14 @@ export external public class N4Method extends N4Member {
 /**
  * Description of a simple data field.
  */
-@N4JS @Final
+@Final
 export external public class N4DataField extends N4Member {
 }
 
 /**
  * Description of an accessor, that is a getter or setter.
  */
-@N4JS @Final
+@Final
 export external public class N4Accessor extends N4Member {
 	/**
 	 * Flag indicating whether accessor is a getter or setter, internal detail.
@@ -275,7 +270,7 @@ export external public class N4Accessor extends N4Member {
 /**
  * Description of an N4Enum
  */
-@N4JS @Final
+@Final
 export external public class N4EnumType extends N4Type {
 	/**
 	 * Returns true if this N4Classifier describes an N4-enumeration declaration.
@@ -341,7 +336,7 @@ export external public class N4Enum {
 /**
  * Annotation with value.
  */
-@N4JS @Final
+@Final
 export external public class N4Annotation extends N4Object {
 
 	/**
@@ -357,7 +352,6 @@ export external public class N4Annotation extends N4Object {
 /**
  * The base class for all instances of n4 classes.
  */
-@N4JS
 export external public class N4Object extends Object {
 
 	/**
@@ -434,21 +428,13 @@ export external public class Array8<T1,T2,T3,T4,T5,T6,T7,T8> extends Array7<T1,T
 export external public class Array9<T1,T2,T3,T4,T5,T6,T7,T8,T9> extends Array8<T1,T2,T3,T4,T5,T6,T7,union{T8,T9}> implements Iterable9<T1,T2,T3,T4,T5,T6,T7,T8,T9> {}
 
 
-@N4JS
 export external public interface Iterable2<out T1,out T2> extends Iterable<union{T1,T2}> {}
-@N4JS
 export external public interface Iterable3<out T1,out T2,out T3> extends Iterable2<T1,union{T2,T3}> {}
-@N4JS
 export external public interface Iterable4<out T1,out T2,out T3,out T4> extends Iterable3<T1,T2,union{T3,T4}> {}
-@N4JS
 export external public interface Iterable5<out T1,out T2,out T3,out T4,out T5> extends Iterable4<T1,T2,T3,union{T4,T5}> {}
-@N4JS
 export external public interface Iterable6<out T1,out T2,out T3,out T4,out T5,out T6> extends Iterable5<T1,T2,T3,T4,union{T5,T6}> {}
-@N4JS
 export external public interface Iterable7<out T1,out T2,out T3,out T4,out T5,out T6,out T7> extends Iterable6<T1,T2,T3,T4,T5,union{T6,T7}> {}
-@N4JS
 export external public interface Iterable8<out T1,out T2,out T3,out T4,out T5,out T6,out T7,out T8> extends Iterable7<T1,T2,T3,T4,T5,T6,union{T7,T8}> {}
-@N4JS
 export external public interface Iterable9<out T1,out T2,out T3,out T4,out T5,out T6,out T7,out T8,out T9> extends Iterable8<T1,T2,T3,T4,T5,T6,T7,union{T8,T9}> {}
 
 
@@ -468,8 +454,7 @@ export external public class N4ApiNotImplementedError extends Error {  }
  * <li>breaking circular dependencies</li>
  * </ul>
  */
-@N4JS
-export external public interface ~N4Provider<out T> {
+export external public interface N4Provider<out T> {
 
 	/**
 	 * Provides and returns a fully constructed and injected instance of type <tt>T</tt>.
@@ -486,7 +471,7 @@ export external public const import : ~Object with {
     };
 
 @Final
-export external public class ~ImportMeta {
+export external public class ImportMeta {
     /** Location of entry point */
     @Final
     public url: string;

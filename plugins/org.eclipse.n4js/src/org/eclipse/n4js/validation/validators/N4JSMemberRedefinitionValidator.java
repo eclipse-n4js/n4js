@@ -709,7 +709,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 
 		// 6. abstract
 		if (m.isAbstract() && !s.isAbstract()) {
-			boolean sIsEffectivelyAbstract = sIsField && isMemberOfInterfaceInN4jsdWithoutN4jsAnnotation(s);
+			boolean sIsEffectivelyAbstract = sIsField && isMemberOfShape(s);
 			if (!sIsEffectivelyAbstract) {
 				if (!consumptionConflict) { // avoid consequential errors
 					messageOverrideAbstract(redefinitionType, m, s);
@@ -1281,10 +1281,10 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 		return ts.subtype(G, typeLeft, typeRight);
 	}
 
-	private boolean isMemberOfInterfaceInN4jsdWithoutN4jsAnnotation(TMember m) {
+	private boolean isMemberOfShape(TMember m) {
 		final ContainerType<?> type = m.getContainingType();
 		return type instanceof TInterface
-				&& N4JSLanguageUtils.builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation((TInterface) type);
+				&& N4JSLanguageUtils.builtInOrProvidedByRuntimeOrShape((TInterface) type);
 	}
 
 	private TClassifier getCurrentClassifier() {

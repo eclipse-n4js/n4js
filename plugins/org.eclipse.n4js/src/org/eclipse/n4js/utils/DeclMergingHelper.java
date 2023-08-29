@@ -169,7 +169,7 @@ public class DeclMergingHelper {
 		if (type != null && !type.eIsProxy()
 				&& type instanceof TClass
 				&& DeclMergingUtils.mayBeMerged(type)) {
-			List<Type> mergedElems = getMergedElements((N4JSResource) type.eResource(), type);
+			Set<Type> mergedElems = getMergedElements((N4JSResource) type.eResource(), type);
 			List<TypeRef> mergedTypeRefs = new ArrayList<>();
 			for (Type mergedElem : mergedElems) {
 				if (mergedElem instanceof TFunction) {
@@ -194,7 +194,7 @@ public class DeclMergingHelper {
 	 * @implNote Check {@link DeclMergingUtils#mayBeMerged(EObject)} before calling this method
 	 */
 	public List<ParameterizedTypeRef> getMergedTypeRefs(N4JSResource context, ParameterizedTypeRef typeRef) {
-		List<Type> mergedTypes = getMergedElements(context, typeRef.getDeclaredType());
+		Set<Type> mergedTypes = getMergedElements(context, typeRef.getDeclaredType());
 		List<ParameterizedTypeRef> mergedTypeRefs = new ArrayList<>(mergedTypes.size());
 		for (Type mt : mergedTypes) {
 			TypeArgument[] typeArgs = typeRef.getDeclaredTypeArgs()
@@ -212,7 +212,7 @@ public class DeclMergingHelper {
 	 *
 	 * @implNote Check {@link DeclMergingUtils#mayBeMerged(EObject)} before calling this method
 	 */
-	public List<Type> getMergedElements(N4JSResource context, Type type) {
+	public Set<Type> getMergedElements(N4JSResource context, Type type) {
 		return cachedGetMergedElements(context, type, TypesPackage.Literals.TYPE);
 	}
 
@@ -224,15 +224,15 @@ public class DeclMergingHelper {
 	 *
 	 * @implNote Check {@link DeclMergingUtils#mayBeMerged(EObject)} before calling this method
 	 */
-	public List<AbstractNamespace> getMergedElements(N4JSResource context, AbstractNamespace namespace) {
+	public Set<AbstractNamespace> getMergedElements(N4JSResource context, AbstractNamespace namespace) {
 		return cachedGetMergedElements(context, namespace, TypesPackage.Literals.ABSTRACT_NAMESPACE);
 	}
 
-	private <T extends EObject> List<T> cachedGetMergedElements(N4JSResource context, T element, EClass eClass) {
+	private <T extends EObject> Set<T> cachedGetMergedElements(N4JSResource context, T element, EClass eClass) {
 		String keyName = "getMergedElements" + eClass.getClassifierID();
 		Object key = N4JSCache.makeKey(keyName, element);
 		if (!cache.contains(context, key)) {
-			List<T> mergedElements = internalGetMergedElements(context, element, eClass);
+			Set<T> mergedElements = internalGetMergedElements(context, element, eClass);
 			cache.get(context, () -> mergedElements, key);
 
 			Set<T> mergedElementsSet = new HashSet<>(mergedElements);
@@ -240,7 +240,7 @@ public class DeclMergingHelper {
 
 			for (T mergedElem : mergedElements) {
 				cache.get(context, () -> {
-					ArrayList<Object> otherMergedElems = new ArrayList<>();
+					Set<Object> otherMergedElems = new LinkedHashSet<>();
 					for (T e : mergedElementsSet) {
 						if (e != mergedElem) {
 							otherMergedElems.add(e);
@@ -255,16 +255,16 @@ public class DeclMergingHelper {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T extends EObject> List<T> internalGetMergedElements(N4JSResource context, T element, EClass eClass) {
+	private <T extends EObject> Set<T> internalGetMergedElements(N4JSResource context, T element, EClass eClass) {
 		QualifiedName elemQN = qualifiedNameProvider.getFullyQualifiedName(element);
 		if (elemQN == null) {
-			return Collections.emptyList();
+			return Collections.emptySet();
 		}
 		Set<EObject> resultSet = new LinkedHashSet<>();
 
 		ProjectImportEnablingScope ctxPieScope = getProjectImportEnablingScope(context, eClass);
 		if (ctxPieScope == null) {
-			return Collections.emptyList();
+			return Collections.emptySet();
 		}
 
 		if (QualifiedNameUtils.isGlobal(elemQN)) {
@@ -293,9 +293,8 @@ public class DeclMergingHelper {
 			}
 		}
 
-		List<EObject> result = new ArrayList<>(resultSet);
-		cleanListOfMergedElements(element, result);
-		return (List<T>) result;
+		cleanListOfMergedElements(element, resultSet);
+		return (Set<T>) resultSet;
 	}
 
 	private ProjectImportEnablingScope getProjectImportEnablingScope(N4JSResource resource, EClass elementType) {
@@ -356,7 +355,7 @@ public class DeclMergingHelper {
 	 * <p>
 	 * In addition, this method removes the start element, because we do not want to include it in the result list.
 	 */
-	private void cleanListOfMergedElements(EObject targetElem, List<? extends EObject> mergedElemsFromScoping) {
+	private void cleanListOfMergedElements(EObject targetElem, Collection<? extends EObject> mergedElemsFromScoping) {
 		if (DeclMergingUtils.isGlobal(targetElem)) {
 			// TODO: check all are global
 			// for global elements and elements in declared modules, name equality is sufficient

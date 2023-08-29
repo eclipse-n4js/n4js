@@ -11,12 +11,12 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
-class ~Party {
+class Party {
 	// XPECT noerrors -->
     public ["@type"] : string = "some.type";
 }
 
-var some_party : Party = {
+var some_party : ~Party = {
 	// XPECT noerrors -->
     ["@type"] : "whatever"
 }

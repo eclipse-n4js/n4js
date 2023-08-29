@@ -4,44 +4,52 @@
 @@Global @@ProvidedByRuntime
 
 @Polyfill
+@EcmaScript
 export external public class Array<T> extends Array<T> {
 	public [Symbol.unscopables](): ~Object with { copyWithin: boolean; entries: boolean; fill: boolean; find: boolean; findIndex: boolean; keys: boolean; values: boolean; };
 	public static get [Symbol.species](): ArrayConstructor;
 }
 
 @Polyfill
+@EcmaScript
 export external public class Date extends Date {
 	public [Symbol.toPrimitive](...args: any+): any+; // overloading not supported
 }
 
 @Polyfill
+@EcmaScript
 export external public class Map<K,V> extends Map<K,V> {
 	public get [Symbol.toStringTag](): string;
 	public static get [Symbol.species](): MapConstructor;
 }
 
 @Polyfill
+@EcmaScript
 export external public class WeakMap<K extends Object,V> extends WeakMap<K,V> {
 	public get [Symbol.toStringTag](): string;
 }
 
 @Polyfill
+@EcmaScript
 export external public class Set<T> extends Set<T> {
 	public get [Symbol.toStringTag](): string;
 	public static get [Symbol.species](): SetConstructor;
 }
 
 @Polyfill
+@EcmaScript
 export external public class WeakSet<T extends Object> extends WeakSet<T> {
 	public get [Symbol.toStringTag](): string;
 }
 
 @Polyfill
+@EcmaScript
 export external public class JSON extends JSON {
 	public static get [Symbol.toStringTag](): string;
 }
 
 @Polyfill
+@EcmaScript
 export external public class Function extends Function {
 	public [Symbol.hasInstance](value: any): boolean;
 }
@@ -51,11 +59,13 @@ export external public interface ~GeneratorFunction {
 }
 
 @Polyfill
+@EcmaScript
 export external public class Math extends Math {
 	public static get [Symbol.toStringTag](): string;
 }
 
 @Polyfill
+@EcmaScript
 export external public class RegExp extends RegExp {
 	public [Symbol.match](string: string): RegExpMatchArray;
 	public [Symbol.replace](...args: any+): any+; // overloading not supported
@@ -65,60 +75,72 @@ export external public class RegExp extends RegExp {
 }
 
 @Polyfill
+@EcmaScript
 export external public class String extends String {}
 
 @Polyfill
+@EcmaScript
 export external public class ArrayBuffer extends ArrayBuffer {
 	public get [Symbol.toStringTag](): string;
 	public static get [Symbol.species](): ArrayBufferConstructor;
 }
 
 @Polyfill
+@EcmaScript
 export external public class DataView extends DataView {
 	public get [Symbol.toStringTag](): string;
 }
 
 @Polyfill
+@EcmaScript
 export external public class Int8Array extends Int8Array {
 	public get [Symbol.toStringTag](): "Int8Array";
 }
 
 @Polyfill
+@EcmaScript
 export external public class Uint8Array extends Uint8Array {
 	public get [Symbol.toStringTag](): "Uint8Array";
 }
 
 @Polyfill
+@EcmaScript
 export external public class Uint8ClampedArray extends Uint8ClampedArray {
 	public get [Symbol.toStringTag](): "Uint8ClampedArray";
 }
 
 @Polyfill
+@EcmaScript
 export external public class Int16Array extends Int16Array {
 	public get [Symbol.toStringTag](): "Int16Array";
 }
 
 @Polyfill
+@EcmaScript
 export external public class Uint16Array extends Uint16Array {
 	public get [Symbol.toStringTag](): "Uint16Array";
 }
 
 @Polyfill
+@EcmaScript
 export external public class Int32Array extends Int32Array {
 	public get [Symbol.toStringTag](): "Int32Array";
 }
 
 @Polyfill
+@EcmaScript
 export external public class Uint32Array extends Uint32Array {
 	public get [Symbol.toStringTag](): "Uint32Array";
 }
 
 @Polyfill
+@EcmaScript
 export external public class Float32Array extends Float32Array {
 	public get [Symbol.toStringTag](): "Float32Array";
 }
 
 @Polyfill
+@EcmaScript
 export external public class Float64Array extends Float64Array {
 	public get [Symbol.toStringTag](): "Float64Array";
 }

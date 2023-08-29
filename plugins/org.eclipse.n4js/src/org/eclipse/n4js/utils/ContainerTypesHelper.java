@@ -52,11 +52,14 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.ts.types.util.NameStaticPair;
 import org.eclipse.n4js.ts.types.util.NonSymetricMemberKey;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.AbstractMergingHierachyTraverser;
+import org.eclipse.n4js.typesystem.utils.AllDirectStructuralSuperTypeRefsCollector;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -92,6 +95,9 @@ public class ContainerTypesHelper {
 	 */
 	@Inject
 	private ImportedNamesRecordingGlobalScopeAccess globalScopeAccess;
+
+	@Inject
+	private StructuralTypesHelper structuralTypesHelper;
 
 	@Inject
 	private N4JSCache cache;
@@ -544,6 +550,27 @@ public class ContainerTypesHelper {
 		}
 
 		/**
+		 * Returns a list of those members declared in (direct and transitive) structural supertypes of the given type.
+		 */
+		public MemberList<TMember> computeInlinedMembersFromShapes(TClassifier type) {
+			List<ParameterizedTypeRef> shapeRefs = AllDirectStructuralSuperTypeRefsCollector.collect(
+					TypeUtils.createTypeRef(type), declMergingHelper);
+
+			MemberList<TMember> result = MemberList.newMemberList();
+			for (ParameterizedTypeRef shapeRef : shapeRefs) {
+				if (TypeUtils.isStructural(shapeRef)) {
+					RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(type);
+					TypingStrategy tStrat = shapeRef.getTypingStrategy();
+					Iterable<TMember> members = structuralTypesHelper.collectStructuralMembers(G, shapeRef, tStrat);
+					for (TMember member : members) {
+						result.add(member);
+					}
+				}
+			}
+			return result;
+		}
+
+		/**
 		 * Returns an iterable with all members of the given classifier + static-polyfills, that is, owned member,
 		 * inherited members, and mixed in members. The constructor is filtered out.
 		 *
@@ -733,7 +760,7 @@ public class ContainerTypesHelper {
 			public AbstractMemberCollector(ContainerType<?> type, boolean includeImplicitSuperTypes,
 					boolean includePolyfills) {
 
-				super(type, contextResource, declMergingHelper);
+				super(type, MemberCollector.this.contextResource, ContainerTypesHelper.this.declMergingHelper);
 				this.includeImplicitSuperTypes = includeImplicitSuperTypes;
 				this.includePolyfills = includePolyfills;
 			}

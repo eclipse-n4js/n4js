@@ -13,12 +13,6 @@
 
 class N { public s?: string }
 
-@Final
-class F {}
-@Final
-class ~FS {}
-class C {}
-class ~CS {}
 
 const ol = {};
 

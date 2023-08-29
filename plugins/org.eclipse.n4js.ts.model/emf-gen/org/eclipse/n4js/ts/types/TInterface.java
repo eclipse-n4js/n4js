@@ -24,6 +24,7 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.TInterface#getSuperInterfaceRefs <em>Super Interface Refs</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TInterface#getTypingStrategy <em>Typing Strategy</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getTInterface()
@@ -42,6 +43,31 @@ public interface TInterface extends TN4Classifier {
 	 * @generated
 	 */
 	EList<ParameterizedTypeRef> getSuperInterfaceRefs();
+
+	/**
+	 * Returns the value of the '<em><b>Typing Strategy</b></em>' attribute.
+	 * The literals are from the enumeration {@link org.eclipse.n4js.ts.types.TypingStrategy}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Typing Strategy</em>' attribute.
+	 * @see org.eclipse.n4js.ts.types.TypingStrategy
+	 * @see #setTypingStrategy(TypingStrategy)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTInterface_TypingStrategy()
+	 * @model unique="false"
+	 * @generated
+	 */
+	TypingStrategy getTypingStrategy();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TInterface#getTypingStrategy <em>Typing Strategy</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Typing Strategy</em>' attribute.
+	 * @see org.eclipse.n4js.ts.types.TypingStrategy
+	 * @see #getTypingStrategy()
+	 * @generated
+	 */
+	void setTypingStrategy(TypingStrategy value);
 
 	/**
 	 * <!-- begin-user-doc -->

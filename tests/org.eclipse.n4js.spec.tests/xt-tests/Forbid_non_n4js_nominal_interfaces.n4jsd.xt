@@ -17,14 +17,16 @@
 
 
 
+// XPECT warnings --> "This annotation is deprecated and has no effect." at "N4JS"
 // XPECT noerrors -->
 @N4JS
 export external public interface I_N4JS {}
 
-// XPECT errors --> "External nominal interface declaration is missing @N4JS annotation." at "I"
+// changed in GH-2529 XPECT noerrors --> "External nominal interface declaration is missing @N4JS annotation." at "I"
 export external public interface I {}
 
-// XPECT noerrors -->
+// XPECT warnings --> "This annotation is deprecated and has no effect." at "N4JS"
+// XPECT errors --> "Only nominal interfaces can be annotated with @N4JS." at "N4JS"
 @N4JS
 export external public interface ~I_STRUCT_N4JS {}
 

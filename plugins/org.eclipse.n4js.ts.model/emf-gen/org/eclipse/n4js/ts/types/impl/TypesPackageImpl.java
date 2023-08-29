@@ -2400,8 +2400,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTN4Classifier_TypingStrategy() {
-		return (EAttribute)tn4ClassifierEClass.getEStructuralFeatures().get(3);
+	public EOperation getTN4Classifier__IsPolyfill() {
+		return tn4ClassifierEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -2410,8 +2410,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTN4Classifier__IsPolyfill() {
-		return tn4ClassifierEClass.getEOperations().get(0);
+	public EOperation getTN4Classifier__GetTypingStrategy() {
+		return tn4ClassifierEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -2440,7 +2440,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTClass_DeclaredN4JS() {
+	public EAttribute getTClass_DeclaredEcmaScript() {
 		return (EAttribute)tClassEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -2582,6 +2582,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	@Override
 	public EReference getTInterface_SuperInterfaceRefs() {
 		return (EReference)tInterfaceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getTInterface_TypingStrategy() {
+		return (EAttribute)tInterfaceEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -4070,12 +4080,12 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEAttribute(tn4ClassifierEClass, TN4_CLASSIFIER__EXTERNAL);
 		createEAttribute(tn4ClassifierEClass, TN4_CLASSIFIER__DECLARED_NON_STATIC_POLYFILL);
 		createEAttribute(tn4ClassifierEClass, TN4_CLASSIFIER__DYNAMIZABLE);
-		createEAttribute(tn4ClassifierEClass, TN4_CLASSIFIER__TYPING_STRATEGY);
 		createEOperation(tn4ClassifierEClass, TN4_CLASSIFIER___IS_POLYFILL);
+		createEOperation(tn4ClassifierEClass, TN4_CLASSIFIER___GET_TYPING_STRATEGY);
 
 		tClassEClass = createEClass(TCLASS);
 		createEAttribute(tClassEClass, TCLASS__DECLARED_ABSTRACT);
-		createEAttribute(tClassEClass, TCLASS__DECLARED_N4JS);
+		createEAttribute(tClassEClass, TCLASS__DECLARED_ECMA_SCRIPT);
 		createEAttribute(tClassEClass, TCLASS__DECLARED_FINAL);
 		createEAttribute(tClassEClass, TCLASS__DECLARED_STATIC_POLYFILL);
 		createEAttribute(tClassEClass, TCLASS__OBSERVABLE);
@@ -4091,6 +4101,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		tInterfaceEClass = createEClass(TINTERFACE);
 		createEReference(tInterfaceEClass, TINTERFACE__SUPER_INTERFACE_REFS);
+		createEAttribute(tInterfaceEClass, TINTERFACE__TYPING_STRATEGY);
 		createEOperation(tInterfaceEClass, TINTERFACE___IS_ABSTRACT);
 		createEOperation(tInterfaceEClass, TINTERFACE___GET_SUPER_CLASSIFIER_REFS);
 		createEOperation(tInterfaceEClass, TINTERFACE___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS);
@@ -4669,13 +4680,14 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEAttribute(getTN4Classifier_External(), theEcorePackage.getEBoolean(), "external", null, 0, 1, TN4Classifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTN4Classifier_DeclaredNonStaticPolyfill(), theEcorePackage.getEBoolean(), "declaredNonStaticPolyfill", null, 0, 1, TN4Classifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTN4Classifier_Dynamizable(), theEcorePackage.getEBoolean(), "dynamizable", "true", 0, 1, TN4Classifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTN4Classifier_TypingStrategy(), this.getTypingStrategy(), "typingStrategy", null, 0, 1, TN4Classifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getTN4Classifier__IsPolyfill(), theEcorePackage.getEBoolean(), "isPolyfill", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEOperation(getTN4Classifier__GetTypingStrategy(), this.getTypingStrategy(), "getTypingStrategy", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(tClassEClass, TClass.class, "TClass", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTClass_DeclaredAbstract(), theEcorePackage.getEBoolean(), "declaredAbstract", null, 0, 1, TClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTClass_DeclaredN4JS(), theEcorePackage.getEBoolean(), "declaredN4JS", null, 0, 1, TClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTClass_DeclaredEcmaScript(), theEcorePackage.getEBoolean(), "declaredEcmaScript", null, 0, 1, TClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTClass_DeclaredFinal(), theEcorePackage.getEBoolean(), "declaredFinal", null, 0, 1, TClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTClass_DeclaredStaticPolyfill(), theEcorePackage.getEBoolean(), "declaredStaticPolyfill", null, 0, 1, TClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTClass_Observable(), theEcorePackage.getEBoolean(), "observable", null, 0, 1, TClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4698,6 +4710,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEClass(tInterfaceEClass, TInterface.class, "TInterface", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTInterface_SuperInterfaceRefs(), theTypeRefsPackage.getParameterizedTypeRef(), null, "superInterfaceRefs", null, 0, -1, TInterface.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTInterface_TypingStrategy(), this.getTypingStrategy(), "typingStrategy", null, 0, 1, TInterface.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getTInterface__IsAbstract(), theEcorePackage.getEBoolean(), "isAbstract", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

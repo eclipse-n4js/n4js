@@ -76,7 +76,7 @@ var v24 : Array<? extends B> = [ b, ...[c] ];
 
 function getArrOfC(): C[] { return null; }
 
-class ~MyIterable<T> {
+class MyIterable<T> {
 	public [Symbol.iterator](): Iterator<T> { return null; }
 }
 let myIterableOfC: MyIterable<C>;

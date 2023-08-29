@@ -23,7 +23,9 @@ import * as Ex from "Ch05_03__StructuralTyping/Externals";
 interface ~SomeInterface{
 	public s : string;
 	public foo(p : number) : void
+	// XPECT warnings --> "Non-public members of structural interfaces are effectless." at "n"
 	n : number;
+	// XPECT warnings --> "Non-public members of structural interfaces are effectless." at "bar"
 	bar(p : string) : void
 }
 var someN4Object : SomeInterface;
@@ -69,7 +71,6 @@ fUseSite(new Impl());
 fUseSiteFields(new Impl());
 
 var someN4O : SomeN4O;
-// XPECT errors --> "All N4Objects must explicitly extend/implement definition site structural type SomeInterface." at "someN4O"
 fDefSite(someN4O);
 // OK, use site
 fUseSite(someN4O);

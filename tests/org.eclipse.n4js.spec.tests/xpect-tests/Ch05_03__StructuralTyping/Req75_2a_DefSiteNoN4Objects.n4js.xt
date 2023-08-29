@@ -11,9 +11,9 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
-class ~T {
+interface ~T {
 	public n : number;
-	public foo() {}
+	public foo();
 }
 class X {
 	public n : number;
@@ -22,5 +22,5 @@ class X {
 
 var x : X;
 var t : T;
-// XPECT errors --> "All N4Objects must explicitly extend/implement definition site structural type T." at "x"
+// changed in GH-2529 XPECT noerrors --> "All N4Objects must explicitly extend/implement definition site structural type T." at "x"
 t = x;

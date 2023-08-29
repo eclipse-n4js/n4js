@@ -15,37 +15,37 @@
 // As return value //
 /////////////////////
 
-class ~A1 {
+class A1 {
 	public a : number;
 }
 
-class ~B2<T> extends A1 {
+class B2<T> extends A1 {
 	public s : T;
 }
 
 // structural as return value XPECT noerrors -->
-function g1 () : A1 { return {a: 2}; }
+function g1 () : ~A1 { return {a: 2}; }
 
-// structural as return value: function call XPECT errors --> "Structural type A1 is not a subtype of non-structural type string." at "g1()"
+// structural as return value: function call XPECT errors --> "Structural type ~A1 is not a subtype of non-structural type string." at "g1()"
 var g1v : string = g1();
 
 // structural as return value 2 XPECT noerrors -->
-function g1a (n : number) : A1 { return {a: n}; }
+function g1a (n : number) : ~A1 { return {a: n}; }
 
-// structural as return value 2: function call XPECT errors --> "Structural type A1 is not a subtype of non-structural type string." at "g1a(3)"
+// structural as return value 2: function call XPECT errors --> "Structural type ~A1 is not a subtype of non-structural type string." at "g1a(3)"
 var g1av : string = g1a(3);
 
 // structural parameterized as return value; primitive parameter XPECT noerrors -->
-function g2 (s : string) : B2<string> { return {a: 2, s: s}; }
+function g2 (s : string) : ~B2<string> { return {a: 2, s: s}; }
 
-// structural parameterized as return value; primitive parameter: function call XPECT errors --> "Structural type B2<string> is not a subtype of non-structural type string." at "g2("f")"
+// structural parameterized as return value; primitive parameter: function call XPECT errors --> "Structural type ~B2<string> is not a subtype of non-structural type string." at "g2("f")"
 var g2v : string = g2("f");
 
 // structural parameterized as return value; structural parameter XPECT noerrors -->
-function g3 (s : A1) : B2<A1> { return {a: 2, s: s}; }
+function g3 (s : ~A1) : ~B2<~A1> { return {a: 2, s: s}; }
 
-// structural parameterized as return value; primitive parameter: function call XPECT errors --> "Structural type B2<A1> is not a subtype of non-structural type string." at "g3({a: 3})"
+// structural parameterized as return value; primitive parameter: function call XPECT errors --> "Structural type ~B2<~A1> is not a subtype of non-structural type string." at "g3({a: 3})"
 var g3v : string = g3({a: 3});
 
-// structural parameterized as return value; primitive parameter: function call 2 XPECT errors --> "Structural type B2<A1> is not a subtype of non-structural type string." at "g3(g1a(8))"
+// structural parameterized as return value; primitive parameter: function call 2 XPECT errors --> "Structural type ~B2<~A1> is not a subtype of non-structural type string." at "g3(g1a(8))"
 var g3v2 : string = g3(g1a(8));

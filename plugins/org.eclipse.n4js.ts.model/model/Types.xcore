@@ -1181,21 +1181,24 @@ class TN4Classifier extends TClassifier, AccessibleTypeElement, ArrayLike {
 	 * Flag indicating whether references to this type may be flagged as dynamic.
 	 */
 	boolean dynamizable = "true"
+
+	op boolean isPolyfill() {
+		return declaredNonStaticPolyfill;
+	}
+
 	/*
 	 * The typing strategy on definition site, nominal typing by default.
 	 * Could be changed to structural but not to structural field.
 	 * The latter is only available on use site.
 	 */
-	TypingStrategy typingStrategy
-
-	op boolean isPolyfill() {
-		return declaredNonStaticPolyfill;
+	op TypingStrategy getTypingStrategy() {
+		return TypingStrategy.NOMINAL;
 	}
 }
 
 class TClass extends TN4Classifier {
 	boolean declaredAbstract
-	boolean declaredN4JS
+	boolean declaredEcmaScript
 	boolean declaredFinal
 	boolean declaredStaticPolyfill
 	boolean observable
@@ -1247,6 +1250,8 @@ class TClass extends TN4Classifier {
 
 class TInterface extends TN4Classifier {
 	contains ParameterizedTypeRef[] superInterfaceRefs
+	
+	TypingStrategy typingStrategy
 
 	op boolean isAbstract() {
 		return true
@@ -1265,7 +1270,7 @@ class TInterface extends TN4Classifier {
 	}
 	
 	op boolean isHollow() {
-		return isExternal() && !annotations.exists[it.name == "N4JS"]
+		return typingStrategy === TypingStrategy.STRUCTURAL
 	}
 }
 

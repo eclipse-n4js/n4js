@@ -12,6 +12,7 @@ package org.eclipse.n4js.scoping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -42,7 +43,6 @@ import org.eclipse.n4js.utils.DeclMergingUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.RecursionGuard;
 import org.eclipse.n4js.utils.ResourceType;
-import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
@@ -66,9 +66,6 @@ public class ExportedElementsCollector {
 
 	@Inject
 	private VariableVisibilityChecker variableVisibilityChecker;
-
-	@Inject
-	private JavaScriptVariantHelper variantHelper;
 
 	@Inject
 	private MemberScopingHelper memberScopingHelper;
@@ -150,7 +147,7 @@ public class ExportedElementsCollector {
 		doCollectElements(namespace, info);
 
 		if (DeclMergingUtils.mayBeMerged(namespace)) {
-			List<AbstractNamespace> mergedNamespaces = declMergingHelper.getMergedElements(info.contextResource,
+			Set<AbstractNamespace> mergedNamespaces = declMergingHelper.getMergedElements(info.contextResource,
 					namespace);
 			for (AbstractNamespace mergedNamespace : mergedNamespaces) {
 				doCollectElements(mergedNamespace, info);
@@ -193,7 +190,7 @@ public class ExportedElementsCollector {
 				if (info.tryNext(exportedModule)) {
 					doCollectElements(exportedModule, info);
 					if (DeclMergingUtils.mayBeMerged(exportedModule)) {
-						List<AbstractNamespace> mergedNamespaces = declMergingHelper.getMergedElements(
+						Set<AbstractNamespace> mergedNamespaces = declMergingHelper.getMergedElements(
 								info.contextResource, exportedModule);
 						for (AbstractNamespace mergedNamespace : mergedNamespaces) {
 							doCollectElements(mergedNamespace, info);
@@ -226,7 +223,7 @@ public class ExportedElementsCollector {
 	private void doCollectElement(String exportedName, TExportableElement exportedElem, CollectionInfo info) {
 
 		boolean include = N4JSLanguageUtils.checkInclude(exportedElem,
-				info.includeHollows, info.includeValueOnlyElements, variantHelper);
+				info.includeHollows, info.includeValueOnlyElements);
 
 		if (include) {
 			TypeVisibility visibility = isVisible(info.contextResource, exportedElem);

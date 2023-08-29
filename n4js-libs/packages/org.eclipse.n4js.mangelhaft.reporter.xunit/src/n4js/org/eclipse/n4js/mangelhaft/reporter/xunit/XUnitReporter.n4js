@@ -20,7 +20,7 @@ import * as xmlbuilder+ from "xmlbuilder2"
 import {outputTextFile} from "org/eclipse/n4js/mangelhaft/util/fs";
 
 
-export public class ~XUnitReportSpec {
+export public class XUnitReportSpec {
     /**
      * Output jUnit/xUnit report file.
      */

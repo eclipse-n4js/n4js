@@ -33,14 +33,8 @@
 // for classes:
 
 @Polyfill
-// XPECT errors --> "Polyfill SomeClass cannot be declared definition-site structural, must be defined nominal just as the filled class." at "SomeClass"
-export external public class ~SomeClass extends SomeClass {
-	additionalMethod();
-}
-
-@Polyfill
-// XPECT errors --> "Polyfill SomeStructClass cannot be declared nominal, must be defined definition-site structural just as the filled class." at "SomeStructClass"
-export external public class SomeStructClass extends SomeStructClass {
+// XPECT noerrors --> "Polyfill SomeClass cannot be declared definition-site structural, must be defined nominal just as the filled class." at "SomeClass"
+export external public class SomeClass extends SomeClass {
 	additionalMethod();
 }
 
@@ -54,7 +48,6 @@ export external public interface ~SomeInterface extends SomeInterface {
 }
 
 @Polyfill
-@N4JS
 // XPECT errors --> "Polyfill SomeStructInterface cannot be declared nominal, must be defined definition-site structural just as the filled interface." at "SomeStructInterface"
 export external public interface SomeStructInterface extends SomeStructInterface {
 	additionalMethod();

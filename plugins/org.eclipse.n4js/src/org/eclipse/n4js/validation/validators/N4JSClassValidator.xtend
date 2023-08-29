@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ObjectLiteral
+import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
 import org.eclipse.n4js.scoping.builtin.N4Scheme
@@ -41,6 +42,7 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TypesPackage
+import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
@@ -59,7 +61,6 @@ import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.*
 import static org.eclipse.n4js.ts.types.TypingStrategy.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.StaticPolyfillValidatorExtension.*
-import org.eclipse.n4js.n4JS.PropertyNameValuePair
 
 /**
  * superfluous properties in {@code @Spec} constructor.
@@ -98,6 +99,9 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 					N4_TYPE_DECLARATION__NAME, CLF_TEST_CLASS_NOT_EXPORTED
 				);
 			}
+		}
+		if (classDecl.typingStrategy === TypingStrategy.STRUCTURAL) {
+			addIssue(getMessageForCLF_MUST_BE_NOMINAL, classDecl, N4JSPackage.eINSTANCE.n4ClassifierDeclaration_TypingStrategy, CLF_MUST_BE_NOMINAL);
 		}
 	}
 
@@ -201,7 +205,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 			if (field !== null) {
 				val containingClassifier = field.containingType;
 				if (containingClassifier instanceof TInterface) {
-					if (N4JSLanguageUtils.builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation(containingClassifier)) {
+					if (N4JSLanguageUtils.builtInOrProvidedByRuntime(containingClassifier)) {
 						val message = getMessageForCLF_SPEC_BUILT_IN_OR_PROVIDED_BY_RUNTIME_OR_EXTENAL_WITHOUT_N4JS_ANNOTATION(field.name, containingClassifier.name);
 						val feature = if ((property.astElement as PropertyNameValuePair).property === null) PROPERTY_NAME_OWNER__DECLARED_NAME
 										else N4JSPackage.eINSTANCE.propertyNameValuePair_Property;

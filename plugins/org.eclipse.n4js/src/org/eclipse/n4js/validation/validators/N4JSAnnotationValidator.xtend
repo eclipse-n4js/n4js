@@ -60,6 +60,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 
 /**
  * Annotation validation rules for N4JS.
@@ -179,6 +180,8 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 					internalCheckStaticPolyfill(annotation)
 				case N4JS.name:
 					internalCheckN4JS(annotation)
+				case ECMASCRIPT.name:
+					internalCheckECMASCRIPT(annotation)
 				/*case TEST_GROUP.name,*/ // checked in internalCheckRepeatableAnnotations()
 				case TEST_METHOD.name,
 				case PARAMETERS.name,
@@ -391,6 +394,36 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 		if (!jsVariantHelper.isExternalMode(element)) {
 			addIssue(getMessageForANN_DISALLOWED_IN_NONDEFINTION_FILE(annotation.name), annotation, ANNOTATION__NAME,
 				ANN_DISALLOWED_IN_NONDEFINTION_FILE);
+			return;
+		}
+		if (element instanceof ExportDeclaration 
+			&& (element as ExportDeclaration).exportedElement instanceof N4InterfaceDeclaration
+			&& ((element as ExportDeclaration).exportedElement as N4InterfaceDeclaration).typingStrategy === TypingStrategy.STRUCTURAL
+			) {
+				addIssue(getMessageForANN_DISALLOWED_ON_SHAPES(annotation.name), annotation, ANNOTATION__NAME,
+					ANN_DISALLOWED_ON_SHAPES);
+		}
+	}
+
+	/**
+	 * Check ECMASCRIPT annotation to be in definition file.
+	 */
+	private def internalCheckECMASCRIPT(Annotation annotation) {
+		val element = annotation.annotatedElement;
+		if (element === null) {
+			return;
+		}
+		if (!jsVariantHelper.isExternalMode(element)) {
+			addIssue(getMessageForANN_ONL_ALLOWED_AT_CLASSES_IN_N4JSD(annotation.name), annotation, ANNOTATION__NAME,
+				ANN_ONL_ALLOWED_AT_CLASSES_IN_N4JSD);
+			return;
+		}
+		if (element instanceof ExportDeclaration 
+			&& !((element as ExportDeclaration).exportedElement instanceof N4ClassDeclaration)
+			) {
+				
+			addIssue(getMessageForANN_ONL_ALLOWED_AT_CLASSES_IN_N4JSD(annotation.name), annotation, ANNOTATION__NAME,
+				ANN_ONL_ALLOWED_AT_CLASSES_IN_N4JSD);
 			return;
 		}
 	}

@@ -6,6 +6,7 @@
 export external public type FlatArray<Arr,Depth extends number> = any+;
 
 @Polyfill
+@EcmaScript
 export external public class Array<T> extends Array<T> {
 	public <U,This> flatMap(callback: {@This(This) function(value: T, index: number, array: Array<T>): (U | ReadonlyArray<U>)}, thisArg: This = ): Array<U>;
 	public <A,D extends number> flat(depth: D = ): Array<FlatArray<A,D>>;

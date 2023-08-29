@@ -13866,15 +13866,15 @@ rule__N4MemberDeclaration__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getN4MemberDeclarationAccess().getN4MethodDeclarationParserRuleCall_3()); }
-		(ruleN4MethodDeclaration)
-		{ after(grammarAccess.getN4MemberDeclarationAccess().getN4MethodDeclarationParserRuleCall_3()); }
+		{ before(grammarAccess.getN4MemberDeclarationAccess().getN4CallSignatureDeclarationParserRuleCall_3()); }
+		(ruleN4CallSignatureDeclaration)
+		{ after(grammarAccess.getN4MemberDeclarationAccess().getN4CallSignatureDeclarationParserRuleCall_3()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getN4MemberDeclarationAccess().getN4CallSignatureDeclarationParserRuleCall_4()); }
-		ruleN4CallSignatureDeclaration
-		{ after(grammarAccess.getN4MemberDeclarationAccess().getN4CallSignatureDeclarationParserRuleCall_4()); }
+		{ before(grammarAccess.getN4MemberDeclarationAccess().getN4MethodDeclarationParserRuleCall_4()); }
+		(ruleN4MethodDeclaration)
+		{ after(grammarAccess.getN4MemberDeclarationAccess().getN4MethodDeclarationParserRuleCall_4()); }
 	)
 	|
 	(
@@ -13911,15 +13911,15 @@ norm1_N4MemberDeclaration__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getN4MemberDeclarationAccess().getN4MethodDeclarationParserRuleCall_3()); }
-		(norm1_N4MethodDeclaration)
-		{ after(grammarAccess.getN4MemberDeclarationAccess().getN4MethodDeclarationParserRuleCall_3()); }
+		{ before(grammarAccess.getN4MemberDeclarationAccess().getN4CallSignatureDeclarationParserRuleCall_3()); }
+		(norm1_N4CallSignatureDeclaration)
+		{ after(grammarAccess.getN4MemberDeclarationAccess().getN4CallSignatureDeclarationParserRuleCall_3()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getN4MemberDeclarationAccess().getN4CallSignatureDeclarationParserRuleCall_4()); }
-		norm1_N4CallSignatureDeclaration
-		{ after(grammarAccess.getN4MemberDeclarationAccess().getN4CallSignatureDeclarationParserRuleCall_4()); }
+		{ before(grammarAccess.getN4MemberDeclarationAccess().getN4MethodDeclarationParserRuleCall_4()); }
+		(norm1_N4MethodDeclaration)
+		{ after(grammarAccess.getN4MemberDeclarationAccess().getN4MethodDeclarationParserRuleCall_4()); }
 	)
 	|
 	(
@@ -70134,9 +70134,9 @@ rule__N4CallSignatureDeclaration__Group__0__Impl
 	}
 :
 (
-	{ before(grammarAccess.getN4CallSignatureDeclarationAccess().getTypeParametersParserRuleCall_0()); }
-	(ruleTypeParameters)?
-	{ after(grammarAccess.getN4CallSignatureDeclarationAccess().getTypeParametersParserRuleCall_0()); }
+	{ before(grammarAccess.getN4CallSignatureDeclarationAccess().getDeclaredModifiersAssignment_0()); }
+	(rule__N4CallSignatureDeclaration__DeclaredModifiersAssignment_0)*
+	{ after(grammarAccess.getN4CallSignatureDeclarationAccess().getDeclaredModifiersAssignment_0()); }
 )
 ;
 finally {
@@ -70161,9 +70161,9 @@ rule__N4CallSignatureDeclaration__Group__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getN4CallSignatureDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_1()); }
-	ruleMethodParamsReturnAndBody
-	{ after(grammarAccess.getN4CallSignatureDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_1()); }
+	{ before(grammarAccess.getN4CallSignatureDeclarationAccess().getTypeParametersParserRuleCall_1()); }
+	(ruleTypeParameters)?
+	{ after(grammarAccess.getN4CallSignatureDeclarationAccess().getTypeParametersParserRuleCall_1()); }
 )
 ;
 finally {
@@ -70176,6 +70176,7 @@ rule__N4CallSignatureDeclaration__Group__2
 	}
 :
 	rule__N4CallSignatureDeclaration__Group__2__Impl
+	rule__N4CallSignatureDeclaration__Group__3
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -70187,9 +70188,35 @@ rule__N4CallSignatureDeclaration__Group__2__Impl
 	}
 :
 (
-	{ before(grammarAccess.getN4CallSignatureDeclarationAccess().getSemicolonKeyword_2()); }
+	{ before(grammarAccess.getN4CallSignatureDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_2()); }
+	ruleMethodParamsReturnAndBody
+	{ after(grammarAccess.getN4CallSignatureDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_2()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__N4CallSignatureDeclaration__Group__3
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__N4CallSignatureDeclaration__Group__3__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__N4CallSignatureDeclaration__Group__3__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getN4CallSignatureDeclarationAccess().getSemicolonKeyword_3()); }
 	(Semicolon)?
-	{ after(grammarAccess.getN4CallSignatureDeclarationAccess().getSemicolonKeyword_2()); }
+	{ after(grammarAccess.getN4CallSignatureDeclarationAccess().getSemicolonKeyword_3()); }
 )
 ;
 finally {
@@ -70215,9 +70242,9 @@ norm1_N4CallSignatureDeclaration__Group__0__Impl
 	}
 :
 (
-	{ before(grammarAccess.getN4CallSignatureDeclarationAccess().getTypeParametersParserRuleCall_0()); }
-	(ruleTypeParameters)?
-	{ after(grammarAccess.getN4CallSignatureDeclarationAccess().getTypeParametersParserRuleCall_0()); }
+	{ before(grammarAccess.getN4CallSignatureDeclarationAccess().getDeclaredModifiersAssignment_0()); }
+	(norm1_N4CallSignatureDeclaration__DeclaredModifiersAssignment_0)*
+	{ after(grammarAccess.getN4CallSignatureDeclarationAccess().getDeclaredModifiersAssignment_0()); }
 )
 ;
 finally {
@@ -70242,9 +70269,9 @@ norm1_N4CallSignatureDeclaration__Group__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getN4CallSignatureDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_1()); }
-	ruleMethodParamsReturnAndBody
-	{ after(grammarAccess.getN4CallSignatureDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_1()); }
+	{ before(grammarAccess.getN4CallSignatureDeclarationAccess().getTypeParametersParserRuleCall_1()); }
+	(ruleTypeParameters)?
+	{ after(grammarAccess.getN4CallSignatureDeclarationAccess().getTypeParametersParserRuleCall_1()); }
 )
 ;
 finally {
@@ -70257,6 +70284,7 @@ norm1_N4CallSignatureDeclaration__Group__2
 	}
 :
 	norm1_N4CallSignatureDeclaration__Group__2__Impl
+	norm1_N4CallSignatureDeclaration__Group__3
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -70268,9 +70296,35 @@ norm1_N4CallSignatureDeclaration__Group__2__Impl
 	}
 :
 (
-	{ before(grammarAccess.getN4CallSignatureDeclarationAccess().getSemicolonKeyword_2()); }
+	{ before(grammarAccess.getN4CallSignatureDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_2()); }
+	ruleMethodParamsReturnAndBody
+	{ after(grammarAccess.getN4CallSignatureDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_2()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+norm1_N4CallSignatureDeclaration__Group__3
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	norm1_N4CallSignatureDeclaration__Group__3__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+norm1_N4CallSignatureDeclaration__Group__3__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getN4CallSignatureDeclarationAccess().getSemicolonKeyword_3()); }
 	(Semicolon)?
-	{ after(grammarAccess.getN4CallSignatureDeclarationAccess().getSemicolonKeyword_2()); }
+	{ after(grammarAccess.getN4CallSignatureDeclarationAccess().getSemicolonKeyword_3()); }
 )
 ;
 finally {
@@ -91878,6 +91932,36 @@ norm1_N4MethodDeclaration__DeclaredNameAssignment_0_0_4_1_0
 		{ before(grammarAccess.getN4MethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_4_1_0_0()); }
 		norm1_LiteralOrComputedPropertyName
 		{ after(grammarAccess.getN4MethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_4_1_0_0()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__N4CallSignatureDeclaration__DeclaredModifiersAssignment_0
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getN4CallSignatureDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0()); }
+		ruleN4Modifier
+		{ after(grammarAccess.getN4CallSignatureDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+norm1_N4CallSignatureDeclaration__DeclaredModifiersAssignment_0
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getN4CallSignatureDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0()); }
+		ruleN4Modifier
+		{ after(grammarAccess.getN4CallSignatureDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0()); }
 	)
 ;
 finally {

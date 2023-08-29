@@ -16,6 +16,7 @@ export external public interface ~PromiseRejectedResult {
 export external public type PromiseSettledResult<T> = PromiseFulfilledResult<T> | PromiseRejectedResult;
 
 @Polyfill
+@EcmaScript
 export external public class Promise<out S, out F = any> extends Promise<S,F> {
 	public static allSettled(...args: any+): any+; // overloading not supported
 }

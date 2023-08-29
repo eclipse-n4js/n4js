@@ -9,6 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+@EcmaScript
 @Api export public class CompanionClass {
 }
 

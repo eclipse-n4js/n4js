@@ -56,7 +56,6 @@ class IterStruct<T> {
 	public [Symbol.iterator]() : Iterator<T> {return null;}
 }
 var v4 : IterStruct<A>;
-// found during IDE-1852: XPECT FIXME noerrors
 // XPECT type of 'a4' --> A
 // XPECT type of 'b4' --> A
 var [a4,b4] = v4;

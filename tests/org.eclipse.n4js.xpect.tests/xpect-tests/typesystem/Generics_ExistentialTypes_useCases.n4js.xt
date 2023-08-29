@@ -84,7 +84,7 @@ let g: G1<?,?>;
 // /org.eclipse.n4js.bugreports.tests/bugreports-tests/IDEBUG_0593_Type_var_not_correctly_substituted_with_wildcard.n4js.xt
 interface ~I2 {}
 
-class ~C2<T extends I2> {
+class C2<T extends I2> {
     public unit: T;
 }
 

@@ -50,7 +50,6 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#isExternal <em>External</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#isDeclaredNonStaticPolyfill <em>Declared Non Static Polyfill</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#isDynamizable <em>Dynamizable</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#getTypingStrategy <em>Typing Strategy</em>}</li>
  * </ul>
  *
  * @generated
@@ -165,26 +164,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * @ordered
 	 */
 	protected boolean dynamizable = DYNAMIZABLE_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getTypingStrategy() <em>Typing Strategy</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTypingStrategy()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final TypingStrategy TYPING_STRATEGY_EDEFAULT = TypingStrategy.DEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getTypingStrategy() <em>Typing Strategy</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTypingStrategy()
-	 * @generated
-	 * @ordered
-	 */
-	protected TypingStrategy typingStrategy = TYPING_STRATEGY_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -371,31 +350,18 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * @generated
 	 */
 	@Override
-	public TypingStrategy getTypingStrategy() {
-		return typingStrategy;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setTypingStrategy(TypingStrategy newTypingStrategy) {
-		TypingStrategy oldTypingStrategy = typingStrategy;
-		typingStrategy = newTypingStrategy == null ? TYPING_STRATEGY_EDEFAULT : newTypingStrategy;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TN4_CLASSIFIER__TYPING_STRATEGY, oldTypingStrategy, typingStrategy));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public boolean isPolyfill() {
 		return this.isDeclaredNonStaticPolyfill();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypingStrategy getTypingStrategy() {
+		return TypingStrategy.NOMINAL;
 	}
 
 	/**
@@ -480,8 +446,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				return isDeclaredNonStaticPolyfill();
 			case TypesPackage.TN4_CLASSIFIER__DYNAMIZABLE:
 				return isDynamizable();
-			case TypesPackage.TN4_CLASSIFIER__TYPING_STRATEGY:
-				return getTypingStrategy();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -511,9 +475,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				return;
 			case TypesPackage.TN4_CLASSIFIER__DYNAMIZABLE:
 				setDynamizable((Boolean)newValue);
-				return;
-			case TypesPackage.TN4_CLASSIFIER__TYPING_STRATEGY:
-				setTypingStrategy((TypingStrategy)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -545,9 +506,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 			case TypesPackage.TN4_CLASSIFIER__DYNAMIZABLE:
 				setDynamizable(DYNAMIZABLE_EDEFAULT);
 				return;
-			case TypesPackage.TN4_CLASSIFIER__TYPING_STRATEGY:
-				setTypingStrategy(TYPING_STRATEGY_EDEFAULT);
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -572,8 +530,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				return declaredNonStaticPolyfill != DECLARED_NON_STATIC_POLYFILL_EDEFAULT;
 			case TypesPackage.TN4_CLASSIFIER__DYNAMIZABLE:
 				return dynamizable != DYNAMIZABLE_EDEFAULT;
-			case TypesPackage.TN4_CLASSIFIER__TYPING_STRATEGY:
-				return typingStrategy != TYPING_STRATEGY_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -667,6 +623,8 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 		switch (operationID) {
 			case TypesPackage.TN4_CLASSIFIER___IS_POLYFILL:
 				return isPolyfill();
+			case TypesPackage.TN4_CLASSIFIER___GET_TYPING_STRATEGY:
+				return getTypingStrategy();
 			case TypesPackage.TN4_CLASSIFIER___IS_PROVIDED_BY_RUNTIME:
 				return isProvidedByRuntime();
 			case TypesPackage.TN4_CLASSIFIER___GET_TYPE_ACCESS_MODIFIER:
@@ -697,8 +655,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 		result.append(declaredNonStaticPolyfill);
 		result.append(", dynamizable: ");
 		result.append(dynamizable);
-		result.append(", typingStrategy: ");
-		result.append(typingStrategy);
 		result.append(')');
 		return result.toString();
 	}

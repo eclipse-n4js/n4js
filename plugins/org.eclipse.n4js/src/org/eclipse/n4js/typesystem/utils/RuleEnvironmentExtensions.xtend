@@ -1096,8 +1096,7 @@ class RuleEnvironmentExtensions {
 
 		if (!guard.tryNext(declaredType)) {
 			if (declaredType instanceof TClass) {
-				if (declaredType == G.n4ObjectType || (declaredType.external && !declaredType.declaredN4JS) ||
-						declaredType.typingStrategy==TypingStrategy.STRUCTURAL) {
+				if (declaredType == G.n4ObjectType || (declaredType.external && declaredType.isDeclaredEcmaScript)) {
 							return G.builtInTypesAllImplicitSuperTypeRefs;
 				} else {
 					return G.n4ClassifiersAllImplicitSuperTypeRefs;
@@ -1112,8 +1111,7 @@ class RuleEnvironmentExtensions {
 				if (declaredType == G.objectType) {
 					emptyList
 				} else if (declaredType == G.n4ObjectType
-						|| (declaredType.external && !declaredType.declaredN4JS)
-						|| declaredType.typingStrategy==TypingStrategy.STRUCTURAL
+						|| (declaredType.external && declaredType.isDeclaredEcmaScript)
 						|| N4Scheme.isFromResourceWithN4Scheme(declaredType) ) {
 					G.builtInTypesAllImplicitSuperTypeRefs
 				} else {

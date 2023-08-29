@@ -737,6 +737,12 @@ import com.google.common.base.Strings;
 	}
 
 	@Override
+	public Boolean caseExpressionAnnotationList(ExpressionAnnotationList original) {
+		processAnnotations(original.getAnnotations());
+		return DONE;
+	}
+
+	@Override
 	public Boolean casePropertyNameValuePair(PropertyNameValuePair original) {
 		if (original.getDeclaredName() != null) {
 			processPropertyName(original);

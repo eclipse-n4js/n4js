@@ -4,6 +4,7 @@
 @@Global @@ProvidedByRuntime
 
 @Polyfill
+@EcmaScript
 export external public class Object extends Object {
 	public static values(obj: Object): any[];
 	public static entries(obj: Object): Iterable2<string, any>[];

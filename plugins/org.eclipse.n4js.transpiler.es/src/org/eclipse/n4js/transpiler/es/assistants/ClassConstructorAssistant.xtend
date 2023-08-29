@@ -222,7 +222,11 @@ class ClassConstructorAssistant extends TransformationAssistant {
 	}
 
 	def private Statement[] createInstanceFieldInitCode(N4ClassDeclaration classDecl, SpecInfo specInfo, SymbolTableEntry specObjSTE, Set<N4FieldDeclaration> fieldsWithExplicitDefinition) {
-		val allFields = classDecl.ownedFields.filter[!isStatic && !isConsumedFromInterface].toList;
+		val allFields = classDecl.ownedFields.filter[
+			!isStatic
+			&& !isConsumedFromInterface
+			&& !builtInOrProvidedByRuntime(state.info.getOriginalDefinedMember(it))
+		].toList;
 		if(specInfo!==null) {
 			// we have a spec-parameter -> we are in a spec-style constructor
 			val result = <Statement>newArrayList;
@@ -411,8 +415,8 @@ class ClassConstructorAssistant extends TransformationAssistant {
 
 		val implementedIfcSTEs = typeAssistant.getSuperInterfacesSTEs(classDecl).filter [
 			// regarding the cast to TInterface: see preconditions of ClassDeclarationTransformation
-			// regarding the entire line: generate $fieldInit call only if the interface is neither built-in nor provided by runtime nor external without @N4JS
-			!(originalTarget as TInterface).builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation;
+			// regarding the entire line: generate $fieldInit call only if the interface is neither built-in nor provided by runtime nor shape
+			!builtInOrProvidedByRuntimeOrShape(originalTarget as TInterface);
 		];
 		if (implementedIfcSTEs.empty) {
 			return #[];

@@ -44,11 +44,14 @@ import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
+import org.eclipse.n4js.n4JS.N4ClassDefinition
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
+import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
@@ -77,7 +80,6 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.parser.conversion.IdentifierValueConverter
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache
-import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
@@ -119,6 +121,7 @@ import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable
+import org.eclipse.n4js.ts.types.util.TypeModelUtils
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.types.utils.TypeCompareUtils
 import org.eclipse.n4js.types.utils.TypeUtils
@@ -127,7 +130,6 @@ import org.eclipse.n4js.typesystem.utils.AllSuperTypesCollector
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.utils.SuperTypesMapper
-import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
@@ -1295,10 +1297,10 @@ public class N4JSLanguageUtils {
 	 * The implementation of this method does *NOT* rely on type model elements and can therefore be used
 	 * in early stages before the types builder has run and in the transpiler!
 	 */
-	def static boolean hasRuntimeRepresentation(N4TypeDeclaration typeDecl, JavaScriptVariantHelper javaScriptVariantHelper) {
+	def static boolean hasRuntimeRepresentation(N4TypeDeclaration typeDecl) {
 		val isNumberOrStringBasedEnum = typeDecl instanceof N4EnumDeclaration
 			&& getEnumKind(typeDecl as N4EnumDeclaration) !== EnumKind.Normal;
-		return typeDecl !== null && !isNumberOrStringBasedEnum && !isHollowElement(typeDecl, javaScriptVariantHelper);
+		return typeDecl !== null && !isNumberOrStringBasedEnum && !isHollowElement(typeDecl);
 	}
 
 	/**
@@ -1308,21 +1310,19 @@ public class N4JSLanguageUtils {
 	 * The implementation of this method does *NOT* rely on the AST and can therefore be used in resources
 	 * that were loaded from the Xtext index.
 	 */
-	def static boolean hasRuntimeRepresentation(IdentifiableElement element, JavaScriptVariantHelper javaScriptVariantHelper) {
+	def static boolean hasRuntimeRepresentation(IdentifiableElement element) {
 		val isNumberOrStringBasedEnum = element instanceof TEnum
 			&& getEnumKind(element as TEnum) !== EnumKind.Normal;
-		return element !== null && !isNumberOrStringBasedEnum && !isHollowElement(element, javaScriptVariantHelper);
+		return element !== null && !isNumberOrStringBasedEnum && !isHollowElement(element);
 	}
 
 	/**
 	 * Tells whether the given element should be included (usually in a scope), based on the given includeHollows /
 	 * includeValueOnlyElements configuration.
 	 */
-	def static boolean checkInclude(TExportableElement elem, boolean includeHollows, boolean includeValueOnlyElements,
-		JavaScriptVariantHelper variantHelper) {
-
-		val include = (includeHollows || !N4JSLanguageUtils.isHollowElement(elem, variantHelper))
-				&& (includeValueOnlyElements || !N4JSLanguageUtils.isValueOnlyElement(elem, variantHelper));
+	def static boolean checkInclude(TExportableElement elem, boolean includeHollows, boolean includeValueOnlyElements) {
+		val include = (includeHollows || !N4JSLanguageUtils.isHollowElement(elem))
+				&& (includeValueOnlyElements || !N4JSLanguageUtils.isValueOnlyElement(elem));
 		return include;
 	}
 
@@ -1333,7 +1333,7 @@ public class N4JSLanguageUtils {
 	 *
 	 * @return {@code true} iff the given element is hollow.
 	 */
-	def static boolean isHollowElement(TypableElement typableElem, JavaScriptVariantHelper javaScriptVariantHelper) {
+	def static boolean isHollowElement(TypableElement typableElem) {
 		val isHollow = typableElem instanceof NamespaceElement && (typableElem as NamespaceElement).isHollow
 						|| typableElem instanceof Type && (typableElem as Type).isHollow;
 		return isHollow;
@@ -1344,30 +1344,71 @@ public class N4JSLanguageUtils {
 	 *
 	 * @return true iff the given element is value-only.
 	 */
-	def static boolean isValueOnlyElement(TypableElement typableElem, JavaScriptVariantHelper javaScriptVariantHelper) {
+	def static boolean isValueOnlyElement(TypableElement typableElem) {
 		val isValueOnly = typableElem instanceof VariableDeclaration
 						|| typableElem instanceof TVariable
 						|| typableElem instanceof FunctionDefinition
 						|| typableElem instanceof TFunction;
 		return isValueOnly;
 	}
-	
 
 	/**
-	 * Check if the interface is built-in or an external without N4JS annotation.
+	 * @see {@link N4JSLanguageUtils#builtInOrProvidedByRuntimeOrShape(TInterface)}
+	 */
+	def static boolean builtInOrProvidedByRuntimeOrShape(TMember member) {
+		if (member.eContainer instanceof TInterface) {
+			return N4JSLanguageUtils.builtInOrProvidedByRuntimeOrShape(member.eContainer as TInterface);
+		}
+		return false;
+	}	
+
+	/**
+	 * @see {@link N4JSLanguageUtils#builtInOrProvidedByRuntime(TInterface)}
+	 */
+	def static boolean builtInOrProvidedByRuntime(TMember member) {
+		if (member.eContainer instanceof TInterface) {
+			return N4JSLanguageUtils.builtInOrProvidedByRuntime(member.eContainer as TInterface);
+		}
+		return false;
+	}	
+
+	/**
+	 * Check if the interface is built-in, provided by runtime, or a shape.
+	 * 
+	 * Note: GHOLD388
 	 *
 	 * @param tinf
 	 *            The interface.
-	 * @return true if the interface is either built-in, provided by runtime or an external interface without N4JS annotation. Return false
+	 * @return true if the interface is either built-in, provided by runtime, or a shape. Return false
 	 *         otherwise.
 	 */
-	def static boolean builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation(TInterface tinf) {
-		val hasN4JSAnnotation = tinf.annotations.exists[AnnotationDefinition.N4JS.name == name];
-		val ts = tinf.typingStrategy;
-		val isDefStructural = ts != TypingStrategy.NOMINAL && ts != TypingStrategy.DEFAULT;
-		val fileExtensionCalculator = new XpectAwareFileExtensionCalculator;
-		val fileExt = fileExtensionCalculator.getXpectAwareFileExtension(tinf);
-		return TypeUtils.isBuiltIn(tinf) || tinf.providedByRuntime || (tinf.isExternal() && !hasN4JSAnnotation) || (isDefStructural && (fileExt == N4JSGlobals.N4JSD_FILE_EXTENSION));
+	def static boolean builtInOrProvidedByRuntimeOrShape(TInterface tinf) {
+		return builtInOrProvidedByRuntime(tinf) || TypeModelUtils.isStructural(tinf.typingStrategy);
+	}	
+
+	/**
+	 * Check if the interface is built-in, provided by runtime.
+	 * 
+	 * Note: GHOLD388
+	 *
+	 * @param tinf
+	 *            The interface.
+	 * @return true if the interface is either built-in, provided by runtime. Return false otherwise.
+	 */
+	def static boolean builtInOrProvidedByRuntime(TInterface tinf) {
+		return TypeUtils.isBuiltIn(tinf) || tinf.providedByRuntime;
+	}
+
+	/**
+	 * @return true iff the given classifier is either a shape or a class annotated with ECMASCRIPT
+	 */
+	def static boolean isShapeOrEcmaScript(N4ClassifierDefinition classifier) {
+		if (classifier instanceof N4ClassDefinition) {
+			return AnnotationDefinition.ECMASCRIPT.hasAnnotation(classifier);
+		} else if (classifier instanceof N4InterfaceDeclaration) {
+			return TypeModelUtils.isStructural(classifier.typingStrategy);
+		}
+		return false;
 	}
 
 	/**

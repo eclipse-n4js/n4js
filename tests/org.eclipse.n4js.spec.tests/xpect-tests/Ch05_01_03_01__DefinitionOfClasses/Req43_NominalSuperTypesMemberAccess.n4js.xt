@@ -11,7 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
-class ~A {
+class A {
 	foo() {}
 }
 
@@ -23,5 +23,5 @@ var b : B;
 b.foo();
 
 var a : A ;
-// control only XPECT errors --> "method foo is not available for structurally defined type A." at "foo"
+// control only XPECT noerrors --> "method foo is not available for structurally defined type A." at "foo"
 a.foo();

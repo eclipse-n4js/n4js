@@ -9,10 +9,15 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+
+@EcmaScript
 export external public class JsLibrary {}
+
+@EcmaScript
 export external public class JsLibraryExplicit extends Object {}
 
-@N4JS
+
+
 export external public class N4JSLibrary {}
-@N4JS
+
 export external public class N4JSLibraryExplicit extends N4Object {}

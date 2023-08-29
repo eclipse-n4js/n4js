@@ -48,5 +48,5 @@ class C {
 }
 
 var c : C = new C();
-// C has the property but cannot access it bc C is not iterable XPECT errors --> "Access of property Symbol.iterator only allowed for instances of Iterable, immediate instances of Object, and dynamic types." at "Symbol.iterator"
+// changed in GH-2529: C has the property but cannot access it bc C is not iterable XPECT noerrors --> "Access of property Symbol.iterator only allowed for instances of Iterable, immediate instances of Object, and dynamic types." at "Symbol.iterator"
 var iC = c[Symbol.iterator]();

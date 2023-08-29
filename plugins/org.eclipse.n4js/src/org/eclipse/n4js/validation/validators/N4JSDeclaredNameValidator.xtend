@@ -384,7 +384,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 			eo2 = eo.importedElement
 		}
 
-		return (eo2 instanceof TypableElement && N4JSLanguageUtils.isValueOnlyElement(eo2 as TypableElement, jsVariantHelper));
+		return (eo2 instanceof TypableElement && N4JSLanguageUtils.isValueOnlyElement(eo2 as TypableElement));
 	}
 	
 	def private boolean isHollow(EObject eo) {
@@ -392,7 +392,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 		if (eo instanceof NamedImportSpecifier) {
 			eo2 = eo.importedElement
 		}
-		return (eo2 instanceof TypableElement && N4JSLanguageUtils.isHollowElement(eo2 as TypableElement, jsVariantHelper));
+		return (eo2 instanceof TypableElement && N4JSLanguageUtils.isHollowElement(eo2 as TypableElement));
 	}
 
 	/**

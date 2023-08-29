@@ -33,7 +33,7 @@
 
 import * as React from "react"
 
-class ~Props {
+class Props {
 	public myProp: string;
 }
 

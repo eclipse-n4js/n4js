@@ -4,9 +4,11 @@
 @@Global @@ProvidedByRuntime
 
 @Polyfill
+@EcmaScript
 export external public class Symbol extends Symbol {}
 
 @Polyfill
+@EcmaScript
 export external public class RegExp extends RegExp {
 	public [Symbol.matchAll](str: string): IterableIterator<RegExpMatchArray>;
 }

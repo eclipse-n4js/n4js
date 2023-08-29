@@ -26,23 +26,23 @@ class A<T> {
 }
 
 // B is a structural class
-class ~B {
+class B {
 	public s : string;
 	public n : number;
 }
 
-var classA : A<B> = new A<B>();
+var classA : A<~B> = new A<~B>();
 classA.a = { s: "S", n: 4 };
 
-// does not return a B XPECT errors --> "Promise<B,?> is not a structural subtype of B: missing field n and 1 more." at "classA.getA()"
-var b1 : B = classA.getA();
+// does not return a B XPECT errors --> "Promise<~B,?> is not a structural subtype of ~B: missing field n and 1 more." at "classA.getA()"
+var b1 : ~B = classA.getA();
 
-// returns a Promise<B,?> XPECT noerrors -->
-var b2 : Promise<B,?> = classA.getA();
+// returns a Promise<~B,?> XPECT noerrors -->
+var b2 : Promise<~B,?> = classA.getA();
 
 
-// does not return a B XPECT errors --> "Promise<B,?> is not a structural subtype of B: missing field n and 1 more." at "classA.getA2()"
-var b3 : B = classA.getA2();
+// does not return a B XPECT errors --> "Promise<~B,?> is not a structural subtype of ~B: missing field n and 1 more." at "classA.getA2()"
+var b3 : ~B = classA.getA2();
 
-// returns a Promise<B,?> XPECT noerrors -->
-var b4 : Promise<B,?> = classA.getA2();
+// returns a Promise<~B,?> XPECT noerrors -->
+var b4 : Promise<~B,?> = classA.getA2();

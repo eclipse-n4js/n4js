@@ -23,7 +23,6 @@ external class C {
 	const continue: any;
 	const finally: any;
 }
-@N4JS
 external interface I {
 	const break: any;
 	static case(): void

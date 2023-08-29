@@ -263,7 +263,7 @@ export project class N4Annotation extends Object {
 	public target: N4Element;
 }
 
-interface ~N4Provider<out T> {
+interface N4Provider<out T> {
 
 	public abstract get(): T
 }

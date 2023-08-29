@@ -20,11 +20,13 @@ import org.eclipse.n4js.transpiler.es.assistants.DelegationAssistant
 import org.eclipse.n4js.transpiler.im.DelegatingMember
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.TField
+import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
+import org.eclipse.n4js.ts.types.TypingStrategy
+import org.eclipse.n4js.utils.Log
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-import org.eclipse.n4js.utils.Log
 
 /**
  * Handles some special cases where code has to be emitted for non-owned members, e.g. for members consumed by an
@@ -74,42 +76,58 @@ class MemberPatchingTransformation extends Transformation {
 				// InterfaceDeclarationTransformation#createInstanceFieldInitializationFunction(N4InterfaceDeclaration, SymbolTableEntry)
 			}
 		}
+
+		for(field : cmoft.fieldsPurelyMixedInNotOverridingAccessor) {
+			if (cmoft.inlinedMembersFromShapes.contains(field)) {
+				val member = _N4MemberDecl(field);
+				ifcDecl.ownedMembersRaw += member;
+				state.info.setOriginalDefinedMember(member, field);
+			}
+		}
 	}
 
 	def private dispatch void transformClassifierDecl(N4ClassDeclaration classDecl) {
 		val tClass = state.info.getOriginalDefinedType(classDecl);
 		val cmoft = typeAssistant.getOrCreateCMOFT(tClass);
 
-		// add delegates to methods consumed from an interface
+		// add delegates to methods consumed from a nominal interface
 		val consumedMethods = cmoft.ownedAndMixedInConcreteMembers.filter(TMethod).filter[m|m.eContainer!==tClass].toList;
 		for(m : consumedMethods) {
 			val member = delegationAssistant.createDelegatingMember(tClass, m);
-			state.info.markAsConsumedFromInterface(member);
+			if (!isInStructuralInterface(m)) {
+				state.info.markAsConsumedFromInterface(member);
+			}
 			classDecl.ownedMembersRaw += member;
 		}
 
-		// add delegates to getters/setters consumed from an interface
+		// add delegates to getters/setters consumed from a nominal interface
 		for(accTuple : cmoft.concreteAccessorTuples) {
 			if(accTuple.getter!==null && accTuple.getter.containingType!==tClass && accTuple.inheritedGetter===null) {
 				val g = accTuple.getter;
 				val member = delegationAssistant.createDelegatingMember(tClass, g);
-				state.info.markAsConsumedFromInterface(member);
+				if (!isInStructuralInterface(accTuple.getter)) {
+					state.info.markAsConsumedFromInterface(member);
+				}
 				classDecl.ownedMembersRaw += member;
 			}
 			if(accTuple.setter!==null && accTuple.setter.containingType!==tClass && accTuple.inheritedSetter===null) {
 				val s = accTuple.setter;
 				val member = delegationAssistant.createDelegatingMember(tClass, s);
-				state.info.markAsConsumedFromInterface(member);
+				if (!isInStructuralInterface(accTuple.setter)) {
+					state.info.markAsConsumedFromInterface(member);
+				}
 				classDecl.ownedMembersRaw += member;
 			}
 		}
 
-		// add fields consumed from an interface
+		// add fields consumed from a nominal interface
 		for(field : cmoft.fieldsPurelyMixedInNotOverridingAccessor) {
 			val member = _N4MemberDecl(field);
 			classDecl.ownedMembersRaw += member;
 			state.info.setOriginalDefinedMember(member, field);
-			state.info.markAsConsumedFromInterface(member);
+			if (!cmoft.inlinedMembersFromShapes.contains(field)) {
+				state.info.markAsConsumedFromInterface(member);
+			}
 		}
 
 
@@ -131,5 +149,11 @@ class MemberPatchingTransformation extends Transformation {
 					" of classifier "+accTuple.getter.containingType+"", new IllegalStateException("Invalid shadowing of inherited setter. Setter should be implemented explicitly."))
 			}
 		}
+	}
+	
+	// Note: Structural interfaces do not appear in the output code. Hence they must be consumed by the classes/interfaces that implement them.
+	def private boolean isInStructuralInterface(TMember member) {
+		return member.eContainer instanceof TInterface
+				&& (member.eContainer as TInterface).typingStrategy === TypingStrategy.STRUCTURAL
 	}
 }

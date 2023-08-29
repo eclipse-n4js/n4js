@@ -18,11 +18,13 @@
 
 export external class ResultCls {}
 
+// XPECT noerrors -->
 export external interface ~IfcCall {
-	(p: string);
+	public (p: string);
 }
+// XPECT noerrors -->
 export external interface ~IfcConstruct {
-	new(p: string): ResultCls;
+	public new(p: string): ResultCls;
 }
 
 export external interface ~SubIfcCall extends IfcCall {}

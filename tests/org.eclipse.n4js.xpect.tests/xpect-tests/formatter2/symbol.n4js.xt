@@ -28,7 +28,7 @@ let a = 1;
  *
  * @specFromDescription
  *\/
-export public abstract class ~ABCObject {
+export public abstract class ABCObject {
 	/\**
 	 * @spec some description
 	 *\/
@@ -43,7 +43,7 @@ let a = 1;
  *
  * @specFromDescription
  */
-export public abstract class ~ABCObject {
+export public abstract class ABCObject {
     /**
      * @spec some description
      */
@@ -57,7 +57,7 @@ export public abstract class ~ABCObject {
 
 
 /* XPECT formattedLines 11 ---
-class ~A {
+class A {
 	public ["@type1"]: string;
 	public get ["@type2"](): string {
 		return "";
@@ -78,7 +78,7 @@ class ~A {
 }
 
 --- */
-class ~A {
+class A {
     public ["@type1"]: string;
     public get ["@type2"] (): string {return "";};
     public set ["@type3"]( p: string) { };

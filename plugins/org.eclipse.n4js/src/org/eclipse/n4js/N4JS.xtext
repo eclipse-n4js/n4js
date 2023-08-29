@@ -1405,8 +1405,8 @@ N4MemberDeclaration <Yield>:
 	AnnotatedN4MemberDeclaration<Yield>
 	| N4GetterDeclaration<Yield>
 	| N4SetterDeclaration<Yield>
+	| =>N4CallSignatureDeclaration<Yield>
 	| N4MethodDeclaration<Yield>
-	| N4CallSignatureDeclaration<Yield>
 	| N4FieldDeclaration<Yield>
 ;
 
@@ -1464,7 +1464,7 @@ N4MethodDeclaration <Yield>:
  * this special grammar rule.
  */
 N4CallSignatureDeclaration <Yield> returns N4MethodDeclaration:
-	TypeParameters? MethodParamsReturnAndBody <Generator=false> ';'?
+	(declaredModifiers+=N4Modifier)* TypeParameters? MethodParamsReturnAndBody <Generator=false> ';'?
 ;
 
 fragment MethodParamsAndBody <Generator>*:

@@ -27,7 +27,7 @@ class C implements IteratorExt<string> {
 	}
 }
 
-//XPECT warnings --> "m is a property of built-in / provided by runtime / external without @N4JS annotation interface IteratorExt and can not be initialized in Spec constructor." at "m"
+//XPECT warnings --> "m is a property of a built-in, provided by runtime, or external module with @EcmaScript annotation. Hence the interface IteratorExt can not be initialized in a spec constructor." at "m"
 let c:C = new C({m: "Hello"});
 console.log(c.m)
 

@@ -195,7 +195,7 @@ class ImportRetainedAtRuntimeTest extends AbstractN4JSTest {
 		val resourceSet = #[
 			"Def.n4jsd" -> '''
 				export external public class C {}
-				@N4JS export external public interface I1 {}
+				export external public interface I1 {}
 				export external public interface ~I3 {}
 			''',
 			"Main1.n4js" -> '''

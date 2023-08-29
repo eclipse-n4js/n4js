@@ -38,7 +38,7 @@ public abstract class AbstractCompleteHierarchyTraverser<ResultT> extends Abstra
 	}
 
 	@Override
-	protected final boolean process(ContainerType<?> currentType) {
+	protected boolean process(ContainerType<?> currentType) {
 		doProcess(currentType);
 		return false;
 	}

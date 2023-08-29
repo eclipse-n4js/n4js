@@ -20,7 +20,7 @@
 
 import * as Ex from "Ch05_03__StructuralTyping/Externals";
 
-class ~SomeN4Object{
+class SomeN4Object {
 	public s : string;
 	public foo(p : number) : void{};
 	private n : number;
@@ -32,7 +32,6 @@ var someN4Object : SomeN4Object;
 // OK: nominal typing
 function fDefSite(p : SomeN4Object) {
 	p.foo(1);
-	// XPECT errors --> "method bar is not available for structurally defined type SomeN4Object." at "bar"
 	p.bar("Hello");
 }
 
@@ -66,7 +65,7 @@ fUseSite(new SomeN4Object());
 fUseSiteFields(new SomeN4Object());
 
 var someN4O : SomeN4O;
-// XPECT errors --> "All N4Objects must explicitly extend/implement definition site structural type SomeN4Object." at "someN4O"
+// XPECT errors --> "SomeN4O is not a subtype of SomeN4Object." at "someN4O"
 fDefSite(someN4O);
 // XPECT noerrors --> "" at "someN4O"
 fUseSite(someN4O);
@@ -81,7 +80,7 @@ fUseSite(new SomeN4Object());
 fUseSiteFields(new SomeN4Object());
 
 var a : Ex.A;
-// XPECT noerrors -->
+// XPECT errors --> "A is not a subtype of SomeN4Object." at "a"
 fDefSite(a);
 // XPECT noerrors -->
 fUseSite(a);

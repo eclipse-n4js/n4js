@@ -18,6 +18,7 @@
 // XPECT errors --> "Import of Lib cannot be resolved." at "Lib"
 import {Lib} from "Lib";
 
+@EcmaScript
 export external public class SomeClass {
 	// XPECT errors --> "Couldn't resolve reference to Type 'Lib'." at "Lib"
 	l : Lib;

@@ -16,6 +16,7 @@ export external public interface ~PropertyDescriptor {
 
 export external public interface ~PropertyDescriptorMap {}
 
+@EcmaScript
 export external public class Object {
 	public toString(): string;
 	public toLocaleString(): string;
@@ -54,6 +55,7 @@ export external public class Object {
 
 export external public type ObjectConstructor = constructor{Object};
 
+@EcmaScript
 export external public class Function {
 	public apply(thisArg: any, argArray: any = ): any;
 	public call(thisArg: any, ...argArray: any): any;
@@ -85,6 +87,7 @@ export external public interface ~IArguments {
 	callee: Function;
 }
 
+@EcmaScript
 export external public class String {
 	@Override
 	public toString(): string;
@@ -121,6 +124,7 @@ export external public class String {
 
 export external public type StringConstructor = constructor{String};
 
+@EcmaScript
 export external public class Boolean {
 	@Override
 	public valueOf(): boolean;
@@ -130,6 +134,7 @@ export external public class Boolean {
 
 export external public type BooleanConstructor = constructor{Boolean};
 
+@EcmaScript
 export external public class Number {
 	@Override
 	public toString(radix: number = ): string;
@@ -158,6 +163,7 @@ export external public interface ~ImportCallOptions {
 
 export external public interface ~ImportAssertions {}
 
+@EcmaScript
 export external public class Math {
 	public static get E(): number;
 	public static get LN10(): number;
@@ -187,6 +193,7 @@ export external public class Math {
 	public static tan(x: number): number;
 }
 
+@EcmaScript
 export external public class Date {
 	@Override
 	public toString(): string;
@@ -243,16 +250,19 @@ export external public class Date {
 
 export external public type DateConstructor = constructor{Date};
 
-export external public class ~RegExpMatchArray extends Array<string> {
+@EcmaScript
+export external public class RegExpMatchArray extends Array<string> {
 	public index?: number;
 	public input?: string;
 }
 
-export external public class ~RegExpExecArray extends Array<string> {
+@EcmaScript
+export external public class RegExpExecArray extends Array<string> {
 	public index: number;
 	public input: string;
 }
 
+@EcmaScript
 export external public class RegExp {
 	public exec(string: string): RegExpExecArray;
 	public test(string: string): boolean;
@@ -287,6 +297,7 @@ export external public class RegExp {
 
 export external public type RegExpConstructor = constructor{RegExp};
 
+@EcmaScript
 export external public class Error {
 	public name: string;
 	public message: string;
@@ -297,6 +308,7 @@ export external public class Error {
 
 export external public type ErrorConstructor = constructor{Error};
 
+@EcmaScript
 export external public class EvalError extends Error {
 	public constructor(message: string = );
 	(message: string = ): EvalError;
@@ -304,6 +316,7 @@ export external public class EvalError extends Error {
 
 export external public type EvalErrorConstructor = constructor{EvalError};
 
+@EcmaScript
 export external public class RangeError extends Error {
 	public constructor(message: string = );
 	(message: string = ): RangeError;
@@ -311,6 +324,7 @@ export external public class RangeError extends Error {
 
 export external public type RangeErrorConstructor = constructor{RangeError};
 
+@EcmaScript
 export external public class ReferenceError extends Error {
 	public constructor(message: string = );
 	(message: string = ): ReferenceError;
@@ -318,6 +332,7 @@ export external public class ReferenceError extends Error {
 
 export external public type ReferenceErrorConstructor = constructor{ReferenceError};
 
+@EcmaScript
 export external public class SyntaxError extends Error {
 	public constructor(message: string = );
 	(message: string = ): SyntaxError;
@@ -325,6 +340,7 @@ export external public class SyntaxError extends Error {
 
 export external public type SyntaxErrorConstructor = constructor{SyntaxError};
 
+@EcmaScript
 export external public class TypeError extends Error {
 	public constructor(message: string = );
 	(message: string = ): TypeError;
@@ -332,6 +348,7 @@ export external public class TypeError extends Error {
 
 export external public type TypeErrorConstructor = constructor{TypeError};
 
+@EcmaScript
 export external public class URIError extends Error {
 	public constructor(message: string = );
 	(message: string = ): URIError;
@@ -339,6 +356,7 @@ export external public class URIError extends Error {
 
 export external public type URIErrorConstructor = constructor{URIError};
 
+@EcmaScript
 export external public class JSON {
 	public static parse(text: string, reviver: {@This(any) function(key: string, value: any): any} = ): any;
 	public static stringify(value: any, replacer: union{Array<?>, {function(key: string, value: any) : any} } = undefined, space: union{number , string} = undefined): string;
@@ -350,6 +368,7 @@ export external public interface ~ConcatArray<T> {
 	slice(start: number = , end: number = ): Array<T>;
 }
 
+@EcmaScript
 export external public class Array<T> {
 	public length: number;
 	@Override
@@ -408,6 +427,7 @@ export external public interface ~ArrayLike<T> {
 
 export external public interface ~ThisType<T> {}
 
+@EcmaScript
 export external public class ArrayBuffer {
 	public get byteLength(): number;
 	public slice(begin: number, end: number = ): ArrayBuffer;
@@ -423,6 +443,7 @@ export external public interface ~ArrayBufferTypes {
 
 export external public type ArrayBufferLike = any+;
 
+@EcmaScript
 export external public class DataView {
 	public get buffer(): ArrayBuffer;
 	public get byteLength(): number;
@@ -448,6 +469,7 @@ export external public class DataView {
 
 export external public type DataViewConstructor = constructor{DataView};
 
+@EcmaScript
 export external public class Int8Array {
 	public get BYTES_PER_ELEMENT(): number;
 	public get buffer(): ArrayBufferLike;
@@ -487,6 +509,7 @@ export external public class Int8Array {
 
 export external public type Int8ArrayConstructor = constructor{Int8Array};
 
+@EcmaScript
 export external public class Uint8Array {
 	public get BYTES_PER_ELEMENT(): number;
 	public get buffer(): ArrayBufferLike;
@@ -526,6 +549,7 @@ export external public class Uint8Array {
 
 export external public type Uint8ArrayConstructor = constructor{Uint8Array};
 
+@EcmaScript
 export external public class Uint8ClampedArray {
 	public get BYTES_PER_ELEMENT(): number;
 	public get buffer(): ArrayBufferLike;
@@ -565,6 +589,7 @@ export external public class Uint8ClampedArray {
 
 export external public type Uint8ClampedArrayConstructor = constructor{Uint8ClampedArray};
 
+@EcmaScript
 export external public class Int16Array {
 	public get BYTES_PER_ELEMENT(): number;
 	public get buffer(): ArrayBufferLike;
@@ -604,6 +629,7 @@ export external public class Int16Array {
 
 export external public type Int16ArrayConstructor = constructor{Int16Array};
 
+@EcmaScript
 export external public class Uint16Array {
 	public get BYTES_PER_ELEMENT(): number;
 	public get buffer(): ArrayBufferLike;
@@ -643,6 +669,7 @@ export external public class Uint16Array {
 
 export external public type Uint16ArrayConstructor = constructor{Uint16Array};
 
+@EcmaScript
 export external public class Int32Array {
 	public get BYTES_PER_ELEMENT(): number;
 	public get buffer(): ArrayBufferLike;
@@ -682,6 +709,7 @@ export external public class Int32Array {
 
 export external public type Int32ArrayConstructor = constructor{Int32Array};
 
+@EcmaScript
 export external public class Uint32Array {
 	public get BYTES_PER_ELEMENT(): number;
 	public get buffer(): ArrayBufferLike;
@@ -721,6 +749,7 @@ export external public class Uint32Array {
 
 export external public type Uint32ArrayConstructor = constructor{Uint32Array};
 
+@EcmaScript
 export external public class Float32Array {
 	public get BYTES_PER_ELEMENT(): number;
 	public get buffer(): ArrayBufferLike;
@@ -760,6 +789,7 @@ export external public class Float32Array {
 
 export external public type Float32ArrayConstructor = constructor{Float32Array};
 
+@EcmaScript
 export external public class Float64Array {
 	public get BYTES_PER_ELEMENT(): number;
 	public get buffer(): ArrayBufferLike;
@@ -807,6 +837,7 @@ export external public type ReadonlyArray<T> = Array<T>;
  *
  * TODO in ES6 this is defined to be a property of the global object and a constructor function
  */
+@EcmaScript
 export external public class Symbol extends Object {
 
 	/**
@@ -1090,6 +1121,7 @@ export external public interface ~AsyncGenerator<out TYield, out TReturn, in TNe
  * encapsulates. A rejected promise indicates erroneous or abnormal completion
  * of the process.
  */
+@EcmaScript
 export external public class Promise<out S, out F = any> extends Object {
 
 	public constructor(

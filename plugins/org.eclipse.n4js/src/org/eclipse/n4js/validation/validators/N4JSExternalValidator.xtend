@@ -82,6 +82,17 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	override register(EValidatorRegistrar registrar) {
 		// nop
 	}
+	
+	/**
+	 * Temporary validation
+	 */
+	@Check
+	def checkAnnotationsInN4JSDFile(Annotation annotation) {
+		if (AnnotationDefinition.N4JS.isAnnotation(annotation)) {
+			val message = getMessageForANN__N4JS_NO_EFFECT();
+			addIssue(message, annotation, ANN__N4JS_NO_EFFECT);
+		}
+	}
 
 	/**
 	 * @see N4Spec, 4.20. External Classes
@@ -90,6 +101,14 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	def checkExternalClassesDefinedInN4JSDFile(N4ClassDeclaration clazz) {
 		if (! holdsExternalOnlyInDefinitionFile(clazz, "Classes")) {
 			return;
+		}
+		if (clazz.external && jsVariantHelper.isExternalMode(clazz)) {
+			val projectType = workspaceAccess.findProjectContaining(clazz)?.type;
+			if (projectType === ProjectType.DEFINITION && !AnnotationDefinition.ECMASCRIPT.hasAnnotation(clazz)) {
+				val message = getMessageForCLF_IN_DEFINITION_PRJ_NON_N4JS()
+				addIssue(message, clazz, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, CLF_IN_DEFINITION_PRJ_NON_N4JS)
+				return;
+			}
 		}
 	}
 
@@ -103,10 +122,10 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		if (interfaceDecl.external && jsVariantHelper.isExternalMode(interfaceDecl)) {
 			val isStructural = TypeUtils.isStructural(interfaceDecl.typingStrategy);
-			val hasN4JSAnnotation = AnnotationDefinition.N4JS.hasAnnotation(interfaceDecl);
-			if (!isStructural && !hasN4JSAnnotation) {
-				val message = getMessageForCLF_EXT_NOMI_INTF_MISSING_N4JS_ANNOTATION()
-				addIssue(message, interfaceDecl, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, CLF_EXT_NOMI_INTF_MISSING_N4JS_ANNOTATION)
+			val projectType = workspaceAccess.findProjectContaining(interfaceDecl)?.type;
+			if (!isStructural && projectType === ProjectType.DEFINITION) {
+				val message = getMessageForITF_IN_DEFINITION_PRJ_NON_N4JS()
+				addIssue(message, interfaceDecl, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, ITF_IN_DEFINITION_PRJ_NON_N4JS)
 				return;
 			}
 		}
@@ -169,8 +188,8 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 					return;
 				}
 
-				if (! AnnotationDefinition.N4JS.hasAnnotation(owner)) {
-					val msg = getMessageForCLF_EXT_PROVIDES_IMPL_ONLY_IN_N4JS_INTERFACES(annodef.name, typeName);
+				if (N4JSLanguageUtils.isShapeOrEcmaScript(owner)) {
+					val msg = getMessageForCLF_EXT_PROVIDES_IMPL_ONLY_IN_N4JS_INTERFACES(annodef.name);
 					addIssue(msg, memberDecl, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
 						CLF_EXT_PROVIDES_IMPL_ONLY_IN_N4JS_INTERFACES);
 					return;
@@ -255,9 +274,9 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	def private handleN4ClassDeclaration(ExportDeclaration eo, N4ClassDeclaration exported) {
 		validateClassifierIsExternal(exported, "classes")
 		// relaxed by IDEBUG-561:	exported.validateClassifierIsPublicApi("classes", eo)
-		if (!AnnotationDefinition.N4JS.hasAnnotation(exported)) {
+		if (AnnotationDefinition.ECMASCRIPT.hasAnnotation(exported)) {
 			val superClass = exported.superClassRef?.typeRef?.hasExpectedTypes(TClass)
-			validateNonAnnotatedClassDoesntExtendN4Object(exported, superClass)
+			validateEcmaScriptClassDoesntExtendN4Object(exported, superClass)
 			validateConsumptionOfNonExternalInterfaces(exported, exported.implementedInterfaceRefs, "classes")
 		}
 		validateNoObservableAtClassifier(eo, exported, "classes")
@@ -270,9 +289,6 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 			validateClassifierIsExternal(exported, "interfaces")
 		}
 
-		if (N4JSLanguageUtils.isHollowElement(exported, jsVariantHelper)) {
-			validateNoStaticMember(exported, "interfaces");
-		}
 		validateNoObservableAtClassifier(eo, exported, "interfaces")
 		validateMembers(exported, "interfaces")
 	}
@@ -340,13 +356,6 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	private def validateNoStaticMember(N4ClassifierDeclaration declaration, String classesOrRolesOrInterface) {
-		for (member : declaration.ownedMembers.filter[it.static]) {
-			val message = getMessageForCLF_EXT_NO_STATIC_MEMBER(classesOrRolesOrInterface)
-			addIssue(message, member, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_EXT_NO_STATIC_MEMBER)
-		}
-	}
-
 	def private validateMembers(N4ClassifierDeclaration declaration, String classesOrRolesOrInterface) {
 		validateNoBody(declaration, classesOrRolesOrInterface)
 		validateNoFieldExpression(declaration, classesOrRolesOrInterface)
@@ -387,8 +396,8 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	def private validateNonAnnotatedClassDoesntExtendN4Object(N4ClassDeclaration exported, TClass superType) {
-		if (superType !== null && (!superType.isExternal || AnnotationDefinition.N4JS.hasAnnotation(superType))) {
+	def private validateEcmaScriptClassDoesntExtendN4Object(N4ClassDeclaration exported, TClass superType) {
+		if (superType !== null && (!superType.isExternal || !AnnotationDefinition.ECMASCRIPT.hasAnnotation(superType))) {
 			val message = messageForCLF_EXT_NOT_ANNOTATED_EXTEND_N4OBJECT
 			val eObjectToNameFeature = exported.findNameFeature
 			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value,

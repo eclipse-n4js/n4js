@@ -22,7 +22,9 @@ export const c02: typeof global;
 /* XPECT ast ---
 Script: true
   ExportDeclaration: false, UNKNOWN
-   N4ClassDeclaration: [external, public], global, ~
+   N4ClassDeclaration: [external, public], global, ?~
+    AnnotationList
+     Annotation: EcmaScript
   ExportDeclaration: false, UNKNOWN
    VariableStatement: [external, public], const
     VariableDeclaration: c01

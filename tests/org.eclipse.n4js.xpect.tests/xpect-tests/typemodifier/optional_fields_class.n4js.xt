@@ -16,15 +16,12 @@ class NFail { public s?: int }
 
 @Final
 class F {}
-@Final
-class ~FS {}
 class C {}
-class ~CS {}
+interface ~IS {}
 
 const f = new F();
-const fs = new FS();
 const c = new C();
-const cs = new CS();
+const is : IS = {};
 const s : ~C = new C();
 const nf = new NFail();
 
@@ -36,22 +33,16 @@ let ni: ~i~N;
 
 // XPECT errors -->"F is not a structural subtype of ~N: missing setter or field s." at "new F()"
 n = new F();
-// XPECT errors -->"FS is not a structural subtype of ~N: missing setter or field s." at "new FS()"
-n = new FS();
 // XPECT errors -->"C is not a structural subtype of ~N: missing setter or field s." at "new C()"
 n = new C();
-// XPECT errors -->"CS is not a structural subtype of ~N: missing setter or field s." at "new CS()"
-n = new CS();
 // XPECT errors -->"NFail is not a structural subtype of ~N: s failed: int is not equal to string." at "new NFail()"
 n = new NFail();
 // XPECT errors -->"F is not a structural subtype of ~N: missing setter or field s." at "f"
 n = f;
-// XPECT errors -->"FS is not a structural subtype of ~N: missing setter or field s." at "fs"
-n = fs;
 // XPECT errors -->"C is not a structural subtype of ~N: missing setter or field s." at "c"
 n = c;
-// XPECT errors -->"CS is not a structural subtype of ~N: missing setter or field s." at "cs"
-n = cs;
+// XPECT noerrors
+n = is;
 // XPECT errors -->"~C is not a structural subtype of ~N: missing setter or field s." at "s"
 n = s;
 // XPECT errors -->"NFail is not a structural subtype of ~N: s failed: int is not equal to string." at "nf"
@@ -59,22 +50,16 @@ n = nf;
 
 // XPECT errors -->"F is not a structural subtype of ~~N: missing setter or field s." at "new F()"
 nn = new F();
-// XPECT errors -->"FS is not a structural subtype of ~~N: missing setter or field s." at "new FS()"
-nn = new FS();
 // XPECT errors -->"C is not a structural subtype of ~~N: missing setter or field s." at "new C()"
 nn = new C();
-// XPECT errors -->"CS is not a structural subtype of ~~N: missing setter or field s." at "new CS()"
-nn = new CS();
 // XPECT errors -->"NFail is not a structural subtype of ~~N: s failed: int is not equal to string." at "new NFail()"
 nn = new NFail();
 // XPECT errors -->"F is not a structural subtype of ~~N: missing setter or field s." at "f"
 nn = f;
-// XPECT errors -->"FS is not a structural subtype of ~~N: missing setter or field s." at "fs"
-nn = fs;
 // XPECT errors -->"C is not a structural subtype of ~~N: missing setter or field s." at "c"
 nn = c;
-// XPECT errors -->"CS is not a structural subtype of ~~N: missing setter or field s." at "cs"
-nn = cs;
+// XPECT noerrors
+nn = is;
 // XPECT errors -->"~C is not a structural subtype of ~~N: missing setter or field s." at "s"
 nn = s;
 // XPECT errors -->"NFail is not a structural subtype of ~~N: s failed: int is not equal to string." at "nf"
@@ -83,21 +68,15 @@ nn = nf;
 // XPECT noerrors -->
 nr = new F();
 // XPECT noerrors -->
-nr = new FS();
-// XPECT noerrors -->
 nr = new C();
-// XPECT noerrors -->
-nr = new CS();
 // XPECT errors -->"NFail is not a structural subtype of ~r~N: s failed: int is not equal to string." at "new NFail()"
 nr = new NFail();
 // XPECT noerrors -->
 nr = f;
 // XPECT noerrors -->
-nr = fs;
-// XPECT noerrors -->
 nr = c;
 // XPECT noerrors -->
-nr = cs;
+nr = is;
 // XPECT noerrors -->
 nr = s;
 // XPECT errors -->"NFail is not a structural subtype of ~r~N: s failed: int is not equal to string." at "nf"
@@ -105,22 +84,16 @@ nr = nf;
 
 // XPECT errors -->"F is not a structural subtype of ~w~N: missing setter or field s; s failed: writable field requires a writable field or a setter in subtype." at "new F()"
 nw = new F();
-// XPECT errors -->"FS is not a structural subtype of ~w~N: missing setter or field s; s failed: writable field requires a writable field or a setter in subtype." at "new FS()"
-nw = new FS();
 // XPECT errors -->"C is not a structural subtype of ~w~N: missing setter or field s; s failed: writable field requires a writable field or a setter in subtype." at "new C()"
 nw = new C();
-// XPECT errors -->"CS is not a structural subtype of ~w~N: missing setter or field s; s failed: writable field requires a writable field or a setter in subtype." at "new CS()"
-nw = new CS();
 // XPECT errors -->"NFail is not a structural subtype of ~w~N: s failed: int is not equal to string." at "new NFail()"
 nw = new NFail();
 // XPECT errors -->"F is not a structural subtype of ~w~N: missing setter or field s; s failed: writable field requires a writable field or a setter in subtype." at "f"
 nw = f;
-// XPECT errors -->"FS is not a structural subtype of ~w~N: missing setter or field s; s failed: writable field requires a writable field or a setter in subtype." at "fs"
-nw = fs;
 // XPECT errors -->"C is not a structural subtype of ~w~N: missing setter or field s; s failed: writable field requires a writable field or a setter in subtype." at "c"
 nw = c;
-// XPECT errors -->"CS is not a structural subtype of ~w~N: missing setter or field s; s failed: writable field requires a writable field or a setter in subtype." at "cs"
-nw = cs;
+// XPECT noerrors
+nw = is;
 // XPECT errors -->"~C is not a structural subtype of ~w~N: missing setter or field s; s failed: writable field requires a writable field or a setter in subtype." at "s"
 nw = s;
 // XPECT errors -->"NFail is not a structural subtype of ~w~N: s failed: int is not equal to string." at "nf"
@@ -129,21 +102,15 @@ nw = nf;
 // XPECT noerrors -->
 ni = new F();
 // XPECT noerrors -->
-ni = new FS();
-// XPECT noerrors -->
 ni = new C();
-// XPECT noerrors -->
-ni = new CS();
 // XPECT errors -->"NFail is not a structural subtype of ~i~N: s failed: int is not equal to string." at "new NFail()"
 ni = new NFail();
 // XPECT noerrors -->
 ni = f;
 // XPECT noerrors -->
-ni = fs;
-// XPECT noerrors -->
 ni = c;
 // XPECT noerrors -->
-ni = cs;
+ni = is;
 // XPECT noerrors -->
 ni = s;
 // XPECT errors -->"NFail is not a structural subtype of ~i~N: s failed: int is not equal to string." at "nf"

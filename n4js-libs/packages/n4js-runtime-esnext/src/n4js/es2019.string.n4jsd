@@ -4,6 +4,7 @@
 @@Global @@ProvidedByRuntime
 
 @Polyfill
+@EcmaScript
 export external public class String extends String {
 	public trimEnd(): string;
 	public trimStart(): string;

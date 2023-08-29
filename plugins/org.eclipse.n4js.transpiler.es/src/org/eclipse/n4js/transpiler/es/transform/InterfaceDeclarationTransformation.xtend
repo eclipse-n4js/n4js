@@ -13,7 +13,6 @@ package org.eclipse.n4js.transpiler.es.transform
 import com.google.inject.Inject
 import java.util.Collections
 import java.util.List
-import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.AdditiveExpression
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AwaitExpression
@@ -22,6 +21,7 @@ import org.eclipse.n4js.n4JS.BinaryLogicalExpression
 import org.eclipse.n4js.n4JS.BooleanLiteral
 import org.eclipse.n4js.n4JS.CastExpression
 import org.eclipse.n4js.n4JS.CommaExpression
+import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
@@ -53,8 +53,8 @@ import org.eclipse.n4js.transpiler.es.assistants.ClassifierAssistant
 import org.eclipse.n4js.transpiler.es.assistants.DelegationAssistant
 import org.eclipse.n4js.transpiler.es.assistants.ReflectionAssistant
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
-import org.eclipse.n4js.ts.types.TInterface
-import org.eclipse.n4js.types.utils.TypeUtils
+import org.eclipse.n4js.transpiler.utils.TranspilerUtils
+import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.ResourceNameComputer
 
@@ -91,6 +91,12 @@ class InterfaceDeclarationTransformation extends Transformation {
 	}
 
 	def private void transformInterfaceDecl(N4InterfaceDeclaration ifcDecl) {
+		if (ifcDecl.typingStrategy === TypingStrategy.STRUCTURAL) {
+			// structural interfaces are shapes, i.e. do only exist at compile time
+			val ifcOrParent = ifcDecl.eContainer instanceof ExportDeclaration ? ifcDecl.eContainer : ifcDecl;
+			remove(ifcOrParent);
+			return;
+		}
 		val ifcSTE = findSymbolTableEntryForElement(ifcDecl, true);
 
 		// add 'Symbol.hasInstance' function for supporting the 'instanceof' operator
@@ -135,15 +141,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 
 		// the return value of this method is intended for default method patching; for this purpose, we have to
 		// filter out some of the directly implemented interfaces:
-		val directlyImplementedInterfacesFiltered = interfaces.filter[ifcSTE|
-			val tIfc = ifcSTE.originalTarget;
-			if(tIfc instanceof TInterface) {
-				return !TypeUtils.isBuiltIn(tIfc) // built-in types are not defined in Api/Impl projects -> no patching required
-					&& !(typeAssistant.inN4JSD(tIfc) && !AnnotationDefinition.N4JS.hasAnnotation(tIfc)) // interface in .n4jsd file only patched in if marked @N4JS
-			}
-			return false;
-		];
-
+		val directlyImplementedInterfacesFiltered = TranspilerUtils.filterNominalInterfaces(interfaces);
 		return _ArrLit( directlyImplementedInterfacesFiltered.map[ _IdentRef(it) ] );
 	}
 

@@ -4,6 +4,7 @@
 @@Global @@ProvidedByRuntime
 
 @Polyfill
+@EcmaScript
 export external public class Object extends Object {
 	public static fromEntries(...args: any+): any+; // overloading not supported
 }

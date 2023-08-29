@@ -57,8 +57,9 @@ class GreedyPredicateTest {
 		'BindingProperty',
 		'BindingElementImpl',
 		'AnnotatedN4MemberDeclaration',
-		"N4MethodDeclaration",
-		"AnnotationArgument"
+		'N4MemberDeclaration',
+		'N4MethodDeclaration',
+		'AnnotationArgument'
 	];
 
 	@Inject
