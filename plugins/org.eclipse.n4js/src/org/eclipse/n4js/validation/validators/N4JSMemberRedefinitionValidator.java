@@ -107,6 +107,7 @@ import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.ts.types.util.NameStaticPair;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
+import org.eclipse.n4js.typesystem.utils.AllSuperTypeRefsCollector;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
@@ -871,12 +872,15 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 						if (abstractMembers == null) {
 							abstractMembers = new ArrayList<>();
 						}
+						if (isClassExtendsInterface(classifier, m)) {
+							continue;
+						}
 						abstractMembers.add(m);
 					}
 				}
 			}
 		}
-		if (abstractMembers != null) {
+		if (abstractMembers != null && !abstractMembers.isEmpty()) {
 			messageMissingImplementations(abstractMembers);
 			return false;
 		}
@@ -888,13 +892,27 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 				&& (((TMethod) m).isCallSignature() || ((TMethod) m).isConstructSignature());
 	}
 
+	private boolean isClassExtendsInterface(TClassifier classifier, TMember m) {
+		if (m.eContainer() instanceof TInterface && jsVariantHelper.isDTS(m)) {
+			List<ParameterizedTypeRef> extendsRefs = AllSuperTypeRefsCollector.collect(
+					TypeUtils.createTypeRef(classifier), declMergingHelper, true);
+
+			for (ParameterizedTypeRef superTypeRef : extendsRefs) {
+				if (superTypeRef.getDeclaredType() == m.eContainer()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	private void messageMissingImplementations(List<TMember> abstractMembers) {
 		TClassifier classifier = getCurrentClassifier();
 		if (!jsVariantHelper.allowMissingImplementation(classifier)) {
 			String message = getMessageForCLF_MISSING_IMPLEMENTATION(classifier.getName(),
 					validatorMessageHelper.descriptions(abstractMembers));
 			addIssue(message, CLF_MISSING_IMPLEMENTATION);
-		} else { // to be removed, only temporary (IDE-1236)
+		} else {
 			String message = getMessageForCLF_MISSING_IMPLEMENTATION_EXT(classifier.getName(),
 					validatorMessageHelper.descriptions(abstractMembers));
 			addIssue(message, CLF_MISSING_IMPLEMENTATION_EXT);

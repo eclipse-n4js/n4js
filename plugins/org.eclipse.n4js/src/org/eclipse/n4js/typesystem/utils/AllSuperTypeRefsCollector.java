@@ -19,6 +19,7 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.DeclMergingHelper;
 
 import com.google.common.collect.Lists;
@@ -27,6 +28,8 @@ import com.google.common.collect.Lists;
  * The bottom type or its merged/polyfilled types <b>are not</b> included.
  */
 public class AllSuperTypeRefsCollector extends AbstractCompleteHierarchyTraverser<List<ParameterizedTypeRef>> {
+
+	private final boolean extendsOnly;
 
 	private final List<ParameterizedTypeRef> result;
 
@@ -38,8 +41,11 @@ public class AllSuperTypeRefsCollector extends AbstractCompleteHierarchyTraverse
 	 * @param typeRef
 	 *            the type to start with.
 	 */
-	public AllSuperTypeRefsCollector(ParameterizedTypeRef typeRef, DeclMergingHelper declMergingHelper) {
+	public AllSuperTypeRefsCollector(ParameterizedTypeRef typeRef, DeclMergingHelper declMergingHelper,
+			boolean extendsOnly) {
+
 		super(typeRef, declMergingHelper);
+		this.extendsOnly = extendsOnly;
 		this.typeRef = typeRef;
 		result = Lists.newArrayList();
 	}
@@ -57,6 +63,17 @@ public class AllSuperTypeRefsCollector extends AbstractCompleteHierarchyTraverse
 	@Override
 	protected boolean releaseGuard() {
 		return true;
+	}
+
+	/** Skip current super type iff it is traversed via an 'implements' reference. */
+	@Override
+	protected boolean process(ContainerType<?> currentType) {
+
+		if (extendsOnly && getCurrentTypeRef().eContainingFeature() == TypesPackage.eINSTANCE
+				.getTClass_ImplementedInterfaceRefs()) {
+			return true;
+		}
+		return super.process(currentType);
 	}
 
 	@Override
@@ -96,6 +113,14 @@ public class AllSuperTypeRefsCollector extends AbstractCompleteHierarchyTraverse
 	}
 
 	/**
+	 * Convenience method for {@link #collect(ParameterizedTypeRef, DeclMergingHelper, boolean)}
+	 */
+	public static final List<ParameterizedTypeRef> collect(ParameterizedTypeRef typeRef,
+			DeclMergingHelper declMergingHelper) {
+		return collect(typeRef, declMergingHelper, false);
+	}
+
+	/**
 	 * Convenience method to create a new instance of {@link AllSuperTypeRefsCollector} and immediately return its
 	 * result.
 	 *
@@ -104,7 +129,7 @@ public class AllSuperTypeRefsCollector extends AbstractCompleteHierarchyTraverse
 	 * @return transitive closure of all super classes, consumed roles and implemented interfaces.
 	 */
 	public static final List<ParameterizedTypeRef> collect(ParameterizedTypeRef typeRef,
-			DeclMergingHelper declMergingHelper) {
-		return new AllSuperTypeRefsCollector(typeRef, declMergingHelper).getResult();
+			DeclMergingHelper declMergingHelper, boolean extendsOnly) {
+		return new AllSuperTypeRefsCollector(typeRef, declMergingHelper, extendsOnly).getResult();
 	}
 }
