@@ -92,6 +92,7 @@ import org.eclipse.n4js.typesystem.utils.AllSuperTypesCollector;
 import org.eclipse.n4js.utils.DeclMergingHelper;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.ResourceNameComputer;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.locations.FileURI;
@@ -231,20 +232,24 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	protected List<CallHierarchyItem> prepareCallHierarchy(ResourceTaskContext rtc,
 			CallHierarchyPrepareParams params, CancelIndicator ci) {
 
-		int offset = rtc.getDocument().getOffSet(params.getPosition());
-		EObject element = eObjectAtOffsetHelper.resolveElementAt(rtc.getResource(), offset);
-		EObject type = N4JSASTUtils.getCorrespondingTypeModelElement(element);
-		if (type != null) {
-			element = type;
-		}
+		try {
+			int offset = rtc.getDocument().getOffSet(params.getPosition());
+			EObject element = eObjectAtOffsetHelper.resolveElementAt(rtc.getResource(), offset);
+			EObject type = N4JSASTUtils.getCorrespondingTypeModelElement(element);
+			if (type != null) {
+				element = type;
+			}
 
-		if (element instanceof FunctionTypeExprOrRef) {
-			FunctionTypeExprOrRef fRef = (FunctionTypeExprOrRef) element;
-			element = fRef.getFunctionType();
-		}
-		if (element instanceof TFunction) {
-			CallHierarchyItem item = toCallHierarchyItem((TFunction) element);
-			return List.of(item);
+			if (element instanceof FunctionTypeExprOrRef) {
+				FunctionTypeExprOrRef fRef = (FunctionTypeExprOrRef) element;
+				element = fRef.getFunctionType();
+			}
+			if (element instanceof TFunction) {
+				CallHierarchyItem item = toCallHierarchyItem((TFunction) element);
+				return List.of(item);
+			}
+		} catch (IndexOutOfBoundsException e) {
+			LOG.error(e);
 		}
 		return Collections.emptyList();
 	}
@@ -384,10 +389,9 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 					TFunction targetFunDef = (TFunction) targetTFunction;
 					XtextResource resCall = (XtextResource) call.eResource();
 					XDocument docCall = new XDocument(1, resCall.getParseResult().getRootNode().getText());
-					ITextRegion sgnfRegion = locationInFileProvider.getSignificantTextRegion(call);
-					Position sgnfStartPos = docCall.getPosition(sgnfRegion.getOffset());
-					Position sgnfEndPos = docCall.getPosition(sgnfRegion.getOffset() + sgnfRegion.getLength());
-					List<Range> fromRanges = List.of(new Range(sgnfStartPos, sgnfEndPos));
+					Range selectionRange = getRangeOrDefault(docCall,
+							locationInFileProvider.getSignificantTextRegion(call));
+					List<Range> fromRanges = List.of(selectionRange);
 					CallHierarchyItem item = toCallHierarchyItem(targetFunDef);
 					result.add(new CallHierarchyOutgoingCall(item, fromRanges));
 				}
@@ -402,15 +406,8 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 		SymbolKind symbolKind = SymbolKindUtil.getSymbolKind(fun.eClass());
 		String uri = resource.getURI().toString();
 
-		ITextRegion fullRegion = locationInFileProvider.getFullTextRegion(fun);
-		Position fullStartPos = doc.getPosition(fullRegion.getOffset());
-		Position fullEndPos = doc.getPosition(fullRegion.getOffset() + fullRegion.getLength());
-		ITextRegion sgnfRegion = locationInFileProvider.getSignificantTextRegion(fun);
-		Position sgnfStartPos = doc.getPosition(sgnfRegion.getOffset());
-		Position sgnfEndPos = doc.getPosition(sgnfRegion.getOffset() + sgnfRegion.getLength());
-		Range range = new Range(fullStartPos, fullEndPos);
-		Range selectionRange = new Range(sgnfStartPos, sgnfEndPos);
-
+		Range range = getRangeOrDefault(doc, locationInFileProvider.getFullTextRegion(fun));
+		Range selectionRange = getRangeOrDefault(doc, locationInFileProvider.getSignificantTextRegion(fun));
 		CallHierarchyItem item = new CallHierarchyItem(fun.getName(), symbolKind, uri, range, selectionRange);
 		return item;
 	}
@@ -419,20 +416,24 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	protected List<TypeHierarchyItem> prepareTypeHierarchy(ResourceTaskContext rtc, TypeHierarchyPrepareParams params,
 			CancelIndicator ci) {
 
-		int offset = rtc.getDocument().getOffSet(params.getPosition());
-		EObject element = eObjectAtOffsetHelper.resolveElementAt(rtc.getResource(), offset);
-		EObject type = N4JSASTUtils.getCorrespondingTypeModelElement(element);
-		if (type != null) {
-			element = type;
-		}
+		try {
+			int offset = rtc.getDocument().getOffSet(params.getPosition());
+			EObject element = eObjectAtOffsetHelper.resolveElementAt(rtc.getResource(), offset);
+			EObject type = N4JSASTUtils.getCorrespondingTypeModelElement(element);
+			if (type != null) {
+				element = type;
+			}
 
-		if (element instanceof TypeRef) {
-			TypeRef tRef = (TypeRef) element;
-			element = tRef.getDeclaredType();
-		}
-		if (element instanceof Type) {
-			TypeHierarchyItem item = toTypeHierarchyItem((Type) element);
-			return List.of(item);
+			if (element instanceof TypeRef) {
+				TypeRef tRef = (TypeRef) element;
+				element = tRef.getDeclaredType();
+			}
+			if (element instanceof Type) {
+				TypeHierarchyItem item = toTypeHierarchyItem((Type) element);
+				return List.of(item);
+			}
+		} catch (IndexOutOfBoundsException e) {
+			LOG.error(e);
 		}
 		return Collections.emptyList();
 	}
@@ -509,12 +510,16 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 			// ensures that we get an TModele element (instead of an AST element)
 			workspaceAccess.loadModuleFromIndex(resSet, resDesc, true);
 		}
-
-		int offset = rtc.getDocument().getOffSet(selRange.getStart());
-		EObject element = eObjectAtOffsetHelper.resolveElementAt(resource, offset);
-		EObject type = N4JSASTUtils.getCorrespondingTypeModelElement(element);
-		if (type != null) {
-			element = type;
+		EObject element = null;
+		try {
+			int offset = rtc.getDocument().getOffSet(selRange.getStart());
+			element = eObjectAtOffsetHelper.resolveElementAt(resource, offset);
+			EObject type = N4JSASTUtils.getCorrespondingTypeModelElement(element);
+			if (type != null) {
+				element = type;
+			}
+		} catch (IndexOutOfBoundsException e) {
+			LOG.error(e);
 		}
 		return element;
 	}
@@ -523,19 +528,23 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 		XtextResource resource = (XtextResource) type.eResource();
 		XDocument doc = new XDocument(1, resource.getParseResult().getRootNode().getText());
 		SymbolKind symbolKind = SymbolKindUtil.getSymbolKind(type.eClass());
-		String uri = type.eResource().getURI().toString();
+		String uri = URIUtils.getBaseOfVirtualResourceURI(type.eResource().getURI()).toString();
 
-		ITextRegion fullRegion = locationInFileProvider.getFullTextRegion(type);
-		Position fullStartPos = doc.getPosition(fullRegion.getOffset());
-		Position fullEndPos = doc.getPosition(fullRegion.getOffset() + fullRegion.getLength());
-		ITextRegion sgnfRegion = locationInFileProvider.getSignificantTextRegion(type);
-		Position sgnfStartPos = doc.getPosition(sgnfRegion.getOffset());
-		Position sgnfEndPos = doc.getPosition(sgnfRegion.getOffset() + sgnfRegion.getLength());
-		Range range = new Range(fullStartPos, fullEndPos);
-		Range selectionRange = new Range(sgnfStartPos, sgnfEndPos);
-
+		Range range = getRangeOrDefault(doc, locationInFileProvider.getFullTextRegion(type));
+		Range selectionRange = getRangeOrDefault(doc, locationInFileProvider.getSignificantTextRegion(type));
 		TypeHierarchyItem item = new TypeHierarchyItem(type.getName(), symbolKind, uri, range, selectionRange);
 		return item;
+	}
+
+	private Range getRangeOrDefault(XDocument doc, ITextRegion region) {
+		try {
+			Position sgnfStartPos = doc.getPosition(region.getOffset());
+			Position sgnfEndPos = doc.getPosition(region.getOffset() + region.getLength());
+			return new Range(sgnfStartPos, sgnfEndPos);
+		} catch (IndexOutOfBoundsException e) {
+			LOG.error(e);
+			return new Range(new Position(), new Position());
+		}
 	}
 
 	static class FunctionReferenceAcceptor implements IReferenceFinder.Acceptor {
