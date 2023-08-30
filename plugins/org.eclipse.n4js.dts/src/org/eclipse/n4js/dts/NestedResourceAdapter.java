@@ -63,6 +63,7 @@ public class NestedResourceAdapter implements Adapter {
 		return adapter;
 	}
 
+	private final String contents;
 	private final DtsTokenStream tokenStream;
 	private final ParserRuleContext ctx;
 	private final List<StatementContext> statements;
@@ -76,7 +77,9 @@ public class NestedResourceAdapter implements Adapter {
 	 *            see {@link #getStatements()}.
 	 */
 	public NestedResourceAdapter(DtsTokenStream tokenStream, ParserRuleContext ctx,
-			Iterable<StatementContext> statements) {
+			Iterable<StatementContext> statements, String contents) {
+
+		this.contents = contents;
 		this.tokenStream = tokenStream;
 		this.ctx = ctx;
 		this.statements = ImmutableList.copyOf(statements);
@@ -98,6 +101,11 @@ public class NestedResourceAdapter implements Adapter {
 	@Override
 	public boolean isAdapterForType(Object type) {
 		return false;
+	}
+
+	/** Returns the complete contents of the base resource. */
+	public String getContents() {
+		return contents;
 	}
 
 	/** Returns the {@link ParserRuleContext} that belongs to the resource this adapter is installed on. */

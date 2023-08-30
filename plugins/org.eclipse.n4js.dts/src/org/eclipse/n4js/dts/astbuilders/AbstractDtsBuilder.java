@@ -49,6 +49,8 @@ public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 	protected final Path srcFolder;
 	/** Current resource */
 	protected final LazyLinkingResource resource;
+	/** Contents of (base) resource */
+	protected final String contents;
 	/** Rule IDs of parser rules to visit as default */
 	protected final Set<Integer> visitChildrenRuleIDs = getVisitChildrenOfRules();
 
@@ -59,23 +61,24 @@ public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 
 	/** Creates a new child builder for the given parent. */
 	public AbstractDtsBuilder(AbstractDtsBuilder<?, ?> parent) {
-		this(parent, parent.tokenStream, parent.packageName, parent.srcFolder, parent.resource);
+		this(parent, parent.tokenStream, parent.packageName, parent.srcFolder, parent.resource, parent.contents);
 	}
 
 	/** Creates a new root builder without parent. */
 	public AbstractDtsBuilder(DtsTokenStream tokenStream, String packageName, Path srcFolder,
-			LazyLinkingResource resource) {
-		this(null, tokenStream, packageName, srcFolder, resource);
+			LazyLinkingResource resource, String contents) {
+		this(null, tokenStream, packageName, srcFolder, resource, contents);
 	}
 
 	private AbstractDtsBuilder(AbstractDtsBuilder<?, ?> parent, DtsTokenStream tokenStream, String packageName,
-			Path srcFolder, LazyLinkingResource resource) {
+			Path srcFolder, LazyLinkingResource resource, String contents) {
 
 		this.parent = parent;
 		this.packageName = packageName;
 		this.srcFolder = srcFolder;
 		this.tokenStream = tokenStream;
 		this.resource = resource;
+		this.contents = contents;
 	}
 
 	/** @return the root {@link DtsScriptBuilder} of this builder hierarchy. */
