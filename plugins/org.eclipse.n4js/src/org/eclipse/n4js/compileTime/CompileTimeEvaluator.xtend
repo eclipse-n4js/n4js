@@ -253,6 +253,8 @@ class CompileTimeEvaluator {
 			if (memberInSym !== null) {
 				// yes, it is!
 				return CompileTimeValue.of(memberInSym);
+			} else {
+				return CompileTimeValue.error("Unknown Symbol property '"+ propName +"'", expr);
 			}
 		} else if (targetElem instanceof TEnum) {
 			// B) Is 'expr' an access to the literal of a @NumberBased or @StringBased enum?

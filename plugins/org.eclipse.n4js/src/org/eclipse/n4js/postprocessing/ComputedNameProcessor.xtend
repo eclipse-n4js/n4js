@@ -88,7 +88,7 @@ class ComputedNameProcessor {
 	}
 
 	/**
-	 * Discards the types model element corresponding to the given AST node. Throws exception is given AST node does not
+	 * Discards the types model element corresponding to the given AST node. Throws exception if given AST node does not
 	 * have a corresponding types model element.
 	 */
 	def private void discardTypeModelElement(EObject astNode) {
