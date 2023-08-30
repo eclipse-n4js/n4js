@@ -885,6 +885,14 @@ export external public class Symbol extends Object {
 	 * @see ES6, 19.4.2.5
 	 */
 	public static keyFor(sym: symbol): string
+	/**
+	 * A method that performs explicit resource cleanup on an object. Called by the semantics of the using declaration and DisposableStack objects.
+	 */
+	public static dispose(): void;
+	/**
+	 * A method that performs explicit resource cleanup on an object. Called by the semantics of the await using declaration and AsyncDisposableStack objects.
+	 */
+	public static async asyncDispose(): symbol;
 }
 
 /**
