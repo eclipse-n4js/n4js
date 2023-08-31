@@ -27,10 +27,17 @@ package class N4JSSetterTypesBuilder {
 	@Inject extension N4JSTypesBuilderHelper
 	@Inject extension N4JSFormalParameterTypesBuilder
 	@Inject extension N4JSVariableStatementTypesBuilder
+	
+	def boolean canCreate(N4SetterDeclaration n4Setter) {
+		return n4Setter.name !== null || n4Setter.hasComputedPropertyName;
+	}
 
 	def package boolean relinkSetter(N4SetterDeclaration n4Setter, TClassifier classifierType, boolean preLinkingPhase, int idx) {
-		if (n4Setter.name === null && !n4Setter.hasComputedPropertyName) {
+		if (!canCreate(n4Setter)) {
 			return false
+		}
+		if (!hasValidName(n4Setter)) {
+			return false;
 		}
 
 		val setterType = classifierType.ownedMembers.get(idx) as TSetter;
@@ -43,7 +50,7 @@ package class N4JSSetterTypesBuilder {
 	}
 
 	def package TSetter createSetter(N4SetterDeclaration n4Setter, TClassifier classifierType, AbstractNamespace target, boolean preLinkingPhase) {
-		if (n4Setter.name === null && !n4Setter.hasComputedPropertyName) {
+		if (!canCreate(n4Setter)) {
 			return null
 		}
 

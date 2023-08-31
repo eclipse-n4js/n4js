@@ -22,10 +22,18 @@ import org.eclipse.n4js.types.utils.TypeUtils
 package class N4JSFieldTypesBuilder {
 
 	@Inject extension N4JSTypesBuilderHelper
+	
+	def boolean canCreate(N4FieldDeclaration n4Field) {
+		return n4Field.name !== null || n4Field.hasComputedPropertyName;
+	}
 
 	def package boolean relinkField(N4FieldDeclaration n4Field, TClassifier classifierType, boolean preLinkingPhase, int idx) {
-		if (n4Field.name === null && !n4Field.hasComputedPropertyName)
+		if (!canCreate(n4Field)) {
+			return false
+		}
+		if (!hasValidName(n4Field)) {
 			return false;
+		}
 
 		val field = classifierType.ownedMembers.get(idx) as TField
 		ensureEqualName(n4Field, field);
@@ -36,8 +44,9 @@ package class N4JSFieldTypesBuilder {
 	}
 
 	def package TField createField(N4FieldDeclaration n4Field, TClassifier classifierType, boolean preLinkingPhase) {
-		if (n4Field.name === null && !n4Field.hasComputedPropertyName)
+		if (!canCreate(n4Field)) {
 			return null;
+		}
 
 		val field = TypesFactory::eINSTANCE.createTField();
 		field.setMemberName(n4Field);

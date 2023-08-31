@@ -20,18 +20,29 @@ import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.ILeafNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
+import org.eclipse.xtext.nodemodel.impl.AbstractNode;
 import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.ITextRegionWithLineInformation;
 
 /**
  *
  */
-public class RootNode implements ICompositeNode {
+public class RootNode
+		extends AbstractNode // necessary due to NodeModelUtils#findLeafNodeAtOffset
+		implements ICompositeNode {
+
 	final ParserRuleContext program;
+	final String contents;
 
 	/** Constructor */
-	public RootNode(ParserRuleContext program) {
+	public RootNode(ParserRuleContext program, String contents) {
+		this.contents = contents;
 		this.program = program;
+	}
+
+	@Override
+	protected NodeType getNodeId() {
+		return NodeType.RootNode;
 	}
 
 	@Override
@@ -126,7 +137,7 @@ public class RootNode implements ICompositeNode {
 
 	@Override
 	public String getText() {
-		return "";
+		return contents;
 	}
 
 	@Override

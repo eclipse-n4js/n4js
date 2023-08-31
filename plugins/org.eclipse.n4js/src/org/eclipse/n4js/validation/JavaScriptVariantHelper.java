@@ -268,6 +268,14 @@ public interface JavaScriptVariantHelper {
 	public boolean isPlainJS(EObject eobj);
 
 	/**
+	 * Return true if the script is a TypeScript definition file.
+	 *
+	 * @param eobj
+	 *            The EObject providing the context for the check.
+	 */
+	public boolean isDTS(EObject eobj);
+
+	/**
 	 * Return true if "use strict" is declared.
 	 *
 	 * @param eobj

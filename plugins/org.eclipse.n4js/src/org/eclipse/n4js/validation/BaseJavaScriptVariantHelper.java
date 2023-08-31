@@ -184,6 +184,10 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	 */
 	public static final ValidationFeature<Boolean> IS_PLAIN_JS = new ValidationFeature<>(false);
 	/**
+	 * Variant is DTS?
+	 */
+	public static final ValidationFeature<Boolean> IS_DTS = new ValidationFeature<>(false);
+	/**
 	 * String representation of variant mode, e.g. "n4js", "js"
 	 */
 	public static final ValidationFeature<String> VARIANT_MODE_STRINGREP = new ValidationFeature<>(EXT_JS);
@@ -585,6 +589,17 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	@Override
 	public boolean isExternalMode(EObject eobj) {
 		return get(fileExtensionCalculator.getXpectAwareFileExtension(eobj), EXTERNAL_MODE);
+	}
+
+	/**
+	 * Returns true if the script is defined in a D.TS module.
+	 *
+	 * @param eobj
+	 *            The EObject providing the context for the check.
+	 */
+	@Override
+	public boolean isDTS(EObject eobj) {
+		return get(fileExtensionCalculator.getXpectAwareFileExtension(eobj), IS_DTS);
 	}
 
 	/**

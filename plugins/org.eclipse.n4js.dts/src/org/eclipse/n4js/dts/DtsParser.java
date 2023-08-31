@@ -122,6 +122,7 @@ public class DtsParser {
 			throws IOException {
 
 		CharStream fileContents = fromReader(reader);
+		String contents = fileContents.toString();
 		long millis = System.currentTimeMillis();
 
 		TypeScriptLexer lexer = new TypeScriptLexer(fileContents);
@@ -156,9 +157,9 @@ public class DtsParser {
 		resource.clearLazyProxyInformation();
 
 		// convert parse tree to AST
-		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, packageName, srcFolder, resource);
+		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, packageName, srcFolder, resource, contents);
 		Script root = astBuilder.consume(stats.tree);
-		RootNode rootNode = new RootNode(stats.tree);
+		RootNode rootNode = new RootNode(stats.tree, contents);
 		Iterable<? extends INode> syntaxErrors = stats.errors;
 
 		ILoadResultInfoAdapter loadResultInfo = ILoadResultInfoAdapter.get(resource);
@@ -175,6 +176,7 @@ public class DtsParser {
 		ParserRuleContext ctx = adapter.getContext();
 		List<StatementContext> statements = adapter.getStatements();
 		DtsTokenStream tokens = adapter.getTokenStream();
+		String contents = adapter.getContents();
 
 		ProgramContext prgCtx = new ProgramContext(null, 0) {
 			{
@@ -199,9 +201,9 @@ public class DtsParser {
 		};
 
 		// convert parse tree to AST
-		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, packageName, srcFolder, resource);
+		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, packageName, srcFolder, resource, contents);
 		Script root = astBuilder.consume(prgCtx);
-		RootNode rootNode = new RootNode(ctx);
+		RootNode rootNode = new RootNode(ctx, contents);
 
 		// nested scripts represent declared modules and elements directly contained
 		// in a declared module are always exported, so we have to adjust as follows:

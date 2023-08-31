@@ -38,19 +38,29 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 	@Inject extension N4JSTypeVariableTypesBuilder
 	@Inject extension N4JSVariableStatementTypesBuilder
 	@Inject extension N4JSTypesBuilderHelper
+	
+	def boolean canCreate(N4MethodDeclaration methodDecl) {
+		val methodDefinedType = methodDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
+		if (methodDefinedType !== null && !methodDefinedType.eIsProxy) {
+			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
+		}
+		if (methodDecl.name === null && !methodDecl.hasComputedPropertyName && !methodDecl.callSignature) {
+			return false;
+		}
+		return true;
+	}
 
 	def package boolean relinkMethod(N4MethodDeclaration methodDecl, TClassifier classifier, boolean preLinkingPhase, int idx) {
+		if (!canCreate(methodDecl)) {
+			return false;
+		}
+		if (!hasValidName(methodDecl)) {
+			return false;
+		}
 		relinkMethod(methodDecl, classifier.ownedMembers.get(idx) as TMethod, preLinkingPhase);
 	}
 
 	def package boolean relinkMethod(N4MethodDeclaration methodDecl, TMethod tMethod, boolean preLinkingPhase) {
-		val methodDefinedType = methodDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
-		if (methodDefinedType !== null && ! methodDefinedType.eIsProxy) {
-			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
-		}
-		if (methodDecl.name === null && !methodDecl.hasComputedPropertyName && !methodDecl.callSignature) {
-			return false
-		}
 		val methodType = tMethod;
 		ensureEqualName(methodDecl, methodType);
 
@@ -70,12 +80,8 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 	 * @param preLinkingPhase
 	 */
 	def package TMethod createMethod(N4MethodDeclaration methodDecl, AbstractNamespace target, boolean preLinkingPhase) {
-		val methodDefinedType = methodDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
-		if (methodDefinedType !== null && !methodDefinedType.eIsProxy) {
-			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
-		}
-		if (methodDecl.name === null && !methodDecl.hasComputedPropertyName && !methodDecl.callSignature) {
-			return null
+		if (!canCreate(methodDecl)) {
+			return null;
 		}
 		val methodType = TypesFactory::eINSTANCE.createTMethod();
 		if (methodDecl.isCallSignature) {

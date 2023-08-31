@@ -17,6 +17,7 @@ import java.util.List
 import org.apache.log4j.Logger
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.compileTime.CompileTimeEvaluator
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.Annotation
 import org.eclipse.n4js.n4JS.FunctionDefinition
@@ -31,6 +32,7 @@ import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument
 import org.eclipse.n4js.postprocessing.ComputedNameProcessor
+import org.eclipse.n4js.scoping.N4JSScopeProviderLocalOnly
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -47,12 +49,16 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypeAccessModifier
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.types.utils.TypeUtils
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 
 @Singleton
 package class N4JSTypesBuilderHelper {
 
 	@Inject private JavaScriptVariantHelper jsVariantHelper;
+	@Inject private CompileTimeEvaluator compileTimeEvaluator;
+	@Inject	private N4JSScopeProviderLocalOnly n4jsScopeProviderLocalOnly;
 
 	private static Logger logger = Logger.getLogger(N4JSTypesBuilderHelper);
 
@@ -228,5 +234,27 @@ package class N4JSTypesBuilderHelper {
 		target.internalTypes += type;
 
 		return type;
+	}
+
+	def package boolean hasValidName(PropertyNameOwner pno) {
+		if (pno.name === null && pno.hasComputedPropertyName) {
+			if (N4JSLanguageUtils.isProcessedAsCompileTimeExpression(pno?.declaredName.expression)) {
+				return false;
+			}
+			
+			val litOrComp = pno.declaredName;
+			val G = RuleEnvironmentExtensions.newRuleEnvironment(pno);
+			val tac = n4jsScopeProviderLocalOnly.newCrossFileResolutionSuppressor();
+			try {
+				val value = compileTimeEvaluator.evaluateCompileTimeExpression(G, litOrComp.expression);
+				val name = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(value);	
+				if (name === null) {
+					return false;
+				}
+			} finally {
+				tac.close();
+			}
+		}
+		return true;
 	}
 }

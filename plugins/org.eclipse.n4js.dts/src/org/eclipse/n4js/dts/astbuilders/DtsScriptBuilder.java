@@ -69,9 +69,9 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 
 	/** Constructor */
 	public DtsScriptBuilder(DtsTokenStream tokenStream, String packageName, Path srcFolder,
-			LazyLinkingResource resource) {
+			LazyLinkingResource resource, String contents) {
 
-		super(tokenStream, packageName, srcFolder, resource);
+		super(tokenStream, packageName, srcFolder, resource, contents);
 	}
 
 	/** Returns true iff this resource is nested/virtual */
