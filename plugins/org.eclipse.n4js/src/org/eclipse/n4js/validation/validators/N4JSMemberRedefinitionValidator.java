@@ -868,15 +868,16 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 					if (isCallConstructSignature(m)) {
 						continue; // avoid duplicate error messages (covered by CLF_CALL_CONSTRUCT_SIG_CANNOT_IMPLEMENT)
 					}
-					if (m.isAbstract()) {
-						if (abstractMembers == null) {
-							abstractMembers = new ArrayList<>();
-						}
-						if (isClassExtendsInterface(classifier, m)) {
-							continue;
-						}
-						abstractMembers.add(m);
+					if (!m.isAbstract()) {
+						continue;
 					}
+					if (isClassExtendsInterface(classifier, m)) {
+						continue;
+					}
+					if (abstractMembers == null) {
+						abstractMembers = new ArrayList<>();
+					}
+					abstractMembers.add(m);
 				}
 			}
 		}
