@@ -470,7 +470,7 @@ public class ParserContextUtils {
 						&& stmtCtx.exportStatement().exportStatementTail() instanceof ExportEqualsContext) {
 
 					ExportEqualsContext eeCtx = (ExportEqualsContext) stmtCtx.exportStatement().exportStatementTail();
-					return eeCtx.namespaceName().getText().toString();
+					return eeCtx.typeName().getText().toString();
 				}
 			}
 		}

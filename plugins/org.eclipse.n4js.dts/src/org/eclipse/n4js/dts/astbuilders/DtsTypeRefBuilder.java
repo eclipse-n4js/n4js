@@ -48,6 +48,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.TupleTypeArgumentContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TupleTypeExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentsContext;
+import org.eclipse.n4js.dts.TypeScriptParser.TypeNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.UnionTypeExpressionContext;
 import org.eclipse.n4js.dts.utils.ParserContextUtils;
@@ -407,10 +408,8 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 	@Override
 	public void enterQueryTypeRef(QueryTypeRefContext ctx) {
 
-		if (ctx.propertyAccessExpressionInTypeRef() != null) {
-			String declTypeName = ctx.propertyAccessExpressionInTypeRef().getText();
-			TypeRef ptr = createParameterizedTypeRef(declTypeName, (TypeArgumentsContext) null, false);
-
+		if (ctx.typeName() != null) {
+			TypeRef ptr = createParameterizedTypeRef(ctx.typeName());
 			if (ptr != null) {
 				TypeTypeRef ttr = TypeRefsFactory.eINSTANCE.createTypeTypeRef();
 				ttr.setOriginalAliasTypeRef(null);
@@ -466,6 +465,13 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 		List<TStructMember> members = newTStructBodyBuilder().consume(ctx.interfaceBody());
 		ptr.getAstStructuralMembers().addAll(members);
 		result = ptr;
+	}
+
+	/** Creates a TypeRef from the given {@link TypeNameContext} */
+	public TypeRef createParameterizedTypeRef(TypeNameContext typeNameCtx) {
+		String declTypeName = typeNameCtx != null ? typeNameCtx.getText() : null;
+		TypeRef ptr = createParameterizedTypeRef(declTypeName, (TypeArgumentsContext) null, false);
+		return ptr;
 	}
 
 	private TypeRef createParameterizedTypeRef(String declTypeName, TypeArgumentsContext typeArgsCtx,

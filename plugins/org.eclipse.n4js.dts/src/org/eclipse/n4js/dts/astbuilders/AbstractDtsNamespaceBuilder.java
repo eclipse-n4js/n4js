@@ -147,7 +147,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 	public void enterNamespaceDeclaration(NamespaceDeclarationContext ctx) {
 		if (result == null) {
 			boolean isExported = ParserContextUtils.isExported(ctx);
-			result = doCreateN4NamespaceDeclaration(ctx.namespaceName().getText(), isExported);
+			result = doCreateN4NamespaceDeclaration(ctx.typeName().getText(), isExported);
 			walker.enqueue(ParserContextUtils.getStatements(ctx.block()));
 		} else {
 			N4NamespaceDeclaration nd = newNamespaceBuilder().consume(ctx);
