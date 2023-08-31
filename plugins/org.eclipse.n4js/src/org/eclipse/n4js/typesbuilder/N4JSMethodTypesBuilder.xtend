@@ -14,7 +14,6 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
-import org.eclipse.n4js.compileTime.CompileTimeEvaluator
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
@@ -22,7 +21,6 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.SuperLiteral
 import org.eclipse.n4js.n4JS.ThisLiteral
-import org.eclipse.n4js.scoping.N4JSScopeProviderLocalOnly
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.types.AbstractNamespace
@@ -31,7 +29,6 @@ import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.types.utils.TypeUtils
-import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 
@@ -41,9 +38,6 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 	@Inject extension N4JSTypeVariableTypesBuilder
 	@Inject extension N4JSVariableStatementTypesBuilder
 	@Inject extension N4JSTypesBuilderHelper
-
-	@Inject private CompileTimeEvaluator compileTimeEvaluator;
-	@Inject	private N4JSScopeProviderLocalOnly n4jsScopeProviderLocalOnly;
 	
 	def boolean canCreate(N4MethodDeclaration methodDecl) {
 		val methodDefinedType = methodDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
@@ -60,23 +54,8 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 		if (!canCreate(methodDecl)) {
 			return false;
 		}
-		if (methodDecl.name === null && methodDecl.hasComputedPropertyName) {
-			if (N4JSLanguageUtils.isProcessedAsCompileTimeExpression(methodDecl?.declaredName.expression)) {
-				return false;
-			}
-			
-			val litOrComp = methodDecl.declaredName;
-			val G = RuleEnvironmentExtensions.newRuleEnvironment(methodDecl);
-			val tac = n4jsScopeProviderLocalOnly.newCrossFileResolutionSuppressor();
-			try {
-				val value = compileTimeEvaluator.evaluateCompileTimeExpression(G, litOrComp.expression);
-				val name = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(value);	
-				if (name === null) {
-					return false;
-				}
-			} finally {
-				tac.close();
-			}
+		if (!hasValidName(methodDecl)) {
+			return false;
 		}
 		relinkMethod(methodDecl, classifier.ownedMembers.get(idx) as TMethod, preLinkingPhase);
 	}

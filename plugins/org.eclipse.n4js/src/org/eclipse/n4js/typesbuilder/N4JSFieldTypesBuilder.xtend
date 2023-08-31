@@ -31,6 +31,9 @@ package class N4JSFieldTypesBuilder {
 		if (!canCreate(n4Field)) {
 			return false
 		}
+		if (!hasValidName(n4Field)) {
+			return false;
+		}
 
 		val field = classifierType.ownedMembers.get(idx) as TField
 		ensureEqualName(n4Field, field);

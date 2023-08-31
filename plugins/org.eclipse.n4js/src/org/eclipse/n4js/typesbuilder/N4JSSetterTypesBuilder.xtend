@@ -36,6 +36,9 @@ package class N4JSSetterTypesBuilder {
 		if (!canCreate(n4Setter)) {
 			return false
 		}
+		if (!hasValidName(n4Setter)) {
+			return false;
+		}
 
 		val setterType = classifierType.ownedMembers.get(idx) as TSetter;
 		ensureEqualName(n4Setter, setterType);
