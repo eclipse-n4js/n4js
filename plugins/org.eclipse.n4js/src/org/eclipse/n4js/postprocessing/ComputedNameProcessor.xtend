@@ -92,6 +92,8 @@ class ComputedNameProcessor {
 	 * have a corresponding types model element.
 	 */
 	def private void discardTypeModelElement(EObject astNode) {
+		val elem = N4JSASTUtils.getCorrespondingTypeModelElement(astNode);
+		
 		EcoreUtilN4.doWithDeliver(false, [
 			switch (astNode) {
 				TypeDefiningElement:
@@ -117,7 +119,6 @@ class ComputedNameProcessor {
 			};
 		], astNode);
 		
-		val elem = N4JSASTUtils.getCorrespondingTypeModelElement(astNode);
 		if (elem instanceof SyntaxRelatedTElement) {
 			elem.astElement = null;
 		}
