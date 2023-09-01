@@ -47,6 +47,9 @@ public interface ILoadResultInfoAdapter extends Adapter {
 	/** Returns all virtual {@link URI}s of nested resources */
 	public Collection<URI> getNewUris();
 
+	/** Returns the URI for a given offset */
+	public URI getURI(int offset);
+
 	/**
 	 * The {@link ResourceSet} of the given resource is checked that all nested resources of the given resource exist.
 	 */
