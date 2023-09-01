@@ -99,6 +99,7 @@ import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.xtext.ide.server.ResourceTaskContext;
 import org.eclipse.n4js.xtext.ide.server.TextDocumentFrontend;
 import org.eclipse.n4js.xtext.ide.server.XDocument;
+import org.eclipse.n4js.xtext.ide.server.build.ILoadResultInfoAdapter;
 import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
@@ -258,7 +259,8 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	protected List<CallHierarchyIncomingCall> callHierarchyIncomingCalls(ResourceTaskContext rtc,
 			CallHierarchyIncomingCallsParams params, CancelIndicator ci) {
 
-		EObject element = resolveElement(rtc, params.getItem().getSelectionRange());
+		CallHierarchyItem paramItem = params.getItem();
+		EObject element = resolveElement(rtc, paramItem.getUri(), paramItem.getSelectionRange());
 
 		List<CallHierarchyIncomingCall> incomingCalls = new ArrayList<>();
 		if (element instanceof TFunction) {
@@ -335,7 +337,8 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	protected List<CallHierarchyOutgoingCall> callHierarchyOutgoingCalls(ResourceTaskContext rtc,
 			CallHierarchyOutgoingCallsParams params, CancelIndicator ci) {
 
-		EObject element = resolveElement(rtc, params.getItem().getSelectionRange());
+		CallHierarchyItem paramItem = params.getItem();
+		EObject element = resolveElement(rtc, paramItem.getUri(), paramItem.getSelectionRange());
 
 		List<FunctionDefinition> funDefs = new ArrayList<>();
 		if (element instanceof TMethod) {
@@ -442,7 +445,8 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	protected List<TypeHierarchyItem> typeHierarchySubtypes(ResourceTaskContext rtc, TypeHierarchySubtypesParams params,
 			CancelIndicator ci) {
 
-		EObject element = resolveElement(rtc, params.getItem().getSelectionRange());
+		TypeHierarchyItem paramItem = params.getItem();
+		EObject element = resolveElement(rtc, paramItem.getUri(), paramItem.getSelectionRange());
 
 		List<TypeHierarchyItem> subTypesTHI = new ArrayList<>();
 		if (element instanceof TClassifier) {
@@ -487,7 +491,8 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	protected List<TypeHierarchyItem> typeHierarchySupertypes(ResourceTaskContext rtc,
 			TypeHierarchySupertypesParams params, CancelIndicator ci) {
 
-		EObject element = resolveElement(rtc, params.getItem().getSelectionRange());
+		TypeHierarchyItem paramItem = params.getItem();
+		EObject element = resolveElement(rtc, paramItem.getUri(), paramItem.getSelectionRange());
 
 		List<TypeHierarchyItem> superTypesTHI = new ArrayList<>();
 		if (element instanceof TClassifier) {
@@ -500,27 +505,39 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 		return superTypesTHI;
 	}
 
-	private EObject resolveElement(ResourceTaskContext rtc, Range selRange) {
+	private EObject resolveElement(ResourceTaskContext rtc, String uriStr, Range range) {
 		XtextResourceSet resSet = rtc.getResourceSet();
-		N4JSResource resource = (N4JSResource) rtc.getResource();
-		IResourceDescriptions index = workspaceAccess.getXtextIndex(resSet).get();
+		URI uri = URIUtils.toFileUriDecode(uriStr);
+		N4JSResource resource = (N4JSResource) resSet.getResource(uri, true);
 
-		IResourceDescription resDesc = index.getResourceDescription(rtc.getURI());
+		int offset;
+		try {
+			XDocument doc = new XDocument(1, resource.getParseResult().getRootNode().getText());
+			offset = doc.getOffSet(range.getStart());
+		} catch (IndexOutOfBoundsException e) {
+			LOG.error(e);
+			return null;
+		}
+
+		ILoadResultInfoAdapter loadResultInfo = ILoadResultInfoAdapter.get(resource);
+		if (loadResultInfo != null) {
+			// in case of virtual resources we need to delegate to the corresponding resource
+			uri = loadResultInfo.getURI(offset);
+			resource = (N4JSResource) resource.getResourceSet().getResource(uri, true);
+		}
+
+		IResourceDescriptions index = workspaceAccess.getXtextIndex(resSet).get();
+		IResourceDescription resDesc = index.getResourceDescription(uri);
 		if (resDesc != null) {
 			// ensures that we get an TModele element (instead of an AST element)
 			workspaceAccess.loadModuleFromIndex(resSet, resDesc, true);
 		}
-		EObject element = null;
-		try {
-			int offset = rtc.getDocument().getOffSet(selRange.getStart());
-			element = eObjectAtOffsetHelper.resolveElementAt(resource, offset);
-			EObject type = N4JSASTUtils.getCorrespondingTypeModelElement(element);
-			if (type != null) {
-				element = type;
-			}
-		} catch (IndexOutOfBoundsException e) {
-			LOG.error(e);
+		EObject element = eObjectAtOffsetHelper.resolveElementAt(resource, offset);
+		EObject type = N4JSASTUtils.getCorrespondingTypeModelElement(element);
+		if (type != null) {
+			element = type;
 		}
+
 		return element;
 	}
 
