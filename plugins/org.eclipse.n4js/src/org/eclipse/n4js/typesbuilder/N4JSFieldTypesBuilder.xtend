@@ -27,18 +27,14 @@ package class N4JSFieldTypesBuilder {
 		return n4Field.name !== null || n4Field.hasComputedPropertyName;
 	}
 
-	def package boolean relinkField(N4FieldDeclaration n4Field, TClassifier classifierType, boolean preLinkingPhase, int idx) {
+	def package boolean relinkField(N4FieldDeclaration n4Field, TField tField, boolean preLinkingPhase) {
 		if (!canCreate(n4Field)) {
 			return false
 		}
-		if (!hasValidName(n4Field)) {
-			return false;
-		}
 
-		val field = classifierType.ownedMembers.get(idx) as TField
-		ensureEqualName(n4Field, field);
-		field.astElement = n4Field;
-		n4Field.definedField = field
+		ensureEqualName(n4Field, tField);
+		tField.astElement = n4Field;
+		n4Field.definedField = tField
 
 		return true;
 	}

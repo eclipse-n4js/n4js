@@ -110,6 +110,7 @@ import org.eclipse.n4js.xtext.ide.server.util.LspLogger;
 import org.eclipse.n4js.xtext.ide.server.util.ParamHelper;
 import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
 import org.eclipse.n4js.xtext.ide.server.util.XChunkedResourceDescriptions;
+import org.eclipse.n4js.xtext.resource.ResourceWithDocument;
 import org.eclipse.xtext.ide.server.ICapabilitiesContributor;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerExtension;
@@ -816,9 +817,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			if (currOFC != null) {
 				ResourceSet resSet = currOFC.getResourceSet();
 				Resource res = resSet.getResource(uri, true);
-				if (res instanceof XtextResource) {
-					String content = ((XtextResource) res).getParseResult().getRootNode().getText();
-					XDocument doc = new XDocument(1, content);
+				if (res instanceof ResourceWithDocument) {
+					XDocument doc = ((ResourceWithDocument) res).getDocument();
 					boolean isOpen = resourceTaskManager.hasContext(uri);
 					T result = function.apply(
 							new ILanguageServerAccess.Context(res, doc, isOpen, CancelIndicator.NullImpl));

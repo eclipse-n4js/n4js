@@ -18,6 +18,7 @@ package org.eclipse.n4js.resource;
 import static org.eclipse.xtext.diagnostics.Diagnostic.SYNTAX_DIAGNOSTIC_WITH_RANGE;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -89,6 +90,8 @@ import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
+import org.eclipse.n4js.xtext.ide.server.XDocument;
+import org.eclipse.n4js.xtext.resource.ResourceWithDocument;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.DiagnosticMessage;
 import org.eclipse.xtext.diagnostics.ExceptionDiagnostic;
@@ -128,7 +131,7 @@ import com.google.inject.Inject;
  * contents class {@link ModuleAwareContentsList}.
  */
 @SuppressWarnings("restriction")
-public class N4JSResource extends PostProcessingAwareResource implements ProxyResolvingResource {
+public class N4JSResource extends PostProcessingAwareResource implements ProxyResolvingResource, ResourceWithDocument {
 	/** @see #clearUnnecessaryFunctionBodies(EObject) */
 	public static final String OPTION_CLEAR_FUNCTION_BODIES = N4JSResource.class.getName() + ".TRIM_FUNCTION_BODIES";
 
@@ -1675,6 +1678,34 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 					// freezing Tracking of used imports in OriginAwareScope
 					() -> script.setFlaggedUsageMarkingFinished(true),
 					script);
+		}
+	}
+
+	@Override
+	public XDocument getDocument() {
+		return new XDocument(1, getDocumentContent());
+	}
+
+	private String getDocumentContent() {
+		IParseResult parseResultOrNull = super.getParseResult();
+		if (parseResultOrNull != null) {
+			return parseResultOrNull.getRootNode().getText();
+		}
+
+		URI baseUri = URIUtils.getBaseOfVirtualResourceURI(getURI());
+		try (InputStream is = getURIConverter().createInputStream(baseUri, defaultLoadOptions)) {
+
+			ByteArrayOutputStream result = new ByteArrayOutputStream();
+			byte[] buffer = new byte[1024];
+			for (int length; (length = is.read(buffer)) != -1;) {
+				result.write(buffer, 0, length);
+			}
+			// StandardCharsets.UTF_8.name() > JDK 7
+			return result.toString("UTF-8");
+
+		} catch (IOException e) {
+			LOGGER.error(e);
+			return "";
 		}
 	}
 

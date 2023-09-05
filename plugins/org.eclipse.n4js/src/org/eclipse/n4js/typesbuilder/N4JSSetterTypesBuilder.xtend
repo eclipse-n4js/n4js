@@ -32,20 +32,16 @@ package class N4JSSetterTypesBuilder {
 		return n4Setter.name !== null || n4Setter.hasComputedPropertyName;
 	}
 
-	def package boolean relinkSetter(N4SetterDeclaration n4Setter, TClassifier classifierType, boolean preLinkingPhase, int idx) {
+	def package boolean relinkSetter(N4SetterDeclaration n4Setter, TSetter tSetter, boolean preLinkingPhase) {
 		if (!canCreate(n4Setter)) {
 			return false
 		}
-		if (!hasValidName(n4Setter)) {
-			return false;
-		}
 
-		val setterType = classifierType.ownedMembers.get(idx) as TSetter;
-		ensureEqualName(n4Setter, setterType);
-		setterType.linkFormalParameters(n4Setter, preLinkingPhase)
+		ensureEqualName(n4Setter, tSetter);
+		tSetter.linkFormalParameters(n4Setter, preLinkingPhase)
 
-		setterType.astElement = n4Setter
-		n4Setter.definedSetter = setterType
+		tSetter.astElement = n4Setter
+		n4Setter.definedSetter = tSetter
 		return true
 	}
 

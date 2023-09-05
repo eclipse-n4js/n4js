@@ -54,9 +54,6 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 		if (!canCreate(methodDecl)) {
 			return false;
 		}
-		if (!hasValidName(methodDecl)) {
-			return false;
-		}
 		relinkMethod(methodDecl, classifier.ownedMembers.get(idx) as TMethod, preLinkingPhase);
 	}
 

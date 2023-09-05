@@ -17,8 +17,13 @@ import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
+import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TField
+import org.eclipse.n4js.ts.types.TGetter
+import org.eclipse.n4js.ts.types.TMethod
+import org.eclipse.n4js.ts.types.TSetter
 
 /**
  * Abstract base class for N4JSClassDeclarationTypesBuilder and N4JSInterfaceDeclarationTypesBuilder
@@ -75,11 +80,28 @@ package abstract class N4JSClassifierDeclarationTypesBuilder {
 		}
 
 		// OWNED members
-		var memberIdx = 0;
-		memberIdx = classifier.relinkFields(declaration, preLinkingPhase, memberIdx);
-		memberIdx = classifier.relinkMethods(declaration, preLinkingPhase, memberIdx);
-		memberIdx = classifier.relinkGetters(declaration, preLinkingPhase, memberIdx);
-		memberIdx = classifier.relinkSetters(declaration, preLinkingPhase, memberIdx);
+		var idx = 0;
+		for (tMember : classifier.ownedMembers) {
+			val member = declaration.ownedMembersRaw.get(idx) as PropertyNameOwner;
+			if (validPNO(member) && tMember.name == member.name) {
+				if (tMember instanceof TField && member instanceof N4FieldDeclaration) {
+					relinkField(member as N4FieldDeclaration, tMember as TField, preLinkingPhase);
+				}
+				if (tMember instanceof TMethod && member instanceof N4MethodDeclaration) {
+					val method = member as N4MethodDeclaration;
+					if (!method.isConstructSignature && !method.isCallSignature) {
+						relinkMethod(method, tMember as TMethod, preLinkingPhase);
+					}
+				}
+				if (tMember instanceof TGetter && member instanceof N4GetterDeclaration) {
+					relinkGetter(member as N4GetterDeclaration, tMember as TGetter, preLinkingPhase);
+				}
+				if (tMember instanceof TSetter && member instanceof N4SetterDeclaration) {
+					relinkSetter(member as N4SetterDeclaration, tMember as TSetter, preLinkingPhase);
+				}
+			}
+			idx++;
+		}
 
 		// TODO proxy resolve vs setter invocation?
 		classifier.astElement = declaration;
@@ -87,40 +109,4 @@ package abstract class N4JSClassifierDeclarationTypesBuilder {
 		declaration.definedType = classifier;
 	}
 
-	def protected int relinkFields(TClassifier classifier, N4ClassifierDefinition definition, boolean preLinkingPhase, int start) {
-		return definition.ownedMembers.filter(N4FieldDeclaration).fold(start) [ idx, fld |
-			if (relinkField(fld, classifier, preLinkingPhase, idx)) {
-				return idx + 1
-			}
-			return idx
-		]
-	}
-
-	def protected int relinkMethods(TClassifier classifier, N4ClassifierDefinition definition, boolean preLinkingPhase, int start) {
-		var int result = definition.ownedMembers.filter(N4MethodDeclaration).fold(start) [ idx, method |
-			if (relinkMethod(method, classifier, preLinkingPhase, idx)) {
-				return idx + 1
-			}
-			return idx
-		]
-		return result;
-	}
-
-	def protected int relinkGetters(TClassifier classifier, N4ClassifierDefinition definition, boolean preLinkingPhase, int start) {
-		return definition.ownedMembers.filter(N4GetterDeclaration).fold(start) [ idx, getter |
-			if (relinkGetter(getter, classifier, preLinkingPhase, idx)) {
-				return idx + 1
-			}
-			return idx
-		]
-	}
-
-	def protected int relinkSetters(TClassifier classifier, N4ClassifierDefinition definition, boolean preLinkingPhase, int start) {
-		return definition.ownedMembers.filter(N4SetterDeclaration).fold(start) [ idx, setter |
-			if (relinkSetter(setter, classifier, preLinkingPhase, idx)) {
-				return idx + 1
-			}
-			return idx
-		]
-	}
 }
