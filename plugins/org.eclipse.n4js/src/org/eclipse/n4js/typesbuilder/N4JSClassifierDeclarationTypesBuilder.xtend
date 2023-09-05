@@ -24,6 +24,9 @@ import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
+import org.eclipse.n4js.n4JS.N4MemberDeclaration
+import java.util.HashMap
+import java.util.Map
 
 /**
  * Abstract base class for N4JSClassDeclarationTypesBuilder and N4JSInterfaceDeclarationTypesBuilder
@@ -80,25 +83,32 @@ package abstract class N4JSClassifierDeclarationTypesBuilder {
 		}
 
 		// OWNED members
+		val Map<String, N4MemberDeclaration> memberByName = new HashMap();
+		for (member : declaration.ownedMembersRaw) {
+			if (member.name !== null) {
+				memberByName.put(member.name, member);
+			} else if ((member as PropertyNameOwner).hasComputedPropertyName) {
+				// TODO compute name here!
+			}
+		}
+		
 		var idx = 0;
 		for (tMember : classifier.ownedMembers) {
-			val member = declaration.ownedMembersRaw.get(idx) as PropertyNameOwner;
-			if (validPNO(member) && tMember.name == member.name) {
-				if (tMember instanceof TField && member instanceof N4FieldDeclaration) {
-					relinkField(member as N4FieldDeclaration, tMember as TField, preLinkingPhase);
+			val member = memberByName.get(tMember.name);
+			if (tMember instanceof TField && member instanceof N4FieldDeclaration) {
+				relinkField(member as N4FieldDeclaration, tMember as TField, preLinkingPhase);
+			}
+			if (tMember instanceof TMethod && member instanceof N4MethodDeclaration) {
+				val method = member as N4MethodDeclaration;
+				if (!method.isConstructSignature && !method.isCallSignature) {
+					relinkMethod(method, tMember as TMethod, preLinkingPhase);
 				}
-				if (tMember instanceof TMethod && member instanceof N4MethodDeclaration) {
-					val method = member as N4MethodDeclaration;
-					if (!method.isConstructSignature && !method.isCallSignature) {
-						relinkMethod(method, tMember as TMethod, preLinkingPhase);
-					}
-				}
-				if (tMember instanceof TGetter && member instanceof N4GetterDeclaration) {
-					relinkGetter(member as N4GetterDeclaration, tMember as TGetter, preLinkingPhase);
-				}
-				if (tMember instanceof TSetter && member instanceof N4SetterDeclaration) {
-					relinkSetter(member as N4SetterDeclaration, tMember as TSetter, preLinkingPhase);
-				}
+			}
+			if (tMember instanceof TGetter && member instanceof N4GetterDeclaration) {
+				relinkGetter(member as N4GetterDeclaration, tMember as TGetter, preLinkingPhase);
+			}
+			if (tMember instanceof TSetter && member instanceof N4SetterDeclaration) {
+				relinkSetter(member as N4SetterDeclaration, tMember as TSetter, preLinkingPhase);
 			}
 			idx++;
 		}
