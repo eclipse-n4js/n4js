@@ -1008,7 +1008,7 @@ public class N4JSLanguageUtils {
 			if (allowProxyResolution) {
 				// mode #1: we may resolve proxies
 				val prop = expr.property;
-				if(prop instanceof TField && prop.eContainer===sym) {
+				if ((prop instanceof TField || prop instanceof TMethod) && prop.eContainer===sym) {
 					return prop as TField;
 				}
 			} else {
@@ -1079,7 +1079,8 @@ public class N4JSLanguageUtils {
 		// cases of expressions that may or may not be a compile-time expression:
 		val parent = expr.eContainer;
 		return parent instanceof VariableDeclaration
-			|| parent instanceof N4FieldDeclaration;
+			|| parent instanceof N4FieldDeclaration
+			|| parent instanceof N4MethodDeclaration;
 	}
 
 	/**
