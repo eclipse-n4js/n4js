@@ -68,6 +68,7 @@ import org.eclipse.n4js.parser.conversion.CompositeSyntaxErrorMessages;
 import org.eclipse.n4js.parser.conversion.LegacyOctalIntValueConverter;
 import org.eclipse.n4js.parser.conversion.N4JSStringValueConverter;
 import org.eclipse.n4js.parser.conversion.RegExLiteralConverter;
+import org.eclipse.n4js.postprocessing.ASTFlowInfo;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
@@ -79,6 +80,7 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.types.util.TypeModelUtils;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder.RelinkTModuleHashMismatchException;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.n4js.utils.ResourceType;
@@ -87,6 +89,7 @@ import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
@@ -308,6 +311,12 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	@Inject
 	private N4JSResourceDescriptionManager resourceDescriptionManager;
+
+	@Inject
+	private TypeSystemHelper typeSystemHelper;
+
+	@Inject
+	private JavaScriptVariantHelper jsVariantHelper;
 
 	/*
 	 * Even though the constructor is empty, it simplifies debugging (allows to set a breakpoint) thus we keep it here.
@@ -633,6 +642,15 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			logger.error("Error in demandLoadResource for " + getURI(), ioe);
 			return object;
 		}
+	}
+
+	/** Creates and sets a new {@link ASTMetaInfoCache}. Overwrites the old cache if not null. */
+	public ASTMetaInfoCache createASTMetaInfoCache() {
+		final boolean hasBrokenAST = !getErrors().isEmpty();
+		final ASTFlowInfo flowInfo = new ASTFlowInfo(typeSystemHelper, jsVariantHelper);
+		final ASTMetaInfoCache newCache = new ASTMetaInfoCache(this, hasBrokenAST, flowInfo);
+		setASTMetaInfoCache(newCache);
+		return newCache;
 	}
 
 	private void superLoad(Map<?, ?> options) throws IOException {

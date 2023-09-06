@@ -11,10 +11,15 @@
 package org.eclipse.n4js.typesbuilder
 
 import com.google.inject.Inject
+import java.util.HashMap
+import java.util.Map
+import org.eclipse.n4js.compileTime.CompileTimeEvaluator
+import org.eclipse.n4js.compileTime.CompileTimeValue.ValueValid
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
+import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameOwner
@@ -24,9 +29,8 @@ import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
-import org.eclipse.n4js.n4JS.N4MemberDeclaration
-import java.util.HashMap
-import java.util.Map
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 
 /**
  * Abstract base class for N4JSClassDeclarationTypesBuilder and N4JSInterfaceDeclarationTypesBuilder
@@ -40,6 +44,7 @@ package abstract class N4JSClassifierDeclarationTypesBuilder {
 	@Inject protected extension N4JSMethodTypesBuilder
 	@Inject protected extension N4JSGetterTypesBuilder
 	@Inject protected extension N4JSSetterTypesBuilder
+	@Inject	protected CompileTimeEvaluator compileTimeEvaluator;
 
 	def protected void addFields(TClassifier classifier, N4ClassifierDefinition definition, boolean preLinkingPhase) {
 		val n4Fields = definition.ownedMembers.filter(N4FieldDeclaration);
@@ -85,10 +90,19 @@ package abstract class N4JSClassifierDeclarationTypesBuilder {
 		// OWNED members
 		val Map<String, N4MemberDeclaration> memberByName = new HashMap();
 		for (member : declaration.ownedMembersRaw) {
+			val pno = member as PropertyNameOwner;
 			if (member.name !== null) {
 				memberByName.put(member.name, member);
-			} else if ((member as PropertyNameOwner).hasComputedPropertyName) {
-				// TODO compute name here!
+			} else if (pno.hasComputedPropertyName) {
+				val expr = pno.declaredName.expression;
+				if (N4JSLanguageUtils.isProcessedAsCompileTimeExpression(expr)) {
+					val G = RuleEnvironmentExtensions.newRuleEnvironment(pno);
+					val ctv = compileTimeEvaluator.evaluateCompileTimeExpression(G, expr);
+					if (ctv.valid) {
+						val ctvName = (ctv as ValueValid<?>).value.toString;
+						memberByName.put(ctvName, member);
+					}
+				}
 			}
 		}
 		

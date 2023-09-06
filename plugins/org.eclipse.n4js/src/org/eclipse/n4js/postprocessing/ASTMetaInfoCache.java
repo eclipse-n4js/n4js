@@ -67,7 +67,8 @@ public final class ASTMetaInfoCache {
 	private final Map<Expression, CompileTimeValue> compileTimeValue = new HashMap<>();
 	private final Map<TVariable, List<EObject>> localVariableReferences = new HashMap<>();
 
-	/* package */ ASTMetaInfoCache(N4JSResource resource, boolean hasBrokenAST, ASTFlowInfo flowInfo) {
+	/** Constructor */
+	public ASTMetaInfoCache(N4JSResource resource, boolean hasBrokenAST, ASTFlowInfo flowInfo) {
 		this.resource = resource;
 		this.projectID = resource.getModule().getProjectID();
 		this.hasBrokenAST = hasBrokenAST;

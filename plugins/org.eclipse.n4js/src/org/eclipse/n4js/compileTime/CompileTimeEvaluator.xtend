@@ -244,8 +244,13 @@ class CompileTimeEvaluator {
 	 */
 	def private dispatch CompileTimeValue eval(RuleEnvironment G, ParameterizedPropertyAccessExpression expr, RecursionGuard<EObject> guard) {
 		val targetExpr = expr.target;
-		val targetElem = if (targetExpr instanceof IdentifierRef) targetExpr.id;
 		val propName = expr.propertyAsText; // IMPORTANT: don't invoke expr.getProperty()!!
+		val targetElem = if (targetExpr instanceof IdentifierRef) {
+			if (targetExpr.eIsProxy) {
+				return CompileTimeValue.error("Expression is a proxy '"+ propName +"'", expr);
+			}
+			targetExpr.id;
+		}
 		val sym = G.symbolObjectType;
 		if (targetElem === sym) {
 			// A) Is 'expr' an access to a built-in symbol, e.g. Symbol.iterator?

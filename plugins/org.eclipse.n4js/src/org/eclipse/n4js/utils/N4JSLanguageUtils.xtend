@@ -102,6 +102,7 @@ import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.MemberAccessModifier
+import org.eclipse.n4js.ts.types.NameAndAccess
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TAnnotableElement
 import org.eclipse.n4js.ts.types.TClass
@@ -992,7 +993,7 @@ public class N4JSLanguageUtils {
 	 * If the given expression is a property access to one of the fields in {@code Symbol}, then this method returns the
 	 * referenced field, otherwise <code>null</code>. This method may perform proxy resolution.
 	 */
-	def public static TField getAccessedBuiltInSymbol(RuleEnvironment G, Expression expr) {
+	def public static TMember getAccessedBuiltInSymbol(RuleEnvironment G, Expression expr) {
 		return getAccessedBuiltInSymbol(G, expr, true);
 	}
 
@@ -1001,7 +1002,7 @@ public class N4JSLanguageUtils {
 	 * However, if proxy resolution is disallowed, this method will only support a "direct access" to built-in symbols,
 	 * i.e. the target must be an {@link IdentifierRef} directly pointing to built-in object 'Symbol'.
 	 */
-	def public static TField getAccessedBuiltInSymbol(RuleEnvironment G, Expression expr, boolean allowProxyResolution) {
+	def public static TMember getAccessedBuiltInSymbol(RuleEnvironment G, Expression expr, boolean allowProxyResolution) {
 		if (expr instanceof ParameterizedPropertyAccessExpression) {
 			val sym = G.symbolObjectType;
 			if (allowProxyResolution) {
@@ -1018,7 +1019,14 @@ public class N4JSLanguageUtils {
 				val targetElem = if (targetExpr instanceof IdentifierRef) targetExpr.id; // n.b.: only supports direct access
 				if (targetElem === sym) {
 					val propName = expr.propertyAsText; // do NOT use expr.property!
-					return sym.ownedMembers.filter(TField).findFirst[static && name == propName];
+					val naaField = new NameAndAccess(propName, true, true);
+					if (sym.getOrCreateOwnedMembersByNameAndAccess.containsKey(naaField)) {
+						return sym.ownedMembersByNameAndAccess.get(naaField);
+					}
+					val naaMethod = new NameAndAccess(propName, false, true);
+					if (sym.getOrCreateOwnedMembersByNameAndAccess.containsKey(naaMethod)) {
+						return sym.ownedMembersByNameAndAccess.get(naaMethod);
+					}
 				}
 			}
 		}
