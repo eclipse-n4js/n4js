@@ -1627,7 +1627,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private boolean internalCheckIndexedAccessWithSymbol(RuleEnvironment G,
-		IndexedAccessExpression indexedAccess, TypeRef receiverTypeRef, TField accessedBuiltInSymbol) {
+		IndexedAccessExpression indexedAccess, TypeRef receiverTypeRef, TMember accessedBuiltInSymbol) {
 		// check valid symbol (currently only 'iterator' and 'asyncIterator')
 		val symbolIterator = G.symbolObjectType.findOwnedMember("iterator", false, true);
 		val symbolAsyncIterator = G.symbolObjectType.findOwnedMember("asyncIterator", false, true);

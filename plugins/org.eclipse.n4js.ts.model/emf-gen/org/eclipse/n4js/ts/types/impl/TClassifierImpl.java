@@ -31,6 +31,7 @@ import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TypeAlias;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 import org.eclipse.n4js.ts.types.TypesPackage.Literals;
@@ -185,7 +186,10 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 		final Object _superClassifierRefs = this.getSuperClassifierRefs();
 		for (final Object superClassifierRef : ((Iterable<?>) _superClassifierRefs)) {
 			if ((superClassifierRef != null)) {
-				final Type declType = ((TypeRef) superClassifierRef).getDeclaredType();
+				Type declType = ((TypeRef) superClassifierRef).getDeclaredType();
+				if ((declType instanceof TypeAlias)) {
+					declType = ((TypeAlias)declType).getTypeRef().getDeclaredType();
+				}
 				if ((declType instanceof TClassifier)) {
 					result.add(((TClassifier)declType));
 				}

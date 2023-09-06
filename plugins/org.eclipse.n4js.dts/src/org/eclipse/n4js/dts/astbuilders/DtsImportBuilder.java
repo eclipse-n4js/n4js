@@ -27,18 +27,23 @@ import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.dts.utils.TripleSlashDirective;
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
+import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
+import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TypesFactory;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsImportBuilder extends AbstractDtsModuleRefBuilder<ImportStatementContext, ImportDeclaration> {
+public class DtsImportBuilder extends AbstractDtsModuleRefBuilder<ImportStatementContext, ScriptElement> {
 
 	/** Constructor */
 	public DtsImportBuilder(AbstractDtsBuilder<?, ?> parent) {
@@ -100,13 +105,15 @@ public class DtsImportBuilder extends AbstractDtsModuleRefBuilder<ImportStatemen
 	public void enterImportFromBlock(ImportFromBlockContext ctx) {
 		result = N4JSFactory.eINSTANCE.createImportDeclaration();
 
-		result.setImportFrom(ctx.From() != null); // will be null for bare imports
-		setModuleSpecifier(result, ctx.StringLiteral()); // must also do this in case ctx.From() == null
+		// will be null for bare imports
+		((ImportDeclaration) result).setImportFrom(ctx.From() != null);
+		// must also do this in case ctx.From() == null
+		setModuleSpecifier((ImportDeclaration) result, ctx.StringLiteral());
 
 		if (ctx.Multiply() != null) {
 			// namespace import
 			NamespaceImportSpecifier nsis = N4JSFactory.eINSTANCE.createNamespaceImportSpecifier();
-			result.getImportSpecifiers().add(nsis);
+			addImportSpecifier(nsis);
 			nsis.setAlias(ctx.identifierName().getText());
 			nsis.setDeclaredDynamic(true);
 
@@ -133,7 +140,7 @@ public class DtsImportBuilder extends AbstractDtsModuleRefBuilder<ImportStatemen
 					ParserContextUtils.installProxy(resource, nis, eRef, tExpElemProxy, ieName);
 					nis.setImportedElement(tExpElemProxy);
 
-					result.getImportSpecifiers().add(nis);
+					addImportSpecifier(nis);
 				}
 			}
 
@@ -153,7 +160,11 @@ public class DtsImportBuilder extends AbstractDtsModuleRefBuilder<ImportStatemen
 		ParserContextUtils.installProxy(resource, dis, eRef, tExpElemProxy, ieName);
 		dis.setImportedElement(tExpElemProxy);
 
-		result.getImportSpecifiers().add(dis);
+		addImportSpecifier(dis);
+	}
+
+	private void addImportSpecifier(ImportSpecifier is) {
+		((ImportDeclaration) result).getImportSpecifiers().add(is);
 	}
 
 	@Override
@@ -177,6 +188,16 @@ public class DtsImportBuilder extends AbstractDtsModuleRefBuilder<ImportStatemen
 			} else {
 				// TODO
 			}
+		} else if (ctx.typeName() != null) {
+			// import TypeB = TypeA;
+
+			N4TypeAliasDeclaration typeAlias = N4JSFactory.eINSTANCE.createN4TypeAliasDeclaration();
+			typeAlias.setName(ctx.identifierName().getText());
+			typeAlias.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
+			TypeRef typeRef = newTypeRefBuilder().createParameterizedTypeRef(ctx.typeName());
+			typeAlias.setDeclaredTypeRefNode(ParserContextUtils.wrapInTypeRefNode(typeRef));
+
+			this.result = typeAlias;
 		}
 	}
 }

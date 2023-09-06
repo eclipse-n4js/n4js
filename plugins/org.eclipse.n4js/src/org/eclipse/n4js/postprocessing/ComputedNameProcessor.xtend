@@ -93,13 +93,7 @@ class ComputedNameProcessor {
 	 */
 	def private void discardTypeModelElement(EObject astNode) {
 		val elem = N4JSASTUtils.getCorrespondingTypeModelElement(astNode);
-		if (elem === null) {
-			throw new IllegalArgumentException(
-				"given AST node does not have a corresponding type model element to discard");
-		}
-		if (elem instanceof SyntaxRelatedTElement) {
-			elem.astElement = null;
-		}
+		
 		EcoreUtilN4.doWithDeliver(false, [
 			switch (astNode) {
 				TypeDefiningElement:
@@ -124,8 +118,14 @@ class ComputedNameProcessor {
 					throw new UnsupportedOperationException("switch case missing for: " + astNode)
 			};
 		], astNode);
-		EcoreUtilN4.doWithDeliver(false, [
-			EcoreUtil2.remove(elem);
-		], elem.eContainer);
+		
+		if (elem instanceof SyntaxRelatedTElement) {
+			elem.astElement = null;
+		}
+		if (elem !== null) {
+			EcoreUtilN4.doWithDeliver(false, [
+				EcoreUtil2.remove(elem);
+			], elem.eContainer);
+		}
 	}
 }

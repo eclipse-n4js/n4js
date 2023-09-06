@@ -33,18 +33,14 @@ package class N4JSGetterTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 		return n4Getter.name !== null || n4Getter.hasComputedPropertyName;
 	}
 
-	def package boolean relinkGetter(N4GetterDeclaration n4Getter, TClassifier classifierType, boolean preLinkingPhase, int idx) {
+	def package boolean relinkGetter(N4GetterDeclaration n4Getter, TGetter tGetter, boolean preLinkingPhase) {
 		if (!canCreate(n4Getter)) {
 			return false
 		}
-		if (!hasValidName(n4Getter)) {
-			return false;
-		}
 		
-		val getterType = classifierType.ownedMembers.get(idx) as TGetter;
-		ensureEqualName(n4Getter, getterType);
-		getterType.astElement = n4Getter
-		n4Getter.definedGetter = getterType
+		ensureEqualName(n4Getter, tGetter);
+		tGetter.astElement = n4Getter
+		n4Getter.definedGetter = tGetter
 		return true
 	}
 

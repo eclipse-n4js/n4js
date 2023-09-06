@@ -11,8 +11,10 @@
 package org.eclipse.n4js.dts;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
@@ -40,6 +42,7 @@ public class LoadResultInfoAdapter implements ILoadResultInfoAdapter {
 		return adapter;
 	}
 
+	final Map<Integer, URI> uriRanges = new LinkedHashMap<>();
 	final Map<URI, NestedResourceAdapter> nestedResources = new LinkedHashMap<>();
 
 	@Override
@@ -61,13 +64,30 @@ public class LoadResultInfoAdapter implements ILoadResultInfoAdapter {
 	}
 
 	/** Adds the given {@link NestedResourceAdapter} to this adapter */
-	public void addNestedResource(URI uri, NestedResourceAdapter nra) {
+	public void addNestedResource(URI uri, int startOffset, NestedResourceAdapter nra) {
+		uriRanges.put(startOffset, uri);
 		nestedResources.put(uri, nra);
 	}
 
 	@Override
 	public Collection<URI> getNewUris() {
 		return nestedResources.keySet();
+	}
+
+	@Override
+	public URI getURI(int offset) {
+		Iterator<Entry<Integer, URI>> iter = uriRanges.entrySet().iterator();
+		if (!iter.hasNext()) {
+			return null;
+		}
+
+		Entry<Integer, URI> entry = iter.next();
+		Entry<Integer, URI> lastEntry = entry;
+		while (iter.hasNext() && entry.getKey() < offset) {
+			lastEntry = entry;
+			entry = iter.next();
+		}
+		return lastEntry.getValue();
 	}
 
 	/** Returns the {@link NestedResourceAdapter} for the given {@link URI} or null */

@@ -1,4 +1,4 @@
-// Generated from /Users/marcusmews/Eclipses/ECL3/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
+// Generated from /Users/marcusmews/Eclipses/ECL1/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -424,18 +424,6 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPropertyAccessExpressionInTypeRef(TypeScriptParser.PropertyAccessExpressionInTypeRefContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPropertyAccessExpressionInTypeRef(TypeScriptParser.PropertyAccessExpressionInTypeRefContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterInferTypeRef(TypeScriptParser.InferTypeRefContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -563,18 +551,6 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitNamespaceDeclaration(TypeScriptParser.NamespaceDeclarationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterNamespaceName(TypeScriptParser.NamespaceNameContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitNamespaceName(TypeScriptParser.NamespaceNameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

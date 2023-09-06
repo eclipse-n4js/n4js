@@ -147,7 +147,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 	public void enterNamespaceDeclaration(NamespaceDeclarationContext ctx) {
 		if (result == null) {
 			boolean isExported = ParserContextUtils.isExported(ctx);
-			result = doCreateN4NamespaceDeclaration(ctx.namespaceName().getText(), isExported);
+			result = doCreateN4NamespaceDeclaration(ctx.typeName().getText(), isExported);
 			walker.enqueue(ParserContextUtils.getStatements(ctx.block()));
 		} else {
 			N4NamespaceDeclaration nd = newNamespaceBuilder().consume(ctx);
@@ -272,8 +272,9 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 		if (loadResultInfo == null) {
 			loadResultInfo = LoadResultInfoAdapter.getOrInstall(resource);
 		}
+
 		NestedResourceAdapter nra = new NestedResourceAdapter(tokenStream, ctx, statements, contents);
-		loadResultInfo.addNestedResource(virtualUri, nra);
+		loadResultInfo.addNestedResource(virtualUri, ctx.start.getStartIndex(), nra);
 	}
 
 	/** Creates a {@link N4NamespaceDeclaration}. The caller must assign it to {@link AbstractDtsBuilder#result}. */

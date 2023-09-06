@@ -1122,8 +1122,11 @@ abstract class TClassifier extends ContainerType<TMember>, SyntaxRelatedTElement
 		val Object _superClassifierRefs = this.getSuperClassifierRefs();
 		for(Object superClassifierRef : (_superClassifierRefs as Iterable<?>)) {
 			if(superClassifierRef!==null) {
-				val Type declType = (superClassifierRef as TypeRef).getDeclaredType();
-				if(declType instanceof TClassifier) {
+				var Type declType = (superClassifierRef as TypeRef).getDeclaredType();
+				if (declType instanceof TypeAlias) {
+					declType = declType.typeRef.declaredType;
+				}
+				if (declType instanceof TClassifier) {
 					result.add(declType);
 				}
 			}

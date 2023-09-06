@@ -216,7 +216,7 @@ thisTypeRef
     ;
 
 queryTypeRef
-    : 'typeof' (importTypeRef | propertyAccessExpressionInTypeRef)
+    : 'typeof' (importTypeRef | typeName)
 ;
 
 importTypeRef
@@ -231,11 +231,6 @@ typePredicateWithOperatorTypeRef
 bindingIdentifier
     : identifierName
     ;
-
-
-propertyAccessExpressionInTypeRef
-    : typeReferenceName ('.' typeReferenceName)* // e.g. Symbol.iterator or osConstants.priority (in node/constants.d.ts)
-;
 
 inferTypeRef:
 	Infer typeReferenceName
@@ -286,12 +281,9 @@ moduleName
 // Namespace
 
 namespaceDeclaration
-    : Namespace namespaceName block
+    : Namespace typeName block
     ;
 
-namespaceName
-    : typeReferenceName ('.' typeReferenceName)*
-    ;
 
 globalScopeAugmentation
     : Global block
@@ -634,7 +626,7 @@ importedElement
 
 importAliasDeclaration
     : identifierName '=' 
-    ( namespaceName
+    ( typeName
     | Require '(' StringLiteral ')'
     )
     ;
@@ -653,8 +645,8 @@ exportStatementTail
     | multipleExportElements (From StringLiteral)?      #ExportElements
     | Multiply (As identifierName)? From StringLiteral  #ExportModule
     | As Namespace identifierName eos                   #ExportAsNamespace
-    | '=' namespaceName eos                             #ExportEquals
-    | Import identifierName '=' namespaceName eos       #ExportImport
+    | '=' typeName eos                                  #ExportEquals
+    | Import identifierName '=' typeName eos            #ExportImport
     ;
 
 multipleExportElements

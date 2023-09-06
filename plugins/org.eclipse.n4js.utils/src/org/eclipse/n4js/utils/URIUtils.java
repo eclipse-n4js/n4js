@@ -12,6 +12,8 @@ package org.eclipse.n4js.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -264,6 +266,11 @@ public class URIUtils {
 	/** @return absolute file URI for the given file. */
 	static public URI toFileUri(File file) {
 		return toFileUri(file.getAbsolutePath());
+	}
+
+	/** @return a complete URI for a given file path string */
+	public static URI toFileUriDecode(String filePath) {
+		return toFileUri(URLDecoder.decode(filePath, Charset.forName("UTF-8")));
 	}
 
 	/** @return a complete URI for a given file path string */

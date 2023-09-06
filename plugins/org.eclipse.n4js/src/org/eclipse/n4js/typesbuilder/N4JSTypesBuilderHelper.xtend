@@ -257,4 +257,9 @@ package class N4JSTypesBuilderHelper {
 		}
 		return true;
 	}
+	
+	
+	def package boolean validPNO(PropertyNameOwner pno) {
+		return pno.name !== null || pno.hasComputedPropertyName;
+	}
 }

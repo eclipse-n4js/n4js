@@ -12,8 +12,10 @@ package org.eclipse.n4js.utils;
 
 import java.util.List;
 
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.dts.DtsParseTreeNodeInfo;
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.GenericDeclaration;
@@ -22,6 +24,7 @@ import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
@@ -35,6 +38,10 @@ public class N4JSEObjectAtOffsetHelper extends EObjectAtOffsetHelper {
 
 	@Override
 	public EObject resolveElementAt(XtextResource resource, int offset) {
+		if (ResourceType.getResourceType(resource) == ResourceType.DTS) {
+			return findElementAtInDts(resource, offset);
+		}
+
 		EObject result = super.resolveElementAt(resource, offset);
 		if (result instanceof LiteralOrComputedPropertyName) {
 			result = result.eContainer();
@@ -64,6 +71,30 @@ public class N4JSEObjectAtOffsetHelper extends EObjectAtOffsetHelper {
 		}
 
 		return result;
+	}
+
+	private EObject findElementAtInDts(XtextResource resource, int offset) {
+		int lastMatchOffsetDistance = Integer.MAX_VALUE;
+		int lastMathLength = Integer.MAX_VALUE;
+		TreeIterator<EObject> iter = ((N4JSResource) resource).getScript().eAllContents();
+		EObject bestFit = iter.next();
+
+		while (iter.hasNext()) {
+			EObject object = iter.next();
+			DtsParseTreeNodeInfo ptnInfo = DtsParseTreeNodeInfo.get(object);
+
+			if (ptnInfo != null) {
+				int offsetDistance = Math.abs(ptnInfo.getOffset() - offset);
+				if ((offsetDistance < lastMatchOffsetDistance)
+						|| (offsetDistance == lastMatchOffsetDistance && ptnInfo.getLength() < lastMathLength)) {
+
+					bestFit = object;
+					lastMatchOffsetDistance = offsetDistance;
+					lastMathLength = ptnInfo.getLength();
+				}
+			}
+		}
+		return bestFit;
 	}
 
 	private EObject findBetterMatch(EObject defaultResult, int offset, Iterable<? extends EObject> candidates,

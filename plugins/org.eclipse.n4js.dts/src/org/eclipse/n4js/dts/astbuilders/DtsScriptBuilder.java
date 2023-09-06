@@ -206,7 +206,7 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 
 	@Override
 	public void enterImportStatement(ImportStatementContext ctx) {
-		ImportDeclaration id = newImportBuilder().consume(ctx);
+		ScriptElement id = newImportBuilder().consume(ctx);
 		addToScript(id);
 	}
 
