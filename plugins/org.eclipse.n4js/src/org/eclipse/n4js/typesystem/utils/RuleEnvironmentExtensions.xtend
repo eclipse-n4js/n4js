@@ -1111,6 +1111,10 @@ class RuleEnvironmentExtensions {
 			TClass:
 				if (declaredType == G.objectType) {
 					emptyList
+//				} else if ((declaredType.external && declaredType.isDeclaredEcmaScript)
+//						|| N4Scheme.isFromResourceWithN4Scheme(declaredType)
+//						|| declaredType == G.n4ObjectType ) {
+							
 				} else if ((declaredType.external && declaredType.isDeclaredEcmaScript)
 						|| N4Scheme.isFromResourceWithN4Scheme(declaredType)
 						|| declaredType == G.n4ObjectType ) {
@@ -1122,12 +1126,12 @@ class RuleEnvironmentExtensions {
 						G.collectAllImplicitSuperTypes(declaredType.superClassRef, guard);
 					}
 				}
-			TInterface:
-				if (declaredType.typingStrategy === TypingStrategy.STRUCTURAL) {
-					G.builtInTypesAllImplicitSuperTypeRefs
-				} else {
-					G.n4ClassifiersAllImplicitSuperTypeRefs
-				}
+//			TInterface:
+//				if (declaredType.typingStrategy === TypingStrategy.STRUCTURAL) {
+//					G.builtInTypesAllImplicitSuperTypeRefs
+//				} else {
+//					G.n4ClassifiersAllImplicitSuperTypeRefs
+//				}
 			TN4Classifier:
 				G.n4ClassifiersAllImplicitSuperTypeRefs
 			TEnum:
