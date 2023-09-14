@@ -29,5 +29,5 @@ const bar = new Bar({foo: "", baz: 3});
 console.log(Object.getOwnPropertyNames(bar));
 
 /* XPECT output ---
-[ 'foo', 'baz' ]
+[ 'baz', 'foo' ]
 --- */
