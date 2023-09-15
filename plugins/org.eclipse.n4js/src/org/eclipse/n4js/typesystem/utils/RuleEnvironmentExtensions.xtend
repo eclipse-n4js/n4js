@@ -1115,9 +1115,6 @@ class RuleEnvironmentExtensions {
 						|| N4Scheme.isFromResourceWithN4Scheme(declaredType)
 						|| declaredType == G.n4ObjectType ) {
 							
-//				} else if ((declaredType.external && declaredType.isDeclaredEcmaScript)
-//						|| N4Scheme.isFromResourceWithN4Scheme(declaredType)
-//						|| declaredType == G.n4ObjectType ) {
 					G.builtInTypesAllImplicitSuperTypeRefs
 				} else {
 					if (declaredType.superClassRef===null) {
@@ -1126,12 +1123,13 @@ class RuleEnvironmentExtensions {
 						G.collectAllImplicitSuperTypes(declaredType.superClassRef, guard);
 					}
 				}
-//			TInterface:
-//				if (declaredType.typingStrategy === TypingStrategy.STRUCTURAL) {
+			TInterface:
+				if (declaredType.typingStrategy === TypingStrategy.STRUCTURAL) {
 //					G.builtInTypesAllImplicitSuperTypeRefs
-//				} else {
-//					G.n4ClassifiersAllImplicitSuperTypeRefs
-//				}
+					G.n4ClassifiersAllImplicitSuperTypeRefs
+				} else {
+					G.n4ClassifiersAllImplicitSuperTypeRefs
+				}
 			TN4Classifier:
 				G.n4ClassifiersAllImplicitSuperTypeRefs
 			TEnum:
