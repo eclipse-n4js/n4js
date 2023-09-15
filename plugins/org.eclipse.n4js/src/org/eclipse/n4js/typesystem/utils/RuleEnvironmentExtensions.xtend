@@ -1111,13 +1111,13 @@ class RuleEnvironmentExtensions {
 			TClass:
 				if (declaredType == G.objectType) {
 					emptyList
-//				} else if ((declaredType.external && declaredType.isDeclaredEcmaScript)
-//						|| N4Scheme.isFromResourceWithN4Scheme(declaredType)
-//						|| declaredType == G.n4ObjectType ) {
-							
 				} else if ((declaredType.external && declaredType.isDeclaredEcmaScript)
 						|| N4Scheme.isFromResourceWithN4Scheme(declaredType)
 						|| declaredType == G.n4ObjectType ) {
+							
+//				} else if ((declaredType.external && declaredType.isDeclaredEcmaScript)
+//						|| N4Scheme.isFromResourceWithN4Scheme(declaredType)
+//						|| declaredType == G.n4ObjectType ) {
 					G.builtInTypesAllImplicitSuperTypeRefs
 				} else {
 					if (declaredType.superClassRef===null) {
