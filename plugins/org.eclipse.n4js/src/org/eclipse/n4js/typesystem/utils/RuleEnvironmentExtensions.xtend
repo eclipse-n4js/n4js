@@ -1126,7 +1126,6 @@ class RuleEnvironmentExtensions {
 			TInterface:
 				if (declaredType.typingStrategy === TypingStrategy.STRUCTURAL) {
 					G.builtInTypesAllImplicitSuperTypeRefs
-//					G.n4ClassifiersAllImplicitSuperTypeRefs
 				} else {
 					G.n4ClassifiersAllImplicitSuperTypeRefs
 				}
