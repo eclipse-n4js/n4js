@@ -20,6 +20,7 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
+import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.utils.DeclMergingHelper;
@@ -37,12 +38,19 @@ public class AllDirectStructuralSuperTypeRefsCollector
 	private final ParameterizedTypeRef typeRef;
 
 	/**
+	 * Used to traverse both super classes and implemented interfaces even if the super class would break traversal
+	 * already.
+	 */
+	private boolean breakTraversing;
+
+	/**
 	 * Creates a new collector.
 	 *
 	 * @param typeRef
 	 *            the type to start with.
 	 */
-	public AllDirectStructuralSuperTypeRefsCollector(ParameterizedTypeRef typeRef, DeclMergingHelper declMergingHelper) {
+	public AllDirectStructuralSuperTypeRefsCollector(ParameterizedTypeRef typeRef,
+			DeclMergingHelper declMergingHelper) {
 		super(typeRef, declMergingHelper);
 		this.typeRef = typeRef;
 		result = Lists.newArrayList();
@@ -78,6 +86,20 @@ public class AllDirectStructuralSuperTypeRefsCollector
 			return false; // start
 		}
 		return true;
+	}
+
+	@Override
+	protected boolean doSwitchSuperClasses(TClass object) {
+		// assumption: called in super class before #doSwitchImplementedInterfaces() is called
+		breakTraversing = super.doSwitchSuperClasses(object);
+		return false;
+	}
+
+	@Override
+	protected boolean doSwitchImplementedInterfaces(TClass object) {
+		// assumption: see above
+		breakTraversing |= super.doSwitchImplementedInterfaces(object);
+		return breakTraversing;
 	}
 
 	@Override
@@ -117,8 +139,8 @@ public class AllDirectStructuralSuperTypeRefsCollector
 	}
 
 	/**
-	 * Convenience method to create a new instance of {@link AllDirectStructuralSuperTypeRefsCollector} and immediately return
-	 * its result.
+	 * Convenience method to create a new instance of {@link AllDirectStructuralSuperTypeRefsCollector} and immediately
+	 * return its result.
 	 *
 	 * @param typeRef
 	 *            the type ref to start with.

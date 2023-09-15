@@ -666,7 +666,7 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 */
 	public synchronized List<ParameterizedTypeRef> getN4ClassifiersAllImplicitSuperTypeRefs() {
 		if (n4classifiersAllImplicitSuperTypeRefs == null) {
-			initImplicitSuperTypeLists();
+			n4classifiersAllImplicitSuperTypeRefs = toTypeReferences(getN4ObjectType(), getObjectType());
 		}
 		return n4classifiersAllImplicitSuperTypeRefs;
 	}
@@ -678,7 +678,7 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 */
 	public synchronized List<ParameterizedTypeRef> getBuiltInTypesAllImplicitSuperTypeRefs() {
 		if (objectPrototypesAllImplicitSuperTypeRefs == null) {
-			initImplicitSuperTypeLists();
+			objectPrototypesAllImplicitSuperTypeRefs = toTypeReferences(getObjectType());
 		}
 		return objectPrototypesAllImplicitSuperTypeRefs;
 	}
@@ -691,7 +691,7 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 */
 	public synchronized List<ParameterizedTypeRef> getFunctionTypesAllImplicitSuperTypeRefs() {
 		if (functionTypesAllImplicitSuperTypeRefs == null) {
-			initImplicitSuperTypeLists();
+			functionTypesAllImplicitSuperTypeRefs = toTypeReferences(getFunctionType(), getObjectType());
 		}
 		return functionTypesAllImplicitSuperTypeRefs;
 	}

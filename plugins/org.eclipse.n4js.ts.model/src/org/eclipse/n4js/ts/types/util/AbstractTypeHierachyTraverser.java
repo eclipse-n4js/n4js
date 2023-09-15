@@ -177,7 +177,7 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 		if (process(clazz)) {
 			return true;
 		}
-		if (doSwitchSuperTypes(clazz)) {
+		if (doSwitchSuperClasses(clazz)) {
 			return true;
 		}
 		if (!suppressPolyfillOrMergedTypes) {
@@ -272,7 +272,7 @@ public abstract class AbstractTypeHierachyTraverser<Result> {
 	/**
 	 * Process the super type of a class.
 	 */
-	protected boolean doSwitchSuperTypes(TClass object) {
+	protected boolean doSwitchSuperClasses(TClass object) {
 		boolean tmp = isDirectPolyfillOrMergedType;
 		try {
 			isDirectPolyfillOrMergedType = false;

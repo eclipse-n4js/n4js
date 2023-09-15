@@ -25,6 +25,7 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.scoping.builtin.N4Scheme
+import org.eclipse.n4js.ts.typeRefs.BaseTypeRef
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
@@ -45,6 +46,7 @@ import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TEnum
+import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
@@ -60,7 +62,6 @@ import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.util.CancelIndicator
 
 import static extension org.eclipse.n4js.types.utils.TypeUtils.*
-import org.eclipse.n4js.ts.typeRefs.BaseTypeRef
 
 /**
  * Extensions of class RuleEnvironment for handling substitutions and
@@ -1110,9 +1111,10 @@ class RuleEnvironmentExtensions {
 			TClass:
 				if (declaredType == G.objectType) {
 					emptyList
-				} else if (declaredType == G.n4ObjectType
-						|| (declaredType.external && declaredType.isDeclaredEcmaScript)
-						|| N4Scheme.isFromResourceWithN4Scheme(declaredType) ) {
+				} else if ((declaredType.external && declaredType.isDeclaredEcmaScript)
+						|| N4Scheme.isFromResourceWithN4Scheme(declaredType)
+						|| declaredType == G.n4ObjectType ) {
+							
 					G.builtInTypesAllImplicitSuperTypeRefs
 				} else {
 					if (declaredType.superClassRef===null) {
@@ -1120,6 +1122,12 @@ class RuleEnvironmentExtensions {
 					} else {
 						G.collectAllImplicitSuperTypes(declaredType.superClassRef, guard);
 					}
+				}
+			TInterface:
+				if (declaredType.typingStrategy === TypingStrategy.STRUCTURAL) {
+					G.builtInTypesAllImplicitSuperTypeRefs
+				} else {
+					G.n4ClassifiersAllImplicitSuperTypeRefs
 				}
 			TN4Classifier:
 				G.n4ClassifiersAllImplicitSuperTypeRefs
