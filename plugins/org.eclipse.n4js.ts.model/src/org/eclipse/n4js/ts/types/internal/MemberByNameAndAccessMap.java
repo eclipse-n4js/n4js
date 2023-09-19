@@ -15,6 +15,7 @@ import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.n4js.ts.types.NameAndAccess;
@@ -83,10 +84,11 @@ public class MemberByNameAndAccessMap extends AbstractMap<NameAndAccess, TMember
 			for (int i = 0, size = members.size(); i < size; i++) {
 				final TMember result = members.get(i);
 				final NameAndAccess nameAndAccess = (NameAndAccess) key;
-				if (nameAndAccess.getName().equals(result.getName())) {
+				if (Objects.equals(nameAndAccess.getName(), result.getName())) {
 					if (nameAndAccess.isStaticAccess() == result.isStatic()) {
 						if ((nameAndAccess.isWriteAccess() && result.isWriteable()) ||
 								(!nameAndAccess.isWriteAccess() && result.isReadable())) {
+
 							return result;
 						}
 					}

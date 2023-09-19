@@ -451,7 +451,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	public static class Newable {
 		/** The actual type reference that contributed constructor or construct signature. Used for error reporting. */
 		TypeRef newableTypeRef;
-		/** The constructor or construct signature. Used for argument checking. */
+		/** The constructor or construct signature. Used for argument checking. Can be null. */
 		TMethod ctorOrConstructSig;
 		/** The type of the newly created instance. */
 		TypeRef instanceTypeRef;
@@ -486,7 +486,9 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 			val List<TypeRef> resTypeRefs = new ArrayList();
 			for (newable : newables) {
 				resTypeRefs += newable.instanceTypeRef;
-				constructSigsReturn += newable.ctorOrConstructSig.returnTypeRef
+				if (newable.ctorOrConstructSig !== null) {
+					constructSigsReturn += newable.ctorOrConstructSig.returnTypeRef
+				}
 			}
 			
 			// use non-simplified because union with any+ will remove other types that would give additional info to the user

@@ -353,6 +353,10 @@ public class XStatefulIncrementalBuilder {
 		URI resourceUri = resource.getURI();
 		ProjectConfigSnapshot projectConfig = workspaceManager.getProjectConfig(resourceUri);
 		Set<OutputConfiguration> outputConfigurations = outputConfProvider.getOutputConfigurations(resource);
+		if (projectConfig == null || outputConfigurations == null) {
+			return false;
+		}
+
 		URI projectBaseUri = projectConfig.getPath();
 		Path resourcePath = URIUtils.toPath(resourceUri);
 
