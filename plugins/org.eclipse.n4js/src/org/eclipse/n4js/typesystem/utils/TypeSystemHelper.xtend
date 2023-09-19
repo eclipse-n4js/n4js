@@ -531,8 +531,10 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 			if (staticType instanceof ContainerType<?>) {
 				ctor = containerTypesHelper.fromContext(G.contextResource).findConstructor(staticType);
 			}
-			val instanceTypeRef = createTypeRefFromStaticType(G, calleeTypeRef, newExpr);
-			return new Newable(calleeTypeRef, ctor, instanceTypeRef)
+			if (ctor !== null) {
+				val instanceTypeRef = createTypeRefFromStaticType(G, calleeTypeRef, newExpr);
+				return new Newable(calleeTypeRef, ctor, instanceTypeRef)
+			}
 		}
 		if (G.isAnyDynamic(calleeTypeRef)) {
 			val constructSig = TypesFactory.eINSTANCE.createTMethod();
