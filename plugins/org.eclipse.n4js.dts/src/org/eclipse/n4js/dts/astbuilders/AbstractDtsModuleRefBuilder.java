@@ -110,6 +110,8 @@ public abstract class AbstractDtsModuleRefBuilder<T extends ParserRuleContext, R
 		// trim extension
 		moduleSpecifier = URIUtils.trimFileExtension(moduleSpecifierUri).toFileString();
 
+		moduleSpecifier = moduleSpecifier.replace(":", "%3A"); // see ModuleSpecifierValueConverter
+
 		return moduleSpecifier;
 	}
 }

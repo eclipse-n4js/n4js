@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -36,6 +37,8 @@ import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.utils.Strings;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.parser.IParseResult;
@@ -648,13 +651,16 @@ public abstract class N4JSASTUtils {
 	 * {@link XtextResource#getParseResult() parse result}, as created by Xtext during parsing.
 	 */
 	public static String md5Hex(XtextResource resource) {
+		final URI uri = resource.getURI();
+		final String[] vrSegments = URIUtils.getPathOfVirtualResource(uri, false);
+		final String uriStr = vrSegments == null ? "" : Strings.join("", (Object[]) vrSegments);
 		final IParseResult parseResult = resource.getParseResult();
 		final INode rootNode = parseResult != null ? parseResult.getRootNode() : null;
 		final String source = rootNode != null ? rootNode.getText() : null;
 		if (source == null) {
-			throw new IllegalStateException("resource does not have a valid parse result: " + resource.getURI());
+			throw new IllegalStateException("resource does not have a valid parse result: " + uri);
 		}
-		return Hashing.murmur3_128(SEED).hashString(source, Charsets.UTF_8).toString();
+		return Hashing.murmur3_128(SEED).hashString(uriStr + source, Charsets.UTF_8).toString();
 	}
 
 	/** Adds the given annotation to the given element. */

@@ -114,7 +114,11 @@ public final class UserDataMapper {
 		@Override
 		public URI deresolve(URI uri) {
 			if (uri.trimFragment().equals(resourceURI)) {
-				return super.deresolve(URI.createURI("#" + uri.fragment()));
+				if (uri.fragment() == null) {
+					uri = URI.createURI("#");
+				} else {
+					uri = URI.createURI("#" + uri.fragment());
+				}
 			}
 			return super.deresolve(uri);
 		}
@@ -174,7 +178,8 @@ public final class UserDataMapper {
 		URI resourceURI = originalResource.getURI();
 		XMIResource resourceForUserData = new XMIResourceImpl(resourceURI);
 
-		resourceForUserData.getContents().add(TypeUtils.copyWithProxies(exportedModule));
+		TModule copyWithProxies = TypeUtils.copyWithProxies(exportedModule);
+		resourceForUserData.getContents().add(copyWithProxies);
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 

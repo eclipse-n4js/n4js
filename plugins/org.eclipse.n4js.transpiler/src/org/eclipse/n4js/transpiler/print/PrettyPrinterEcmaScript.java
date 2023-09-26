@@ -173,7 +173,7 @@ import com.google.common.base.Strings;
 		}
 		// 3) module specifier
 		String moduleSpecifier = original.getModuleSpecifierAsText() != null
-				? original.getModuleSpecifierAsText()
+				? original.getModuleSpecifierAsText().replace("%3A", ":") // see ModuleSpecifierValueConverter
 				: original.getModule().getQualifiedName();
 		write(quote(moduleSpecifier));
 		// 4) empty line after block of imports
