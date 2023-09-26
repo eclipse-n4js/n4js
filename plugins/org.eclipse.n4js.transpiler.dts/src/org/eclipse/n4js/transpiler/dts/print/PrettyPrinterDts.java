@@ -211,7 +211,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	@Override
 	public Boolean caseImportDeclaration(ImportDeclaration original) {
 		String moduleSpecifier = original.getModuleSpecifierAsText() != null
-				? original.getModuleSpecifierAsText()
+				? original.getModuleSpecifierAsText().replace("%3A", ":") // see ModuleSpecifierValueConverter
 				: original.getModule().getQualifiedName();
 
 		processAnnotations(original.getAnnotations());

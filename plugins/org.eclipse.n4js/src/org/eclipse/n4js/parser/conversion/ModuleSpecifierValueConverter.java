@@ -10,15 +10,14 @@
  */
 package org.eclipse.n4js.parser.conversion;
 
+import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
+import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.xtext.conversion.IValueConverter;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.nodemodel.INode;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
-import org.eclipse.n4js.services.N4JSGrammarAccess;
 
 /**
  * Converts the module specifier used in import declarations into qualified module names.
@@ -39,6 +38,7 @@ public class ModuleSpecifierValueConverter implements IValueConverter<String> {
 	 */
 	@Override
 	public String toValue(String string, INode node) throws ValueConverterException {
+		string = string.replace(":", "%3A"); // otherwise: converting to URI will create schemes
 		String withDots = IS_CONVERSION_REQUIRED ? string.replace(DELIMITER_MODULE_SPECIFIER, DELIMITER_INTERNAL)
 				: string;
 		return (String) delegateService.toValue(withDots, grammarAccess.getSTRINGRule().getName(), node);
@@ -51,6 +51,7 @@ public class ModuleSpecifierValueConverter implements IValueConverter<String> {
 	public String toString(String value) throws ValueConverterException {
 		String withSlashes = IS_CONVERSION_REQUIRED ? value.replace(DELIMITER_INTERNAL, DELIMITER_MODULE_SPECIFIER)
 				: value;
+		value = value.replace("%3A", ":");
 		return delegateService.toString(withSlashes, grammarAccess.getSTRINGRule().getName());
 	}
 }

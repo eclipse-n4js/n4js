@@ -249,6 +249,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 	/** Triggers the creation of a nested/virtual resource. */
 	private void createNestedModule(ParserRuleContext ctx, Iterable<StatementContext> statements, String name) {
 		URI resUri = resource.getURI();
+		name = name.replace(":", "%3A"); // see ModuleSpecifierValueConverter
 
 		if (ParserContextUtils.isModuleAugmentationName(name)) {
 			ProgramContext pgrCtx = (ProgramContext) ParserContextUtils.findParentContext(ctx, RULE_program);
