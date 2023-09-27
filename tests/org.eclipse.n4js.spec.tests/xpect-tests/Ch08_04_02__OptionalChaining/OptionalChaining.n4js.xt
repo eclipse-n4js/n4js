@@ -87,8 +87,8 @@ log(def.def.def.defWithMethod.method?.("arg1", "arg2"));
 log(defWithMethod.undefMethod?.(mustNotBeEvaluated()));
 logException(() => undefWithMethod.method?.());
 
-log(defTag?.`value ${'o' + 'f'} template`);
-log(undefTag?.`value ${'o' + 'f'} template`);
+log(defTag?.(`value ${'o' + 'f'} template`));
+log(undefTag?.(`value ${'o' + 'f'} template`));
 
 
 console.log('======== Short-Circuiting');
@@ -98,14 +98,14 @@ function mustNotBeEvaluated(): string { throw new Error("ERROR: this should not 
 log(undefObj?.[mustNotBeEvaluated()]);
 log(undefFn?.(mustNotBeEvaluated()));
 log(defWithMethod.undefMethod?.(mustNotBeEvaluated()));
-log(undefTag?.`${mustNotBeEvaluated()}`);
+log(undefTag?.(`${mustNotBeEvaluated()}`));
 
 
 console.log('======== Long Short-Circuiting');
 
 log(undefObj?.undef.undef.undef[mustNotBeEvaluated()]);
 log(undefObj?.undef.undef.undef(mustNotBeEvaluated()));
-log(undef?.undef.undef.undefTag`${mustNotBeEvaluated()}`);
+log(undef?.undef.undef.undefTag(`${mustNotBeEvaluated()}`));
 
 log(def.def?.def.def.def.prop);
 log(def.undef?.def.def.def.prop);
@@ -164,7 +164,7 @@ method invoked (call context: correct, args: [arg1, arg2])
 method invoked (call context: correct, args: [arg1, arg2])
 undefined
 EXCEPTION: Cannot read properties of undefined (reading 'method')
-[["value "," template"],"of"]
+["value of template"]
 undefined
 ======== Short-Circuiting
 undefined

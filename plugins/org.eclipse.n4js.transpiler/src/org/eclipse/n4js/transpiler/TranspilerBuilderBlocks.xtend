@@ -706,6 +706,12 @@ public class TranspilerBuilderBlocks
 		return result;
 	}
 
+	public static def ParameterizedCallExpression _ParameterizedCallExpression(Expression expr) {
+		val result = N4JSFactory.eINSTANCE.createParameterizedCallExpression;
+		result.target = expr;
+		return result;
+	}
+
 	public static def NullLiteral _NULL() {
 		return N4JSFactory.eINSTANCE.createNullLiteral;
 	}

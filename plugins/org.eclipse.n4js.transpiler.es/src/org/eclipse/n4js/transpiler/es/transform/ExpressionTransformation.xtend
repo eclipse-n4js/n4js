@@ -84,17 +84,12 @@ class ExpressionTransformation extends Transformation {
 		replace(castExpr, castExpr.expression); // simply remove the cast
 	}
 
-//	def private dispatch void transformExpression(CoalesceExpression coalExpr) {
-//		transformCoalesceExpression(coalExpr);
-//	}
-
 	def private dispatch void transformExpression(ExpressionWithTarget exprWithTarget) {
 		if (exprWithTarget instanceof ParameterizedPropertyAccessExpression_IM) {
 			if (transformTrivialUsageOfReflection(exprWithTarget)) {
 				return;
 			}
 		}
-//		transformOptionalChaining(exprWithTarget);
 	}
 
 	/**
