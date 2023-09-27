@@ -14,15 +14,10 @@ import com.google.inject.Inject
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.AwaitExpression
 import org.eclipse.n4js.n4JS.CastExpression
-import org.eclipse.n4js.n4JS.CoalesceExpression
-import org.eclipse.n4js.n4JS.EqualityOperator
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionWithTarget
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
-import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PromisifyExpression
-import org.eclipse.n4js.n4JS.UnaryExpression
-import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
@@ -45,11 +40,6 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
  * Some expressions need special handling, this is done in this transformation.
  */
 class ExpressionTransformation extends Transformation {
-
-	/**
-	 * NOTE: we can use same temporary variable for optional chaining and the coalescing operator.
-	 */
-	private static final String CHAINING_COALESCING_TEMP_VAR_NAME = "$opt";
 
 	@Inject private ResourceNameComputer resourceNameComputer;
 	@Inject private PromisifyHelper promisifyHelper;
@@ -94,9 +84,9 @@ class ExpressionTransformation extends Transformation {
 		replace(castExpr, castExpr.expression); // simply remove the cast
 	}
 
-	def private dispatch void transformExpression(CoalesceExpression coalExpr) {
-		transformCoalesceExpression(coalExpr);
-	}
+//	def private dispatch void transformExpression(CoalesceExpression coalExpr) {
+//		transformCoalesceExpression(coalExpr);
+//	}
 
 	def private dispatch void transformExpression(ExpressionWithTarget exprWithTarget) {
 		if (exprWithTarget instanceof ParameterizedPropertyAccessExpression_IM) {
@@ -104,7 +94,7 @@ class ExpressionTransformation extends Transformation {
 				return;
 			}
 		}
-		transformOptionalChaining(exprWithTarget);
+//		transformOptionalChaining(exprWithTarget);
 	}
 
 	/**
@@ -245,152 +235,4 @@ class ExpressionTransformation extends Transformation {
 		return false;
 	}
 
-	/**
-	 * Converts
-	 * <pre>a ?? b</pre>
-	 * to
-	 * <pre>($temp = a) != null ? $temp : b</pre>
-	 */
-	def private void transformCoalesceExpression(CoalesceExpression coalExpr) {
-		// convert
-		val tempVarSTE = addOrGetTemporaryVariable(CHAINING_COALESCING_TEMP_VAR_NAME, coalExpr);
-		val replacement = _ConditionalExpr(
-			_EqualityExpr(
-				_Parenthesis(
-					_AssignmentExpr(
-						_IdentRef(tempVarSTE),
-						coalExpr.expression
-					)
-				),
-				EqualityOperator.NEQ,
-				_NULL
-			),
-			_IdentRef(tempVarSTE),
-			coalExpr.defaultExpression
-		);
-		if (coalExpr.eContainer instanceof Expression) {
-			replace(coalExpr, _Parenthesis(replacement));
-		} else {
-			replace(coalExpr, replacement);
-		}
-	}
-
-	/**
-	 * Converts
-	 * <pre>a?.b.c</pre>
-	 * to
-	 * <pre>($temp = a) == null ? void 0 : $temp.b.c</pre>
-	 */
-	def private boolean transformOptionalChaining(ExpressionWithTarget exprWithTarget) {
-		if (!exprWithTarget.optionalChaining) {
-			return false;
-		}
-		exprWithTarget.optionalChaining = false;
-
-		val target = exprWithTarget.target;
-		val tempVarSTE = addOrGetTemporaryVariable(CHAINING_COALESCING_TEMP_VAR_NAME, exprWithTarget);
-
-		replace(target, _IdentRef(tempVarSTE));
-
-		val toBeReplaced = getLongShortCircuitingDesitnation(exprWithTarget);
-		val replacement = _ConditionalExpr(
-			_EqualityExpr(
-				_Parenthesis(
-					_AssignmentExpr(
-						_IdentRef(tempVarSTE),
-						target
-					)
-				),
-				EqualityOperator.EQ,
-				_NULL
-			),
-			if (toBeReplaced instanceof UnaryExpression) _TRUE else _Void0,
-			null // will be set below
-		);
-		if (toBeReplaced.eContainer instanceof Expression) {
-			replace(toBeReplaced, _Parenthesis(replacement));
-		} else {
-			replace(toBeReplaced, replacement);
-		}
-		replacement.falseExpression = toBeReplaced;
-
-		if (exprWithTarget instanceof ParameterizedCallExpression
-			&& target instanceof ParameterizedPropertyAccessExpression) {
-
-			preserveCallContext(
-				exprWithTarget as ParameterizedCallExpression,
-				target as ParameterizedPropertyAccessExpression);
-		}
-
-		return true;
-	}
-
-	def private Expression getLongShortCircuitingDesitnation(ExpressionWithTarget expr) {
-		var dest = expr as Expression;
-		var destParent = dest.eContainer;
-		while (destParent instanceof ExpressionWithTarget) {
-			dest = destParent;
-			destParent = dest.eContainer;
-		}
-		if (destParent instanceof UnaryExpression) {
-			if (destParent.op === UnaryOperator.DELETE && destParent.expression === dest) {
-				// go up one more level to turn "delete a?.b"
-				// into "($temp = a) == null ? true : delete a.b"
-				dest = destParent;
-			}
-		}
-		return dest;
-	}
-
-	/**
-	 * When method {@link #transformOptionalChaining(ExpressionWithTarget)} is invoked with something like
-	 * <pre>foo.bar1.bar2.bar3.bar4?.(5)</pre>
-	 * it will convert that to
-	 * <pre>($opt = foo.bar1.bar2.bar3.bar4) == null ? void 0 : $opt(5)</pre>
-	 * However, that code would lose the call context of the original code.
-	 * <p>
-	 * Therefore, {@link #transformOptionalChaining(ExpressionWithTarget)} will call this method to further convert to:
-	 * <pre>($opt = ($optR = foo.bar1.bar2.bar3).bar4) == null ? void 0 : $opt.call($optR, 5)</pre>
-	 */
-	def private void preserveCallContext(ParameterizedCallExpression exprWithTarget, ParameterizedPropertyAccessExpression target) {
-		var Expression callContextExpr;
-
-		// step 1: convert
-		// $opt = foo.bar1.bar2.bar3.bar4
-		// to
-		// $opt = ($optR = foo.bar1.bar2.bar3).bar4
-		val receiver = target.target;
-		if (receiver instanceof IdentifierRef_IM && !isIdentifierRefToChainingTempVar(receiver)) {
-			// special case: receiver is a plain IdentifierRef, which can be evaluated more than once without side effects
-			// -> no need for introducing a second temporary variable
-			callContextExpr = _IdentRef((receiver as IdentifierRef_IM).id_IM);
-		} else {
-			val tempVarReceiverSTE = addOrGetTemporaryVariable(CHAINING_COALESCING_TEMP_VAR_NAME + "R", exprWithTarget);
-			val receiverAssignment = _AssignmentExpr(
-				_IdentRef(tempVarReceiverSTE),
-				null // will be set below
-			);
-			replace(receiver, _Parenthesis(receiverAssignment));
-			receiverAssignment.rhs = receiver;
-			callContextExpr = _IdentRef(tempVarReceiverSTE);
-		}
-
-		// step 2: convert
-		// $opt(5)
-		// to
-		// $opt.call($optR, 5)
-		exprWithTarget.target = _PropertyAccessExpr(
-			exprWithTarget.target,
-			steFor_Function_call
-		);
-		exprWithTarget.arguments.add(0, _Argument(callContextExpr));
-	}
-
-	def private boolean isIdentifierRefToChainingTempVar(Expression expr) {
-		if (expr instanceof IdentifierRef_IM) {
-			val name = expr.id_IM?.name;
-			return name !== null && name.startsWith(CHAINING_COALESCING_TEMP_VAR_NAME);
-		}
-		return false;
-	}
 }
