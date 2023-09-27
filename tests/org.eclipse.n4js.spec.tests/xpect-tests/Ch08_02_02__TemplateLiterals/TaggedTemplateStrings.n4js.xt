@@ -49,7 +49,7 @@ console.log('======')
 value = foo`aaa ${ 1,2,3 } bbb ${ 4,5,6 } ccc`;
 console.log('======')
 for(let b: boolean of [true, false]) {
-	value = (b?foo:null)?.`aaa ${ bar('111') } bbb ${ bar('222') } ccc`;
+	value = (b?foo`aaa ${ bar('111') } bbb ${ bar('222') } ccc`:null);
 	console.log(value);
 	console.log('======')
 }
@@ -82,7 +82,7 @@ bar called with 222
 foo called with [ [ 'aaa ', ' bbb ', ' ccc' ], '111', '222' ]
 aaa | bbb | ccc||111|222
 ======
-undefined
+null
 ======
 bar called with 111
 foo called with [ [ 'xxx', 'yyy' ], 111 ]

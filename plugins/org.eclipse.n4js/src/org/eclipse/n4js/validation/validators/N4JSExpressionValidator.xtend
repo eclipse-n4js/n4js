@@ -139,6 +139,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.n4JS.ExpressionWithTarget
 
 /**
  */
@@ -1755,6 +1756,24 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
+	@Check
+	def void checkTaggedTemplateString(TaggedTemplateString ttString) {
+		if (isInOptionalChaining(ttString)) {
+			addIssue(getMessageForVCO_TEMPLATE_IN_OPT_CHAIN, ttString.template, VCO_TEMPLATE_IN_OPT_CHAIN);
+		}
+	}
+
+	def private boolean isInOptionalChaining(EObject start) {
+		var EObject expr = start;
+		while (expr instanceof ExpressionWithTarget) {
+			if (expr.optionalChaining) {
+				return true;
+			}
+			expr = expr.target;
+		}
+		return false;
+	}
+	
 	@Check
 	def void checkMandatoryCompileTimeExpression(Expression expr) {
 		if(expr.eContainer instanceof IndexedAccessExpression) {

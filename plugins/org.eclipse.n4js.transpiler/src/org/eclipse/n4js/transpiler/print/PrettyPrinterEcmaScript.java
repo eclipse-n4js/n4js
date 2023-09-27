@@ -1040,6 +1040,14 @@ import com.google.common.base.Strings;
 	}
 
 	@Override
+	public Boolean caseCoalesceExpression(CoalesceExpression original) {
+		process(original.getExpression());
+		write(" ?? ");
+		process(original.getDefaultExpression());
+		return DONE;
+	}
+
+	@Override
 	public Boolean caseCastExpression(CastExpression original) {
 		process(original.getExpression());
 		write(" as ");
