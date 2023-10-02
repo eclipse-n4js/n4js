@@ -41,7 +41,7 @@ class StructuralMembersTripleIteratorTest extends AbstractN4JSTest {
 	@Before
 	def void prepareMembers() {
 		if(!isMemberPreparationDone) {
-			val script = '''
+			val script = testHelper.parseAndValidateSuccessfully('''
 				class L {
 					public get f(): string {return null;}
 					public set f(value:string) {}
@@ -56,7 +56,7 @@ class StructuralMembersTripleIteratorTest extends AbstractN4JSTest {
 				class RF {
 					public f: string;
 				}
-			'''.parseAndValidateSuccessfully;
+			''');
 
 			val classes = script.eContents.filter(N4ClassDeclaration).map[definedType].filter(TClass);
 

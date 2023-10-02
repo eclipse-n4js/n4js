@@ -46,13 +46,13 @@ class InferenceContextMiscTest extends AbstractN4JSTest {
 
 	@Test
 	def void testNewInferenceVariablesForFunctionTypeExprOrRef01() {
-		val script = '''
+		val script = testHelper.parseAndValidateSuccessfully('''
 			class G<T,S> {}
 
 			function <T,S> foo(p: G<T,string>): S {
 				return null;
 			}
-		'''.parseAndValidateSuccessfully;
+		''');
 
 		val fun = script.eAllContents.filter(FunctionDeclaration).head.definedFunction;
 		val funTypeRef = TypeUtils.createTypeRef(fun) as FunctionTypeRef;
@@ -68,9 +68,9 @@ class InferenceContextMiscTest extends AbstractN4JSTest {
 
 	@Test
 	def void testNewInferenceVariablesForFunctionTypeExprOrRef02() {
-		val script = '''
+		val script = testHelper.parseAndValidateSuccessfully('''
 			function <T,S> foo(): void {}
-		'''.parseAndValidateSuccessfully;
+		''');
 
 		val fun = script.eAllContents.filter(FunctionDeclaration).head.definedFunction;
 		val funTypeRef = TypeUtils.createTypeRef(fun) as FunctionTypeRef;

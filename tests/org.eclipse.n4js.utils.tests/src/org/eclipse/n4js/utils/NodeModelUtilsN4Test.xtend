@@ -105,7 +105,7 @@ class NodeModelUtilsN4Test extends AbstractN4JSTest {
 	}
 
 	def private void assertLengthOfImportDecl(CharSequence code, int expectedLength) {
-		val script = code.parseN4js;
+		val script = parserHelper.parseN4js(code);
 		val importDecl = script.scriptElements.filter(ImportDeclaration).head;
 		val node = NodeModelUtils.findActualNodeFor(importDecl);
 		val actualLength = NodeModelUtilsN4.getNodeLengthWithASISupport(node);
