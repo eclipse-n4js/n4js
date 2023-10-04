@@ -26,10 +26,10 @@ import com.google.common.io.CharStreams;
 
 import org.eclipse.n4js.n4JS.Script;
 
-/***/
+
 public class SmokeTestWriter extends N4JSParseHelper {
 
-	/***/
+	
 	public static boolean active = Boolean.getBoolean("SmokeTestWriter");
 
 	static int counter = 1;

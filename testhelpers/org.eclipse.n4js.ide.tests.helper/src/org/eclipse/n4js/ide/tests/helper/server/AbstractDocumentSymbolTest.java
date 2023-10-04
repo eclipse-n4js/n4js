@@ -32,7 +32,7 @@ import org.eclipse.n4js.utils.Strings;
 @SuppressWarnings("deprecation")
 abstract public class AbstractDocumentSymbolTest extends AbstractStructuredIdeTest<DocumentSymbolConfig> {
 
-	/***/
+	
 	public static class DocumentSymbolConfig {
 		String expectation;
 

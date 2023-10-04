@@ -42,13 +42,13 @@ import com.google.inject.Provider;
 @InjectWith(N4JSInjectorProvider.class)
 public abstract class AbstractN4JSTest extends Assert {
 
-	/***/
+	
 	@Inject
 	protected N4JSTestHelper testHelper;
-	/***/
+	
 	@Inject
 	protected N4JSParseHelper parserHelper;
-	/***/
+	
 	@Inject
 	protected N4JSValidationTestHelper validationTestHelper;
 

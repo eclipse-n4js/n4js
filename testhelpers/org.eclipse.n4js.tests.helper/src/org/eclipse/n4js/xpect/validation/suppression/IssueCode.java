@@ -31,22 +31,22 @@ public class IssueCode {
 	private final String name;
 	private boolean enabled = false;
 
-	/***/
+	
 	public IssueCode(String name) throws IllegalArgumentException {
 		this.name = name;
 	}
 
-	/***/
+	
 	public String getName() {
 		return this.name;
 	}
 
-	/***/
+	
 	public void setEnabled(boolean state) {
 		enabled = state;
 	}
 
-	/***/
+	
 	public boolean isEnabled() {
 		return enabled;
 	}

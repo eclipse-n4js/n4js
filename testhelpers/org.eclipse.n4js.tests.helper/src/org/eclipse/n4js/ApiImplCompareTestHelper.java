@@ -84,7 +84,7 @@ public class ApiImplCompareTestHelper {
 		}
 	}
 
-	/***/
+	
 	@SuppressWarnings("unchecked")
 	public void assertCorrectTypeEntry(
 			ProjectComparison comparision,
@@ -122,14 +122,14 @@ public class ApiImplCompareTestHelper {
 		return entries.get(0);
 	}
 
-	/***/
+	
 	public String getElementNameForEntry(ProjectComparisonEntry entry) {
 		Iterable<IdentifiableElement> idElems = filter(Arrays.asList(entry.getAllElements()),
 				IdentifiableElement.class);
 		return map(idElems, idElem -> idElem.getName()).iterator().next();
 	}
 
-	/***/
+	
 	public String getElementFqnForEntry(ProjectComparisonEntry entry) {
 		Iterable<Type> types = filter(Arrays.asList(entry.getAllElements()), Type.class);
 		Iterable<String> names = map(types,
@@ -149,7 +149,7 @@ public class ApiImplCompareTestHelper {
 		return projectCompareHelper.compareApiImpl(entry, 0).description;
 	}
 
-	/***/
+	
 	public ProjectReference createProjectReference(String projectNameOfTargetProject) {
 		return new ProjectReference(projectNameOfTargetProject);
 	}

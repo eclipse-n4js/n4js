@@ -42,7 +42,7 @@ public class ExceptionAnalyser extends PositiveAnalyser {
 	@Inject
 	private IResourceValidator validator;
 
-	/***/
+	
 	public ExceptionAnalyser() {
 		super(Logger.getLogger(ExceptionAnalyser.class), null);
 	}

@@ -31,7 +31,7 @@ import org.eclipse.n4js.utils.Strings;
 @SuppressWarnings("deprecation")
 abstract public class AbstractWorkspaceSymbolTest extends AbstractStructuredIdeTest<WorkspaceSymbolConfig> {
 
-	/***/
+	
 	public static class WorkspaceSymbolConfig {
 		WorkspaceSymbolParams params;
 		String expectation;

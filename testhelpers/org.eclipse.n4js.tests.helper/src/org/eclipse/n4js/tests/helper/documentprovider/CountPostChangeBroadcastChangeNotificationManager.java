@@ -38,7 +38,7 @@ public class CountPostChangeBroadcastChangeNotificationManager extends Notificat
 		super.broadcastChanges(lastState, event, lockTree);
 	}
 
-	/***/
+	
 	public int numberPostChangeTriggered() {
 		return countPostChangeBroadcastTriggered;
 	}

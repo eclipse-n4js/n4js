@@ -46,7 +46,7 @@ public class CSVParserTest {
 		}
 	}
 
-	/***/
+	
 	@Test
 	public void testWindowsLineEndings() throws SimpleParserException {
 		assertResult(List.of(
@@ -72,20 +72,20 @@ public class CSVParserTest {
 						",,Supplier,Class,,\r\n,,Subject of Access,\"Field, Accessor, Method\",,\"Static Field, Getter, Setter, Method\",,\r\n"));
 	}
 
-	/***/
+	
 	@Test
 	public void testEmptyString() throws SimpleParserException {
 		assertResult(Collections.emptyList(), CSVParser.parse(""));
 	}
 
-	/***/
+	
 	@Test
 	public void testOneEmptyField() throws SimpleParserException {
 		assertResult(List.of(
 				List.of("")), CSVParser.parse("\n"));
 	}
 
-	/***/
+	
 	@Test
 	public void testTwoRowsWithOneFieldEach() throws SimpleParserException {
 		assertResult(List.of(
@@ -93,7 +93,7 @@ public class CSVParserTest {
 				List.of("")), CSVParser.parse("\n\n"));
 	}
 
-	/***/
+	
 	@Test
 	public void testOneRowWithThreeFields() throws SimpleParserException {
 		assertResult(List.of(
@@ -102,7 +102,7 @@ public class CSVParserTest {
 						"""));
 	}
 
-	/***/
+	
 	@Test
 	public void testOneRowWithThreeEmptyFields() throws SimpleParserException {
 		assertResult(List.of(
@@ -111,7 +111,7 @@ public class CSVParserTest {
 						"""));
 	}
 
-	/***/
+	
 	@Test
 	public void testOneRowWithSomeEmptyFields() throws SimpleParserException {
 		assertResult(List.of(
@@ -157,7 +157,7 @@ public class CSVParserTest {
 						"""));
 	}
 
-	/***/
+	
 	@Test
 	public void testSeveralRowsOfSameLength() throws SimpleParserException {
 		assertResult(List.of(
@@ -189,7 +189,7 @@ public class CSVParserTest {
 						"""));
 	}
 
-	/***/
+	
 	@Test
 	public void testSeveralRowsOfDifferingLengths() throws SimpleParserException {
 		assertResult(List.of(
@@ -241,7 +241,7 @@ public class CSVParserTest {
 						"""));
 	}
 
-	/***/
+	
 	@Test
 	public void testFieldsWithControlChars() throws SimpleParserException {
 		assertResult(List.of(

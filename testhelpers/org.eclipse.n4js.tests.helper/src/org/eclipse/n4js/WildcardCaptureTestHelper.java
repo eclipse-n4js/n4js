@@ -135,25 +135,25 @@ public class WildcardCaptureTestHelper {
 		});
 	}
 
-	/***/
+	
 	public TypeRef capture(Wildcard wildcard) {
 		ExistentialTypeRef captured = TypeUtils.captureWildcard(wildcard);
 		return captured;
 	}
 
-	/***/
+	
 	public TypeRef captureAndReopen(Wildcard wildcard) {
 		TypeRef captured = capture(wildcard);
 		TypeRef reopened = reopenExistentialTypes(captured);
 		return reopened;
 	}
 
-	/***/
+	
 	public TypeRef reopenExistentialTypes(TypeRef typeRef) {
 		return (TypeRef) reopenExistentialTypes((TypeArgument) typeRef);
 	}
 
-	/***/
+	
 	public TypeArgument reopenExistentialTypes(TypeArgument typeArg) {
 		boolean isOrContainsClosedExistential = isClosedExistentialTypeRef(typeArg)
 				|| IteratorExtensions.exists(typeArg.eAllContents(), elem -> isClosedExistentialTypeRef(elem));

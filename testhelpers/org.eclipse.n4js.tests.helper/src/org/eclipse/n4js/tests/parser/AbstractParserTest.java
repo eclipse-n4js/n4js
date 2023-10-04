@@ -30,16 +30,16 @@ import org.junit.runner.RunWith;
 
 import com.google.inject.Inject;
 
-/***/
+
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSInjectorProvider.class)
 public abstract class AbstractParserTest extends Assert {
 
-	/***/
+	
 	@Inject
 	protected N4JSParseHelper parseHelper;
 
-	/***/
+	
 	protected Script parseJSSuccessfully(CharSequence js) throws Exception {
 		Script script = parseHelper.parseUnrestricted(js);
 		EList<Diagnostic> errors = script.eResource().getErrors();
@@ -48,7 +48,7 @@ public abstract class AbstractParserTest extends Assert {
 		return script;
 	}
 
-	/***/
+	
 	protected Script parseJSWithError(CharSequence js) throws Exception {
 		Script script = parseHelper.parseUnrestricted(js);
 		List<Diagnostic> errors = script.eResource().getErrors();
@@ -56,17 +56,17 @@ public abstract class AbstractParserTest extends Assert {
 		return script;
 	}
 
-	/***/
+	
 	protected Script parseESSuccessfully(CharSequence js) throws Exception {
 		return parseJSSuccessfully(js);
 	}
 
-	/***/
+	
 	protected Script parseESWithError(CharSequence js) throws Exception {
 		return parseJSWithError(js);
 	}
 
-	/***/
+	
 	protected Script parseN4jsSuccessfully(CharSequence js) throws Exception {
 		Script script = parseHelper.parseN4js(js);
 		EList<Diagnostic> errors = script.eResource().getErrors();
@@ -75,7 +75,7 @@ public abstract class AbstractParserTest extends Assert {
 		return script;
 	}
 
-	/***/
+	
 	protected Script parseN4jsWithError(CharSequence js) throws Exception {
 		Script script = parseHelper.parseN4js(js);
 		List<Diagnostic> errors = script.eResource().getErrors();
@@ -92,12 +92,12 @@ public abstract class AbstractParserTest extends Assert {
 		return null;
 	}
 
-	/***/
+	
 	protected String getText(Expression expr) {
 		return NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(expr));
 	}
 
-	/***/
+	
 	protected String getPropertyText(ParameterizedPropertyAccessExpression ppae) {
 		return NodeModelUtils.getTokenText(NodeModelUtils.findNodesForFeature(ppae,
 				N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY).iterator().next());

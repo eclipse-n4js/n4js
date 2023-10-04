@@ -69,7 +69,7 @@ public class SemverParseHelper extends ParseHelper<NPMVersionRequirement> {
 		}
 	}
 
-	/***/
+	
 	public VersionRangeSetRequirement parseVersionRangeSet(String versionString) throws Exception {
 		if (versionString == null) {
 			return null;
@@ -82,7 +82,7 @@ public class SemverParseHelper extends ParseHelper<NPMVersionRequirement> {
 		return vrs;
 	}
 
-	/***/
+	
 	public VersionNumber parseVersionNumber(String versionString) throws Exception {
 		VersionRangeSetRequirement vrs = parseVersionRangeSet(versionString);
 		if (vrs == null || vrs.getRanges().isEmpty()) {

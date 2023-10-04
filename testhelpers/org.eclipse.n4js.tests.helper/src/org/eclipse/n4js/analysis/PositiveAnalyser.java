@@ -36,7 +36,7 @@ public class PositiveAnalyser extends BaseAnalyser implements Analyser {
 	 */
 	protected final SerializerTestHelper serializerTester;
 
-	/***/
+	
 	// TODO after java update bring back null analysis
 	// public PositiveAnalyser(final @Nonnull Logger logger) {
 	public PositiveAnalyser(final Logger logger, SerializerTestHelper serializerTester) {

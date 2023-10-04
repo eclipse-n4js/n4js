@@ -38,11 +38,11 @@ import com.google.inject.util.Modules;
  */
 public class N4JSInjectorProvider implements IInjectorProvider, IRegistryConfigurator {
 
-	/***/
+	
 	protected GlobalStateMemento stateBeforeInjectorCreation;
-	/***/
+	
 	protected GlobalStateMemento stateAfterInjectorCreation;
-	/***/
+	
 	protected Injector injector;
 
 	/**
@@ -152,12 +152,12 @@ public class N4JSInjectorProvider implements IInjectorProvider, IRegistryConfigu
 			return getClass().getClassLoader();
 		}
 
-		/***/
+		
 		public Class<? extends Provider<? extends SynchronizedXtextResourceSet>> provideConfiguredXtextResourceSet() {
 			return MockResourceSetProvider.class;
 		}
 
-		/***/
+		
 		@SingletonBinding
 		public Class<? extends ResourceHelper> bindResourceHelper() {
 			return MockResourceHelper.class;

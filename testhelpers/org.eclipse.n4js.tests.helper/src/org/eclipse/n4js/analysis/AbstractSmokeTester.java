@@ -47,7 +47,7 @@ public abstract class AbstractSmokeTester {
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
 
-	/***/
+	
 	public void assertNoException(CharSequence expression) throws Exception {
 		boolean old = SmokeTestWriter.active;
 		SmokeTestWriter.active = false;
@@ -160,6 +160,6 @@ public abstract class AbstractSmokeTester {
 		return resourceSetProvider.get();
 	}
 
-	/***/
+	
 	protected abstract void processFile(String input) throws Exception;
 }

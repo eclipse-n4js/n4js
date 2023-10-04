@@ -24,12 +24,12 @@ import org.eclipse.xpect.xtext.lib.setup.InjectorSetup;
 public class SuppressIssuesSetupRoot {
 	private IssueConfiguration issueConfiguration;
 
-	/***/
+	
 	public void add(IssueConfiguration configuration) {
 		issueConfiguration = configuration;
 	}
 
-	/***/
+	
 	public IssueConfiguration getIssueConfiguration() {
 		return issueConfiguration;
 	}
