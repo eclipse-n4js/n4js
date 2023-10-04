@@ -31,14 +31,14 @@ import org.eclipse.xpect.setup.XpectSetupComponent;
 public class IssueConfiguration {
 	private final List<IssueCode> issueCodes = new ArrayList<>();
 
-	IssueConfiguration() {
+	public IssueConfiguration() {
 	}
 
-	void add(IssueCode code) {
+	public void add(IssueCode code) {
 		issueCodes.add(code);
 	}
 
-	List<IssueCode> getIssueCodes() {
+	public List<IssueCode> getIssueCodes() {
 		return issueCodes;
 	}
 }

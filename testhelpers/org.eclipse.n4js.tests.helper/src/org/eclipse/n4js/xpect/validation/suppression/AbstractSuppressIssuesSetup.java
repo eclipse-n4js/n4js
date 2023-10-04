@@ -70,7 +70,7 @@ public abstract class AbstractSuppressIssuesSetup extends IssuesByLineProvider {
 	 * @param setupInitializer
 	 *            The setup initializer for setup specific settings. Provided by Xpect.
 	 */
-	protected AbstractSuppressIssuesSetup(@ThisResource XtextResource resource,
+	public AbstractSuppressIssuesSetup(@ThisResource XtextResource resource,
 			ISetupInitializer<SuppressIssuesSetupRoot> setupInitializer) {
 
 		super(resource);

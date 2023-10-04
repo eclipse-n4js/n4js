@@ -33,7 +33,7 @@ import org.eclipse.xtext.resource.XtextResource;
 public class N4JSSuppressIssuesSetup extends AbstractSuppressIssuesSetup {
 
 	/** Instantiates a new {@link N4JSSuppressIssuesSetup}. */
-	N4JSSuppressIssuesSetup(@ThisResource XtextResource resource,
+	public N4JSSuppressIssuesSetup(@ThisResource XtextResource resource,
 			ISetupInitializer<SuppressIssuesSetupRoot> setupInitializer) {
 		super(resource, setupInitializer);
 	}
