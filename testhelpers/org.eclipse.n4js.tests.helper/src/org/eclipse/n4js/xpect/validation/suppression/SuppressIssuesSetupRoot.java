@@ -8,11 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.xpect.validation.suppression
+package org.eclipse.n4js.xpect.validation.suppression;
 
-import org.eclipse.xpect.XpectImport
-import org.eclipse.xpect.setup.XpectSetupRoot
-import org.eclipse.xpect.xtext.lib.setup.InjectorSetup
+import org.eclipse.xpect.XpectImport;
+import org.eclipse.xpect.setup.XpectSetupRoot;
+import org.eclipse.xpect.xtext.lib.setup.InjectorSetup;
 
 /**
  * An xpect setup root which allows to configure a {@link N4JSSuppressIssuesSetup}.
@@ -20,15 +20,17 @@ import org.eclipse.xpect.xtext.lib.setup.InjectorSetup
  * Also see {@link IssueConfiguration}.
  */
 @XpectSetupRoot
-@XpectImport( # [ IssueConfiguration, IssueCode, InjectorSetup] )
-class SuppressIssuesSetupRoot {
+@XpectImport({ IssueConfiguration.class, IssueCode.class, InjectorSetup.class })
+public class SuppressIssuesSetupRoot {
 	private IssueConfiguration issueConfiguration;
 
-	def add(IssueConfiguration configuration) {
+	/***/
+	public void add(IssueConfiguration configuration) {
 		issueConfiguration = configuration;
 	}
 
-	def getIssueConfiguration() {
+	/***/
+	public IssueConfiguration getIssueConfiguration() {
 		return issueConfiguration;
 	}
 }
