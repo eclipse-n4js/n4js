@@ -53,22 +53,22 @@ public class VersionTest {
 
 	}
 
-	VersionNumber parse(String versionString) {
+	VersionNumber parse(String versionString) throws Exception {
 		return semverParseHelper.parseVersionNumber(versionString);
 	}
 
 	@Test
-	public void testParseNullExpectMissing() {
+	public void testParseNullExpectMissing() throws Exception {
 		assertMissing(semverParseHelper.parseVersionNumber(null));
 	}
 
 	@Test
-	public void testParseEmptyStringExpectMissing() {
+	public void testParseEmptyStringExpectMissing() throws Exception {
 		assertMissing(semverParseHelper.parseVersionNumber(""));
 	}
 
 	@Test
-	public void testParseTwoDotsString() {
+	public void testParseTwoDotsString() throws Exception {
 		assertEquals(semverParseHelper.parseVersionNumber("1.2.3"), version(1, 2, 3));
 	}
 
@@ -132,7 +132,7 @@ public class VersionTest {
 	}
 
 	@Test
-	public void testVersions() {
+	public void testVersions() throws Exception {
 		assertEquals(version(1, 2, 3), parse("1.2.3"));
 		assertEquals(version(1, 2, 3, "alpha.1", ""), parse("1.2.3-alpha.1"));
 		assertEquals(version(1, 2, 3, "alpha.1", "c04d73a"), parse("1.2.3-alpha.1+c04d73a"));

@@ -93,7 +93,7 @@ public class SemverRangeTest {
 
 	/** Checks if a range under test matches other ranges. */
 	@Test
-	public void testParseAndToString() {
+	public void testParseAndToString() throws Exception {
 		for (Triple<List<String>, List<String>, List<String>> entry : data) {
 			List<String> underTestStrings = entry.getFirst();
 			List<String> shouldMatches = entry.getSecond();
@@ -104,7 +104,8 @@ public class SemverRangeTest {
 		}
 	}
 
-	private void internalTestVersion(String underTestStr, List<String> shouldMatches, List<String> shouldNotMatches) {
+	private void internalTestVersion(String underTestStr, List<String> shouldMatches, List<String> shouldNotMatches)
+			throws Exception {
 		VersionRangeSetRequirement underTestVRS = semverParseHelper.parseVersionRangeSet(underTestStr);
 		assertTrue(underTestVRS != null);
 
@@ -118,7 +119,7 @@ public class SemverRangeTest {
 	}
 
 	private void checkMatching(String underTestStr, VersionRangeSetRequirement underTestVRS, String matchingString,
-			boolean shouldMatch) {
+			boolean shouldMatch) throws Exception {
 		VersionNumber versionNumber = semverParseHelper.parseVersionNumber(matchingString);
 		assertTrue(versionNumber != null);
 
