@@ -247,7 +247,7 @@ class JudgmentSubtypeTest extends AbstractTypesystemTest {
 		val open = TypeUtils.copy(ctorTypeRefFromAST);
 		val closed1 = ts.substTypeVariablesWithFullCapture(G, open) as TypeTypeRef;
 		val closed2 = ts.substTypeVariablesWithFullCapture(G, open) as TypeTypeRef;
-		val reopened = wildcardCaptureTestHelper.reopenExistentialTypes(G, closed1) as TypeTypeRef;
+		val reopened = wildcardCaptureTestHelper.reopenExistentialTypes(closed1) as TypeTypeRef;
 
 		val openCpy = TypeUtils.copy(open);
 		val closed1Cpy = TypeUtils.copy(closed1);

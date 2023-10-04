@@ -125,7 +125,7 @@ class WildcardAndExistentialTypeRefSubtypingTest extends AbstractTypesystemTest 
 	 * cases, to avoid duplicating the test cases above.
 	 */
 	def private void assertSubtypeOfVariations(boolean expectedResult, TypeArgument left, TypeArgument right) {
-		val variations = wildcardCaptureTestHelper.createCaptureVariations(G, #[left, right]);
+		val variations = wildcardCaptureTestHelper.createCaptureVariations(#[left, right]);
 		for (variation : variations) {
 			val currLeft = variation.get(0);
 			val currRight = variation.get(1);

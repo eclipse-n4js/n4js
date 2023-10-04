@@ -203,14 +203,14 @@ class InferenceContext_WildcardAndExistentialTypeRef1Test extends AbstractInfere
 	 * cases, to avoid duplicating the test cases above.
 	 */
 	def protected void assertSolutionOfVariations(Script script, TypeConstraint[] constraints, Pair<InferenceVariable,TypeRef>... expectedInstantiations) {
-		val variations = wildcardCaptureTestHelper.createCaptureVariationsForConstraints(_G, constraints, true);
+		val variations = wildcardCaptureTestHelper.createCaptureVariationsForConstraints(constraints, true);
 		for (variation : variations) {
 			script.assertSolution(variation, expectedInstantiations);
 		}
 	}
 
 	def protected void assertNoSolutionOfVariations(Script script, TypeConstraint[] constraints, InferenceVariable... inferenceVariables) {
-		val variations = wildcardCaptureTestHelper.createCaptureVariationsForConstraints(_G, constraints, true);
+		val variations = wildcardCaptureTestHelper.createCaptureVariationsForConstraints(constraints, true);
 		for (variation : variations) {
 			script.assertNoSolution(variation, inferenceVariables);
 		}

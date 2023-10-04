@@ -23,7 +23,6 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint;
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.utils.UtilN4.DigitIterator;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
@@ -35,14 +34,14 @@ public class WildcardCaptureTestHelper {
 
 	/**
 	 * Creates variations of the given constraint system by capturing and/or reopening any wildcards. See
-	 * {@link #createCaptureVariations(RuleEnvironment, Collection, boolean)} for details.
+	 * {@link #createCaptureVariations(Collection, boolean)} for details.
 	 */
-	public List<List<TypeConstraint>> createCaptureVariationsForConstraints(RuleEnvironment G,
+	public List<List<TypeConstraint>> createCaptureVariationsForConstraints(
 			Collection<TypeConstraint> constraints, boolean avoidClosedCaptures) {
 
 		List<Object> constraintsAsSingleListOfObjects = IterableExtensions
 				.toList(IterableExtensions.flatMap(constraints, c -> List.of(c.left, c.right, c.variance)));
-		List<List<Object>> variations = createCaptureVariations(G, constraintsAsSingleListOfObjects,
+		List<List<Object>> variations = createCaptureVariations(constraintsAsSingleListOfObjects,
 				avoidClosedCaptures);
 		List<List<TypeConstraint>> listOfListOfConstraints = new ArrayList<>();
 		for (List<Object> variation : variations) {
@@ -59,11 +58,10 @@ public class WildcardCaptureTestHelper {
 	}
 
 	/**
-	 * Same as {@link #createCaptureVariations(RuleEnvironment, Collection, boolean)} with avoidClosedCaptures ===
-	 * false.
+	 * Same as {@link #createCaptureVariations(Collection, boolean)} with avoidClosedCaptures === false.
 	 */
-	public <T> List<List<T>> createCaptureVariations(RuleEnvironment G, Collection<T> objects) {
-		return createCaptureVariations(G, objects, false);
+	public <T> List<List<T>> createCaptureVariations(Collection<T> objects) {
+		return createCaptureVariations(objects, false);
 	}
 
 	/**
@@ -99,7 +97,7 @@ public class WildcardCaptureTestHelper {
 	 * ]
 	 * </pre>
 	 */
-	public <T> List<List<T>> createCaptureVariations(RuleEnvironment G, Collection<T> objects,
+	public <T> List<List<T>> createCaptureVariations(Collection<T> objects,
 			boolean avoidClosedCaptures) {
 
 		int numOfVariationsPerWildcard = avoidClosedCaptures ? 2 : 3;
@@ -109,7 +107,7 @@ public class WildcardCaptureTestHelper {
 		List<List<T>> result = new ArrayList<>();
 		DigitIterator iter = new DigitIterator(0, numOfVariationsPerWildcard);
 		while (iter.getValue() < numOfTotalVariations) {
-			Iterable<T> captureVariation = createCaptureVariation(G, objects, iter, avoidClosedCaptures);
+			Iterable<T> captureVariation = createCaptureVariation(objects, iter, avoidClosedCaptures);
 			List<T> variation = IterableExtensions.toList(captureVariation);
 			result.add(variation);
 			iter.inc();
@@ -118,7 +116,7 @@ public class WildcardCaptureTestHelper {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> Iterable<T> createCaptureVariation(RuleEnvironment G, Iterable<T> objects, DigitIterator iter,
+	private <T> Iterable<T> createCaptureVariation(Iterable<T> objects, DigitIterator iter,
 			boolean avoidClosedCaptures) {
 		return IterableExtensions.map(objects, obj -> {
 			if (obj instanceof Wildcard) {
@@ -129,7 +127,7 @@ public class WildcardCaptureTestHelper {
 				} else if (digit == 1 && !avoidClosedCaptures) {
 					return (T) capture(wildcard);
 				} else {
-					return (T) captureAndReopen(G, wildcard);
+					return (T) captureAndReopen(wildcard);
 				}
 			} else {
 				return obj;
@@ -144,19 +142,19 @@ public class WildcardCaptureTestHelper {
 	}
 
 	/***/
-	public TypeRef captureAndReopen(RuleEnvironment G, Wildcard wildcard) {
+	public TypeRef captureAndReopen(Wildcard wildcard) {
 		TypeRef captured = capture(wildcard);
-		TypeRef reopened = reopenExistentialTypes(G, captured);
+		TypeRef reopened = reopenExistentialTypes(captured);
 		return reopened;
 	}
 
 	/***/
-	public TypeRef reopenExistentialTypes(RuleEnvironment G, TypeRef typeRef) {
-		return (TypeRef) reopenExistentialTypes(G, (TypeArgument) typeRef);
+	public TypeRef reopenExistentialTypes(TypeRef typeRef) {
+		return (TypeRef) reopenExistentialTypes((TypeArgument) typeRef);
 	}
 
 	/***/
-	public TypeArgument reopenExistentialTypes(RuleEnvironment G, TypeArgument typeArg) {
+	public TypeArgument reopenExistentialTypes(TypeArgument typeArg) {
 		boolean isOrContainsClosedExistential = isClosedExistentialTypeRef(typeArg)
 				|| IteratorExtensions.exists(typeArg.eAllContents(), elem -> isClosedExistentialTypeRef(elem));
 
