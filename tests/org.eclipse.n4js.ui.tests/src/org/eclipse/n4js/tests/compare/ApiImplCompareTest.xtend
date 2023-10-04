@@ -12,7 +12,6 @@ package org.eclipse.n4js.tests.compare
 
 import com.google.inject.Inject
 import java.io.File
-import org.eclipse.n4js.ApiImplCompareTestHelper
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
 import org.eclipse.n4js.tooling.compare.ProjectCompareHelper
 import org.eclipse.n4js.tooling.compare.ProjectCompareResult.Status
@@ -22,6 +21,7 @@ import org.junit.Test
 
 import static org.junit.Assert.*
 import org.eclipse.n4js.workspace.utils.N4JSPackageName
+import org.eclipse.n4js.ApiImplCompareTestHelper
 
 @Ignore // Api/Impl concept is doomed
 class ApiImplCompareTest extends ConvertedIdeTest {
@@ -47,9 +47,7 @@ class ApiImplCompareTest extends ConvertedIdeTest {
 		assertEquals(0, errMsgs.size)
 
 		// checking class Clazz
-
-		comparison.assertCorrectChildEntries("x/y/M","Clazz",
-
+		assertCorrectChildEntries(comparison, "x/y/M", "Clazz",
 			// format:
 			// childName  ->  expected comparison status  ->  expected comparison description
 

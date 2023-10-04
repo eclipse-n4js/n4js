@@ -13,7 +13,6 @@ package org.eclipse.n4js.xsemantics
 import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.N4JSTestHelper
-import org.eclipse.n4js.WildcardCaptureTestHelper
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.tests.issues.IssueUtils
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
@@ -30,6 +29,7 @@ import org.junit.runner.RunWith
 
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static org.junit.Assert.*
+import org.eclipse.n4js.WildcardCaptureTestHelper
 
 /*
  * Tests for judgment subtype, see n4js.xsemantics for judgment, axiom and rules.

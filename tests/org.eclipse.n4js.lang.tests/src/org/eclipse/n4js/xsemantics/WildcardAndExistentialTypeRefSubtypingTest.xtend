@@ -12,7 +12,6 @@ package org.eclipse.n4js.xsemantics
 
 import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
-import org.eclipse.n4js.WildcardCaptureTestHelper
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
@@ -28,6 +27,7 @@ import org.junit.runner.RunWith
 import static org.junit.Assert.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.WildcardCaptureTestHelper
 
 /**
  * Test for subtype relations where at least one side is a wildcard or (closed or reopened) ExistentialTypeRef.

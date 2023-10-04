@@ -12,7 +12,6 @@ package org.eclipse.n4js.typesystem
 
 import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
-import org.eclipse.n4js.WildcardCaptureTestHelper
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.InferenceVariable
@@ -21,6 +20,7 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.eclipse.n4js.WildcardCaptureTestHelper
 
 /**
  * Here we test constraints having bare wildcards on the top level (not wildcards as type argument
