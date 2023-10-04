@@ -49,7 +49,7 @@ public class JSONParserTest {
 
 	/** Checks that all supported types of value literals are parsed correctly. */
 	@Test
-	public void testPlainValues() {
+	public void testPlainValues() throws Exception {
 		jsonParserHelper.parseSuccessfully("");// empty document
 		jsonParserHelper.parseSuccessfully("	 "); // whitespace document
 		jsonParserHelper.parseSuccessfully("{}");
@@ -67,7 +67,7 @@ public class JSONParserTest {
 
 	/** Checks that all supported escape sequences are parsed correctly. */
 	@Test
-	public void testStringEscapeSequences() {
+	public void testStringEscapeSequences() throws Exception {
 		jsonParserHelper.parseSuccessfully("\"f\\no\"");
 		jsonParserHelper.parseSuccessfully("\"\\f\"");
 		jsonParserHelper.parseSuccessfully("\"\\n\"");
@@ -81,7 +81,7 @@ public class JSONParserTest {
 
 	/** Checks that various different variations of numeric literals are parsed correctly. */
 	@Test
-	public void testNumericValues() {
+	public void testNumericValues() throws Exception {
 		jsonParserHelper.parseSuccessfully("2");
 		jsonParserHelper.parseSuccessfully("4");
 		jsonParserHelper.parseSuccessfully("0.2");
@@ -108,7 +108,7 @@ public class JSONParserTest {
 
 	/** Checks that various different variations of string literals are parsed correctly. */
 	@Test
-	public void testStringValues() {
+	public void testStringValues() throws Exception {
 		jsonParserHelper.parseSuccessfully("\"\"");
 		jsonParserHelper.parseSuccessfully("\"   \"");
 		jsonParserHelper.parseSuccessfully("\"\\t\\n\"");
@@ -121,7 +121,7 @@ public class JSONParserTest {
 	}
 
 	@Test
-	public void testInvalidJSON() {
+	public void testInvalidJSON() throws Exception {
 		jsonParserHelper.parseUnsuccessfully("NaN");
 		jsonParserHelper.parseUnsuccessfully("Infinity");
 		jsonParserHelper.parseUnsuccessfully("f()"); // JS style function calls
@@ -160,7 +160,7 @@ public class JSONParserTest {
 	}
 
 	@Test
-	public void testComments() {
+	public void testComments() throws Exception {
 		jsonParserHelper.parseSuccessfully("""
 						//single line comment
 				{"content": 1}""");
@@ -172,7 +172,7 @@ public class JSONParserTest {
 	}
 
 	@Test
-	public void testSimpleObjects() {
+	public void testSimpleObjects() throws Exception {
 		JSONObject obj1 = assertIsObject(jsonParserHelper.parseSuccessfully("{\"a\": 1, \"b\": 2}").getContent());
 		assertEqualsValue(1, assertHasKey(obj1, "a"));
 		assertEqualsValue(2, assertHasKey(obj1, "b"));
@@ -185,7 +185,7 @@ public class JSONParserTest {
 
 	/** Checks that an array of numeric literals is parsed correctly. */
 	@Test
-	public void testNumericArray() {
+	public void testNumericArray() throws Exception {
 		JSONDocument doc = jsonParserHelper.parseSuccessfully("[1, 2, 3]");
 		assertTrue(doc.getContent() instanceof JSONArray);
 
@@ -198,7 +198,7 @@ public class JSONParserTest {
 
 	/** Checks that an array of mixed values is parsed correctly. */
 	@Test
-	public void testMixedArray() {
+	public void testMixedArray() throws Exception {
 		JSONDocument doc = jsonParserHelper.parseSuccessfully("""
 				[1, "str", {"v" : 1}, [], null, true, 42.42, 12e+2]""");
 		assertTrue(doc.getContent() instanceof JSONArray);
@@ -222,7 +222,7 @@ public class JSONParserTest {
 
 	/** Checks that the parsing of a nested JSON object works as intended. */
 	@Test
-	public void testNestedObject() {
+	public void testNestedObject() throws Exception {
 		JSONDocument doc = jsonParserHelper.parseSuccessfully("""
 				{
 					"a": {
@@ -248,7 +248,7 @@ public class JSONParserTest {
 
 	/** Checks that the parsing of a nested JSON array works as intended. */
 	@Test
-	public void testNestedArray() {
+	public void testNestedArray() throws Exception {
 		JSONDocument doc = jsonParserHelper.parseSuccessfully("""
 				[
 					[
@@ -269,7 +269,7 @@ public class JSONParserTest {
 
 	/** Checks that the parsing of a simple Node.js package.json file works as intended. */
 	@Test
-	public void testSimpleNodePackageJson() {
+	public void testSimpleNodePackageJson() throws Exception {
 		JSONDocument doc = jsonParserHelper.parseSuccessfully("""
 				{
 				  "name": "test-npm",
@@ -311,7 +311,7 @@ public class JSONParserTest {
 
 	/**  */
 	@Test
-	public void testUnicodeControlCharacters() {
+	public void testUnicodeControlCharacters() throws Exception {
 		jsonParserHelper.parseUnsuccessfully("[\"a a\"]");
 	}
 
