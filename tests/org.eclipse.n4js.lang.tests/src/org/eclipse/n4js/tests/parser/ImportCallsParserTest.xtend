@@ -26,7 +26,7 @@ class ImportCallsParserTest extends AbstractParserTest {
 
 	@Test
 	def testImportCalls() {
-		val script = '''
+		val script = parseHelper.parse('''
 			import * as X from "C";
 			import {D as Y} from "D";
 
@@ -70,7 +70,7 @@ class ImportCallsParserTest extends AbstractParserTest {
 			}
 
 			X,Y;
-		'''.parse;
+		''');
 		val resource = script.eResource;
 
 		assertTrue("unexpected syntax errors:\n\t" + Joiner.on("\n\t").join(resource.errors), resource.errors.empty);

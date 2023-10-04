@@ -16,7 +16,7 @@ class N4_09_AnnotationTest extends AbstractParserTest{
 
 	@Test
 	def void testScriptAnnotationExample() {
-		val script = '''
+		val script = parseHelper.parse('''
 			@@DoNotCompile
 			import { A } from "p/A"
 			@Force
@@ -29,7 +29,7 @@ class N4_09_AnnotationTest extends AbstractParserTest{
 				@ReadOnly
 				public A = "Hello";
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertEquals(4, script.scriptElements.size);

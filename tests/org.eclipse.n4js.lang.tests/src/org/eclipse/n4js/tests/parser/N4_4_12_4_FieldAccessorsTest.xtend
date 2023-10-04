@@ -19,7 +19,7 @@ class N4_4_12_4_FieldAccessorsTest extends AbstractParserTest {
 
 	@Test
 	def void testMethodDeclarations() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public class A {
 
 				f1(): void {}
@@ -53,7 +53,7 @@ class N4_4_12_4_FieldAccessorsTest extends AbstractParserTest {
 				@Internal
 				public static <T> s3(): T { return null; }
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}

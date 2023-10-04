@@ -20,7 +20,7 @@ class N4_08_01_05_PropertyDeclarationsWithTypeAnnotations extends AbstractParser
 
 	@Test
 	def void test_Members() {
-		val script = '''
+		val script = parseHelper.parse('''
 			var ol = {
 				int 	a: 5,
 				string 	b: "",
@@ -29,7 +29,7 @@ class N4_08_01_05_PropertyDeclarationsWithTypeAnnotations extends AbstractParser
 				get e(): string {return ""},
 				set f(x: int){}
 			}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 

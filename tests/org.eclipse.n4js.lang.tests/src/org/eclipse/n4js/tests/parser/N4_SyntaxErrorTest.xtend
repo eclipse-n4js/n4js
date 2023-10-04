@@ -38,11 +38,11 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testSyntaxErrorInClassBody() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public class C {
 				c: C = syntax error
 			}
-		'''.parse
+		''');
 
 		assertFalse(script.eResource.errors.toString, script.eResource.errors.empty)
 		val n4Class = script.scriptElements.head as N4ClassDeclaration
@@ -52,10 +52,10 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testSyntaxErrorInRegExLiteral_01() {
-		val script = '''
+		val script = parseHelper.parse('''
 			{ /* empty block followed by unclosed regex*/ } /
 
-		'''.parse
+		''');
 
 		assertFalse(script.eResource.errors.toString, script.eResource.errors.empty)
 		val stmt = script.scriptElements.last as ExpressionStatement
@@ -67,10 +67,10 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testSyntaxErrorInRegExLiteral_02() {
-		val script = '''
+		val script = parseHelper.parse('''
 			{ /* empty block followed by unclosed regex*/ } /=
 
-		'''.parse
+		''');
 
 		assertFalse(script.eResource.errors.toString, script.eResource.errors.empty)
 		val stmt = script.scriptElements.last as ExpressionStatement
@@ -82,7 +82,7 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testBrowserTests_MissingParentheses() {
-		val script = '''
+		val script = parseHelper.parse('''
 			YUI.add('browser-tests', function(Y) {
 
 		    var suite = new Y.Test.Suite('YUI: Core Browser');
@@ -115,7 +115,7 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 		    Y.Test.Runner.add(suite);
 
 		});
-		'''.parse
+		''');
 
 		assertEquals(script.eResource.errors.toString, 1, script.eResource.errors.size)
 		val diagnostic = script.eResource.errors.head
@@ -124,18 +124,18 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testIDEBUG_5_01() {
-		val script = '''
+		val script = parseHelper.parse('''
 			var A<?
-		'''.parse
+		''');
 
 		assertFalse(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testIDEBUG_5_02() {
-		val script = '''
+		val script = parseHelper.parse('''
 			var A<
-		'''.parse
+		''');
 		assertFalse(script.eResource.errors.toString, script.eResource.errors.empty)
 		val res = script.eResource as XtextResource
 		res.update(6, 0, '?')
@@ -146,33 +146,33 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testIDEBUG_8_01() {
-		val script = '''
+		val script = parseHelper.parse('''
 			var A<? extends
-		'''.parse
+		''');
 		assertFalse(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testIDEBUG_8_02() {
-		val script = '''
+		val script = parseHelper.parse('''
 			var A<? super
-		'''.parse
+		''');
 		assertFalse(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testIDEBUG_7_01() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class C {}
 			class D<A,> extends C {}
-		'''.parse
+		''');
 		assertFalse(script.eResource.errors.toString, script.eResource.errors.empty)
 		EcoreUtil.resolveAll(script.eResource)
 	}
 
 	@Test
 	def void testIDEBUG_29_01() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class A {
 				method() {
 					new class {
@@ -180,7 +180,7 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 					};
 				}
 			}
-		'''.parse
+		''');
 		val errorList = script.eResource.errors
 		assertEquals(errorList.toString, 1, errorList.size)
 		val firstError = errorList.head
@@ -189,7 +189,7 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testIDEBUG_207_01() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class A {
 				method() {
 					new class {
@@ -198,18 +198,18 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 					};
 				}
 			}
-		'''.parse
+		''');
 		val errorList = script.eResource.errors
 		assertEquals(errorList.toString, 0, errorList.size)
 	}
 
 	@Test
 	def void testIDEBUG_29_02() {
-		val script = '''
+		val script = parseHelper.parse('''
 			new class {
 				var x: string;
 			};
-		'''.parse
+		''');
 		val errorList = script.eResource.errors
 		assertEquals(errorList.toString, 1, errorList.size)
 		val firstError = errorList.head
@@ -218,10 +218,10 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testRecoveredIndexAccessExpression() {
-		val script = '''
+		val script = parseHelper.parse('''
 			var testArray = ["A""];
 			testArray[0];
-		'''.parse
+		''');
 		assertEquals(script.eResource.errors.toString, 1, script.eResource.errors.size)
 		val stmt = script.scriptElements.last as ExpressionStatement
 		val expr = stmt.expression
@@ -232,9 +232,9 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testIDE_1172_01() {
-		val script = '''
+		val script = parseHelper.parse('''
 			var s};
-		'''.parse
+		''');
 		assertEquals(script.eResource.errors.toString, 1, script.eResource.errors.size)
 		val error = script.eResource.errors.head
 		assertEquals("missing EOF at '}'", error.message)
@@ -255,10 +255,10 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 		//
 		// since colon type annotation syntax is used now, this is no longer valid:
 
-		val script = '''
+		val script = parseHelper.parse('''
 			var v = a + b,
 			        c + d;
-		'''.parse
+		''');
 		assertEquals(script.eResource.errors.toString, 1, script.eResource.errors.size)
 	}
 
@@ -266,18 +266,18 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 	def void testIDE_1172_02a() {
 		// same as testIDE_1172_02 but with colon type annotation syntax, making it less tricky
 
-		val script = '''
+		val script = parseHelper.parse('''
 			var v = a + b,  d: c+;
-		'''.parse
+		''');
 		assertEquals(script.eResource.errors.toString, 0, script.eResource.errors.size)
 	}
 
 	@Test
 	def void testIDE_1172_03() {
-		val script = '''
+		val script = parseHelper.parse('''
 			var v = a + b,
 			        class A { a = new A(); };
-		'''.parse
+		''');
 		assertEquals(script.eResource.errors.toString, 1, script.eResource.errors.size)
 		val error = script.eResource.errors.head
 		assertEquals("no viable alternative at input 'class'", error.message)
@@ -285,7 +285,7 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testIDEBUG_384_01() {
-		val script = '`${}\\'.parse
+		val script = parseHelper.parse('`${}\\');
 		assertEquals(script.eResource.errors.toString, 1, script.eResource.errors.size)
 		val error = script.eResource.errors.head
 		assertEquals("Template literal is not properly closed by a backtick.", error.message)
@@ -293,7 +293,7 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testIDEBUG_384_02() {
-		val script = '"\\'.parse
+		val script = parseHelper.parse('"\\');
 		assertEquals(script.eResource.errors.toString, 1, script.eResource.errors.size)
 		val error = script.eResource.errors.head
 		assertEquals("String literal is not properly closed by a double-quote.", error.message)
@@ -301,7 +301,7 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testIDEBUG_384_03() {
-		val script = "'\\".parse
+		val script = parseHelper.parse("'\\");
 		assertEquals(script.eResource.errors.toString, 1, script.eResource.errors.size)
 		val error = script.eResource.errors.head
 		assertEquals("String literal is not properly closed by a quote.", error.message)
@@ -313,7 +313,7 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 			var class;
 			var 1a = null;
 		'''
-		val script = scriptAsText.parse
+		val script = parseHelper.parse(scriptAsText);
 		val insertHere = scriptAsText.indexOf('1')
 		val resource = script.eResource as N4JSResource
 
@@ -377,9 +377,9 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testIDEBUG_352_02() {
-		val script = '''
+		val script = parseESWithError('''
 			a >>>= b =
-		'''.parseESWithError
+		''');
 		val stmt = script.scriptElements.head as ExpressionStatement
 		val expr = stmt.expression as AssignmentExpression
 		assertEquals(AssignmentOperator.USHR_ASSIGN, expr.op)
@@ -387,9 +387,9 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testIDEBUG_594_01() {
-		val script = '''
+		val script = parseESWithError('''
 			function f(x: {function():type?}) {}
-		'''.parseESWithError
+		''')
 		val f = script.scriptElements.head as FunctionDeclaration
 		val param = f.fpars.head
 		assertEquals('x', param.name)
@@ -401,9 +401,9 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testIDEBUG_594_02() {
-		val script = '''
+		val script = parseESWithError('''
 			function f(x: {function():constructor?}) {}
-		'''.parseESWithError
+		''');
 		val f = script.scriptElements.head as FunctionDeclaration
 		val param = f.fpars.head
 		assertEquals('x', param.name)
@@ -415,10 +415,10 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testNodeModelInvariants_01() {
-		val script = '''
+		val script = parseESWithError('''
 			var ~Object with {
 			var s;
-		'''.parseESWithError
+		''');
 		val parseResult = (script.eResource as XtextResource).parseResult
 		val node = parseResult.rootNode
 		assertSame(node.rootNode, node)
@@ -426,12 +426,12 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testNodeModelInvariant_02() {
-		val script = '''
+		val script = parseESWithError('''
 			var ~Object with {a: string; b: string;;
 			var s: string;
 			s = r.a;
 			s = r.b;
-		'''.parseESWithError
+		''');
 		val parseResult = (script.eResource as XtextResource).parseResult
 		val node = parseResult.rootNode
 		assertSame(node.rootNode, node)
@@ -440,12 +440,12 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testNodeModelInvariant_03() {
-		val script = '''
+		val script = parseESWithError('''
 			var ~Object with {a: string; b: string;}
 			var s: string;
 			s = r.a;
 			s = r.b;
-		'''.parseESWithError
+		''');
 		val parseResult = (script.eResource as XtextResource).parseResult
 		val node = parseResult.rootNode
 		assertSame(node.rootNode, node)
@@ -454,10 +454,10 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testNodeModelInvariant_03b() {
-		val script = '''
+		val script = parseESWithError('''
 			var ~Object with {b;}
 			var s;
-		'''.parseESWithError
+		''');
 		val parseResult = (script.eResource as XtextResource).parseResult
 		val node = parseResult.rootNode
 		assertSame(node.rootNode, node)
@@ -467,12 +467,12 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testNodeModelInvariant_04() {
-		val script = '''
+		val script = parseESWithError('''
 			export var ~Object with {a: string; b: string;}
 			var s: string;
 			s = r.a;
 			s = r.b;
-		'''.parseESWithError
+		''');
 		val parseResult = (script.eResource as XtextResource).parseResult
 		val node = parseResult.rootNode
 		assertSame(node.rootNode, node)
@@ -481,10 +481,10 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testNodeModelInvariant_05() {
-		val script = '''
+		val script = parseESWithError('''
 			var ~Object with {}
 			var s;
-		'''.parseESWithError
+		''');
 		val parseResult = (script.eResource as XtextResource).parseResult
 		val node = parseResult.rootNode
 		assertSame(node.rootNode, node)
@@ -493,7 +493,7 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testNodeModelInvariant_06() {
-		val script = '''
+		val script = parseESWithError('''
 			class A {}
 			class B extends A {}
 			class C extends B {}
@@ -509,7 +509,7 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 			var ~Object with {a: A;b: B;;
 			var rd: ~A with{B b;}+;
-		'''.parseESWithError
+		''');
 		val parseResult = (script.eResource as XtextResource).parseResult
 		val node = parseResult.rootNode
 		assertSame(node.rootNode, node)
@@ -518,7 +518,7 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testNodeModelInvariant_07() {
-		val script = '''
+		val script = parseESWithError('''
 			class A {}
 			class B extends A {}
 			class C extends B {}
@@ -534,7 +534,7 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 			var ~Object with {a: A;b: B;}
 			var rd: ~A with{B b;}+;
-		'''.parseESWithError
+		''');
 		val parseResult = (script.eResource as XtextResource).parseResult
 		val node = parseResult.rootNode
 		assertSame(node.rootNode, node)
@@ -543,9 +543,9 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testForAwaitOf01() {
-		val script = '''
+		val script = parseESWithError('''
 			for await (let i = 0; i < 100; i++) {}
-		'''.parseESWithError;
+		''');
 		val errors = script.eResource.errors;
 		assertEquals(1, errors.size);
 		assertEquals(IssueCodes.AST_INVALID_FOR_AWAIT, (errors.head as XtextLinkingDiagnostic).code);
@@ -553,9 +553,9 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testForAwaitOf02() {
-		val script = '''
+		val script = parseESWithError('''
 			for await (let p in []) {}
-		'''.parseESWithError;
+		''');
 		val errors = script.eResource.errors;
 		assertEquals(1, errors.size);
 		assertEquals(IssueCodes.AST_INVALID_FOR_AWAIT, (errors.head as XtextLinkingDiagnostic).code);

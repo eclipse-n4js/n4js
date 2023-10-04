@@ -24,9 +24,9 @@ class N4_04_12_2_ClassDeclarationsTest extends AbstractParserTest{
 
 	@Test
 	def void testEmptyDeclarations() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class C {}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertEquals(1, script.scriptElements.size);
@@ -35,7 +35,7 @@ class N4_04_12_2_ClassDeclarationsTest extends AbstractParserTest{
 
 	@Test
 	def void testClassDeclarations() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public class A {
 				private a: A;
 				public 	b: A = null;
@@ -56,21 +56,21 @@ class N4_04_12_2_ClassDeclarationsTest extends AbstractParserTest{
 				protected abstract bar()
 				baz(p: A?) {}
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testClassDeclarations2() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public class A {}
 			public class B {}
 
 			public class C<T extends A> {
 				<S> foo(p: union{A,B}) {}
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 
@@ -91,7 +91,7 @@ class N4_04_12_2_ClassDeclarationsTest extends AbstractParserTest{
 
 	@Test
 	def void testMethodDeclarations() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public class A {
 
 				f1(): void {}
@@ -125,14 +125,14 @@ class N4_04_12_2_ClassDeclarationsTest extends AbstractParserTest{
 				@Internal
 				public static <T> s1(): T { return null; }
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testMethodDeclarationsTypeScriptNotation() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public class A {
 
 				f1(): void {}
@@ -166,14 +166,14 @@ class N4_04_12_2_ClassDeclarationsTest extends AbstractParserTest{
 				@Internal
 				public static <T> s1(): T { return null; }
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testClassExample() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class C {
 				data: any;
 
@@ -183,14 +183,14 @@ class N4_04_12_2_ClassDeclarationsTest extends AbstractParserTest{
 
 				foo(): void { }
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testClassDeclarationWithRolesAndInterfacesExample() {
-		val script = '''
+		val script = parseHelper.parse('''
 			interface I {
 				foo(): void
 			}
@@ -202,14 +202,14 @@ class N4_04_12_2_ClassDeclarationsTest extends AbstractParserTest{
 				@Overrides
 				foo(): void;
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testGetterSetterExample() {
-		'''
+		parseESSuccessfully('''
 			class A {}
 
 			class C {
@@ -231,12 +231,12 @@ class N4_04_12_2_ClassDeclarationsTest extends AbstractParserTest{
 					// ...
 				}
 			}
-		'''.parseESSuccessfully
+		''');
 	}
 
 	@Test
 	def void testComputedFieldNames() {
-		'''
+		parseESSuccessfully('''
 			class C1 {
 				['m']: string = "1";
 				m: string = "2";
@@ -245,18 +245,18 @@ class N4_04_12_2_ClassDeclarationsTest extends AbstractParserTest{
 				[ /*comment*/ '@abc2']: string = "5";
 				['@abc3'  /*comment*/ ]: string = "6";
 			}
-		'''.parseESSuccessfully
+		''');
 	}
 
 	@Test
 	def void testFieldTypes() {
-		'''
+		parseESSuccessfully('''
 			class C1 {
 				s: any = null;
 				s: any = null;
 				s = null;
 			}
-		'''.parseESSuccessfully
+		''');
 	}
 
 

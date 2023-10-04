@@ -152,36 +152,36 @@ class ExpressionWithTargetParserTest extends AbstractParserTest {
 
 	@Test
 	def void testDisallowOnLHSOfAssignment_01() {
-		val script = '''
+		val script = parseHelper.parse('''
 			c?.field = ""
-		'''.parse
+		''');
 		val errors = script.eResource.errors.map[message].join('\n');
 		assertEquals("Invalid assignment left-hand side.", errors);
 	}
 
 	@Test
 	def void testDisallowOnLHSOfAssignment_02() {
-		val script = '''
+		val script = parseHelper.parse('''
 			c?.c.field = ""
-		'''.parse
+		''');
 		val errors = script.eResource.errors.map[message].join('\n');
 		assertEquals("Invalid assignment left-hand side.", errors);
 	}
 
 	@Test
 	def void testDisallowOnLHSOfAssignment_03() {
-		val script = '''
+		val script = parseHelper.parse('''
 			c?.['field'] = ""
-		'''.parse
+		''');
 		val errors = script.eResource.errors.map[message].join('\n');
 		assertEquals("Invalid assignment left-hand side.", errors);
 	}
 
 	@Test
 	def void testDisallowOnLHSOfAssignment_04() {
-		val script = '''
+		val script = parseHelper.parse('''
 			c?.['c']['field'] = ""
-		'''.parse
+		''');
 		val errors = script.eResource.errors.map[message].join('\n');
 		assertEquals("Invalid assignment left-hand side.", errors);
 	}

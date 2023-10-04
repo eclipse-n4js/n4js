@@ -49,7 +49,7 @@ class ES_07_08_4_StringLiteralErrorTest extends AbstractParserTest {
 	}
 
 	def parseESWithWarning(CharSequence js) {
-		val script = js.parseUnrestricted
+		val script = parseHelper.parseUnrestricted(js)
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertFalse(script.eResource.warnings.toString, script.eResource.warnings.empty)
 		return script

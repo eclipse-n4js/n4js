@@ -20,7 +20,7 @@ class N4_05_02_MemberDeclarationsWithTypeAnnotations extends AbstractParserTest 
 
 	@Test
 	def void test_Members_OLD() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class C {
 			  a: int = 5;
 			  b: string;
@@ -30,12 +30,12 @@ class N4_05_02_MemberDeclarationsWithTypeAnnotations extends AbstractParserTest 
 			  set f(v: string) {}
 
 			}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 	@Test
 	def void test_Members() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class C {
 			  a: int = 5;
 			  b: string;
@@ -44,13 +44,13 @@ class N4_05_02_MemberDeclarationsWithTypeAnnotations extends AbstractParserTest 
 			  get e(): string { return "";}
 			  set f(v: string) { }
 			}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void test_MembersWithAnnotation_OLD() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class C {
 			  @Final a: int = 5;
 			  @Final b: string;
@@ -60,12 +60,12 @@ class N4_05_02_MemberDeclarationsWithTypeAnnotations extends AbstractParserTest 
 			  @Final set f(v: string) {}
 
 			}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 	@Test
 	def void test_MembersWithAnntation() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class C {
 			  @Final a: int = 5;
 			  @Final b: string;
@@ -74,7 +74,7 @@ class N4_05_02_MemberDeclarationsWithTypeAnnotations extends AbstractParserTest 
 			  @Final get e(): string { return "";}
 			  @Final set f(v: string) { }
 			}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 

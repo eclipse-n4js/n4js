@@ -19,13 +19,13 @@ class N4_07_02_ImportExportTest extends AbstractParserTest{
 
 	@Test
 	def void testImportExample() {
-		val script = '''
+		val script = parseHelper.parse('''
 			import A from "p/A"
 			import {C,D,E} from "p/E"
 			import * as F from "p/F"
 			import {A as G} from "p/G"
 			import {A as H, B as I} from "p/H"
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertEquals(5, script.scriptElements.size);
@@ -34,10 +34,10 @@ class N4_07_02_ImportExportTest extends AbstractParserTest{
 
 	@Test
 	def void testES6Imports_01() {
-		val script = '''
+		val script = parseESSuccessfully('''
 			import 'p/A' /*
 			*/ import 'p/A';import 'p/A'
-			import "p/A"'''.parseESSuccessfully
+			import "p/A"''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertEquals(4, script.scriptElements.size);
@@ -47,10 +47,10 @@ class N4_07_02_ImportExportTest extends AbstractParserTest{
 
 	@Test
 	def void testES6Imports_02() {
-		val script = '''
+		val script = parseHelper.parse('''
 			import { ImportedBinding } from 'p/A'
 			import * as ImportedBinding from 'p/A'
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertEquals(2, script.scriptElements.size);
@@ -61,7 +61,7 @@ class N4_07_02_ImportExportTest extends AbstractParserTest{
 
 	@Test
 	def void testES6Imports_03() {
-		val script = '''
+		val script = parseHelper.parse('''
 			import {} from 'p/A'
 			import { ImportsList } from 'p/A'
 			import { ImportsList as X } from 'p/A'
@@ -71,7 +71,7 @@ class N4_07_02_ImportExportTest extends AbstractParserTest{
 			import { ImportsList as X, Second } from 'p/A'
 			import { ImportsList, Second, } from 'p/A'
 			import { ImportsList as X, Second as Y, } from 'p/A'
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertEquals(9, script.scriptElements.size);
@@ -81,10 +81,10 @@ class N4_07_02_ImportExportTest extends AbstractParserTest{
 
 	@Test
 	def void testES6Imports_04() {
-		val script = '''
+		val script = parseHelper.parse('''
 			import ImportedBinding, * as NameSpaceImport from 'p/A'
 			import ImportedBinding, {} from 'p/A'
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertEquals(2, script.scriptElements.size);
@@ -95,13 +95,13 @@ class N4_07_02_ImportExportTest extends AbstractParserTest{
 
 	@Test
 	def void testExportExample() {
-		val script = '''
+		val script = parseHelper.parse('''
 			export @Export public class A{}
 			export interface B{}
 			export function foo() {}
 			export var a;
 			export const c="Hello";
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertEquals(5, script.scriptElements.size);
@@ -110,10 +110,10 @@ class N4_07_02_ImportExportTest extends AbstractParserTest{
 
 	@Test
 	def void testES6Exports_01() {
-		val script = '''
+		val script = parseESSuccessfully('''
 			export * from 'p/A'/*
 			*/export * from 'p/A'; export * from 'p/A'
-			export * from "p/A"'''.parseESSuccessfully
+			export * from "p/A"''');
 
 		assertEquals(4, script.scriptElements.size);
 		assertTrue(script.scriptElements.forall[it instanceof ExportDeclaration])
@@ -121,7 +121,7 @@ class N4_07_02_ImportExportTest extends AbstractParserTest{
 
 	@Test
 	def void testES6Exports_02() {
-		val script = '''
+		val script = parseESSuccessfully('''
 			export * from 'p/A'
 			export {} from 'p/A'
 			export { exported } from 'p/A'
@@ -138,7 +138,7 @@ class N4_07_02_ImportExportTest extends AbstractParserTest{
 			export default function () {}
 			export default class {}
 			export default x = 7
-		'''.parseESSuccessfully
+		''');
 
 		assertEquals(16, script.scriptElements.size);
 		assertTrue(script.scriptElements.forall[it instanceof ExportDeclaration])

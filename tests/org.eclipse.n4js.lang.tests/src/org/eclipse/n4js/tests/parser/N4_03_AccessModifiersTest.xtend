@@ -28,7 +28,7 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 
 	@Test
 	def void testTypeAccessModifiers() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class								Cprv {}
 			export class						Cdef {}
 			export project class				Cpro {}
@@ -49,7 +49,7 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 			export project enum 				Epro {L}
 			export @Internal public enum		Epub {L}
 			export public enum					Eep {L}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 
@@ -84,7 +84,7 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 
 	@Test
 	def void testMemberAccessModifiers() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public class C {
 				f0;
 				private f1;
@@ -94,7 +94,7 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 				@Internal public f6;
 				public f7;
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 
@@ -126,9 +126,9 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 
 	@Test
 	def void testVarAccessModifiers_01() {
-		val script = '''
+		val script = parseHelper.parse('''
 			export @Internal public var x = ""
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as VariableStatement
@@ -137,9 +137,9 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 
 	@Test
 	def void testVarAccessModifiers_02() {
-		val script = '''
+		val script = parseHelper.parse('''
 			export project var x = ""
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as VariableStatement
@@ -148,9 +148,9 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 
 	@Test
 	def void testVarAccessModifiers_03() {
-		val script = '''
+		val script = parseESSuccessfully('''
 			export @Internal public const x = ""
-		'''.parseESSuccessfully
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as VariableStatement
@@ -159,9 +159,9 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 
 	@Test
 	def void testVarAccessModifiers_04() {
-		val script = '''
+		val script = parseESSuccessfully('''
 			export project const x = ""
-		'''.parseESSuccessfully
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as VariableStatement
@@ -170,9 +170,9 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 
 	@Test
 	def void testVarAccessModifiers_05() {
-		val script = '''
+		val script = parseHelper.parse('''
 			export @Internal public var x = ""
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as VariableStatement
@@ -181,9 +181,9 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 
 	@Test
 	def void testVarAccessModifiers_06() {
-		val script = '''
+		val script = parseHelper.parse('''
 			export project var x = ""
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as VariableStatement
@@ -192,9 +192,9 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionAccessModifiers_01() {
-		val script = '''
+		val script = parseHelper.parse('''
 			export function x() {}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		val functionDecl = (script.scriptElements.head as ExportDeclaration).exportedElement as FunctionDeclaration
@@ -205,9 +205,9 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionAccessModifiers_02() {
-		val script = '''
+		val script = parseHelper.parse('''
 			export @Internal public function x() {}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		val functionDecl = (script.scriptElements.head as ExportDeclaration).exportedElement as FunctionDeclaration
@@ -218,9 +218,9 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionAccessModifiers_03() {
-		val script = '''
+		val script = parseHelper.parse('''
 			export public function x() {}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		val functionDecl = (script.scriptElements.head as ExportDeclaration).exportedElement as FunctionDeclaration
@@ -231,9 +231,9 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionAccessModifiers_04() {
-		val script = '''
+		val script = parseHelper.parse('''
 			export @Internal public function x() {}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		val functionDecl = (script.scriptElements.head as ExportDeclaration).exportedElement as FunctionDeclaration
@@ -244,9 +244,9 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionAccessModifiers_05() {
-		val script = '''
+		val script = parseHelper.parse('''
 			export project function x() {}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		val functionDecl = (script.scriptElements.head as ExportDeclaration).exportedElement as FunctionDeclaration

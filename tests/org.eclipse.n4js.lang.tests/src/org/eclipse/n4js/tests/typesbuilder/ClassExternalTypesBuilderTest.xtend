@@ -21,12 +21,12 @@ class ClassExternalTypesBuilderTest extends AbstractParserTest {
 
 	@Test
 	def void testClassExternal() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public class C {
 			}
 			external public class D {
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 

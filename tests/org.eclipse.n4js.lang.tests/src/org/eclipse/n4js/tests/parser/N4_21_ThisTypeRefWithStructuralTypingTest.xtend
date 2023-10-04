@@ -24,11 +24,11 @@ class N4_21_ThisTypeRefWithStructuralTypingTest extends AbstractStructuralTyping
 
 	@Test
 	def void testThisTypeRefWithStructuralTypingConstructorPlain() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class A {
 				constructor(p: ~this) {}
 			}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertEquals(1, script.scriptElements.size);
 		val classDecl = script.scriptElements.head as N4ClassDeclaration;
@@ -41,11 +41,11 @@ class N4_21_ThisTypeRefWithStructuralTypingTest extends AbstractStructuralTyping
 
 	@Test
 	def void testThisTypeRefWithStructuralTypingConstructorWithMembers() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class A {
 				constructor(p: ~this with { s: string; }) {}
 			}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertEquals(1, script.scriptElements.size);
 		val classDecl = script.scriptElements.head as N4ClassDeclaration;

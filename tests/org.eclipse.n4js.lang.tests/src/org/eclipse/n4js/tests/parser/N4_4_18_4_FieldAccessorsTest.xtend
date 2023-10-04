@@ -20,7 +20,7 @@ class N4_4_18_4_FieldAccessorsTest extends AbstractParserTest{
 
 	@Test
 	def void testGetterSetterExample() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class A {}
 
 			class C {
@@ -42,7 +42,7 @@ class N4_4_18_4_FieldAccessorsTest extends AbstractParserTest{
 					// ...
 				}
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}

@@ -24,48 +24,48 @@ class GH197NullComputedName extends AbstractParserTest {
 
 	@Test
 	def void testNullComputedNameNoCacheMiss() {
-		val script1 = '''
+		val script1 = parseHelper.parse('''
 			let o: ~Object with {prop: ~Object with {propNested: string}} = {
 				[missing]: {
 					propNested: null
 				}
 			}; 
-		'''.parse
+		''');
 
 		script1.testNoCacheMiss
 		
-		val script2 = '''
+		val script2 = parseHelper.parse('''
 			export public const myConst = {
 			    [p1]: {s
 			        p2: val,
 			    }
 			};
-		'''.parse
+		''');
 
 		script2.testNoCacheMiss
 	}
 
 	@Test
 	def void testNotNullComputedNameNoCacheMiss() {
-		val script1 = '''
+		val script1 = parseHelper.parse('''
 			const someProp = 'someProp'
 			let o: ~Object with {prop: ~Object with {propNested: string}} = {
 				[someProp]: {
 					propNested: null
 				}
 			}; 
-		'''.parse
+		''');
 
 		script1.testNoCacheMiss
 
-		val script2 = '''
+		val script2 = parseHelper.parse('''
 			const p1 = 'p1'
 			export public const myConst = {
 			    [p1]: {s
 			        p2: val,
 			    }
 			};
-		'''.parse
+		''');
 
 		script2.testNoCacheMiss
 	}
