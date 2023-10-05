@@ -38,7 +38,7 @@ public class FindOwnedMemberBenchmarkTest {
 	private static final int runs = 1000000;
 	private final int mode;
 
-	/***/
+	
 	@Parameters(name = "{0}-{1}")
 	public static Collection<Object[]> data() {
 		List<Object[]> data = Lists.newArrayList();
@@ -50,13 +50,13 @@ public class FindOwnedMemberBenchmarkTest {
 		return data;
 	}
 
-	/***/
+	
 	public FindOwnedMemberBenchmarkTest(int members, int mode) {
 		this.members = members;
 		this.mode = mode;
 	}
 
-	/***/
+	
 	@Before
 	public void setup() {
 		@SuppressWarnings("hiding")

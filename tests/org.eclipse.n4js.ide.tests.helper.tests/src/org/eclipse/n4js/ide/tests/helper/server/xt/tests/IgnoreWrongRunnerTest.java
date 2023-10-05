@@ -17,7 +17,7 @@ import org.junit.Test;
  */
 public class IgnoreWrongRunnerTest extends AbstractXtParentRunnerTest {
 
-	/***/
+	
 	@Test
 	public void test() throws Exception {
 		run("probands/IgnoreWrongRunner");

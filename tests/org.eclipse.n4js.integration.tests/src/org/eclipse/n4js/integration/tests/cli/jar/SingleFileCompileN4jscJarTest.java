@@ -32,7 +32,7 @@ import org.junit.Test;
  */
 public class SingleFileCompileN4jscJarTest extends AbstractCliJarTest {
 
-	/***/
+	
 	public SingleFileCompileN4jscJarTest() {
 		super("probands/SingleFileCompile");
 	}

@@ -19,7 +19,7 @@ import org.junit.Test;
  */
 public class FindReferencesTest extends AbstractXtParentRunnerTest {
 
-	/***/
+	
 	@Test
 	public void test() throws Exception {
 		run("probands/FindReferences");

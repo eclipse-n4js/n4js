@@ -31,7 +31,7 @@ import org.junit.Test;
  */
 public class FlowgraphMethodsTest extends AbstractXtParentRunnerTest {
 
-	/***/
+	
 	@Test
 	public void test() throws Exception {
 		run("probands/FlowgraphMethods");

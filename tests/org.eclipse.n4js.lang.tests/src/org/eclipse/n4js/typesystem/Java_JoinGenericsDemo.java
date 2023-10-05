@@ -88,7 +88,7 @@ public class Java_JoinGenericsDemo {
 	B b = null;
 	C c = null;
 
-	/***/
+	
 	@SuppressWarnings("unused")
 	public void lcst() {
 		// def void testJoinWithGenericsSameNoWildcard() {

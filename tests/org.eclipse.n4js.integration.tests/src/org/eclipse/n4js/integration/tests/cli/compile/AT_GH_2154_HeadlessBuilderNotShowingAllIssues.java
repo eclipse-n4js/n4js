@@ -49,7 +49,7 @@ public class AT_GH_2154_HeadlessBuilderNotShowingAllIssues extends AbstractCliCo
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	/***/
+	
 	@Test
 	public void testAllIssuesShown() {
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace), N4jscExitCode.VALIDATION_ERRORS);

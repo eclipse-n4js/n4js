@@ -17,7 +17,7 @@ import org.junit.Test;
 
 import org.eclipse.n4js.jsdoc.JSDocCharScanner;
 
-/***/
+
 public class RegionTokenizerTest {
 
 	@SuppressWarnings("javadoc")

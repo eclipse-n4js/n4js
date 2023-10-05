@@ -28,7 +28,7 @@ import org.junit.Test;
  */
 public class N4jsLibsTest {
 
-	/***/
+	
 	@Test
 	public void testN4jsLibs() throws IOException {
 		final Path n4jsRootPath = UtilN4.findN4jsRepoRootPath();

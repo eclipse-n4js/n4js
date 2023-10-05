@@ -30,7 +30,7 @@ import org.junit.Test;
  */
 public class IncompleteApiImplementationJarTest extends AbstractCliJarTest {
 
-	/***/
+	
 	public IncompleteApiImplementationJarTest() {
 		super("probands/IncompleteApiImplementation");
 	}

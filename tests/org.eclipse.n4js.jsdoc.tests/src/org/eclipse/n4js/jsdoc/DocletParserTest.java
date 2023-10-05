@@ -36,7 +36,7 @@ public class DocletParserTest {
 	 */
 	public class StubLineTagDefinition extends AbstractLineTagDefinition {
 
-		/***/
+		
 		public StubLineTagDefinition(String title) {
 			setTitles(title);
 		}

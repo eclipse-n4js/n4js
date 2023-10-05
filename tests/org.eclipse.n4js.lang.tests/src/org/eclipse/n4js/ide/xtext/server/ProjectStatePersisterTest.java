@@ -62,7 +62,7 @@ public class ProjectStatePersisterTest {
 
 	private static Level oldLevel = null;
 
-	/***/
+	
 	@BeforeClass
 	public static void suppressNoisyLogging() {
 		Logger rootLogger = Logger.getRootLogger();
@@ -70,7 +70,7 @@ public class ProjectStatePersisterTest {
 		rootLogger.setLevel(Level.WARN);
 	}
 
-	/***/
+	
 	@AfterClass
 	public static void restoreLogLevel() {
 		Logger.getRootLogger().setLevel(Objects.requireNonNull(oldLevel));
@@ -256,7 +256,7 @@ public class ProjectStatePersisterTest {
 		Assert.assertTrue(IssueUtils.equals(src2Issue2, pIssues.get(source2).get(1)));
 	}
 
-	/***/
+	
 	@Test
 	public void testWriteAndReadDependencies() throws IOException, ClassNotFoundException {
 		ProjectStatePersister testMe = new ProjectStatePersister(null, new URITransformer());

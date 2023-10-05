@@ -41,7 +41,7 @@ public class GrammarLinter {
 	private N4JSGrammarAccess grammarAccess;
 	private TypeExpressionsGrammarAccess typesGrammarAccess;
 
-	/***/
+	
 	public static void main(String[] args) {
 		GrammarLinter linter = new N4JSStandaloneSetup().createInjectorAndDoEMFRegistration().getInstance(
 				GrammarLinter.class);
@@ -50,7 +50,7 @@ public class GrammarLinter {
 		linter.diagnose();
 	}
 
-	/***/
+	
 	public void diagnose() {
 		printKeywordsOnlyInDatatypeRules();
 		printKeywordsInTypesButNotInN4JS();

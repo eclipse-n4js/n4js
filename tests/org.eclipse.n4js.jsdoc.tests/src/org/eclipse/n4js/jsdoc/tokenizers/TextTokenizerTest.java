@@ -18,7 +18,7 @@ import org.junit.Test;
 import org.eclipse.n4js.jsdoc.JSDocCharScanner;
 import org.eclipse.n4js.jsdoc.JSDocToken;
 
-/***/
+
 public class TextTokenizerTest {
 
 	@SuppressWarnings("javadoc")

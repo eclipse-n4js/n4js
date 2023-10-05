@@ -50,7 +50,7 @@ public class AT_IDEBUG_654_MissingPolyfillImportsTest extends AbstractCliCompile
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	/***/
+	
 	@Test
 	public void compileCheckPolyfillImports_ExpectExist() {
 

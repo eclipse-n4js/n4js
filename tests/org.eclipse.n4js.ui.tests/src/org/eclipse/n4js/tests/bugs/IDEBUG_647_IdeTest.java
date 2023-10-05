@@ -22,7 +22,7 @@ import org.junit.Test;
  */
 public class IDEBUG_647_IdeTest extends ConvertedIdeTest {
 
-	/***/
+	
 	@Test
 	public void buildCheckGeneratedFileExists_AssertExists() {
 		importProband(new File("probands", "IDEBUG_647"));

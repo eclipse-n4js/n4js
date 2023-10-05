@@ -24,7 +24,7 @@ import org.junit.Test;
  */
 public class NodeVersionTest {
 
-	/***/
+	
 	@Test
 	public void testNodeVersion() {
 		Path cwd = new File("").toPath().toAbsolutePath();

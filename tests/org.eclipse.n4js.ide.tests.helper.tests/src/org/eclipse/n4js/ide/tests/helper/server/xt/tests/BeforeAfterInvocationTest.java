@@ -37,7 +37,7 @@ public class BeforeAfterInvocationTest extends AbstractXtParentRunnerTest {
 
 	private static List<String> invocationRecorder = null;
 
-	/***/
+	
 	@Test
 	public void test() throws Exception {
 		assertNull(invocationRecorder);

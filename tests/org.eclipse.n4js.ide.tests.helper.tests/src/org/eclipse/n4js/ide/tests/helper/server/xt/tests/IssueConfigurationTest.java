@@ -24,7 +24,7 @@ import org.junit.Test;
  */
 public class IssueConfigurationTest extends AbstractXtParentRunnerTest {
 
-	/***/
+	
 	@Test
 	public void test() throws Exception {
 

@@ -23,7 +23,7 @@ import org.junit.Test;
  */
 public class ErrorsTest extends AbstractXtParentRunnerTest {
 
-	/***/
+	
 	@Test
 	public void test() throws Exception {
 		run("probands/Errors");

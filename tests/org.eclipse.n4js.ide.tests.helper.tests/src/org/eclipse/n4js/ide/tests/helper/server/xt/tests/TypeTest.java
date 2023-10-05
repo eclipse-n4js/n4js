@@ -23,7 +23,7 @@ import org.junit.Test;
  */
 public class TypeTest extends AbstractXtParentRunnerTest {
 
-	/***/
+	
 	@Test
 	public void test() throws Exception {
 		run("probands/Type");

@@ -19,7 +19,7 @@ import org.junit.Test;
  */
 public class StringsTest {
 
-	/***/
+	
 	@Test
 	public void testEscapeNonPrintable() {
 		assertEquals("", Strings.escapeNonPrintable(""));

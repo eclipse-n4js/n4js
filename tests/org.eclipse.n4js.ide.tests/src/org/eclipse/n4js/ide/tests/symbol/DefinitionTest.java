@@ -37,7 +37,7 @@ public class DefinitionTest extends AbstractDefinitionTest {
 	 */
 	public static final int STRING_LENGTH_LINE = 110;
 
-	/***/
+	
 	@Test
 	public void testDefinition_01() throws Exception {
 		testAtCursor(
@@ -45,7 +45,7 @@ public class DefinitionTest extends AbstractDefinitionTest {
 				"(n4scheme:/primitives.n4jsd, [0:0 - 12:0])");
 	}
 
-	/***/
+	
 	@Test
 	public void testDefinition_02() throws Exception {
 		testAtCursor(
@@ -53,7 +53,7 @@ public class DefinitionTest extends AbstractDefinitionTest {
 				"(test-project/src/MyModule.n4js, [0:4 - 0:5])");
 	}
 
-	/***/
+	
 	@Test
 	public void testDefinition_03() throws Exception {
 		testAtCursor(
@@ -61,7 +61,7 @@ public class DefinitionTest extends AbstractDefinitionTest {
 				"(n4scheme:/builtin_js.n4jsd, [" + STRING_LENGTH_LINE + ":12 - " + STRING_LENGTH_LINE + ":18])");
 	}
 
-	/***/
+	
 	@Test
 	public void testDefinition_destruct_decl() throws Exception {
 		testAtCursor(
@@ -69,7 +69,7 @@ public class DefinitionTest extends AbstractDefinitionTest {
 				"(test-project/src/MyModule.n4js, [0:10 - 0:16])");
 	}
 
-	/***/
+	
 	@Test
 	public void testDefinition_destruct_assign() throws Exception {
 		testAtCursor(
@@ -78,7 +78,7 @@ public class DefinitionTest extends AbstractDefinitionTest {
 						+ "(test-project/src/MyModule.n4js, [1:4 - 1:10])");
 	}
 
-	/***/
+	
 	@Test
 	public void testDefinition_04() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(Collections.emptyMap());

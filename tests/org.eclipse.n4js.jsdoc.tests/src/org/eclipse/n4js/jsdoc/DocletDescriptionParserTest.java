@@ -29,7 +29,7 @@ import org.eclipse.n4js.jsdoc.tags.AbstractInlineTagDefinition;
 import org.eclipse.n4js.jsdoc.tags.AbstractLineTagDefinition;
 import org.eclipse.n4js.jsdoc.tokenizers.InlineTagTokenizer;
 
-/***/
+
 public class DocletDescriptionParserTest {
 
 	/**
@@ -76,7 +76,7 @@ public class DocletDescriptionParserTest {
 	 */
 	public class StubLineTagDefinition extends AbstractLineTagDefinition {
 
-		/***/
+		
 		public StubLineTagDefinition(String title) {
 			setTitles(title);
 		}
