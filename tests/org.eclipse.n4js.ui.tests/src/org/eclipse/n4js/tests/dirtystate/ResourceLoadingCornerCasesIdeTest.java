@@ -8,19 +8,24 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.tests.dirtystate
+package org.eclipse.n4js.tests.dirtystate;
 
-import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
-import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.tests.resource.ModuleToModuleProxyIdeTest
-import org.eclipse.n4js.utils.emf.ProxyResolvingResource
-import org.junit.Test
+import java.util.Collections;
+
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
+import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.tests.resource.ModuleToModuleProxyIdeTest;
+import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
+import org.eclipse.xtext.xbase.lib.Pair;
+import org.junit.Test;
 
 /**
  * Tests a corner case of dependencies between resources. See also {@link ModuleToModuleProxyIdeTest}.
  */
 // converted from ResourceLoadingCornerCasesPluginUITest
-class ResourceLoadingCornerCasesIdeTest extends AbstractIdeTest {
+public class ResourceLoadingCornerCasesIdeTest extends AbstractIdeTest {
 
 	/**
 	 * This tests the bug fix of IDE-2243 / IDE-2299.
@@ -28,8 +33,9 @@ class ResourceLoadingCornerCasesIdeTest extends AbstractIdeTest {
 	 * To reproduce the bug and to make the following test fail, comment out the special handling in
 	 * {@link N4JSResource#doResolveProxy(InternalEObject, EObject)}.
 	 * <p>
-	 * NOTE: as of GHOLD-141, in order to make this test fail, you also have to undo a bug fix in
-	 * Xsemantics rule 'subtypeTypeTypeRef'. Replace this code:
+	 * NOTE: as of GHOLD-141, in order to make this test fail, you also have to undo a bug fix in Xsemantics rule
+	 * 'subtypeTypeTypeRef'. Replace this code:
+	 *
 	 * <pre>
 	 * // we need the type of the two constructors (i.e. their signature)
 	 * // DO NOT USE "var leftCtorRef = TypeUtils.createTypeRef(leftCtor)", because this would by-pass the handling
@@ -37,7 +43,9 @@ class ResourceLoadingCornerCasesIdeTest extends AbstractIdeTest {
 	 * G |- leftCtor : var TypeRef leftCtorRef;
 	 * G |- rightCtor : var TypeRef rightCtorRef;
 	 * </pre>
+	 *
 	 * with the following (old) code:
+	 *
 	 * <pre>
 	 * val leftCtorRef = TypeUtils.createTypeRef(leftCtor);
 	 * val rightCtorRef = TypeUtils.createTypeRef(rightCtor);
@@ -46,26 +54,26 @@ class ResourceLoadingCornerCasesIdeTest extends AbstractIdeTest {
 	 * For further details, see {@link ProxyResolvingResource} and {@link ModuleToModuleProxyIdeTest}.
 	 */
 	@Test
-	def void testModule2ModuleReferencesBug() {
+	public void testModule2ModuleReferencesBug() {
 		testWorkspaceManager.createTestProjectOnDisk(
-			"C" -> '''
-				export public class C {
-					constructor() {}
-				}
-			''',
-			"B" -> '''
-				import { C } from "C"
+				Pair.of("C", """
+						export public class C {
+							constructor() {}
+						}
+						"""),
+				Pair.of("B", """
+						import { C } from "C"
 
-				export public class B extends C {
-				}
-			''',
-			"A" -> '''
-				import { B } from "B"
+						export public class B extends C {
+						}
+						"""),
+				Pair.of("A",
+						"""
+								import { B } from "B"
 
-				var ctor: constructor{B};
-				ctor = B; // <-- before bug fix, error appeared here: "constructor{B} is not a subtype of constructor{B}." at "B"
-			'''
-		);
+								var ctor: constructor{B};
+								ctor = B; // <-- before bug fix, error appeared here: "constructor{B} is not a subtype of constructor{B}." at "B"
+								"""));
 		startAndWaitForLspServer();
 		assertNoErrors();
 
@@ -78,19 +86,22 @@ class ResourceLoadingCornerCasesIdeTest extends AbstractIdeTest {
 		// we now open file C.n4js in a new, separate editor and change its contents (without saving!);
 		// this will cause the resource of C.n4js to be unloaded in the ResourceSet of editorA (via dirty-state index)
 		openFile("C");
-		changeOpenedFile("C", '''
-			export public class C {
-				constructor() {}
-			}
-			export public class X {} // <-- adding a class in editor to cause a change in dirty-state index
-		''');
+		changeOpenedFile("C", """
+				export public class C {
+					constructor() {}
+				}
+				export public class X {} // <-- adding a class in editor to cause a change in dirty-state index
+				""");
 		// note: we do *not* save editorC
 
-		/* NOTE: after transition to LSP, can no longer check issues on disk for an opened file! */ // no errors on disk (also before bug fix)
+		/* NOTE: after transition to LSP, can no longer check issues on disk for an opened file! */ // no errors on disk
+																									// (also before bug
+																									// fix)
 
 		// bug fix, part 2:
 		// when commenting out the creation of m2m URIs in N4JSResource#doUnload(),
 		// next line should fail with "constructor{B} is not a subtype of constructor{B}."
-		assertIssuesInModules("A" -> #[]); // editor for file A should *still* not have any errors
+		assertIssuesInModules(Pair.of("A", Collections.emptyList())); // editor for file A should *still* not have any
+																		// errors
 	}
 }

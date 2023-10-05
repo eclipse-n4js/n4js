@@ -8,18 +8,22 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.tests.dirtystate
+package org.eclipse.n4js.tests.dirtystate;
 
-import org.eclipse.n4js.tests.dirtystate.testdata.CaseSensitiveTestFiles
-import org.eclipse.n4js.tests.dirtystate.testdata.EnumTestFiles
-import org.eclipse.n4js.tests.dirtystate.testdata.InheritanceTestFiles
-import org.eclipse.n4js.tests.dirtystate.testdata.MemberTestFiles
-import org.eclipse.n4js.tests.dirtystate.testdata.RoleTestFiles
-import org.eclipse.n4js.tests.dirtystate.testdata.StaticTestFiles
-import org.eclipse.n4js.tests.dirtystate.testdata.TestFiles
-import org.eclipse.n4js.tests.dirtystate.testdata.TransitiveInheritMemberTestFiles
-import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
-import org.junit.Test
+import java.util.Collections;
+import java.util.List;
+
+import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
+import org.eclipse.n4js.tests.dirtystate.testdata.CaseSensitiveTestFiles;
+import org.eclipse.n4js.tests.dirtystate.testdata.EnumTestFiles;
+import org.eclipse.n4js.tests.dirtystate.testdata.InheritanceTestFiles;
+import org.eclipse.n4js.tests.dirtystate.testdata.MemberTestFiles;
+import org.eclipse.n4js.tests.dirtystate.testdata.RoleTestFiles;
+import org.eclipse.n4js.tests.dirtystate.testdata.StaticTestFiles;
+import org.eclipse.n4js.tests.dirtystate.testdata.TestFiles;
+import org.eclipse.n4js.tests.dirtystate.testdata.TransitiveInheritMemberTestFiles;
+import org.eclipse.xtext.xbase.lib.Pair;
+import org.junit.Test;
 
 /**
  * tests if the dirty state manager creates and removes error markers at affected resources when another resource breaks
@@ -40,11 +44,10 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 	 */
 	//@formatter:on
 	@Test
-	def void testReferenceBrokenToOtherClassesField() throws Exception {
+	public void testReferenceBrokenToOtherClassesField() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			TestFiles.moduleFolder() + "/Class0" -> TestFiles.class0(),
-			TestFiles.moduleFolder() + "/Class1" -> TestFiles.class1()
-		);
+				Pair.of(TestFiles.moduleFolder() + "/Class0", TestFiles.class0()),
+				Pair.of(TestFiles.moduleFolder() + "/Class1", TestFiles.class1()));
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -59,9 +62,10 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 		changeOpenedFile("Class1", TestFiles.class1After());
 		joinServerRequests();
 		// New content of editor 2 should be valid
-		assertIssuesInModules("Class1" -> #[]);
+		assertIssuesInModules(Pair.of("Class1", Collections.emptyList()));
 		// Content of editor 1 should be broken, because now linking to a missing field 'field0' in Class1
-		assertIssuesInModules("Class0" -> #["(Error, [7:32 - 7:38], Couldn't resolve reference to IdentifiableElement 'field0'.)"]);
+		assertIssuesInModules(Pair.of("Class0",
+				List.of("(Error, [7:32 - 7:38], Couldn't resolve reference to IdentifiableElement 'field0'.)")));
 
 		// resetting old content in editor 2
 		changeOpenedFile("Class1", TestFiles.class1());
@@ -82,12 +86,11 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 	 */
 	//@formatter:on
 	@Test
-	def void testReferenceDeleted() throws Exception {
+	public void testReferenceDeleted() throws Exception {
 		// create project and test files
 		testWorkspaceManager.createTestProjectOnDisk(
-			TestFiles.moduleFolder() + "/Class0" -> TestFiles.class0(),
-			TestFiles.moduleFolder() + "/Class1" -> TestFiles.class1()
-		);
+				Pair.of(TestFiles.moduleFolder() + "/Class0", TestFiles.class0()),
+				Pair.of(TestFiles.moduleFolder() + "/Class1", TestFiles.class1()));
 		startAndWaitForLspServer();
 
 		// open editors of test files
@@ -102,10 +105,9 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 		// Content of editor for Class0 should be broken, because now linking to missing resource
 		// Consequential errors are omitted, so there is no error reported for unknown field, as the receiver is of
 		// unknown type
-		assertIssuesInModules("Class0" -> #[
-			"(Error, [3:23 - 3:40], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
-			"(Error, [6:26 - 6:32], Couldn't resolve reference to Type 'Class1'.)"
-		]);
+		assertIssuesInModules(Pair.of("Class0", List.of(
+				"(Error, [3:23 - 3:40], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
+				"(Error, [6:26 - 6:32], Couldn't resolve reference to Type 'Class1'.)")));
 
 		createFile(TestFiles.moduleFolder() + "/Class1", TestFiles.class1());
 		joinServerRequests();
@@ -125,12 +127,11 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 	 */
 	//@formatter:on
 	@Test
-	def void testSuperClassDeleted() throws Exception {
+	public void testSuperClassDeleted() throws Exception {
 		// create project and test files
 		testWorkspaceManager.createTestProjectOnDisk(
-			InheritanceTestFiles.inheritanceModule() + "/Parent" -> InheritanceTestFiles.Parent(),
-			InheritanceTestFiles.inheritanceModule() + "/Child" -> InheritanceTestFiles.Child()
-		);
+				Pair.of(InheritanceTestFiles.inheritanceModule() + "/Parent", InheritanceTestFiles.Parent()),
+				Pair.of(InheritanceTestFiles.inheritanceModule() + "/Child", InheritanceTestFiles.Child()));
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -146,12 +147,10 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 		joinServerRequests();
 		// Editor of child should have error markers
 		assertIssues2(
-			"Child" -> #[
-				"(Error, [0:46 - 0:66], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
-				"(Error, [1:34 - 1:53], Couldn't resolve reference to Type 'ParentObjectLiteral'.)",
-				"(Error, [3:18 - 3:35], The method printlnToOverride must override or implement a method from a super class or interface.)"
-			]
-		);
+				Pair.of("Child", List.of(
+						"(Error, [0:46 - 0:66], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
+						"(Error, [1:34 - 1:53], Couldn't resolve reference to Type 'ParentObjectLiteral'.)",
+						"(Error, [3:18 - 3:35], The method printlnToOverride must override or implement a method from a super class or interface.)")));
 
 		createFile(InheritanceTestFiles.inheritanceModule() + "/Parent", InheritanceTestFiles.Parent());
 		joinServerRequests();
@@ -170,12 +169,11 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 	 */
 	//@formatter:on
 	@Test
-	def void testMethodInConsumedRoleInBetweenRenamed() throws Exception {
+	public void testMethodInConsumedRoleInBetweenRenamed() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			RoleTestFiles.moduleFolder() + "/ARole" -> RoleTestFiles.roleA(),
-			RoleTestFiles.moduleFolder() + "/BRole" -> RoleTestFiles.roleB(),
-			RoleTestFiles.moduleFolder() + "/CRole" -> RoleTestFiles.roleC()
-		);
+				Pair.of(RoleTestFiles.moduleFolder() + "/ARole", RoleTestFiles.roleA()),
+				Pair.of(RoleTestFiles.moduleFolder() + "/BRole", RoleTestFiles.roleB()),
+				Pair.of(RoleTestFiles.moduleFolder() + "/CRole", RoleTestFiles.roleC()));
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -188,8 +186,8 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 
 		changeOpenedFile("BRole", RoleTestFiles.roleBChanged());
 		assertIssues2(
-			"CRole" -> #["(Error, [6:7 - 6:16], Couldn't resolve reference to IdentifiableElement 'myMethodB'.)"]
-		);
+				Pair.of("CRole", List
+						.of("(Error, [6:7 - 6:16], Couldn't resolve reference to IdentifiableElement 'myMethodB'.)")));
 
 		changeOpenedFile("BRole", RoleTestFiles.roleB());
 		joinServerRequests();
@@ -213,14 +211,13 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 	 */
 	//@formatter:on
 	@Test
-	def void testMethodChainingWithRenamingLastOne() throws Exception {
+	public void testMethodChainingWithRenamingLastOne() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			MemberTestFiles.moduleFolder() + "/MyInterfaceFour" -> MemberTestFiles.myInterfaceFour(),
-			MemberTestFiles.moduleFolder() + "/MyRoleThree" -> MemberTestFiles.myRoleThree(),
-			MemberTestFiles.moduleFolder() + "/MyClassTwo" -> MemberTestFiles.myClassTwo(),
-			MemberTestFiles.moduleFolder() + "/MyVariableTwo" -> MemberTestFiles.myVariableTwo(),
-			MemberTestFiles.moduleFolder() + "/MyClassOne" -> MemberTestFiles.myClassOne()
-		);
+				Pair.of(MemberTestFiles.moduleFolder() + "/MyInterfaceFour", MemberTestFiles.myInterfaceFour()),
+				Pair.of(MemberTestFiles.moduleFolder() + "/MyRoleThree", MemberTestFiles.myRoleThree()),
+				Pair.of(MemberTestFiles.moduleFolder() + "/MyClassTwo", MemberTestFiles.myClassTwo()),
+				Pair.of(MemberTestFiles.moduleFolder() + "/MyVariableTwo", MemberTestFiles.myVariableTwo()),
+				Pair.of(MemberTestFiles.moduleFolder() + "/MyClassOne", MemberTestFiles.myClassOne()));
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -232,7 +229,8 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 
 		changeOpenedFile("MyInterfaceFour", MemberTestFiles.myInterfaceFourChanged());
 		joinServerRequests();
-		assertIssues2("MyClassOne" -> #["(Error, [5:35 - 5:47], Couldn't resolve reference to IdentifiableElement 'myMethodFour'.)"]);
+		assertIssues2(Pair.of("MyClassOne",
+				List.of("(Error, [5:35 - 5:47], Couldn't resolve reference to IdentifiableElement 'myMethodFour'.)")));
 
 		changeOpenedFile("MyInterfaceFour", MemberTestFiles.myInterfaceFour());
 		joinServerRequests();
@@ -254,12 +252,11 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 	 */
 	//@formatter:on
 	@Test
-	def void testRenamingMethodAccessedViaSubclass() throws Exception {
+	public void testRenamingMethodAccessedViaSubclass() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			TransitiveInheritMemberTestFiles.moduleFolder() + "/A" -> TransitiveInheritMemberTestFiles.A(),
-			TransitiveInheritMemberTestFiles.moduleFolder() + "/B" -> TransitiveInheritMemberTestFiles.B(),
-			TransitiveInheritMemberTestFiles.moduleFolder() + "/C" -> TransitiveInheritMemberTestFiles.C()
-		);
+				Pair.of(TransitiveInheritMemberTestFiles.moduleFolder() + "/A", TransitiveInheritMemberTestFiles.A()),
+				Pair.of(TransitiveInheritMemberTestFiles.moduleFolder() + "/B", TransitiveInheritMemberTestFiles.B()),
+				Pair.of(TransitiveInheritMemberTestFiles.moduleFolder() + "/C", TransitiveInheritMemberTestFiles.C()));
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -273,7 +270,8 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 		changeOpenedFile("C", TransitiveInheritMemberTestFiles.CChanged());
 		joinServerRequests();
 		// Editor of A should have error markers because of missing method
-		assertIssues2("A" -> #["(Error, [5:19 - 5:28], Couldn't resolve reference to IdentifiableElement 'myMethodC'.)"]);
+		assertIssues2(Pair.of("A",
+				List.of("(Error, [5:19 - 5:28], Couldn't resolve reference to IdentifiableElement 'myMethodC'.)")));
 
 		changeOpenedFile("C", TransitiveInheritMemberTestFiles.C());
 		joinServerRequests();
@@ -293,11 +291,12 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 	 */
 	//@formatter:on
 	@Test
-	def void testMethodCallWithCaseSensitiveMethodNames() throws Exception {
+	public void testMethodCallWithCaseSensitiveMethodNames() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			CaseSensitiveTestFiles.moduleFolder() + "/CaseSensitiveCallee" -> CaseSensitiveTestFiles.callee(),
-			CaseSensitiveTestFiles.moduleFolder() + "/CaseSensitiveCaller" -> CaseSensitiveTestFiles.caller()
-		);
+				Pair.of(CaseSensitiveTestFiles.moduleFolder() + "/CaseSensitiveCallee",
+						CaseSensitiveTestFiles.callee()),
+				Pair.of(CaseSensitiveTestFiles.moduleFolder() + "/CaseSensitiveCaller",
+						CaseSensitiveTestFiles.caller()));
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -311,8 +310,8 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 		joinServerRequests();
 		// Editor of Caller should have error markers because of missing method
 		assertIssues2(
-			"CaseSensitiveCaller" -> #["(Error, [5:14 - 5:22], Couldn't resolve reference to IdentifiableElement 'mymethod'.)"]
-		);
+				Pair.of("CaseSensitiveCaller", List
+						.of("(Error, [5:14 - 5:22], Couldn't resolve reference to IdentifiableElement 'mymethod'.)")));
 
 		changeOpenedFile("CaseSensitiveCallee", CaseSensitiveTestFiles.callee());
 		joinServerRequests();
@@ -331,13 +330,12 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 	 */
 	//@formatter:on
 	@Test
-	def void testStaticMethodCalls() throws Exception {
+	public void testStaticMethodCalls() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			StaticTestFiles.moduleFolder() + "/A" -> StaticTestFiles.A(),
-			StaticTestFiles.moduleFolder() + "/B" -> StaticTestFiles.B(),
-			StaticTestFiles.moduleFolder() + "/C" -> StaticTestFiles.C(),
-			StaticTestFiles.moduleFolder() + "/D" -> StaticTestFiles.D()
-		);
+				Pair.of(StaticTestFiles.moduleFolder() + "/A", StaticTestFiles.A()),
+				Pair.of(StaticTestFiles.moduleFolder() + "/B", StaticTestFiles.B()),
+				Pair.of(StaticTestFiles.moduleFolder() + "/C", StaticTestFiles.C()),
+				Pair.of(StaticTestFiles.moduleFolder() + "/D", StaticTestFiles.D()));
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -351,8 +349,8 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 		joinServerRequests();
 		// Editor of A should have error markers because of missing method
 		assertIssues2(
-			"A" -> #["(Error, [6:6 - 6:7], The non-static member d cannot be accessed from a static context.)"]
-		);
+				Pair.of("A", List.of(
+						"(Error, [6:6 - 6:7], The non-static member d cannot be accessed from a static context.)")));
 
 		changeOpenedFile("C", StaticTestFiles.C());
 		joinServerRequests();
@@ -375,11 +373,10 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 	 */
 	//@formatter:on
 	@Test
-	def void testEnumLiterals() throws Exception {
+	public void testEnumLiterals() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			EnumTestFiles.moduleFolder() + "/MyEnum" -> EnumTestFiles.myEnum(),
-			EnumTestFiles.moduleFolder() + "/MyEnumUser" -> EnumTestFiles.myEnumUser()
-		);
+				Pair.of(EnumTestFiles.moduleFolder() + "/MyEnum", EnumTestFiles.myEnum()),
+				Pair.of(EnumTestFiles.moduleFolder() + "/MyEnumUser", EnumTestFiles.myEnumUser()));
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -394,18 +391,19 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 		changeOpenedFile("MyEnum", EnumTestFiles.myEnum_changed());
 		joinServerRequests();
 		// File MyEnumUser with old literal should have no errors yet
-		assertIssuesInModules("MyEnumUser" -> #[]);
+		assertIssuesInModules(Pair.of("MyEnumUser", Collections.emptyList()));
 
 		saveOpenedFile("MyEnum");
 		joinServerRequests();
 		// File MyEnumUser with old literal should have errors as editor now saved
-		assertIssuesInModules("MyEnumUser" -> #["(Error, [5:22 - 5:25], Couldn't resolve reference to IdentifiableElement 'ONE'.)"]);
+		assertIssuesInModules(Pair.of("MyEnumUser",
+				List.of("(Error, [5:22 - 5:25], Couldn't resolve reference to IdentifiableElement 'ONE'.)")));
 
 		changeOpenedFile("MyEnum", EnumTestFiles.myEnum());
 		saveOpenedFile("MyEnum");
 		joinServerRequests();
 		// Error in MyEnumUser now gone
-		assertIssuesInModules("MyEnumUser" -> #[]);
+		assertIssuesInModules(Pair.of("MyEnumUser", Collections.emptyList()));
 
 		// now again with MyEnumUser being open:
 		openFile("MyEnumUser");
@@ -415,8 +413,9 @@ public class BuilderParticipantWithEditorsIdeTest extends AbstractIdeTest {
 		changeOpenedFile("MyEnum", EnumTestFiles.myEnum_changed());
 		joinServerRequests();
 		// Editor of MyEnumUser should have error markers because of missing literal (even without saving)
-		assertIssuesInModules("MyEnumUser" -> #["(Error, [5:22 - 5:25], Couldn't resolve reference to IdentifiableElement 'ONE'.)"]);
-		
+		assertIssuesInModules(Pair.of("MyEnumUser",
+				List.of("(Error, [5:22 - 5:25], Couldn't resolve reference to IdentifiableElement 'ONE'.)")));
+
 		changeOpenedFile("MyEnum", EnumTestFiles.myEnum());
 		joinServerRequests();
 		assertNoIssues();
