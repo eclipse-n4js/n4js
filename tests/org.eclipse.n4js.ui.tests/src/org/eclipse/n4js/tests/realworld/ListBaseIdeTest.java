@@ -10,12 +10,17 @@
  */
 package org.eclipse.n4js.tests.realworld;
 
-import com.google.common.collect.FluentIterable
-import java.io.File
-import java.util.Collections
-import org.eclipse.n4js.tests.utils.ConvertedIdeTest
-import org.eclipse.n4js.validation.IssueCodes
-import org.junit.Test
+import java.io.File;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import org.eclipse.n4js.tests.utils.ConvertedIdeTest;
+import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.xbase.lib.Pair;
+import org.junit.Test;
+
+import com.google.common.collect.FluentIterable;
 
 /**
  * Tests parsing and validation of ListBase and underscore.
@@ -23,23 +28,21 @@ import org.junit.Test
 // converted from ListBasePluginTest
 public class ListBaseIdeTest extends ConvertedIdeTest {
 
-	override getIgnoredIssueCodes() {
+	@Override
+	public Set<String> getIgnoredIssueCodes() {
 		return FluentIterable.concat(
 				super.getIgnoredIssueCodes(),
 				Collections.singleton(IssueCodes.CLF_NAME_CONTAINS_DISCOURAGED_CHARACTER)).toSet();
 	}
 
 	@Test
-	def void testListBase() throws Exception {
+	public void testListBase() throws Exception {
 		importProband(new File("probands", "ListBase"));
 		assertIssues2(
-			"ListBase" -> #[
-				"(Warning, [62:17 - 62:37], Unnecessary cast from ChangeEvent to ChangeEvent)"
-			],
-			"DataObject" -> #[
-				"(Warning, [11:9 - 11:19], The import of ChangeType is unused.)",
-				"(Warning, [12:9 - 12:29], The import of PropertyChangedEvent is unused.)"
-			]
-		);
+				Pair.of("ListBase", List.of(
+						"(Warning, [62:17 - 62:37], Unnecessary cast from ChangeEvent to ChangeEvent)")),
+				Pair.of("DataObject", List.of(
+						"(Warning, [11:9 - 11:19], The import of ChangeType is unused.)",
+						"(Warning, [12:9 - 12:29], The import of PropertyChangedEvent is unused.)")));
 	}
 }

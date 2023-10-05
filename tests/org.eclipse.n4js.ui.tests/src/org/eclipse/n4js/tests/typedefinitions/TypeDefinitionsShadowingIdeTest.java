@@ -1,11 +1,12 @@
 package org.eclipse.n4js.tests.typedefinitions;
 
-import java.io.File
-import java.util.List
-import org.eclipse.core.runtime.CoreException
-import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.tests.utils.ConvertedIdeTest
-import org.junit.Test
+import java.io.File;
+import java.util.List;
+
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.tests.utils.ConvertedIdeTest;
+import org.eclipse.xtext.xbase.lib.Pair;
+import org.junit.Test;
 
 /**
  * Simple plugin test that imports client, definition and implementation projects into the workspace and checks that the
@@ -31,9 +32,9 @@ public class TypeDefinitionsShadowingIdeTest extends ConvertedIdeTest {
 	 * it.
 	 */
 	@Test
-	def void testValidTypeDefinitionsShadowing() throws CoreException {
+	public void testValidTypeDefinitionsShadowing() {
 		importProband(new File(new File(PROBANDS, PROBANDS_SUBFOLDER), POSITIVE_FIXTURE_FOLDER),
-			List.of(N4JSGlobals.N4JS_RUNTIME));
+				List.of(N4JSGlobals.N4JS_RUNTIME));
 		cleanBuildAndWait();
 		assertNoIssues();
 	}
@@ -48,15 +49,14 @@ public class TypeDefinitionsShadowingIdeTest extends ConvertedIdeTest {
 	 * implementation project.
 	 */
 	@Test
-	def void testInvalidTypeDefinitionsShadowing() throws CoreException {
+	public void testInvalidTypeDefinitionsShadowing() {
 		importProband(new File(new File(PROBANDS, PROBANDS_SUBFOLDER), NEGATIVE_FIXTURE_FOLDER),
-			List.of(N4JSGlobals.N4JS_RUNTIME));
+				List.of(N4JSGlobals.N4JS_RUNTIME));
+
 		cleanBuildAndWait();
 		assertIssues2(
-			"Client" -> #[
-				"(Error, [1:8 - 1:9], Import of A cannot be resolved.)",
-				"(Error, [5:14 - 5:15], Couldn't resolve reference to IdentifiableElement 'A'.)"
-			]
-		);
+				Pair.of("Client", List.of(
+						"(Error, [1:8 - 1:9], Import of A cannot be resolved.)",
+						"(Error, [5:14 - 5:15], Couldn't resolve reference to IdentifiableElement 'A'.)")));
 	}
 }
