@@ -450,7 +450,7 @@ public class StringLSP4J {
 		}
 		String str = Strings.join(", ",
 				toString(edit.getRange()),
-				edit.getNewText());
+				edit.getNewText().trim());
 		return "(" + str + ")";
 	}
 
