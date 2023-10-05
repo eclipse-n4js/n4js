@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  * Tests incremental builds triggered by changes in source files.
  */
-@SuppressWarnings("javadoc")
+
 public class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 	private static Map<String, String> testDataSingleFile = Map.of(

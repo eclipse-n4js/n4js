@@ -29,7 +29,7 @@ import com.google.inject.Module;
  * Tests certain cases in which the builder must *not* be cancelled (i.e. changes to files not contained in an N4JS
  * source folder).
  */
-@SuppressWarnings("javadoc")
+
 public class IncrementalBuilderNoCancellationTest extends AbstractIncrementalBuilderTest {
 
 	private static final AtomicInteger cancellationCounter = new AtomicInteger(0);

@@ -21,10 +21,10 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
- * Tests {@link Html2ADocConverter#transformHTML(CharSequence).
+ * Tests {@link Html2ADocConverter#transformHTML(CharSequence)}.
  */
 @RunWith(Parameterized.class)
-@SuppressWarnings("javadoc")
+
 public class Html2ADocConverterTest {
 
 	/**

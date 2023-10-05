@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 import org.eclipse.n4js.ide.editor.contentassist.CamelCasePrefixMatcher;
 import org.junit.Test;
 
-@SuppressWarnings("javadoc")
+
 public class CamelCasePrefixMatcherTest extends AbstractPrefixMatcherTest<CamelCasePrefixMatcher> {
 
 	@Override

@@ -21,7 +21,7 @@ import org.junit.Test;
 /**
  * Test for package.json property {@code n4js , generator , rewriteCjsImports}.
  */
-@SuppressWarnings("javadoc")
+
 public class RewriteCjsImportsTest extends AbstractIdeTest {
 
 	@Test

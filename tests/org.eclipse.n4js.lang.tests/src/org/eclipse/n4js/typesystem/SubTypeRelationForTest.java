@@ -12,7 +12,7 @@ package org.eclipse.n4js.typesystem;
 
 /**
  */
-@SuppressWarnings("javadoc")
+
 public enum SubTypeRelationForTest {
 	_sub, _super, _equals, _neither
 }

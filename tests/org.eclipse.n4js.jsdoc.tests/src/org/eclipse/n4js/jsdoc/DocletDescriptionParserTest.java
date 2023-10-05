@@ -88,7 +88,7 @@ public class DocletDescriptionParserTest {
 		}
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testSimpleDescription() {
 		String in = "/** This is the description.\n */";
@@ -102,7 +102,7 @@ public class DocletDescriptionParserTest {
 		assertEquals("This is the description.", descriptionText.getText());
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testDescriptionWithInline() {
 		String in = "/** This is the description with {@inline tag description} ..and finish description. \n */";
@@ -129,7 +129,7 @@ public class DocletDescriptionParserTest {
 		assertEquals(" tag description", tValue.getText());
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testDescriptionWithUnknownInlineTag() {
 		String in = "/** This is the description with {@unkonwnInlineTag parsed as text} ..and finish description. \n */";
@@ -144,7 +144,7 @@ public class DocletDescriptionParserTest {
 				descr.getText());
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testParserResumesAfterUnkownInlineTag() {
 		String in = "/** This is the description with {@unkonwnInlineTag parsed as text} ... text in between... {@inline tag description} ..and finish description. \n */";

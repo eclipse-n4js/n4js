@@ -73,7 +73,7 @@ public class FindOwnedMemberBenchmarkTest {
 		this.names = names;
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void test() {
 		switch (mode) {
@@ -89,7 +89,7 @@ public class FindOwnedMemberBenchmarkTest {
 		}
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	public void testImplementation() {
 		for (int i = 0; i < runs; i++) {
 			Assert.assertNull(type.findOwnedMember("DoesNotExist"));
@@ -99,7 +99,7 @@ public class FindOwnedMemberBenchmarkTest {
 		}
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	public void testImplementationWithClear() {
 		for (int i = 0; i < runs; i++) {
 			Assert.assertNull(type.findOwnedMember("DoesNotExist"));
@@ -110,7 +110,7 @@ public class FindOwnedMemberBenchmarkTest {
 		}
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	public void testImplementationWithOccasionalClear() {
 		for (int i = 0; i < runs; i++) {
 			Assert.assertNull(type.findOwnedMember("DoesNotExist"));
@@ -123,7 +123,7 @@ public class FindOwnedMemberBenchmarkTest {
 		}
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	public void testImplementationWithEagerClear() {
 		for (int i = 0; i < runs; i++) {
 			Assert.assertNull(type.findOwnedMember("DoesNotExist"));
@@ -135,7 +135,7 @@ public class FindOwnedMemberBenchmarkTest {
 		}
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	public void testImplementation2() {
 		for (int i = 0; i < runs; i++) {
 			for (int j = 0; j < members; j++) {
@@ -145,7 +145,7 @@ public class FindOwnedMemberBenchmarkTest {
 		}
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	public void testImplementationWithClear2() {
 		for (int i = 0; i < runs; i++) {
 			for (int j = 0; j < members; j++) {
@@ -156,7 +156,7 @@ public class FindOwnedMemberBenchmarkTest {
 		}
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	public void testImplementationWithOccasionalClear2() {
 		for (int i = 0; i < runs; i++) {
 			for (int j = 0; j < members; j++) {
@@ -169,7 +169,7 @@ public class FindOwnedMemberBenchmarkTest {
 		}
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	public void testImplementationWithEagerClear2() {
 		for (int i = 0; i < runs; i++) {
 			for (int j = 0; j < members; j++) {

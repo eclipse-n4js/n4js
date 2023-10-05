@@ -18,7 +18,7 @@ import org.junit.Test;
 /**
  * Like {@link OrganizeImportsTest}, but covers cases in which a missing import has to be added during organize imports.
  */
-@SuppressWarnings("javadoc")
+
 public class OrganizeImportsAddMissingTest extends AbstractOrganizeImportsTest {
 
 	@Test

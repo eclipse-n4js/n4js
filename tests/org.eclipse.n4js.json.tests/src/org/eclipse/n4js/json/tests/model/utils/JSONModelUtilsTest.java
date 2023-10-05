@@ -42,7 +42,7 @@ import com.google.inject.Inject;
  */
 @RunWith(XtextRunner.class)
 @InjectWith(JSONInjectorProvider.class)
-@SuppressWarnings("javadoc")
+
 public class JSONModelUtilsTest extends Assert {
 
 	@Inject

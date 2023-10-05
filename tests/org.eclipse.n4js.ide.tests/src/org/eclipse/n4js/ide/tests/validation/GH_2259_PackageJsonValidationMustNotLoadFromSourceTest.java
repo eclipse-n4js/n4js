@@ -41,7 +41,7 @@ import com.google.common.base.Optional;
  * The problem was that a package.json validation caused resources in other projects to be loaded from source (in method
  * {@code N4JSProjectSetupJsonValidatorExtension#checkConsistentPolyfills(JSONDocument)}).
  */
-@SuppressWarnings("javadoc")
+
 public class GH_2259_PackageJsonValidationMustNotLoadFromSourceTest extends AbstractIdeTest {
 
 	// The custom implementation of N4JSProjectBuilder (see below) will add messages to

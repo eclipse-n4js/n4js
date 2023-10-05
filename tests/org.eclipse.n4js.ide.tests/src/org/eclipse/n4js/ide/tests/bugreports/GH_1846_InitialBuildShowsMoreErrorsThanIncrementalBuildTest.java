@@ -19,7 +19,7 @@ import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
 import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.Test;
 
-@SuppressWarnings("javadoc")
+
 public class GH_1846_InitialBuildShowsMoreErrorsThanIncrementalBuildTest extends AbstractIdeTest {
 
 	@Test

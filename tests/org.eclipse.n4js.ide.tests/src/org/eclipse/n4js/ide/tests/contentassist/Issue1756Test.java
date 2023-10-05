@@ -15,7 +15,7 @@ import org.junit.Test;
 /**
  * see https://github.com/eclipse/n4js/issues/1756
  */
-@SuppressWarnings("javadoc")
+
 public class Issue1756Test extends AbstractCompletionTest {
 
 	@Test

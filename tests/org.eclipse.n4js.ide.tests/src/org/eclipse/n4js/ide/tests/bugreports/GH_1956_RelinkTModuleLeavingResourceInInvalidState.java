@@ -33,7 +33,7 @@ import org.junit.Test;
 /**
  * If TModule reconciliation fails due to a hash mismatch, the resource was left in an invalid state.
  */
-@SuppressWarnings("javadoc")
+
 public class GH_1956_RelinkTModuleLeavingResourceInInvalidState extends AbstractIdeTest {
 
 	@Test

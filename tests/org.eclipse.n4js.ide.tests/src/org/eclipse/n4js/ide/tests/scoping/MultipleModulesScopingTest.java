@@ -20,7 +20,7 @@ import org.junit.Test;
 /**
  * Tests for building yarn workspaces, in particular certain corner and special cases such as "yarn link".
  */
-@SuppressWarnings("javadoc")
+
 public class MultipleModulesScopingTest extends AbstractIdeTest {
 
 	@Test

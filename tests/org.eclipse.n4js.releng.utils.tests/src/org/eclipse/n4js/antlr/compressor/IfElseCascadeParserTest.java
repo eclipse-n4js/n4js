@@ -25,7 +25,7 @@ import org.eclipse.n4js.antlr.compressor.IfElseCascade.Replacement;
 
 /**
  */
-@SuppressWarnings("javadoc")
+
 public class IfElseCascadeParserTest {
 
 	static final String snippet = "pre else if ( (LA450_383==Solidus) && (synpred265_InternalN4JSParser())) {s = 282;}\n"

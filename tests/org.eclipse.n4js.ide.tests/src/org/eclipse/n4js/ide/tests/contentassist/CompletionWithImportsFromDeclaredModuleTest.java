@@ -18,7 +18,7 @@ import org.junit.Test;
 /**
  * Like {@link CompletionWithImportsTest}, but for the special case that we import from a declared module}.
  */
-@SuppressWarnings("javadoc")
+
 public class CompletionWithImportsFromDeclaredModuleTest extends AbstractCompletionTest {
 
 	/** Some default modules that export a number of classes for all tests. */

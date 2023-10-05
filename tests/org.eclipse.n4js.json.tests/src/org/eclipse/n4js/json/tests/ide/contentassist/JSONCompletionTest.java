@@ -16,7 +16,7 @@ import org.junit.Test;
 
 // FIXME: GH-2045: Tests in this bundle seem to use plain Xtext test infrastructure that differs from ours.
 // This results (sometimes) in wrong results. E.g.: The result of testNameValuePairs_01 is incomplete.
-@SuppressWarnings("javadoc")
+
 public class JSONCompletionTest extends AbstractLanguageServerTest {
 
 	public JSONCompletionTest() {

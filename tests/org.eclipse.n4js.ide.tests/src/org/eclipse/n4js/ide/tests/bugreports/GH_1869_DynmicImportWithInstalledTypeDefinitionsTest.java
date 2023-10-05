@@ -15,7 +15,7 @@ import java.util.Map;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
 import org.junit.Test;
 
-@SuppressWarnings("javadoc")
+
 public class GH_1869_DynmicImportWithInstalledTypeDefinitionsTest extends AbstractIdeTest {
 
 	@Test

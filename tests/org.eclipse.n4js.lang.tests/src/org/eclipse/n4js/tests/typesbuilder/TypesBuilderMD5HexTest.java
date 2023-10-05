@@ -34,7 +34,7 @@ public class TypesBuilderMD5HexTest {
 	@Inject
 	private N4JSParseHelper n4jsParseHelper;
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testMD5Hex() throws Exception {
 		final Script script = n4jsParseHelper.parse("let hi = 'Hello World';");

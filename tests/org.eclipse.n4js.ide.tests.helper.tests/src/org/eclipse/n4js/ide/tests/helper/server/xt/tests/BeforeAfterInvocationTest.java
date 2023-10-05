@@ -91,7 +91,7 @@ public class BeforeAfterInvocationTest extends AbstractXtParentRunnerTest {
 		invocationRecorder = null;
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	public static class SuperBeforeAfterXtIdeTest extends XtIdeTest {
 
 		@BeforeClass
@@ -125,7 +125,7 @@ public class BeforeAfterInvocationTest extends AbstractXtParentRunnerTest {
 		}
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	public static class SubBeforeAfterXtIdeTest extends SuperBeforeAfterXtIdeTest {
 
 		@BeforeClass

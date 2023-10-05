@@ -19,7 +19,7 @@ import org.junit.Test;
 /**
  * Tests indirect dependencies between files.
  */
-@SuppressWarnings("javadoc")
+
 public class IncrementalBuilderIndirectDependencyTest extends AbstractIncrementalBuilderTest {
 
 	@Test

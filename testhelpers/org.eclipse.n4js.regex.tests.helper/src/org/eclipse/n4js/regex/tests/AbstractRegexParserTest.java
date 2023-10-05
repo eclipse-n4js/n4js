@@ -219,7 +219,7 @@ public abstract class AbstractRegexParserTest extends Assert {
 
 	@Test
 	public void testIdentityEscape_01() {
-		assertValid("/\\/");
+		assertValid("/\\\\/");
 	}
 
 	@Test
@@ -266,22 +266,22 @@ public abstract class AbstractRegexParserTest extends Assert {
 
 	@Test
 	public void testExampleHandlebarsCompiler_01() {
-		assertValid("/(?:\r\n?|\n).*/g");
+		assertValid("/(?:\\r\\n?|\\n).*/g");
 	}
 
 	@Test
 	public void testExampleHandlebarsCompiler_02() {
-		assertValid("/(?:\r\n?|\n)/g");
+		assertValid("/(?:\\r\\n?|\\n)/g");
 	}
 
 	@Test
 	public void testExampleHandlebarsCompiler_03() {
-		assertValid("/\n/g");
+		assertValid("/\\n/g");
 	}
 
 	@Test
 	public void testExampleHandlebarsCompiler_04() {
-		assertValid("/\r?\n?/");
+		assertValid("/\\r?\\n?/");
 	}
 
 	@Test
@@ -466,12 +466,12 @@ public abstract class AbstractRegexParserTest extends Assert {
 
 	@Test
 	public void testExampleAce_01() {
-		assertValid("/\\/\\.\\// ");
+		assertValid("/\\/\\.\\//");
 	}
 
 	@Test
 	public void testExampleAce_02() {
-		assertValid("/[^\\/]+\\/\\.\\.\\// ");
+		assertValid("/[^\\/]+\\/\\.\\.\\//");
 	}
 
 	@Test

@@ -17,7 +17,7 @@ import org.junit.Test;
 /**
  * Basic tests for the incremental builder.
  */
-@SuppressWarnings("javadoc")
+
 public class IncrementalBuilderBasicTest extends AbstractIncrementalBuilderTest {
 
 	@Test

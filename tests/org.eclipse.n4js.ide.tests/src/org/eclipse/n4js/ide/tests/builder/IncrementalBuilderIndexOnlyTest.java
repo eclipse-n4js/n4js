@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  * Tests index only flag which needs to rebuild the project state on a clean-build.
  */
-@SuppressWarnings("javadoc")
+
 public class IncrementalBuilderIndexOnlyTest extends AbstractIncrementalBuilderTest {
 	static final long FILE_TIME_MILLISECONDS = 8472000;
 

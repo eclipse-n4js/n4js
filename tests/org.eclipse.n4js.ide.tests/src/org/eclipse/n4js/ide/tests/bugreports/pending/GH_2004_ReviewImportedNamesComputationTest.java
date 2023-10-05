@@ -34,7 +34,7 @@ import com.google.common.collect.Multimaps;
 /**
  * See GH-2004.
  */
-@SuppressWarnings("javadoc")
+
 public class GH_2004_ReviewImportedNamesComputationTest extends AbstractIdeTest {
 
 	@Test

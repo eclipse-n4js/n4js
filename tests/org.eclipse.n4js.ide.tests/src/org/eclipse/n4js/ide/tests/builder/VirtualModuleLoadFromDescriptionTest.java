@@ -24,7 +24,7 @@ import org.junit.Test;
 /**
  * Test to ensure that virtual modules from dependencies are loaded from description correctly.
  */
-@SuppressWarnings("javadoc")
+
 public class VirtualModuleLoadFromDescriptionTest extends AbstractIncrementalBuilderTest {
 
 	@Test

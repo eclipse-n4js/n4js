@@ -33,7 +33,7 @@ import com.google.inject.Inject;
 /**
  * Basic version tests.
  */
-@SuppressWarnings("javadoc")
+
 @RunWith(XtextRunner.class)
 @InjectWith(SemverInjectorProvider.class)
 public class VersionTest {

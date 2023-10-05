@@ -14,7 +14,7 @@ import org.eclipse.n4js.parser.conversion.AbstractN4JSStringValueConverter;
 import org.junit.Assert;
 import org.junit.Test;
 
-@SuppressWarnings("javadoc")
+
 public class JSStringValueConverterTest extends Assert {
 
 	public void assertConversion(String expected, String input) {

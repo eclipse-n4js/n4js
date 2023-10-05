@@ -17,7 +17,7 @@ import org.junit.Test;
 /**
  * Tests to ensure that various kinds of AST nodes can be renamed.
  */
-@SuppressWarnings("javadoc")
+
 public class RenameASTNodesTest extends AbstractRenameTest {
 
 	@Test

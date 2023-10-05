@@ -18,7 +18,7 @@ import org.junit.Test;
 /**
  * Code completion tests for scenarios that also might add an import statement from dependency projects
  */
-@SuppressWarnings("javadoc")
+
 public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 
 	/** Some default modules that export a number of classes for all tests. */

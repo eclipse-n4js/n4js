@@ -18,7 +18,7 @@ import org.junit.Test;
 /**
  * Baseclass for tests with SafeURIs.
  */
-@SuppressWarnings("javadoc")
+
 public abstract class AbstractSafeURITest<U extends SafeURI<U>> {
 
 	protected final U create(String withoutScheme) {

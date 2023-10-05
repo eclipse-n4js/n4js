@@ -14,7 +14,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.xtext.util.UriExtensions;
 
-@SuppressWarnings("javadoc")
+
 public class FileURITest extends AbstractSafeURITest<FileURI> {
 
 	@Override

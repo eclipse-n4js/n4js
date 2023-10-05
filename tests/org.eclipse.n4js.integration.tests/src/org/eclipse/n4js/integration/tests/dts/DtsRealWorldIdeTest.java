@@ -31,7 +31,7 @@ import org.junit.Test;
 /**
  * Testing .d.ts support with real-world type definitions.
  */
-@SuppressWarnings("javadoc")
+
 public class DtsRealWorldIdeTest extends AbstractIdeTest {
 
 	/**

@@ -25,7 +25,7 @@ import org.junit.Test;
  * This test class covers the base cases (including extensions ".cjs" and ".mjs"); special cases are covered in separate
  * test classes.
  */
-@SuppressWarnings("javadoc")
+
 public class ImportPlainJsTest2 extends AbstractIdeTest {
 
 	@Test

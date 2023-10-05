@@ -24,7 +24,7 @@ import org.junit.Test;
 /**
  * Tests generation of build artifacts (i.e. output files and <code>.n4js.projectstate</code> files).
  */
-@SuppressWarnings("javadoc")
+
 public class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 
 	private static Map<String, String> testDataWithDependency = Map.of(

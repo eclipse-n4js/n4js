@@ -13,7 +13,7 @@ package org.eclipse.n4js.jsdoc;
 import org.junit.Assert;
 import org.junit.Test;
 
-@SuppressWarnings("javadoc")
+
 public class MD2HTMLConvertingBuilderTest {
 
 	void assertConvert(CharSequence markdown, CharSequence expectedHTML) {

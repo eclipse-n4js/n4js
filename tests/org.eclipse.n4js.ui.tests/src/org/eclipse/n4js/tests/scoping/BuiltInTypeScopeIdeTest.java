@@ -29,7 +29,7 @@ public class BuiltInTypeScopeIdeTest extends ConvertedIdeTest {
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testLoadingBuiltInTypes() {
 		// we only create an empty project and start the server to ensure that we test with a "realistic" setup

@@ -31,7 +31,7 @@ import org.junit.Test;
  * Test various cases of changes between LSP server sessions to ensure the initial build of the later session correctly
  * reacts to those changes.
  */
-@SuppressWarnings("javadoc")
+
 public class InitialBuildTest extends AbstractIncrementalBuilderTest {
 
 	private static Map<String, Map<String, String>> testData = Map.of(

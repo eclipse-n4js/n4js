@@ -45,7 +45,7 @@ import com.google.inject.Inject;
 /**
  * Low-level tests for {@link ResourceTaskManager}.
  */
-@SuppressWarnings("javadoc")
+
 public class ResourceTaskManagerIdeTest extends AbstractIdeTest {
 
 	private final String TEST_MODULE_NAME = "TestModule";

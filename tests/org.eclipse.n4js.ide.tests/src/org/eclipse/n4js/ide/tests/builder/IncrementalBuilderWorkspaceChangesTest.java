@@ -31,7 +31,7 @@ import org.junit.Test;
  * Tests incremental builds triggered by changes that lead to a different overall workspace configuration, e.g. projects
  * being added or removed, source folders being added or removed.
  */
-@SuppressWarnings("javadoc")
+
 public class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderTest {
 
 	private static Map<String, Map<String, String>> testCode_yarnWorkspaceWithTwoProjects = Map.of(

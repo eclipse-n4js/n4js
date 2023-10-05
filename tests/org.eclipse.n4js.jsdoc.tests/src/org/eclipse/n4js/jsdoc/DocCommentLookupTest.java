@@ -44,14 +44,14 @@ public class DocCommentLookupTest {
 		return lkpDC.findJSDocComment(parser.parse(code), false);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void NullForNull() throws Exception {
 		Assert.assertNull(lkpDC.findJSDocComment(null, true));
 		Assert.assertNull(lkpDC.findJSDocComment(null, false));
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void NUllforNoComments() throws Exception {
 		String code = "var a = 'a';";
@@ -59,7 +59,7 @@ public class DocCommentLookupTest {
 		Assert.assertNull(getCommentIgnoreDoubleStar(code));
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void NullForSingleLineComment() throws Exception {
 		String code = "// foo \n var a = 'a';";
@@ -67,7 +67,7 @@ public class DocCommentLookupTest {
 		Assert.assertNull(getCommentIgnoreDoubleStar(code));
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void SingleStarML() throws Exception {
 		String code = "/* foo */ \n var a = 'a';";
@@ -75,7 +75,7 @@ public class DocCommentLookupTest {
 		Assert.assertEquals("/* foo */", getCommentIgnoreDoubleStar(code).getText());
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void SingleStarMLAndSL() throws Exception {
 		String code = "/* foo */ \n //bar \n var a = 'a';";
@@ -83,7 +83,7 @@ public class DocCommentLookupTest {
 		Assert.assertEquals("/* foo */", getCommentIgnoreDoubleStar(code).getText());
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void pickNearestSingleStarML() throws Exception {
 		String code = "/* foo */ \n /* bar */ var a = 'a';";
@@ -91,7 +91,7 @@ public class DocCommentLookupTest {
 		Assert.assertEquals("/* bar */", getCommentIgnoreDoubleStar(code).getText());
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void DoubleStarML() throws Exception {
 		String code = "/** foo */ var a = 'a';";
@@ -99,7 +99,7 @@ public class DocCommentLookupTest {
 		Assert.assertNull(getCommentIgnoreDoubleStar(code));
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void pickNearestDoubleStarML() throws Exception {
 		String code = "/** foo */ /** bar */ var a = 'a';";
@@ -107,7 +107,7 @@ public class DocCommentLookupTest {
 		Assert.assertNull(getCommentIgnoreDoubleStar(code));
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void SingleStarAndDoubleStar() throws Exception {
 		String code = "/** foo */ /* bar */ var a = 'a';";
@@ -115,7 +115,7 @@ public class DocCommentLookupTest {
 		Assert.assertEquals("/* bar */", getCommentIgnoreDoubleStar(code).getText());
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void DoubleStarAndSingleStar() throws Exception {
 		String code = "/* foo */ /** bar */ var a = 'a';";

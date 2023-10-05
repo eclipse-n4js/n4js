@@ -27,7 +27,7 @@ import com.google.common.base.Predicate;
 
 /**
  */
-@SuppressWarnings("javadoc")
+
 public class EcoreUtilN4Test {
 
 	@Test

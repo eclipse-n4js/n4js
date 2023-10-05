@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
-@SuppressWarnings("javadoc")
+
 public class ParserCompresserLogicPerformanceTest {
 
 	static final int[] tm = {0, 10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,-1,-1,-1,-1,-1,-1,-1,-1,-1,1000};

@@ -22,7 +22,7 @@ import org.junit.Test;
 /**
  * Test for code actions in n4js
  */
-@SuppressWarnings("javadoc")
+
 public class CodeActionTest extends AbstractCodeActionTest {
 
 	@Test

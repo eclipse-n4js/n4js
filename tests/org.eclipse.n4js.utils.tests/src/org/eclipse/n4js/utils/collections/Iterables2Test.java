@@ -32,7 +32,7 @@ public class Iterables2Test {
 		chainOf(List.of(), new Object());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = NullPointerException.class)
 	public void testNullRefAsNotContainedRefExpectIAE() {
 		chainOf(List.of(1, 2, 3, 4), null);
 	}

@@ -21,7 +21,7 @@ import org.junit.Test;
 
 /**
  */
-@SuppressWarnings("javadoc")
+
 public class TsConfigCreationTest extends AbstractIdeTest {
 
 	private static Map<String, String> testData = Map.of(

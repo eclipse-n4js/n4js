@@ -37,16 +37,16 @@ public abstract class AbstractECMATestInSuite extends AbstractJSLibTest {
 	 */
 	protected static final Logger logger = Logger.getLogger("debugECMA");
 
-	@SuppressWarnings("javadoc")
+	
 	@Inject
 	protected ParseHelper<Script> parserN4JS;
-	@SuppressWarnings("javadoc")
+	
 	@Inject
 	protected Provider<XtextResourceSet> resourceSetProvider;
-	@SuppressWarnings("javadoc")
+	
 	@Inject
 	protected ValidationTestHelper validationTestHelper;
-	@SuppressWarnings("javadoc")
+	
 	@Inject
 	protected SerializerTestHelper tester;
 

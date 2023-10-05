@@ -22,7 +22,7 @@ import org.junit.Test;
  * <p>
  * This test class covers main modules and project imports. Also covers default imports/exports.
  */
-@SuppressWarnings("javadoc")
+
 public class ImportPlainJsMainModuleTest extends AbstractIdeTest {
 
 	@Test

@@ -18,7 +18,7 @@ import org.junit.Test;
 /**
  * Test rename refactoring related to imports.
  */
-@SuppressWarnings("javadoc")
+
 public class RenameImportsTest extends AbstractRenameTest {
 
 	@Test

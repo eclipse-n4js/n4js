@@ -19,7 +19,7 @@ import org.junit.Test;
  * Code completion tests to ensure the correct behavior in the presence and absence of automatically inserted semicolons
  * (ASI).
  */
-@SuppressWarnings("javadoc")
+
 public class CompletionWithASITest extends AbstractCompletionTest {
 
 	/** Some default modules that export a number of classes for all tests. */

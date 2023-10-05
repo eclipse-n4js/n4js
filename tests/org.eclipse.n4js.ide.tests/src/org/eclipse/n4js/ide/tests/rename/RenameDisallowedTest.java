@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  * Test cases in which rename refactoring is disallowed.
  */
-@SuppressWarnings("javadoc")
+
 public class RenameDisallowedTest extends AbstractIdeTest {
 
 	@Test

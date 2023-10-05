@@ -14,7 +14,7 @@ import org.eclipse.n4js.jsdoc.dom.Doclet;
 import org.junit.Assert;
 import org.junit.Test;
 
-@SuppressWarnings("javadoc")
+
 public class JSDoc2HoverSerializerTest {
 
 	void assertHover(CharSequence jsdocString, CharSequence expectedHover) {

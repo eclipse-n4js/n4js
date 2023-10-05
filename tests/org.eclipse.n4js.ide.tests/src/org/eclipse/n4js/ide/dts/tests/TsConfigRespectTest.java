@@ -27,7 +27,7 @@ import org.junit.Test;
 /**
  *
  */
-@SuppressWarnings("javadoc")
+
 public class TsConfigRespectTest extends AbstractIdeTest {
 
 	@Test

@@ -23,7 +23,7 @@ import org.junit.Test;
 /**
  * Tests {@link NodeModelUtilsN4}.
  */
-class NodeModelUtilsN4Test extends AbstractN4JSTest {
+public class NodeModelUtilsN4Test extends AbstractN4JSTest {
 
 	@Test
 	public void testNodeLengthWithOptionalSemiOmitted01() throws Exception {
@@ -33,32 +33,32 @@ class NodeModelUtilsN4Test extends AbstractN4JSTest {
 	@Test
 	public void testNodeLengthWithOptionalSemiOmitted02() throws Exception {
 		assertLengthOfImportDecl("""
-					// top
-					/**/import {A} from /**/ "A"    /******/
+				// top
+				/**/import {A} from /**/ "A"    /******/
 				""", 24);
 	}
 
 	@Test
 	public void testNodeLengthWithOptionalSemiOmitted03() throws Exception {
 		assertLengthOfImportDecl("""
-					// top
-					import { A } from "A"      ««« don't remove the trailing white space!
+				// top
+				import { A } from "A"      // don't remove the trailing white space!
 
 
-					//
-					let x = 42;
+				//
+				let x = 42;
 				""", 21);
 	}
 
 	@Test
 	public void testNodeLengthWithOptionalSemiOmitted04() throws Exception {
 		assertLengthOfImportDecl("""
-					// top
+				// top
 
 
-					import {A}
-					from
-					"A"
+				import {A}
+				from
+				"A"
 
 
 				""", 17 + 2 * System.lineSeparator().length());// node length includes two line separators!
@@ -72,39 +72,39 @@ class NodeModelUtilsN4Test extends AbstractN4JSTest {
 	@Test
 	public void testNodeLengthWithOptionalSemiPresent02() throws Exception {
 		assertLengthOfImportDecl("""
-					// top
-					/**/import {A} from /**/ "A";    /******/
+				// top
+				/**/import {A} from /**/ "A";    /******/
 				""", 25);
 	}
 
 	@Test
 	public void testNodeLengthWithOptionalSemiPresent03() throws Exception {
 		assertLengthOfImportDecl("""
-					// top
-					import {A} from /**/ "A" /******/ ; /**/
+				// top
+				import {A} from /**/ "A" /******/ ; /**/
 				""", 35);
 	}
 
 	@Test
 	public void testNodeLengthWithOptionalSemiPresent04() throws Exception {
 		assertLengthOfImportDecl("""
-					// top
-					import {A}
-					from
-					"A"
-					;    /******/
+				// top
+				import {A}
+				from
+				"A"
+				;    /******/
 				""", 18 + 3 * System.lineSeparator().length());// node length includes three line separators!
 	}
 
 	@Test
 	public void testNodeLengthWithOptionalSemiPresent05() throws Exception {
 		assertLengthOfImportDecl("""
-					// top
-					import {A}
-					from
-					"A"
-					/**/
-					/**/;    /******/
+				// top
+				import {A}
+				from
+				"A"
+				/**/
+				/**/;    /******/
 				""", 26 + 4 * System.lineSeparator().length()); // node length includes four line separators!
 	}
 

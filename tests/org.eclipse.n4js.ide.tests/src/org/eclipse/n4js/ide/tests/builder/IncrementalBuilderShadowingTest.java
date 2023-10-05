@@ -28,7 +28,7 @@ import org.junit.Test;
  * thus a single incremental build. Here, "shadowing state" means that the workspace contains a project in the
  * <code>packages</code> folder that shadows a project located in a <code>node_modules</code> folder.
  */
-@SuppressWarnings("javadoc")
+
 public class IncrementalBuilderShadowingTest extends AbstractIdeTest {
 
 	@Test

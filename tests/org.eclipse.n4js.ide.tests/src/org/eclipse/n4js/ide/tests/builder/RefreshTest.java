@@ -25,7 +25,7 @@ import org.junit.Test;
 /**
  * Tests for the "N4JS: Refresh" command.
  */
-@SuppressWarnings("javadoc")
+
 public class RefreshTest extends AbstractIncrementalBuilderTest {
 
 	@Test

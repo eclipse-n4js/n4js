@@ -20,7 +20,7 @@ import org.eclipse.n4js.jsdoc.JSDocCharScanner;
 
 public class RegionTokenizerTest {
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testSimple() {
 		RegionTokenizer rt = new RegionTokenizer("{", "}", true, '\\', false, false);
@@ -41,7 +41,7 @@ public class RegionTokenizerTest {
 		assertNull(rt.nextToken(scanner));
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testSimpleEscaped() {
 		RegionTokenizer rt = new RegionTokenizer("{", "}", true, '\\', false, false);
@@ -55,7 +55,7 @@ public class RegionTokenizerTest {
 		assertNull(rt.nextToken(scanner));
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testSimpleIncludeTags() {
 		RegionTokenizer rt = new RegionTokenizer("{", "}", true, '\\', true, false);
@@ -67,7 +67,7 @@ public class RegionTokenizerTest {
 
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testSimpleNested() {
 		RegionTokenizer rt = new RegionTokenizer("{", "}", true, '\\', false, false);
@@ -96,7 +96,7 @@ public class RegionTokenizerTest {
 		assertNull(rt.nextToken(scanner));
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testSimpleNotNested() {
 		RegionTokenizer rt = new RegionTokenizer("{", "}", false, '\\', false, false);
@@ -119,7 +119,7 @@ public class RegionTokenizerTest {
 		assertEquals("simple{and{nested", rt.nextToken(scanner).token);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testSimpleNestedSkipable() {
 		RegionTokenizer rt = new RegionTokenizer("{", "}", true, '\\', false, true);
@@ -138,7 +138,7 @@ public class RegionTokenizerTest {
 
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testHTML() {
 		RegionTokenizer rt = new RegionTokenizer("<pre>", "</pre>", true, '\\', false, true);
