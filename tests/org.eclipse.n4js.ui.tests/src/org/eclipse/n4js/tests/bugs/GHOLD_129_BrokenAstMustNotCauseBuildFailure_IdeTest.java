@@ -10,9 +10,12 @@
  */
 package org.eclipse.n4js.tests.bugs;
 
-import java.io.File
-import org.eclipse.n4js.tests.utils.ConvertedIdeTest
-import org.junit.Test
+import java.io.File;
+import java.util.List;
+
+import org.eclipse.n4js.tests.utils.ConvertedIdeTest;
+import org.eclipse.xtext.xbase.lib.Pair;
+import org.junit.Test;
 
 /**
  * Test class for checking type system does not cause build failure when processing and traversing broken AST.
@@ -26,13 +29,11 @@ public class GHOLD_129_BrokenAstMustNotCauseBuildFailure_IdeTest extends Convert
 	 * the types.
 	 */
 	@Test
-	def void checkBrokenAstDoesNotCauseBuildFailure_ExpectValidationErrors() {
+	public void checkBrokenAstDoesNotCauseBuildFailure_ExpectValidationErrors() {
 		importProband(new File("probands", PROJECT_NAME));
 		assertIssues2(
-			"BrokenAst_GHOLD_129" -> #[
-				"(Error, [11:0 - 13:1], Name missing in type declaration.)",
-				"(Error, [14:4 - 14:5], Couldn't resolve reference to IdentifiableElement 'A'.)"
-			]
-		);
+				Pair.of("BrokenAst_GHOLD_129", List.of(
+						"(Error, [11:0 - 13:1], Name missing in type declaration.)",
+						"(Error, [14:4 - 14:5], Couldn't resolve reference to IdentifiableElement 'A'.)")));
 	}
 }
