@@ -560,7 +560,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 				Pair.of("Caller", List.of(
 						"(Error, [14:13 - 14:39], The accessor myPrivateNonStaticAccessor is write-only.)")),
 				Pair.of("Callee", List.of(
-						"(Error, [26:15 - 26:38], The non-static member myPrivateNonStaticField cannot be accessed from a static context.)")));
+						"(Error, [29:13 - 29:36], The non-static member myPrivateNonStaticField cannot be accessed from a static context.)")));
 
 		changeNonOpenedFile("Callee", StaticTestFiles.callee());
 		joinServerRequests();

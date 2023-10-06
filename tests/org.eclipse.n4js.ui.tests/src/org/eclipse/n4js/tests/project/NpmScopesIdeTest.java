@@ -63,26 +63,26 @@ public class NpmScopesIdeTest extends ConvertedIdeTest {
 	@Test
 	public void testImportModuleThatExistsOnlyInScopedProject() {
 		setContentsOfClientModule("""
-					import {A} from "A"
-					new A().foo();
+				import {A} from "A"
+				new A().foo();
 				""");
 		assertNoIssues();
 		assertCorrectOutput("""
-					Hello from A in @myScope/Lib!
+				Hello from A in @myScope/Lib!
 				""");
 
 		setContentsOfClientModule("""
-					import {A} from "@myScope/Lib/A"     // <-- should have same result as above
-					new A().foo();
+				import {A} from "@myScope/Lib/A"     // <-- should have same result as above
+				new A().foo();
 				""");
 		assertNoIssues();
 		assertCorrectOutput("""
-					Hello from A in @myScope/Lib!
+				Hello from A in @myScope/Lib!
 				""");
 
 		setContentsOfClientModule(
 				"""
-							import {A} from "Lib/A"              // <-- must *not* work (because module A not contained in non-scoped project "Lib")
+						import {A} from "Lib/A"              // <-- must *not* work (because module A not contained in non-scoped project "Lib")
 						""");
 		assertIssues2(
 				Pair.of("ClientModule", List.of(
@@ -92,92 +92,92 @@ public class NpmScopesIdeTest extends ConvertedIdeTest {
 	@Test
 	public void testImportModuleThatExistsOnlyInNonScopedProject() {
 		setContentsOfClientModule("""
-					import {B} from "B"
-					new B().foo();
+				import {B} from "B"
+				new B().foo();
 				""");
 		assertNoIssues();
 		assertCorrectOutput("""
-					Hello from B in Lib!
+				Hello from B in Lib!
 				""");
 
 		setContentsOfClientModule(
 				"""
-							import {B} from "@myScope/Lib/B"     // <-- must *not* work (because module B not contained in scoped project "@myScope/Lib")
+						import {B} from "@myScope/Lib/B"     // <-- must *not* work (because module B not contained in scoped project "@myScope/Lib")
 						""");
 		assertIssues2(
 				Pair.of("ClientModule", List.of(
 						"(Error, [0:16 - 0:32], Cannot resolve complete module specifier (with project name as first segment): no matching module found.)")));
 
 		setContentsOfClientModule("""
-					import {B} from "Lib/B"              // <-- should have same result as first import above
-					new B().foo();
+				import {B} from "Lib/B"              // <-- should have same result as first import above
+				new B().foo();
 				""");
 		assertNoIssues();
 		assertCorrectOutput("""
-					Hello from B in Lib!
+				Hello from B in Lib!
 				""");
 	}
 
 	@Test
 	public void testImportModuleThatExistsInBothProjects() {
 		setContentsOfClientModule("""
-					import {C} from "@myScope/Lib/C"
-					new C().foo();
+				import {C} from "@myScope/Lib/C"
+				new C().foo();
 				""");
 		assertNoIssues();
 		assertCorrectOutput("""
-					Hello from C in @myScope/Lib!
+				Hello from C in @myScope/Lib!
 				""");
 
 		setContentsOfClientModule("""
-					import {C as C_scoped} from "@myScope/Lib/C"
-					import {C as C_nonScoped} from "Lib/C"
-					new C_scoped().foo();
-					new C_nonScoped().foo();
+				import {C as C_scoped} from "@myScope/Lib/C"
+				import {C as C_nonScoped} from "Lib/C"
+				new C_scoped().foo();
+				new C_nonScoped().foo();
 				""");
 		assertNoIssues();
 		assertCorrectOutput("""
-					Hello from C in @myScope/Lib!
-					Hello from C in Lib!
+				Hello from C in @myScope/Lib!
+				Hello from C in Lib!
 				""");
 	}
 
 	@Test
 	public void testImportModuleThatExistsInBothProjectsInSubFolders() {
 		setContentsOfClientModule("""
-					import {C} from "@myScope/Lib/folder1/folder2/C"
-					new C().foo();
+				import {C} from "@myScope/Lib/folder1/folder2/C"
+				new C().foo();
 				""");
 		assertNoIssues();
 		assertCorrectOutput("""
-					Hello from folder1/folder2/C in @myScope/Lib!
+				Hello from folder1/folder2/C in @myScope/Lib!
 				""");
 
 		setContentsOfClientModule("""
-					import {C as C_scoped} from "@myScope/Lib/folder1/folder2/C"
-					import {C as C_nonScoped} from "Lib/folder1/folder2/C"
-					new C_scoped().foo();
-					new C_nonScoped().foo();
+				import {C as C_scoped} from "@myScope/Lib/folder1/folder2/C"
+				import {C as C_nonScoped} from "Lib/folder1/folder2/C"
+				new C_scoped().foo();
+				new C_nonScoped().foo();
 				""");
 		assertNoIssues();
 		assertCorrectOutput("""
-					Hello from folder1/folder2/C in @myScope/Lib!
-					Hello from folder1/folder2/C in Lib!
+				Hello from folder1/folder2/C in @myScope/Lib!
+				Hello from folder1/folder2/C in Lib!
 				""");
 	}
 
 	@Test
 	public void testImportMainModule() {
 		setContentsOfClientModule("""
-					import {D as D_scoped} from "@myScope/Lib"
-					import {D as D_nonScoped} from "Lib"
-					new D_scoped().foo();
-					new D_nonScoped().foo();
+				import {D as D_scoped} from "@myScope/Lib"
+				import {D as D_nonScoped} from "Lib"
+				new D_scoped().foo();
+				new D_nonScoped().foo();
 				""");
 		assertNoIssues();
 		assertCorrectOutput("""
-					Hello from D in @myScope/Lib!
-					Hello from D in Lib!
+				Hello from D in @myScope/Lib!
+				Hello from D in Lib!
 				""");
 	}
 

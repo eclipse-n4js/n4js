@@ -36,7 +36,7 @@ public class EnumTestFiles {
 
 	public static String myEnumUser() {
 		return """
-				import { MyEnum } from "«moduleFolder»/MyEnum"
+				import { MyEnum } from "%s/MyEnum"
 
 				class A {
 
@@ -44,7 +44,7 @@ public class EnumTestFiles {
 						var myEnum = MyEnum.ONE
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String moduleFolder() {

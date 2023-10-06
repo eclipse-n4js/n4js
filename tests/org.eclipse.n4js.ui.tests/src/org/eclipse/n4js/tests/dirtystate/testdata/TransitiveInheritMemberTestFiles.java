@@ -18,7 +18,7 @@ public class TransitiveInheritMemberTestFiles {
 
 	public static String A() {
 		return """
-				import { C } from "«moduleFolder»/C"
+				import { C } from "%s/C"
 				export public class A {
 
 					@Internal public myMethodA() {
@@ -26,24 +26,24 @@ public class TransitiveInheritMemberTestFiles {
 						c.myMethodBInC().myMethodC()
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String B() {
 		return """
-				import { C } from "«moduleFolder»/C"
+				import { C } from "%s/C"
 				export public class B extends C {
 
 					@Internal public myMethodB() : B {
 						return null;
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String C() {
 		return """
-				import { B } from "«moduleFolder»/B"
+				import { B } from "%s/B"
 				export public class C {
 
 					@Internal public myMethodBInC() : B {
@@ -54,12 +54,12 @@ public class TransitiveInheritMemberTestFiles {
 						return null;
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String CChanged() {
 		return """
-				import { B } from "«moduleFolder»/B"
+				import { B } from "%s/B"
 				export public class C {
 
 					@Internal public myMethodBInC() : B {
@@ -70,6 +70,6 @@ public class TransitiveInheritMemberTestFiles {
 						return null;
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 }

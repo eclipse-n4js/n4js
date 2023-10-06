@@ -38,18 +38,18 @@ public class InterfaceTestFiles {
 
 	public static String interfaceB() {
 		return """
-				import { InterfaceA } from "«moduleFolder»/InterfaceA"
+				import { InterfaceA } from "%s/InterfaceA"
 				export interface InterfaceB extends InterfaceA {
 
 					public methodIB();
 
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String classWithInterfaces() {
 		return """
-				import { InterfaceB } from "«moduleFolder»/InterfaceB"
+				import { InterfaceB } from "%s/InterfaceB"
 				abstract class ClassWithInterfaces implements InterfaceB {
 
 					test() : void {
@@ -57,6 +57,6 @@ public class InterfaceTestFiles {
 						this.methodIB
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 }

@@ -15,7 +15,7 @@ public class TestFiles {
 	public static String class0() {
 		return """
 				/**
-				 * Class «moduleFolder».Class0.Class0
+				 * Class %s.Class0.Class0
 				 */
 				import { Class1 } from "pr0_0pa0/Class1"
 				export public class Class0 {
@@ -24,7 +24,7 @@ public class TestFiles {
 						var dummy = localFieldAccess0.field0;
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String moduleFolder() {
@@ -34,25 +34,25 @@ public class TestFiles {
 	public static String class1() {
 		return """
 					/**
-					 * Class «moduleFolder».Class1.Class1
+					 * Class %s.Class1.Class1
 					 */
 					export public class Class1 {
 						@Internal public field0 : any;
 						@Internal public field1 : any;
 					}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String class1After() {
 		return """
 					/**
-					 * Class «moduleFolder».Class1.Class1
+					 * Class %s.Class1.Class1
 					 */
 					export public class Class1 {
 						@Internal public field23 : any;
 						@Internal public field1 : any;
 					}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String mutualModuleFolder() {
@@ -61,8 +61,8 @@ public class TestFiles {
 
 	public static String classBrother() {
 		return """
-				import { Sister as SisterObject } from "«mutualModuleFolder»/Sister";
-				import { Child } from "«mutualModuleFolder»/Child";
+				import { Sister as SisterObject } from "%s/Sister";
+				import { Child } from "%s/Child";
 				export public class Brother {
 					@Internal public getSister() : SisterObject {return null;}
 					@Internal public getChild() : Child {return null;}
@@ -71,13 +71,13 @@ public class TestFiles {
 				brother.getSister().getBrother()
 				var sister : SisterObject /*= new SisterObject*/;
 				brother = sister.getBrother();
-				""";
+				""".formatted(mutualModuleFolder(), mutualModuleFolder());
 	}
 
 	public static String classSister() {
 		return """
-				import { Brother as BrotherObject } from "«mutualModuleFolder»/Brother";
-				import { Child } from "«mutualModuleFolder»/Child";
+				import { Brother as BrotherObject } from "%s/Brother";
+				import { Child } from "%s/Child";
 				export public class Sister {
 					@Internal public getBrother() : BrotherObject {return null;}
 					@Internal public getChild() : Child {return null;}
@@ -86,13 +86,13 @@ public class TestFiles {
 				brother.getSister().getBrother()
 				var brother : BrotherObject = new BrotherObject();
 				sister = brother.getSister();
-				""";
+				""".formatted(mutualModuleFolder(), mutualModuleFolder());
 	}
 
 	public static String classSisterNew() {
 		return """
-				import { Brother as BrotherObject } from "«mutualModuleFolder»/Brother";
-				import { Child } from "«mutualModuleFolder»/Child";
+				import { Brother as BrotherObject } from "%s/Brother";
+				import { Child } from "%s/Child";
 				export public class Sister {
 					@Internal public getStepBrother() : BrotherObject {return null;}
 					@Internal public getChild() : Child {return null;}
@@ -102,7 +102,7 @@ public class TestFiles {
 				var brother : BrotherObject /*= new BrotherObject*/;
 				sister = brother.getSister();
 				var brotherChildAge = sister.getBrother().getChild().age;
-				""";
+				""".formatted(mutualModuleFolder(), mutualModuleFolder());
 	}
 
 	public static String classChild() {

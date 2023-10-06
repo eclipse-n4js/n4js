@@ -86,177 +86,177 @@ public class StaticPolyfill_inheriting_from_filled_type__Probands {
 	// IDEBUG 657 - Passed in Arguments not bound correctly
 	// ********************************************************************************
 	public static String idebug657_filling = """
-				@@StaticPolyfillModule
-				import { PolyB } from "A2"
-				@StaticPolyfill
-				export public class Poly extends Poly {
+			@@StaticPolyfillModule
+			import { PolyB } from "A2"
+			@StaticPolyfill
+			export public class Poly extends Poly {
 
-				    public test() : boolean {
-				        return this.value == 0;
-				    }
+			    public test() : boolean {
+			        return this.value == 0;
+			    }
 
-				    public action(other : Poly) : void {
-				        // filled in missing XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'test'."
-				        other.test();
-				        this.test();
-				    }
+			    public action(other : Poly) : void {
+			        // filled in missing XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'test'."
+			        other.test();
+			        this.test();
+			    }
 
-				    public action2(other : PolyB) : void {
-				        // inherited filled in missing XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'test'."
-				        other.test();
+			    public action2(other : PolyB) : void {
+			        // inherited filled in missing XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'test'."
+			        other.test();
 
-				        var pb : PolyB;
-				        pb.plusB();
-				        pb.test();
-				    }
+			        var pb : PolyB;
+			        pb.plusB();
+			        pb.test();
+			    }
 
+			}
+
+			@StaticPolyfill
+			export public class Buddy extends Buddy {
+
+				public foo(other : Poly) : void {
+			        // filled in missing XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'test'."
+					other.test();
 				}
 
-				@StaticPolyfill
-				export public class Buddy extends Buddy {
-
-					public foo(other : Poly) : void {
-				        // filled in missing XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'test'."
-						other.test();
-					}
-
-					public bar(other : PolyB) : void {
-				        // inherited filled in missing XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'test'."
-						other.test();
-					}
-
+				public bar(other : PolyB) : void {
+			        // inherited filled in missing XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'test'."
+					other.test();
 				}
+
+			}
 			""";
 
 	public static String idebug657_next_to_filling = """
-				import { Poly } from "A"
+			import { Poly } from "A"
 
-				export public class PolyB extends Poly {
+			export public class PolyB extends Poly {
 
-				//	@Override
-				//    public test() : boolean {
-				//        return this.value == 0;
-				//    }
+			//	@Override
+			//    public test() : boolean {
+			//        return this.value == 0;
+			//    }
 
-				    @Override
-				    public action(other : Poly) : void {
-				        // filled in missing XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'test'."
-				        other.test();
+			    @Override
+			    public action(other : Poly) : void {
+			        // filled in missing XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'test'."
+			        other.test();
 
-				        // filled in missing XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'test'."
-				        this.test();
+			        // filled in missing XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'test'."
+			        this.test();
 
-				    }
+			    }
 
-					@Override
-				    public action2(other : PolyB) : void {
-				        // inherited filled in missing XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'test'."
-				        other.test();
+				@Override
+			    public action2(other : PolyB) : void {
+			        // inherited filled in missing XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'test'."
+			        other.test();
 
-				        // inherited filled in missing XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'action'."
-				        other.action( this );
+			        // inherited filled in missing XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'action'."
+			        other.action( this );
 
-				        // inherited filled in missing XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'action2'."
-				        other.action2( this );
+			        // inherited filled in missing XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'action2'."
+			        other.action2( this );
 
-				    }
+			    }
 
-				    public plusB() : void {}
+			    public plusB() : void {}
 
-				}
+			}
 			""";
 
 	public static String idebug657_filled = """
-				@@StaticPolyfillAware
-				export public class Poly {
-				   public value : number = 0;
-				}
+			@@StaticPolyfillAware
+			export public class Poly {
+			   public value : number = 0;
+			}
 
-				export public class Buddy {
-				   public name : string = "nix";
-				}
+			export public class Buddy {
+			   public name : string = "nix";
+			}
 			""";
 
 	// ********************************************************************************
 	// IDEBUG 662 - Validation of Type Arguments broken
 	// ********************************************************************************
 	public static String idebug662_filled = """
-				@@StaticPolyfillAware
-				import { Abstract } from "Abstract"
+			@@StaticPolyfillAware
+			import { Abstract } from "Abstract"
 
-				export public class Poly<T extends Abstract> {
-				    public unit : T;
-				}
+			export public class Poly<T extends Abstract> {
+			    public unit : T;
+			}
 			""";
 
 	public static String idebug662_next_to_filled = """
-				export public abstract class Abstract {}
-				export public class Concrete extends Abstract {}
+			export public abstract class Abstract {}
+			export public class Concrete extends Abstract {}
 			""";
 
 	public static String idebug662_filling = """
-				@@StaticPolyfillModule
-				import { Abstract } from "Abstract"
-				@StaticPolyfill
+			@@StaticPolyfillModule
+			import { Abstract } from "Abstract"
+			@StaticPolyfill
 
-				export public class Poly<T extends Abstract> extends Poly<T> {
+			export public class Poly<T extends Abstract> extends Poly<T> {
 
-				    protected verify(other : Poly<T>) : void {}
-				    protected verifyUnit(other : T) : void {}
+			    protected verify(other : Poly<T>) : void {}
+			    protected verifyUnit(other : T) : void {}
 
-				    public convert(other : Poly<T>) : Poly<T> {
-				        var u = other.unit;
+			    public convert(other : Poly<T>) : Poly<T> {
+			        var u = other.unit;
 
-				        // XPECT noerrors -->
-				        this.verify(other);//Error: Poly<T> is not a subtype of Poly<T>.
+			        // XPECT noerrors -->
+			        this.verify(other);//Error: Poly<T> is not a subtype of Poly<T>.
 
-				        // XPECT noerrors -->
-				        this.verifyUnit(other.unit);//Error: T is not a subtype of T.
+			        // XPECT noerrors -->
+			        this.verifyUnit(other.unit);//Error: T is not a subtype of T.
 
-				        // XPECT noerrors -->
-				        u = this.unit;//Error: T is not a subtype of T.
+			        // XPECT noerrors -->
+			        u = this.unit;//Error: T is not a subtype of T.
 
-				        // XPECT noerrors -->
-				        return this;//Error: this[Poly] is not a subtype of Poly<T>.
-				    }
+			        // XPECT noerrors -->
+			        return this;//Error: this[Poly] is not a subtype of Poly<T>.
+			    }
 
-				}
+			}
 			""";
 
 	// ********************************************************************************
 	// IDEBUG 681 - missing initializer for static fields in static polyfills
 	// ********************************************************************************
 	public static String idebug681_filled = """
-				@@StaticPolyfillAware
-				export public class Poly {
-				}
+			@@StaticPolyfillAware
+			export public class Poly {
+			}
 
-				export public class DataMap <T,T> {
-					public constructor(p : Array<Array<T>>) {
-						console.log("P1=",p[0][0]);
-						console.log("P2=",p[0][1]);
-					}
+			export public class DataMap <T,T> {
+				public constructor(p : Array<Array<T>>) {
+					console.log("P1=",p[0][0]);
+					console.log("P2=",p[0][1]);
 				}
+			}
 			""";
 
 	public static String idebug681_filling = """
-				@@StaticPolyfillModule
+			@@StaticPolyfillModule
 
 
-				@StaticPolyfill
-				export public class Poly extends Poly{
+			@StaticPolyfill
+			export public class Poly extends Poly{
 
-				    private static ENUM_MAP = new DataMap<string, string>([
-				            ['a', 'b']
-				        ]);
-				    const mapping = new DataMap<string, string>([
-				            ['C', 'D']
-				        ]);
+			    private static ENUM_MAP = new DataMap<string, string>([
+			            ['a', 'b']
+			        ]);
+			    const mapping = new DataMap<string, string>([
+			            ['C', 'D']
+			        ]);
 
-				    const NUMBER = 5;
-				    const STRING = "5";
-				    public static OTHER : string = "";
-				}
+			    const NUMBER = 5;
+			    const STRING = "5";
+			    public static OTHER : string = "";
+			}
 			""";
 
 	/** search pattern can be found in compiled code exactly once (short-hand-version) */
@@ -284,21 +284,21 @@ public class StaticPolyfill_inheriting_from_filled_type__Probands {
 		Assert.assertFalse(pattern_681_ENUM_MAP.matcher(" xxx Poly ENUM_MAP xx").find());
 
 		String testCode = """
-					return metaClass;
-					        }
-					        );
+				return metaClass;
+				        }
+				        );
 
-					Poly.ENUM_MAP =  new DataMap([
-					            ['a', 'b']
-					        ]);
-					Poly.mapping =  new DataMap([
-					            ['C', 'D']
-					        ]);
-					Poly.NUMBER =  5;
-					Poly.STRING =  "5";
-					Poly.OTHER =  "";
+				Poly.ENUM_MAP =  new DataMap([
+				            ['a', 'b']
+				        ]);
+				Poly.mapping =  new DataMap([
+				            ['C', 'D']
+				        ]);
+				Poly.NUMBER =  5;
+				Poly.STRING =  "5";
+				Poly.OTHER =  "";
 
-					            $n4Export('Poly', Poly);
+				            $n4Export('Poly', Poly);
 				""";
 
 		Assert.assertTrue(pattern_681_ENUM_MAP.matcher(testCode).find());

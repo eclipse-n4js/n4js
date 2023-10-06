@@ -36,43 +36,43 @@ public class RoleTestFiles {
 
 	public static String roleB() {
 		return """
-				import { ARole } from "«moduleFolder»/ARole"
+				import { ARole } from "%s/ARole"
 				export interface BRole extends ARole {
 
 					public myMethodB() {
 						this.myMethodA()
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String roleBChanged() {
 		return """
-				import { ARole } from "«moduleFolder»/ARole"
+				import { ARole } from "%s/ARole"
 				export interface BRole extends ARole {
 
 					public myMethodB2() {
 						this.myMethodA()
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String roleBChanged2() {
 		return """
-				import { ARole } from "«moduleFolder»/ARole"
+				import { ARole } from "%s/ARole"
 				export interface BRole /*extends ARole*/ {
 
 					public myMethodA() {
 
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String roleBChanged3() {
 		return """
-				import { ARole } from "«moduleFolder»/ARole"
+				import { ARole } from "%s/ARole"
 				export interface BRole /*extends ARole*/ {
 
 					public myMethodA() {
@@ -83,12 +83,12 @@ public class RoleTestFiles {
 
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String roleC() {
 		return """
-				import { BRole } from "«moduleFolder»/BRole"
+				import { BRole } from "%s/BRole"
 				export interface CRole extends BRole {
 					name : String;
 
@@ -97,7 +97,7 @@ public class RoleTestFiles {
 						this.myMethodB()
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String classD() {
@@ -122,27 +122,27 @@ public class RoleTestFiles {
 
 	public static String classE() {
 		return """
-				import { D } from "«moduleFolder»/D"
-				import { BRole } from "«moduleFolder»/BRole"
+				import { D } from "%s/D"
+				import { BRole } from "%s/BRole"
 				export class E extends D implements BRole {
 
 					public myMethodE() {
 						this.myMethodB()
 					}
 				}
-				""";
+				""".formatted(moduleFolder(), moduleFolder());
 	}
 
 	public static String classEChanged() {
 		return """
-				import { D } from "«moduleFolder»/D"
-				import { BRole } from "«moduleFolder»/BRole"
+				import { D } from "%s/D"
+				import { BRole } from "%s/BRole"
 				export class E extends D /*extends BRole*/ {
 
 					public myMethodE() {
 						this.myMethodB()
 					}
 				}
-				""";
+				""".formatted(moduleFolder(), moduleFolder());
 	}
 }

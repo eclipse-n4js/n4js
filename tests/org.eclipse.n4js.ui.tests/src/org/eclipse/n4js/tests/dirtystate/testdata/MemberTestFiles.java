@@ -18,7 +18,7 @@ public class MemberTestFiles {
 
 	public static String myClassOne() {
 		return """
-				import * as N from "«moduleFolder»/MyVariableTwo"
+				import * as N from "%s/MyVariableTwo"
 
 				export public class MyClassOne  {
 
@@ -28,20 +28,20 @@ public class MemberTestFiles {
 						// two.myAttributeTwo("test").myMethodFour()
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String myVariableTwo() {
 		return """
-				import { MyClassTwo } from "«moduleFolder»/MyClassTwo"
+				import { MyClassTwo } from "%s/MyClassTwo"
 				export public var two : MyClassTwo;
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String myClassTwo() {
 		return """
-				import { MyInterfaceFour } from "«moduleFolder»/MyInterfaceFour"
-				import { MyRoleThree } from "«moduleFolder»/MyRoleThree"
+				import { MyInterfaceFour } from "%s/MyInterfaceFour"
+				import { MyRoleThree } from "%s/MyRoleThree"
 				export public class MyClassTwo {
 					@Internal public myAttributeTwo: {function(param: String): MyInterfaceFour};
 
@@ -49,12 +49,12 @@ public class MemberTestFiles {
 						return null;
 					}
 				}
-				""";
+				""".formatted(moduleFolder(), moduleFolder());
 	}
 
 	public static String myRoleThree() {
 		return """
-				import { MyInterfaceFour } from "«moduleFolder»/MyInterfaceFour"
+				import { MyInterfaceFour } from "%s/MyInterfaceFour"
 				export public interface MyRoleThree {
 				    @Internal public element : MyInterfaceFour;
 
@@ -62,12 +62,12 @@ public class MemberTestFiles {
 						return this.element;
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String myRoleThreeChanged() {
 		return """
-				import { MyInterfaceFour } from "«moduleFolder»/MyInterfaceFour"
+				import { MyInterfaceFour } from "%s/MyInterfaceFour"
 				export public interface MyRoleThree {
 				    @Internal public element : MyInterfaceFour;
 
@@ -75,7 +75,7 @@ public class MemberTestFiles {
 						return this.element;
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String myInterfaceFour() {

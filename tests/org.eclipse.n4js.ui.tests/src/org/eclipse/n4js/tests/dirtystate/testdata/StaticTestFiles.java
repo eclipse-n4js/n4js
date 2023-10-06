@@ -19,8 +19,8 @@ public class StaticTestFiles {
 
 	public static String caller() {
 		return """
-				import { Callee } from "«moduleFolder»/Callee"
-				import * as SC from "«moduleFolder»/SubCallee"
+				import { Callee } from "%s/Callee"
+				import * as SC from "%s/SubCallee"
 
 				export public class Caller {
 
@@ -63,21 +63,23 @@ public class StaticTestFiles {
 						fun2(SC.SubCallee)
 					}
 				}
-				""";
+				"""
+				.formatted(moduleFolder(), moduleFolder());
 	}
 
 	public static String callee() {
 		return """
 				export public class Callee {
-					«calleeStaticMembers»
+					%s
 
-					«calleeNonStaticMembers»
+					%s
 
-					«calleeStaticAccessors»
+					%s
 
-					«calleeNonStaticAccessors»
+					%s
 				}
-				""";
+				""".formatted(calleeStaticMembers(), calleeNonStaticMembers(), calleeStaticAccessors(),
+				calleeNonStaticAccessors());
 	}
 
 	private static String calleeStaticMembers() {
@@ -102,44 +104,45 @@ public class StaticTestFiles {
 
 	private static String calleeStaticAccessors() {
 		return """
-				  private static myPrivateStaticField : string = "myPrivateStaticField";
+				private static myPrivateStaticField : string = "myPrivateStaticField";
 
-				  @Internal public static get myPrivateStaticAccessor() : string {
-				  		return this.myPrivateStaticField;
-				  }
+				@Internal public static get myPrivateStaticAccessor() : string {
+					return this.myPrivateStaticField;
+				}
 
-				  @Internal public static set myPrivateStaticAccessor(myPrivateStaticParam : string) {
-				  		/*this*/Callee.myPrivateStaticField = myPrivateStaticParam;
-				  }
+				@Internal public static set myPrivateStaticAccessor(myPrivateStaticParam : string) {
+					/*this*/Callee.myPrivateStaticField = myPrivateStaticParam;
+				}
 				""";
 	}
 
 	private static String calleeNonStaticAccessors() {
 		return """
-				  private myPrivateNonStaticField : string = "myPrivateField";
+				private myPrivateNonStaticField : string = "myPrivateField";
 
-				  @Internal public get myPrivateNonStaticAccessor() : string {
-				  		return this.myPrivateNonStaticField;
-				  }
+				@Internal public get myPrivateNonStaticAccessor() : string {
+					return this.myPrivateNonStaticField;
+				}
 
-				  @Internal public set myPrivateNonStaticAccessor(myPrivateParam : string) {
-				  		this.myPrivateNonStaticField = myPrivateParam;
-				  }
+				@Internal public set myPrivateNonStaticAccessor(myPrivateParam : string) {
+					this.myPrivateNonStaticField = myPrivateParam;
+				}
 				""";
 	}
 
 	public static String callee_changedStaticMember() {
 		return """
 				export public class Callee {
-					«calleeStaticMembersChanged»
+					%s
 
-					«calleeNonStaticMembers»
+					%s
 
-					«calleeStaticAccessors»
+					%s
 
-					«calleeNonStaticAccessors»
+					%s
 				}
-				""";
+				""".formatted(calleeStaticMembersChanged(), calleeNonStaticMembers(), calleeStaticAccessors(),
+				calleeNonStaticAccessors());
 	}
 
 	private static String calleeStaticMembersChanged() {
@@ -155,77 +158,78 @@ public class StaticTestFiles {
 	public static String callee_changedNonStaticAccessors() {
 		return """
 				export public class Callee {
-					«calleeStaticMembers»
+					%s
 
-					«calleeNonStaticMembers»
+					%s
 
-					«calleeStaticAccessors»
+					%s
 
-					«calleeNonStaticAccessorsChanged»
+					%s
 				}
-				""";
+				""".formatted(calleeStaticMembers(), calleeNonStaticMembers(), calleeStaticAccessors(),
+				calleeNonStaticAccessorsChanged());
 	}
 
 	private static String calleeNonStaticAccessorsChanged() {
 		return """
-				  private myPrivateNonStaticField : string = "myPrivateField";
+				private myPrivateNonStaticField : string = "myPrivateField";
 
-				  @Internal public static get myPrivateNonStaticAccessor() : string {
-				  		return this.myPrivateNonStaticField;
-				  }
+				@Internal public static get myPrivateNonStaticAccessor() : string {
+					return this.myPrivateNonStaticField;
+				}
 
-				  @Internal public set myPrivateNonStaticAccessor(myPrivateParam : string) {
-				  		this.myPrivateNonStaticField = myPrivateParam;
-				  }
+				@Internal public set myPrivateNonStaticAccessor(myPrivateParam : string) {
+					this.myPrivateNonStaticField = myPrivateParam;
+				}
 				""";
 	}
 
 	public static String subCallee() {
 		return """
-				import { Callee } from "«moduleFolder»/Callee"
+				import { Callee } from "%s/Callee"
 
 				export public class SubCallee extends Callee {
 
-				   @Internal public call() {
+					@Internal public call() {
 						this.myNonStaticField
-				   }
+					}
 
-				   @Internal public static callStatic() {
+					@Internal public static callStatic() {
 						this.myStaticField
-				   }
+					}
 
-				   @Override
-				   @Internal public static myStaticMethod() : string {
+					@Override
+					@Internal public static myStaticMethod() : string {
 						return "myStaticMethod";
-				   }
+					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String subCallee_changed() {
 		return """
-				import { Callee } from "«moduleFolder»/Callee"
+				import { Callee } from "%s/Callee"
 
 				export public class SubCallee extends Callee {
 
-				   @Internal public call() {
+					@Internal public call() {
 						this.myNonStaticField
-				   }
+					}
 
-				   @Internal public static callStatic() {
+					@Internal public static callStatic() {
 						this.myStaticField
-				   }
+					}
 
-				   @Internal public static myStaticMethod2() : string {
+					@Internal public static myStaticMethod2() : string {
 						return "myStaticMethod";
-				   }
+					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String A() {
 		return """
-				import { B } from "«moduleFolder»/B"
+				import { B } from "%s/B"
 
 				export public class A {
 
@@ -238,12 +242,12 @@ public class StaticTestFiles {
 						B.c.d.e
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String B() {
 		return """
-				import { C } from "«moduleFolder»/C"
+				import { C } from "%s/C"
 
 				export public class B {
 
@@ -255,12 +259,12 @@ public class StaticTestFiles {
 						return null;
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String C() {
 		return """
-				import { D } from "«moduleFolder»/D"
+				import { D } from "%s/D"
 
 				export @Internal public class C {
 
@@ -272,12 +276,12 @@ public class StaticTestFiles {
 						return null;
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String C_changed() {
 		return """
-				import { D } from "«moduleFolder»/D"
+				import { D } from "%s/D"
 
 				export public class C {
 
@@ -289,7 +293,7 @@ public class StaticTestFiles {
 						return null;
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String D() {

@@ -17,73 +17,73 @@ import org.junit.Test;
 public class ContentAssistBugGH0039IdeTest extends ConvertedCompletionIdeTest {
 
 	private final String expectedProposals = """
-					(__proto__, Property, __proto__, , , 00000, , , , ([3:5 - 3:5], __proto__), [], [], , )
-					(constructor, Method, constructor, , , 00001, , , , ([3:5 - 3:5], constructor), [], [], , )
-					(hasOwnProperty, Method, hasOwnProperty, , , 00002, , , , ([3:5 - 3:5], hasOwnProperty), [], [], , )
-					(isPrototypeOf, Method, isPrototypeOf, , , 00003, , , , ([3:5 - 3:5], isPrototypeOf), [], [], , )
-					(propertyIsEnumerable, Method, propertyIsEnumerable, , , 00004, , , , ([3:5 - 3:5], propertyIsEnumerable), [], [], , )
-					(toLocaleString, Method, toLocaleString, , , 00005, , , , ([3:5 - 3:5], toLocaleString), [], [], , )
-					(toString, Method, toString, , , 00006, , , , ([3:5 - 3:5], toString), [], [], , )
-					(valueOf, Method, valueOf, , , 00007, , , , ([3:5 - 3:5], valueOf), [], [], , )
+			(__proto__, Property, __proto__, , , 00000, , , , ([3:5 - 3:5], __proto__), [], [], , )
+			(constructor, Method, constructor, , , 00001, , , , ([3:5 - 3:5], constructor), [], [], , )
+			(hasOwnProperty, Method, hasOwnProperty, , , 00002, , , , ([3:5 - 3:5], hasOwnProperty), [], [], , )
+			(isPrototypeOf, Method, isPrototypeOf, , , 00003, , , , ([3:5 - 3:5], isPrototypeOf), [], [], , )
+			(propertyIsEnumerable, Method, propertyIsEnumerable, , , 00004, , , , ([3:5 - 3:5], propertyIsEnumerable), [], [], , )
+			(toLocaleString, Method, toLocaleString, , , 00005, , , , ([3:5 - 3:5], toLocaleString), [], [], , )
+			(toString, Method, toString, , , 00006, , , , ([3:5 - 3:5], toString), [], [], , )
+			(valueOf, Method, valueOf, , , 00007, , , , ([3:5 - 3:5], valueOf), [], [], , )
 			""";
 
 	@Test
 	public void testGB_39_01() {
 		testAtCursor("""
-					class A {}
-					export public function* foo(req: A) {
-						yield 5;
-						req.<|>
+				class A {}
+				export public function* foo(req: A) {
+					yield 5;
+					req.<|>
 				""", expectedProposals);
 	}
 
 	@Test
 	public void testGB_39_02() {
 		testAtCursor("""
-					class A {}
-					function* foo(req: A) {
-						yield 5; // removing 5 fixes the problem
-						req.<|>
+				class A {}
+				function* foo(req: A) {
+					yield 5; // removing 5 fixes the problem
+					req.<|>
 				""", expectedProposals);
 	}
 
 	@Test
 	public void testGB_39_03() {
 		testAtCursor("""
-					class A {}
-					export public function* foo(req: A) {
-						yield;
-						req.<|>
+				class A {}
+				export public function* foo(req: A) {
+					yield;
+					req.<|>
 				""", expectedProposals);
 	}
 
 	@Test
 	public void testGB_39_04() {
 		testAtCursor("""
-					class A {}
-					function foo(req: A) {
-						yield 5; // removing 5 fixes the problem
-						req.<|>
+				class A {}
+				function foo(req: A) {
+					yield 5; // removing 5 fixes the problem
+					req.<|>
 				""", expectedProposals);
 	}
 
 	@Test
 	public void testGB_39_05() {
 		testAtCursor("""
-					class A {}
-					public function* foo(req: A) {
-						yield 5;
-						req.<|>
+				class A {}
+				public function* foo(req: A) {
+					yield 5;
+					req.<|>
 				""", expectedProposals);
 	}
 
 	@Test
 	public void testGB_39_06() {
 		testAtCursor("""
-					class A {}
-					export function* foo(req: A) {
-						yield 5;
-						req.<|>
+				class A {}
+				export function* foo(req: A) {
+					yield 5;
+					req.<|>
 				""", expectedProposals);
 	}
 }

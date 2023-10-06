@@ -14,7 +14,7 @@ public class CaseSensitiveTestFiles {
 
 	public static String caller() {
 		return """
-				import { CaseSensitiveCallee } from "«moduleFolder»/CaseSensitiveCallee"
+				import { CaseSensitiveCallee } from "%s/CaseSensitiveCallee"
 				export public class CaseSensitiveCaller {
 					@Internal public callee : CaseSensitiveCallee;
 
@@ -30,7 +30,7 @@ public class CaseSensitiveTestFiles {
 						this.callee.mYMETHOD()
 					}
 				}
-				""";
+				""".formatted(moduleFolder());
 	}
 
 	public static String callee() {

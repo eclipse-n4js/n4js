@@ -22,83 +22,83 @@ public class InheritanceTestFiles {
 
 	public static String A() {
 		return """
-				import { B } from "«module2»/B"
+				import { B } from "%s/B"
 				export public class A {
 					@Internal public getB() : B {return null;}
 					@Internal public foo() : B {return null;}
 				}
 				var a : A;
-				""";
+				""".formatted(module2());
 	}
 
 	public static String AOtherMethodName() {
 		return """
-				import { B } from "«module2»/B"
+				import { B } from "%s/B"
 				export public class A {
 					@Internal public getB2() : B {return null;}
 					@Internal public foo2() : A {return null;}
 				}
 				var a : A;
-				""";
+				""".formatted(module2());
 	}
 
 	public static String B() {
 		return """
-				import { A as AObjectLiteral } from "«module1»/A";
+				import { A as AObjectLiteral } from "%s/A";
 				export public class B {
 					@Internal public foo() : B {return null;}
 				}
 				var a : AObjectLiteral = new AObjectLiteral();
 				a.foo();
 				var b : B = new B();
-				""";
+				""".formatted(module1());
 	}
 
 	public static String C() {
 		return """
-				import { A as AObjectLiteral } from "«module1»/A";
+				import { A as AObjectLiteral } from "%s/A";
 				export public class C extends AObjectLiteral {
 					@Internal public getA() : AObjectLiteral {return null;}
 				}
 				var c : C = new C;
 				c.getB;
-				""";
+				""".formatted(module1());
 	}
 
 	public static String CWithAssignmentToSuperType() {
 		return """
-				import { A as AObjectLiteral } from "«module1»/A";
+				import { A as AObjectLiteral } from "%s/A";
 				export public class C extends AObjectLiteral {
 					@Internal public getA() : AObjectLiteral {return null;}
 				}
 				var c : C = new C;
 				var b : AObjectLiteral = c.getB();
-				""";
+				""".formatted(module1());
 	}
 
 	public static String CWithAssignmentToActualType() {
 		return """
-				import { A as AObjectLiteral } from "«module1»/A";
-				import { B } from "«module2»/B"
+				import { A as AObjectLiteral } from "%s/A";
+				import { B } from "%s/B"
 				export public class C extends AObjectLiteral {
 					@Internal public getA() : AObjectLiteral {return null;}
 				}
 				var c : C = new C;
 				var b : B = c.getB()
-				""";
+				""".formatted(module1(), module2());
 	}
 
 	public static String D() {
 		return """
-				import { C as CObjectLiteral } from "«module2»/C";
-				import { A } from "«module1»/A"
-				import { B } from "«module2»/B"
+				import { C as CObjectLiteral } from "%s/C";
+				import { A } from "%s/A"
+				import { B } from "%s/B"
 				export public class D {
 				}
 				var c : CObjectLiteral = new CObjectLiteral();
 				var a : A = c.getA();
 				var b : B = c.getB();
-				""";
+				""".formatted(module2(), module1(), module2());
 	}
 
 	public static String inheritanceModule() {
@@ -116,12 +116,12 @@ public class InheritanceTestFiles {
 
 	public static String Child() {
 		return """
-				import { Parent as ParentObjectLiteral } from "«inheritanceModule»/Parent";
+				import { Parent as ParentObjectLiteral } from "%s/Parent";
 				export public class Child extends ParentObjectLiteral {
 					@Override
 					@Internal public printlnToOverride() : any {return null;}
 					printlnChild() : any {return null;}
 				}
-				""";
+				""".formatted(inheritanceModule());
 	}
 }

@@ -22,27 +22,27 @@ public class ContentAssistBugGH1756IdeTest extends ConvertedCompletionIdeTest {
 	@Test
 	public void test_01() throws Exception {
 		testAtCursor("""
-					let value;
+				let value;
 
-					export function foo(): any {
-					    return (arg) => {
-					        let x = async () => {
-					            value = new C((p: Object) => {
-					            	someFun<|>
-					            });
-					            return null;
-					        };
-						}
+				export function foo(): any {
+				    return (arg) => {
+				        let x = async () => {
+				            value = new C((p: Object) => {
+				            	someFun<|>
+				            });
+				            return null;
+				        };
 					}
+				}
 
-					class C {
-						constructor(f: Function) {}
-					}
+				class C {
+					constructor(f: Function) {}
+				}
 
-					function someFunctionWithAnExtremelyLooooongName() {}
+				function someFunctionWithAnExtremelyLooooongName() {}
 				""",
 				"""
-							(someFunctionWithAnExtremelyLooooongName, Function, MyModule, , , 00000, , , , ([6:13 - 6:20], someFunctionWithAnExtremelyLooooongName), [], [], , )
+						(someFunctionWithAnExtremelyLooooongName, Function, MyModule, , , 00000, , , , ([6:13 - 6:20], someFunctionWithAnExtremelyLooooongName), [], [], , )
 						""");
 	}
 
