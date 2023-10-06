@@ -38,8 +38,7 @@ public class CompletionWithImportsFromDeclaredModuleTest extends AbstractComplet
 				let x = new MyC<|>
 				""",
 				"""
-						(MyCls, Class, a/b/myDeclModule, , , 00000, , , , ([0:12 - 0:15], MyCls), [([0:0 - 0:0], import {MyCls} from "a/b/myDeclModule";
-						)], [], , )
+						(MyCls, Class, a/b/myDeclModule, , , 00000, , , , ([0:12 - 0:15], MyCls), [([0:0 - 0:0], import {MyCls} from "a/b/myDeclModule";)], [], , )
 						""");
 	}
 

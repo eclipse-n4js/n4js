@@ -67,20 +67,20 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 	public void testRedirectionForDefinitionProjects() {
 		testAtCursor("""
 				let x = new A1<|>
-				""", """
-				(A1, Class, index, , , 00000, , , , ([0:12 - 0:14], A1), [([0:0 - 0:0], import {A1} from "SomeNPM";
-				)], [], , )
-				""");
+				""",
+				"""
+						(A1, Class, index, , , 00000, , , , ([0:12 - 0:14], A1), [([0:0 - 0:0], import {A1} from "SomeNPM";)], [], , )
+						""");
 	}
 
 	@Test
 	public void testNoRedirectionForNormalProjects() {
 		testAtCursor("""
 				let x = new XY<|>
-				""", """
-				(XY, Class, LibXY, , , 00000, , , , ([0:12 - 0:14], XY), [([0:0 - 0:0], import {XY} from "LibXY";
-				)], [], , )
-				""");
+				""",
+				"""
+						(XY, Class, LibXY, , , 00000, , , , ([0:12 - 0:14], XY), [([0:0 - 0:0], import {XY} from "LibXY";)], [], , )
+						""");
 	}
 
 	@Test
@@ -89,8 +89,7 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 				AnotherClass<|>
 				""",
 				"""
-						(AnotherClass, Class, AnotherModule, , , 00000, , , , ([0:0 - 0:12], AnotherClass), [([0:0 - 0:0], import {AnotherClass} from "SomeNPM/AnotherModule";
-						)], [], , )
+						(AnotherClass, Class, AnotherModule, , , 00000, , , , ([0:0 - 0:12], AnotherClass), [([0:0 - 0:0], import {AnotherClass} from "SomeNPM/AnotherModule";)], [], , )
 						""");
 	}
 }
