@@ -8,21 +8,21 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.antlr
+package org.eclipse.n4js.antlr;
 
-import org.eclipse.n4js.antlr.UnicodeKeywordHelper
-import org.eclipse.xtext.xtext.generator.parser.antlr.AntlrContentAssistGrammarGenerator
-import org.eclipse.xtext.xtext.generator.parser.antlr.AntlrOptions
+import org.eclipse.xtext.xtext.generator.parser.antlr.AntlrContentAssistGrammarGenerator;
+import org.eclipse.xtext.xtext.generator.parser.antlr.AntlrOptions;
 
 /**
  * Customized content assist grammar generation.
  */
-class N4JSAntlrContentAssistGrammarGenerator extends AntlrContentAssistGrammarGenerator {
+public class N4JSAntlrContentAssistGrammarGenerator extends AntlrContentAssistGrammarGenerator {
 
 	/**
 	 * Replace specified extensions with custom implementation for unicode keyword lexer rules
 	 */
-	override protected toAntlrKeywordRule(String keyword, AntlrOptions options) {
-		UnicodeKeywordHelper.toUnicodeKeyword(keyword)
+	@Override
+	protected String toAntlrKeywordRule(String keyword, AntlrOptions options) {
+		return UnicodeKeywordHelper.toUnicodeKeyword(keyword);
 	}
 }
