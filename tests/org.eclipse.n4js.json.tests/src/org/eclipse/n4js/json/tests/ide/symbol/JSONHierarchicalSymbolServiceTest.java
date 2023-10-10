@@ -27,7 +27,7 @@ import com.google.common.base.Strings;
 /**
  * Tests for the outline tree
  */
-@SuppressWarnings("javadoc")
+
 public class JSONHierarchicalSymbolServiceTest extends AbstractLanguageServerTest {
 
 	public JSONHierarchicalSymbolServiceTest() {

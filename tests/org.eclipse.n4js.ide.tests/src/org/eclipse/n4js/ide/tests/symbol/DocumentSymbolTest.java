@@ -18,7 +18,7 @@ import org.junit.Test;
  */
 public class DocumentSymbolTest extends AbstractDocumentSymbolTest {
 
-	/***/
+	
 	@Test
 	public void openWorkspaceSymbolsClassTest() throws Exception {
 		test("class C { field: string; method(): {}}",
@@ -27,7 +27,7 @@ public class DocumentSymbolTest extends AbstractDocumentSymbolTest {
 						"(method, Method, [0:25 - 0:31])");
 	}
 
-	/***/
+	
 	@Test
 	public void openWorkspaceSymbolsInterfaceTest() throws Exception {
 		test("interface I { field: string; method(): {} }",
@@ -36,7 +36,7 @@ public class DocumentSymbolTest extends AbstractDocumentSymbolTest {
 						"(method, Method, [0:29 - 0:35])");
 	}
 
-	/***/
+	
 	@Test
 	public void openWorkspaceSymbolsNamespaceTest() throws Exception {
 		test("namespace N { class C {} interface I {}}",
@@ -45,7 +45,7 @@ public class DocumentSymbolTest extends AbstractDocumentSymbolTest {
 						"(I, Interface, [0:35 - 0:36])");
 	}
 
-	/***/
+	
 	@Test
 	public void openWorkspaceSymbolsEnumTest() throws Exception {
 		test("enum E {green, red}",
@@ -54,7 +54,7 @@ public class DocumentSymbolTest extends AbstractDocumentSymbolTest {
 						"(red, EnumMember, [0:15 - 0:18])");
 	}
 
-	/***/
+	
 	@Test
 	public void openWorkspaceSymbolsTypeAliasTest() throws Exception {
 		test("class A {}; type T = A;",

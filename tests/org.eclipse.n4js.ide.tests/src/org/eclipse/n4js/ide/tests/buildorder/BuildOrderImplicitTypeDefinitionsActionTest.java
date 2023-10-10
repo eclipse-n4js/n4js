@@ -18,7 +18,7 @@ import org.junit.Test;
 /**
  * Test for build order
  */
-@SuppressWarnings("javadoc")
+
 public class BuildOrderImplicitTypeDefinitionsActionTest extends AbstractBuildOrderTest {
 
 	@Test

@@ -18,7 +18,7 @@ import org.junit.Test;
 /**
  * Like {@link CompletionWithImportsTest}, but for the special case that we import from a declared module}.
  */
-@SuppressWarnings("javadoc")
+
 public class CompletionWithImportsFromDeclaredModuleTest extends AbstractCompletionTest {
 
 	/** Some default modules that export a number of classes for all tests. */
@@ -38,8 +38,7 @@ public class CompletionWithImportsFromDeclaredModuleTest extends AbstractComplet
 				let x = new MyC<|>
 				""",
 				"""
-						(MyCls, Class, a/b/myDeclModule, , , 00000, , , , ([0:12 - 0:15], MyCls), [([0:0 - 0:0], import {MyCls} from "a/b/myDeclModule";
-						)], [], , )
+						(MyCls, Class, a/b/myDeclModule, , , 00000, , , , ([0:12 - 0:15], MyCls), [([0:0 - 0:0], import {MyCls} from "a/b/myDeclModule";)], [], , )
 						""");
 	}
 

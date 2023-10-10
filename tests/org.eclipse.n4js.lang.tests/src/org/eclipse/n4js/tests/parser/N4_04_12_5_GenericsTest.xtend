@@ -20,7 +20,7 @@ class N4_04_12_5_GenericsTest extends AbstractParserTest{
 
 	@Test
 	def void testGenericClassDeclarations() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class A{}
 			class C<T> {}
 			class D extends C<A> {}
@@ -33,7 +33,7 @@ class N4_04_12_5_GenericsTest extends AbstractParserTest{
 
 			class I<S,T> extends F<C<T>,F<S,C<T>>> {}
 
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
@@ -41,72 +41,72 @@ class N4_04_12_5_GenericsTest extends AbstractParserTest{
 
 	@Test
 	def void testGenericClassWithMembers() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class A{}
 			class C<T> {
 				public t: T;
 				public foo(): t {return null;}
 				public bar(t: T): void {}
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testClassWithGenericMethodDeclaration() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class A{}
 			class C {
 				public <T> foo(): T {return null;}
 				public <T> bar(t: T): void {}
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testGenericFunctionDeclaration() {
-		val script = '''
+		val script = parseHelper.parse('''
 			function <T> foo(t: T): void {}
 			function <T> bar(): T {}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testParameterizedClass() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class A{}
 			class C<T> {}
 			class F<S,T> {}
 
 			var c: C<A>;
 			var f: F<A,C<A>>;
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testParameterizedMethodCall() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class A{}
 			class C {
 				public <T> foo(): T {}
 			}
 			var c: C;
 			c.<A>foo();
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testParameterizedMethodCallNegative() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class A{}
 			class C {
 				public <T> foo(): T {return null;}
@@ -115,26 +115,26 @@ class N4_04_12_5_GenericsTest extends AbstractParserTest{
 
 			var c: C;
 			<A>c.foo();
-		'''.parse
+		''');
 
 		assertEquals(1, script.eResource.errors.size)
 	}
 
 	@Test
 	def void testGenericFunctionCall() {
-		val script = '''
+		val script = parseHelper.parse('''
 			function <T> foo(t: T): void {}
 			var a: A;
 			<A>foo(a);
 			bar();
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testGenericTypeDefExample() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class Container<T> {
 				private item: T;
 
@@ -146,27 +146,27 @@ class N4_04_12_5_GenericsTest extends AbstractParserTest{
 					this.item = item;
 				}
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testGenericTypeUsageExample() {
-		val script = '''
+		val script = parseHelper.parse('''
 			import { Container } from "p/Container"
 
 			var stringContainer: Container<String> = new Container();
 			stringContainer.setItem("Hello");
 			var s: String = stringContainer.getItem();
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testGenericMultipleTypesBindingExample() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class A{}
 			class B{}
 			class C extends A{}
@@ -175,7 +175,7 @@ class N4_04_12_5_GenericsTest extends AbstractParserTest{
 			}
 
 			var x: G<Number,C,B>;
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}

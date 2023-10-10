@@ -23,11 +23,11 @@ class LookAheadTest extends AbstractParserTest{
 
 	@Test
 	def void testNumber() {
-		val script = '''
+		val script = parseHelper.parse('''
 			1
 			2
 			3
-		'''.parse
+		''');
 
 		assertEquals(3, script.scriptElements.size)
 		
@@ -48,11 +48,11 @@ class LookAheadTest extends AbstractParserTest{
 	
 	@Test
 	def void testNumberWithSemi() {
-		val script = '''
+		val script = parseHelper.parse('''
 			1;
 			2;
 			3
-		'''.parse
+		''');
 
 		assertEquals(3, script.scriptElements.size)
 		
@@ -75,7 +75,7 @@ class LookAheadTest extends AbstractParserTest{
 	
 	@Test
 	def void testIdentifierWithSemi() {
-		val script = '''
+		val script = parseHelper.parse('''
 			// comment 
 			myIdent
 			/* 
@@ -83,7 +83,7 @@ class LookAheadTest extends AbstractParserTest{
 			  spannign multiple lines
 			*/
 			;
-		'''.parse
+		''');
 
 		assertEquals(1, script.scriptElements.size)
 		
@@ -98,9 +98,9 @@ class LookAheadTest extends AbstractParserTest{
 	
 	@Test
 	def void testIdentifier() {
-		val script = '''
+		val script = parseHelper.parse('''
 			/*comment*/myIdent
-		'''.parse
+		''');
 
 		assertEquals(1, script.scriptElements.size)
 		
@@ -115,10 +115,10 @@ class LookAheadTest extends AbstractParserTest{
 	
 	@Test
 	def void testIdentifierAfterImport_01() {
-		val script = '''
+		val script = parseHelper.parse('''
 			import * from "";
 			myIdent
-		'''.parse
+		''');
 
 		assertEquals(2, script.scriptElements.size)
 		
@@ -133,10 +133,10 @@ class LookAheadTest extends AbstractParserTest{
 	
 	@Test
 	def void testIdentifierAfterImport_02() {
-		val script = '''
+		val script = parseHelper.parse('''
 			import * from ""
 			myIdent
-		'''.parse
+		''');
 
 		assertEquals(2, script.scriptElements.size)
 		
@@ -151,10 +151,10 @@ class LookAheadTest extends AbstractParserTest{
 	
 	@Test
 	def void testIdentifierWithSemiAfterImport_01() {
-		val script = '''
+		val script = parseHelper.parse('''
 			import * from "";
 			myIdent;
-		'''.parse
+		''');
 
 		assertEquals(2, script.scriptElements.size)
 		
@@ -169,10 +169,10 @@ class LookAheadTest extends AbstractParserTest{
 	
 	@Test
 	def void testIdentifierWithSemiAfterImport_02() {
-		val script = '''
+		val script = parseHelper.parse('''
 			import * from ""
 			myIdent;
-		'''.parse
+		''');
 
 		assertEquals(2, script.scriptElements.size)
 		
@@ -187,10 +187,10 @@ class LookAheadTest extends AbstractParserTest{
 	
 	@Test
 	def void testIdentifierWithSemiAfterImport_03() {
-		val script = '''
+		val script = parseHelper.parse('''
 			import * as x from ""
 			myIdent;
-		'''.parse
+		''');
 
 		assertEquals(2, script.scriptElements.size)
 		
@@ -205,10 +205,10 @@ class LookAheadTest extends AbstractParserTest{
 	
 	@Test
 	def void testIdentifierWithSemiAfterImport_04() {
-		val script = '''
+		val script = parseHelper.parse('''
 			import x from ""
 			myIdent;
-		'''.parse
+		''');
 
 		assertEquals(2, script.scriptElements.size)
 		
@@ -223,10 +223,10 @@ class LookAheadTest extends AbstractParserTest{
 	
 	@Test
 	def void testIdentifierWithSemiAfterImport_05() {
-		val script = '''
+		val script = parseHelper.parse('''
 			import ""
 			myIdent;
-		'''.parse
+		''');
 
 		assertEquals(2, script.scriptElements.size)
 		
@@ -241,10 +241,10 @@ class LookAheadTest extends AbstractParserTest{
 	
 	@Test
 	def void testIdentifierWithSemiAfterImport_06() {
-		val script = '''
+		val script = parseHelper.parse('''
 			import x, * as a from ""
 			myIdent;
-		'''.parse
+		''');
 
 		assertEquals(2, script.scriptElements.size)
 		
@@ -259,10 +259,10 @@ class LookAheadTest extends AbstractParserTest{
 	
 	@Test
 	def void testIdentifierWithSemiAfterImport_07() {
-		val script = '''
+		val script = parseHelper.parse('''
 			import {x} from ""
 			myIdent;
-		'''.parse
+		''');
 
 		assertEquals(2, script.scriptElements.size)
 		
@@ -277,10 +277,10 @@ class LookAheadTest extends AbstractParserTest{
 	
 	@Test
 	def void testIdentifierWithSemiAfterImport_08() {
-		val script = '''
+		val script = parseHelper.parse('''
 			import {x as y} from ""
 			myIdent;
-		'''.parse
+		''');
 
 		assertEquals(2, script.scriptElements.size)
 		
@@ -295,7 +295,7 @@ class LookAheadTest extends AbstractParserTest{
 	
 	@Test
 	def void testComplexScenario() {
-		val script = '''
+		val script = parseHelper.parse('''
 			
 			import CollectionChangedEvent      from 'n4/events/CollectionChangedEvent';
 			import Event                 	   from 'n4/events/Event';
@@ -882,7 +882,7 @@ class LookAheadTest extends AbstractParserTest{
 			        return out.join(", ").slice(0, 50);
 			    }
 			}
-		'''.parse
+		''');
 
 		val exportDecl = script.scriptElements.last as ExportDeclaration
 		assertEquals(1, NodeModelUtils.getNode(exportDecl).lookAhead)

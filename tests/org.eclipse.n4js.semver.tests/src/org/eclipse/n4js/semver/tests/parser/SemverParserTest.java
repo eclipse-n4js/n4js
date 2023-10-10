@@ -199,7 +199,7 @@ public class SemverParserTest {
 
 	/** Checks empty strings. */
 	@Test
-	public void testEmtyStrings() {
+	public void testEmtyStrings() throws Exception {
 		semverParseHelper.parseSuccessfully(""); // empty document
 		semverParseHelper.parseSuccessfully("	 "); // whitespace document
 		semverParseHelper.parseSuccessfully("		"); // whitespace document
@@ -207,38 +207,38 @@ public class SemverParserTest {
 
 	/** Check SEMVER versions and ranges. */
 	@Test
-	public void testSEMVERParseAndToString() {
+	public void testSEMVERParseAndToString() throws Exception {
 		internalTestParseAndToString(semverData, VersionRangeSetRequirement.class,
 				(s) -> s.replace("x", "*").replace("X", "*").replace("V", "v"));
 	}
 
 	/** Checks other NPM supported versions. */
 	@Test
-	public void testNPMURLParseAndToString() {
+	public void testNPMURLParseAndToString() throws Exception {
 		internalTestParseAndToString(urlData, URLVersionRequirement.class, (s) -> s);
 	}
 
 	/** Checks other NPM supported versions. */
 	@Test
-	public void testNPMLocalPathParseAndToString() {
+	public void testNPMLocalPathParseAndToString() throws Exception {
 		internalTestParseAndToString(localPathData, LocalPathVersionRequirement.class, (s) -> s);
 	}
 
 	/** Checks other NPM supported versions. */
 	@Test
-	public void testNPMGithubParseAndToString() {
+	public void testNPMGithubParseAndToString() throws Exception {
 		internalTestParseAndToString(githubData, GitHubVersionRequirement.class, (s) -> s);
 	}
 
 	/** Checks other NPM supported versions. */
 	@Test
-	public void testNPMTagParseAndToString() {
+	public void testNPMTagParseAndToString() throws Exception {
 		internalTestParseAndToString(tagData, TagVersionRequirement.class, (s) -> s);
 	}
 
 	/** Checks other NPM supported versions. */
 	@Test
-	public void testNPMError() {
+	public void testNPMError() throws Exception {
 		internalTestError(errorData);
 	}
 
@@ -247,7 +247,7 @@ public class SemverParserTest {
 	 * these requirements.
 	 */
 	@Test
-	public void testEmptyAndWildcardRequirements() {
+	public void testEmptyAndWildcardRequirements() throws Exception {
 		NPMVersionRequirement empty = semverParseHelper.parseSuccessfully("");
 		NPMVersionRequirement wildcard = semverParseHelper.parseSuccessfully("*");
 		assertTrue(SemverUtils.isEmptyVersionRequirement(empty));
@@ -255,7 +255,8 @@ public class SemverParserTest {
 	}
 
 	/** Checks a range. */
-	private void internalTestParseAndToString(List<String> data, Class<?> clazz, Function<String, String> adjust) {
+	private void internalTestParseAndToString(List<String> data, Class<?> clazz, Function<String, String> adjust)
+			throws Exception {
 		for (String entry : data) {
 			NPMVersionRequirement versionRequirement = semverParseHelper.parseSuccessfully(entry);
 			assertTrue("Parser returned null", versionRequirement != null);
@@ -270,7 +271,7 @@ public class SemverParserTest {
 	}
 
 	/** Checks a range. */
-	private void internalTestError(List<String> data) {
+	private void internalTestError(List<String> data) throws Exception {
 		for (String entry : data) {
 			semverParseHelper.parseUnsuccessfully(entry);
 		}

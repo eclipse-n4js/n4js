@@ -18,10 +18,10 @@ import org.junit.Test;
 import org.eclipse.n4js.jsdoc.JSDocCharScanner;
 import org.eclipse.n4js.jsdoc.JSDocToken;
 
-/***/
+
 public class TextTokenizerTest {
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void test() {
 		TextTokenizer TEXT = TextTokenizer.INSTANCE;
@@ -39,7 +39,7 @@ public class TextTokenizerTest {
 				TEXT.nextToken(new JSDocCharScanner("/**\n * Hello World {@code sample} */")));
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testLinebreak() {
 		TextTokenizer TEXT = TextTokenizer.INSTANCE;
@@ -55,7 +55,7 @@ public class TextTokenizerTest {
 
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testEmpty() {
 		TextTokenizer TEXT = TextTokenizer.INSTANCE;

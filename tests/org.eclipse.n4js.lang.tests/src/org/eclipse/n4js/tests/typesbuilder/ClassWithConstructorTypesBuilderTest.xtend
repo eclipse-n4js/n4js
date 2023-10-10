@@ -24,12 +24,12 @@ class ClassWithConstructorTypesBuilderTest extends AbstractParserTest {
 
 	@Test
 	def void testConstructorSimple() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public class C {
 				public constructor() {}
 				public m() {}
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 
@@ -39,12 +39,12 @@ class ClassWithConstructorTypesBuilderTest extends AbstractParserTest {
 
 	@Test
 	def void testConstructorInN4JSD() {
-		val script = '''
+		val script = parseHelper.parse('''
 			export external public class C {
 				public constructor()
 				public m()
 			}
-		'''.parse(JavaScriptVariant.external)
+		''', JavaScriptVariant.external)
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 

@@ -34,114 +34,114 @@ class N4_04_02_TypeExpressionsTest extends AbstractParserTest {
 
 	@Test
 	def void testTypeDefPrefix() {
-		val script = TYPE_DEFS_PREFIX.parse
+		val script = parseHelper.parse(TYPE_DEFS_PREFIX);
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testStructuralType() {
-		val script = '''
+		val script = parseHelper.parse('''
 			«TYPE_DEFS_PREFIX»
 
 			var r: ~Object with {a: A;b: B;};
 			var rd: ~A with{b: B;}+;
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testStructuralTypeES4_OLWithFields() {
-		val script = '''
+		val script = parseHelper.parse('''
 			«TYPE_DEFS_PREFIX»
 
 			var r: ~Object with {a: A;b: B;};
 			var rd: ~A with{b: B;}+;
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testStructuralTypeES4_OLWithGetter() {
-		val script = '''
+		val script = parseHelper.parse('''
 			«TYPE_DEFS_PREFIX»
 			var rg: ~A with { get b(): string; };
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testStructuralTypeES4_OLWithSetter() {
-		val script = '''
+		val script = parseHelper.parse('''
 			«TYPE_DEFS_PREFIX»
 			var rs: ~A with { set b(s: string); };
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testStructuralTypeES4_OLWithMethod() {
-		val script = '''
+		val script = parseHelper.parse('''
 			«TYPE_DEFS_PREFIX»
 			var rm1: ~A with { foo(a: string); };
 			var rm2: ~A with { foo(): string; };
 			var rm3: ~A with { foo(a); };
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testParameterizedTypeRef() {
-		val script = '''
+		val script = parseHelper.parse('''
 			«TYPE_DEFS_PREFIX»
 
 			var a: A, g: G<A>, h: H<A,B>, ga: G<? extends A>, gb: G<? super B>, r: R, i: I, e: E;
 			var ad: A+;
 			var gd: G<A>+;
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testAny() {
-		val script = '''
+		val script = parseHelper.parse('''
 			«TYPE_DEFS_PREFIX»
 			var x: any;
 			var xdyn: any+;
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testThisType() {
-		val script = '''
+		val script = parseHelper.parse('''
 			«TYPE_DEFS_PREFIX»
 
 			class X { foo(): void { var copy: This; } }
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testFunctionType() {
-		val script = '''
+		val script = parseHelper.parse('''
 			«TYPE_DEFS_PREFIX»
 
 			var f: {function()},
 				map: {function(b: B):A},
 				weird: {function(b: B):{function(a: A):C}};
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testFunctionTypeES4() {
-		val script = '''
+		val script = parseHelper.parse('''
 			«TYPE_DEFS_PREFIX»
 
 			var f: {function()},
 				map: {function(b: B):A},
 				weird: {function(b: B):{function(a: A):C}};
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
@@ -149,37 +149,37 @@ class N4_04_02_TypeExpressionsTest extends AbstractParserTest {
 
 	@Test
 	def void testUnionType() {
-		val script = '''
+		val script = parseHelper.parse('''
 			«TYPE_DEFS_PREFIX»
 
 			var u: union{A,B,C};
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testIntersectionType() {
-		val script = '''
+		val script = parseHelper.parse('''
 			«TYPE_DEFS_PREFIX»
 
 			var i: intersection{A,D};
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testVoid() {
-		val script = '''
+		val script = parseHelper.parse('''
 			«TYPE_DEFS_PREFIX»
 
 			function foo(): void{};
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testTypeArguments() {
-		val script = '''
+		val script = parseHelper.parse('''
 			«TYPE_DEFS_PREFIX»
 
 			var gTypeRef: G<A>;
@@ -189,18 +189,18 @@ class N4_04_02_TypeExpressionsTest extends AbstractParserTest {
 			var gLowerB: G<? super B>;
 
 
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testTypeParameters() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class A{}
 			class G<T> {}
 			class GUpperA<T extends A> {}
 			class GUpperA<T extends G<T>> {}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 

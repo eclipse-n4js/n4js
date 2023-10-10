@@ -15,10 +15,10 @@ import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
-/***/
+
 public class JSDocCharScannerTest {
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testEmpty() {
 
@@ -29,7 +29,7 @@ public class JSDocCharScannerTest {
 		assertFalse(new JSDocCharScanner("/** \n * */").hasNext());
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testContent() {
 		doTestContent("Test", new JSDocCharScanner("Test"));
@@ -37,21 +37,21 @@ public class JSDocCharScannerTest {
 		doTestContent("Test\nEin Test", new JSDocCharScanner("/**\n * Test\n * Ein Test\n */"));
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testInitialOffset() {
 		doTestContent("\nEin Test", new JSDocCharScanner("/**\n * Test\n * Ein Test\n */", 11));
 		doTestContent("Ein Test", new JSDocCharScanner("/**\n * Test\n * Ein Test\n */", 15));
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testMaxOffset() {
 		doTestContent("Test", new JSDocCharScanner("/**\n * Test\n * Ein Test\n */", 0, 11));
 		doTestContent("Ein", new JSDocCharScanner("/**\n * Test\n * Ein Test\n */", 15, 19));
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testWhitespaces() {
 		doTestContent(" Test", new JSDocCharScanner(" Test"), "preserve leading ws");

@@ -48,7 +48,7 @@ public class ResourceNameComputerTest {
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
 
-	@SuppressWarnings("javadoc")
+	
 	@Before
 	public void prepare() throws Exception {
 		XtextResourceSet rs = resourceSetProvider.get();

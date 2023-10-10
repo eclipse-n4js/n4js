@@ -36,7 +36,7 @@ import com.google.inject.Provider;
  * Ensures that EMF resource sets are created and configured correctly when using various ways of obtaining them via
  * dependency injection.
  */
-@SuppressWarnings("javadoc")
+
 public class DependencyInjectionResourceSetTest extends AbstractIdeTest {
 
 	@Inject

@@ -17,28 +17,28 @@ import org.junit.Test;
  */
 public class CamelCaseCompletionTest extends AbstractCompletionTest {
 
-	/***/
+	
 	@Test
 	public void testCamelCasePrefix_01() {
 		testAtCursor("EvE<|>", "(EvalError, Class, EvalError, , , 00000, , , , ([0:0 - 0:3], EvalError), [], [], , )\n"
 				+ "(EvalErrorConstructor, Text, EvalErrorConstructor, , , 00001, , , , ([0:0 - 0:3], EvalErrorConstructor), [], [], , )");
 	}
 
-	/***/
+	
 	@Test
 	public void testCamelCasePrefix_02() {
 		testAtCursor("eURIC<|>",
 				"(encodeURIComponent, Method, encodeURIComponent, , , 00000, , , , ([0:0 - 0:5], encodeURIComponent), [], [], , )");
 	}
 
-	/***/
+	
 	@Test
 	public void testCamelCasePrefix_03() {
 		testAtCursor("eUC<|>",
 				"(encodeURIComponent, Method, encodeURIComponent, , , 00000, , , , ([0:0 - 0:3], encodeURIComponent), [], [], , )");
 	}
 
-	/***/
+	
 	@Test
 	public void testCamelCasePrefix_04() {
 		testAtCursor("eC<|>",

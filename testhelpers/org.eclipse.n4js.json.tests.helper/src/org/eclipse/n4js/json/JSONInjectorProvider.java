@@ -22,11 +22,11 @@ import com.google.inject.Injector;
  */
 public class JSONInjectorProvider implements IInjectorProvider, IRegistryConfigurator {
 
-	/***/
+	
 	protected GlobalStateMemento stateBeforeInjectorCreation;
-	/***/
+	
 	protected GlobalStateMemento stateAfterInjectorCreation;
-	/***/
+	
 	protected Injector injector;
 
 	static {
@@ -43,7 +43,7 @@ public class JSONInjectorProvider implements IInjectorProvider, IRegistryConfigu
 		return injector;
 	}
 
-	/***/
+	
 	protected Injector internalCreateInjector() {
 		return new JSONStandaloneSetup().createInjectorAndDoEMFRegistration();
 	}

@@ -22,9 +22,9 @@ import org.eclipse.n4js.n4JS.Script;
  */
 public abstract class BaseAnalyser {
 
-	/***/
+	
 	protected final Logger logger;
-	/***/
+	
 	protected final boolean logCode;
 
 	/**
@@ -42,7 +42,7 @@ public abstract class BaseAnalyser {
 		this.logCode = logCode;
 	}
 
-	/***/
+	
 	// TODO after java update bring back null analysis
 	// protected StringBuilder agregateDiagnosticsToStringBuilder(@Nonnull final List<Diagnostic> issues) {
 	protected StringBuilder aggregateDiagnosticsToStringBuilder(String codeName, final List<Diagnostic> issues) {
@@ -56,7 +56,7 @@ public abstract class BaseAnalyser {
 		return result;
 	}
 
-	/***/
+	
 	// TODO after java update bring back null analysis
 	// protected List<Diagnostic> getScriptErrors(final @Nonnull Script script) {
 	protected List<Diagnostic> getScriptErrors(final Script script) {

@@ -18,21 +18,21 @@ import org.junit.Test;
  */
 public class WorkspaceSymbolTest extends AbstractWorkspaceSymbolTest {
 
-	/***/
+	
 	@Test
 	public void openWorkspaceSymbolsClassTest() throws Exception {
 		test("class C { }",
 				"(C, Class, (test-project/src/MyModule.n4js, [0:6 - 0:7]))");
 	}
 
-	/***/
+	
 	@Test
 	public void openWorkspaceSymbolsInterfaceTest() throws Exception {
 		test("interface I { }",
 				"(I, Interface, (test-project/src/MyModule.n4js, [0:10 - 0:11]))");
 	}
 
-	/***/
+	
 	@Test
 	public void openWorkspaceSymbolsNamespaceTest() throws Exception {
 		test("namespace N { class C {} interface I {}}",
@@ -41,14 +41,14 @@ public class WorkspaceSymbolTest extends AbstractWorkspaceSymbolTest {
 						"(I, Interface, (test-project/src/MyModule.n4js, [0:35 - 0:36]))");
 	}
 
-	/***/
+	
 	@Test
 	public void openWorkspaceSymbolsEnumTest() throws Exception {
 		test("enum E {green, red}",
 				"(E, Enum, (test-project/src/MyModule.n4js, [0:5 - 0:6]))");
 	}
 
-	/***/
+	
 	@Test
 	public void openWorkspaceSymbolsTypeAliasTest() throws Exception {
 		test("class A {}; type T = A;",

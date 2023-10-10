@@ -46,7 +46,7 @@ public class SimpleN4JSDocTest {
 		assertEquals(jsdocString, out);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testTaskWithOutContent() {
 		String in = "/**"
@@ -56,7 +56,7 @@ public class SimpleN4JSDocTest {
 		assertSameSerializationForm(in);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testTaskWithFollowingLine() {
 		String in = "/**"
@@ -68,7 +68,7 @@ public class SimpleN4JSDocTest {
 		assertSameSerializationForm(in);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testAPIRelatedTags() {
 		String in = "/**"
@@ -82,7 +82,7 @@ public class SimpleN4JSDocTest {
 		assertSameSerializationForm(in);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testTestRelatedTags() {
 		String in = "/**"
@@ -95,7 +95,7 @@ public class SimpleN4JSDocTest {
 		assertSameSerializationForm(in);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testSpecAndNoNewline() {
 		String in = "/**"
@@ -107,7 +107,7 @@ public class SimpleN4JSDocTest {
 		assertSameSerializationForm(in);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testSpecAndNewline() {
 		String in = "/**"
@@ -119,7 +119,7 @@ public class SimpleN4JSDocTest {
 		assertSameNumberOfLineTags(2, in);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testDescriptionWithInlineAndSeveralTags() {
 		String in = "/**"
@@ -140,7 +140,7 @@ public class SimpleN4JSDocTest {
 		assertSameSerializationForm(in);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testWhitespaces_IDEBUG_571_a() {
 		String in = "/**\n" +
@@ -157,7 +157,7 @@ public class SimpleN4JSDocTest {
 		assertSameNumberOfLineTags(1, doclet);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testWhitespaces_IDEBUG_571_b() {
 		String in = "/**\n" +

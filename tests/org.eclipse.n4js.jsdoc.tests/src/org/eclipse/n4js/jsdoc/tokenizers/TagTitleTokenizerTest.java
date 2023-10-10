@@ -18,10 +18,10 @@ import org.junit.Test;
 import org.eclipse.n4js.jsdoc.JSDocCharScanner;
 import org.eclipse.n4js.jsdoc.JSDocToken;
 
-/***/
+
 public class TagTitleTokenizerTest {
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void test() {
 		TagTitleTokenizer tokenizer = new TagTitleTokenizer();

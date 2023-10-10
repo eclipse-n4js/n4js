@@ -39,7 +39,7 @@ import com.google.inject.Inject;
 /**
  * Ported from Xtext's RequestManager tests.
  */
-@SuppressWarnings("javadoc")
+
 public class QueuedExecutorServiceTest {
 
 	@Inject

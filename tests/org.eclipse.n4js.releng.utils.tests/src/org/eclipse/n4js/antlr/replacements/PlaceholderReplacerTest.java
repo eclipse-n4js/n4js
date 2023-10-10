@@ -26,7 +26,7 @@ import com.google.common.io.Resources;
 /**
  * Test for regular expression handling in replacements for generated code.
  */
-@SuppressWarnings("javadoc")
+
 public class PlaceholderReplacerTest {
 
 	@Test

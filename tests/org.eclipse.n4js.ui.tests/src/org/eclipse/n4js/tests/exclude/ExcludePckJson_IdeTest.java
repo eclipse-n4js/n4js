@@ -37,7 +37,7 @@ public class ExcludePckJson_IdeTest extends ConvertedIdeTest {
 
 	private static final String PROJECT_NAME = "ExcludePckJson";
 
-	/***/
+	
 	@Before
 	public void prepareWorkspace() {
 		importProband(new File("probands", PROJECT_NAME));

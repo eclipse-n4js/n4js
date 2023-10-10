@@ -20,7 +20,7 @@ import org.junit.Test;
 /**
  * Tests for the error messages of unresolved imports. See also Xpect test file 'ImportsUnresolved.n4js.xt'.
  */
-@SuppressWarnings("javadoc")
+
 public class ImportsUnresolvedTest extends AbstractIdeTest {
 
 	@Test

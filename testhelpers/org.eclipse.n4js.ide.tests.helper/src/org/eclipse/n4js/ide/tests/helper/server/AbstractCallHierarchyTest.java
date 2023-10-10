@@ -34,7 +34,7 @@ import org.eclipse.n4js.utils.Strings;
  */
 abstract public class AbstractCallHierarchyTest extends AbstractStructuredIdeTest<CallHierarchyConfig> {
 
-	/***/
+	
 	public static class CallHierarchyConfig {
 		final String expectation;
 		final Position position;

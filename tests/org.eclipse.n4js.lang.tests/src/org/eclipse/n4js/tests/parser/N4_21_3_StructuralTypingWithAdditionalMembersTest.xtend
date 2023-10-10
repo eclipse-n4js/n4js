@@ -27,14 +27,14 @@ class N4_21_3_StructuralTypingWithAdditionalMembersTest extends AbstractStructur
 
 	@Test
 	def void testUseSiteWithAdditionalMember() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class C {}
 			class D {
 				x: ~C with { s: string; };
 				f(p: ~C with { s: string; }): void {}
 			}
 			function f(p: ~C with { s: string; }) {}
-		'''.parse
+		''');
 
 		assertNotNull(script);
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
@@ -52,14 +52,14 @@ class N4_21_3_StructuralTypingWithAdditionalMembersTest extends AbstractStructur
 
 	@Test
 	def void testUseSiteWithAdditionalMemberWOTypes() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class C {}
 			class D {
 				x: ~C with { s; };
 				f(p: ~C with { s; }): void {}
 			}
 			function f(p: ~C with { s; }) {}
-		'''.parse
+		''');
 
 		assertNotNull(script);
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
@@ -94,7 +94,7 @@ class N4_21_3_StructuralTypingWithAdditionalMembersTest extends AbstractStructur
 
 	@Test
 	def void testUseSiteWithDifferentAdditionalMemberSetUpCheck() {
-		val script = additionalMemberScriptSrc.parse
+		val script = parseHelper.parse(additionalMemberScriptSrc);
 		assertNotNull(script);
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		EcoreUtil.resolveAll(script)
@@ -105,7 +105,7 @@ class N4_21_3_StructuralTypingWithAdditionalMembersTest extends AbstractStructur
 	}
 
 	def TMember setupAdditionalMember(int index) {
-		val script = additionalMemberScriptSrc.parse
+		val script = parseHelper.parse(additionalMemberScriptSrc);
 		assertNotNull(script);
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		EcoreUtil.resolveAll(script)

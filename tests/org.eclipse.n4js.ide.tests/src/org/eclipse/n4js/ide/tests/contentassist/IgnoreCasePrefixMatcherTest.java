@@ -15,7 +15,7 @@ import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
 import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher.IgnoreCase;
 import org.junit.Test;
 
-@SuppressWarnings("javadoc")
+
 public class IgnoreCasePrefixMatcherTest extends AbstractPrefixMatcherTest<IPrefixMatcher.IgnoreCase> {
 
 	@Override

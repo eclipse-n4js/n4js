@@ -28,11 +28,11 @@ class ClassDeclarationsTypeBuilderTest extends AbstractParserTest {
 
 	@Test
 	def void testClassDeclarations3() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public class C {
 				p: C;
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 
@@ -50,19 +50,19 @@ class ClassDeclarationsTypeBuilderTest extends AbstractParserTest {
 
 	@Test
 	def void testClassDeclarationsWithSructuralTyping() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public interface ~C {}
 			public class D {}
-		'''.parse
+		''');
 		doTestClassDeclarationsWithSructuralTyping(script);
 	}
 
 	@Test
 	def void testClassDeclarationsWithSructuralTypingAnnotated() {
-		val script = '''
+		val script = parseHelper.parse('''
 			@Deprectated public interface ~C {}
 			@Deprectated public class D {}
-		'''.parse
+		''');
 		doTestClassDeclarationsWithSructuralTyping(script);
 	}
 

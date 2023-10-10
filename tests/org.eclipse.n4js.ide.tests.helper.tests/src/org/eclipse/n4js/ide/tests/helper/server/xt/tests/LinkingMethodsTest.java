@@ -24,7 +24,7 @@ import org.junit.Test;
  */
 public class LinkingMethodsTest extends AbstractXtParentRunnerTest {
 
-	/***/
+	
 	@Test
 	public void test() throws Exception {
 		run("probands/LinkingMethods");

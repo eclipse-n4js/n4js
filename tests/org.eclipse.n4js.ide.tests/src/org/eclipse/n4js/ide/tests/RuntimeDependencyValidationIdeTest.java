@@ -23,7 +23,7 @@ import com.google.common.collect.Iterables;
 /**
  * IDE test for validations related to runtime dependency analysis.
  */
-@SuppressWarnings("javadoc")
+
 public class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 
 	// runtime dependency cycle: C -> B -> A -> Y -> X -> C

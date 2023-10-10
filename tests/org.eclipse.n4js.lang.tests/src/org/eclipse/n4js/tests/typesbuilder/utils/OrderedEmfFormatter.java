@@ -37,7 +37,7 @@ public class OrderedEmfFormatter {
 	private static final char SPACE = ' ';
 	private static final String INDENT = "    ";
 
-	/***/
+	
 	public static String objToStr(Object obj) {
 		Appendable buf = new StringBuilder(1024);
 		try {
@@ -195,7 +195,7 @@ public class OrderedEmfFormatter {
 			buf.append(r.getURI().toString()).append("#").append(r.getURIFragment(target));
 	}
 
-	/***/
+	
 	public static String listToStr(List<? extends EObject> elements) {
 		StringBuffer buff = new StringBuffer();
 		for (int i = 0; i < elements.size(); i++) {
@@ -207,7 +207,7 @@ public class OrderedEmfFormatter {
 		return buff.toString();
 	}
 
-	/***/
+	
 	public static String objPath(EObject obj) {
 		if (obj == null)
 			return "null";

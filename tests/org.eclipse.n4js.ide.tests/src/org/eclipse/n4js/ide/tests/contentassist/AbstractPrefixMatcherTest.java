@@ -20,7 +20,7 @@ import org.junit.Test;
 /**
  * Abstract base class for prefix matcher tests.
  */
-@SuppressWarnings("javadoc")
+
 public abstract class AbstractPrefixMatcherTest<Matcher extends IPrefixMatcher> {
 
 	protected Matcher matcher;

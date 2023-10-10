@@ -28,7 +28,7 @@ import org.eclipse.n4js.jsdoc.dom.LineTag;
  */
 public class LineTagWithFullMemberReferenceTest {
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void test_fullRef_simpleName() {
 		String in = "/** foo."
@@ -50,7 +50,7 @@ public class LineTagWithFullMemberReferenceTest {
 		assertEquals("each", ref.getMemberName());
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void test_fullRef_symbolName() {
 		String in = "/** foo."

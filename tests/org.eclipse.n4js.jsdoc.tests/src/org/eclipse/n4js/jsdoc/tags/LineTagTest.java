@@ -29,7 +29,7 @@ import org.junit.Test;
  */
 public class LineTagTest {
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testSimpleLineTag() {
 		String in = "/** foo.\n * @stubLineTagTitle\n */";
@@ -42,7 +42,7 @@ public class LineTagTest {
 		assertEquals("stubLineTagTitle", lineTag.getTitle().getTitle());
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testLineTagWithRegion() {
 		String in = "/** foo.\n * @stubLineTagTitle {@region value}\n */";
@@ -57,7 +57,7 @@ public class LineTagTest {
 		assertEquals("@region value", strcturedText.getText());
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testLineTagDescrWithTrimmedSpace() {
 		String in = "/** foo."
@@ -75,7 +75,7 @@ public class LineTagTest {
 		assertEquals("tag description.", deString);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testLineTagDescrWithOutSpace() {
 		String in = "/** foo."
@@ -93,7 +93,7 @@ public class LineTagTest {
 		assertEquals("tag description.", deString);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testLineTagWithRegionAndDescr() {
 		String in = "/** foo.\n * @stubLineTagTitle {@region value} tag description.\n */";

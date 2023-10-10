@@ -32,7 +32,7 @@ import org.junit.Test;
  */
 public class ImplementationTest extends AbstractImplementationTest {
 
-	/***/
+	
 	@Test
 	public void testDefinition_01() throws Exception {
 		testAtCursor(
@@ -40,7 +40,7 @@ public class ImplementationTest extends AbstractImplementationTest {
 				"(test-project/src-gen/MyModule.js, [4:4 - 4:4])");
 	}
 
-	/***/
+	
 	@Test
 	public void testDefinition_02() throws Exception {
 		testAtCursor(
@@ -48,7 +48,7 @@ public class ImplementationTest extends AbstractImplementationTest {
 				"(test-project/src-gen/MyModule.js, [5:0 - 5:0])");
 	}
 
-	/***/
+	
 	@Test
 	public void testDefinition_03() throws Exception {
 		testAtCursor(
@@ -56,7 +56,7 @@ public class ImplementationTest extends AbstractImplementationTest {
 				"(test-project/src-gen/MyModule.js, [5:0 - 5:0])");
 	}
 
-	/***/
+	
 	@Test
 	public void testDefinition_04() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(Collections.emptyMap());

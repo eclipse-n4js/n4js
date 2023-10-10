@@ -42,7 +42,7 @@ import com.google.inject.Inject;
  */
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSInjectorProvider.class)
-@SuppressWarnings("javadoc")
+
 public class AutomaticCancelationTest {
 
 	@Inject

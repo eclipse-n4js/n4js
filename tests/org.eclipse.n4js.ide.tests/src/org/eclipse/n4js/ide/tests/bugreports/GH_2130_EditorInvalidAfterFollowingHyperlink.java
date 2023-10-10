@@ -36,7 +36,7 @@ import com.google.inject.Inject;
  *
  * @see ResourceTaskManagerIdeTest#testCreateDisposeRecreate()
  */
-@SuppressWarnings("javadoc")
+
 public class GH_2130_EditorInvalidAfterFollowingHyperlink extends AbstractIdeTest {
 
 	@Inject

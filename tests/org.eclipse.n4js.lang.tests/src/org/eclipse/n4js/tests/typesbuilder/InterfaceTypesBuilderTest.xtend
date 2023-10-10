@@ -32,12 +32,12 @@ class InterfaceTypesBuilderTest extends AbstractParserTest {
 
 	@Test
 	def testFieldsInInterfaces() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public interface I {
 				f: string;
 			}
 			class C {}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 
@@ -56,13 +56,13 @@ class InterfaceTypesBuilderTest extends AbstractParserTest {
 
 	@Test
 	def testMembersImplicitAbstract() {
-		val script = '''
+		val script = parseHelper.parse('''
 			export public interface I {
 				m(): string;
 				get g(): string;
 				set s(p: string);
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 
@@ -114,19 +114,19 @@ class InterfaceTypesBuilderTest extends AbstractParserTest {
 
 	@Test
 	def void testInterfaceDeclarationsWithSructuralTyping() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public interface ~I {}
 			public interface J {}
-		'''.parse
+		''');
 		doTestInterfaceDeclarationsWithSructuralTyping(script);
 	}
 
 	@Test
 	def void testInterfaceDeclarationsWithSructuralTypingAnnotated() {
-		val script = '''
+		val script = parseHelper.parse('''
 			@Deprectated interface ~I {}
 			@Deprectated interface J {}
-		'''.parse
+		''');
 		doTestInterfaceDeclarationsWithSructuralTyping(script);
 	}
 

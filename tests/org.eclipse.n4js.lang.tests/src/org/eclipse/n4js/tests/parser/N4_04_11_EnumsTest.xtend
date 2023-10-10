@@ -20,9 +20,9 @@ class N4_04_11_EnumsTest extends AbstractParserTest{
 
 	@Test
 	def void testEmptyDeclarations() {
-		val script = '''
+		val script = parseHelper.parse('''
 			enum E{  } // cannot be empty
-		'''.parse
+		''');
 
 		assertFalse(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertEquals(1, script.scriptElements.size);
@@ -31,9 +31,9 @@ class N4_04_11_EnumsTest extends AbstractParserTest{
 
 	@Test
 	def void testCorrectDeclarations() {
-		val script = '''
+		val script = parseHelper.parse('''
 			enum E{ LITERAL } // cannot be empty
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertEquals(1, script.scriptElements.size);
@@ -43,13 +43,13 @@ class N4_04_11_EnumsTest extends AbstractParserTest{
 
 	@Test
 	def void testEnumExample() {
-		val script = '''
+		val script = parseHelper.parse('''
 			enum Color {
 				RED, GREEN, BLUE
 			}
 
 			var c: Color = Color.RED;
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertTrue(script.scriptElements.get(0) instanceof N4EnumDeclaration)

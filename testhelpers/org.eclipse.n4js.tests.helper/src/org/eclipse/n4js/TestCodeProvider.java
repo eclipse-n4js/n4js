@@ -114,7 +114,7 @@ public class TestCodeProvider {
 		return mergeEntries;
 	}
 
-	/***/
+	
 	public static String getContentsFromFileEntry(final ZipEntry entry, String rootName) throws IOException,
 			URISyntaxException {
 		URL rootURL = Thread.currentThread().getContextClassLoader().getResource(rootName);

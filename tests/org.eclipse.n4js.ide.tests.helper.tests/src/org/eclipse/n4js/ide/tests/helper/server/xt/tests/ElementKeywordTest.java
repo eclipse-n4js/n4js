@@ -19,7 +19,7 @@ import org.junit.Test;
  */
 public class ElementKeywordTest extends AbstractXtParentRunnerTest {
 
-	/***/
+	
 	@Test
 	public void test() throws Exception {
 		run("probands/ElementKeyword");

@@ -36,25 +36,25 @@ class ErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testNoStackoverflow_01() {
-		val script = '''
+		val script = parseHelper.parse('''
 			var a = a || {};
 			a.b
-		'''.parse(URI.createURI('sample.n4js'), resourceSetProvider.get)
+		''', URI.createURI('sample.n4js'), resourceSetProvider.get);
 		analyser.analyse(script, "script", "script")
 	}
 
 	@Test
 	def void testNoStackoverflow_02() {
-		val script = '''
+		val script = parseHelper.parse('''
 			var u =
 			u.either
-		'''.parse(URI.createURI('sample.n4js'), resourceSetProvider.get)
+		''', URI.createURI('sample.n4js'), resourceSetProvider.get);
 		analyser.analyse(script, "script", "script")
 	}
 
 	@Test
 	def void testNoNPE_01() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class C<T> {
 			    boolean b = null
 			    x() {
@@ -63,13 +63,13 @@ class ErrorTest extends AbstractParserTest {
 			    y(number? n) {
 			    }
 			}
-		'''.parse
+		''');
 		analyser.analyse(script, "script", "script")
 	}
 
 	@Test
 	def void testNoNPE_02() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class C<T> {
 			    m(? p) {
 			    }
@@ -77,23 +77,23 @@ class ErrorTest extends AbstractParserTest {
 			        this.m();
 			    }
 			}
-		'''.parse
+		''');
 		analyser.analyse(script, "script", "script")
 	}
 
 	@Test
 	def void testNoNPE_03() {
-		val script = '''
+		val script = parseHelper.parse('''
 			var target = {
 				s: "hello",
 				set x
-		'''.parse
+		''');
 		analyser.analyse(script, "script", "script")
 	}
 
 	@Test
 	def void testNoNPE_04() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class C {}
 			function f( ~C with {
 				s: string;
@@ -104,13 +104,13 @@ class ErrorTest extends AbstractParserTest {
 				C get y()
 				get z()
 				set a(
-		'''.parse
+		''');
 		analyser.analyse(script, "script", "script")
 	}
 
 	@Test
 	def void testNoNPE_05() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class C {}
 			function f( ~C with {
 				s: string;
@@ -122,66 +122,66 @@ class ErrorTest extends AbstractParserTest {
 				get z()
 				set a()
 			} p) {}
-		'''.parse
+		''');
 		analyser.analyse(script, "script", "script")
 	}
 	
 	@Test
 	def void testNoNPE_06() {
-		val script = '''mport * as 1 from 'a/X';
-			var N1.x: X;'''.parse
+		val script = parseHelper.parse('''mport * as 1 from 'a/X';
+			var N1.x: X;''');
 		analyser.analyse(script, "script", "script");
 	}
 
 	@Test
 	def void testNoCyclicResolution_01() {
-		val script = '''
+		val script = parseHelper.parse('''
 			function(a){
 				return a.b
 			}
-		'''.parse
+		''');
 		analyser.analyse(script, "script", "script")
 	}
 
 	@Test
 	def void testNoIllegalArgumentException_01() {
-		val script = '''
+		val script = parseHelper.parse('''
 			interface R1 {
 				void f(p: number) {}
 			}
 			interface R2 {
 				void f(p: string) {
 			class C implements R1, R2 {}
-		'''.parse
+		''');
 		analyser.analyse(script, "script", "script")
 	}
 
 	@Test
 	def void testNoIllegalArgumentException_02() {
-		val script = '''
+		val script = parseHelper.parse('''
 			interface R1 {
 				x: string;
 			}
 			class S {
 				void x() {
 			class C1 extends S implements R1 {}
-		'''.parse
+		''');
 		analyser.analyse(script, "script", "script")
 	}
 
 	@Test
 	def void testNoIllegalStateException_01() {
-		val script = '''
+		val script = parseHelper.parse('''
 			var fo = 5,/*
 						*/
 						class A { a = new A(); }
-		'''.parse
+		''');
 		analyser.analyse(script, "script", "script")
 	}
 
 	@Test
 	def void testNoIllegalStateException_02() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public class C {
 				f0;
 				private f1;
@@ -191,38 +191,38 @@ class ErrorTest extends AbstractParserTest {
 				@Internal public f6;
 				public f7;
 			}
-		'''.parse
+		''');
 		analyser.analyse(script, "script", "script")
 	}
 
 	@Test
 	def void testNoIllegalArgumentException_03() {
-		val script = '''
+		val script = parseHelper.parse('''
 			import * as N2 from 'a/X';
 			import * as 1 from 'a/X';
 			var N1.X x;
-		'''.parse
+		''');
 		analyser.analyse(script, "script", "script")
 	}
 
 	@Test
 	def void testNoIllegalArgumentException_04() {
-		val script = '''
+		val script = parseHelper.parse('''
 			import X1 from 'a/X';
 			import X2 from 'a/X';
 			var X1 x = X2;
-		'''.parse
+		''');
 		analyser.analyse(script, "script", "script")
 	}
 
 	@Test
 	def void testNoIllegalStateException_03() {
-		val script = '''
+		val script = parseHelper.parse('''
 			var ol = {
 				et target() {return null}
 			}
 			ol.target=null;
-		'''.parse
+		''');
 		analyser.analyse(script, "script", "script")
 	}
 

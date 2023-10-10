@@ -18,7 +18,7 @@ import org.junit.Test;
 /**
  * Code completion tests for camel case scenarios
  */
-@SuppressWarnings("javadoc")
+
 public class NamespaceCompletionTest extends AbstractCompletionTest {
 
 	/** Some default modules that export a number of classes for all tests. */
@@ -40,12 +40,11 @@ public class NamespaceCompletionTest extends AbstractCompletionTest {
 	public void test01() {
 		testAtCursorPartially("""
 				let x : N<|>
-				""", """
-				(NC, Class, Exporter, , , 00019, , , , ([0:8 - 0:9], NC), [([0:0 - 0:0], import {NC} from "Exporter";
-				)], [], , )
-				(NS, Color, Exporter, , , 00020, , , , ([0:8 - 0:9], NS), [([0:0 - 0:0], import {NS} from "Exporter";
-				)], [], , )
-				""");
+				""",
+				"""
+						(NC, Class, Exporter, , , 00019, , , , ([0:8 - 0:9], NC), [([0:0 - 0:0], import {NC} from "Exporter";)], [], , )
+						(NS, Color, Exporter, , , 00020, , , , ([0:8 - 0:9], NS), [([0:0 - 0:0], import {NS} from "Exporter";)], [], , )
+						""");
 	}
 
 }

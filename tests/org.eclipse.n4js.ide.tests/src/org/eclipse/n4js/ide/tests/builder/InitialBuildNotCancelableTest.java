@@ -46,7 +46,7 @@ import com.google.inject.Module;
  * build.
  * </ol>
  */
-@SuppressWarnings("javadoc")
+
 public class InitialBuildNotCancelableTest extends AbstractIdeTest {
 
 	private static final CountDownLatch didBuildModuleOther = new CountDownLatch(1);

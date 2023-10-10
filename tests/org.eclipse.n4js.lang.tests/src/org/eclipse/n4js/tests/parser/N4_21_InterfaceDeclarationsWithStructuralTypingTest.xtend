@@ -26,19 +26,19 @@ class N4_21_InterfaceDeclarationsWithStructuralTypingTest extends AbstractParser
 
 	@Test
 	def void testDefinitionSiteStructuralTypeWithInterfaces() {
-		val script = '''
+		val script = parseHelper.parse('''
 			interface I {}
 			interface ~J {}
-		'''.parse
+		''');
 		doTestDefinitionSiteStructuralTypeWithInterfaces(script)
 	}
 
 	@Test
 	def void testDefinitionSiteStructuralTypeWithInterfacesAnnotated() {
-		val script = '''
+		val script = parseHelper.parse('''
 			@Deprecated interface I {}
 			@Deprecated	interface ~J {}
-		'''.parse
+		''');
 		doTestDefinitionSiteStructuralTypeWithInterfaces(script)
 	}
 
@@ -60,19 +60,19 @@ class N4_21_InterfaceDeclarationsWithStructuralTypingTest extends AbstractParser
 
 	@Test
 	def void testDefinitionSiteStructuralTypeWithInterfacesExport() {
-		val script = '''
+		val script = parseHelper.parse('''
 			export interface I {}
 			export interface ~J {}
-		'''.parse
+		''');
 		doTestDefinitionSiteStructuralTypeWithInterfacesExport(script);
 	}
 
 	@Test
 	def void testDefinitionSiteStructuralTypeWithInterfacesAnnotatedExport() {
-		val script = '''
+		val script = parseHelper.parse('''
 			export @Deprecated interface I {}
 			export @Deprecated interface ~J {}
-		'''.parse
+		''');
 		doTestDefinitionSiteStructuralTypeWithInterfacesExport(script);
 	}
 
@@ -95,23 +95,23 @@ class N4_21_InterfaceDeclarationsWithStructuralTypingTest extends AbstractParser
 
 	@Test
 	def void testDefinitionSiteStructuralTypeWithInterfaces_NoStructuralField() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public interface ~~I {}
-		'''.parse;
+		''');
 		assertNotNull(script);
 		assertFalse("At definition site, structural field typing must not be possible", script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testUseSiteStructuralTypeWithInterfaces() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public interface I {}
 			public class C {
 				public fNominal(p: I): void
 				public fStructual(p: ~I): void
 				public fStucturalField(p: ~~I): void
 			}
-		'''.parse;
+		''');
 		assertNotNull(script);
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 

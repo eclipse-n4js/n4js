@@ -31,7 +31,7 @@ import org.junit.Test;
  */
 public class DtsParserJarTest extends AbstractCliJarTest {
 
-	/***/
+	
 	public DtsParserJarTest() {
 		super("probands/dts-parser");
 	}

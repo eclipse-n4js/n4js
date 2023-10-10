@@ -19,16 +19,16 @@ class N4_06_02_01_FunctionDeclarationsWithTypeAnnotations extends AbstractParser
 
 	@Test
 	def void test_IDE_2019_OLD() {
-		val script = '''
+		val script = parseHelper.parse('''
 			function f(i: int, s: string): int { return i + s.length; }
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 	@Test
 	def void test_IDE_2019() {
-		val script = '''
+		val script = parseHelper.parse('''
 			function f(i: int, s: string): int { return i + s.length; }
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 

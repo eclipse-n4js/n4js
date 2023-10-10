@@ -24,14 +24,14 @@ import org.eclipse.n4js.n4JS.Script;
  */
 public class NegativeAnalyser extends BaseAnalyser implements Analyser {
 
-	/***/
+	
 	// TODO after java update bring back null analysis
 	// public NegativeAnalyser(final @Nonnull Logger logger) {
 	public NegativeAnalyser(final Logger logger) {
 		super(logger);
 	}
 
-	/***/
+	
 	public NegativeAnalyser(final Logger logger, final boolean logCode) {
 		super(logger, logCode);
 	}

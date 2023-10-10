@@ -18,7 +18,7 @@ import org.junit.Test;
 /**
  * Tests to ensure that various AST nodes can be renamed.
  */
-@SuppressWarnings("javadoc")
+
 public class RenameReactPropsTest extends AbstractRenameTest {
 	/** this is a poor-mans fake of React to enable the use of react in MyReactModule.n4jsx */
 	static final String reactIndexN4JSX_Name = CFG_NODE_MODULES + "react" + CFG_SRC + "index.n4jsd";

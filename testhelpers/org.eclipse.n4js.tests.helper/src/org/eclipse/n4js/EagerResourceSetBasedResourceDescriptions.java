@@ -45,7 +45,7 @@ public class EagerResourceSetBasedResourceDescriptions extends ResourceSetBasedR
 
 	@Inject
 	private IResourceServiceProvider.Registry registry;
-	/***/
+	
 	public ResourceSet resourceSet;
 
 	private Descriptions getDescriptions(ResourceSet rs) {

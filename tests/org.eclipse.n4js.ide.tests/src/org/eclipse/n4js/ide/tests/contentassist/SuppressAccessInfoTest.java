@@ -16,7 +16,7 @@ import org.junit.Test;
  * Test for content assist on a receiver structurally typed as ~r~ but used at write location in the AST (i.e. left hand
  * side).
  */
-@SuppressWarnings("javadoc")
+
 public class SuppressAccessInfoTest extends AbstractCompletionTest {
 
 	@Test

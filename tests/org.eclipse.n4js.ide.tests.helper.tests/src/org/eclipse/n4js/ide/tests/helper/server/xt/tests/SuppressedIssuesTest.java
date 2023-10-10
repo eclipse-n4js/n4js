@@ -20,7 +20,7 @@ import org.junit.Test;
  */
 public class SuppressedIssuesTest extends AbstractXtParentRunnerTest {
 
-	/***/
+	
 	@Test
 	public void test() throws Exception {
 		run("probands/SuppressedIssues", N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS);

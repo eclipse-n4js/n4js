@@ -19,7 +19,7 @@ import org.junit.Test;
  * Code completion tests to ensure the correct behavior in the presence and absence of automatically inserted semicolons
  * (ASI).
  */
-@SuppressWarnings("javadoc")
+
 public class CompletionWithASITest extends AbstractCompletionTest {
 
 	/** Some default modules that export a number of classes for all tests. */
@@ -39,15 +39,13 @@ public class CompletionWithASITest extends AbstractCompletionTest {
 		testAtCursor("""
 				import {A02} from "ImportMe";
 				A0<|>
-				""", """
-				(A01, Class, ImportMe, , , 00000, , , , ([1:0 - 1:2], A01), [([0:29 - 0:29],\s
-				import {A01} from "ImportMe";)], [], , )
-				(A02, Class, ImportMe, , , 00001, , , , ([1:0 - 1:2], A02), [], [], , )
-				(A03, Class, ImportMe, , , 00002, , , , ([1:0 - 1:2], A03), [([0:29 - 0:29],\s
-				import {A03} from "ImportMe";)], [], , )
-				(A04, Class, ImportMe, , , 00003, , , , ([1:0 - 1:2], A04), [([0:29 - 0:29],\s
-				import {A04} from "ImportMe";)], [], , )
-				""");
+				""",
+				"""
+						(A01, Class, ImportMe, , , 00000, , , , ([1:0 - 1:2], A01), [([0:29 - 0:29], import {A01} from "ImportMe";)], [], , )
+						(A02, Class, ImportMe, , , 00001, , , , ([1:0 - 1:2], A02), [], [], , )
+						(A03, Class, ImportMe, , , 00002, , , , ([1:0 - 1:2], A03), [([0:29 - 0:29], import {A03} from "ImportMe";)], [], , )
+						(A04, Class, ImportMe, , , 00003, , , , ([1:0 - 1:2], A04), [([0:29 - 0:29], import {A04} from "ImportMe";)], [], , )
+						""");
 	}
 
 	@Test
@@ -55,15 +53,13 @@ public class CompletionWithASITest extends AbstractCompletionTest {
 		testAtCursor("""
 				import {A02} from "ImportMe"
 				A0<|>
-				""", """
-				(A01, Class, ImportMe, , , 00000, , , , ([1:0 - 1:2], A01), [([0:28 - 0:28],\s
-				import {A01} from "ImportMe";)], [], , )
-				(A02, Class, ImportMe, , , 00001, , , , ([1:0 - 1:2], A02), [], [], , )
-				(A03, Class, ImportMe, , , 00002, , , , ([1:0 - 1:2], A03), [([0:28 - 0:28],\s
-				import {A03} from "ImportMe";)], [], , )
-				(A04, Class, ImportMe, , , 00003, , , , ([1:0 - 1:2], A04), [([0:28 - 0:28],\s
-				import {A04} from "ImportMe";)], [], , )
-				""");
+				""",
+				"""
+						(A01, Class, ImportMe, , , 00000, , , , ([1:0 - 1:2], A01), [([0:28 - 0:28], import {A01} from "ImportMe";)], [], , )
+						(A02, Class, ImportMe, , , 00001, , , , ([1:0 - 1:2], A02), [], [], , )
+						(A03, Class, ImportMe, , , 00002, , , , ([1:0 - 1:2], A03), [([0:28 - 0:28], import {A03} from "ImportMe";)], [], , )
+						(A04, Class, ImportMe, , , 00003, , , , ([1:0 - 1:2], A04), [([0:28 - 0:28], import {A04} from "ImportMe";)], [], , )
+						""");
 	}
 
 	@Test
@@ -73,10 +69,10 @@ public class CompletionWithASITest extends AbstractCompletionTest {
 
 				A02;
 				A01<|>
-				""", """
-				(A01, Class, ImportMe, , , 00000, , , , ([3:0 - 3:3], A01), [([0:29 - 0:29],\s
-				import {A01} from "ImportMe";)], [], , )
-				""");
+				""",
+				"""
+						(A01, Class, ImportMe, , , 00000, , , , ([3:0 - 3:3], A01), [([0:29 - 0:29], import {A01} from "ImportMe";)], [], , )
+						""");
 	}
 
 	@Test
@@ -86,10 +82,10 @@ public class CompletionWithASITest extends AbstractCompletionTest {
 
 				A02
 				A01<|>
-				""", """
-				(A01, Class, ImportMe, , , 00000, , , , ([3:0 - 3:3], A01), [([0:29 - 0:29],\s
-				import {A01} from "ImportMe";)], [], , )
-				""");
+				""",
+				"""
+						(A01, Class, ImportMe, , , 00000, , , , ([3:0 - 3:3], A01), [([0:29 - 0:29], import {A01} from "ImportMe";)], [], , )
+						""");
 	}
 
 	@Test

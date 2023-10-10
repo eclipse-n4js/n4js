@@ -21,7 +21,7 @@ import org.junit.Test;
 /**
  * GH-1951: Exception in open editors due to stale URIs from other opened editors
  */
-@SuppressWarnings("javadoc")
+
 public class GH_1951_ExceptionInOpenEditorsDueToStaleURIsTest extends AbstractIdeTest {
 
 	@Test

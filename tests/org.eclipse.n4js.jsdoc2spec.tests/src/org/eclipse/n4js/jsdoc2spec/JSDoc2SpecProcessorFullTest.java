@@ -25,7 +25,7 @@ import com.google.inject.Provider;
  * Runs a full test, that is, reading n4js projects and generate new spec. Is based on LaTeX tests which refer to
  * IDEBUGs.
  */
-@SuppressWarnings("javadoc")
+
 abstract public class JSDoc2SpecProcessorFullTest extends AbstractIdeTest {
 
 	abstract protected void fullTest(String projectName)

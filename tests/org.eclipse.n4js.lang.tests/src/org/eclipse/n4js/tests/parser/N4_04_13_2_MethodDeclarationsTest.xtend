@@ -22,7 +22,7 @@ class N4_04_13_2_MethodDeclarationsTest extends AbstractParserTest{
 
 	@Test
 	def void testMethodDeclarations() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public class A {
 
 				f1(): void {}
@@ -56,7 +56,7 @@ class N4_04_13_2_MethodDeclarationsTest extends AbstractParserTest{
 				@Internal
 				public static <T> s1(): T { return null; }
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}

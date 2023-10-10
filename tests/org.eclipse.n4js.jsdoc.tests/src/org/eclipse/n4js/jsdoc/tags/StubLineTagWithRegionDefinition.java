@@ -24,9 +24,9 @@ import org.eclipse.n4js.jsdoc.tokenizers.InlineTagTokenizer;
  * Stub to verify general functionality without concrete tag in the jsdoc parser.
  */
 public class StubLineTagWithRegionDefinition extends AbstractLineTagDefinition {
-	/***/
+	
 	public static final String REGION = "REGION";
-	/***/
+	
 	public static final String DESCR = "DESCR";
 
 	/**
@@ -36,7 +36,7 @@ public class StubLineTagWithRegionDefinition extends AbstractLineTagDefinition {
 		setTitles(title);
 	}
 
-	/***/
+	
 	protected Text convertToText(JSDocToken descr) {
 		Text text = DOM.createText();
 		text.setText(descr.token);

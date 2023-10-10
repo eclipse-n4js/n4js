@@ -17,14 +17,14 @@ import org.eclipse.xtext.testing.IRegistryConfigurator;
 
 import com.google.inject.Injector;
 
-/***/
+
 public class RegularExpressionInjectorProvider implements IInjectorProvider, IRegistryConfigurator {
 
-	/***/
+	
 	protected GlobalStateMemento stateBeforeInjectorCreation;
-	/***/
+	
 	protected GlobalStateMemento stateAfterInjectorCreation;
-	/***/
+	
 	protected Injector injector;
 
 	static {
@@ -42,7 +42,7 @@ public class RegularExpressionInjectorProvider implements IInjectorProvider, IRe
 		return injector;
 	}
 
-	/***/
+	
 	protected Injector internalCreateInjector() {
 		return new RegularExpressionStandaloneSetup().createInjectorAndDoEMFRegistration();
 	}

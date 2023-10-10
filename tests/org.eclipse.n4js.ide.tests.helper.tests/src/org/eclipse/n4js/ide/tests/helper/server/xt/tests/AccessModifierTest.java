@@ -19,7 +19,7 @@ import org.junit.Test;
  */
 public class AccessModifierTest extends AbstractXtParentRunnerTest {
 
-	/***/
+	
 	@Test
 	public void test() throws Exception {
 		run("probands/AccessModifier");

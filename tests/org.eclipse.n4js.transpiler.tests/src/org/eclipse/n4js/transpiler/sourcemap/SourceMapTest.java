@@ -17,7 +17,7 @@ import org.junit.Test;
 /**
  * Tests for SourceMap including the SourceMapParser
  */
-@SuppressWarnings("javadoc")
+
 public class SourceMapTest {
 
 	static final String sampleMap = "{\n"

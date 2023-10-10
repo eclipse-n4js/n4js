@@ -38,9 +38,9 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 
 	@Test
 	def void testOnlyDirectlyExported() {
-		val res = '''
+		val res =testHelper.parseAndValidateSuccessfullyIgnoring( '''
 			export class Cls {}
-		'''.parseAndValidateSuccessfullyIgnoring(UNSUPPORTED).eResource as N4JSResource;
+		''', UNSUPPORTED).eResource as N4JSResource;
 
 		val module = res.module;
 		val cls = module.types.get(0);
@@ -61,10 +61,10 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 
 	@Test
 	def void testOnlyIndirectlyExported() {
-		val res = '''
+		val res = testHelper.parseAndValidateSuccessfullyIgnoring('''
 			public class Cls {}
 			export { Cls };
-		'''.parseAndValidateSuccessfullyIgnoring(UNSUPPORTED).eResource as N4JSResource;
+		''', UNSUPPORTED).eResource as N4JSResource;
 
 		val module = res.module;
 		val cls = module.types.get(0);
@@ -89,10 +89,10 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 
 	@Test
 	def void testBothDirectlyAndIndirectlyExported() {
-		val res = '''
+		val res = testHelper.parseAndValidateSuccessfullyIgnoring('''
 			export class Cls {}
 			export { Cls as Cls1 };
-		'''.parseAndValidateSuccessfullyIgnoring(UNSUPPORTED).eResource as N4JSResource;
+		''', UNSUPPORTED).eResource as N4JSResource;
 
 		val module = res.module;
 		val cls = module.types.get(0);
@@ -121,17 +121,17 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 	def void testReexport1() {
 		val rs = resourceSetProvider.get();
 
-		val scriptOther = '''
+		val scriptOther = testHelper.parseInFile('''
 			export class Cls {}
-		'''.parseInFile("other.n4js", rs);
+		''', "other.n4js", rs);
 
-		val scriptMain = '''
+		val scriptMain = testHelper.parseInFile('''
 			import { Cls } from "other"
 			export { Cls };
-		'''.parseInFile("main.n4js", rs);
+		''', "main.n4js", rs);
 
-		assertNoErrorsExcept(scriptOther, UNSUPPORTED);
-		assertNoErrorsExcept(scriptMain, UNSUPPORTED);
+		validationTestHelper.assertNoErrorsExcept(scriptOther, UNSUPPORTED);
+		validationTestHelper.assertNoErrorsExcept(scriptMain, UNSUPPORTED);
 
 		val moduleOther = scriptOther.module;
 		val moduleMain = scriptMain.module;
@@ -151,16 +151,16 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 	def void testReexport2() {
 		val rs = resourceSetProvider.get();
 
-		val scriptOther = '''
+		val scriptOther = testHelper.parseInFile('''
 			export class Cls {}
-		'''.parseInFile("other.n4js", rs);
+		''', "other.n4js", rs);
 
-		val scriptMain = '''
+		val scriptMain = testHelper.parseInFile('''
 			export { Cls } from "other"
-		'''.parseInFile("main.n4js", rs);
+		''', "main.n4js", rs);
 
-		assertNoErrorsExcept(scriptOther, UNSUPPORTED);
-		assertNoErrorsExcept(scriptMain, UNSUPPORTED);
+		validationTestHelper.assertNoErrorsExcept(scriptOther, UNSUPPORTED);
+		validationTestHelper.assertNoErrorsExcept(scriptMain, UNSUPPORTED);
 
 		val moduleOther = scriptOther.module;
 		val moduleMain = scriptMain.module;
@@ -180,16 +180,16 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 	def void testReexport3() {
 		val rs = resourceSetProvider.get();
 
-		val scriptOther = '''
+		val scriptOther = testHelper.parseInFile('''
 			export class Cls {}
-		'''.parseInFile("other.n4js", rs);
+		''', "other.n4js", rs);
 
-		val scriptMain = '''
+		val scriptMain = testHelper.parseInFile('''
 			export { Cls as ClsAlias } from "other"
-		'''.parseInFile("main.n4js", rs);
+		''', "main.n4js", rs);
 
-		assertNoErrorsExcept(scriptOther, UNSUPPORTED);
-		assertNoErrorsExcept(scriptMain, UNSUPPORTED);
+		validationTestHelper.assertNoErrorsExcept(scriptOther, UNSUPPORTED);
+		validationTestHelper.assertNoErrorsExcept(scriptMain, UNSUPPORTED);
 
 		val moduleOther = scriptOther.module;
 		val moduleMain = scriptMain.module;
@@ -207,9 +207,9 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 
 	@Test
 	def void testOnlyDirectlyExported_variable() {
-		val res = '''
+		val res = testHelper.parseAndValidateSuccessfullyIgnoring('''
 			export var v;
-		'''.parseAndValidateSuccessfullyIgnoring(UNSUPPORTED).eResource as N4JSResource;
+		''', UNSUPPORTED).eResource as N4JSResource;
 
 		val module = res.module;
 
@@ -235,10 +235,10 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 
 	@Test
 	def void testOnlyIndirectlyExported_variable() {
-		val res = '''
+		val res = parserHelper.parseN4js('''
 			public var v;
 			export { v };
-		'''.parseN4js.eResource as N4JSResource;
+		''').eResource as N4JSResource;
 
 		res.installDerivedState(false);
 
@@ -252,7 +252,7 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 		assertEquals(0, module.localVariables.size);
 		assertEquals(1, module.exposedLocalVariables.size);
 
-		assertNoErrorsExcept(res.script, UNSUPPORTED);
+		validationTestHelper.assertNoErrorsExcept(res.script, UNSUPPORTED);
 
 		val v = module.exposedLocalVariables.get(0);
 		val ed = module.exportDefinitions.get(0) as ElementExportDefinition;

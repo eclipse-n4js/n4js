@@ -26,7 +26,7 @@ import org.junit.Test;
 /**
  * Test different legal forms of yarn's workspaces property.
  */
-@SuppressWarnings("javadoc")
+
 public class YarnWorkspacesPropertyTest extends AbstractIdeTest {
 
 	@Test

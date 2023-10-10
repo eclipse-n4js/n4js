@@ -24,31 +24,31 @@ import org.junit.Test;
  */
 public class CharDiscreteDomainTest {
 
-	/***/
+	
 	@Test
 	public void testSizeWithClosed() {
 		assertTrue(3 == create(closed('a', 'c'), chars()).size());
 	}
 
-	/***/
+	
 	@Test
 	public void testSizeWithOpened() {
 		assertTrue(1 == create(open('a', 'c'), chars()).size());
 	}
 
-	/***/
+	
 	@Test
 	public void testPrevious() {
 		assertEquals((Character) 'a', chars().previous('b'));
 	}
 
-	/***/
+	
 	@Test
 	public void testNext() {
 		assertEquals((Character) 'c', chars().next('b'));
 	}
 
-	/***/
+	
 	@Test
 	public void testDistance() {
 		assertEquals(1, chars().distance('a', 'b'));

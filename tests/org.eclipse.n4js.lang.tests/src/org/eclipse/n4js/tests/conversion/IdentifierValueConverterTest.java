@@ -18,7 +18,7 @@ import org.junit.Test;
 
 /**
  */
-@SuppressWarnings("javadoc")
+
 public class IdentifierValueConverterTest extends Assert {
 
 	public void assertConversion(String expected, String input) {

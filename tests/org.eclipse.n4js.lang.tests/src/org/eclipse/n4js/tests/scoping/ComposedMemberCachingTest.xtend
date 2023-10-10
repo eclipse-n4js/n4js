@@ -161,7 +161,7 @@ class ComposedMemberCachingTest extends AbstractN4JSTest {
 	}
 
 	def private Script parseAndPostProcessAndDeleteCachedComposedMembers(CharSequence code) {
-		val script = code.parseAndValidateSuccessfully;
+		val script = testHelper.parseAndValidateSuccessfully(code);
 		assertTrue((script.eResource as N4JSResource).isFullyProcessed); // ensure validation did trigger post-processing
 
 		// While resolving the proxies during validation above, composed members have been added to the composed member

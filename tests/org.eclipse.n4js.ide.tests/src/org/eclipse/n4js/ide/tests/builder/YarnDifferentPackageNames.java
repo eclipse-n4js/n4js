@@ -20,7 +20,7 @@ import org.junit.Test;
 /**
  * Test two cases of projects with the same project name within a yarn setup
  */
-@SuppressWarnings("javadoc")
+
 public class YarnDifferentPackageNames extends AbstractIncrementalBuilderTest {
 
 	private static Map<String, Map<String, String>> testData = Map.of(

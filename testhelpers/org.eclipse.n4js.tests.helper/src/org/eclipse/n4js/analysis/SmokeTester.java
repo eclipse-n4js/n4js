@@ -31,7 +31,7 @@ public class SmokeTester extends AbstractSmokeTester {
 	@Inject
 	private ParseHelper<Script> parseHelper;
 
-	/***/
+	
 	@Override
 	protected void processFile(String input) throws Exception {
 		Script script = parseHelper.parse(input, URI.createURI("sample.n4js"), newResourceSet());

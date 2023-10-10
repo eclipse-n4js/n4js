@@ -27,7 +27,7 @@ import org.junit.Test;
  *
  * Hard links are not tested, for now.
  */
-@SuppressWarnings("javadoc")
+
 public class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 
 	@Test

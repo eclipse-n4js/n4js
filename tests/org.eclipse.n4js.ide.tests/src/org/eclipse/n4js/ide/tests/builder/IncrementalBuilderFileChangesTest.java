@@ -29,7 +29,7 @@ import org.junit.Test;
  * Tests incremental builds triggered by changes not inside source files but to the files themselves, e.g. creating,
  * deleting, or renaming source files.
  */
-@SuppressWarnings("javadoc")
+
 public class IncrementalBuilderFileChangesTest extends AbstractIncrementalBuilderTest {
 
 	@Test

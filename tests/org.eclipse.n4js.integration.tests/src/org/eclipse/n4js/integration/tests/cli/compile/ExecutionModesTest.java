@@ -43,7 +43,7 @@ import org.junit.Test;
  * bundling of the runtime code (see script {@code n4js-libs/packages/n4js-runtime/npm-bundle.sh} for details).
  * Therefore, this test can also be seen as a test for this bundling.
  */
-@SuppressWarnings("javadoc")
+
 public class ExecutionModesTest extends AbstractCliCompileTest {
 
 	private static final String PROJECT_NAME = "execute-n4js-code";

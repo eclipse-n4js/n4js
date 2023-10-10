@@ -29,7 +29,7 @@ import com.google.common.base.Strings;
  * <p>
  * This test class covers directory imports.
  */
-@SuppressWarnings("javadoc")
+
 public class ImportPlainJsDirectoryImportTest extends AbstractIdeTest {
 
 	@Ignore("not yet supported") // directory imports are supported only if an .n4jsd file exists!

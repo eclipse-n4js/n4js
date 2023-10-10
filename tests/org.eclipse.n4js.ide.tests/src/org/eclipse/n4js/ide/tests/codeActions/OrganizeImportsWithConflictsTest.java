@@ -21,7 +21,7 @@ import org.junit.Test;
  * Like {@link OrganizeImportsTest}, but covers cases in which a the imported module is in conflict with another module
  * that has the same name.
  */
-@SuppressWarnings("javadoc")
+
 public class OrganizeImportsWithConflictsTest extends AbstractOrganizeImportsTest {
 
 	@Override

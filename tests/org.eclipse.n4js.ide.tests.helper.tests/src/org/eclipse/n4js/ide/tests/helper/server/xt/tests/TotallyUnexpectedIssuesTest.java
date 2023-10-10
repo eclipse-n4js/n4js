@@ -17,7 +17,7 @@ import org.junit.Test;
  */
 public class TotallyUnexpectedIssuesTest extends AbstractXtParentRunnerTest {
 
-	/***/
+	
 	@Test
 	public void test() throws Exception {
 		run("probands/TotallyUnexpectedIssues");

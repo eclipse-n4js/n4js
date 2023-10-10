@@ -51,7 +51,7 @@ public class AT_IDEBUG_695_CannotSetFinalFieldInCtorForStaticPolyfillsTest exten
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	/***/
+	
 	@Test
 	public void compileCheckFinalFieldCanBeSetInInheritedCtor_ExpectCanBeSet() {
 		Path projectDir = workspace.toPath().resolve(WS_IDEBUG_695);

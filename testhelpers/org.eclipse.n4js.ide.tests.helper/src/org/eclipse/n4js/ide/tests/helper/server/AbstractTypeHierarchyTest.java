@@ -32,7 +32,7 @@ import org.eclipse.n4js.utils.Strings;
  */
 abstract public class AbstractTypeHierarchyTest extends AbstractStructuredIdeTest<TypeHierarchyConfig> {
 
-	/***/
+	
 	public static class TypeHierarchyConfig {
 		final String expectation;
 		final Position position;

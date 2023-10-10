@@ -36,12 +36,12 @@ class AvoidFollowUpExceptionsInValidationTest extends AbstractN4JSTest {
 
 	@Test
 	def void testSimulatedEditorUpdate() throws Exception {
-		val res = '''
+		val res = parserHelper.parse('''
 			class C {
 				m() {
 				}
 			}
-		'''.parse.eResource as N4JSResource;
+		''').eResource as N4JSResource;
 
 		// the following code simulates behavior of an Xtext editor that is triggered when the source is edited by the
 		// user, see method: XtextDocumentReconcileStrategy#postParse(XtextResource, IProgressMonitor)

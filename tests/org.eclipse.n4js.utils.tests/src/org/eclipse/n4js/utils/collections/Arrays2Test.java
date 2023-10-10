@@ -34,19 +34,19 @@ import org.junit.Test;
  */
 public class Arrays2Test {
 
-	/***/
+	
 	@Test
 	public void testNullArrayExpectEmptyList() {
 		assertTrue(transform(null, input -> valueOf(input)).isEmpty());
 	}
 
-	/***/
+	
 	@Test
 	public void testEmptyArrayExpectEmptyList() {
 		assertTrue(transform(new Object[0], input -> valueOf(input)).isEmpty());
 	}
 
-	/***/
+	
 	@Test
 	public void testToStringTransformation() {
 		final Collection<Integer> origin = create(closed(1, 3), integers());
@@ -56,19 +56,19 @@ public class Arrays2Test {
 		assertEquals(expected, actual);
 	}
 
-	/***/
+	
 	@Test(expected = NullPointerException.class)
 	public void testNullFunctionExpectNPE() {
 		transform(new Object[] { "item" }, null);
 	}
 
-	/***/
+	
 	@Test(expected = UnsupportedOperationException.class)
 	public void testReturnIsUnmodifiableExpectUOE() {
 		transform(new Object[] { "item" }, input -> valueOf(input)).add("another item");
 	}
 
-	/***/
+	
 	@Test
 	public void testReturnCanBeSet() {
 		final List<String> ret = transform(new Object[] { "item" }, input -> valueOf(input));
@@ -78,31 +78,31 @@ public class Arrays2Test {
 		assertTrue("another item".equals(getOnlyElement(ret)));
 	}
 
-	/***/
+	
 	@Test
 	public void testIsEmptyWithNull_ExpectTrue() {
 		assertTrue(Arrays2.isEmpty(null));
 	}
 
-	/***/
+	
 	@Test
 	public void testIsEmptyWithEmpty_ExpectTrue() {
 		assertTrue(Arrays2.isEmpty(new String[] {}));
 	}
 
-	/***/
+	
 	@Test
 	public void testIsEmptyWithNotEmpty_ExpectFalse() {
 		assertTrue(!Arrays2.isEmpty(new String[] { "something" }));
 	}
 
-	/***/
+	
 	@Test(expected = NullPointerException.class)
 	public void testAddToNull_ExpectNPE() {
 		Arrays2.add(null, 1, 2, 3);
 	}
 
-	/***/
+	
 	@Test
 	public void testAddNullIsPermited() {
 		final Object[] source = new Object[] { 0, 1, 2, 3 };
@@ -114,7 +114,7 @@ public class Arrays2Test {
 				actuals);
 	}
 
-	/***/
+	
 	@Test
 	public void testAdd() {
 		final Object[] source = new Object[] { 0, 1, 2, 3 };
@@ -126,7 +126,7 @@ public class Arrays2Test {
 				actuals);
 	}
 
-	/***/
+	
 	@Test
 	public void testAddEmpty() {
 		final Object[] source = new Object[] { 0, 1, 2, 3 };
@@ -139,19 +139,19 @@ public class Arrays2Test {
 		assertTrue("Expected same reference for return value as argument", source == actuals);
 	}
 
-	/***/
+	
 	@Test(expected = NullPointerException.class)
 	public void testFilterNullClassExpectNPE() {
 		Arrays2.filter(new Object[0], null);
 	}
 
-	/***/
+	
 	@Test(expected = NullPointerException.class)
 	public void testFilterNullArrayExpectNPE() {
 		Arrays2.filter(null, Object.class);
 	}
 
-	/***/
+	
 	@Test
 	public void testFilterAlwaysCreatesNewArray() {
 		final Object[] input = new Object[0];
@@ -159,7 +159,7 @@ public class Arrays2Test {
 		assertNotSame("Expected non identical argument and result but was the same.", input, result);
 	}
 
-	/***/
+	
 	@Test
 	public void testFilter() {
 		final Object[] input = { "A", 1, false };

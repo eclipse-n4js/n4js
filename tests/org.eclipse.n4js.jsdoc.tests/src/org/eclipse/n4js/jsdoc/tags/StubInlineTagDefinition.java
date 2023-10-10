@@ -21,7 +21,7 @@ import org.eclipse.n4js.jsdoc.tokenizers.InlineTagTokenizer;
  * Stub to verify general functionality without concrete tag in the jsdoc parser.
  */
 public class StubInlineTagDefinition extends AbstractInlineTagDefinition {
-	/***/
+	
 	public static final String PARAM_VALUE = "PARAM_VALUE";
 
 	/**

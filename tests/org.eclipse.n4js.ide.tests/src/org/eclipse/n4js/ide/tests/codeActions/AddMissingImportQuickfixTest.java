@@ -35,16 +35,16 @@ public class AddMissingImportQuickfixTest extends AbstractCodeActionTest {
 			kind       : quickfix
 			command    :\s
 			diagnostics: (CODE:org.eclipse.xtext.diagnostics.Diagnostic.Linking, Error, , [1:0 - 1:9], Couldn't resolve reference to IdentifiableElement 'SomeClass'., [])
-			edit       : ([],\s
-			   test-project/src/Main.n4js -> [([0:10 - 0:10],\s
-			import {SomeClass} from "A";)])
+			edit       : ([],%s
+			   test-project/src/Main.n4js -> [([0:10 - 0:10], import {SomeClass} from "A";)])
 			-----
 			title      : N4JS: Organize Imports
 			kind       : source.organizeImports
 			command    : (N4JS: Organize Imports, n4js.organizeImports, [test-project/src/Main.n4js])
 			diagnostics:\s
 			edit       :
-			""";
+			"""
+			.formatted(" "); // due to Eclipse auto-formatting
 
 	/**
 	 * When the client requests available quick fixes for the hover, it sets the {@link CodeActionParams}'s range to the

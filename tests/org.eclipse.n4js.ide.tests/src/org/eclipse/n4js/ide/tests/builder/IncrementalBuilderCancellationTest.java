@@ -50,7 +50,7 @@ import com.google.inject.Module;
 /**
  * Tests handling of a cancellation during an incremental build.
  */
-@SuppressWarnings("javadoc")
+
 public class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest {
 
 	private static final AtomicReference<URI> cancelOnResource = new AtomicReference<>(null);
@@ -357,6 +357,7 @@ public class IncrementalBuilderCancellationTest extends AbstractIncrementalBuild
 	 * building "ProjectMain" and "ProjectClient1" will remain in {@link XWorkspaceBuilder#toBeConsideredDeltas}. This
 	 * test makes sure that those deltas do not mess up the incremental build following the cancellation.
 	 */
+	@SuppressWarnings("javadoc")
 	@Test
 	public void testCancelWhileProcessingCrossProjectDependencies() {
 		testWorkspaceManager.createTestOnDisk(Map.of(

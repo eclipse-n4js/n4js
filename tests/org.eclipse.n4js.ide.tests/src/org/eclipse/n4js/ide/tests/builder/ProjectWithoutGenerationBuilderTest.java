@@ -31,7 +31,7 @@ import com.google.common.base.Optional;
  * Tests the builder with project types for which the generator is disabled, see
  * {@link N4JSGlobals#PROJECT_TYPES_WITHOUT_GENERATION}.
  */
-@SuppressWarnings("javadoc")
+
 public class ProjectWithoutGenerationBuilderTest extends AbstractIdeTest {
 
 	@Test

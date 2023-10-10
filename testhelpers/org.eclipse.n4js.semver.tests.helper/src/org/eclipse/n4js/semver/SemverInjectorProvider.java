@@ -22,11 +22,11 @@ import com.google.inject.Injector;
  */
 public class SemverInjectorProvider implements IInjectorProvider, IRegistryConfigurator {
 
-	/***/
+	
 	protected GlobalStateMemento stateBeforeInjectorCreation;
-	/***/
+	
 	protected GlobalStateMemento stateAfterInjectorCreation;
-	/***/
+	
 	protected Injector injector;
 
 	static {
@@ -43,7 +43,7 @@ public class SemverInjectorProvider implements IInjectorProvider, IRegistryConfi
 		return injector;
 	}
 
-	/***/
+	
 	protected Injector internalCreateInjector() {
 		return new SemverStandaloneSetup().createInjectorAndDoEMFRegistration();
 	}

@@ -22,7 +22,7 @@ import org.junit.Test;
 /**
  * Testing incremental builds of re-export chains.
  */
-@SuppressWarnings("javadoc")
+
 public class IncrementalBuilderReexportTest extends AbstractIncrementalBuilderTest {
 
 	@Override

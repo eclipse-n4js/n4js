@@ -79,7 +79,7 @@ public class ECMA6TestInSuite extends AbstractECMATestInSuite {
 	 */
 	public static final String BLACKLIST_EXECUTION_FILENAME = "execution_6.0.txt";
 
-	/***/
+	
 	public ECMA6TestInSuite(JSLibSingleTestConfig config) {
 		super(config);
 	}

@@ -72,7 +72,7 @@ public class ECMA5TestInSuite extends AbstractECMATestInSuite {
 	 */
 	public static final String BLACKLIST_EXECUTION_FILENAME = "execution_5.0.txt";
 
-	/***/
+	
 	public ECMA5TestInSuite(JSLibSingleTestConfig config) {
 		super(config);
 	}

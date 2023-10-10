@@ -36,7 +36,7 @@ public class DocletParserTest {
 	 */
 	public class StubLineTagDefinition extends AbstractLineTagDefinition {
 
-		/***/
+		
 		public StubLineTagDefinition(String title) {
 			setTitles(title);
 		}
@@ -48,7 +48,7 @@ public class DocletParserTest {
 		}
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testJSDocParsing() {
 		String in = "/** This is the description.\n * @stubLineTagTitle \n */";
@@ -64,7 +64,7 @@ public class DocletParserTest {
 		assertEquals("stubLineTagTitle", lineTag.getTitle().getTitle());
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testJSDocParsingWithoutMainDescription() {
 		String in = "/** \n * @stubLineTagTitle \n */";
@@ -77,7 +77,7 @@ public class DocletParserTest {
 		assertEquals("stubLineTagTitle", lineTag.getTitle().getTitle());
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testJSDocParsingWithManyLineTags() {
 		String in = "/** \n * @stubLineTagTitle0 \n * @stubLineTagTitle1 \n * @stubLineTagTitle2 \n */";
@@ -100,7 +100,7 @@ public class DocletParserTest {
 		assertEquals("stubLineTagTitle2", lineTag2.getTitle().getTitle());
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testJSDocParsingWithoutLineTags() {
 		String in = "/** Just free text.\n */";
@@ -113,7 +113,7 @@ public class DocletParserTest {
 		assertEquals("Just free text.", descr.getText());
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testTrailingDescriptionIsIgnored() {
 		String in = "/** This is the description.\n * @stubLineTagTitle \n * Trailing description.\n */";
@@ -131,7 +131,7 @@ public class DocletParserTest {
 		assertEquals("stubLineTagTitle", lineTag.getTitle().getTitle());
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testTrailingDescriptionAndAllThatFollowsIsIgnored() {
 		String in = "/** This is the description." + "\n * @stubLineTagTitle " + "\n * Trailing description."
@@ -151,7 +151,7 @@ public class DocletParserTest {
 		assertEquals("stubLineTagTitle", lineTag.getTitle().getTitle());
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testUnkonwLineTagIsIgnored() {
 		String in = "/** \n * @unkonwTagTitle \n */";
@@ -163,7 +163,7 @@ public class DocletParserTest {
 		assertEquals(0, doclet.getLineTags().size());
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testParserResumesAfterUnkonwLineTag() {
 		String in = "/** \n * @unkonwLineTag \n * @stubLineTagTitle1 \n * @stubLineTagTitle2 \n */";

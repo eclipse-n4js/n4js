@@ -54,7 +54,6 @@ public class BuiltInTypeScopeTest {
 	@Inject
 	ParseHelper<Script> parseHelper;
 
-	@SuppressWarnings("javadoc")
 	@Test
 	public void testLoadingBuiltInTypes() {
 		BuiltInTypeScope scope = BuiltInTypeScope.get(resourceSet);
@@ -72,7 +71,6 @@ public class BuiltInTypeScopeTest {
 		Assert.assertEquals("Resources definine built-in types must have no error.", "", s);
 	}
 
-	@SuppressWarnings("javadoc")
 	@Test
 	public void testResolveSuperTypeOfBuiltInType() {
 		BuiltInTypeScope scope = BuiltInTypeScope.get(resourceSet);
@@ -83,7 +81,6 @@ public class BuiltInTypeScopeTest {
 		Assert.assertEquals("string", assCompatType.getName());
 	}
 
-	@SuppressWarnings("javadoc")
 	@Test
 	public void testResolveAllBuiltInTypes() {
 		BuiltInTypeScope scope = BuiltInTypeScope.get(resourceSet);
@@ -115,7 +112,6 @@ public class BuiltInTypeScopeTest {
 
 	}
 
-	@SuppressWarnings("javadoc")
 	@Test
 	public void testParsing() throws Exception {
 		String content = "var name: any = 'global'";

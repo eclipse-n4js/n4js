@@ -18,7 +18,7 @@ import org.junit.Test;
  * Test for build order. These tests assure that dependencies of plain-js projects are not ignored when computing the
  * build order if they also are dependencies of non-plain-js projects (e.g. n4js projects)
  */
-@SuppressWarnings("javadoc")
+
 public class BuildOrderToDtsTest extends AbstractBuildOrderTest {
 
 	@Test

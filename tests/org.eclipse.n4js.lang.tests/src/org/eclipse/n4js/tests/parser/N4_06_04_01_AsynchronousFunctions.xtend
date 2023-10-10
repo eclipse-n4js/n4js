@@ -32,9 +32,9 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_NonAsyncArrowExpression() {
-		val script = '''
+		val script = parseHelper.parse('''
 			() => f()
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement)
 		val expr = (script.scriptElements.get(0) as ExpressionStatement).expression;
@@ -44,9 +44,9 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_AsyncArrowExpression() {
-		val script = '''
+		val script = parseHelper.parse('''
 			async () => f()
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement)
 		val expr = (script.scriptElements.get(0) as ExpressionStatement).expression;
@@ -59,10 +59,10 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 	 */
 	@Test
 	def void test_NonAsyncArrowExpressionWithIdentifierRef() {
-		val script = '''
+		val script = parseHelper.parse('''
 			async
 			() => f()
-		'''.parse
+		''');
 		assertFalse(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
@@ -70,9 +70,9 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_AsyncFunctionDeclaration() {
-		val script = '''
+		val script = parseHelper.parse('''
 			async function foo(): void {}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, FunctionDeclaration)
 		assertTrue("Function must be async", (script.scriptElements.get(0) as FunctionDeclaration).async)
@@ -80,9 +80,9 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_AsyncFunctionDeclarationWithAnnotation() {
-		val script = '''
+		val script = parseHelper.parse('''
 			@Someanno async function foo(): void {}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, FunctionDeclaration)
 		assertTrue("Function must be async", (script.scriptElements.get(0) as FunctionDeclaration).async)
@@ -90,14 +90,14 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_AsyncMethodDeclarations() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class C {
 				async foo() {}
 				bar() {}
 				@Final async foo1() {}
 				@Final bar1() {}
 			}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, N4ClassDeclaration)
 		val classDecl = script.scriptElements.get(0) as N4ClassDeclaration
@@ -107,21 +107,21 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test @Ignore // invalid test expectation
 	def void test_AsyncMethodDeclarationErrorDueToTrailingEOL() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class C {
 				async
 				foo() {}
 
 			}
-		'''.parse
+		''');
 		assertFalse(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void test_NonAsyncFunctionDeclaration() {
-		val script = '''
+		val script = parseHelper.parse('''
 			function foo(): void {}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, FunctionDeclaration)
 		assertFalse("Function must not be async", (script.scriptElements.get(0) as FunctionDeclaration).async)
@@ -129,10 +129,10 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_Async_WithLineBreak() {
-		val script = '''
+		val script = parseHelper.parse('''
 			async
 			function foo(): void {}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement, FunctionDeclaration)
 		assertInstanceOf((script.scriptElements.get(0) as ExpressionStatement).expression, IdentifierRef)
@@ -140,10 +140,10 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 	}
 	@Test
 	def void test_Async_WithLineBreaky() {
-		val script = '''
+		val script = parseHelper.parse('''
 			asyncx
 			function foo(): void {}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement, FunctionDeclaration)
 		assertInstanceOf((script.scriptElements.get(0) as ExpressionStatement).expression, IdentifierRef)
@@ -152,10 +152,10 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_IdentifierAsync() {
-		val script = '''
+		val script = parseHelper.parse('''
 			async
 
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement)
 		assertInstanceOf((script.scriptElements.get(0) as ExpressionStatement).expression, IdentifierRef)
@@ -163,10 +163,10 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_IdentifierAsync_AndOthers() {
-		val script = '''
+		val script = parseHelper.parse('''
 			async
 			someVar
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement, ExpressionStatement)
 		assertInstanceOf((script.scriptElements.get(0) as ExpressionStatement).expression, IdentifierRef)
@@ -177,10 +177,10 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_IdentifierOnlyOthers() {
-		val script = '''
+		val script = parseHelper.parse('''
 			asyncOther
 			someVar
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement, ExpressionStatement)
 		assertInstanceOf((script.scriptElements.get(0) as ExpressionStatement).expression, IdentifierRef)
@@ -189,9 +189,9 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_AsyncFctExpr() {
-		val script = '''
+		val script = parseHelper.parse('''
 			(async function foo(): void {})
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement)
 		assertFExprAsync(script.scriptElements.get(0), true, false);
@@ -199,9 +199,9 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_AsyncGenExpr1() {
-		val script = '''
+		val script = parseESSuccessfully('''
 			(async function* foo(): void {})
-		'''.parseESSuccessfully
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement)
 		assertFExprAsync(script.scriptElements.get(0), true, true);
@@ -209,9 +209,9 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_AsyncGenExpr2() {
-		val script = '''
+		val script = parseESSuccessfully('''
 			(async function*(): void {})
-		'''.parseESSuccessfully
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement)
 		assertFExprAsync(script.scriptElements.get(0), true, true);
@@ -219,9 +219,9 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_AsyncGenExpr3() {
-		val script = '''
+		val script = parseESSuccessfully('''
 			(async function* <T> (syncIterable: Iterable<T>): T {})
-		'''.parseESSuccessfully
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement)
 		val fe = assertFExprAsync(script.scriptElements.get(0), true, true);
@@ -231,9 +231,9 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_FctExpr() {
-		val script = '''
+		val script = parseHelper.parse('''
 			(function foo(): void {})
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement)
 		assertFExprAsync(script.scriptElements.get(0), false, false);
@@ -241,10 +241,10 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_AsyncFctExpr_WithLineBreak() {
-		val script = '''
+		val script = parseHelper.parse('''
 			async
 			(function foo(): void {})
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement)
 		assertInstanceOf((script.scriptElements.get(0) as ExpressionStatement).expression, ParameterizedCallExpression)
@@ -252,10 +252,10 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_AsyncFctExpr_WithLineBreak1() {
-		val script = '''
+		val script = parseHelper.parse('''
 			asyncCall
 			(function foo(): void {})
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement)
 		assertInstanceOf((script.scriptElements.get(0) as ExpressionStatement).expression, ParameterizedCallExpression)
@@ -274,10 +274,10 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_ExpressionWithAsync_WithLineBreak() {
-		val script = '''
+		val script = parseHelper.parse('''
 			someVar + async
 			function foo(): void {}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement, FunctionDeclaration)
 		assertFalse("Function must not be async", (script.scriptElements.get(1) as FunctionDeclaration).async)
@@ -285,10 +285,10 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_ExpressionWithAsyncAndVar_WithLineBreak() {
-		val script = '''
+		val script = parseHelper.parse('''
 			async + someVar
 			function foo(): void {}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement, FunctionDeclaration)
 		assertFalse("Function must not be async", (script.scriptElements.get(1) as FunctionDeclaration).async)
@@ -296,10 +296,10 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_SomeVarName_WithLineBreak() {
-		val script = '''
+		val script = parseHelper.parse('''
 			somveVar
 			function foo(): void {}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement, FunctionDeclaration)
 		assertFalse("Function must not be async", (script.scriptElements.get(1) as FunctionDeclaration).async)
@@ -307,10 +307,10 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_Async_WithSemi() {
-		val script = '''
+		val script = parseHelper.parse('''
 			async;
 			function foo(): void {}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement, FunctionDeclaration)
 		assertFalse("Function must not be async", (script.scriptElements.get(1) as FunctionDeclaration).async)
@@ -318,10 +318,10 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	@Test
 	def void test_VariableNamedAsync() {
-		val script = '''
+		val script = parseHelper.parse('''
 			var async = 1
 			async
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, VariableStatement, ExpressionStatement)
 		assertTrue(script.scriptElements.get(1).class.simpleName,

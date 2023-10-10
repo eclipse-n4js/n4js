@@ -61,22 +61,22 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 	def void testDirectExports() {
 		val rs = resourceSetProvider.get();
 
-		val script1 = '''
+		val script1 = testHelper.parseInFile('''
 			import { ClsB } from "other2"
 
 			export class ClsA { fieldA: number; }
-		'''.parseInFile("other1.n4js", rs);
+		''', "other1.n4js", rs);
 
-		val script2 = '''
+		val script2 = testHelper.parseInFile('''
 			import { ClsA } from "other1"
 
 			export class ClsB { fieldB: number; }
-		'''.parseInFile("other2.n4js", rs);
+		''', "other2.n4js", rs);
 
 		assertNoErrors(script1);
 		assertNoErrors(script2);
 
-		val scriptUsage = '''
+		val scriptUsage = testHelper.parseInFile('''
 			import { ClsA } from "other1"
 			import { ClsB } from "other2"
 
@@ -85,36 +85,36 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 			let v11: boolean = new ClsB().fieldB; // error
 			let v12: number = new ClsB().fieldB;
-		'''.parseInFile("usage.n4js", rs);
+		''', "usage.n4js", rs);
 
 		assertErrors(scriptUsage, #[
 			"ERROR:number is not a subtype of boolean. (usage.n4js line : 4 column : 20)",
 			"ERROR:number is not a subtype of boolean. (usage.n4js line : 7 column : 20)"
 		]);
-	}
+    }
 
 	@Test
 	def void testSeparateExports() {
 		val rs = resourceSetProvider.get();
 
-		val script1 = '''
+		val script1 = testHelper.parseInFile('''
 			import { ClsB } from "other2"
 
 			public class ClsA { fieldA: number; }
 			export { ClsA }
-		'''.parseInFile("other1.n4js", rs);
+		''', "other1.n4js", rs);
 
-		val script2 = '''
+		val script2 = testHelper.parseInFile('''
 			import { ClsA } from "other1"
 
 			public class ClsB { fieldB: number; }
 			export { ClsB }
-		'''.parseInFile("other2.n4js", rs);
+		''', "other2.n4js", rs);
 
 		assertNoErrors(script1);
 		assertNoErrors(script2);
 
-		val scriptUsage = '''
+		val scriptUsage = testHelper.parseInFile('''
 			import { ClsA } from "other1"
 			import { ClsB } from "other2"
 
@@ -123,7 +123,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 			let v11: boolean = new ClsB().fieldB;
 			let v12: number = new ClsB().fieldB;
-		'''.parseInFile("usage.n4js", rs);
+		''', "usage.n4js", rs);
 
 		assertErrors(scriptUsage, #[
 			"ERROR:number is not a subtype of boolean. (usage.n4js line : 4 column : 20)",
@@ -135,28 +135,28 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 	def void testSeparateExports_withImportedType() {
 		val rs = resourceSetProvider.get();
 
-		val script1 = '''
+		val script1 = testHelper.parseInFile('''
 			import { ClsValueB } from "other2"
 
 			export public class ClsValueA {}
 
 			public class ClsA { fieldA: ClsValueB; }
 			export { ClsA }
-		'''.parseInFile("other1.n4js", rs);
+		''', "other1.n4js", rs);
 
-		val script2 = '''
+		val script2 = testHelper.parseInFile('''
 			import { ClsValueA } from "other1"
 
 			export public class ClsValueB {}
 
 			public class ClsB { fieldB: ClsValueA; }
 			export { ClsB }
-		'''.parseInFile("other2.n4js", rs);
+		''', "other2.n4js", rs);
 
 		assertNoErrors(script1);
 		assertNoErrors(script2);
 
-		val scriptUsage = '''
+		val scriptUsage = testHelper.parseInFile('''
 			import { ClsA, ClsValueA } from "other1"
 			import { ClsB, ClsValueB } from "other2"
 
@@ -165,7 +165,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 			let v11: boolean = new ClsB().fieldB;
 			let v12: ClsValueA = new ClsB().fieldB;
-		'''.parseInFile("usage.n4js", rs);
+		''', "usage.n4js", rs);
 
 		assertErrors(scriptUsage, #[
 			"ERROR:ClsValueB is not a subtype of boolean. (usage.n4js line : 4 column : 20)",
@@ -177,26 +177,26 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 	def void testReexports_separateImportExport() {
 		val rs = resourceSetProvider.get();
 
-		val script1 = '''
+		val script1 = testHelper.parseInFile('''
 			import { ClsB } from "other2"
 
 			export public class ClsA { fieldA: number; }
 
 			export { ClsB as ClsBViaOther1 }
-		'''.parseInFile("other1.n4js", rs);
+		''', "other1.n4js", rs);
 
-		val script2 = '''
+		val script2 = testHelper.parseInFile('''
 			import { ClsA } from "other1"
 
 			export public class ClsB { fieldB: number; }
 
 			export { ClsA as ClsAViaOther2 }
-		'''.parseInFile("other2.n4js", rs);
+		''', "other2.n4js", rs);
 
 		assertNoErrors(script1);
 		assertNoErrors(script2);
 
-		val scriptUsage = '''
+		val scriptUsage = testHelper.parseInFile('''
 			import { ClsBViaOther1 } from "other1"
 			import { ClsAViaOther2 } from "other2"
 
@@ -205,7 +205,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 			let v11: boolean = new ClsAViaOther2().fieldA;
 			let v12: number = new ClsAViaOther2().fieldA;
-		'''.parseInFile("usage.n4js", rs);
+		''', "usage.n4js", rs);
 
 		assertErrors(scriptUsage, #[
 			"ERROR:number is not a subtype of boolean. (usage.n4js line : 4 column : 20)",
@@ -217,22 +217,22 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 	def void testReexports_mergedImportExport() {
 		val rs = resourceSetProvider.get();
 
-		val script1 = '''
+		val script1 = testHelper.parseInFile('''
 			export public class ClsA { fieldA: number; }
 
 			export { ClsB as ClsBViaOther1 } from "other2"
-		'''.parseInFile("other1.n4js", rs);
+		''', "other1.n4js", rs);
 
-		val script2 = '''
+		val script2 = testHelper.parseInFile('''
 			export public class ClsB { fieldB: number; }
 
 			export { ClsA as ClsAViaOther2 } from "other1"
-		'''.parseInFile("other2.n4js", rs);
+		''', "other2.n4js", rs);
 
 		assertNoErrors(script1);
 		assertNoErrors(script2);
 
-		val scriptUsage = '''
+		val scriptUsage = testHelper.parseInFile('''
 			import { ClsBViaOther1 } from "other1"
 			import { ClsAViaOther2 } from "other2"
 
@@ -241,7 +241,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 			let v11: boolean = new ClsAViaOther2().fieldA;
 			let v12: number = new ClsAViaOther2().fieldA;
-		'''.parseInFile("usage.n4js", rs);
+		''', "usage.n4js", rs);
 
 		assertErrors(scriptUsage, #[
 			"ERROR:number is not a subtype of boolean. (usage.n4js line : 4 column : 20)",
@@ -253,33 +253,33 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 	def void testReexportChain() {
 		val rs = resourceSetProvider.get();
 
-		val script1 = '''
+		val script1 = testHelper.parseInFile('''
 			import { ClsUnrelated2 } from "other2"
 			export public class ClsUnrelated1 {}
 
 			export { Cls } from "other2"
-		'''.parseInFile("other1.n4js", rs);
+		''', "other1.n4js", rs);
 
-		val script2 = '''
+		val script2 = testHelper.parseInFile('''
 			import { ClsUnrelated3 } from "other3"
 			export public class ClsUnrelated2 {}
 
 			export { Cls } from "other3"
-		'''.parseInFile("other2.n4js", rs);
+		''', "other2.n4js", rs);
 
-		val script3 = '''
+		val script3 = testHelper.parseInFile('''
 			import { ClsUnrelated1 } from "other1" // <-- closing the cycle
 			export public class ClsUnrelated3 {}
 			
 			public class Cls { field: number; }
 			export { Cls }
-		'''.parseInFile("other3.n4js", rs);
+		''', "other3.n4js", rs);
 
 		assertNoErrors(script1);
 		assertNoErrors(script2);
 		assertNoErrors(script3);
 
-		val scriptUsage = '''
+		val scriptUsage = testHelper.parseInFile('''
 			import { Cls as ClsViaOther1 } from "other1"
 			import { Cls as ClsViaOther3 } from "other3"
 
@@ -288,7 +288,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 			let v11: boolean = new ClsViaOther3().field;
 			let v12: number = new ClsViaOther3().field;
-		'''.parseInFile("usage.n4js", rs);
+		''', "usage.n4js", rs);
 
 		assertErrors(scriptUsage, #[
 			"ERROR:number is not a subtype of boolean. (usage.n4js line : 4 column : 20)",
@@ -300,33 +300,33 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 	def void testReexportChain_reverse() {
 		val rs = resourceSetProvider.get();
 
-		val script1 = '''
+		val script1 = testHelper.parseInFile('''
 			import { ClsUnrelated2 } from "other2"
 			export public class ClsUnrelated1 {}
 
 			public class Cls { field: number; }
 			export { Cls }
-		'''.parseInFile("other1.n4js", rs);
+		''', "other1.n4js", rs);
 
-		val script2 = '''
+		val script2 = testHelper.parseInFile('''
 			import { ClsUnrelated3 } from "other3"
 			export public class ClsUnrelated2 {}
 
 			export { Cls } from "other1"
-		'''.parseInFile("other2.n4js", rs);
+		''', "other2.n4js", rs);
 
-		val script3 = '''
+		val script3 = testHelper.parseInFile('''
 			import { ClsUnrelated1 } from "other1" // <-- closing the cycle
 			export public class ClsUnrelated3 {}
 			
 			export { Cls } from "other2"
-		'''.parseInFile("other3.n4js", rs);
+		''', "other3.n4js", rs);
 
 		assertNoErrors(script1);
 		assertNoErrors(script2);
 		assertNoErrors(script3);
 
-		val scriptUsage = '''
+		val scriptUsage = testHelper.parseInFile('''
 			import { Cls as ClsViaOther1 } from "other1"
 			import { Cls as ClsViaOther3 } from "other3"
 
@@ -335,7 +335,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 			let v11: boolean = new ClsViaOther3().field;
 			let v12: number = new ClsViaOther3().field;
-		'''.parseInFile("usage.n4js", rs);
+		''', "usage.n4js", rs);
 
 		assertErrors(scriptUsage, #[
 			"ERROR:number is not a subtype of boolean. (usage.n4js line : 4 column : 20)",
@@ -347,26 +347,26 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 	def void testReexportLoop_minimal_separateImportExport() {
 		val rs = resourceSetProvider.get();
 
-		val script1 = '''
+		val script1 = testHelper.parseInFile('''
 			import { Cls2 } from "other2"
 			export public class Cls1 { field: number; }
 			export { Cls2 as Cls3 }
-		'''.parseInFile("other1.n4js", rs);
+		''', "other1.n4js", rs);
 
-		val script2 = '''
+		val script2 = testHelper.parseInFile('''
 			import { Cls1 } from "other1"
 			export { Cls1 as Cls2 }
-		'''.parseInFile("other2.n4js", rs);
+		''', "other2.n4js", rs);
 
 		assertNoErrors(script1);
 		assertNoErrors(script2);
 
-		val scriptUsage = '''
+		val scriptUsage = testHelper.parseInFile('''
 			import { Cls3 } from "other1"
 
 			let v01: boolean = new Cls3().field; // error
 			let v02: number = new Cls3().field;
-		'''.parseInFile("usage.n4js", rs);
+		''', "usage.n4js", rs);
 
 		assertErrors(scriptUsage, #[
 			"ERROR:number is not a subtype of boolean. (usage.n4js line : 3 column : 20)"
@@ -377,24 +377,24 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 	def void testReexportLoop_minimal_mergedImportExport() {
 		val rs = resourceSetProvider.get();
 
-		val script1 = '''
+		val script1 = testHelper.parseInFile('''
 			export public class Cls1 { field: number; }
 			export { Cls2 as Cls3 } from "other2"
-		'''.parseInFile("other1.n4js", rs);
+		''', "other1.n4js", rs);
 
-		val script2 = '''
+		val script2 = testHelper.parseInFile('''
 			export { Cls1 as Cls2 } from "other1"
-		'''.parseInFile("other2.n4js", rs);
+		''', "other2.n4js", rs);
 
 		assertNoErrors(script1);
 		assertNoErrors(script2);
 
-		val scriptUsage = '''
+		val scriptUsage = testHelper.parseInFile('''
 			import { Cls3 } from "other1"
 
 			let v01: boolean = new Cls3().field; // error
 			let v02: number = new Cls3().field;
-		'''.parseInFile("usage.n4js", rs);
+		''', "usage.n4js", rs);
 
 		assertErrors(scriptUsage, #[
 			"ERROR:number is not a subtype of boolean. (usage.n4js line : 3 column : 20)"
@@ -405,18 +405,18 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 	def void testReexportLoop_minimalUnsupported_separateImportExport() {
 		val rs = resourceSetProvider.get();
 
-		val script1 = '''
+		val script1 = testHelper.parseInFile('''
 			import { Cls2 } from "other2"
 			export public class Cls1 {}
 			export { Cls2 as Cls3 }
-		'''.parseInFile("other1.n4js", rs);
+		''', "other1.n4js", rs);
 
-		val script2 = '''
+		val script2 = testHelper.parseInFile('''
 			import { Cls1 } from "other1"
 			import { Cls3 } from "other1"
 			export { Cls1 as Cls2 }
 			export { Cls3 }
-		'''.parseInFile("other2.n4js", rs);
+		''', "other2.n4js", rs);
 
 		assertNoErrors(script1);
 // TODO GH-2338 not supported yet
@@ -429,15 +429,15 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 	def void testReexportLoop_minimalUnsupported_mergedImportExport() {
 		val rs = resourceSetProvider.get();
 
-		val script1 = '''
+		val script1 = testHelper.parseInFile('''
 			export public class Cls1 {}
 			export { Cls2 as Cls3 } from "other2"
-		'''.parseInFile("other1.n4js", rs);
+		''', "other1.n4js", rs);
 
-		val script2 = '''
+		val script2 = testHelper.parseInFile('''
 			export { Cls1 as Cls2 } from "other1"
 			export { Cls3 } from "other1"
-		'''.parseInFile("other2.n4js", rs);
+		''', "other2.n4js", rs);
 
 		assertNoErrors(script1);
 // TODO GH-2338 not supported yet
@@ -450,7 +450,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 	def void testReexportLoop_crazy_separateImportExport() {
 		val rs = resourceSetProvider.get();
 
-		val script1 = '''
+		val script1 = testHelper.parseInFile('''
 			import { ClsUnrelated2 } from "other2"
 			import { Cls2 } from "other2"
 			import { Cls5 } from "other2"
@@ -461,9 +461,9 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 			export { Cls2 as Cls3 }
 			export { Cls5 as Cls6 }
 			export { Cls8 as Cls9 }
-		'''.parseInFile("other1.n4js", rs);
+		''', "other1.n4js", rs);
 
-		val script2 = '''
+		val script2 = testHelper.parseInFile('''
 			import { ClsUnrelated3 } from "other3"
 			import { Cls1 } from "other3"
 			import { Cls4 } from "other3"
@@ -474,9 +474,9 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 			export { Cls1 as Cls2 }
 			export { Cls4 as Cls5 }
 			export { Cls7 as Cls8 }
-		'''.parseInFile("other2.n4js", rs);
+		''', "other2.n4js", rs);
 
-		val script3 = '''
+		val script3 = testHelper.parseInFile('''
 			import { ClsUnrelated1 } from "other1" // <-- closing the cycle
 			import { Cls3 } from "other1"
 			import { Cls6 } from "other1"
@@ -488,7 +488,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 			export { Cls3 as Cls4 }
 			export { Cls6 as Cls7 }
-		'''.parseInFile("other3.n4js", rs);
+		''', "other3.n4js", rs);
 
 // TODO GH-2338 not supported yet
 		assertParseErrors(script1, #[
@@ -508,7 +508,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 //		assertNoErrors(script2);
 //		assertNoErrors(script3);
 //
-//		val scriptUsage = '''
+//		val scriptUsage = testHelper.parseInFile('''
 //			import { Cls9 as ClsViaOther1 } from "other1"
 //			import { Cls1 as ClsViaOther3 } from "other3"
 //
@@ -517,7 +517,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 //
 //			let v11: boolean = new ClsViaOther3().field;
 //			let v12: number = new ClsViaOther3().field;
-//		'''.parseInFile("usage.n4js", rs);
+//		''', "usage.n4js", rs);
 //
 //		assertErrors(scriptUsage, #[
 //			"ERROR:number is not a subtype of boolean. (usage.n4js line : 4 column : 20)",
@@ -529,25 +529,25 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 	def void testReexportLoop_crazy_mergedImportExport() {
 		val rs = resourceSetProvider.get();
 
-		val script1 = '''
+		val script1 = testHelper.parseInFile('''
 			import { ClsUnrelated2 } from "other2"
 			export public class ClsUnrelated1 {}
 
 			export { Cls2 as Cls3 } from "other2"
 			export { Cls5 as Cls6 } from "other2"
 			export { Cls8 as Cls9 } from "other2"
-		'''.parseInFile("other1.n4js", rs);
+		''', "other1.n4js", rs);
 
-		val script2 = '''
+		val script2 = testHelper.parseInFile('''
 			import { ClsUnrelated3 } from "other3"
 			export public class ClsUnrelated2 {}
 
 			export { Cls1 as Cls2 } from "other3"
 			export { Cls4 as Cls5 } from "other3"
 			export { Cls7 as Cls8 } from "other3"
-		'''.parseInFile("other2.n4js", rs);
+		''', "other2.n4js", rs);
 
-		val script3 = '''
+		val script3 = testHelper.parseInFile('''
 			import { ClsUnrelated1 } from "other1" // <-- closing the cycle
 			export public class ClsUnrelated3 {}
 
@@ -556,7 +556,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 			export { Cls3 as Cls4 } from "other1"
 			export { Cls6 as Cls7 } from "other1"
-		'''.parseInFile("other3.n4js", rs);
+		''', "other3.n4js", rs);
 
 // TODO GH-2338 not supported yet
 		assertParseErrors(script1, #[
@@ -576,7 +576,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 //		assertNoErrors(script2);
 //		assertNoErrors(script3);
 //
-//		val scriptUsage = '''
+//		val scriptUsage = testHelper.parseInFile('''
 //			import { Cls9 as ClsViaOther1 } from "other1"
 //			import { Cls1 as ClsViaOther3 } from "other3"
 //
@@ -585,7 +585,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 //
 //			let v11: boolean = new ClsViaOther3().field;
 //			let v12: number = new ClsViaOther3().field;
-//		'''.parseInFile("usage.n4js", rs);
+//		''', "usage.n4js", rs);
 //
 //		assertErrors(scriptUsage, #[
 //			"ERROR:number is not a subtype of boolean. (usage.n4js line : 4 column : 20)",
@@ -600,8 +600,8 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 	def private void assertErrors(Script script, String[] expectedErrors) {
 		val res = script.eResource as N4JSResource;
 		res.performPostProcessing;
-		script.assertNoParseErrors();
-		script.assertErrorsExcept(#[ UNSUPPORTED ], expectedErrors);
+		parserHelper.assertNoParseErrors(script);
+		validationTestHelper.assertErrorsExcept(script, #[ UNSUPPORTED ], expectedErrors);
 	}
 
 	def private void assertParseErrors(Script script, String[] expectedErrors) {

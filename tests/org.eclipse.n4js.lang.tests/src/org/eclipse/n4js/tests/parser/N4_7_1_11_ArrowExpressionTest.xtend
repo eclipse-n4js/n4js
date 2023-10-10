@@ -31,9 +31,9 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 
 	@Test
 	def void testPlainExpression() {
-		val script = '''
+		val script = parseHelper.parse('''
 			(a, b)=>a + b
-		'''.parse
+		''');
 		val expressionStatement = script.scriptElements.head as ExpressionStatement
 		val functionExpression = expressionStatement.expression as FunctionExpression
 		assertTrue(functionExpression.arrowFunction)
@@ -42,9 +42,9 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 
 	@Test
 	def void testPlainExpressionWithTypeInformation() {
-		val script = '''
+		val script = parseHelper.parse('''
 			(a: any, b: any)=>a + b
-		'''.parse
+		''');
 		val expressionStatement = script.scriptElements.head as ExpressionStatement
 		val functionExpression = expressionStatement.expression as FunctionExpression
 		assertTrue(functionExpression.arrowFunction)
@@ -53,9 +53,9 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 
 	@Test
 	def void testPlainExpressionWithTypeInformationTS() {
-		val script = '''
+		val script = parseHelper.parse('''
 			( a: any, b: any )=>a + b
-		'''.parse
+		''');
 		val expressionStatement = script.scriptElements.head as ExpressionStatement
 		val functionExpression = expressionStatement.expression as FunctionExpression
 		assertTrue(functionExpression.arrowFunction)

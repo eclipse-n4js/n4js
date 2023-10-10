@@ -33,7 +33,7 @@ import org.eclipse.n4js.jsdoc.dom.Text;
  */
 public class InlineTagTest {
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testSimpleLineTag() {
 		String in = "/** Some Description {@inline me} some other text. \n */";

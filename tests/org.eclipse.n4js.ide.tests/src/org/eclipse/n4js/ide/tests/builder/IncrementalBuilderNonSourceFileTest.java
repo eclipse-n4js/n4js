@@ -21,7 +21,7 @@ import org.junit.Test;
 /**
  * Test how the builder handles N4JS files that are NOT contained in a source folder.
  */
-@SuppressWarnings("javadoc")
+
 public class IncrementalBuilderNonSourceFileTest extends AbstractIncrementalBuilderTest {
 
 	@Test

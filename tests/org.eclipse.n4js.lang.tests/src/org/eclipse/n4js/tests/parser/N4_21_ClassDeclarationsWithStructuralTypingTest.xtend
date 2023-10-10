@@ -29,19 +29,19 @@ class N4_21_ClassDeclarationsWithStructuralTypingTest extends AbstractParserTest
 
 	@Test
 	def void testDefinitionSiteStructuralTypeWithClasses() {
-		val script = '''
+		val script = parseHelper.parse('''
 			class C {}
 			class ~D {}
-		'''.parse
+		''');
 		doTestDefinitionSiteStructuralTypeWithClasses(script)
 	}
 
 	@Test
 	def void testDefinitionSiteStructuralTypeWithClassesAnnotated() {
-		val script = '''
+		val script = parseHelper.parse('''
 			@Deprectated class C {}
 			@Deprectated class ~D {}
-		'''.parse
+		''');
 		doTestDefinitionSiteStructuralTypeWithClasses(script)
 	}
 
@@ -59,19 +59,19 @@ class N4_21_ClassDeclarationsWithStructuralTypingTest extends AbstractParserTest
 
 	@Test
 	def void testDefinitionSiteStructuralTypeWithClassesExported() {
-		val script = '''
+		val script = parseHelper.parse('''
 			export class C {}
 			export class ~D {}
-		'''.parse
+		''');
 		doTestDefinitionSiteStructuralTypeWithClassesExport(script);
 	}
 
 	@Test
 	def void testDefinitionSiteStructuralTypeWithClassesAnnotatedExported() {
-		val script = '''
+		val script = parseHelper.parse('''
 			export @Deprecated class C {}
 			export @Deprecated class ~D {}
-		'''.parse
+		''');
 		doTestDefinitionSiteStructuralTypeWithClassesExport(script);
 	}
 
@@ -95,22 +95,22 @@ class N4_21_ClassDeclarationsWithStructuralTypingTest extends AbstractParserTest
 
 	@Test
 	def void testDefinitionSiteStructuralTypeWithClasses_NoStructuralField() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public class ~~D {}
-		'''.parse;
+		''');
 		assertNotNull(script);
 		assertFalse("At definition site, structural field typing must not be possible", script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testUseSiteStructuralTypeWithClasses() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public class C {
 				public fNominal(p: C): void
 				public fStructual(p: ~C): void
 				public fStucturalField(p: ~~C): void
 			}
-		'''.parse;
+		''');
 		assertNotNull(script);
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 

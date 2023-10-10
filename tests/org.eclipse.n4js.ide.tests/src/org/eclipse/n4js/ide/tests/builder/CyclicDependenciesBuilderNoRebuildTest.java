@@ -73,15 +73,15 @@ public class CyclicDependenciesBuilderNoRebuildTest extends AbstractIncrementalB
 		return Optional.of(Test_Module.class);
 	}
 
-	/***/
+	
 	public static final class Test_Module extends AbstractGenericModule {
-		/***/
+		
 		public Class<? extends XWorkspaceManager> bindXWorkspaceManager() {
 			return Test_N4JSWorkspaceManager.class;
 		}
 	}
 
-	/***/
+	
 	@Singleton
 	public static class Test_N4JSWorkspaceManager extends N4JSWorkspaceManager {
 		@Override

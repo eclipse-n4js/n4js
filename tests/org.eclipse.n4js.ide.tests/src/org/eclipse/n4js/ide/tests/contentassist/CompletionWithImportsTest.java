@@ -18,7 +18,7 @@ import org.junit.Test;
 /**
  * Code completion tests for scenarios that also might add an import statement
  */
-@SuppressWarnings("javadoc")
+
 public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	/** Some default modules that export a number of classes for all tests. */
@@ -38,8 +38,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 		testAtCursor("""
 				let x = new A1<|>
 				""", """
-				(A1, Class, MA, , , 00000, , , , ([0:12 - 0:14], A1), [([0:0 - 0:0], import {A1} from "MA";
-				)], [], , )
+				(A1, Class, MA, , , 00000, , , , ([0:12 - 0:14], A1), [([0:0 - 0:0], import {A1} from "MA";)], [], , )
 				""");
 	}
 
@@ -48,10 +47,8 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 		testAtCursor("""
 				let x = new A2<|>
 				""", """
-				(A2, Class, MA, , , 00000, , , , ([0:12 - 0:14], A2), [([0:0 - 0:0], import {A2} from "MA";
-				)], [], , )
-				(A2, Class, MBA, , , 00001, , , , ([0:12 - 0:14], A2), [([0:0 - 0:0], import {A2} from "MBA";
-				)], [], , )
+				(A2, Class, MA, , , 00000, , , , ([0:12 - 0:14], A2), [([0:0 - 0:0], import {A2} from "MA";)], [], , )
+				(A2, Class, MBA, , , 00001, , , , ([0:12 - 0:14], A2), [([0:0 - 0:0], import {A2} from "MBA";)], [], , )
 				(Array2, Class, Array2, , , 00002, , , , ([0:12 - 0:14], Array2), [], [], , )
 				""");
 	}
@@ -86,8 +83,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 						(B1, Class, alias for MA.A1, , , 00000, , , , ([1:0 - 1:2], B1), [], [], , )
 						(B1, Class, via new alias Alias_MBA_B1 for MBA.B1
 
-						Introduces the new alias 'Alias_MBA_B1' for element MBA.B1, , , 00001, , , , ([1:0 - 1:2], Alias_MBA_B1), [([0:28 - 0:28],\s
-						import {B1 as Alias_MBA_B1} from "MBA";)], [], , )
+						Introduces the new alias 'Alias_MBA_B1' for element MBA.B1, , , 00001, , , , ([1:0 - 1:2], Alias_MBA_B1), [([0:28 - 0:28], import {B1 as Alias_MBA_B1} from "MBA";)], [], , )
 						""");
 	}
 
@@ -142,8 +138,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 				import {A2 as A2_Alias} from "MA";
 				A2<|>;
 				""", """
-				(A2, Class, MBA, , , 00000, , , , ([1:0 - 1:2], A2), [([0:34 - 0:34],\s
-				import {A2} from "MBA";)], [], , )
+				(A2, Class, MBA, , , 00000, , , , ([1:0 - 1:2], A2), [([0:34 - 0:34], import {A2} from "MBA";)], [], , )
 				(A2_Alias, Class, alias for MA.A2, , , 00001, , , , ([1:0 - 1:2], A2_Alias), [], [], , )
 				(Array2, Class, Array2, , , 00002, , , , ([1:0 - 1:2], Array2), [], [], , )
 				""");
@@ -172,12 +167,10 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 						(A2, Class, alias for MA.A1, , , 00000, , , , ([1:0 - 1:2], A2), [], [], , )
 						(A2, Class, via new alias Alias_MA_A2 for MA.A2
 
-						Introduces the new alias 'Alias_MA_A2' for element MA.A2, , , 00001, , , , ([1:0 - 1:2], Alias_MA_A2), [([0:28 - 0:28],\s
-						import {A2 as Alias_MA_A2} from "MA";)], [], , )
+						Introduces the new alias 'Alias_MA_A2' for element MA.A2, , , 00001, , , , ([1:0 - 1:2], Alias_MA_A2), [([0:28 - 0:28], import {A2 as Alias_MA_A2} from "MA";)], [], , )
 						(A2, Class, via new alias Alias_MBA_A2 for MBA.A2
 
-						Introduces the new alias 'Alias_MBA_A2' for element MBA.A2, , , 00002, , , , ([1:0 - 1:2], Alias_MBA_A2), [([0:28 - 0:28],\s
-						import {A2 as Alias_MBA_A2} from "MBA";)], [], , )
+						Introduces the new alias 'Alias_MBA_A2' for element MBA.A2, , , 00002, , , , ([1:0 - 1:2], Alias_MBA_A2), [([0:28 - 0:28], import {A2 as Alias_MBA_A2} from "MBA";)], [], , )
 						(Array2, Class, Array2, , , 00003, , , , ([1:0 - 1:2], Array2), [], [], , )
 						""");
 	}
@@ -192,8 +185,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 						(A2, Class, MA, , , 00000, , , , ([1:12 - 1:14], A2), [], [], , )
 						(A2, Class, via new alias Alias_MBA_A2 for MBA.A2
 
-						Introduces the new alias 'Alias_MBA_A2' for element MBA.A2, , , 00001, , , , ([1:12 - 1:14], Alias_MBA_A2), [([0:22 - 0:22],\s
-						import {A2 as Alias_MBA_A2} from "MBA";)], [], , )
+						Introduces the new alias 'Alias_MBA_A2' for element MBA.A2, , , 00001, , , , ([1:12 - 1:14], Alias_MBA_A2), [([0:22 - 0:22], import {A2 as Alias_MBA_A2} from "MBA";)], [], , )
 						(Array2, Class, Array2, , , 00002, , , , ([1:12 - 1:14], Array2), [], [], , )
 						""");
 	}
@@ -224,8 +216,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 				import * as NSMA from "MA";
 				A2<|>
 				""", """
-				(A2, Class, MBA, , , 00000, , , , ([1:0 - 1:2], A2), [([0:27 - 0:27],\s
-				import {A2} from "MBA";)], [], , )
+				(A2, Class, MBA, , , 00000, , , , ([1:0 - 1:2], A2), [([0:27 - 0:27], import {A2} from "MBA";)], [], , )
 				(Array2, Class, Array2, , , 00001, , , , ([1:0 - 1:2], Array2), [], [], , )
 				(NSMA.A2, Class, MA.A2, , , 00002, , , , ([1:0 - 1:2], NSMA.A2), [], [], , )
 				""");
@@ -242,8 +233,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 						(A2.A2, Class, MA.A2, , , 00001, , , , ([1:0 - 1:2], A2.A2), [], [], , )
 						(A2, Class, via new alias Alias_MBA_A2 for MBA.A2
 
-						Introduces the new alias 'Alias_MBA_A2' for element MBA.A2, , , 00002, , , , ([1:0 - 1:2], Alias_MBA_A2), [([0:25 - 0:25],\s
-						import {A2 as Alias_MBA_A2} from "MBA";)], [], , )
+						Introduces the new alias 'Alias_MBA_A2' for element MBA.A2, , , 00002, , , , ([1:0 - 1:2], Alias_MBA_A2), [([0:25 - 0:25], import {A2 as Alias_MBA_A2} from "MBA";)], [], , )
 						(Array2, Class, Array2, , , 00003, , , , ([1:0 - 1:2], Array2), [], [], , )
 						""");
 	}
@@ -288,12 +278,9 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 				import {A<|>
 				""",
 				"""
-						(A1, Class, MA, , , 00000, , , , ([0:8 - 0:9], A1), [([0:0 - 0:0], import {A1} from "MA";
-						)], [], , )
-						(A2, Class, MA, , , 00001, , , , ([0:8 - 0:9], A2), [([0:0 - 0:0], import {A2} from "MA";
-						)], [], , )
-						(A2, Class, MBA, , , 00002, , , , ([0:8 - 0:9], A2), [([0:0 - 0:0], import {A2} from "MBA";
-						)], [], , )
+						(A1, Class, MA, , , 00000, , , , ([0:8 - 0:9], A1), [([0:0 - 0:0], import {A1} from "MA";)], [], , )
+						(A2, Class, MA, , , 00001, , , , ([0:8 - 0:9], A2), [([0:0 - 0:0], import {A2} from "MA";)], [], , )
+						(A2, Class, MBA, , , 00002, , , , ([0:8 - 0:9], A2), [([0:0 - 0:0], import {A2} from "MBA";)], [], , )
 						(Array, Class, Array, , , 00003, , , , ([0:8 - 0:9], Array), [], [], , )
 						(Array2, Class, Array2, , , 00004, , , , ([0:8 - 0:9], Array2), [], [], , )
 						(Array3, Class, Array3, , , 00005, , , , ([0:8 - 0:9], Array3), [], [], , )
@@ -349,12 +336,9 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 				import {A<|> from "MA";
 				""",
 				"""
-						(A1, Class, MA, , , 00000, , , , ([0:8 - 0:9], A1), [([0:0 - 0:0], import {A1} from "MA";
-						)], [], , )
-						(A2, Class, MA, , , 00001, , , , ([0:8 - 0:9], A2), [([0:0 - 0:0], import {A2} from "MA";
-						)], [], , )
-						(A2, Class, MBA, , , 00002, , , , ([0:8 - 0:9], A2), [([0:0 - 0:0], import {A2} from "MBA";
-						)], [], , )
+						(A1, Class, MA, , , 00000, , , , ([0:8 - 0:9], A1), [([0:0 - 0:0], import {A1} from "MA";)], [], , )
+						(A2, Class, MA, , , 00001, , , , ([0:8 - 0:9], A2), [([0:0 - 0:0], import {A2} from "MA";)], [], , )
+						(A2, Class, MBA, , , 00002, , , , ([0:8 - 0:9], A2), [([0:0 - 0:0], import {A2} from "MBA";)], [], , )
 						(Array, Class, Array, , , 00003, , , , ([0:8 - 0:9], Array), [], [], , )
 						(Array2, Class, Array2, , , 00004, , , , ([0:8 - 0:9], Array2), [], [], , )
 						(Array3, Class, Array3, , , 00005, , , , ([0:8 - 0:9], Array3), [], [], , )
@@ -423,8 +407,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 				A1;
 				""",
 				"""
-						(A1, Class, MA, , , 00000, , , , ([0:0 - 0:2], A1), [([0:0 - 0:0], import {A1} from "MA";
-						)], [], , )
+						(A1, Class, MA, , , 00000, , , , ([0:0 - 0:2], A1), [([0:0 - 0:0], import {A1} from "MA";)], [], , )
 						""");
 	}
 
@@ -439,8 +422,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 						<A1/>;
 						""",
 				"""
-						(A1, Class, MA, , , 00000, , , , ([0:1 - 0:3], A1), [([0:0 - 0:0], import {A1} from "MA";
-						)], [], , )
+						(A1, Class, MA, , , 00000, , , , ([0:1 - 0:3], A1), [([0:0 - 0:0], import {A1} from "MA";)], [], , )
 						""");
 	}
 
@@ -457,8 +439,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 				<A1<|>
 				/>;
 				""", """
-				(A1, Class, MA, , , 00000, , , , ([0:1 - 0:3], A1), [([0:0 - 0:0], import {A1} from "MA";
-				)], [], , )
+				(A1, Class, MA, , , 00000, , , , ([0:1 - 0:3], A1), [([0:0 - 0:0], import {A1} from "MA";)], [], , )
 				""");
 	}
 }

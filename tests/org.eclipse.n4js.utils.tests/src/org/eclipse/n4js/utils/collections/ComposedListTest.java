@@ -25,34 +25,34 @@ import com.google.common.collect.Lists;
  */
 public class ComposedListTest {
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testNoList() {
 		assertComposedList();
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testSingleList() {
 		List<String> l1 = Lists.newArrayList("A", "B", "C");
 		assertComposedList(l1);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testSingleListOneElement() {
 		List<String> l1 = Lists.newArrayList("A");
 		assertComposedList(l1);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testSingleEmptyList() {
 		List<String> l1 = Lists.newArrayList();
 		assertComposedList(l1);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testWithTwoEmptyLists() {
 		List<String> l1 = Lists.newArrayList();
@@ -60,7 +60,7 @@ public class ComposedListTest {
 		assertComposedList(l1, l2);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testSimpleCase() {
 		List<String> l1 = Lists.newArrayList("A", "B", "C");
@@ -69,7 +69,7 @@ public class ComposedListTest {
 		assertComposedList(l1, l2, l3);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testSimpleCase1() {
 		List<String> l1 = Lists.newArrayList("A");
@@ -78,7 +78,7 @@ public class ComposedListTest {
 		assertComposedList(l1, l2, l3);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testSimpleCase2() {
 		List<String> l1 = Lists.newArrayList("A", "B", "C");
@@ -87,7 +87,7 @@ public class ComposedListTest {
 		assertComposedList(l1, l2, l3);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testSimpleCase3() {
 		List<String> l1 = Lists.newArrayList("A");
@@ -96,7 +96,7 @@ public class ComposedListTest {
 		assertComposedList(l1, l2, l3);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testWithEmptyListInMiddle() {
 		List<String> l1 = Lists.newArrayList("A", "B", "C");
@@ -105,7 +105,7 @@ public class ComposedListTest {
 		assertComposedList(l1, l2, l3);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testWithEmptyListAtStart() {
 		List<String> l1 = Lists.newArrayList();
@@ -114,7 +114,7 @@ public class ComposedListTest {
 		assertComposedList(l1, l2, l3);
 	}
 
-	@SuppressWarnings("javadoc")
+	
 	@Test
 	public void testWithEmptyListAtEnd() {
 		List<String> l1 = Lists.newArrayList("A", "B", "C");

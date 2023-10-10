@@ -28,7 +28,7 @@ class ImportRetainedAtRuntimeTest extends AbstractN4JSTest {
 
 	@Test
 	def void testNamedImports() {
-		val resourceSet = #[
+		val resourceSet = testHelper.parseAndValidateSuccessfullyMany(#[
 			"ABCD.n4js" -> '''
 				export public class A {}
 				export public class B {}
@@ -50,7 +50,7 @@ class ImportRetainedAtRuntimeTest extends AbstractN4JSTest {
 				export function foo(p: C) {}
 				class Main extends D {}
 			'''
-		].parseAndValidateSuccessfullyMany;
+		]);
 
 		val main1 = resourceSet.findScript("Main1.n4js");
 		val importDecl = main1.scriptElements.filter(ImportDeclaration).head;
@@ -77,7 +77,7 @@ class ImportRetainedAtRuntimeTest extends AbstractN4JSTest {
 
 	@Test
 	def void testNamespaceImports() {
-		val resourceSet = #[
+		val resourceSet = testHelper.parseAndValidateSuccessfullyMany(#[
 			"A.n4js" -> '''
 				export public class A {}
 			''',
@@ -99,7 +99,7 @@ class ImportRetainedAtRuntimeTest extends AbstractN4JSTest {
 				export function foo(p: NC.C) {}
 				class Main extends ND.D {}
 			'''
-		].parseAndValidateSuccessfullyMany;
+		]);
 
 		val main = resourceSet.findScript("Main.n4js");
 		val importDeclA = main.scriptElements.filter(ImportDeclaration).get(0);
@@ -114,7 +114,7 @@ class ImportRetainedAtRuntimeTest extends AbstractN4JSTest {
 
 	@Test
 	def void testDefaultImports() {
-		val resourceSet = #[
+		val resourceSet =  testHelper.parseAndValidateSuccessfullyMany(#[
 			"A.n4js" -> '''
 				export default public class A {}
 			''',
@@ -136,7 +136,7 @@ class ImportRetainedAtRuntimeTest extends AbstractN4JSTest {
 				export function foo(p: c) {}
 				class Main extends d {}
 			'''
-		].parseAndValidateSuccessfullyMany;
+		]);
 
 		val main = resourceSet.findScript("Main.n4js");
 		val importDeclA = main.scriptElements.filter(ImportDeclaration).get(0);
@@ -151,14 +151,14 @@ class ImportRetainedAtRuntimeTest extends AbstractN4JSTest {
 
 	@Test
 	def void testBareImports() {
-		val resourceSet = #[
+		val resourceSet =  testHelper.parseAndValidateSuccessfullyMany(#[
 			"A.n4js" -> '''
 				export public class A {}
 			''',
 			"Main.n4js" -> '''
 				import "A"
 			'''
-		].parseAndValidateSuccessfullyMany;
+		]);
 
 		val main = resourceSet.findScript("Main.n4js");
 		val importDecl = main.scriptElements.filter(ImportDeclaration).head;
@@ -167,7 +167,7 @@ class ImportRetainedAtRuntimeTest extends AbstractN4JSTest {
 
 	@Test
 	def void testImportingEnums() {
-		val resourceSet = #[
+		val resourceSet = testHelper.parseAndValidateSuccessfullyMany( #[
 			"E.n4js" -> '''
 				export public enum E1 { L1, L2, L3 }
 				@StringBased
@@ -180,7 +180,7 @@ class ImportRetainedAtRuntimeTest extends AbstractN4JSTest {
 				console.log(E1.L1);
 				console.log(E2.L1);
 			'''
-		].parseAndValidateSuccessfullyMany;
+		]);
 
 		val main = resourceSet.findScript("Main.n4js");
 		val importDeclE1 = main.scriptElements.filter(ImportDeclaration).get(0);
@@ -192,7 +192,7 @@ class ImportRetainedAtRuntimeTest extends AbstractN4JSTest {
 
 	@Test
 	def void testImportingFromN4JSDFiles() {
-		val resourceSet = #[
+		val resourceSet = testHelper.parseAndValidateSuccessfullyMany( #[
 			"Def.n4jsd" -> '''
 				export external public class C {}
 				export external public interface I1 {}
@@ -214,7 +214,7 @@ class ImportRetainedAtRuntimeTest extends AbstractN4JSTest {
 				class T1 implements I1 {}
 				class T3 implements I3 {}
 			'''
-		].parseAndValidateSuccessfullyMany;
+		]);
 
 		val main1 = resourceSet.findScript("Main1.n4js");
 		val importDeclC_in1 = main1.scriptElements.filter(ImportDeclaration).get(0);

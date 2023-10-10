@@ -33,7 +33,7 @@ class GH_773_NamespaceTypeReconcilation extends AbstractN4JSTest {
 		res.contents.get(0); // trigger demand-loading of AST (with reconciliation)
 		val module = res.contents.get(1) as TModule;
 
-		res.assertNoIssues
+		validationTestHelper.assertNoIssues(res);
 
 		assertEquals("No duplicates in internalTypes + exposedInternalTypes", 1,
 			(module.internalTypes + module.exposedInternalTypes).size);

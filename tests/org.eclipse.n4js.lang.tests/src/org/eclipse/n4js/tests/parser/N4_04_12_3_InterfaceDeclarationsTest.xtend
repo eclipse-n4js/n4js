@@ -21,9 +21,9 @@ class N4_04_12_3_InterfaceDeclarationsTest extends AbstractParserTest{
 
 	@Test
 	def void testEmptyDeclarations() {
-		val script = '''
+		val script = parseESSuccessfully('''
 			interface I {}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertEquals(1, script.scriptElements.size);
@@ -32,7 +32,7 @@ class N4_04_12_3_InterfaceDeclarationsTest extends AbstractParserTest{
 
 	@Test
 	def void testInterfaceDeclarations() {
-		val script = '''
+		val script = parseESSuccessfully('''
 			public interface A {
 				foo()
 				public bar(p: A): any
@@ -44,7 +44,7 @@ class N4_04_12_3_InterfaceDeclarationsTest extends AbstractParserTest{
 				baz(p: A?)
 			}
 
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
@@ -52,14 +52,14 @@ class N4_04_12_3_InterfaceDeclarationsTest extends AbstractParserTest{
 
 	@Test
 	def void testInterfaceExample() {
-		val script = '''
+		val script = parseESSuccessfully('''
 			interface I {
 				foo(): void
 			}
 			interface I2 extends I {
 				bar(): void
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}

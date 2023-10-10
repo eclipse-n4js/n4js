@@ -21,10 +21,10 @@ class N4_04_12_4_RoleDeclarationsTest extends AbstractParserTest {
 
 	@Test
 	def void testEmptyDeclarations() {
-		val script = '''
+		val script = parseHelper.parse('''
 			interface R {}
 
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertEquals(1, script.scriptElements.size);
@@ -34,7 +34,7 @@ class N4_04_12_4_RoleDeclarationsTest extends AbstractParserTest {
 
 	@Test
 	def void testRoleDeclarations() {
-		val script = '''
+		val script = parseHelper.parse('''
 			public interface A {
 				foo() { return null}
 				public abstract bar(p: A): any
@@ -45,13 +45,13 @@ class N4_04_12_4_RoleDeclarationsTest extends AbstractParserTest {
 				abstract bar()
 				baz(p: A?) { }
 			}
-		'''.parse
+		''');
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 
 	@Test
 	def void testRoleExample1() {
-		val script = '''
+		val script = parseHelper.parse('''
 			interface R {
 				data: any;
 				foo(): void {}
@@ -59,7 +59,7 @@ class N4_04_12_4_RoleDeclarationsTest extends AbstractParserTest {
 			interface S extends R {
 				bar(): void {}
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
@@ -67,7 +67,7 @@ class N4_04_12_4_RoleDeclarationsTest extends AbstractParserTest {
 
 	@Test
 	def void testRoleInterfaceExample() {
-		val script = '''
+		val script = parseHelper.parse('''
 			interface I {
 				foo(): void
 			}
@@ -81,7 +81,7 @@ class N4_04_12_4_RoleDeclarationsTest extends AbstractParserTest {
 			interface S extends R, I2 {
 				bar(): void {}
 			}
-		'''.parse
+		''');
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}

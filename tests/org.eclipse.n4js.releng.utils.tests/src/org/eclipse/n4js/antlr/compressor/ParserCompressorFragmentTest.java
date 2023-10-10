@@ -29,7 +29,7 @@ import com.google.common.io.CharStreams;
 
 /**
  */
-@SuppressWarnings("javadoc")
+
 public class ParserCompressorFragmentTest {
 
 	@Test
