@@ -8,78 +8,80 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.tests.parser
+package org.eclipse.n4js.tests.parser;
 
-import org.eclipse.n4js.n4JS.AdditiveExpression
-import org.eclipse.n4js.n4JS.ExpressionStatement
-import org.eclipse.n4js.n4JS.MultiplicativeExpression
-import org.eclipse.n4js.n4JS.NullLiteral
-import org.eclipse.n4js.n4JS.ShiftExpression
-import org.eclipse.n4js.n4JS.ThisLiteral
-import org.junit.Test
-import org.eclipse.n4js.n4JS.IntLiteral
+import org.eclipse.n4js.n4JS.AdditiveExpression;
+import org.eclipse.n4js.n4JS.ExpressionStatement;
+import org.eclipse.n4js.n4JS.IntLiteral;
+import org.eclipse.n4js.n4JS.MultiplicativeExpression;
+import org.eclipse.n4js.n4JS.NullLiteral;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4JS.ShiftExpression;
+import org.eclipse.n4js.n4JS.ThisLiteral;
+import org.junit.Test;
 
-class ES_11_01_SimpleEsprimaTest extends AbstractParserTest {
+public class ES_11_01_SimpleEsprimaTest extends AbstractParserTest {
 
 	@Test
-	def void testThis() {
-		val script = 'this\n'.parseESSuccessfully
-		val statement = script.scriptElements.head as ExpressionStatement
-		val thisExpression = statement.expression as ThisLiteral
-		assertNotNull(thisExpression) // to avoid the unused warning
+	public void testThis() {
+		Script script = parseESSuccessfully("this\n");
+		ExpressionStatement statement = (ExpressionStatement) script.getScriptElements().get(0);
+		ThisLiteral thisExpression = (ThisLiteral) statement.getExpression();
+		assertNotNull(thisExpression); // to avoid the unused warning
 	}
 
 	@Test
-	def void testNull() {
-		val script = 'null\n'.parseESSuccessfully
-		val statement = script.scriptElements.head as ExpressionStatement
-		val nullLiteral = statement.expression as NullLiteral
-		assertNotNull(nullLiteral) // to avoid the unused warning
+	public void testNull() {
+		Script script = parseESSuccessfully("null\n");
+		ExpressionStatement statement = (ExpressionStatement) script.getScriptElements().get(0);
+		NullLiteral nullLiteral = (NullLiteral) statement.getExpression();
+		assertNotNull(nullLiteral);// to avoid the unused warning
 	}
 
 	@Test
-	def void testIntegerLiteral() {
-		val script = '\n    42\n\n'.parseESSuccessfully
-		val statement = script.scriptElements.head as ExpressionStatement
-		val intLiteral = statement.expression as IntLiteral
-		assertEquals(42, intLiteral.toInt)
+	public void testIntegerLiteral() {
+		Script script = parseESSuccessfully("\n    42\n\n");
+		ExpressionStatement statement = (ExpressionStatement) script.getScriptElements().get(0);
+		IntLiteral intLiteral = (IntLiteral) statement.getExpression();
+		assertEquals(42, intLiteral.toInt());
 	}
 
 	@Test
-	def void testBinaryOperation_01() {
-		val script = '(1 + 2 ) * 3'.parseESSuccessfully
-		val statement = script.scriptElements.head as ExpressionStatement
-		val multiplication = statement.expression as MultiplicativeExpression
-		assertEquals(3, (multiplication.rhs as IntLiteral).toInt)
-		val lhs = multiplication.lhs.unwrap as AdditiveExpression
-		assertEquals(1, (lhs.lhs as IntLiteral).toInt)
-		assertEquals(2, (lhs.rhs as IntLiteral).toInt)
+	public void testBinaryOperation_01() {
+		Script script = parseESSuccessfully("(1 + 2 ) * 3");
+		ExpressionStatement statement = (ExpressionStatement) script.getScriptElements().get(0);
+		MultiplicativeExpression multiplication = (MultiplicativeExpression) statement.getExpression();
+		assertEquals(3, ((IntLiteral) multiplication.getRhs()).toInt());
+		AdditiveExpression lhs = (AdditiveExpression) unwrap(multiplication.getLhs());
+		assertEquals(1, ((IntLiteral) lhs.getLhs()).toInt());
+		assertEquals(2, ((IntLiteral) lhs.getRhs()).toInt());
 	}
 
 	@Test
-	def void testBinaryOperation_02() {
-		val script = '(1) + (2 ) + 3'.parseESSuccessfully
-		val statement = script.scriptElements.head as ExpressionStatement
-		val sum = statement.expression as AdditiveExpression
-		assertEquals(3, (sum.rhs as IntLiteral).toInt)
-		val rhs = sum.lhs as AdditiveExpression
-		assertEquals(1, (rhs.lhs.unwrap as IntLiteral).toInt)
-		assertEquals(2, (rhs.rhs.unwrap as IntLiteral).toInt)
+	public void testBinaryOperation_02() {
+		Script script = parseESSuccessfully("(1) + (2 ) + 3");
+		ExpressionStatement statement = (ExpressionStatement) script.getScriptElements().get(0);
+		AdditiveExpression sum = (AdditiveExpression) statement.getExpression();
+		assertEquals(3, ((IntLiteral) sum.getRhs()).toInt());
+		AdditiveExpression rhs = (AdditiveExpression) sum.getLhs();
+		assertEquals(1, ((IntLiteral) unwrap(rhs.getLhs())).toInt());
+		assertEquals(2, ((IntLiteral) unwrap(rhs.getRhs())).toInt());
 	}
 
 	@Test
-	def void testBinaryOperation_03() {
-		val script = '4 + 5 << (6)'.parseESSuccessfully
-		val statement = script.scriptElements.head as ExpressionStatement
-		val shift = statement.expression as ShiftExpression
-		assertEquals(6, (shift.rhs.unwrap as IntLiteral).toInt)
-		val lhs = shift.lhs as AdditiveExpression
-		assertEquals(4, (lhs.lhs as IntLiteral).toInt)
-		assertEquals(5, (lhs.rhs as IntLiteral).toInt)
+	public void testBinaryOperation_03() {
+		Script script = parseESSuccessfully("4 + 5 << (6)");
+		ExpressionStatement statement = (ExpressionStatement) script.getScriptElements().get(0);
+		ShiftExpression shift = (ShiftExpression) statement.getExpression();
+		assertEquals(6, ((IntLiteral) unwrap(shift.getRhs())).toInt());
+		AdditiveExpression lhs = (AdditiveExpression) shift.getLhs();
+		assertEquals(4, ((IntLiteral) lhs.getLhs()).toInt());
+		assertEquals(5, ((IntLiteral) lhs.getRhs()).toInt());
 	}
 
 }
 
+// @formatter:off
 /*
     'Left-Hand-Side Expression': {
 
