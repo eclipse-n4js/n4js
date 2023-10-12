@@ -16,6 +16,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -133,7 +134,7 @@ public class BuiltInTypesThreadSafetyTest {
 		@Override
 		public void createTModuleFromSource(DerivedStateAwareResource resource, boolean preLinkingPhase) {
 			String resourceName = resource.getURI().lastSegment();
-			if (resourceName == BuiltInTypeScope.PRIMITIVES_N4JSD) {
+			if (Objects.equals(resourceName, BuiltInTypeScope.PRIMITIVES_N4JSD)) {
 				workingOnPrimitives.countDown();
 				try {
 					mayContinue.await();

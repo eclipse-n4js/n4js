@@ -79,7 +79,7 @@ public class JSXParserTest extends AbstractN4JSXParserTest {
 	public void testOpenCloseTagWithNestedExpression() throws Exception {
 		Script script = parseSuccessfully("""
 				class Foo{}
-				<div>{`Hello «»
+				<div>{`Hello\\u0020
 				World`}</div>
 				function bar() {}
 				""");
@@ -240,8 +240,9 @@ public class JSXParserTest extends AbstractN4JSXParserTest {
 	@Test
 	public void testInvalidAttributeNames_04() throws Exception {
 		parseWithError("""
-				<a abcd\u0065="true"></a>
-				""", "Illegal character in identifier 'abcd\\u0065' (\\) at position 4.");
+				<a abcd\\u0065=\"true\"></a>
+				""",
+				"Illegal character in identifier 'abcd\\u0065' (\\) at position 4.");
 	}
 
 	protected Script parseWithError(CharSequence js, String message) throws Exception {

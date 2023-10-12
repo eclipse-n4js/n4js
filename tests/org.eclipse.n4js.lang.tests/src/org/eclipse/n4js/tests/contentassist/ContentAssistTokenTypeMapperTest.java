@@ -50,7 +50,7 @@ public class ContentAssistTokenTypeMapperTest {
 		int i = testMe.getInternalTokenType(kw);
 		AccessibleInternalN4JSParserStub p = new AccessibleInternalN4JSParserStub();
 		String v = p.getValueForTokenName("ExclamationMark");
-		Assert.assertEquals("\"!\"", v);
+		Assert.assertEquals("'!'", v);
 		Assert.assertEquals(InternalN4JSParser.ExclamationMark, i);
 	}
 
