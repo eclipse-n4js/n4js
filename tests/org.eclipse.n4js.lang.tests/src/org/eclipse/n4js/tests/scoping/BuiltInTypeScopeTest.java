@@ -98,7 +98,7 @@ public class BuiltInTypeScopeTest {
 		GlobalObjectScope.get(resourceSet).getAllElements();
 
 		Assert.assertEquals(FluentIterable.from(builtInResourceSet.getResources()).transform(Resource::getURI)
-				.join(Joiner.on('\n')), 5, builtInResourceSet.getResources().size());
+				.join(Joiner.on("\n")), 5, builtInResourceSet.getResources().size());
 
 		EcoreUtil.resolveAll(builtInResourceSet);
 		Map<EObject, Collection<Setting>> unresolvedProxies = EcoreUtil.UnresolvedProxyCrossReferencer
