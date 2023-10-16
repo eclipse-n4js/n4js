@@ -11,7 +11,7 @@
 package org.eclipse.n4js.scoping.members
 
 import com.google.inject.Inject
-import java.util.List
+import java.util.ArrayList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.n4JS.MemberAccess
@@ -19,10 +19,11 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.StaticWriteAccessFilterScope
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareMemberScope
-import org.eclipse.n4js.scoping.utils.CompositeScope
-import org.eclipse.n4js.scoping.utils.DynamicPseudoScope
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.scoping.builtin.N4Scheme
+import org.eclipse.n4js.scoping.utils.CompositeScope
+import org.eclipse.n4js.scoping.utils.DynamicPseudoScope
+import org.eclipse.n4js.scoping.utils.UberParentScope
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
@@ -60,6 +61,7 @@ import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.Scopes
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 
 /**
  */
@@ -282,17 +284,35 @@ class MemberScopingHelper {
 			return new DynamicPseudoScope();
 		}
 
-		val subScopes = uniontypeexp.typeRefs.map [ elementTypeRef |
+		val G = RuleEnvironmentExtensions.newRuleEnvironment(request.context);
+		var IScope anyPlusScope = null;
+		val subScopes = new ArrayList();
+		for (TypeRef elementTypeRef: uniontypeexp.typeRefs) {
 			val structFieldInitMode = elementTypeRef.getTypingStrategy() == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
 			val scope = members(elementTypeRef, request.setStructFieldInitMode(structFieldInitMode));
-			return scope;
-		]
-
-		switch (subScopes.size) { // only create union scope if really necessary, remember this optimization in test, since union{A} tests scope of A only!
-			case 0: return IScope.NULLSCOPE
-			case 1: return subScopes.get(0)
-			default: return new UnionMemberScope(uniontypeexp, request, subScopes, ts)
+			if (RuleEnvironmentExtensions.isAnyDynamic(G, elementTypeRef)) {
+				anyPlusScope = scope;
+			} else {
+				subScopes.add(scope);
+			}
 		}
+
+		val IScope subScope = switch (subScopes.size) { // only create union scope if really necessary, remember this optimization in test, since union{A} tests scope of A only!
+			case 0: null
+			case 1: subScopes.get(0)
+			default: new UnionMemberScope(uniontypeexp, request, subScopes, ts)
+		}
+		
+		if (anyPlusScope === null && subScope === null) {
+			return IScope.NULLSCOPE;
+		}
+		if (anyPlusScope === null) {
+			return subScope;
+		}
+		if (subScope === null) {
+			return anyPlusScope;
+		}
+		return new UberParentScope("", subScope, anyPlusScope);
 	}
 
 	private def dispatch IScope members(IntersectionTypeExpression intersectiontypeexp, MemberScopeRequest request) {
@@ -300,13 +320,32 @@ class MemberScopingHelper {
 			return IScope.NULLSCOPE;
 		}
 
-		val List<IScope> subScopes = intersectiontypeexp.typeRefs.map [ elementTypeRef |
+		val G = RuleEnvironmentExtensions.newRuleEnvironment(request.context);
+		var IScope anyPlusScope = null;
+		val subScopes = new ArrayList();
+		for (TypeRef elementTypeRef: intersectiontypeexp.typeRefs) {
 			val structFieldInitMode = elementTypeRef.getTypingStrategy() == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
 			val scope = members(elementTypeRef, request.setStructFieldInitMode(structFieldInitMode));
-			return scope;
-		]
+			if (RuleEnvironmentExtensions.isAnyDynamic(G, elementTypeRef)) {
+				anyPlusScope = scope;
+			} else {
+				subScopes.add(scope);
+			}
+		}
 
-		return new IntersectionMemberScope(intersectiontypeexp, request, subScopes, ts);
+		val IScope subScope = switch (subScopes.size) { // only create union scope if really necessary, remember this optimization in test, since union{A} tests scope of A only!
+			case 0: null
+			case 1: subScopes.get(0)
+			default: new IntersectionMemberScope(intersectiontypeexp, request, subScopes, ts)
+		}
+		
+		if (anyPlusScope === null && subScope === null) {
+			return IScope.NULLSCOPE;
+		}
+		if (subScope !== null) {
+			return subScope;
+		}
+		return anyPlusScope;
 	}
 
 	private def dispatch IScope members(FunctionTypeRef ftExpr, MemberScopeRequest request) {
