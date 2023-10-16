@@ -13,6 +13,26 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 
+class Cls {
+	m(p: string): number {
+		return 42;
+	}
+}
+
+interface Ifc {}
+
+let u: Cls | Ifc+;
+
+
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "u.m()"
+u.m();
+
+// XPECT noerrors -->
+// XPECT type of 'result' --> number
+let result_u = u.m("");
+
+
+
 /* XPECT warnings ---
 "The use of the any type in a union type is discouraged." at "any"
 "The use of the any type in a union type is discouraged." at "any"
@@ -25,3 +45,4 @@ f1.myMethod();
 let f2 : any+ | string = {};
 // XPECT noerrors -->
 f2.myMethod();
+
