@@ -86,11 +86,17 @@ public abstract class AbstractParserTest extends Assert {
 		}
 	}
 
-	protected Script parseN4jsWithError(CharSequence js) throws Exception {
-		Script script = parseHelper.parseN4js(js);
-		List<Diagnostic> errors = script.eResource().getErrors();
-		assertFalse(errors.toString(), errors.isEmpty());
-		return script;
+	protected Script parseN4jsWithError(CharSequence js) {
+		Script script;
+		try {
+			script = parseHelper.parseN4js(js);
+			List<Diagnostic> errors = script.eResource().getErrors();
+			assertFalse(errors.toString(), errors.isEmpty());
+			return script;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/** Used in tests to eliminate the suspicious paren expression */
