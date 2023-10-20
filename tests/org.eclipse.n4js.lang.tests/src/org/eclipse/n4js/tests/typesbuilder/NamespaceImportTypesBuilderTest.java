@@ -70,7 +70,7 @@ public class NamespaceImportTypesBuilderTest extends AbstractTypesBuilderTest {
 		for (String externalFile : externalFiles) {
 			Resource testResource = rs.createResource(URI.createURI("src/" + getPath() + "/" + externalFile));
 			testResource.load(Collections.emptyMap());
-			super._n4JSResourceExtensions.resolve(testResource);
+			super.n4resX.resolve(testResource);
 			testResource.getAllContents();
 		}
 
@@ -78,8 +78,8 @@ public class NamespaceImportTypesBuilderTest extends AbstractTypesBuilderTest {
 		Resource testResource = rs.createResource(URI.createURI("src/" + getPath() + "/" + testFileName));
 		testResource.load(Collections.emptyMap());
 
-		super._n4JSResourceExtensions.resolve(testResource);
-		super._resourceAssertionsExtensions.assertResourceHasNoErrors("x", testResource);
+		super.n4resX.resolve(testResource);
+		super.resX.assertResourceHasNoErrors("x", testResource);
 		checkTModule((TModule) testResource.getContents().get(1));
 	}
 
