@@ -10,17 +10,18 @@
  */
 package org.eclipse.n4js.types;
 
+import static org.junit.Assert.fail;
+
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.xtext.testing.util.ParseHelper;
-import org.junit.Assert;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
+import org.eclipse.xtext.testing.util.ParseHelper;
+import org.junit.Assert;
+
+import com.google.inject.Inject;
 
 /**
  */
@@ -34,15 +35,27 @@ public abstract class AbstractContainerTypesTest<T extends ContainerType<?>> {
 	 * Parses the given text and returns the first top level type casted to the type variable.
 	 */
 	@SuppressWarnings("unchecked")
-	protected T parseAndGetFirstType(CharSequence text) throws Exception {
-		return (T) parseHelper.parse(text).getModule().getTypes().get(0);
+	protected T parseAndGetFirstType(CharSequence text) {
+		try {
+			return (T) parseHelper.parse(text).getModule().getTypes().get(0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+			return null;
+		}
 	}
 
 	/**
 	 * Parses the given text and returns the top level types.
 	 */
-	protected EList<Type> parseAndGetTypes(CharSequence text) throws Exception {
-		return parseHelper.parse(text).getModule().getTypes();
+	protected EList<Type> parseAndGetTypes(CharSequence text) {
+		try {
+			return parseHelper.parse(text).getModule().getTypes();
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+			return null;
+		}
 	}
 
 	/**

@@ -8,40 +8,51 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.utils.tests
+package org.eclipse.n4js.utils.tests;
 
-import com.google.inject.Inject
-import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
-import org.eclipse.n4js.N4JSParseHelper
-import org.eclipse.n4js.compileTime.CompileTimeEvaluator
-import org.eclipse.n4js.compileTime.CompileTimeValue
-import org.eclipse.n4js.n4JS.ExpressionStatement
-import org.eclipse.n4js.n4JS.ParenExpression
-import java.math.BigDecimal
-import org.eclipse.xtext.testing.InjectWith
-import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.testing.validation.ValidationTestHelper
-import org.junit.Test
-import org.junit.runner.RunWith
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.newRuleEnvironment;
+import static org.eclipse.xtext.xbase.lib.IterableExtensions.last;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import static org.junit.Assert.*
+import java.math.BigDecimal;
+import java.util.List;
 
-import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression;
+import org.eclipse.n4js.N4JSParseHelper;
+import org.eclipse.n4js.compileTime.CompileTimeEvaluator;
+import org.eclipse.n4js.compileTime.CompileTimeValue;
+import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.ExpressionStatement;
+import org.eclipse.n4js.n4JS.ParenExpression;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.utils.Strings;
+import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.XtextRunner;
+import org.eclipse.xtext.testing.validation.ValidationTestHelper;
+import org.eclipse.xtext.validation.Issue;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/**
- *
- */
-@RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProviderWithIssueSuppression)
-class CompileTimeEvaluatorTest {
+import com.google.inject.Inject;
 
-	@Inject private extension N4JSParseHelper parseHelper;
-	@Inject private extension ValidationTestHelper;
-	@Inject private CompileTimeEvaluator compileTimeEvaluator;
+@RunWith(XtextRunner.class)
+@InjectWith(N4JSInjectorProviderWithIssueSuppression.class)
+public class CompileTimeEvaluatorTest {
 
+	@Inject
+	private N4JSParseHelper parseHelper;
+	@Inject
+	private ValidationTestHelper valTestHelper;
+	@Inject
+	private CompileTimeEvaluator compileTimeEvaluator;
 
 	@Test
-	def public void testSimple() {
+	public void testSimple() {
 		assertValueOfCompileTimeExpr("null", CompileTimeValue.NULL);
 		assertValueOfCompileTimeExpr("undefined", CompileTimeValue.UNDEFINED);
 		assertValueOfCompileTimeExpr("true", CompileTimeValue.TRUE);
@@ -58,14 +69,14 @@ class CompileTimeEvaluatorTest {
 	}
 
 	@Test
-	def public void testTemplateStrings() {
+	public void testTemplateStrings() {
 		assertValueOfCompileTimeExpr("`hello`", "hello");
 		assertValueOfCompileTimeExpr("`hel${  }lo`", "hello");
 		assertValueOfCompileTimeExpr("`${`Hello`} ${`world`}!`", "Hello world!");
 	}
 
 	@Test
-	def public void testAddition() {
+	public void testAddition() {
 		assertValueOfCompileTimeExpr("39 + 3", 42);
 		assertValueOfCompileTimeExpr("1.2 + 3.4", 4.6);
 		assertValueOfCompileTimeExpr("'1.2' + 3.4", "1.23.4");
@@ -77,13 +88,13 @@ class CompileTimeEvaluatorTest {
 	}
 
 	@Test
-	def public void testSubtraction() {
+	public void testSubtraction() {
 		assertValueOfCompileTimeExpr("45 - 3", 42);
 		assertValueOfCompileTimeExpr("1.2 - 3.4", -2.2);
 	}
 
 	@Test
-	def public void testMultiplication() {
+	public void testMultiplication() {
 		assertValueOfCompileTimeExpr("21 * 2", 42);
 		assertValueOfCompileTimeExpr("-21 * 2", -42);
 		assertValueOfCompileTimeExpr("21 * -2", -42);
@@ -91,7 +102,7 @@ class CompileTimeEvaluatorTest {
 	}
 
 	@Test
-	def public void testDivision() {
+	public void testDivision() {
 		assertValueOfCompileTimeExpr("21 / 2", 10.5);
 		assertValueOfCompileTimeExpr("-21 / 2", -10.5);
 		assertValueOfCompileTimeExpr("21 / -2", -10.5);
@@ -109,7 +120,7 @@ class CompileTimeEvaluatorTest {
 	}
 
 	@Test
-	def public void testModulo() {
+	public void testModulo() {
 		assertValueOfCompileTimeExpr("5 % 4", 1);
 		assertValueOfCompileTimeExpr("-5 % 4", -1);
 		assertValueOfCompileTimeExpr("5 % -4", 1);
@@ -117,7 +128,7 @@ class CompileTimeEvaluatorTest {
 	}
 
 	@Test
-	def public void testUnaryExpression() {
+	public void testUnaryExpression() {
 		assertValueOfCompileTimeExpr("+3", 3);
 		assertValueOfCompileTimeExpr("-3", -3);
 		assertValueOfCompileTimeExpr("!true", false);
@@ -125,7 +136,7 @@ class CompileTimeEvaluatorTest {
 	}
 
 	@Test
-	def public void testLogicalExpressions() {
+	public void testLogicalExpressions() {
 		assertValueOfCompileTimeExpr("false && false", false);
 		assertValueOfCompileTimeExpr("false && true", false);
 		assertValueOfCompileTimeExpr("true && false", false);
@@ -136,55 +147,61 @@ class CompileTimeEvaluatorTest {
 		assertValueOfCompileTimeExpr("true || true", true);
 		assertValueOfCompileTimeExpr("!(true && false)", true);
 		assertValueOfCompileTimeExpr("!(true || false)", false);
-		assertValueOfCompileTimeExpr("true && false ? 'yep' : 'nope'", 'nope');
-		assertValueOfCompileTimeExpr("true || false ? 'yep' : 'nope'", 'yep');
+		assertValueOfCompileTimeExpr("true && false ? 'yep' : 'nope'", "nope");
+		assertValueOfCompileTimeExpr("true || false ? 'yep' : 'nope'", "yep");
 	}
 
 	@Test
-	def public void testEnums() {
-		val enumStringBased = '''
-			@StringBased
-			enum Color { RED, GREEN: '*green*', BLUE }
-		''';
+	public void testEnums() {
+		String enumStringBased = """
+				@StringBased
+				enum Color { RED, GREEN: '*green*', BLUE }
+				""";
 		assertValueOfCompileTimeExpr(enumStringBased, "Color.RED", "RED");
 		assertValueOfCompileTimeExpr(enumStringBased, "Color.GREEN", "*green*");
 		assertValueOfCompileTimeExpr(enumStringBased, "Color.RED + Color.GREEN + Color.BLUE", "RED*green*BLUE");
-		assertValueOfCompileTimeExpr(enumStringBased, "`_${Color.RED}_${Color.GREEN}_${Color.BLUE}_`", "_RED_*green*_BLUE_");
+		assertValueOfCompileTimeExpr(enumStringBased, "`_${Color.RED}_${Color.GREEN}_${Color.BLUE}_`",
+				"_RED_*green*_BLUE_");
 
 		// non-@StringBased enums are not treated as compile-time expressions:
-		val enumPlain = '''
-			enum Color { RED, GREEN: '*green*', BLUE }
-		''';
+		String enumPlain = """
+				enum Color { RED, GREEN: '*green*', BLUE }
+				""";
 		assertValueOfCompileTimeExpr(enumPlain, "Color.RED + Color.GREEN + Color.BLUE", INVALID);
 	}
 
-
 	private static final Object INVALID = new Object();
 
-	def protected void assertValueOfCompileTimeExpr(CharSequence expression, Object expectedValue) {
+	protected void assertValueOfCompileTimeExpr(CharSequence expression, Object expectedValue) {
 		assertValueOfCompileTimeExpr("", expression, expectedValue);
 	}
-	def protected void assertValueOfCompileTimeExpr(CharSequence preamble, CharSequence expression, Object expectedValue) {
+
+	protected void assertValueOfCompileTimeExpr(CharSequence preamble, CharSequence expression, Object expectedValue) {
 		assertNotNull(expectedValue);
-		val script = '''
-			«preamble»;
-			(«expression»);
-		'''.parse;
-		script.assertNoParseErrors;
-		val issues = script.validate;
-		assertTrue(issues.toString, issues.empty);
-		val lastStatement = script.scriptElements.last as ExpressionStatement;
-		val expressionInAST = (lastStatement.expression as ParenExpression).expression;
-		assertNotNull(expressionInAST);
-		val G = script.newRuleEnvironment;
-		val computedValue = compileTimeEvaluator.evaluateCompileTimeExpression(G, expressionInAST);
-		assertNotNull(computedValue);
-		if(expectedValue===INVALID) {
-			assertFalse("expected an invalid value but got a valid one", computedValue.valid);
-		} else {
-			assertTrue("expected a valid value but got an invalid one", computedValue.valid);
-			val expectedCompileTimeValue = CompileTimeValue.of(expectedValue);
-			assertEquals(expectedCompileTimeValue, computedValue);
+		try {
+			Script script = parseHelper.parse("""
+					%s;
+					(%s);
+					""".formatted(preamble, expression));
+			parseHelper.assertNoParseErrors(script);
+			List<Issue> issues = valTestHelper.validate(script);
+			assertTrue(Strings.toString(issues), issues.isEmpty());
+			ExpressionStatement lastStatement = (ExpressionStatement) last(script.getScriptElements());
+			Expression expressionInAST = ((ParenExpression) lastStatement.getExpression()).getExpression();
+			assertNotNull(expressionInAST);
+			RuleEnvironment G = newRuleEnvironment(script);
+			CompileTimeValue computedValue = compileTimeEvaluator.evaluateCompileTimeExpression(G, expressionInAST);
+			assertNotNull(computedValue);
+			if (expectedValue == INVALID) {
+				assertFalse("expected an invalid value but got a valid one", computedValue.isValid());
+			} else {
+				assertTrue("expected a valid value but got an invalid one", computedValue.isValid());
+				CompileTimeValue expectedCompileTimeValue = CompileTimeValue.of(expectedValue);
+				assertEquals(expectedCompileTimeValue, computedValue);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
 		}
 	}
 }
