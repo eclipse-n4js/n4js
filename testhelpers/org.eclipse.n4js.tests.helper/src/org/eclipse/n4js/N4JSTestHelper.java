@@ -21,6 +21,7 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.xbase.lib.Pair;
+import org.junit.Assert;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -42,22 +43,33 @@ public class N4JSTestHelper {
 	 * Parse & validate the given code, assert that there are no parser or validation errors, and return the root of the
 	 * fully resolved (i.e. types builder, post-processing, etc.) AST.
 	 */
-	public Script parseAndValidateSuccessfully(CharSequence code) throws Exception {
-		final Script script = parseHelper.parseN4js(code);
-		parseHelper.assertNoParseErrors(script);
-		validationTestHelper.assertNoErrors(script); // this will trigger post-processing, validation, etc.
-		return script;
+	public Script parseAndValidateSuccessfully(CharSequence code) {
+		try {
+			final Script script = parseHelper.parseN4js(code);
+			parseHelper.assertNoParseErrors(script);
+			validationTestHelper.assertNoErrors(script); // this will trigger post-processing, validation, etc.
+			return script;
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+			return null;
+		}
 	}
 
 	/**
 	 * Like {@link #parseAndValidateSuccessfully(CharSequence)}, but ignoring issues with the given issue codes.
 	 */
-	public Script parseAndValidateSuccessfullyIgnoring(CharSequence code, String... ignoredIssueCodes)
-			throws Exception {
-		final Script script = parseHelper.parseN4js(code);
-		parseHelper.assertNoParseErrors(script, new HashSet<>(Arrays.asList(ignoredIssueCodes)));
-		validationTestHelper.assertNoErrorsExcept(script, ignoredIssueCodes);
-		return script;
+	public Script parseAndValidateSuccessfullyIgnoring(CharSequence code, String... ignoredIssueCodes) {
+		try {
+			final Script script = parseHelper.parseN4js(code);
+			parseHelper.assertNoParseErrors(script, new HashSet<>(Arrays.asList(ignoredIssueCodes)));
+			validationTestHelper.assertNoErrorsExcept(script, ignoredIssueCodes);
+			return script;
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+			return null;
+		}
 	}
 
 	/**
@@ -69,8 +81,7 @@ public class N4JSTestHelper {
 	 *            include a path relative to a prject's source folder.
 	 * @return the newly created resource set.
 	 */
-	public ResourceSet parseAndValidateSuccessfullyMany(Iterable<Pair<String, String>> fileNamesToCode)
-			throws Exception {
+	public ResourceSet parseAndValidateSuccessfullyMany(Iterable<Pair<String, String>> fileNamesToCode) {
 		XtextResourceSet rs = resourceSetProvider.get();
 
 		// add all files to resource set and parse them
@@ -95,12 +106,11 @@ public class N4JSTestHelper {
 	/**
 	 * Create a new {@link Resource} in the given {@link ResourceSet} and parse the given source code.
 	 */
-	public Script parseInFile(CharSequence code, String fileName, ResourceSet resourceSetToUse) throws Exception {
+	public Script parseInFile(CharSequence code, String fileName, ResourceSet resourceSetToUse) {
 		return parseWithFileExtensionFromURI(code, URI.createURI(fileName), resourceSetToUse);
 	}
 
-	private Script parseWithFileExtensionFromURI(CharSequence text, URI uriToUse, ResourceSet resourceSetToUse)
-			throws Exception {
+	private Script parseWithFileExtensionFromURI(CharSequence text, URI uriToUse, ResourceSet resourceSetToUse) {
 		final String fileExtensionToUse = URIUtils.fileExtension(uriToUse);
 		if (fileExtensionToUse == null) {
 			throw new IllegalArgumentException("given URI does not have a file extension");
@@ -109,6 +119,11 @@ public class N4JSTestHelper {
 		try {
 			parseHelper.fileExtension = fileExtensionToUse;
 			return parseHelper.parse(text, uriToUse, resourceSetToUse);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+			return null;
 		} finally {
 			parseHelper.fileExtension = oldExtension;
 		}
