@@ -8,33 +8,35 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.typesystem;
 
-import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
-import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
-import org.eclipse.xtext.testing.InjectWith
-import org.eclipse.xtext.testing.XtextRunner
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
+import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.XtextRunner;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/*
- * Tests for {@link TypeSystemHelper#join(RuleEnvironment, TypeRef...)} method with function types.
+/**
+ * Tests for {@link TypeSystemHelper#join(RuleEnvironment, TypeRef ...)} method with function types.
  */
-@RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProviderWithIssueSuppression)
-class JoinComputer_FunctionTypesTest extends AbstractTypeSystemHelperTests {
+@RunWith(XtextRunner.class)
+@InjectWith(N4JSInjectorProviderWithIssueSuppression.class)
+public class JoinComputer_FunctionTypesTest extends AbstractTypeSystemHelperTests {
 
 	@Before
-	def void prepareTypeDefs() {
-		setDefaultTypeDefinitions()
+	public void prepareTypeDefs() {
+		setDefaultTypeDefinitions();
 	}
 
 	/*
 	 * Test some assumptions.
 	 */
 	@Test
-	def void testJoinAssumptions() {
+	public void testJoinAssumptions() {
 		assertJoin("G<? extends A>", "G<A>", "G<B>");
 		assertJoin("A", "A", "B");
 		assertMeet("B", "A", "B");
@@ -45,13 +47,12 @@ class JoinComputer_FunctionTypesTest extends AbstractTypeSystemHelperTests {
 	}
 
 	@Test
-	def void testJoinEmptyVoidFunction() {
+	public void testJoinEmptyVoidFunction() {
 		assertJoin("{function()}", "{function()}", "{function()}");
 	}
 
-
 	@Test
-	def void testJoinFunction() {
+	public void testJoinFunction() {
 		assertJoin("{function(A)}", "{function(A)}", "{function(A)}");
 		assertJoin("{function(A)}", "{function()}", "{function(A)}");
 		assertJoin("{function(A)}", "{function(A)}", "{function()}");
@@ -74,9 +75,8 @@ class JoinComputer_FunctionTypesTest extends AbstractTypeSystemHelperTests {
 
 	}
 
-
 	@Test
-	def void testJoinFunctionDebug() {
+	public void testJoinFunctionDebug() {
 		assertJoin("{function(B):A}", "{function(A):A}", "{function(B):B}");
 	}
 

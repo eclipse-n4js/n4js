@@ -8,37 +8,39 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.typesystem;
 
-import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
-import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
-import org.eclipse.xtext.testing.InjectWith
-import org.eclipse.xtext.testing.XtextRunner
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
+import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.XtextRunner;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/*
- * Tests for {@link TypeSystemHelper#meet(RuleEnvironment, TypeRef...)} method.
+/**
+ * Tests for {@link TypeSystemHelper#meet(RuleEnvironment, TypeRef ...)} method.
  */
-@RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProviderWithIssueSuppression)
-class MeetComputer_RawTypesTest extends AbstractTypeSystemHelperTests {
+@RunWith(XtextRunner.class)
+@InjectWith(N4JSInjectorProviderWithIssueSuppression.class)
+public class MeetComputer_RawTypesTest extends AbstractTypeSystemHelperTests {
 
 	@Before
-	def void prepareTypeDefs() {
-		setDefaultTypeDefinitions()
+	public void prepareTypeDefs() {
+		setDefaultTypeDefinitions();
 	}
 
 	@Test
-	def void testMeet() {
+	public void testMeet() {
 		assertMeet("A", "A", "A");
 		assertMeet("B", "A", "B");
 		assertMeet("B", "B", "A");
 	}
 
 	@Test
-	def void testMeetWithIntersection() {
+	public void testMeetWithIntersection() {
 
 		assertMeet("intersection{A,D}", "D", "A");
 		assertMeet("intersection{A,D}", "A", "D");
