@@ -67,6 +67,7 @@ public class TypeRefsToVariablesAssembler extends AbstractScriptAssembler {
 	public Pair<Script, RuleEnvironment> doPrepareScriptAndCreateRuleEnvironment(String[] expectedMessages,
 			JavaScriptVariant variant, String... typeExpressions) {
 		String completeScript = getScriptPrefix() + "\n" + createVariables(typeExpressions);
+		@SuppressWarnings("hiding")
 		Script script = setupScript(completeScript, variant, expectedMessages);
 		RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(script);
 		return Pair.of(script, G);
