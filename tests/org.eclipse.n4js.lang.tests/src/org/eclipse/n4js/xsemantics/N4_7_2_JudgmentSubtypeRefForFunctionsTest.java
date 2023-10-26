@@ -8,23 +8,23 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.xsemantics
+package org.eclipse.n4js.xsemantics;
 
-import org.eclipse.xtext.testing.InjectWith
-import org.eclipse.xtext.testing.XtextRunner
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression;
+import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.XtextRunner;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * N4JS Spec Test: 4.7.2. Functions and FunctionType, Type Inference
  */
-@RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProviderWithIssueSuppression)
-class N4_7_2_JudgmentSubtypeRefForFunctionsTest extends AbstractJudgmentSubtypeTest {
+@RunWith(XtextRunner.class)
+@InjectWith(N4JSInjectorProviderWithIssueSuppression.class)
+public class N4_7_2_JudgmentSubtypeRefForFunctionsTest extends AbstractJudgmentSubtypeTest {
 
 	@Test
-	def void testSubTypeFunctionRefsSpecExample() {
+	public void testSubTypeFunctionRefsSpecExample() {
 		assertSubType("{function():void}", "{function():void}");
 		assertSubType("{function(A):A}", "{function(A):A}");
 		assertSubType("{function(A):void}", "{function(B):void}");
@@ -39,7 +39,7 @@ class N4_7_2_JudgmentSubtypeRefForFunctionsTest extends AbstractJudgmentSubtypeT
 	}
 
 	@Test
-	def void testSubTypeFunctionRefsSpecExampleVarOpt() {
+	public void testSubTypeFunctionRefsSpecExampleVarOpt() {
 		assertSubType("{function(A)}", "{function(B)}");
 		assertSubType("{function(...A)}", "{function(A)}");
 		assertSubType("{function(A, A)}", "{function(A)}", false);
@@ -63,7 +63,7 @@ class N4_7_2_JudgmentSubtypeRefForFunctionsTest extends AbstractJudgmentSubtypeT
 	}
 
 	@Test
-	def void testSubTypeFunctionRefsSpecExampleVarOptWithNoneOnRHS() {
+	public void testSubTypeFunctionRefsSpecExampleVarOptWithNoneOnRHS() {
 		assertSubType("{function(A=undefined)}", "{function()}");
 		assertSubType("{function(...A)}", "{function()}");
 		assertSubType("{function(A=undefined,A=undefined)}", "{function()}");
@@ -71,13 +71,13 @@ class N4_7_2_JudgmentSubtypeRefForFunctionsTest extends AbstractJudgmentSubtypeT
 		assertSubType("{function(A)}", "{function()}", false);
 	}
 
-//	@Test
-//	def void testSingle() {
-//		assertSubType("{function(A=undefined,A...)}", "{function(A...)}");
-//	}
+	// @Test
+	// public void testSingle() {
+	// assertSubType("{function(A=undefined,A...)}", "{function(A...)}");
+	// }
 
 	@Test
-	def void testSubTypeFunctionRefsSpecExampleThis() {
+	public void testSubTypeFunctionRefsSpecExampleThis() {
 		// IDE-802: so X is not known in the Context of Test,
 		// replacing X with (! A;B;C;) D;E here.
 
