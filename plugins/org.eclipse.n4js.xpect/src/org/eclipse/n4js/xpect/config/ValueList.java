@@ -8,18 +8,22 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.xpect.config
+package org.eclipse.n4js.xpect.config;
 
-import java.util.List
-import org.eclipse.xtext.resource.XtextResource
+import java.util.List;
+
+import org.eclipse.xtext.resource.XtextResource;
 
 /**
  */
 interface ValueList {
 
-	/** Evaluate this value list against a current environment.
-	 * @param res Xtext Resource to evaluate against. Can be used for accessing built in types.
-	 * @return list of computed strings.*/
-	def List<String> evaluate(XtextResource res)
-
+	/**
+	 * Evaluate this value list against a current environment.
+	 *
+	 * @param res
+	 *            Xtext Resource to evaluate against. Can be used for accessing built in types.
+	 * @return list of computed strings.
+	 */
+	List<String> evaluate(XtextResource res);
 }
