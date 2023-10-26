@@ -35,7 +35,7 @@ public class TypeAliasComputerTest extends AbstractTypesystemTest {
 
 	@Test
 	public void testBasic() {
-		Script script = _n4JSTestHelper.parseAndValidateSuccessfully("""
+		Script script = n4TestHelper.parseAndValidateSuccessfully("""
 				type A = string;
 				""");
 
@@ -52,7 +52,7 @@ public class TypeAliasComputerTest extends AbstractTypesystemTest {
 
 	@Test
 	public void testResolutionChangesMetaType() {
-		Script script = _n4JSTestHelper.parseAndValidateSuccessfully("""
+		Script script = n4TestHelper.parseAndValidateSuccessfully("""
 				type A = string | number;
 				""");
 
@@ -69,7 +69,7 @@ public class TypeAliasComputerTest extends AbstractTypesystemTest {
 
 	@Test
 	public void testNestedInComposedTypeRef() {
-		Script script = _n4JSTestHelper.parseAndValidateSuccessfully("""
+		Script script = n4TestHelper.parseAndValidateSuccessfully("""
 				type S = string;
 				type U = number | S;
 				type A = U;
@@ -94,7 +94,7 @@ public class TypeAliasComputerTest extends AbstractTypesystemTest {
 
 	@Test
 	public void testNestedInFunctionTypeRef() {
-		Script script = _n4JSTestHelper.parseAndValidateSuccessfully("""
+		Script script = n4TestHelper.parseAndValidateSuccessfully("""
 				type S = string;
 				type F = (S)=>S;
 				type A = F;

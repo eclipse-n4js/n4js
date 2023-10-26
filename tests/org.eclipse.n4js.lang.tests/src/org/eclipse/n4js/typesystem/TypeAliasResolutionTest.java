@@ -41,7 +41,7 @@ public class TypeAliasResolutionTest extends AbstractTypesystemTest {
 
 	@Test
 	public void testVarDecl() {
-		Script script = _n4JSTestHelper.parseAndValidateSuccessfully("""
+		Script script = n4TestHelper.parseAndValidateSuccessfully("""
 				type S = string;
 				let x: S;
 				""");
@@ -54,7 +54,7 @@ public class TypeAliasResolutionTest extends AbstractTypesystemTest {
 
 	@Test
 	public void testExportedVarDecl() {
-		Script script = _n4JSTestHelper.parseAndValidateSuccessfully("""
+		Script script = n4TestHelper.parseAndValidateSuccessfully("""
 				type S = string;
 				export let x: S;
 				""");
@@ -67,7 +67,7 @@ public class TypeAliasResolutionTest extends AbstractTypesystemTest {
 
 	@Test
 	public void testClassMembers() {
-		Script script = _n4JSTestHelper.parseAndValidateSuccessfully("""
+		Script script = n4TestHelper.parseAndValidateSuccessfully("""
 				type S = string;
 				class Cls {
 					field: S;
@@ -98,7 +98,7 @@ public class TypeAliasResolutionTest extends AbstractTypesystemTest {
 
 	@Test
 	public void testInterfaceMembers() {
-		Script script = _n4JSTestHelper.parseAndValidateSuccessfully("""
+		Script script = n4TestHelper.parseAndValidateSuccessfully("""
 				type S = string;
 				interface Ifc {
 					field: S;
@@ -129,7 +129,7 @@ public class TypeAliasResolutionTest extends AbstractTypesystemTest {
 
 	@Test
 	public void testTypeAlias() {
-		Script script = _n4JSTestHelper.parseAndValidateSuccessfully("""
+		Script script = n4TestHelper.parseAndValidateSuccessfully("""
 				type S = string;
 				type A = S;
 				""");

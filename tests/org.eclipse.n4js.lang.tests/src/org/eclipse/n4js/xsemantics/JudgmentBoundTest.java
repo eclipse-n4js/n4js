@@ -26,7 +26,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression;
-import org.eclipse.n4js.N4JSTestHelper;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.Script;
@@ -60,9 +59,6 @@ import com.google.inject.Inject;
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSInjectorProviderWithIssueSuppression.class)
 public class JudgmentBoundTest extends AbstractTypesystemTest {
-
-	@Inject
-	N4JSTestHelper n4TestHelper;
 
 	@Inject
 	private TypeCompareHelper typeCompareHelper;

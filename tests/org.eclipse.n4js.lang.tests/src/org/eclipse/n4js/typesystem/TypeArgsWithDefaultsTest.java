@@ -31,7 +31,7 @@ public class TypeArgsWithDefaultsTest extends AbstractTypesystemTest {
 
 	@Test
 	public void testSimple() throws Exception {
-		Script script = _n4JSTestHelper.parseAndValidateSuccessfully("""
+		Script script = n4TestHelper.parseAndValidateSuccessfully("""
 				class A {}
 				class B {}
 				class G<T0, T1=A, T2=A> {}
@@ -51,7 +51,7 @@ public class TypeArgsWithDefaultsTest extends AbstractTypesystemTest {
 
 	@Test
 	public void testRawTypeReferences() throws Exception {
-		Script script = _n4JSTestHelper.parseAndValidateSuccessfully("""
+		Script script = n4TestHelper.parseAndValidateSuccessfully("""
 				class A {}
 				class B {}
 				class G<T0, T1, T2=A, T3=A> {}

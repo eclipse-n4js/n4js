@@ -14,6 +14,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.newRul
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.head;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.last;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.map;
+import static org.eclipse.xtext.xbase.lib.IterableExtensions.toList;
 import static org.eclipse.xtext.xbase.lib.IteratorExtensions.filter;
 import static org.eclipse.xtext.xbase.lib.IteratorExtensions.head;
 import static org.junit.Assert.assertEquals;
@@ -26,7 +27,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression;
-import org.eclipse.n4js.N4JSTestHelper;
 import org.eclipse.n4js.WildcardCaptureTestHelper;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
@@ -65,9 +65,6 @@ public class JudgmentSubtypeTest extends AbstractTypesystemTest {
 	ValidationTestHelper valTestHelper;
 
 	@Inject
-	N4JSTestHelper n4TestHelper;
-
-	@Inject
 	private WildcardCaptureTestHelper wildcardCaptureTestHelper;
 
 	@Test
@@ -97,13 +94,13 @@ public class JudgmentSubtypeTest extends AbstractTypesystemTest {
 	@Test
 	public void testSubtypeUnknownType_01() throws Exception {
 		Script script = parseHelper.parse("""
-					var x: Unknown1
-					var y: Unknown2
+				var x: Unknown1
+				var y: Unknown2
 				""");
 		assertEquals(List.of(
 				"ERROR:Couldn't resolve reference to Type 'Unknown1'. (__synthetic0.n4js line : 1 column : 8)",
 				"ERROR:Couldn't resolve reference to Type 'Unknown2'. (__synthetic0.n4js line : 2 column : 8)"),
-				map(valTestHelper.validate(script), issue -> IssueUtils.toString(issue)));
+				toList(map(valTestHelper.validate(script), issue -> IssueUtils.toString(issue))));
 
 		List<ScriptElement> lastTwoVars = ListExtensions.reverseView(script.getScriptElements()).subList(0, 2);
 		TypeRef firstType = variableStatementDeclaredType(head(lastTwoVars));
@@ -116,12 +113,12 @@ public class JudgmentSubtypeTest extends AbstractTypesystemTest {
 	@Test
 	public void testSubtypeUnknownType_02() throws Exception {
 		Script script = parseHelper.parse("""
-					var x: String
-					var y: Unknown
+				var x: String
+				var y: Unknown
 				""");
 		assertEquals(List.of(
 				"ERROR:Couldn't resolve reference to Type 'Unknown'. (__synthetic0.n4js line : 2 column : 8)"),
-				map(valTestHelper.validate(script), issue -> IssueUtils.toString(issue)));
+				toList(map(valTestHelper.validate(script), issue -> IssueUtils.toString(issue))));
 
 		List<ScriptElement> lastTwoVars = ListExtensions.reverseView(script.getScriptElements()).subList(0, 2);
 		TypeRef firstType = variableStatementDeclaredType(head(lastTwoVars));
@@ -134,12 +131,12 @@ public class JudgmentSubtypeTest extends AbstractTypesystemTest {
 	@Test
 	public void testSubtypeUnknownType_03() throws Exception {
 		Script script = parseHelper.parse("""
-					var x: Unknown
-					var y: String
+				var x: Unknown
+				var y: String
 				""");
 		assertEquals(List.of(
 				"ERROR:Couldn't resolve reference to Type 'Unknown'. (__synthetic0.n4js line : 1 column : 8)"),
-				map(valTestHelper.validate(script), issue -> IssueUtils.toString(issue)));
+				toList(map(valTestHelper.validate(script), issue -> IssueUtils.toString(issue))));
 
 		List<ScriptElement> lastTwoVars = ListExtensions.reverseView(script.getScriptElements()).subList(0, 2);
 		TypeRef firstType = variableStatementDeclaredType(head(lastTwoVars));
