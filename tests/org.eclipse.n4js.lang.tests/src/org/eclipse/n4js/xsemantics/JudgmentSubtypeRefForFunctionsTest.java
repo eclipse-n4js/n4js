@@ -8,34 +8,32 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.xsemantics
+package org.eclipse.n4js.xsemantics;
 
-import org.eclipse.xtext.testing.InjectWith
-import org.eclipse.xtext.testing.XtextRunner
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression;
+import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.XtextRunner;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/**
- */
-@RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProviderWithIssueSuppression)
-class JudgmentSubtypeRefForFunctionsTest extends AbstractJudgmentSubtypeTest {
+@RunWith(XtextRunner.class)
+@InjectWith(N4JSInjectorProviderWithIssueSuppression.class)
+public class JudgmentSubtypeRefForFunctionsTest extends AbstractJudgmentSubtypeTest {
 
 	@Test
-	def void testSubTypeFunctionRefsEmpty() {
+	public void testSubTypeFunctionRefsEmpty() {
 		assertSubType("/*1*/{function()}", "/*2*/{function()}");
 	}
 
 	@Test
-	def void testSubTypeFunctionRefsWithReturn() {
+	public void testSubTypeFunctionRefsWithReturn() {
 		assertSubType("/*1*/{function():A}", "/*2*/{function():A}");
 		assertSubType("{function():B}", "{function():A}");
 		assertSubType("{function():A}", "{function():B}", false);
 	}
 
 	@Test
-	def void testSubTypeFunctionRefsWithParameters() {
+	public void testSubTypeFunctionRefsWithParameters() {
 		assertSubType("/*1*/{function(A)}", "/*2*/{function(A)}");
 		assertSubType("{function(A)}", "{function(B)}");
 		assertSubType("{function(B)}", "{function(A)}", false);
