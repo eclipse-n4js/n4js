@@ -41,7 +41,6 @@ public class Config {
 
 	List<VarDef> vars = new ArrayList<>();
 
-	/**   */
 	public String name;
 	long contentAssistTimeout = 2000L;
 	String content_assist_kind = "n4js";
@@ -56,12 +55,10 @@ public class Config {
 		this.name = name;
 	}
 
-	/**   */
 	public void add(VarDef v) {
 		vars.add(v);
 	}
 
-	/**   */
 	public VarDef getVar(String sname) {
 		return findFirst(vars, var -> Objects.equals(var.name, sname));
 	}
@@ -94,7 +91,6 @@ public class Config {
 		content_assist_kind = kind;
 	}
 
-	/**   */
 	public String getContent_assist_kind() {
 		return content_assist_kind;
 	}

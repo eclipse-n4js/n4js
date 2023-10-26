@@ -14,8 +14,6 @@ import java.util.List;
 
 import org.eclipse.xtext.resource.XtextResource;
 
-/**
- */
 interface ValueList {
 
 	/**

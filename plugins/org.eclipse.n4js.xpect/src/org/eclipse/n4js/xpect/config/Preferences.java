@@ -21,7 +21,6 @@ import org.eclipse.xtext.preferences.TypedPreferenceKey;
 
 /**
  * Preferences Container for Xpect-Setup sections.
- *
  */
 @XpectSetupRoot
 @XpectImport(Preference.class)
@@ -29,7 +28,6 @@ public class Preferences implements ITypedPreferenceValues {
 
 	HashMap<String, Preference> prefs;
 
-	/** */
 	public Preferences() {
 		prefs = new HashMap<>();
 	}

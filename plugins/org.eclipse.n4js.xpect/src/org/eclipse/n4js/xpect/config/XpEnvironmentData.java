@@ -21,8 +21,6 @@ import org.eclipse.xpect.setup.XpectSetupRoot;
 import org.eclipse.xpect.xtext.lib.setup.InjectorSetup;
 import org.eclipse.xtext.resource.XtextResource;
 
-/**
- */
 @XpectSetupRoot
 @XpectImport({ Config.class, VarDef.class, InjectorSetup.class, StringList.class })
 public class XpEnvironmentData {
@@ -33,12 +31,10 @@ public class XpEnvironmentData {
 
 	XtextResource resourceUnderTest = null;
 
-	/***/
 	public void add(Config cRoot) {
 		root = cRoot;
 	}
 
-	/***/
 	public void add(VarDef aVar) {
 		vars.add(aVar);
 	}
@@ -62,12 +58,10 @@ public class XpEnvironmentData {
 		return "XpEnvironmentData with config=%s vars=%s.".formatted(root, vars);
 	}
 
-	/***/
 	public void setResourceUnderTest(XtextResource resource) {
 		this.resourceUnderTest = resource;
 	}
 
-	/***/
 	public XtextResource getResourceUnderTest() {
 		return resourceUnderTest;
 	}

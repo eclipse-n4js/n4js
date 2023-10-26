@@ -37,7 +37,6 @@ import org.eclipse.xtext.resource.XtextResource;
 @XpectSetupComponent
 public class StringList implements ValueList {
 
-	/***/
 	public ArrayList<String> strings;
 
 	/** Constructor */
@@ -51,12 +50,10 @@ public class StringList implements ValueList {
 		strings.addAll(Arrays.asList(x));
 	}
 
-	/***/
 	public void add(String s) {
 		strings.add(s);
 	}
 
-	/***/
 	public void setS(String s) {
 		strings.add(s);
 	}

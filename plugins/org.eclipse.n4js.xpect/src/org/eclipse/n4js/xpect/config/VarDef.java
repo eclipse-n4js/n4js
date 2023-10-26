@@ -40,10 +40,8 @@ import org.eclipse.xpect.setup.XpectSetupComponent;
 @XpectSetupComponent
 public class VarDef {
 
-	/***/
 	public String name;
 
-	/***/
 	public List<ValueList> mlist = new ArrayList<>();
 
 	/**
@@ -61,7 +59,6 @@ public class VarDef {
 		mlist.add(l);
 	}
 
-	/***/
 	public void add(StringList s) {
 		mlist.add(s);
 	}
