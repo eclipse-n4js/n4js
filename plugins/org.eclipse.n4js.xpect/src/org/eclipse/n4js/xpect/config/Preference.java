@@ -20,7 +20,6 @@ import org.eclipse.xpect.setup.XpectSetupComponent;
  *  Preference "key2" "value2" {}
  *  ...
  * </pre>
- *
  */
 @XpectSetupComponent
 public class Preference {

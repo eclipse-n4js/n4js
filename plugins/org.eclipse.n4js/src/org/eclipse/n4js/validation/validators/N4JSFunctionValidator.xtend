@@ -45,7 +45,7 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageHelper
 import org.eclipse.n4js.utils.nodemodel.HiddenLeafAccess
-import org.eclipse.n4js.utils.nodemodel.HiddenLeafs
+import org.eclipse.n4js.utils.nodemodel.HiddenLeafAccess.HiddenLeafs
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.EcoreUtil2

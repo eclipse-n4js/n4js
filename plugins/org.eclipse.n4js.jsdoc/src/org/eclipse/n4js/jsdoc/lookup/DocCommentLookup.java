@@ -15,17 +15,16 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.services.N4JSGrammarAccess;
+import org.eclipse.n4js.utils.nodemodel.HiddenLeafAccess;
+import org.eclipse.n4js.utils.nodemodel.HiddenLeafAccess.CommentInfo;
+import org.eclipse.n4js.utils.nodemodel.HiddenLeafAccess.HiddenLeafs;
+import org.eclipse.n4js.utils.nodemodel.HiddenLeafAccess.LeafInfo;
 import org.eclipse.xtext.TerminalRule;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.services.N4JSGrammarAccess;
-import org.eclipse.n4js.utils.nodemodel.CommentInfo;
-import org.eclipse.n4js.utils.nodemodel.HiddenLeafAccess;
-import org.eclipse.n4js.utils.nodemodel.HiddenLeafs;
-import org.eclipse.n4js.utils.nodemodel.LeafInfo;
 
 /**
  * Tries to retrieve comment form given EObject. Returns {@link CommentCandidate} or null.
