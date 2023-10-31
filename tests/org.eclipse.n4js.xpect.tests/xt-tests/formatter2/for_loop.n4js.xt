@@ -1,0 +1,57 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+   END_SETUP
+ */
+
+//
+/* XPECT formattedLines 1 ---
+for (let a = 1; a < 7; a += 1) {
+	console.log("a=", a)
+}
+--- */
+for(let a=1;a<7;a+=1){console.log("a=",a)}
+
+// test post-increment in for-loop
+/* XPECT formattedLines 1 ---
+for (let a = 1; a < 7; a++) {
+	console.log("a=", a)
+}
+--- */
+for(let a=1;a<7;a++){console.log("a=",a)}
+
+//
+/* XPECT formattedLines 50 ---
+for (let a = 1; a < 7; a++) {
+	console.log("a=", a);
+}
+
+--- */
+for
+     (
+     	   let
+     	       a=1
+     	          ;
+     	             a
+     	                <
+     	                   7
+     	                      ;
+     	                         a ++
+
+        )
+            {
+            	    console.log("a="
+            	    	   ,
+            	    	      a
+            	        )
+                 }

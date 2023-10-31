@@ -1,0 +1,226 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest 
+   
+//   Preference "indentation" "    " {}
+//   Preference "format.max_consecutive_newlines" "1" {}
+   
+   
+   END_SETUP
+ */
+
+// refer to GHOLD-251
+
+enum E {
+	A,
+	B,
+	C
+}
+
+/* block after case clause colon opens one space after colon 
+   XPECT formattedLines 8 ---
+function f1(e: E) {
+	switch (e) {
+		case E.A: {}
+		default: {}
+	}
+};
+--- */
+function f1(e: E) {
+	switch (e) {
+		case E.A:  {
+		}
+		default:  {
+		}
+	}
+};
+
+
+/* block after case clause colon opens one space after colon 
+   XPECT formattedLines 6 ---
+function f2(e: E) {
+	switch (e) {
+		case E.A: {}
+		default: {}
+	}
+};
+--- */
+function f2(e: E) {
+	switch (e) {
+		case E.A:{     }
+		default:{   }
+	}
+};
+
+
+/* block in case clause opens in next line, following statements are formatted too 
+   XPECT formattedLines 10 ---
+function f3(e: E) {
+	switch (e) {
+		case E.A:
+			{}
+			console.log("");
+		default:
+			{}
+			console.log("");
+	}
+};
+--- */
+function f3(e: E) {
+	switch (e) {
+		case E.A: 
+		{}
+		console.log("");
+		default: 
+		   {}
+		console.log("");
+	}
+};
+
+
+/* blocks in case clause opens in same line as colon, block is formatted too 
+   XPECT formattedLines 18 ---
+function f4(e: E) {
+	switch (e) {
+		case E.A: {
+
+				console.log("");
+		}
+		default: {
+				console.log("");
+
+		}
+	}
+};
+--- */
+function f4(e: E) {
+	switch (e) {
+		case E.A: 
+		{
+			
+			
+			
+		console.log("");
+		}
+		default: 
+		
+		{		console.log("");
+			
+			
+			
+		}
+	}
+};
+
+
+/* >1 statements in case: new line after case expression colon
+   XPECT formattedLines 13 ---
+function f5(e: E) {
+	switch (e) {
+		case E.A:
+			console.log("");
+			break;
+		default:
+			console.log("");
+
+			break;
+
+	}
+};
+--- */
+function f5(e: E) {
+	switch (e) {
+		case E.A: 
+
+
+					console.log("");
+			break;
+		default: 
+					console.log("");
+				
+				
+			break;
+
+		
+	}
+};
+
+
+/* >1 statements in case: new line after case expression colon 
+   XPECT formattedLines 8 ---
+function f6(e: E) {
+	switch (e) {
+		case E.A:
+			console.log("");
+			break;
+		default:
+			console.log("");
+
+			break;
+
+	}
+};
+--- */
+function f6(e: E) {
+	switch (e) {
+		case E.A:			console.log("");
+			break;
+		default:console.log("");
+
+			break;
+
+	}
+};
+
+
+/* one statements in case: new line after case expression colon 
+   XPECT formattedLines 8 ---
+function f7(e: E) {
+	switch (e) {
+		case E.A:
+			return true;
+		default:
+			return false;
+
+	}
+};
+--- */
+function f7(e: E) {
+	switch (e) {
+		case E.A:
+			return true;
+		default:
+
+			return false;
+
+	}
+};
+
+
+/* one statements in case: same line after case expression colon 
+   XPECT formattedLines 7 ---
+function f8(e: E) {
+	switch (e) {
+		case E.A: return true;
+		default: return false;
+
+	}
+};
+
+--- */
+function f8(e: E) {
+	switch (e) {
+		case E.A:			return true;
+		default:return false;
+
+	}
+};

@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+var a,b;
+/* insert single space between "if" and "(" opening parenthesis  */
+/* XPECT formattedLines 1 ---
+if ((a === 0)) {
+	;
+}
+--- */
+if((a === 0)) { ; }
+
+
+
+/* no linebreak between "if" and "(" opening parenthesis  */
+/* XPECT formattedLines 2 ---
+if (b === 0) {}
+--- */
+if
+  (b === 0){}
+
+
+/* no linebreak between "if" and "(" opening parenthesis  */
+/* XPECT formattedLines 5 ---
+if (b === 0) {
+	// stuff
+}
+--- */
+if
+  (b === 0)
+  {
+  	// stuff
+  }
+
+
+
+/*
+Based on empirical result of hand-formatted code:
+:~/stdlib/stdlib_n4js$ find . -name "*.n4js" -exec grep "if(" {} \; | wc -l
+      10
+:~/stdlib/stdlib_n4js$ find . -name "*.n4js" -exec grep "if\W*(" {} \; | wc -l
+    1257
+)
+*/

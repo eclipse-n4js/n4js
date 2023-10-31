@@ -1,0 +1,118 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+//   Preference "indentation" "    " {}
+
+
+   END_SETUP
+ */
+
+class A { a:A; }
+var exc = null;
+
+
+
+/* XPECT formattedLines 2 ---
+let bool = true;
+let z = bool ? 5 : 10;
+--- */
+let bool = true;
+let z = bool?5:10;
+
+/** Inlined Chained property calls. */
+/* XPECT formattedLines 6 ---
+{
+	let values = [223, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23];
+	values.map(val => 2 * val).reduce((memo, val) => {
+			return memo;
+		}, 56);
+}
+--- */
+{
+        let values = [223, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23];
+        values.map(val => 2 * val).reduce((memo, val) => {
+            return memo;
+        }, 56);
+}
+
+/** Inlined Chained property calls. */
+/* XPECT formattedLines 8 ---
+{
+	let values = [223, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23];
+	values
+		.map(val => 2 * val)
+		.reduce((memo, val) => {
+			return memo;
+		}, 56);
+}
+--- */
+{
+        let values = [223, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23];
+        values
+          .map(  val    =>2*val   )
+      .reduce(   (   memo   ,    val    )    =>    {
+                   return memo;
+   },   56   );
+}
+
+/** Inlined Chained property calls. */
+/* XPECT formattedLines  16 ---
+{
+	let a: A;
+	a.a.a.a.a.a;
+	a.a
+		.a
+		.a;
+	a
+		.a
+		.a
+		.a;
+}
+--- */
+{
+        let a:A;
+         a.a.a.a.a.a
+         a.
+         a
+         .
+         a
+         .a
+         a
+         .
+         a
+         .
+         a
+         .
+         a
+}
+
+
+/** wrappign of logical expressions */
+/* XPECT formattedLines 3 ---
+interface GooSupperLongWordWithSomeSuperHeros {}
+let abc: int, bar, hoo;
+let juergen = (1 === abc % 2 || ((bar instanceof GooSupperLongWordWithSomeSuperHeros) && (hoo instanceof
+				GooSupperLongWordWithSomeSuperHeros))) ? [23423, 23423, 23423, 23423, 23423] : [23423, 23423, 23423,
+		23423, 23423];
+--- */
+interface GooSupperLongWordWithSomeSuperHeros {}
+let abc:int, bar, hoo;
+let juergen = (1 === abc % 2 || ((bar instanceof GooSupperLongWordWithSomeSuperHeros) && (hoo instanceof GooSupperLongWordWithSomeSuperHeros))) ? [23423, 23423, 23423, 23423, 23423] : [23423, 23423, 23423, 23423, 23423];
+
+
+// found during IDE-1852: XPECT FIXME noerrors
+// Nested String-concat.
+/* XPECT formattedLines 1 ---
+throw new ArithmeticError("BigNumber Error: " + (exc as Error).message, exc as Error);
+--- */
+throw new ArithmeticError("BigNumber Error: " + (exc as Error).message, exc as Error);

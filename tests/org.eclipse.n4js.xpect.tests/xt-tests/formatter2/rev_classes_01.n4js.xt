@@ -1,0 +1,97 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   IssueConfiguration { IssueCode "ANN__TEST_ONLY_IN_TEST_SOURCES" {enabled=false} }
+   END_SETUP
+ */
+
+/* Remove spaces, fix indentation */
+/* XPECT formattedLines 2 ---
+class C {}
+--- */
+class C {
+    }
+
+
+/* remove empty lines with annotation */
+/* XPECT formattedLines 4 ---
+let a = 0;
+
+@Description("a")
+class C2 {}
+--- */
+let a=0;
+   @Description("a")
+  class C2 {
+
+
+
+
+}
+
+/* remove empty lines */
+/* XPECT FIXME formattedLines 4 ---
+class C3 {}
+--- */
+  class C3 {
+
+
+
+
+}
+
+
+/* remove empty lines */
+/* XPECT FIXME formattedLines 4 ---
+class C3a {// comment
+}
+--- */
+  class C3a {
+
+// comment
+
+
+}
+
+
+/* remove leading WS */
+/* XPECT FIXME formattedLines 4 ---
+class C4 {}
+--- */
+  class C4 {
+
+
+
+
+}
+
+
+
+
+/* strange */
+/* XPECT formattedLines 3 ---
+{
+	() => 0;
+}
+--- */
+{
+     () => 0;
+}
+
+
+
+/* XPECT FIXME formattedLines 3 ---
+function foo() {};
+--- */
+    function foo() {
+
+}

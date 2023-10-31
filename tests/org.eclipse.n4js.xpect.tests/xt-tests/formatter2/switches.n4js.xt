@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+   Preference "format.switch_cases_have_space_in_front_of_colon" "true" {}
+
+   END_SETUP
+ */
+
+enum XMode {
+	A,B,C,Z
+}
+class YStuff {
+	static E = 1;
+	static F = 2;
+	static G = 3;
+}
+
+
+/* XPECT formattedLines 15 ---
+class A {
+	// This is a comment.
+	private static getSomething(mode: XMode): number {
+		switch(mode) {
+			case XMode.A:
+				return YStuff.E;
+
+			case XMode.B:
+				return YStuff.F;
+
+			case XMode.C: return YStuff.G;
+
+			case XMode.Z:
+				return -1;
+
+			default: throw new Error("Incorrect XMode!");
+		}
+	}
+}
+--- */
+class A {
+    // This is a comment.
+    private static getSomething(mode: XMode): number {
+        switch(mode){
+            case XMode.A:
+            	return YStuff.E;
+
+      case XMode.B:
+            	return YStuff.F;
+
+            case XMode.C: return YStuff.G;
+
+            case XMode.Z:
+            	return -1;
+
+            default: throw new Error("Incorrect XMode!");
+        }
+    }
+}
+
+/* XPECT formattedLines 4 ---
+switch (1) {
+	case 'a': //
+	default:
+}
+--- */
+switch (1) {
+	case 'a': //
+	default:
+}

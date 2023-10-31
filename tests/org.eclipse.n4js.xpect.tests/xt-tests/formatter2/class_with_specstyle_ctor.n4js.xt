@@ -1,0 +1,165 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest 
+   
+   END_SETUP
+ */
+class DataObject {}
+
+/* XPECT formattedLines 20 ---
+const NAME_SLOT = Symbol("name");
+/\**
+ * @spec Formerly known as ValueObjects bla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla
+ *\/
+export public abstract class ImmutableDataObject extends DataObject {
+
+	@Internal
+	protected get __name(): string {
+		let self: Object = this;
+		return self[NAME_SLOT] as string;
+	}
+	private set __name(name: string) {
+		let self: Object = this;
+		self[NAME_SLOT] = name;
+	}
+	public constructor(@Spec spec: ~i~this with {__name?: string;}) {
+		if (spec != null) {
+			this.__name = spec.__name;
+		}
+	}
+}
+--- */
+const NAME_SLOT = Symbol("name");
+/**
+ * @spec Formerly known as ValueObjects bla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla
+ */
+export public abstract class ImmutableDataObject extends DataObject {
+
+    @Internal
+    protected get __name(): string {
+    	let self:Object = this;
+        return self[NAME_SLOT] as string;
+    }
+    private set __name(name: string) {
+    	let self:Object = this;
+        self[NAME_SLOT] = name;
+    }
+    public constructor(@Spec spec: ~i~this with {__name?: string;}) {
+        if (spec != null) {
+            this.__name = spec.__name;
+        }
+    }
+}
+
+
+
+
+/* XPECT formattedLines 160 ---
+const NAME_SLOT2 = Symbol("name2");
+/\**
+ * @spec Formerly known as ValueObjects bla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla
+ *\/
+export public abstract class ImmutableDataObject2
+	extends DataObject {
+
+	@Internal
+	protected get __name(): string {
+		let self: Object = this;
+		return self[NAME_SLOT2] as string;
+	}
+
+	private set __name(name: string) {
+		let self: Object = this;
+		self[NAME_SLOT2] = name;
+	}
+
+	public constructor(@Spec spec: ~i~this with {__name?: string;}) {
+		if (spec != null) {
+			this.__name = spec.__name;
+		}
+	}
+}
+
+--- */
+const 
+       NAME_SLOT2 
+            =    
+                Symbol(
+                      "name2"
+                          );
+       /**
+           * @spec Formerly known as ValueObjects bla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla
+                    */
+       export 
+          public 
+             abstract 
+                class 
+                   ImmutableDataObject2 
+                      extends 
+                         DataObject 
+                            {
+       
+           @Internal
+             
+           protected 
+               get 
+                  __name()
+                     : 
+                         string 
+                            {
+              let 
+                     self:Object = 
+                         this;
+               return self[
+                     NAME_SLOT2
+                         ] as 
+                     string;
+           }
+           
+           
+                private 
+                     set 
+                         __name
+                             ( 
+                               
+                                 name
+                                     : 
+                                         string
+                             ) 
+                                {
+           	let self:Object = this;
+               self[NAME_SLOT2] = name;
+           }
+           
+           
+           public  
+                constructor(
+                     @  Spec 
+                          spec
+                          : 
+                             ~i~
+                             this 
+                             with 
+                             {
+                                 __name
+                                 						?
+                                   : 
+                                      string
+                                        ;
+                             }
+                )    
+                    {
+               if (spec != null) {
+                   this.__name = spec.__name;
+               }
+           }
+       }

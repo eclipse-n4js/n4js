@@ -1,0 +1,122 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+/* [BLOCK] indent single-line comment not on first column */
+/* XPECT formattedLines 3 ---
+{
+	// x
+}
+--- */
+{
+ // x
+}
+
+
+/* Don't indent single-line comment on first column */
+/* XPECT formattedLines 3 ---
+{
+// y
+}
+--- */
+{
+// y
+}
+
+/* Keep single-line comment in line with brace */
+/* XPECT formattedLines 2 ---
+{ // a
+}
+--- */
+{      // a
+}
+
+/* Collapse space between single-line comment and brace */
+/* XPECT formattedLines 2 ---
+{ // b
+}
+--- */
+{                              // b
+}
+
+/* Collapse space between single-line comment and brace */
+/* XPECT formattedLines 2 ---
+	{ // c
+	}
+--- */
+{                              // c
+}
+
+/* Insert single space between single-line comment and brace */
+/* XPECT formattedLines 2 ---
+{ // d
+}
+--- */
+{// d
+}
+
+/* normalize ml-comment in single-line braces */
+/* XPECT formattedLines 1 ---
+{ /\* h *\/
+}
+--- */
+{/* h */}
+
+/* normalize ml-comment in single-line braces */
+/* XPECT formattedLines 1 ---
+{ /\* h *\/
+}
+--- */
+{           /* h */               }
+
+/* normalize ml-comment in single-line braces OL */
+/* XPECT formattedLines 2 ---
+{ /\* h *\/
+}
+--- */
+{           /* h */
+}
+
+/* Multiple SL-comments some indented */
+/* XPECT formattedLines 6 ---
+{
+// keep
+	// move to right
+	// move to left
+// keep again.
+}
+--- */
+{
+// keep
+ // move to right
+ 						// move to left
+// keep again.
+}
+
+/* Multiple ML-comments in single line with statement: don't touch */
+/* XPECT formattedLines 1 ---
+{ /\* a *\/ /\*b*\/ /\*     c     *\/
+	let x = 3; /\*d*\/
+}
+--- */
+{ /* a */ /*b*/ /*     c     */ let x=3; /*d*/ }
+
+
+/* Multiple ML-comments with statement and braces in different lines: format in multiple lines */
+/* XPECT formattedLines 2 ---
+{ /\* a *\/ /\*b*\/ /\*     c     *\/
+	let x = 3; /\*d*\/
+}
+--- */
+{ /* a */ /*b*/ /*     c     */ let x=3; /*d*/
+}

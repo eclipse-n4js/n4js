@@ -1,0 +1,158 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+   END_SETUP
+ */
+
+// found during IDE-1852: XPECT FIXME nowarnings
+/* If-expressions: consider having the colon an the beginning of the line:
+	TODO DISCUSS Conditional operator
+*/
+// I get this:
+/* XPECT formattedLines 3 ---
+var a = a ?
+	42 :
+	0;
+--- */
+var a = a ?
+    42 :
+    0;
+
+// maybe better: TODO DISCUSS Conditional operator
+/* XPECT FIXME formattedLines 3 ---
+var a2 = a ?
+	42
+	: 0;
+--- */
+var a2 = a ?
+    42
+    : 0;
+
+// or TODO DISCUSS Conditional operator
+/* XPECT FIXME formattedLines 2 ---
+var a3 = a ? 42
+	: 0;
+--- */
+var a3 = a ? 42
+    : 0;
+
+
+
+// found during IDE-1852: XPECT FIXME noerrors
+/* the following does not get fully formatted:
+ */
+/* XPECT formattedLines 2 ---
+foo(1, 2);
+--- */
+foo(1
+,2)
+
+
+/* TODO discuss, TK to my mind it is only concise to have this.
+ * in next example, the last two lines will get 1 additional indent level, which seems to be undesired:
+ */
+/* XPECT formattedLines 3 ---
+var ol = {
+		donkey: "kong"
+	};
+--- */
+var ol = {
+    donkey: "kong"
+};
+
+
+
+/* object destructuring, pt. 1:
+*/
+/* XPECT formattedLines 5 ---
+var {donkey: bar2} = {donkey: null};
+--- */
+var
+                    {
+donkey
+:            bar2
+} = {donkey: null};
+
+
+
+/*  object destructuring, pt. 2:
+ *  Multiline
+ */
+/* XPECT formattedLines 5 ---
+var bar;
+
+({
+		donkey: bar
+	} = {donkey: null});
+--- */
+var bar;
+
+(                   {
+donkey
+:            bar
+} = {donkey: null});
+
+
+
+/*  object destructuring, pt. 2:
+ * single line.
+ */
+/* XPECT formattedLines 4 ---
+var bar1;
+
+({donkey: bar1} = {donkey: null});
+--- */
+var bar1;
+
+(                   {   	donkey
+:            bar1
+} = {donkey: null});
+
+
+/*
+object destructuring, pt. 3:
+ */
+/* XPECT formattedLines 8 ---
+for (var {donkey: bar3} of [{donkey: null}]) {
+	//
+}
+--- */
+for     (
+   var
+                    {
+donkey
+:            bar3
+} of [{donkey: null}]) {
+    //
+}
+
+
+
+
+
+/*  enums almost good:
+ */
+/* XPECT formattedLines 8 ---
+enum Color {
+	RED: 'R',
+	GREEN: 'G'
+}
+--- */
+enum Color
+                       {
+RED
+: 'R'
+,
+                    GREEN:
+'G'
+}
