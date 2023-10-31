@@ -14,11 +14,15 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager;
@@ -48,6 +52,8 @@ public class XtSetupParser {
 
 	static final String ERROR = "Xt setup parse error: ";
 
+	static final Pattern TOKEN_PATTERN = Pattern.compile("(\\\"[^\\\"]*?\\\")|\\{|\\}|\\=|[\\S&&[^=\\{|\\}\\\"]]+");
+
 	static class TokenStream implements Iterator<String> {
 		final String[] tokens;
 		final String[] tokensComplete;
@@ -55,7 +61,13 @@ public class XtSetupParser {
 
 		TokenStream(String setupWorkspace) {
 			String commentsRemoved = setupWorkspace.replaceAll("\\/\\/[^\\n]*", "");
-			this.tokens = commentsRemoved.trim().split("(?<=\\S)(?=\\{|\\})|(?<=\\{|\\})(?=\\S)|[=\\s]+");
+			Matcher matcher = TOKEN_PATTERN.matcher(commentsRemoved);
+			List<String> allMatches = new ArrayList<>();
+			while (matcher.find()) {
+				allMatches.add(matcher.group());
+			}
+			tokens = allMatches.toArray(new String[0]);
+
 			this.cursor = 0;
 			this.tokensComplete = new String[this.tokens.length];
 			for (int i = 0, pos = 0; i < this.tokens.length; i++) {
@@ -141,6 +153,7 @@ public class XtSetupParser {
 		final Map<String, String> files = new HashMap<>();
 		final Set<String> enabledIssues = new HashSet<>();
 		final Set<String> disabledIssues = new HashSet<>();
+		final Map<String, String> preferences = new HashMap<>();
 	}
 
 	/**
@@ -171,8 +184,15 @@ public class XtSetupParser {
 				tokens.expect("{");
 				result.workspace = parseWorkspace(tokens, xtFile, xtFileContent);
 				break;
+			case "Project":
+			case "JavaProject":
+				parseProject(tokens, xtFile, xtFileContent);
+				break;
 			case "File":
 				parseFile(tokens, result);
+				break;
+			case "Preference":
+				parsePreference(tokens, result);
 				break;
 			case XtFileDataParser.XT_SETUP_END:
 				applyInlinedFileContents(result.workspace, result.files);
@@ -212,7 +232,7 @@ public class XtSetupParser {
 		if (tokens.hasNext() && Objects.equal(tokens.current(), "{")) { // optional block
 			tokens.next(); // consume opening curly brace
 			tokens.expect("enabled");
-			// tokens.expect("="); // note: tokenizer is removing '='
+			tokens.expect("=");
 			switch (tokens.next().toLowerCase()) {
 			case "true":
 				result.disabledIssues.remove(issueCode);
@@ -238,10 +258,10 @@ public class XtSetupParser {
 			switch (tokens.next()) {
 			case "Project":
 			case "JavaProject":
-				parseProject(tokens, xtFile, xtFileContent, yarnProjectBuilder, false);
+				parseYarnProject(tokens, xtFile, xtFileContent, yarnProjectBuilder, false);
 				break;
 			case "NodeModuleProject":
-				parseProject(tokens, xtFile, xtFileContent, yarnProjectBuilder, true);
+				parseYarnProject(tokens, xtFile, xtFileContent, yarnProjectBuilder, true);
 				break;
 			case "}":
 				break LOOP;
@@ -256,7 +276,14 @@ public class XtSetupParser {
 		return xtWorkspace;
 	}
 
-	private static void parseProject(TokenStream tokens, File xtFile, String xtFileContent,
+	private static void parseProject(TokenStream tokens, File xtFile, String xtFileContent) {
+		String projectName = tokens.expectNameInQuotes();
+		WorkspaceBuilder builder = new WorkspaceBuilder(new BuilderInfo());
+		ProjectBuilder prjBuilder = builder.addProject(projectName);
+		parseContainerRest(tokens, xtFile, xtFileContent, prjBuilder, ".", "Project");
+	}
+
+	private static void parseYarnProject(TokenStream tokens, File xtFile, String xtFileContent,
 			YarnProjectBuilder yarnProjectBuilder, boolean inNodeModules) {
 
 		String projectName = tokens.expectNameInQuotes();
@@ -345,6 +372,7 @@ public class XtSetupParser {
 							ERROR + "'This' file's content cannot be loaded using 'from'" + " in file "
 									+ xtFile.getPath());
 
+					tokens.expect("=");
 					fromFileName = tokens.expectNameInQuotes();
 					pathToLoad = xtFileFolder.resolve(fromFileName).normalize();
 					break;
@@ -418,6 +446,14 @@ public class XtSetupParser {
 			tokens.next();
 		}
 		result.files.put(fileName, fileContent.toString());
+	}
+
+	private static void parsePreference(TokenStream tokens, XtSetupParseResult result) {
+		String prefName = tokens.expectNameInQuotes();
+		String prefValue = tokens.expectNameInQuotes();
+		tokens.expect("{");
+		tokens.expect("}");
+		result.preferences.put(prefName, prefValue);
 	}
 
 	private static void applyInlinedFileContents(XtWorkspace workspace, Map<String, String> files) {
