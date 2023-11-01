@@ -22,7 +22,7 @@
 
 
 /* XPECT formattedLines 6 ---
-import { Ce } from "formatter2/input";
+import { Ce } from "input";
 
 /\**
  * Error to notify a cancelation.
@@ -30,7 +30,7 @@ import { Ce } from "formatter2/input";
 export public class CanceledError extends Ce<Error> {}
 
 --- */
-import {Ce} from "formatter2/input"
+import {Ce} from "input"
 
 /**
  * Error to notify a cancelation.

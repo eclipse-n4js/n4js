@@ -19,7 +19,7 @@
 
 /* */
 /* XPECT formattedLines 10 ---
-import {B as X} from "formatter2/input";
+import {B as X} from "input";
 
 
 X;
@@ -34,7 +34,7 @@ import {
 
     as
                X
-} from "formatter2/input";
+} from "input";
 
 
 X;

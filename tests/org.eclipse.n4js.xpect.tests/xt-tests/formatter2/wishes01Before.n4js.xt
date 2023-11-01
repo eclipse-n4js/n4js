@@ -31,7 +31,7 @@
   - line 158 & 159 newlines swallowed.
  */
 /* XPECT FIXME formattedLines 140 ---
-import {SomethingLongHere} from "formatter2/wishesImported";
+import {SomethingLongHere} from "wishesImported";
 
 interface Goo {}
 interface GooSupperLongWordWithSomeSuperHeros {}
@@ -188,7 +188,7 @@ function foo(bar: int): ~Object with {bar?: int;} {
  * preconfigure print margin to 100
  */
 
-import {SomethingLongHere} from "formatter2/wishesImported";
+import {SomethingLongHere} from "wishesImported";
 
 interface Goo {}
 interface GooSupperLongWordWithSomeSuperHeros {}
