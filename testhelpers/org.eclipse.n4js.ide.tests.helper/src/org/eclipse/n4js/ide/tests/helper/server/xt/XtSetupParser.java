@@ -181,12 +181,16 @@ public class XtSetupParser {
 			case "Workspace":
 				Preconditions.checkState(result.workspace == null,
 						ERROR + "Multiple Workspace nodes in file " + xtFile.getPath());
+
 				tokens.expect("{");
 				result.workspace = parseWorkspace(tokens, xtFile, xtFileContent);
 				break;
 			case "Project":
 			case "JavaProject":
-				parseProject(tokens, xtFile, xtFileContent);
+				Preconditions.checkState(result.workspace == null,
+						ERROR + "Multiple Workspace nodes in file " + xtFile.getPath());
+
+				result.workspace = parseProject(tokens, xtFile, xtFileContent);
 				break;
 			case "File":
 				parseFile(tokens, result);
@@ -276,11 +280,17 @@ public class XtSetupParser {
 		return xtWorkspace;
 	}
 
-	private static void parseProject(TokenStream tokens, File xtFile, String xtFileContent) {
-		String projectName = tokens.expectNameInQuotes();
+	private static XtWorkspace parseProject(TokenStream tokens, File xtFile, String xtFileContent) {
 		WorkspaceBuilder builder = new WorkspaceBuilder(new BuilderInfo());
-		ProjectBuilder prjBuilder = builder.addProject(projectName);
+		YarnProjectBuilder yarnProjectBuilder = builder.addYarnProject(TestWorkspaceManager.YARN_TEST_PROJECT);
+
+		String projectName = tokens.expectNameInQuotes();
+		ProjectBuilder prjBuilder = yarnProjectBuilder.addProject(projectName);
 		parseContainerRest(tokens, xtFile, xtFileContent, prjBuilder, ".", "Project");
+
+		XtWorkspace xtWorkspace = builder.build(new XtWorkspace());
+		xtWorkspace.moduleNameOfXtFile = ((BuilderInfo) builder.builderInfo).moduleNameOfXtFile;
+		return xtWorkspace;
 	}
 
 	private static void parseYarnProject(TokenStream tokens, File xtFile, String xtFileContent,

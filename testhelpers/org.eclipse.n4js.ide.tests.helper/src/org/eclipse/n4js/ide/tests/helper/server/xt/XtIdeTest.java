@@ -239,6 +239,9 @@ public class XtIdeTest extends AbstractIdeTest {
 		case "findReferences":
 			findReferences(testMethodData);
 			break;
+		case "formattedLines":
+			formattedLines(testMethodData, xtData.preferences);
+			break;
 		case "linkedName":
 			linkedName(testMethodData);
 			break;
@@ -544,8 +547,12 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * </pre>
 	 */
 	@Xpect
-	public void formattedLines(@SuppressWarnings("unused") XtMethodData data) {
-		// TODO
+	public void formattedLines(XtMethodData data, Map<String, String> preferences) {
+		String argLines = eobjProvider.checkAndGetArgAfter(data, "formattedLines");
+		int lines = Integer.parseInt(argLines);
+		xtMethods.getFormattedLines(data.offset, lines, preferences);
+		// assertEquals(data.expectation, formattedLines);
+		throw new IgnoreTestException();
 	}
 
 	/**

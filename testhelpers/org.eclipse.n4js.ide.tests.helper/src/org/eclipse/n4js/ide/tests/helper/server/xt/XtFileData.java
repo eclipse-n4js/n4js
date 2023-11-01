@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.lsp4j.Position;
@@ -24,6 +25,7 @@ import org.eclipse.n4js.ide.tests.helper.server.xt.XtSetupParser.XtWorkspace;
 import org.eclipse.n4js.workspace.locations.FileURI;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
@@ -50,6 +52,8 @@ public class XtFileData {
 	final public Set<String> enabledIssues;
 	/** Issue codes locally disabled in this test file via an <code>IssueConfiguration</code> in the Xt setup. */
 	final public Set<String> disabledIssues;
+	/** Preferences provided in the test setup section. */
+	final public Map<String, String> preferences;
 	/** Methods to execute to start the LSP server */
 	final public List<XtMethodData> startupMethodData;
 	/** Test methods, first run */
@@ -61,7 +65,7 @@ public class XtFileData {
 
 	/** Constructor */
 	public XtFileData(File xtFile, String content, String setupRunnerName, XtWorkspace workspace,
-			Set<String> enabledIssues, Set<String> disabledIssues,
+			Set<String> enabledIssues, Set<String> disabledIssues, Map<String, String> preferences,
 			List<XtMethodData> startupMethodData, Collection<XtMethodData> testMethodData1,
 			Collection<XtMethodData> testMethodData2, List<XtMethodData> teardownMethodData) {
 
@@ -76,6 +80,7 @@ public class XtFileData {
 		this.workspace = workspace;
 		this.enabledIssues = ImmutableSet.copyOf(enabledIssues);
 		this.disabledIssues = ImmutableSet.copyOf(disabledIssues);
+		this.preferences = ImmutableMap.copyOf(preferences);
 		this.startupMethodData = startupMethodData;
 		this.testMethodData1 = testMethodData1;
 		this.testMethodData2 = testMethodData2;

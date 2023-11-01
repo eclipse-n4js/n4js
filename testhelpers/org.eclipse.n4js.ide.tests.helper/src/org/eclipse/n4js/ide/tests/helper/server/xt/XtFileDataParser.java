@@ -70,7 +70,7 @@ public class XtFileDataParser {
 		fillTestMethodData(xtFile.toString(), xtFileContent, testMethodData1, testMethodData2);
 
 		return new XtFileData(xtFile, xtFileContent, setupParseResult.runner, workspace,
-				setupParseResult.enabledIssues, setupParseResult.disabledIssues,
+				setupParseResult.enabledIssues, setupParseResult.disabledIssues, setupParseResult.preferences,
 				startupMethodData, testMethodData1, testMethodData2, teardownMethodData);
 	}
 

@@ -105,8 +105,9 @@ public class XtFileRunner extends Runner {
 							notifier.fireTestFinished(testDescription);
 						}
 					} catch (Throwable t) {
-
-						if (testMethodData.isFixme) {
+						if (t instanceof IgnoreTestException) {
+							notifier.fireTestIgnored(testDescription);
+						} else if (testMethodData.isFixme) {
 							notifier.fireTestFinished(testDescription);
 						} else {
 							notifier.fireTestFailure(new Failure(testDescription, t));
