@@ -1,0 +1,29 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest
+
+	Project {
+		ThisFile {}
+		File "Importee.n4js" {}
+	}
+
+	END_SETUP
+ */
+
+import * as N from "typesystem/Importee"
+
+// XPECT type of 'typeFromLeftSideUsage' --> string
+var typeFromLeftSideUsage = N.typeFromLeftSide;
+// XPECT type of 'typeFromRightSideUsage' --> string
+var typeFromRightSideUsage = N.typeFromRightSide;
+// XPECT type of 'myClassUsage' --> MyClass2
+var myClassUsage = N.myClass2;

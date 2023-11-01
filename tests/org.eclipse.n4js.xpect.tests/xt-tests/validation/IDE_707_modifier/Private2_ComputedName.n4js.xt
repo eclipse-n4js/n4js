@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest
+
+	Project {
+		ThisFile {}
+		File "Private.n4js" {}
+	}
+
+	END_SETUP
+ */
+
+import * as N from "validation/IDE_707_modifier/Private"
+
+class B extends N.A {
+	// XPECT errors --> "The field B.x cannot override or implement non-accessible field A.x." at "['x']"
+	private ['x'];
+
+	@Override
+	// XPECT errors --> "The method B.m cannot override or implement non-accessible method A.m." at "['m']"
+	private ['m']() {
+
+	}
+}
+
+function f(a : N.A) {
+	// XPECT errors --> "The field x is not visible." at "a['x']"
+	console.log(a['x'])
+	// XPECT errors --> "Member z not found." at "a['z']"
+	console.log(a['z'])
+}

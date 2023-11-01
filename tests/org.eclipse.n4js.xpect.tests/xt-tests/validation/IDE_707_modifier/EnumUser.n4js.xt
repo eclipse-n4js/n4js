@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest
+
+	Project {
+		ThisFile {}
+		File "Enums.n4js" {}
+	}
+
+	END_SETUP
+ */
+
+import * as N from "validation/IDE_707_modifier/Enums"
+
+class EnumUser {
+
+	use() {
+		var b : N.Enums = N.Enums.LIT1;
+	}
+}
+
+
+var c : N.Color = N.Color.RED;

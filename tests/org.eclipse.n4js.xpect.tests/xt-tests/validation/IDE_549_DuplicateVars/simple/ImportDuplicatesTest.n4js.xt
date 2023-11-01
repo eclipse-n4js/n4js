@@ -1,0 +1,75 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest
+
+	Project {
+		ThisFile {}
+		File "Exports.n4js" {}
+	}
+
+	END_SETUP
+ */
+
+//expected errors form import validation not from duplicates validation
+/* XPECT issues ---
+	"Name a is already used as name for named import a from validation/IDE_549_DuplicateVars/simple/Exports." at "a"
+	"The import of a is unused." at "a"
+	"The import of b is unused." at "b"
+---
+ */
+import {a,b,a} from "validation/IDE_549_DuplicateVars/simple/Exports";
+
+//expected errors form import validation not from duplicates validation
+/* XPECT issues ---
+	"The import of d is unused." at "d"
+--- */
+import { d } from "validation/IDE_549_DuplicateVars/simple/Exports";
+/* XPECT issues ---
+	"Name d is already used as name for named import d from validation/IDE_549_DuplicateVars/simple/Exports." at "d"
+--- */
+import { d } from "validation/IDE_549_DuplicateVars/simple/Exports";
+
+
+//there should be duplication error
+// XPECT warnings --> "The import of c is unused." at "c"
+import { c } from "validation/IDE_549_DuplicateVars/simple/Exports";
+// XPECT errors --> "Variable c duplicates named import c (line 44)." at "c"
+var c;
+
+
+//duplicate declaration error comes form conflict between import declaration and var declaration,
+//not from conflict between import declarations themselves
+/* XPECT issues ---
+	"The import of x is unused." at "x"
+	"The import statement should be placed on top of other statements." at "import { x } from "validation/IDE_549_DuplicateVars/simple/Exports";"
+--- */
+import { x } from "validation/IDE_549_DuplicateVars/simple/Exports";
+/* XPECT issues ---
+	"Name x is already used as name for named import x from validation/IDE_549_DuplicateVars/simple/Exports." at "x"
+	"The import statement should be placed on top of other statements." at "import { x } from "validation/IDE_549_DuplicateVars/simple/Exports";"
+--- */
+import { x } from "validation/IDE_549_DuplicateVars/simple/Exports";
+/* XPECT errors ---
+	"Variable x duplicates named import x (line 55)." at "x"
+--- */
+var x;
+
+
+/*  XPECT warnings ---
+"The import of C is unused." at "C"
+"The import statement should be placed on top of other statements." at "import { C } from "validation/IDE_549_DuplicateVars/simple/Exports";"
+--- */
+import { C } from "validation/IDE_549_DuplicateVars/simple/Exports";
+/* XPECT errors ---
+	"Class C duplicates named import C (line 71)." at "C"
+--- */
+class C{};
