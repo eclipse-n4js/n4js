@@ -10,7 +10,7 @@
  */
 
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest 
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest 
     
    Project {
 		ThisFile {  }
@@ -32,7 +32,7 @@ class GMyClassOne  {
     }
 
 	private myfunz() {
-		/* XPECT findReferences at myCons ---
+		/* XPECT findReferences at 'myCons' ---
 		referenceFinder/inferenceTypes/GMyClassOne - myCons - 40
 		---
 		*/

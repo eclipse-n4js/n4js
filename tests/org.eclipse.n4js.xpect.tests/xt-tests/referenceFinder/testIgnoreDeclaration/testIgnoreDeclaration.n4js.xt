@@ -9,16 +9,16 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
 
-// XPECT findReferences at param --> referenceFinder/testIgnoreDeclaration/testIgnoreDeclaration - param - 19
+// XPECT findReferences at 'param' --> referenceFinder/testIgnoreDeclaration/testIgnoreDeclaration - param - 19
 function foo(param : int) {
-	// XPECT findReferences at myConst --> referenceFinder/testIgnoreDeclaration/testIgnoreDeclaration - myConst - 18
+	// XPECT findReferences at 'myConst' --> referenceFinder/testIgnoreDeclaration/testIgnoreDeclaration - myConst - 18
 	const myConst = 42;
 	console.log(myConst);
 	console.log(param);
 }
 
-// XPECT findReferences at myVar --> referenceFinder/testIgnoreDeclaration/testIgnoreDeclaration - myVar - 24
+// XPECT findReferences at 'myVar' --> referenceFinder/testIgnoreDeclaration/testIgnoreDeclaration - myVar - 24
 export public var myVar: int;
 myVar;

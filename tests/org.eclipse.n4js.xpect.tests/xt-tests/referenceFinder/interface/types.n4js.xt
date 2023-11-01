@@ -9,16 +9,16 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
 
-/* XPECT findReferences at T ---
+/* XPECT findReferences at 'T' ---
 	referenceFinder/interface/types - T - 29,
 	referenceFinder/interface/types - T - 39,
 ---
 */
 class T {}
 
-/* XPECT findReferences at J ---
+/* XPECT findReferences at 'J' ---
 	referenceFinder/interface/types - J - 31,
 	referenceFinder/interface/types - J - 46
 ---
@@ -31,14 +31,14 @@ T;
 J;
 
 
-/* XPECT findReferences at E ---
+/* XPECT findReferences at 'E' ---
 	referenceFinder/interface/types - E - 48,
 	referenceFinder/interface/types - E - 50
 ---
 */
 class E extends T {}
 
-/* XPECT findReferences at I ---
+/* XPECT findReferences at 'I' ---
    referenceFinder/interface/types - I - 48,
    referenceFinder/interface/types - I - 50
 ---

@@ -9,20 +9,20 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
 
 class T {
-// XPECT findReferences at a --> referenceFinder/class/classExtension1 - this.a - 32
+// XPECT findReferences at 'a' --> referenceFinder/class/classExtension1 - this.a - 32
 	a : T;
-// XPECT findReferences at i --> referenceFinder/class/classExtension1 - this.i - 34
+// XPECT findReferences at 'i' --> referenceFinder/class/classExtension1 - this.i - 34
 	i : int;
-// IDE-1662 XPECT findReferences at foo --> referenceFinder/class/classExtension1 - super.foo - 30
+// IDE-1662 XPECT findReferences at 'foo' --> referenceFinder/class/classExtension1 - super.foo - 30
 	foo(){};
 }
 
 class S extends T {
 	// No reference
-	/* XPECT findReferences at foo ---
+	/* XPECT findReferences at 'foo' ---
 	---
 	*/
 	@Override

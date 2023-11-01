@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
    Project {
    	ThisFile {}
    	File "ImportClassPropertiesImp.n4js" { }
@@ -18,7 +18,7 @@ END_SETUP
  */
 
 
-/* XPECT findReferences at T ---
+/* XPECT findReferences at 'T' ---
 	referenceFinder/class/ImportClassPropertiesExp - T - 34,
 	referenceFinder/class/ImportClassPropertiesImp - T - 14,
 	referenceFinder/class/ImportClassPropertiesImp - T - 15,
@@ -26,19 +26,19 @@ END_SETUP
 ---
 */
 export public class T {
-	/* XPECT findReferences at a ---
+	/* XPECT findReferences at 'a' ---
 		referenceFinder/class/ImportClassPropertiesImp - t.a - 18,
 		referenceFinder/class/ImportClassPropertiesImp - t.a - 19
 	---
 	*/
 	a : T;
-	/* XPECT findReferences at i ---
+	/* XPECT findReferences at 'i' ---
 		referenceFinder/class/ImportClassPropertiesImp - t.i - 21,
 		referenceFinder/class/ImportClassPropertiesImp - t.i - 22
 	---
 	*/
 	i : int;
-	/* XPECT findReferences at foo ---
+	/* XPECT findReferences at 'foo' ---
 		referenceFinder/class/ImportClassPropertiesImp - t.foo - 24
 	---
 	*/

@@ -9,23 +9,23 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
 
 
 export public class A {
-	/* XPECT findReferences at a ---
+	/* XPECT findReferences at 'a' ---
 		referenceFinder/class/classExtension2 - b.a - 54,
 		referenceFinder/class/classExtension2 - bj.a - 49
 	---
 	*/
 	a : A;
-	/* XPECT findReferences at i ---
+	/* XPECT findReferences at 'i' ---
 		referenceFinder/class/classExtension2 - b.i - 55,
 		referenceFinder/class/classExtension2 - bj.i - 50
 	---
 	*/
 	i : int;
-	/* XPECT findReferences at foo ---
+	/* XPECT findReferences at 'foo' ---
 		referenceFinder/class/classExtension2 - b.foo - 56,
 		referenceFinder/class/classExtension2 - bj.foo - 51
 	---
@@ -34,11 +34,11 @@ export public class A {
 }
 
 interface I {
-// XPECT findReferences at a --> referenceFinder/class/classExtension2 - j.a - 59
+// XPECT findReferences at 'a' --> referenceFinder/class/classExtension2 - j.a - 59
 	a : A;
-// XPECT findReferences at i --> referenceFinder/class/classExtension2 - j.i - 60
+// XPECT findReferences at 'i' --> referenceFinder/class/classExtension2 - j.i - 60
 	i : int;
-// XPECT findReferences at foo --> referenceFinder/class/classExtension2 - j.foo - 61
+// XPECT findReferences at 'foo' --> referenceFinder/class/classExtension2 - j.foo - 61
 	foo(){};
 }
 

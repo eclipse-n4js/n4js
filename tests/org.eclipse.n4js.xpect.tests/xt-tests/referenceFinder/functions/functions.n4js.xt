@@ -9,10 +9,10 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
 
 
-/* XPECT findReferences at x ---
+/* XPECT findReferences at 'x' ---
 	referenceFinder/functions/functions - x - 22,
 	referenceFinder/functions/functions - x - 30
 	---
@@ -22,7 +22,7 @@ function x () : void {}
 x();
 
 class C {
-	/* XPECT findReferences at param ---
+	/* XPECT findReferences at 'param' ---
 	referenceFinder/functions/functions - param - 31
 	---
 	*/

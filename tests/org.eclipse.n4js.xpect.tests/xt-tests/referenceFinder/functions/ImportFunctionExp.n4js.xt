@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
    Project {
 	ThisFile {}
 	File "ImportFunctionImp.n4js" {}
@@ -17,7 +17,7 @@
 END_SETUP
  */
 
-/* XPECT findReferences at function ---
+/* XPECT findReferences at 'function' ---
 	referenceFinder/functions/ImportFunctionExp- zzz - 28,
 	referenceFinder/functions/ImportFunctionImp - zzz - 26,
 	referenceFinder/functions/ImportFunctionImp - zzz - 28

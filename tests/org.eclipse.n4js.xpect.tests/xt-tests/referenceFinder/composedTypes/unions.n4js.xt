@@ -9,23 +9,23 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
 
 export public class A {
-	/* XPECT findReferences at a ---
+	/* XPECT findReferences at 'a' ---
 	referenceFinder/composedTypes/unions - b.a - 75,
 	referenceFinder/composedTypes/unions - union.a - 61
 	---
 	*/
 	a : A;
 
-	/* XPECT findReferences at i ---
+	/* XPECT findReferences at 'i' ---
 	referenceFinder/composedTypes/unions - b.i - 76,
 	referenceFinder/composedTypes/unions - union.i - 63
 	---
 	 */
 	i : int;
-	/* XPECT findReferences at foo ---
+	/* XPECT findReferences at 'foo' ---
 	referenceFinder/composedTypes/unions - b.foo - 77,
 	referenceFinder/composedTypes/unions - union.foo - 72
 	---
@@ -34,19 +34,19 @@ export public class A {
 }
 
 interface I {
-	/* XPECT findReferences at a ---
+	/* XPECT findReferences at 'a' ---
 	referenceFinder/composedTypes/unions - j.a - 80,
 	referenceFinder/composedTypes/unions - union.a - 61
 	---
 	*/
 	a : A;
-	/* XPECT findReferences at i ---
+	/* XPECT findReferences at 'i' ---
 	referenceFinder/composedTypes/unions - j.i - 81,
 	referenceFinder/composedTypes/unions - union.i - 63
 	---
 	*/
 	i : int;
-	/* XPECT findReferences at foo ---
+	/* XPECT findReferences at 'foo' ---
 	referenceFinder/composedTypes/unions - j.foo - 82,
 	referenceFinder/composedTypes/unions - union.foo - 72
 	---
@@ -61,7 +61,7 @@ var union : A | I;
 union.a;
 
 union.i;
-/* XPECT findReferences at foo---
+/* XPECT findReferences at 'foo' ---
 referenceFinder/composedTypes/unions - b.foo - 77,
 referenceFinder/composedTypes/unions - j.foo - 82,
 referenceFinder/composedTypes/unions - union.foo - 72

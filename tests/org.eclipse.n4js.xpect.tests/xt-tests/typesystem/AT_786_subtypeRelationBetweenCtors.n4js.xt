@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP  */
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
 
 // 1) type of an abstract class declaration C must be inferred to type{C} and not constructor{C}.
 // 2) it is always possible to call new X() if X is of some type constructor{C}, even if C is declared abstract

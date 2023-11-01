@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest 
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest 
     
    Project {
 		ThisFile {  }
@@ -23,7 +23,7 @@
 */
 
 export public interface GMyInterfaceFour {
-	/* XPECT findReferences at myMethodFour ---
+	/* XPECT findReferences at 'myMethodFour' ---
 	referenceFinder/inferenceTypes/GMyClassOne - two.myAttributeTwo("test").myMethodFour - 31,
 	referenceFinder/inferenceTypes/GMyClassOne - two.myMethodTwo().getElement().myMethodFour - 30
 	---

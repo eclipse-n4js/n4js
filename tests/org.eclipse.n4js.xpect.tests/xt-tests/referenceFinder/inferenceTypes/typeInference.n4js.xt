@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
 
 
 var two : MyClassTwo;
@@ -22,13 +22,13 @@ class MyClassOne  {
 }
 
 class MyClassTwo {
-	/* XPECT findReferences at myAttributeTwo ---
+	/* XPECT findReferences at 'myAttributeTwo' ---
 	referenceFinder/inferenceTypes/typeInference - two.myAttributeTwo - 20
 	---
 	*/
 	myAttributeTwo : {function (param:string) : MyInterfaceFour};
 
-	/* XPECT findReferences at myMethodTwo ---
+	/* XPECT findReferences at 'myMethodTwo' ---
 	   referenceFinder/inferenceTypes/typeInference - two.myMethodTwo - 19
 	---
 	 */
@@ -40,7 +40,7 @@ class MyClassTwo {
 interface MyRoleLikeInterface<T extends MyInterfaceFour> {
     element : T;
 
-	/* XPECT findReferences at getElement ---
+	/* XPECT findReferences at 'getElement' ---
 	referenceFinder/inferenceTypes/typeInference - two.myMethodTwo().getElement - 19
 	---
 	*/
@@ -50,7 +50,7 @@ interface MyRoleLikeInterface<T extends MyInterfaceFour> {
 }
 
 interface MyInterfaceFour {
-	/* XPECT findReferences at myMethodFour ---
+	/* XPECT findReferences at 'myMethodFour' ---
 	 referenceFinder/inferenceTypes/typeInference - two.myAttributeTwo("test").myMethodFour - 20,
 	 referenceFinder/inferenceTypes/typeInference - two.myMethodTwo().getElement().myMethodFour - 19
 	---

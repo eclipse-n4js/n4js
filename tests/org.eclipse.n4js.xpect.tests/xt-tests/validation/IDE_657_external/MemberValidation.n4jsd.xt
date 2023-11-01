@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
 
 // IDE-1099 XPECT ! errors --> "For the given n4jsd file no corresponding external file resp. no matching implemented by expression can be found." at "MyObject"
 export external public class MyObject extends Object {

@@ -9,20 +9,20 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest 
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest 
 	END_SETUP   
 */
 
 
 
 class C {
-  /* XPECT findReferences at field ---
+  /* XPECT findReferences at 'field' ---
       referenceFinder/destructuring/C_singlename - c.fieldA - 33,
       referenceFinder/destructuring/C_singlename - fieldA - 39
   ---*/
   fieldA: string = "hallo";
 
-  /* XPECT findReferences at fieldB ---
+  /* XPECT findReferences at 'fieldB' ---
       referenceFinder/destructuring/C_singlename - c.fieldB - 34,
       referenceFinder/destructuring/C_singlename - fieldB - 49
   ---*/
@@ -33,7 +33,7 @@ const c = new C();
 c.fieldA;
 c.fieldB;
 
-/* XPECT findReferences at fieldA ---
+/* XPECT findReferences at 'fieldA' ---
 	referenceFinder/destructuring/C_singlename - fieldA - 41
 ---*/
 const { fieldA } = c; // this reference to 'field' is not found
@@ -41,7 +41,7 @@ const { fieldA } = c; // this reference to 'field' is not found
 fieldA;
 
 
-/* XPECT findReferences at fieldB ---
+/* XPECT findReferences at 'fieldB' ---
 	referenceFinder/destructuring/C_singlename - fieldB - 49,
 	referenceFinder/destructuring/C_singlename - fieldB - 50
 ---*/

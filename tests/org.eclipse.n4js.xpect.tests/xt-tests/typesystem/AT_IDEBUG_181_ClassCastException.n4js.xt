@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP  */
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
 
 // see IDEBUG-181
 // (was caused by a ClassCastException in GenericsComputer#addTypeMapping(RuleEnvironment,TypeRef,TypeArgument, ...) in case of having a Wildcard)

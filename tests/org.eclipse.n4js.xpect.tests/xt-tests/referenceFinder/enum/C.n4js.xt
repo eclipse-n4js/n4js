@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest 
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest 
     
    Project {
 		ThisFile {  }
@@ -24,7 +24,7 @@ export public enum ColorEnum {
 	// XPECT findReferences --> referenceFinder/enum/D - ColorEnum.RED - 2
 	RED,
 	// Test local find references
-	// XPECT findReferences at YELLOW --> referenceFinder/enum/C - ColorEnum.YELLOW - 30
+	// XPECT findReferences at 'YELLOW' --> referenceFinder/enum/C - ColorEnum.YELLOW - 30
 	YELLOW
 }
 var b = ColorEnum.YELLOW;

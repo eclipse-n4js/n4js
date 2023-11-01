@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest 
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest 
     
    Project {
 		ThisFile {  }
@@ -26,13 +26,13 @@ import { GMyInterfaceFour } from "referenceFinder/inferenceTypes/GMyInterfaceFou
 import { GMyRoleLikeInterface } from "referenceFinder/inferenceTypes/GMyRoleLikeInterface";
 
 export class GMyClassTwo {
-	/* XPECT findReferences at myAttributeTwo ---
+	/* XPECT findReferences at 'myAttributeTwo' ---
 	referenceFinder/inferenceTypes/GMyClassOne - two.myAttributeTwo - 31
 	---
 	*/
 	myAttributeTwo : {function (param:string) : GMyInterfaceFour};
 
-	/* XPECT findReferences at myMethodTwo ---
+	/* XPECT findReferences at 'myMethodTwo' ---
 	   referenceFinder/inferenceTypes/GMyClassOne - two.myMethodTwo - 30
 	---
 	 */

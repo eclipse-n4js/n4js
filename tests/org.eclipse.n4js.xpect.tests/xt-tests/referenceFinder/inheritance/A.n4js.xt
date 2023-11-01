@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
  
- /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest 
+ /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest 
     
    Project {
 		ThisFile {   }
@@ -21,7 +21,7 @@
 */
 
 export public class A {
-	/* XPECT findReferences at foo ---
+	/* XPECT findReferences at 'foo' ---
 		 referenceFinder/inheritance/C - a.foo - 27
 	---
 	*/
@@ -30,18 +30,18 @@ export public class A {
 
 	}
 
-	/* XPECT findReferences at gg ---
+	/* XPECT findReferences at 'gg' ---
 		 referenceFinder/inheritance/C - a.gg - 28
 	---
 	*/
 	public get gg(): string { return "Hi A"; }
 
-	/* XPECT findReferences at ss ---
+	/* XPECT findReferences at 'ss' ---
 		 referenceFinder/inheritance/C - a.ss - 29
 	---
 	*/
 	public set ss(val: string) { }
-	/* XPECT findReferences at ff ---
+	/* XPECT findReferences at 'ff' ---
 		 referenceFinder/inheritance/C - a.ff - 30
 	---
 	*/	
