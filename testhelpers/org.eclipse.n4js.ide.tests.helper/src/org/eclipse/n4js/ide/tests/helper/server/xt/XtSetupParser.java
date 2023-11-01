@@ -284,7 +284,10 @@ public class XtSetupParser {
 		WorkspaceBuilder builder = new WorkspaceBuilder(new BuilderInfo());
 		YarnProjectBuilder yarnProjectBuilder = builder.addYarnProject(TestWorkspaceManager.YARN_TEST_PROJECT);
 
-		String projectName = tokens.expectNameInQuotes();
+		String projectName = TestWorkspaceManager.DEFAULT_PROJECT_NAME;
+		if (Objects.equal(tokens.current(), "\"")) { // optional project name
+			projectName = tokens.expectNameInQuotes();
+		}
 		ProjectBuilder prjBuilder = yarnProjectBuilder.addProject(projectName);
 		parseContainerRest(tokens, xtFile, xtFileContent, prjBuilder, ".", "Project");
 
