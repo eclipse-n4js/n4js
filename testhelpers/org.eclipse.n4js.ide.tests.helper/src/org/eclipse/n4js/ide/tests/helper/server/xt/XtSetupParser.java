@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt;
 
+import static org.eclipse.xtext.xbase.lib.StringExtensions.isNullOrEmpty;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -285,7 +287,8 @@ public class XtSetupParser {
 		YarnProjectBuilder yarnProjectBuilder = builder.addYarnProject(TestWorkspaceManager.YARN_TEST_PROJECT);
 
 		String projectName = TestWorkspaceManager.DEFAULT_PROJECT_NAME;
-		if (Objects.equal(tokens.current(), "\"")) { // optional project name
+		if (!isNullOrEmpty(tokens.current()) && tokens.current().startsWith("\"")) {
+			// optional
 			projectName = tokens.expectNameInQuotes();
 		}
 		ProjectBuilder prjBuilder = yarnProjectBuilder.addProject(projectName);

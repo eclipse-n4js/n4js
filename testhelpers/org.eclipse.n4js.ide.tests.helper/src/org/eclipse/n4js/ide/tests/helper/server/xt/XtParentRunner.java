@@ -164,15 +164,20 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 				public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
 					File file = path.toFile();
 					if (file.isFile() && file.getName().endsWith(".xt")) {
+						XtFileData xtFileData = null;
+						Exception initException = null;
 						try {
-							XtFileRunner fileRunner = new XtFileRunner(XtParentRunner.this, testClassName, file,
-									globallySuppressedIssues);
-							result.add(fileRunner);
+							xtFileData = XtFileDataParser.parse(file);
 						} catch (Exception e) {
 							System.err.println("Error on file: " + file.getAbsolutePath().toString());
 							// precondition failed. Problem should show up in the JUnit view.
 							e.printStackTrace();
+							initException = e;
 						}
+
+						XtFileRunner fileRunner = new XtFileRunner(XtParentRunner.this, testClassName, file,
+								globallySuppressedIssues, xtFileData, initException);
+						result.add(fileRunner);
 					}
 					return FileVisitResult.CONTINUE;
 				}
