@@ -20,8 +20,8 @@ class C implements I {
 }
 // C is not considered as a reference to I even though it implements I
 /* XPECT findReferences at 'I' --- 
-referenceFinder/class/subclassesNotConsideredAsReference - I - 18,
-referenceFinder/class/subclassesNotConsideredAsReference - I - 27
+subclassesNotConsideredAsReference - I - 18,
+subclassesNotConsideredAsReference - I - 27
 ---
 */
 var j : I;

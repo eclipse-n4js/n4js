@@ -12,11 +12,11 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
 
 class T {
-// XPECT findReferences at 'a' --> referenceFinder/class/classExtension1 - this.a - 32
+// XPECT findReferences at 'a' --> classExtension1 - this.a - 32
 	a : T;
-// XPECT findReferences at 'i' --> referenceFinder/class/classExtension1 - this.i - 34
+// XPECT findReferences at 'i' --> classExtension1 - this.i - 34
 	i : int;
-// IDE-1662 XPECT findReferences at 'foo' --> referenceFinder/class/classExtension1 - super.foo - 30
+// IDE-1662 XPECT findReferences at 'foo' --> classExtension1 - super.foo - 30
 	foo(){};
 }
 

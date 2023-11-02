@@ -20,8 +20,8 @@
 	END_SETUP   
 */
 
-import {A} from "referenceFinder/inheritance/A";
-import {B} from "referenceFinder/inheritance/B";
+import {A} from "A";
+import {B} from "B";
 
 let a : A = new A();
 a.foo();

@@ -23,7 +23,7 @@
 	END_SETUP   
 */
 
-import { two } from "referenceFinder/inferenceTypes/GMyVariableTwo"
+import { two } from "GMyVariableTwo"
 
 class GMyClassOne  {
      myMethodOne() : void {
@@ -33,7 +33,7 @@ class GMyClassOne  {
 
 	private myfunz() {
 		/* XPECT findReferences at 'myCons' ---
-		referenceFinder/inferenceTypes/GMyClassOne - myCons - 40
+		GMyClassOne - myCons - 40
 		---
 		*/
 		const myCons = 42;

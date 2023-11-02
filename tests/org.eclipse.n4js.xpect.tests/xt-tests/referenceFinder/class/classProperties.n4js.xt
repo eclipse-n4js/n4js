@@ -12,28 +12,28 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
 
 /* XPECT findReferences at 'T' ---
-	referenceFinder/class/classProperties - T - 26,
-	referenceFinder/class/classProperties - T - 42,
-	referenceFinder/class/classProperties - T - 43
+	classProperties - T - 26,
+	classProperties - T - 42,
+	classProperties - T - 43
 ---
 */
 class T {
 	/* XPECT findReferences at 'a' ---
-	referenceFinder/class/classProperties - t.a - 45,
-	referenceFinder/class/classProperties - t.a - 46
+	classProperties - t.a - 45,
+	classProperties - t.a - 46
 	---
 	*/
 	a : T;
 
 	/* XPECT findReferences at 'i' ---
-	referenceFinder/class/classProperties - t.i - 48,
-	referenceFinder/class/classProperties - t.i - 49
+	classProperties - t.i - 48,
+	classProperties - t.i - 49
 	---
 	*/
 	i : int
 
 	/* XPECT findReferences at 'foo' ---
-	referenceFinder/class/classProperties - t.foo - 51
+	classProperties - t.foo - 51
 	---
 	*/
 	foo(){};

@@ -18,8 +18,8 @@
 
 
 /* XPECT findReferences at 'donkey' ---
-referenceFinder/destructuring/object_literal - donkey - 25,
-referenceFinder/destructuring/object_literal - donkey: null - 25
+object_literal - donkey - 25,
+object_literal - donkey: null - 25
 ---
 */
 for (var {donkey: bar3} of [{donkey: null}]) {

@@ -20,11 +20,11 @@
 	END_SETUP   
 */
 
-import {A} from "referenceFinder/inheritance/A";
+import {A} from "A";
 
 export public class B extends A {
 	/* XPECT findReferences at 'foo' ---
-		referenceFinder/inheritance/C - b.foo - 33
+		C - b.foo - 33
 	---
 	*/
 	@Override
@@ -33,21 +33,21 @@ export public class B extends A {
 	}
 
 	/* XPECT findReferences at 'gg' ---
-		referenceFinder/inheritance/C - b.gg - 34
+		C - b.gg - 34
 	---
 	*/
 	@Override
 	public get gg(): string { return "Hi B"; }
 
 	/* XPECT findReferences at 'ss' ---
-		referenceFinder/inheritance/C - b.ss - 35,
+		C - b.ss - 35,
 	---
 	*/
 	@Override
 	public set ss(val: string) { }
 
 	/* XPECT findReferences at 'ff' ---
-		 referenceFinder/inheritance/C - b.ff - 36
+		 C - b.ff - 36
 	---
 	*/	
 	@Override

@@ -22,13 +22,13 @@
 	END_SETUP   
 */
 
-import { GMyInterfaceFour } from "referenceFinder/inferenceTypes/GMyInterfaceFour";
+import { GMyInterfaceFour } from "GMyInterfaceFour";
 
 export public interface GMyRoleLikeInterface<T extends GMyInterfaceFour> {
 	element:T;
 
 	/* XPECT findReferences at 'getElement' ---
-	referenceFinder/inferenceTypes/GMyClassOne - two.myMethodTwo().getElement - 30
+	GMyClassOne - two.myMethodTwo().getElement - 30
 	---
 	*/
 	getElement():T {

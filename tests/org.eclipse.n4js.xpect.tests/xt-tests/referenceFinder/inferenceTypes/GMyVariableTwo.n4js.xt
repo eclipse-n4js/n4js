@@ -22,6 +22,6 @@
 	END_SETUP   
 */
 
-import { GMyClassTwo } from "referenceFinder/inferenceTypes/GMyClassTwo"
+import { GMyClassTwo } from "GMyClassTwo"
 
 export var two : GMyClassTwo;

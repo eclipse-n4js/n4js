@@ -17,14 +17,14 @@
 
 class C {
   /* XPECT findReferences at 'field' ---
-      referenceFinder/destructuring/C_singlename - c.fieldA - 33,
-      referenceFinder/destructuring/C_singlename - fieldA - 39
+      C_singlename - c.fieldA - 33,
+      C_singlename - fieldA - 39
   ---*/
   fieldA: string = "hallo";
 
   /* XPECT findReferences at 'fieldB' ---
-      referenceFinder/destructuring/C_singlename - c.fieldB - 34,
-      referenceFinder/destructuring/C_singlename - fieldB - 49
+      C_singlename - c.fieldB - 34,
+      C_singlename - fieldB - 49
   ---*/
   fieldB: string = "hallo";
 }
@@ -34,7 +34,7 @@ c.fieldA;
 c.fieldB;
 
 /* XPECT findReferences at 'fieldA' ---
-	referenceFinder/destructuring/C_singlename - fieldA - 41
+	C_singlename - fieldA - 41
 ---*/
 const { fieldA } = c; // this reference to 'field' is not found
 
@@ -42,8 +42,8 @@ fieldA;
 
 
 /* XPECT findReferences at 'fieldB' ---
-	referenceFinder/destructuring/C_singlename - fieldB - 49,
-	referenceFinder/destructuring/C_singlename - fieldB - 50
+	C_singlename - fieldB - 49,
+	C_singlename - fieldB - 50
 ---*/
 let fieldB;
 ({ fieldB } = c); // this reference to 'field' is not found

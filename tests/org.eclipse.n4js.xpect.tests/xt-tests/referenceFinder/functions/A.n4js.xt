@@ -21,9 +21,9 @@
 
 // Test find references of functions in local file or in other files
 /* XPECT findReferences at 'foo' ---
-  referenceFinder/functions/A - foo - 33,
- referenceFinder/functions/B - foo - 1,
- referenceFinder/functions/B - foo - 3
+  A - foo - 33,
+ B - foo - 1,
+ B - foo - 3
  ---
  */
 export function foo() {

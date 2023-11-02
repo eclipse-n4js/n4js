@@ -18,8 +18,8 @@
 
 class C {
   /* XPECT findReferences at 'field' ---
-      referenceFinder/destructuring/C - c.field - 28,
-      referenceFinder/destructuring/C - field - 34
+      C - c.field - 28,
+      C - field - 34
   ---*/
   field: string = "hallo";
 }
@@ -27,8 +27,8 @@ class C {
 const c = new C();
 c.field;
 /* XPECT findReferences at 'field' ---
-	referenceFinder/destructuring/C - c.field - 28,
-	referenceFinder/destructuring/C - field - 34
+	C - c.field - 28,
+	C - field - 34
 ---*/
-// XPECT findReferences at 'fld2' --> referenceFinder/destructuring/C - fld2 - 34
+// XPECT findReferences at 'fld2' --> C - fld2 - 34
 const {field : fld2 } = c; // this reference to 'field' is not found

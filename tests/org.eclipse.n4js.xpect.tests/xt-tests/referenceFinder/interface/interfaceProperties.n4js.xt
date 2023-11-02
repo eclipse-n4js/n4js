@@ -12,26 +12,26 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
 
 /* XPECT findReferences at 'T' ---
-	 referenceFinder/interface/interfaceProperties - T - 26,
-	 referenceFinder/interface/interfaceProperties - T - 45,
-	 referenceFinder/interface/interfaceProperties - T - 46
+	 interfaceProperties - T - 26,
+	 interfaceProperties - T - 45,
+	 interfaceProperties - T - 46
 ---
 */
 interface T {
 	/* XPECT findReferences at 'a' ---
-	referenceFinder/interface/interfaceProperties - t.a - 48,
-	referenceFinder/interface/interfaceProperties - t.a - 49,
+	interfaceProperties - t.a - 48,
+	interfaceProperties - t.a - 49,
 	---
 	*/
 	a : T;
 	/* XPECT findReferences at 'i' ---
-	referenceFinder/interface/interfaceProperties - t.i - 51,
-	referenceFinder/interface/interfaceProperties - t.i - 52
+	interfaceProperties - t.i - 51,
+	interfaceProperties - t.i - 52
 	---
 	*/
 	i : int;
 	/* XPECT findReferences at 'foo' ---
-	referenceFinder/interface/interfaceProperties - t.foo - 54
+	interfaceProperties - t.foo - 54
 	---
 	*/
 	foo(){};

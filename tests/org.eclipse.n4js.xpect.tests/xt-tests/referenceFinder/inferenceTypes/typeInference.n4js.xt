@@ -23,13 +23,13 @@ class MyClassOne  {
 
 class MyClassTwo {
 	/* XPECT findReferences at 'myAttributeTwo' ---
-	referenceFinder/inferenceTypes/typeInference - two.myAttributeTwo - 20
+	typeInference - two.myAttributeTwo - 20
 	---
 	*/
 	myAttributeTwo : {function (param:string) : MyInterfaceFour};
 
 	/* XPECT findReferences at 'myMethodTwo' ---
-	   referenceFinder/inferenceTypes/typeInference - two.myMethodTwo - 19
+	   typeInference - two.myMethodTwo - 19
 	---
 	 */
     myMethodTwo() : MyRoleLikeInterface<MyInterfaceFour> {
@@ -41,7 +41,7 @@ interface MyRoleLikeInterface<T extends MyInterfaceFour> {
     element : T;
 
 	/* XPECT findReferences at 'getElement' ---
-	referenceFinder/inferenceTypes/typeInference - two.myMethodTwo().getElement - 19
+	typeInference - two.myMethodTwo().getElement - 19
 	---
 	*/
     getElement() : T {
@@ -51,8 +51,8 @@ interface MyRoleLikeInterface<T extends MyInterfaceFour> {
 
 interface MyInterfaceFour {
 	/* XPECT findReferences at 'myMethodFour' ---
-	 referenceFinder/inferenceTypes/typeInference - two.myAttributeTwo("test").myMethodFour - 20,
-	 referenceFinder/inferenceTypes/typeInference - two.myMethodTwo().getElement().myMethodFour - 19
+	 typeInference - two.myAttributeTwo("test").myMethodFour - 20,
+	 typeInference - two.myMethodTwo().getElement().myMethodFour - 19
 	---
 	*/
 	myMethodFour() : void

@@ -13,8 +13,8 @@
 
 
 /* XPECT findReferences at 'x' ---
-	referenceFinder/functions/functions - x - 22,
-	referenceFinder/functions/functions - x - 30
+	functions - x - 22,
+	functions - x - 30
 	---
 	*/
 function x () : void {}
@@ -23,7 +23,7 @@ x();
 
 class C {
 	/* XPECT findReferences at 'param' ---
-	referenceFinder/functions/functions - param - 31
+	functions - param - 31
 	---
 	*/
 	constructor(param :int) {
