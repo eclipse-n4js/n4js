@@ -23,6 +23,6 @@
 
 // start at line after last line in 'ImportFunctionExp'
 
-import {zzz} from "referenceFinder/functions/ImportFunctionExp";
+import {zzz} from "ImportFunctionExp";
 
 zzz();

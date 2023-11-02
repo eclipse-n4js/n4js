@@ -11,7 +11,7 @@
 
 
 
-import { T } from "referenceFinder/class/ImportClassPropertiesExp"
+import { T } from "ImportClassPropertiesExp"
 T;
 var t : T;
 

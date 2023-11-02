@@ -13,10 +13,10 @@
     
    Project {
 		ThisFile {  }
-		File "GMyVariableTwo.n4js.xt" { from = "GMyVariableTwo.n4js.xt" }
-		File "GMyClassOne.n4js.xt" { from = "GMyClassOne.n4js.xt" }
-		File "GMyRoleLikeInterface.n4js.xt" { from = "GMyRoleLikeInterface.n4js.xt" }
-		File "GMyInterfaceFour.n4js.xt" { from = "GMyInterfaceFour.n4js.xt" }
+		File "GMyVariableTwo.n4js" { from = "GMyVariableTwo.n4js.xt" }
+		File "GMyClassOne.n4js" { from = "GMyClassOne.n4js.xt" }
+		File "GMyRoleLikeInterface.n4js" { from = "GMyRoleLikeInterface.n4js.xt" }
+		File "GMyInterfaceFour.n4js" { from = "GMyInterfaceFour.n4js.xt" }
 	}
 
 	END_SETUP   

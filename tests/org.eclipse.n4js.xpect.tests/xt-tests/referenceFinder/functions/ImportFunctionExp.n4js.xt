@@ -18,7 +18,7 @@ END_SETUP
  */
 
 /* XPECT findReferences at 'function' ---
-	ImportFunctionExp- zzz - 28,
+	ImportFunctionExp - zzz - 28,
 	ImportFunctionImp - zzz - 26,
 	ImportFunctionImp - zzz - 28
 ---

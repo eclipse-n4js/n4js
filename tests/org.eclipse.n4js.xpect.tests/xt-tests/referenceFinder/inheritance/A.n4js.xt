@@ -13,8 +13,8 @@
     
    Project {
 		ThisFile {   }
-		File "B.n4js.xt" { from = "B.n4js.xt" }
-		File "C.n4js.xt" { from = "C.n4js.xt" }
+		File "B.n4js" { from = "B.n4js.xt" }
+		File "C.n4js" { from = "C.n4js.xt" }
 	}
 
 	END_SETUP   

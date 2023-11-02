@@ -1,4 +1,4 @@
-import { ColorEnum } from "referenceFinder/enum/C";
+import { ColorEnum } from "C";
 var y = ColorEnum.RED;
 
 export public class MyClass {
