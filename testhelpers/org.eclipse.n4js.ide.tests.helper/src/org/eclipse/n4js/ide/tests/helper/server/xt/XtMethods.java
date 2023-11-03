@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt;
 
+import static org.eclipse.n4js.ide.tests.helper.server.xt.EObjectDescriptionToNameWithPositionMapper.descriptionToNameWithPosition;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.newRuleEnvironment;
 
 import java.util.ArrayDeque;
@@ -21,7 +22,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -412,36 +412,40 @@ public class XtMethods {
 
 	/** Implementation for {@link XtIdeTest#scope(XtMethodData)} */
 	public Set<String> getScopeString(IEObjectCoveringRegion ocr) {
-		return getScopeWithResourceString(ocr, desc -> QualifiedNameUtils.toHumanReadableString(desc.getName()));
+		LinkedHashSet<String> scopeNames = new LinkedHashSet<>();
+		for (IEObjectDescription desc : getElementsFromScope(ocr)) {
+			scopeNames.add(QualifiedNameUtils.toHumanReadableString(desc.getName()));
+		}
+		return scopeNames;
 	}
 
 	/** Implementation for {@link XtIdeTest#scopeWithResource(XtMethodData)} */
 	public Set<String> getScopeWithResourceString(IEObjectCoveringRegion ocr) {
-		return getScopeWithResourceString(ocr, desc -> EObjectDescriptionToNameWithPositionMapper
-				.descriptionToNameWithPosition(desc.getEObjectURI(), false, desc));
+		LinkedHashSet<String> scopeNames = new LinkedHashSet<>();
+		URI uri = ocr.getXtextResource().getURI();
+		for (IEObjectDescription desc : getElementsFromScope(ocr)) {
+			scopeNames.add(descriptionToNameWithPosition(uri, false, desc));
+		}
+		return scopeNames;
 	}
 
 	/** Implementation for {@link XtIdeTest#scopeWithPosition(XtMethodData)} */
 	public Set<String> getScopeWithPositionString(IEObjectCoveringRegion ocr) {
-		return getScopeWithResourceString(ocr, desc -> EObjectDescriptionToNameWithPositionMapper
-				.descriptionToNameWithPosition(desc.getEObjectURI(), true, desc));
+		LinkedHashSet<String> scopeNames = new LinkedHashSet<>();
+		URI uri = ocr.getXtextResource().getURI();
+		for (IEObjectDescription desc : getElementsFromScope(ocr)) {
+			scopeNames.add(descriptionToNameWithPosition(uri, true, desc));
+		}
+		return scopeNames;
 	}
 
-	private LinkedHashSet<String> getScopeWithResourceString(IEObjectCoveringRegion ocr,
-			Function<IEObjectDescription, String> toString) {
-
+	private List<IEObjectDescription> getElementsFromScope(IEObjectCoveringRegion ocr) {
 		Assert.assertNotNull(ocr.getEStructuralFeature());
 		IScope scope = scopeProvider.getScope(ocr.getEObject(), (EReference) ocr.getEStructuralFeature());
 		IScope scopeWithoutErrors = new FilteringScope(scope,
 				desc -> !IEObjectDescriptionWithError.isErrorDescription(desc));
 		List<IEObjectDescription> allElements = Lists.newArrayList(scopeWithoutErrors.getAllElements());
-
-		LinkedHashSet<String> scopeNames = new LinkedHashSet<>();
-		for (IEObjectDescription desc : allElements) {
-			scopeNames.add(toString.apply(desc));
-		}
-
-		return scopeNames;
+		return allElements;
 	}
 
 	private String getLinkedFragment(EObject targetObject, URI baseUri) {
