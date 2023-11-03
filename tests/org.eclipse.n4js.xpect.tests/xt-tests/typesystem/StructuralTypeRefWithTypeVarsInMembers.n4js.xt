@@ -26,7 +26,7 @@ var c1s : C1<string>;
 // TODO improve typeRefAsString in StructuralTypeRef
 // XPECT FIXME type of 'c1s.field' --> ~Object with { prop: string; }
 c1s.field;
-// XPECT type of 'c1s.field.prop' --> string
+// XPECT type of 'c1s.field.<|>prop' --> string
 c1s.field.prop;
 // XPECT noerrors -->
 c1s.field.prop = "Hello prop!";
@@ -35,7 +35,7 @@ var test01 : string = c1s.field.prop;
 
 
 var f = c1s.field;
-// XPECT type of 'f.prop' --> string
+// XPECT type of 'f.<|>prop' --> string
 f.prop;
 // XPECT noerrors -->
 f.prop = "Hello prop!";
@@ -57,7 +57,7 @@ class C2<T> {
 var c2s : C2<string>;
 
 
-// XPECT type of 'c2s.m().prop' --> string
+// XPECT type of 'c2s.m().<|>prop' --> string
 c2s.m().prop;
 // XPECT noerrors -->
 c2s.m().prop = "Hello prop!";
@@ -68,7 +68,7 @@ var test11 : string = c2s.m().prop;
 // XPECT warnings --> "A reference to method m is created detached from a (correct) this-instance." at "m"
 var m = c2s.m;
 var m_result = m();
-// XPECT type of 'm_result.prop' --> string
+// XPECT type of 'm_result.<|>prop' --> string
 m_result.prop;
 // XPECT noerrors -->
 m_result.prop = "Hello prop!";

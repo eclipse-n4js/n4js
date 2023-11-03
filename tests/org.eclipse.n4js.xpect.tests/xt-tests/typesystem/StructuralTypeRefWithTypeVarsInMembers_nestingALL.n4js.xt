@@ -33,7 +33,7 @@ class C_all_sub4<T_sub4> extends C_all_sub3<~Object with { propInSub4a: ~Object 
 
 var c_all_sub4 : C_all_sub4<~Object with { propInDecl1: ~Object with { propInDecl2: string; }; }>;
 
-// XPECT type of 'c_all_sub4.m().prop1.prop2.prop3.prop4.propInSub1a.propInSub1b.propInSub2a.propInSub2b.propInSub3a.propInSub3b.propInSub4a.propInSub4b.propInDecl1.propInDecl2' --> string
+// XPECT type of 'c_all_sub4.m().prop1.prop2.prop3.prop4.propInSub1a.propInSub1b.propInSub2a.propInSub2b.propInSub3a.propInSub3b.propInSub4a.propInSub4b.propInDecl1.<|>propInDecl2' --> string
 c_all_sub4.m().prop1.prop2.prop3.prop4.propInSub1a.propInSub1b.propInSub2a.propInSub2b.propInSub3a.propInSub3b.propInSub4a.propInSub4b.propInDecl1.propInDecl2;
 // XPECT noerrors -->
 c_all_sub4.m().prop1.prop2.prop3.prop4.propInSub1a.propInSub1b.propInSub2a.propInSub2b.propInSub3a.propInSub3b.propInSub4a.propInSub4b.propInDecl1.propInDecl2 = "Hello prop!";

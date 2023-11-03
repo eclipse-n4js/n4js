@@ -31,7 +31,7 @@ import {IArguments,XAt} from "A"
 !A.A - proxy:A.n4js.xt#/1/@types.1,
 !A.R - proxy:A.n4js.xt#/1/@types.2,
 !A.R2 - proxy:A.n4js.xt#/1/@types.3,
-B - AT_662_arguments_Export_UserDefined_ArgumentsType.n4js, IArguments - A.n4js, Array - builtin_js.n4jsd,
+B - T, IArguments - A.n4js, Array - builtin_js.n4jsd,
 Boolean - builtin_js.n4jsd, Date - builtin_js.n4jsd, Error - builtin_js.n4jsd, EvalError - builtin_js.n4jsd,
 Function - builtin_js.n4jsd, Generator - builtin_js.n4jsd, Iterable - builtin_js.n4jsd,
 Iterable2 - builtin_n4.n4jsd, Iterable3 - builtin_n4.n4jsd, Iterable4 - builtin_n4.n4jsd, Iterable5 - builtin_n4.n4jsd,

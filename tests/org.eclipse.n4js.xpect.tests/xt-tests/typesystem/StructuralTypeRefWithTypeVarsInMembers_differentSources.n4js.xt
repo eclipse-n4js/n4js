@@ -75,7 +75,7 @@ var c2a : C2<A>;
 // XPECT noerrors -->
 var test21 : E = c2a.m(a,b).m1(b,c).m2(c,d).m3(d,e);
 
-// XPECT type of 'c2a.m(a,b).m1(b,c).m2(c,d).m3(d,e)' --> E
+// XPECT type of 'c2a.m(a,b).m1(b,c).m2(c,d).m3<|>(d,e)' --> E
 c2a.m(a,b).m1(b,c).m2(c,d).m3(d,e);
 
 c2a.m(a,b).m1(b,c).m2(c,d).m3(

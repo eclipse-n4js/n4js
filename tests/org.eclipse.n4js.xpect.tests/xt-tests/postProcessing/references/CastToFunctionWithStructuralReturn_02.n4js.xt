@@ -18,7 +18,7 @@ END_SETUP
  */
 
 // XPECT nowarnings --> "The import of A is unused."
-import {A} from "postProcessing/references/ReferencedClassA"
+import {A} from "ReferencedClassA"
 
 let x;
 

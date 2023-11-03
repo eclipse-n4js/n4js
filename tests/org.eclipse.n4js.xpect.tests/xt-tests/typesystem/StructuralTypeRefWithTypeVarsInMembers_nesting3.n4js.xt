@@ -25,7 +25,7 @@ class C3sub<T_sub> extends C3<~Object with {propInExtends: T_sub;}> {}
 var c3s : C3sub<string>;
 
 
-// XPECT type of 'c3s.m().prop.propInExtends' --> string
+// XPECT type of 'c3s.m().prop.<|>propInExtends' --> string
 c3s.m().prop.propInExtends;
 // XPECT noerrors -->
 c3s.m().prop.propInExtends = "Hello prop!";
@@ -51,7 +51,7 @@ class C3depth_sub7<T_sub7> extends C3depth_sub6<~Object with { propInSub7: T_sub
 
 var c3depth : C3depth_sub7<string>;
 
-// XPECT type of 'c3depth.m().prop.propInSub1.propInSub2.propInSub3.propInSub4.propInSub5.propInSub6.propInSub7' --> string
+// XPECT type of 'c3depth.m().prop.propInSub1.propInSub2.propInSub3.propInSub4.propInSub5.propInSub6.<|>propInSub7' --> string
 c3depth.m().prop.propInSub1.propInSub2.propInSub3.propInSub4.propInSub5.propInSub6.propInSub7;
 // XPECT noerrors -->
 c3depth.m().prop.propInSub1.propInSub2.propInSub3.propInSub4.propInSub5.propInSub6.propInSub7 = "Hello prop!";

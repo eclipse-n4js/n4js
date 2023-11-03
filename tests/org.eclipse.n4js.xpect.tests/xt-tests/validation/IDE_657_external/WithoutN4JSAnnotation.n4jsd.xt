@@ -20,7 +20,7 @@
  */
 @@IgnoreImplementation
 
-import * as N from "validation/IDE_657_external/WithoutN4JSAnnotationCompanion";
+import * as N from "WithoutN4JSAnnotationCompanion";
 
 // XPECT noerrors --> "non-n4js super type" at "MyObject"
 export external public class MyObject extends Object {}

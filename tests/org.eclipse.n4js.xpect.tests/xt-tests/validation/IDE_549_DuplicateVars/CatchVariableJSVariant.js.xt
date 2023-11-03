@@ -42,7 +42,7 @@ function fd1_3(){
 	try{
 		throw 3;
 	}catch (x){
-	// XPECT errors --> "Variable x duplicates catch variable x (line 44)." at "x"
+	// JS modules are opaque -> no validation here XPECT noerrors --> "Variable x duplicates catch variable x (line 44)." at "x"
 		var x;
 	}
 }

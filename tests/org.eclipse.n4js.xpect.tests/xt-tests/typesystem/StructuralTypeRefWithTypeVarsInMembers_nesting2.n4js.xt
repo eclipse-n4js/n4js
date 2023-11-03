@@ -23,7 +23,7 @@ class C2<T> {
 var c2s : C2<string>;
 
 
-// XPECT type of 'c2s.m().prop1.prop2' --> string
+// XPECT type of 'c2s.m().prop1.<|>prop2' --> string
 c2s.m().prop1.prop2;
 // XPECT noerrors -->
 c2s.m().prop1.prop2 = "Hello prop!";
@@ -54,7 +54,7 @@ class C2depth<T> {
 var c2depth : C2depth<string>;
 
 
-// XPECT type of 'c2depth.m().prop1.prop2.prop3.prop4.prop5.prop6.prop7' --> string
+// XPECT type of 'c2depth.m().prop1.prop2.prop3.prop4.prop5.prop6.<|>prop7' --> string
 c2depth.m().prop1.prop2.prop3.prop4.prop5.prop6.prop7;
 // XPECT noerrors -->
 c2depth.m().prop1.prop2.prop3.prop4.prop5.prop6.prop7 = "Hello prop!";

@@ -36,7 +36,7 @@ var a = 4;
 // case #1b
 // XPECT noerrors --> we mark duplication on lower elements
 function fdb(s : String){};
-// XPECT errors --> "Function fdb duplicates function fdb (line 38) ." at "fdb"
+// XPECT errors --> "Function fdb duplicates function fdb (line 38)." at "fdb"
 function fdb(n : Number){};
 
 // case #1ca
@@ -46,7 +46,7 @@ var vdc2a = function feca(n : Number){};//ok in all modes?
 // case #1cb
 // XPECT noerrors --> we mark duplication on lower elements
 var vdc1b = function fecb(s : String){};//only var decl name issue, not function expression name
-// XPECT errors --> "Variable vdc1b duplicates variable vdc1b (line 48) ." at "vdc1b"
+// XPECT errors --> "Variable vdc1b duplicates variable vdc1b (line 48)." at "vdc1b"
 var vdc1b = function fecb(n : Number){};//only var decl name issue, not function expression name
 
 
@@ -57,20 +57,20 @@ var vdcc = function fcc(n : Number){};//ok in all modes?
 // case #1cd
 // XPECT noerrors --> we mark duplication on lower elements
 function fcd(s : String){};
-// XPECT errors --> "Variable fcd duplicates function fcd (line 59) ." at "fcd"
+// XPECT errors --> "Variable fcd duplicates function fcd (line 59)." at "fcd"
 var fcd = function fcd(n : Number){};//only var decl name issue, not function expression name
 
 
 // case #1da
 // XPECT noerrors --> we mark duplication on lower elements
 var varFD = 3;
-// XPECT errors --> "Function varFD duplicates variable varFD (line 66) ." at "varFD"
+// XPECT errors --> "Function varFD duplicates variable varFD (line 66)." at "varFD"
 function varFD (){};
 
 // case #1db
 // XPECT warnings --> "Variable names should start with lower case letter." at "VarClass"
 var VarClass = 1;
-// XPECT errors --> "Class VarClass duplicates variable VarClass (line 72) ." at "VarClass"
+// XPECT errors --> "Class VarClass duplicates variable VarClass (line 72)." at "VarClass"
 class VarClass{};
 
 // case #1dc
@@ -93,18 +93,18 @@ interface RoleInter{};
  */
 // XPECT noerrors --> we mark duplication on lower elements
 var varconst = 2
-// XPECT errors --> "Variable varconst duplicates variable varconst (line 95) ." at "varconst"
+// XPECT errors --> "Variable varconst duplicates variable varconst (line 95)." at "varconst"
 const varconst = 3;
 
 // case #1eb
 // XPECT noerrors --> we mark duplication on lower elements
 const dupeConst = 1;
 /* XPECT errors ---
-	"Variable dupeConst duplicates variable dupeConst (line 101) ." at "dupeConst"
+	"Variable dupeConst duplicates variable dupeConst (line 101)." at "dupeConst"
 --- */
 const dupeConst = 2;
 /* XPECT errors ---
-	"Variable dupeConst duplicates variable dupeConst (line 101) ." at "dupeConst"
+	"Variable dupeConst duplicates variable dupeConst (line 101)." at "dupeConst"
 --- */
 const dupeConst = 1;
 
@@ -139,7 +139,7 @@ If multiple formal parameters have the same name, the one occurring latest in th
 for (var i = 0; i < 9; i++) {
    //console.log(i)
 }
-// XPECT errors --> "Variable i duplicates variable i (line 139) ." at "i"
+// XPECT errors --> "Variable i duplicates variable i (line 139)." at "i"
 for (var i = 9; i < 19; i++) {
    //console.log(i)
 }
@@ -148,7 +148,7 @@ for (var i = 9; i < 19; i++) {
 // XPECT noerrors --> we mark duplication on lower elements
 var fba = 1;
 if(true){
-// XPECT errors --> "Variable fba duplicates variable fba (line 149) ." at "fba"
+// XPECT errors --> "Variable fba duplicates variable fba (line 149)." at "fba"
 	var fba = 2;
 }
 
@@ -306,7 +306,6 @@ function fdtd(this: any){
 }
 
 
-// XPECT FIXME noerrors --> class expressions don't introduce the name in outer scope'
 // XPECT errors --> "Unsupported feature: class expressions." at "_"
 var _ = class _ {}
 

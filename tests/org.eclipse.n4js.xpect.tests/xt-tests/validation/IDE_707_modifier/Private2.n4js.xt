@@ -19,7 +19,7 @@
 	END_SETUP
  */
 
-import * as N from "validation/IDE_707_modifier/Private"
+import * as N from "Private"
 
 class B extends N.A {
 	// XPECT errors --> "The field B.x cannot override or implement non-accessible field A.x." at "x"

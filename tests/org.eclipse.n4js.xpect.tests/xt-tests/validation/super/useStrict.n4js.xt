@@ -17,37 +17,37 @@
 
 'use strict';
 
-// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\\112World""
-// XPECT warnings --> "Bad escapement" at ""Hello\\112World""
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\112World""
+// XPECT warnings --> "Bad escapement" at ""Hello\112World""
 "Hello\112World";
 
 
-// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\\0112World""
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\0112World""
 "Hello\0112World";
 
 
-// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\\312World""
-// XPECT warnings --> "Bad escapement" at ""Hello\\312World""
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\312World""
+// XPECT warnings --> "Bad escapement" at ""Hello\312World""
 "Hello\312World";
 
 
-// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\\412World""
-// XPECT warnings --> "Bad escapement" at ""Hello\\412World""
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\412World""
+// XPECT warnings --> "Bad escapement" at ""Hello\412World""
 "Hello\412World";
 
 
-// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\\812World""
-// XPECT warnings --> "Bad escapement" at ""Hello\\812World""
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\812World""
+// XPECT warnings --> "Bad escapement" at ""Hello\812World""
 "Hello\812World";
 
 
-// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\\712World""
-// XPECT warnings --> "Bad escapement" at ""Hello\\712World""
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\712World""
+// XPECT warnings --> "Bad escapement" at ""Hello\712World""
 "Hello\712World";
 
 
-// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\\1World""
-// XPECT warnings --> "Bad escapement" at ""Hello\\1World""
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\1World""
+// XPECT warnings --> "Bad escapement" at ""Hello\1World""
 "Hello\1World";
 
 
@@ -62,11 +62,11 @@ let x01: 0123;
 // XPECT noerrors -->
 let x02: 0o123;
 
-// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\\0112World""
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\0112World""
 let x03: "Hello\0112World";
 
-// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\\312World""
-// XPECT warnings --> "Bad escapement" at ""Hello\\312World""
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\312World""
+// XPECT warnings --> "Bad escapement" at ""Hello\312World""
 let x04: "Hello\312World";
 
 

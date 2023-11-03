@@ -19,16 +19,16 @@
 	END_SETUP
  */
 
-import * as N from "typesystem/StructuralTypeRefWithMembersAcrossFiles_Importee"
+import * as N from "StructuralTypeRefWithMembersAcrossFiles_Importee"
 
 
 var p : N.Provider;
 
-// XPECT type of 'p.f1.n' --> X
+// XPECT type of 'p.f1.<|>n' --> X
 p.f1.n;
-// XPECT type of 'p.f2.n' --> X
+// XPECT type of 'p.f2.<|>n' --> X
 p.f2.n;
-// XPECT type of 'p.f3.value.n' --> X
+// XPECT type of 'p.f3.value.<|>n' --> X
 p.f3.value.n;
-// XPECT type of 'p.m1().n' --> X
+// XPECT type of 'p.m1().<|>n' --> X
 p.m1().n;

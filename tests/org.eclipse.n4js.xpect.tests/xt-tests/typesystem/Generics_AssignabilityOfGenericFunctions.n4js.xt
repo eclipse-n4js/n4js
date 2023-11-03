@@ -18,7 +18,7 @@
 //   /org.eclipse.n4js.spec.tests/xpect-tests/Ch05_04__RedefinitionOfMembers/RedefineGenericMethodsMore.n4js.xt
 //   /org.eclipse.n4js.spec.tests/xpect-tests/Ch05_04__RedefinitionOfMembers/RedefineMethodsCovariantReturn.n4js.xt
 // and here:
-//   /org.eclipse.n4js.xpect.tests/model/typesystem/Generics_AssignabilityOfGenericFunctions2.n4js.xt
+//   /org.eclipse.n4js.xpect.tests/model/Generics_AssignabilityOfGenericFunctions2.n4js.xt
 
 
 //

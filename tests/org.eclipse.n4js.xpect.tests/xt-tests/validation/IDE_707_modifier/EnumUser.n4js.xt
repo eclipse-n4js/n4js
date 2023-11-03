@@ -19,7 +19,7 @@
 	END_SETUP
  */
 
-import * as N from "validation/IDE_707_modifier/Enums"
+import * as N from "Enums"
 
 class EnumUser {
 

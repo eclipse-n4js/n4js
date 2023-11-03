@@ -23,13 +23,13 @@
 /* No conflicts as Class2 is imported from different modules and at one import aliased */
 
 // XPECT nowarnings --> "The import of Class2 is unused." at "Class2 as X"
-import { Class2 as X } from "validation/imports/MultipleClasses"
+import { Class2 as X } from "MultipleClasses"
 
 // XPECT nowarnings --> "The import of a is unused." at "a as b"
-import { a as b } from "validation/imports/MultipleClasses"
+import { a as b } from "MultipleClasses"
 
 // XPECT nowarnings -->
-import * as Ndc from "validation/imports/DifferentClasses"
+import * as Ndc from "DifferentClasses"
 
 var c : Ndc.Class2;
 var /*nasty*/x : X;

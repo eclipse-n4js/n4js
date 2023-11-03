@@ -21,17 +21,17 @@
 
 // Warnings of unused imports due to no real usage in file below.
 
-/* XPECT issues ---
+/* XPECT warnings ---
 "The import of Class2 is unused." at "Class2"
 --- */
-import { Class2 } from "validation/imports/MultipleClasses"
+import { Class2 } from "MultipleClasses"
 
-/* XPECT issues ---
-"Name Class2 is already used as name for named import Class2 from validation/imports/MultipleClasses." at "Class2"
+/* XPECT errors ---
+"Name Class2 is already used as name for named import Class2 from MultipleClasses." at "Class2"
 --- */
-import { Class2 } from "validation/imports/DifferentClasses"
+import { Class2 } from "DifferentClasses"
 
-/* XPECT issues ---
-	"Name Class2 is already used as name for named import Class2 from validation/imports/MultipleClasses." at "Class1 as Class2"
+/* XPECT errors ---
+	"Name Class2 is already used as name for named import Class2 from MultipleClasses." at "Class1 as Class2"
  --- */
-import { Class1 as Class2 } from "validation/imports/MultipleClasses"
+import { Class1 as Class2 } from "MultipleClasses"

@@ -38,17 +38,17 @@ function <T> fooG_ret(p : T) : G<T> {return null;}
 // no generics
 
 // no return type expectation
-// XPECT typeArgs of foo --> B
+// XPECT typeArgs of 'foo' --> B
 var v01 = foo(b);
 // co-variant return type expectation
-// XPECT typeArgs of foo --> B
+// XPECT typeArgs of 'foo' --> B
 var v02 : A = foo(b);
 
 // ========================================================================
 // generic argument
 
 // invariant argument type expectation
-// XPECT typeArgs of fooG_fpar --> B
+// XPECT typeArgs of 'fooG_fpar' --> B
 var v03 : A = fooG_fpar(gb);
 
 // ========================================================================
@@ -61,16 +61,16 @@ var v03 : A = fooG_fpar(gb);
 // ---
 var v11 : G<C> = fooG_ret(b);
 // invariant return type expectation, match
-// XPECT typeArgs of fooG_ret --> A
+// XPECT typeArgs of 'fooG_ret' --> A
 var v12 : G<A> = fooG_ret(b);
 // co-variant return type expectation
-// XPECT typeArgs of fooG_ret --> B
+// XPECT typeArgs of 'fooG_ret' --> B
 var v13 : G<? extends A> = fooG_ret(b);
 // contra-variant return type expectation, mismatch (alternatively, this could emit an error)
-// XPECT typeArgs of fooG_ret --> A
+// XPECT typeArgs of 'fooG_ret' --> A
 var v14 : G<? super A> = fooG_ret(b);
 // contra-variant return type expectation, match
-// XPECT typeArgs of fooG_ret --> B
+// XPECT typeArgs of 'fooG_ret' --> B
 var v15 : G<? super C> = fooG_ret(b);
 
 // ========================================================================
@@ -82,10 +82,10 @@ var v15 : G<? super C> = fooG_ret(b);
 // "G<T> is not a subtype of G<A>." at "fooG(gb)"
 // ---
 var v21 : G<A> = fooG(gb);
-// XPECT typeArgs of fooG --> B
+// XPECT typeArgs of 'fooG' --> B
 var v22 : G<B> = fooG(gb);
 // co-/invariant
-// XPECT typeArgs of fooG --> B
+// XPECT typeArgs of 'fooG' --> B
 var v23 : G<? extends A> = fooG(gb);
 // contra-/invariant, mismatch (now, we have to emit an error; compare with v14)
 // XPECT errors ---
@@ -94,7 +94,7 @@ var v23 : G<? extends A> = fooG(gb);
 // ---
 var v24 : G<? super A> = fooG(gb);
 // contra-/invariant, match
-// XPECT typeArgs of fooG --> B
+// XPECT typeArgs of 'fooG' --> B
 var v25 : G<? super C> = fooG(gb);
 
  // argument is generic type with wildcard => cannot choose a non-wildcard T such that G<T> is a super type

@@ -19,7 +19,7 @@
 	END_SETUP
  */
 
-import * as N from "typesystem/VariableFieldTypeInferenceIndirectly_Importee"
+import * as N from "VariableFieldTypeInferenceIndirectly_Importee"
 
 
 class X {}

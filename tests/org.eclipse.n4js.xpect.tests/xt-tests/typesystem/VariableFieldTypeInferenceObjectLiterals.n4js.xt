@@ -19,7 +19,7 @@
 	END_SETUP
  */
 
-import * as N from "typesystem/VariableFieldTypeInferenceObjectLiterals_Importee"
+import * as N from "VariableFieldTypeInferenceObjectLiterals_Importee"
 
 
 class Local {
@@ -48,17 +48,17 @@ var local : Local;
 var remote : N.Remote;
 
 
-// XPECT type of 'local.field' --> ~Object with { s: string; n: int; f: {function(string):int} }
+// XPECT type of 'local.<|>field' --> ~Object with { s: string; n: int; f: {function(string):int} }
 var x01 = local.field;
-// XPECT type of 'Local.staticField' --> ~Object with { s: string; n: int; f: {function(string):int} }
+// XPECT type of 'Local.<|>staticField' --> ~Object with { s: string; n: int; f: {function(string):int} }
 var x02 = Local.staticField;
 // XPECT type of 'local_variable' --> ~Object with { s: string; n: int; f: {function(string):int} }
 var x03 = local_variable;
 
 
-// XPECT type of 'remote.field' --> ~Object with { s: string; n: int; f: {function(string):int} }
+// XPECT type of 'remote.<|>field' --> ~Object with { s: string; n: int; f: {function(string):int} }
 var x11 = remote.field;
-// XPECT type of 'Remote.staticField' --> ~Object with { s: string; n: int; f: {function(string):int} }
+// XPECT type of 'Remote.<|>staticField' --> ~Object with { s: string; n: int; f: {function(string):int} }
 var x12 = N.Remote.staticField;
 // XPECT type of 'remote_variable' --> ~Object with { s: string; n: int; f: {function(string):int} }
 var x13 = N.remote_variable;

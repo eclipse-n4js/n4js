@@ -19,7 +19,7 @@
    END_SETUP
  */
 
-import * as N from "typesystem/AT_547_Externals"
+import * as N from "AT_547_Externals"
 
 // XPECT errors --> "ExternalClass is not a subtype of N4Object." at "new N.ExternalClass()"
 var extClassAsN4Object : N4Object = new N.ExternalClass();

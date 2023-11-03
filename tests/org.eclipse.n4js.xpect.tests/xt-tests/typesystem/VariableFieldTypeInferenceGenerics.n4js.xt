@@ -19,7 +19,7 @@
 	END_SETUP
  */
 
-import * as N from "typesystem/VariableFieldTypeInferenceGenerics_Importee"
+import * as N from "VariableFieldTypeInferenceGenerics_Importee"
 
 
 class LocalGen extends N.RemoteGenSuper<number> {

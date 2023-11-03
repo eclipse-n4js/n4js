@@ -26,7 +26,7 @@ function <T> foo(p : T) : T {return null;}
 function <T> fooArr(p : Array<T>) : G<T> {return null;}
 
 // XPECT noerrors -->
-// XPECT typeArgs of fooArr --> A
+// XPECT typeArgs of 'fooArr' --> A
 // XPECT type of '[ b, c ]' --> Array<A>
 let v01: Array<G<A>> = [ ... foo([ fooArr( [ b, c ] ) ]) ];
 //                     α     β   γ δ       ε
@@ -52,13 +52,13 @@ let v01: Array<G<A>> = [ ... foo([ fooArr( [ b, c ] ) ]) ];
 
 
 // XPECT noerrors -->
-// XPECT typeArgs of fooArr --> A
+// XPECT typeArgs of 'fooArr' --> A
 // XPECT type of '[ b, c ]' --> Array<A>
 let v02: Array<G<A>> = foo([ ... foo([ fooArr( [ b, c ] ) ]) ]);
 
 
 // XPECT noerrors -->
-// XPECT typeArgs of fooArr --> A
+// XPECT typeArgs of 'fooArr' --> A
 // XPECT type of '[ b, c ]' --> Array<B>
 // XPECT type of '[ ... [ b, c ], new C2() ]' --> Array<A>
 let v03: Array<G<A>> = foo([ ... foo([ fooArr( [ ... [ b, c ], new C2() ] ) ]) ]);

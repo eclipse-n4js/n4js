@@ -19,7 +19,7 @@
 	END_SETUP
  */
 
-import * as N from "typesystem/VariableFieldTypeInferenceFunctionExpressions_Importee"
+import * as N from "VariableFieldTypeInferenceFunctionExpressions_Importee"
 
 
 class Local {

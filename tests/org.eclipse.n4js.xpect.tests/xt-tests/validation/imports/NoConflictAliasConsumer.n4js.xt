@@ -21,7 +21,7 @@
 
 
 /* No conflicts as Class2 is imported from different modules and at one import aliased */
-import { Class2 as X } from "validation/imports/MultipleClasses"
-import { Class2 } from "validation/imports/DifferentClasses"
+import { Class2 as X } from "MultipleClasses"
+import { Class2 } from "DifferentClasses"
 var c : Class2;
 var x : X;

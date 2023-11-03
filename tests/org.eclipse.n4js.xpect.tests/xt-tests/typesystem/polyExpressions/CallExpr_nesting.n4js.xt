@@ -37,22 +37,22 @@ function <T> fooG_ret(p : T) : G<T> {return null;}
 // ========================================================================
 
 
-// XPECT typeArgs of foo --> B
+// XPECT typeArgs of 'foo' --> B
 var v01 = foo(foo(foo(b)))
-// XPECT typeArgs of foo --> B
+// XPECT typeArgs of 'foo' --> B
 var v02 : A = foo(foo(foo(b)))
 
 
-// XPECT typeArgs of fooG_ret --> B
-// XPECT typeArgs of foo --> G<B>
+// XPECT typeArgs of 'fooG_ret' --> B
+// XPECT typeArgs of 'foo' --> G<B>
 var v03 = foo(foo(  fooG_ret(b)  ))
 
 
-// XPECT typeArgs of fooG_ret --> A
-// XPECT typeArgs of foo --> G<A>
+// XPECT typeArgs of 'fooG_ret' --> A
+// XPECT typeArgs of 'foo' --> G<A>
 var v04 : G<A> = foo(foo(  fooG_ret(b)  ))
 
 
-// XPECT typeArgs of fooG_ret --> A
-// XPECT typeArgs of foo --> G<A>
+// XPECT typeArgs of 'fooG_ret' --> A
+// XPECT typeArgs of 'foo' --> G<A>
 var v05 : G<A> = foo(foo(  fooG_ret(  foo(foo(b))  )  ))

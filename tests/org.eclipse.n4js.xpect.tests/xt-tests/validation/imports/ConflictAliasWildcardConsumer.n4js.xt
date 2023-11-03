@@ -20,12 +20,12 @@
  */
 
 
-import { Class2 as X } from "validation/imports/MultipleClasses"
+import { Class2 as X } from "MultipleClasses"
 // A warning duplicates the error-message, as the real error shows below
-/* XPECT issues ---
- "Class2 from validation/imports/MultipleClasses is already imported as X." at "* as Ndc"
+/* XPECT errors ---
+ "Class2 from MultipleClasses is already imported as X." at "* as Ndc"
  --- */
-import * as Ndc from "validation/imports/MultipleClasses"
+import * as Ndc from "MultipleClasses"
 // XPECT errors --> "Import of Ndc.Class2 cannot be resolved." at "Ndc.Class2"
 var c : Ndc.Class2;
 var x : X;

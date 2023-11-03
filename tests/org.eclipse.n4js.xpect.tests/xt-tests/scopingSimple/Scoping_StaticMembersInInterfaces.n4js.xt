@@ -63,7 +63,6 @@ I2.propI2;
 // __proto__, apply, arguments, bind, call, caller, constructor, create, defineProperties,
 // defineProperty, freeze, getOwnPropertyDescriptor, getOwnPropertyNames, getPrototypeOf,
 // hasOwnProperty, isExtensible, isFrozen, isPrototypeOf, isSealed, keys, length, n4type,
-// preventExtensions, propertyIsEnumerable, prototype, prototype, seal, toLocaleString,
-// toString, valueOf
+// preventExtensions, propertyIsEnumerable, prototype, seal, toLocaleString, toString, valueOf
 // ---
 C.propC;

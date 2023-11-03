@@ -23,7 +23,7 @@ class MyClassX {
 /* XPECT scope at 'boolean' ---
 	Array, Boolean,
 	Date, Error, EvalError,
-	Function, JSON, Math, MyClassX - T,
+	Function, JSON, Math, MyClassX,
 	N4Class, N4Object,
 	Number, Object,
 	RangeError, ReferenceError,

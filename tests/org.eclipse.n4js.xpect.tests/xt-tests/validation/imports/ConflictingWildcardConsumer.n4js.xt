@@ -20,12 +20,12 @@
  */
 
 
-import * as MC from "validation/imports/MultipleClasses"
-import * as DC from "validation/imports/DifferentClasses"
-// XPECT errors --> "Class2 from validation/imports/DifferentClasses is already imported as DC.Class2." at "Class2"
-import { Class2 } from "validation/imports/DifferentClasses"
-// XPECT errors --> "Class1 from validation/imports/MultipleClasses is already imported as MC.Class1." at "Class1"
-import { Class1 } from "validation/imports/MultipleClasses"
+import * as MC from "MultipleClasses"
+import * as DC from "DifferentClasses"
+// XPECT errors --> "Class2 from DifferentClasses is already imported as DC.Class2." at "Class2"
+import { Class2 } from "DifferentClasses"
+// XPECT errors --> "Class1 from MultipleClasses is already imported as MC.Class1." at "Class1"
+import { Class1 } from "MultipleClasses"
 // XPECT errors --> "Class4 has been imported as MC.Class4." at "Class4"
 var class4 : Class4//needs to be either MC.Class4 ot DC.Class4
 var class1 : MC.Class1

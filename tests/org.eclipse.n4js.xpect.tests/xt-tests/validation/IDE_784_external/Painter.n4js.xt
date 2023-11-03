@@ -19,7 +19,7 @@
 	END_SETUP
  */
 
-import { Color } from "validation/IDE_784_external/Color"
+import { Color } from "Color"
 
 // literal RED is accessible
 var c : Color = Color.RED;

@@ -28,14 +28,14 @@ function <T> fooOL(p : ~Object with { prop: T; }) : G<T> {return null;}
 
 
 
-// XPECT typeArgs of fooOL --> B
+// XPECT typeArgs of 'fooOL' --> B
 // XPECT type of '{ prop: b }' --> ~Object with { prop: B }
 var v01 = fooOL( { prop: b } );
 
-// XPECT typeArgs of fooOL --> A
+// XPECT typeArgs of 'fooOL' --> A
 // XPECT type of '{ prop: b }' --> ~Object with { prop: A }
 var v02 : G<A> = fooOL( { prop: b } );
 
-// XPECT typeArgs of fooOL --> A
+// XPECT typeArgs of 'fooOL' --> A
 // XPECT type of '{ prop: b }' --> ~Object with { prop: A }
 var v03 : G<A> = foo(foo(foo(fooOL( { prop: b } ))));

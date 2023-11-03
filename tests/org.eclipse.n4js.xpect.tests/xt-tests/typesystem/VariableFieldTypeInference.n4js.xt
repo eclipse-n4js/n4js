@@ -19,7 +19,7 @@
 	END_SETUP
  */
 
-import * as N from "typesystem/VariableFieldTypeInference_Importee"
+import * as N from "VariableFieldTypeInference_Importee"
 
 
 class Local {

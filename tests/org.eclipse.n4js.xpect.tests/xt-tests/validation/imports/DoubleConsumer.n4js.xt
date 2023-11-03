@@ -19,11 +19,11 @@
  */
 
 
-// first two lines are errors,
-// line 3-5 are warnings
-/* XPECT issues ---
- "Name Class1 is already used as name for named import Class1 from validation/imports/MultipleClasses." at "Class1"
+/* XPECT errors ---
+ "Name Class1 is already used as name for named import Class1 from MultipleClasses." at "Class1"
+--- */
+/* XPECT warnings ---
  "The import of Class1 is unused." at "Class1"
  "The import of Class2 is unused." at "Class2"
 --- */
-import {Class1, Class2, Class1} from "validation/imports/MultipleClasses"
+import {Class1, Class2, Class1} from "MultipleClasses"

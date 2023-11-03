@@ -15,8 +15,8 @@ class A<T> {
 	static foo() : this { return null; }
 }
 
-// XPECT type of C --> A<?> 
+// XPECT type of 'C' --> A<?> 
 const C = A.foo();
 
-// XPECT type of foo --> {function():this[A<?>]}
+// XPECT type of 'foo' --> {function():this[A<?>]}
 A.foo();

@@ -23,7 +23,7 @@ class C1<T> {
 var c1s : C1<~Object with { propInArg: string; }>;
 
 
-// XPECT type of 'c1s.m().prop.propInArg' --> string
+// XPECT type of 'c1s.m().prop.<|>propInArg' --> string
 c1s.m().prop.propInArg;
 // XPECT noerrors -->
 c1s.m().prop.propInArg = "Hello prop!";

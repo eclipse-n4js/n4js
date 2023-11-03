@@ -19,7 +19,7 @@
    END_SETUP
  */
 
- import { B , A } from "validation/IDEBUG_448/IDEBUG_448_Private"
+ import { B , A } from "IDEBUG_448_Private"
 
 class D extends B {
 

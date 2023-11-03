@@ -52,9 +52,9 @@ var asub2: ASub<ABot>;
 // XPECT noerrors -->
 var abot: ABot;
 
-// XPECT type of 'asub1.m()' --> ? extends ASub<?>
+// XPECT type of 'asub1.m<|>()' --> ? extends ASub<?>
 asub1.m();
-// XPECT type of 'asub2.m()' --> ABot
+// XPECT type of 'asub2.m<|>()' --> ABot
 asub2.m();
 // XPECT type of 'abot.m()' --> ABot
 abot.m();

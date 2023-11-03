@@ -20,12 +20,12 @@
  */
 
 
-/* XPECT issues ---
- "Class2 from validation/imports/MultipleClasses is already imported as X." at "Class2 as Y"
+/* XPECT errors ---
+ "Class2 from MultipleClasses is already imported as X." at "Class2 as Y"
 --- */
-import { Class2 as X, Class2 as Y } from "validation/imports/MultipleClasses"
-// XPECT errors --> "Class2 from validation/imports/MultipleClasses is already imported as X." at "Class2"
-import { Class2 } from "validation/imports/MultipleClasses"
+import { Class2 as X, Class2 as Y } from "MultipleClasses"
+// XPECT errors --> "Class2 from MultipleClasses is already imported as X." at "Class2"
+import { Class2 } from "MultipleClasses"
 // XPECT noerrors --> "X is resolved to Class2"
 var c : X;
 // XPECT errors --> "Import of Y cannot be resolved." at "Y"

@@ -19,7 +19,7 @@
 	END_SETUP
  */
 
-import * as N from "typesystem/Importee"
+import * as N from "Importee"
 
 // XPECT type of 'typeFromLeftSideUsage' --> string
 var typeFromLeftSideUsage = N.typeFromLeftSide;

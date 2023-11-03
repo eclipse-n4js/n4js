@@ -136,7 +136,7 @@ function fdevd() {
 }
 
 var n4cde = 2;
-	//XPECT FIXME noerrors --> expression does not introduce the name ... "Class n4cde duplicates variable n4cde (line 127)." at "n4cde"
+
 	//XPECT errors --> "Unsupported feature: class expressions." at "n4cde"
 var n4cdevd = class n4cde {};
 
