@@ -14,14 +14,14 @@
  */
 
 function b() {
-	/* XPECT scope at '|arguments' ---
+	/* XPECT scope at '<|>arguments' ---
 	   arguments, Infinity, ...
 	   ---
 	 */
 	var l = arguments.length;
 }
 
-/* No arguments in script XPECT scope at '|b' ---
+/* No arguments in script XPECT scope at '<|>b' ---
 	   !arguments, ...
 	   ---
  */
@@ -31,14 +31,14 @@ var a = b;
 
 class A {
 
- /* No arguments in class-body XPECT scope at '|b' ---
+ /* No arguments in class-body XPECT scope at '<|>b' ---
 		   !arguments, ...
 		   ---
  */
  a : any = b;
 
   get d () : string {
-	/* arguments in getter X!PECT scope at '|return' ---
+	/* arguments in getter X!PECT scope at '<|>return' ---
 			   arguments, ...
 			   ---
 	 */
@@ -46,7 +46,7 @@ class A {
  	}
 
    set d (d : number) {
-	/* arguments in getter XPECT scope at '|d' ---
+	/* arguments in getter XPECT scope at '<|>d' ---
 			   arguments, ...
 			   ---
 	 */
@@ -55,7 +55,7 @@ class A {
 
 
  constructor() {
-	 /* arguments in constructor XPECT scope at '|console' ---
+	 /* arguments in constructor XPECT scope at '<|>console' ---
 			   arguments, ...
 			   ---
 	 */
@@ -63,7 +63,7 @@ class A {
  }
 
  meth01() : void {
-	 /* arguments in method XPECT scope at '|console' ---
+	 /* arguments in method XPECT scope at '<|>console' ---
 			   arguments, ...
 			   ---
 	 */
@@ -71,7 +71,7 @@ class A {
  }
 
  static meth02() : void {
-	 /* arguments in static method XPECT scope at '|console' ---
+	 /* arguments in static method XPECT scope at '<|>console' ---
 			   arguments, ...
 			   ---
 	 */

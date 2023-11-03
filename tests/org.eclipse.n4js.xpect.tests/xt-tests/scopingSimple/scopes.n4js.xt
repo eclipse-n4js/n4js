@@ -15,7 +15,7 @@ var x=1;
 
 function foo() {
 	var x=3;
-	/* XPECT scopeWithPosition at x ---
+	/* XPECT scopeWithPosition at 'x' ---
 		x - T17, b - T22, c - T24, foo - T16,
 		...
 	---*/
@@ -23,7 +23,7 @@ function foo() {
 }
 var c;
 var b = c;
-/* XPECT scopeWithPosition at c ---
+/* XPECT scopeWithPosition at 'c' ---
 		x - T14, b - T25, c - T24, foo - T16,
 		...
 	---*/

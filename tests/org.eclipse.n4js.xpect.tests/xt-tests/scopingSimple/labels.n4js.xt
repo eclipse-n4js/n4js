@@ -14,7 +14,7 @@
 
 LBL: while (2) {
 
-// XPECT scopeWithPosition at LBL --> LBL - 15
+// XPECT scopeWithPosition at 'LBL' --> LBL - 15
     break LBL;
 }
 

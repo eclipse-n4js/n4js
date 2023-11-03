@@ -14,7 +14,7 @@
 try {
 	var x = 0;
 } catch(z) {
-// XPECT scope at 'var x = |z' --> !e, x, z, ...
+// XPECT scope at 'var x = <|>z' --> !e, x, z, ...
 	var x = z;
 	try {
 	} catch(e) {

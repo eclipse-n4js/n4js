@@ -38,7 +38,7 @@ class C implements I {
 }
 
 
-// XPECT scope at 'I.|propI' ---
+// XPECT scope at 'I.<|>propI' ---
 // f, g, s, m, propI,
 // __proto__, constructor, create, defineProperties,
 // defineProperty, freeze, getOwnPropertyDescriptor, getOwnPropertyNames, getPrototypeOf,
@@ -48,7 +48,7 @@ class C implements I {
 I.propI;
 
 
-// XPECT scope at 'I2.|propI2' ---
+// XPECT scope at 'I2.<|>propI2' ---
 // propI2,
 // __proto__, constructor, create, defineProperties,
 // defineProperty, freeze, getOwnPropertyDescriptor, getOwnPropertyNames, getPrototypeOf,
@@ -58,7 +58,7 @@ I.propI;
 I2.propI2;
 
 
-// XPECT scope at 'C.|propC' ---
+// XPECT scope at 'C.<|>propC' ---
 // propC,
 // __proto__, apply, arguments, bind, call, caller, constructor, create, defineProperties,
 // defineProperty, freeze, getOwnPropertyDescriptor, getOwnPropertyNames, getPrototypeOf,

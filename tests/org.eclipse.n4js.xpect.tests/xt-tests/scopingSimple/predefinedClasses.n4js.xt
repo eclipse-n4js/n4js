@@ -20,7 +20,7 @@ class MyClassX {
 ---*/
 	field : string;
 
-/* XPECT scope at boolean ---
+/* XPECT scope at 'boolean' ---
 	Array, Boolean,
 	Date, Error, EvalError,
 	Function, JSON, Math, MyClassX - T,
@@ -44,7 +44,7 @@ class MyClassX {
 	}
 }
 
-/* XPECT scope at 'myBooleanVar : |boolean' ---
+/* XPECT scope at 'myBooleanVar : <|>boolean' ---
 	 Array, Boolean, Date, Error, EvalError, Function,
 	 JSON, Math, N4Object, Number, Object,  RangeError,
 	ReferenceError, RegExp, String, SyntaxError, TypeError,  URIError,
@@ -53,7 +53,7 @@ class MyClassX {
 ---*/
 var myBooleanVar : boolean;
 
-/* XPECT scope at String ---
+/* XPECT scope at 'String' ---
 	!arguments, Array, Boolean, Date, Error, EvalError, Function,
 	 JSON, Math, N4Object, Number, Object,  RangeError,
 	ReferenceError, RegExp, String, SyntaxError, TypeError,  URIError,
@@ -62,7 +62,7 @@ var myBooleanVar : boolean;
 ---*/
 var myPathSelector : pathSelector<String>;
 
-/* XPECT scope at 'T extends |MyClassX' ---
+/* XPECT scope at 'T extends <|>MyClassX' ---
 	!arguments, Array, Boolean, Date, Error, EvalError, Function,
 	 JSON, Math, N4Object, Number, Object,  RangeError,
 	ReferenceError, RegExp, String, SyntaxError, TypeError,  URIError,
@@ -73,7 +73,7 @@ class MyClassY<T extends MyClassX> {
 
 }
 
-/* XPECT scope at void ---
+/* XPECT scope at 'void' ---
 	!arguments, Array, Boolean, Date, Error, EvalError, Function,
 	 JSON, Math, N4Object, Number, Object,  RangeError,
 	ReferenceError, RegExp, String, SyntaxError, TypeError,  URIError,
@@ -81,7 +81,7 @@ class MyClassY<T extends MyClassX> {
  	...
 ---*/
 function myFun1() : void {
-	/* XPECT scope at Object ---
+	/* XPECT scope at 'Object' ---
 		!arguments, Array, Boolean, Date, Error, EvalError, Function,
 		 JSON, Math, N4Object, Number, Object,  RangeError,
 		ReferenceError, RegExp, String, SyntaxError, TypeError,  URIError,
@@ -89,7 +89,7 @@ function myFun1() : void {
 		!void, ...
 	---*/
 	var myFun2Var = function myFun2(a : Object) :
-	/* XPECT scope at void ---
+	/* XPECT scope at 'void' ---
 		!arguments, Array, Boolean, Date, Error, EvalError, Function,
 		JSON, Math, N4Object, Number, Object,  RangeError,
 		ReferenceError, RegExp, String, SyntaxError, TypeError,  URIError, any, boolean,

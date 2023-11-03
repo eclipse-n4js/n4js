@@ -17,14 +17,14 @@ enum MyEnum {
 	THREE: "drei"
 }
 
-/* XPECT scopeWithPosition at 'MyEnum.|ONE' ---
+/* XPECT scopeWithPosition at 'MyEnum.<|>ONE' ---
 ONE - T15,
 TWO - T16,
 THREE - T17, ...
 --- */
 MyEnum.ONE;
 
-/* XPECT scope at 'MyEnum.ONE.|value' ---
+/* XPECT scope at 'MyEnum.ONE.<|>value' ---
 __proto__, toString, toLocaleString,
 valueOf, hasOwnProperty, isPrototypeOf,
 propertyIsEnumerable,

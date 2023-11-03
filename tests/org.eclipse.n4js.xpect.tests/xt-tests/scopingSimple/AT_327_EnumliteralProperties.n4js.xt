@@ -14,25 +14,25 @@
 enum Color { RED, GREEN, BLUE }
 enum Country { DE : "276", US : "840", TR : "792" }
 
-// XPECT scopeWithPosition at 'Color.|RED' --> RED - T14, GREEN - T14, BLUE - T14, ...
+// XPECT scopeWithPosition at 'Color.<|>RED' --> RED - T14, GREEN - T14, BLUE - T14, ...
 var red : Color = Color.RED;
-// XPECT scopeWithPosition at 'Country.|US' --> DE - T15, US - T15, TR - T15, ...
+// XPECT scopeWithPosition at 'Country.<|>US' --> DE - T15, US - T15, TR - T15, ...
 var us : Country = Country.US;
-/* XPECT scope at 'us.|value' ---
+/* XPECT scope at 'us.<|>value' ---
 __proto__, toString, toLocaleString,
 valueOf, hasOwnProperty, isPrototypeOf,
 propertyIsEnumerable,
 name, value
 --- */
 var s : string = us.value;
-/* XPECT scope at 'red.|name' ---
+/* XPECT scope at 'red.<|>name' ---
 __proto__, toString, toLocaleString,
 valueOf, hasOwnProperty, isPrototypeOf,
 propertyIsEnumerable,
 name, value
 --- */
 var s2 : string = red.name;
-/* XPECT scope at 'DE.|value' ---
+/* XPECT scope at 'DE.<|>value' ---
 __proto__, toString, toLocaleString,
 valueOf, hasOwnProperty, isPrototypeOf,
 propertyIsEnumerable,
