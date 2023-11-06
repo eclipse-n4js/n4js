@@ -1,0 +1,82 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+export public class A {
+	/* XPECT findReferences at 'a' ---
+	unions - b.a - 75,
+	unions - union.a - 61
+	---
+	*/
+	a : A;
+
+	/* XPECT findReferences at 'i' ---
+	unions - b.i - 76,
+	unions - union.i - 63
+	---
+	 */
+	i : int;
+	/* XPECT findReferences at 'foo' ---
+	unions - b.foo - 77,
+	unions - union.foo - 72
+	---
+	*/
+	foo(){};
+}
+
+interface I {
+	/* XPECT findReferences at 'a' ---
+	unions - j.a - 80,
+	unions - union.a - 61
+	---
+	*/
+	a : A;
+	/* XPECT findReferences at 'i' ---
+	unions - j.i - 81,
+	unions - union.i - 63
+	---
+	*/
+	i : int;
+	/* XPECT findReferences at 'foo' ---
+	unions - j.foo - 82,
+	unions - union.foo - 72
+	---
+	*/
+	foo(){};
+}
+
+
+class AI extends A implements I {}
+
+var union : A | I;
+union.a;
+
+union.i;
+/* XPECT findReferences at 'foo' ---
+unions - b.foo - 77,
+unions - j.foo - 82,
+unions - union.foo - 72
+---
+*/
+
+
+union.foo();
+
+var b : A;
+b.a;
+b.i;
+b.foo();
+
+var j : I;
+j.a;
+j.i;
+j.foo();

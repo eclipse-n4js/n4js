@@ -1,0 +1,140 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+
+// XPECT warnings --> "Dead code." at "3"
+for (1;2;3) {
+	break;
+}
+
+
+
+function f1() {
+	/* Forward XPECT allPaths ---
+		"start" -> 1 -> "x" -> throw "x"; -> 3 -> 6
+	---	*/
+	/* Backward XPECT allPaths direction 'Backward' ---
+		6 -> 3 -> throw "x"; -> "x" -> 1 -> "start"
+	---	*/
+	"start";
+	try {
+		try {
+			1;
+			throw "x";
+			// XPECT warnings --> "Dead code. No execution possible after throw." at "2;"
+			2;
+		} finally {
+			3;
+		}
+		// XPECT warnings --> "Dead code." at "4;"
+		4;
+	} finally {
+		6;
+	}
+	// XPECT warnings --> "Dead code." at ""end";"
+	"end";
+}
+
+
+
+function f2() {
+	return;
+	//  XPECT warnings --> "Dead code." at "1; 2; 3; for (;;) 4;"
+	for (;;)  1;
+	2;
+
+	3;
+
+	for (;;)  4;
+}
+
+function f3() {
+	"start";
+	try {
+		1;
+	} catch (e) {
+		try {
+			2;
+			throw 3;
+		} catch (ee) {
+			4;
+		}
+		5;
+	}
+	"end";
+}
+
+function f4() {
+	/*  XPECT allEdges ---
+		"start" --> 1,
+		"start" --> 2,
+		0 --> 4,
+		1 --> 2,
+		1 --> 4,
+		2 --> 3,
+		3 --> throw 3;,
+		4 --> "end",
+		throw 3; -Throw-> 4
+	--- */
+	/* Forward XPECT allPaths ---
+		"start" -> 1 -> 4 -> "end",
+		"start" -> 1 -> 2 -> 3 -> throw 3; -> 4,
+		"start" -> 2 -> 3 -> throw 3; -> 4
+	---	*/
+	/* ThrowTryCatchFinallyStatement2 XPECT allPaths direction 'Backward' ---
+		"end" -> 4 -> 1 -> "start",
+		4 -> throw 3; -> 3 -> 2 -> "start",
+		4 -> throw 3; -> 3 -> 2 -> 1 -> "start"
+	---	*/
+	"start";
+	try {
+		1;
+
+	} catch (e) {
+		2;
+		throw 3;
+		// XPECT warnings --> "Dead code. No execution possible after throw." at "0;"
+		0;
+
+	} finally {
+		4;
+	}
+	"end";
+}
+
+
+function f5() {
+	"start";
+	do {
+		1
+		if (2) {
+			3;
+			break;
+		// XPECT warnings --> "Dead code. No execution possible after break." at "4;"
+			4;
+		} else {
+			5;
+			break;
+		// XPECT warnings --> "Dead code. No execution possible after break." at "6;"
+			6;
+		}
+		// XPECT warnings --> "Dead code." at "7;"
+		7;
+	// XPECT warnings --> "Dead code." at "8"
+	} while (8);
+	"end";
+};
+
+

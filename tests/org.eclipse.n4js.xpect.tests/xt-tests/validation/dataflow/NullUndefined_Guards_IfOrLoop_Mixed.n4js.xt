@@ -1,0 +1,121 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest 
+	IssueConfiguration {
+		IssueCode "DFG_NULL_DEREFERENCE" {enabled=true}
+	}
+	END_SETUP
+ */
+
+
+
+function f1() {
+	let a : int;
+	if (!a) {
+		a = 0;
+	}
+	// XPECT nowarnings -->
+	a.toString();
+}
+
+function f2() {
+	let a : int = 0;
+	if (!a) {
+		a = 0;
+	}
+	// XPECT nowarnings -->
+	a.toString();
+}
+
+function f3() {
+	let a : int;
+	if (a) {
+	} else {
+		a = 0;
+	}
+	// XPECT nowarnings -->
+	a.toString();
+}
+
+function f4() {
+	let a : int = 0;
+	if (!a) {
+	} else {
+		a = 0;
+	}
+	// XPECT nowarnings -->
+	a.toString();
+}
+
+function f5() {
+	let a : int;
+	if (a) {
+		a = null;
+	}
+	// XPECT warnings -->"Variable a is null or undefined" at "a"
+	a.toString();
+}
+
+function f6() {
+	let a : int = 0;
+	if (a) {
+		a = null;
+	}
+	// XPECT warnings -->"Variable a may be null" at "a"
+	a.toString();
+}
+
+function f7() {
+	let a : int;
+	if (!a) {
+	} else {
+		a = null;
+	}
+	// XPECT warnings -->"Variable a is null or undefined" at "a"
+	a.toString();
+}
+
+function f8() {
+	let a : int = 0;
+	if (!a) {
+	} else {
+		a = null;
+	}
+	// XPECT warnings -->"Variable a may be null" at "a"
+	a.toString();
+}
+
+function f10() {
+	let a : int;
+	if (1) {
+		a = 1;
+	} else {
+		if (!a) {
+			a = 2;
+		}
+	}
+	// XPECT nowarnings -->
+	a.toString();
+}
+
+function f11() {
+	let a : int;
+	if (1) {
+		a = 1;
+	} else {
+		if (!a) {
+			return;
+		}
+	}
+	// XPECT nowarnings -->
+	a.toString();
+}

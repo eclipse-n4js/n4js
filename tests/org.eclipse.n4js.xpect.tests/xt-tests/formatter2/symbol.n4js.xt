@@ -1,0 +1,91 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest 
+   
+//   Preference "indentation" "    " {}
+   
+   
+   END_SETUP
+ */
+
+
+
+/* XPECT formattedLines 14 ---
+let a = 1;
+/\**
+ * XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
+ * YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY
+ * an added <code>@type</code> field.
+ *
+ * @specFromDescription
+ *\/
+export public abstract class ABCObject {
+	/\**
+	 * @spec some description
+	 *\/
+	public ["@type"]: string;
+}
+--- */
+let a = 1;
+/**
+ * XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
+ * YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY YYYY
+ * an added <code>@type</code> field.
+ *
+ * @specFromDescription
+ */
+export public abstract class ABCObject {
+    /**
+     * @spec some description
+     */
+    public ["@type"]: string;
+}
+
+
+
+
+
+
+
+/* XPECT formattedLines 11 ---
+class A {
+	public ["@type1"]: string;
+	public get ["@type2"](): string {
+		return "";
+	};
+	public set ["@type3"](p: string) {};
+	public static ["@type1s"]: string;
+	public static get ["@type2s"](): string {
+		return "";
+	};
+	public static set ["@type3s"](p: string) {};
+
+	public ["@type4"](par1: string): string {
+		return "";
+	};
+	public static ["@type4s"](par1: string): string {
+		return "";
+	};
+}
+
+--- */
+class A {
+    public ["@type1"]: string;
+    public get ["@type2"] (): string {return "";};
+    public set ["@type3"]( p: string) { };
+    public static ["@type1s"]: string;
+    public static get ["@type2s"] (): string {return "";};
+    public static set ["@type3s"]( p: string) { };
+    
+    public ["@type4"](par1:string): string{ return "";};
+    public static ["@type4s"](par1:string): string{ return "";};
+}

@@ -1,0 +1,137 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest 
+	IssueConfiguration {
+		IssueCode "DFG_NULL_DEREFERENCE" {enabled=true}
+	}
+	END_SETUP
+ */
+
+
+
+function f1() {
+	let a : int;
+	if (0) a = 1;
+	// XPECT warnings --> "Variable a may be undefined" at "a"
+	a.toString();
+}
+
+function f2() {
+	let a : int = undefined;
+	if (0) a = 1;
+	// XPECT warnings --> "Variable a may be undefined" at "a"
+	a.toString();
+}
+
+function f3() {
+	let a : int = null;
+	if (0) a = 1;
+	// XPECT warnings --> "Variable a may be null" at "a"
+	a.toString();
+}
+
+function f4() {
+	let a : int;
+	a = undefined;
+	if (0) a = 1;
+	// XPECT warnings --> "Variable a may be undefined" at "a"
+	a.toString();
+}
+
+function f5() {
+	let a : int;
+	a = null
+	if (0) a = 1;
+	// XPECT warnings --> "Variable a may be null" at "a"
+	a.toString();
+}
+
+function f10() {
+	let a : int = 1;
+	if (0) a = undefined;
+	// XPECT warnings --> "Variable a may be undefined" at "a"
+	a.toString();
+}
+
+function f11() {
+	let a : int = 1;
+	if (0) a = null;
+	// XPECT warnings --> "Variable a may be null" at "a"
+	a.toString();
+}
+
+function f12() {
+	let a : int;
+	a = 1;
+	if (0) a = undefined;
+	// XPECT warnings --> "Variable a may be undefined" at "a"
+	a.toString();
+}
+
+function f13() {
+	let a : int;
+	a = 1;
+	if (0) a = null;
+	// XPECT warnings --> "Variable a may be null" at "a"
+	a.toString();
+}
+
+function f20(p:int) {
+	let a : int = 1;
+	switch (p) {
+		case 1: a = null;
+	}
+	// XPECT warnings --> "Variable a may be null" at "a"
+	a.toString();
+}
+
+function f21(p:int) {
+	let a : int = 1;
+	switch (p) {
+		case 1: break;
+		default: a = null;
+	}
+	// XPECT warnings --> "Variable a may be null" at "a"
+	a.toString();
+}
+
+function f25(p:int) {
+	let a : int = 1;
+	try {
+		a = null;
+	} catch (e) {
+	}
+	// XPECT warnings --> "Variable a may be null" at "a"
+	a.toString();
+}
+
+function f26(p:int) {
+	let a : int = 1;
+	try {
+	} catch (e) {
+		a = null;
+	}
+	// XPECT warnings --> "Variable a may be null" at "a"
+	a.toString();
+}
+
+function f30() {
+	let a : int;
+	while (0) {
+		if (1) {
+			a = 1;
+			continue;
+		}
+		// XPECT warnings --> "Variable a may be undefined" at "a"
+		a.toString();
+	}
+}

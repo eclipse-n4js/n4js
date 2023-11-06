@@ -1,0 +1,76 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+
+
+
+'use strict';
+
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\112World""
+// XPECT warnings --> "Bad escapement" at ""Hello\112World""
+"Hello\112World";
+
+
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\0112World""
+"Hello\0112World";
+
+
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\312World""
+// XPECT warnings --> "Bad escapement" at ""Hello\312World""
+"Hello\312World";
+
+
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\412World""
+// XPECT warnings --> "Bad escapement" at ""Hello\412World""
+"Hello\412World";
+
+
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\812World""
+// XPECT warnings --> "Bad escapement" at ""Hello\812World""
+"Hello\812World";
+
+
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\712World""
+// XPECT warnings --> "Bad escapement" at ""Hello\712World""
+"Hello\712World";
+
+
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\1World""
+// XPECT warnings --> "Bad escapement" at ""Hello\1World""
+"Hello\1World";
+
+
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at "0129"
+// XPECT warnings --> "Don't use extra leading zeros 0129."" at "0129"
+0129;
+
+
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at "0123"
+let x01: 0123;
+
+// XPECT noerrors -->
+let x02: 0o123;
+
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\0112World""
+let x03: "Hello\0112World";
+
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\312World""
+// XPECT warnings --> "Bad escapement" at ""Hello\312World""
+let x04: "Hello\312World";
+
+
+class X {}
+let list= new Array<X>();
+// XPECT errors --> "The iteration variable of a for..in or for..of loop must not be provided with an initializer." at "new X()"
+for(var v = new X() of list) {};

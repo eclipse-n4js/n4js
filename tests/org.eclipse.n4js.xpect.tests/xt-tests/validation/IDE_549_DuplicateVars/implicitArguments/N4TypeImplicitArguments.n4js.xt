@@ -1,0 +1,140 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+
+/*
+ * This shows that validation for duplicate names when N4Type is involved is suppressed.
+ * ASTStructureValidator is adding error on "arguments" usage.
+ * TODO : Remove that check from mentioned utility. This change may require extra work with ecma test suite.
+ * After utility is reworked, unblock duplicate names validation to do this check
+ * Do those chaneg separately.
+ */
+
+//-- CD
+class C1{
+	/* XPECT errors ---
+		"arguments is a reserved identifier." at "arguments"
+	--- */
+	m(arguments){}
+}
+
+class C2{
+	m(){
+	/* XPECT errors ---
+		"arguments is a reserved identifier." at "arguments"
+	--- */
+		var arguments;
+	}
+}
+
+class C3{
+	/* XPECT errors ---
+		"arguments is a reserved identifier." at "arguments"
+	--- */
+	f = function(arguments){};
+}
+
+class C4{
+	f = function(){
+		/* XPECT errors ---
+			"arguments is a reserved identifier." at "arguments"
+		--- */
+		var arguments;
+	};
+}
+
+
+//-- CE
+// XPECT errors --> "Unsupported feature: class expressions." at "class"
+var ce1 = class {
+	/* XPECT errors ---
+		"arguments is a reserved identifier." at "arguments"
+	--- */
+	m(arguments){}
+}
+
+// XPECT errors --> "Unsupported feature: class expressions." at "class"
+var ce2 = class {
+	m(){
+		/* XPECT errors ---
+			"arguments is a reserved identifier." at "arguments"
+		--- */
+		var arguments;
+	}
+}
+
+// XPECT errors --> "Unsupported feature: class expressions." at "class"
+var ce3 = class {
+	/* XPECT errors ---
+		"arguments is a reserved identifier." at "arguments"
+	--- */
+	f = function(arguments){};
+}
+
+// XPECT errors --> "Unsupported feature: class expressions." at "class"
+var ce4 = class {
+	f = function(){
+		/* XPECT errors ---
+			"arguments is a reserved identifier." at "arguments"
+		--- */
+		var arguments;
+	};
+}
+
+//-- RD
+interface R1{
+	/* XPECT errors ---
+		"arguments is a reserved identifier." at "arguments"
+	--- */
+	m(arguments){}
+}
+
+interface R2{
+	m(){
+		/* XPECT errors ---
+			"arguments is a reserved identifier." at "arguments"
+		--- */
+		var arguments;
+	}
+}
+
+interface R3{
+	/* XPECT errors ---
+		"arguments is a reserved identifier." at "arguments"
+	--- */
+	f = function(arguments){};
+}
+
+interface R4{
+	f = function(){
+		/*XPECT errors ---
+			"arguments is a reserved identifier." at "arguments"
+		--- */
+		var arguments;
+	};
+}
+//-- ID
+interface I1{
+	/* XPECT errors ---
+		"arguments is a reserved identifier." at "arguments"
+	--- */
+	m(arguments)
+}
+
+
+interface I3{
+	/* XPECT errors ---
+		"arguments is a reserved identifier." at "arguments"
+	--- */
+	f = function(arguments){};
+}

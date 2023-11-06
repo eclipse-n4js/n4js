@@ -1,0 +1,53 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+// ------------------------------------------------------------
+
+
+// XPECT errors --> "Array<int> is not a structural subtype of ~Object with { pop(): string }: pop failed: {function():int} is not a subtype of {function():string}." at "[42]"
+var somethingPopable1 : ~Object with { pop(): string } = [42];
+
+// XPECT noerrors -->
+var somethingPopable2 : ~Object with { pop(): string } = [""];
+
+// XPECT FIXME noerrors -->
+var somethingPopable2 : ~Object with { pop(): string } = [];
+
+
+// ------------------------------------------------------------
+
+// now with invariance in the return type of #pop() + further nesting:
+
+class A {}
+class B extends A {}
+
+class G<T> {}
+
+function <T> fooArr(arr : Array<T>) : Array<G<T>> {return null;}
+
+var somethingPopable3 : ~Object with {
+	pop(): G<A>
+	// XPECT type of '[ new B() ]' --> Array<A>
+	// XPECT noerrors -->
+} = fooArr( [ new B() ] );
+
+
+// ------------------------------------------------------------
+
+// now with a generic method #reduce() with a more complex signature, instead of the non-generic, simple method #pop():
+
+var reducible2 : ~Object with {
+	<MemoT> reduce(callback: {function(previousValue: MemoT, currentValue: any, index: number, traversedObject: Object) : MemoT}, initialValue: MemoT=undefined): MemoT
+	// XPECT noerrors -->
+} = [];

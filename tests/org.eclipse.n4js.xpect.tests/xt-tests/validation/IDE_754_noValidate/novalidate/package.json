@@ -1,0 +1,21 @@
+{
+	"name": "org.eclipse.n4js.xpect.tests",
+	"version": "0.0.1",
+	"type": "module",
+	"n4js": {
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"projectType": "library",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		"moduleFilters": {
+			"noValidate": [
+				"novalidate/*"
+			]
+		}
+	}
+}

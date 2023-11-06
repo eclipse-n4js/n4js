@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -36,6 +37,7 @@ import java.util.concurrent.ExecutionException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionList;
+import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
@@ -70,7 +72,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -138,6 +139,7 @@ public class XtIdeTest extends AbstractIdeTest {
 		xtData = newXtData;
 
 		testWorkspaceManager.createTestOnDisk(xtData.workspace);
+		FileURI xtModule = getFileURIFromModuleName(xtData.workspace.moduleNameOfXtFile);
 
 		Set<String> actuallySuppressedIssues = new HashSet<>(globallySuppressedIssues);
 		actuallySuppressedIssues.removeAll(xtData.enabledIssues);
@@ -153,8 +155,6 @@ public class XtIdeTest extends AbstractIdeTest {
 				throw new IllegalArgumentException("Unknown method: " + startupMethod.name);
 			}
 		}
-		FileURI xtModule = getFileURIFromModuleName(xtData.workspace.moduleNameOfXtFile);
-
 		languageServer.getResourceTaskManager().runInTemporaryContext(xtModule.toURI(), "test", false,
 				(context, ci) -> {
 					resource = context.getResource();
@@ -182,7 +182,8 @@ public class XtIdeTest extends AbstractIdeTest {
 			}
 		}
 
-		this.issueHelper = new XtMethodsIssues(xtData, getIssuesInFile(xtModule), issueTests);
+		Collection<Diagnostic> issues = getIssuesInFile(xtModule);
+		this.issueHelper = new XtMethodsIssues(xtData, issues, issueTests);
 	}
 
 	/** Sets the issues that are suppressed regarding issue related xt methods */
@@ -238,6 +239,9 @@ public class XtIdeTest extends AbstractIdeTest {
 			break;
 		case "findReferences":
 			findReferences(testMethodData);
+			break;
+		case "formattedLines":
+			formattedLines(testMethodData, xtData.preferences);
 			break;
 		case "linkedName":
 			linkedName(testMethodData);
@@ -543,9 +547,13 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * // Xpect formattedLines --&gt; &ltFORMATTED LINES&gt
 	 * </pre>
 	 */
-	@Xpect
-	public void formattedLines(@SuppressWarnings("unused") XtMethodData data) {
-		// TODO
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void formattedLines(XtMethodData data, Map<String, String> preferences) {
+		String argLines = eobjProvider.checkAndGetArgAfter(data, "formattedLines");
+		int lines = Integer.parseInt(argLines);
+		xtMethods.getFormattedLines(data.offset, lines, preferences);
+		// assertEquals(data.expectation, formattedLines);
+		throw new IgnoreTestException();
 	}
 
 	/**
@@ -1068,12 +1076,21 @@ public class XtIdeTest extends AbstractIdeTest {
 		assertEqualIterables(data.expectation, succTexts);
 	}
 
-	private void assertEqualIterables(String s1, Iterable<String> i2s) {
-		assertEqualIterables(s1, i2s, true);
+	private void assertEqualIterables(String expectation, Iterable<String> i2s) {
+		List<List<String>> alts = new ArrayList<>();
+		for (String s2 : i2s) {
+			alts.add(Lists.newArrayList(s2));
+		}
+		assertEqualIterablesAlts(expectation, alts, true);
 	}
 
-	private void assertEqualIterables(String s1, Iterable<String> i2s, boolean replaceEmptySpace) {
-		String[] elems1 = s1.split("(?:\\s+|(?<=[^\\\\])),\\s*");
+	@SuppressWarnings("unused")
+	private void assertEqualIterablesAlts(String expectation, Iterable<List<String>> i2s) {
+		assertEqualIterablesAlts(expectation, i2s, true);
+	}
+
+	private void assertEqualIterablesAlts(String expectation, Iterable<List<String>> i2s, boolean replaceEmptySpace) {
+		String[] elems1 = expectation.split("(?:\\s+|(?<=[^\\\\])),\\s*");
 		for (int i = 0; i < elems1.length; i++) {
 			elems1[i] = elems1[i].replace("\\,", ",");
 			elems1[i] = elems1[i].replace("\\n", "\n");
@@ -1093,29 +1110,63 @@ public class XtIdeTest extends AbstractIdeTest {
 				&& (expectElems.contains("...") || !expectMissingElems.isEmpty());
 		expectElems.remove("...");
 
-		if (replaceEmptySpace) {
-			i2s = Iterables.transform(i2s, s -> s.replaceAll("\\s+", " ").trim());
+		boolean hasAlts = false;
+		List<String> noAlts2s = new ArrayList<>();
+		Set<String> allAlts2s = new HashSet<>();
+		for (List<String> alts : i2s) {
+			hasAlts |= alts.size() > 1;
+
+			if (replaceEmptySpace) {
+				for (int idx = 0; idx < alts.size(); idx++) {
+					String trimmedS = alts.get(idx).replaceAll("\\s+", " ").trim();
+					alts.set(idx, trimmedS);
+				}
+			}
+			noAlts2s.add(alts.get(0));
+			allAlts2s.addAll(alts);
 		}
 
 		if (partialExpectation) {
-			expectElems.removeAll(Lists.newArrayList(i2s));
-			expectMissingElems.retainAll(Sets.newHashSet(i2s));
+			expectElems.removeAll(allAlts2s);
+			expectMissingElems.retainAll(allAlts2s);
 
 			assertTrue("Not found:\n    " + Strings.join("\n    ", expectElems) + "\n"
-					+ "Among these actual elements:\n    " + Strings.join("\n    ", i2s), expectElems.isEmpty());
+					+ "Among these actual elements:\n    " + Strings.join("\n    ", noAlts2s), expectElems.isEmpty());
 
 			assertTrue("Expected missing, but found: " + Strings.join(", ", expectMissingElems),
 					expectMissingElems.isEmpty());
 
-		} else {
+		} else if (!hasAlts) {
 			List<String> sorted1 = Lists.newArrayList(elems1);
 			Collections.sort(sorted1);
 
-			List<String> sorted2 = Lists.newArrayList(i2s);
+			List<String> sorted2 = Lists.newArrayList(noAlts2s);
 			Collections.sort(sorted2);
 			String s1sorted = Strings.join(", ", sorted1);
 			String s2sorted = Strings.join(", ", sorted2);
 			assertEquals(s1sorted, s2sorted);
+		} else {
+			// !partialExpectation && hasAlts
+
+			Set<String> remainingActuals = new HashSet<>(noAlts2s);
+			Set<String> remainingExpects = new HashSet<>(expectElems);
+			for (String expect : expectElems) {
+				for (List<String> alts : i2s) {
+					for (String alt : alts) {
+						if (Objects.equal(alt, expect)) {
+							remainingActuals.removeAll(alts);
+							remainingExpects.remove(expect);
+							break;
+						}
+					}
+				}
+			}
+			assertTrue("Not found: \n    " + Strings.join("\n    ", remainingActuals) + "\n" + "\n"
+					+ "Among these actual elements:\n    " + Strings.join("\n    ", noAlts2s),
+					remainingActuals.isEmpty());
+
+			assertTrue("Expected, but not found found: " + Strings.join(", ", remainingExpects),
+					remainingExpects.isEmpty());
 		}
 	}
 

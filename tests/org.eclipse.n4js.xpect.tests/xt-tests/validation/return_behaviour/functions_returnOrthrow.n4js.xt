@@ -1,0 +1,316 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+
+// test containsReturnOrThrow with:
+// e.g.,  X-PECT:
+//   X-PECT returnOrThrow --> returnsMode
+//   X-PECT returnOrThrow --> throwsMode
+//   X-PECT returnOrThrow --> breakOrContinue labels ..
+//   X-PECT returnOrThrow --> noReturnsMode
+// example see: org.eclipse.n4js.xpect.N4JSTypeSystemXpectTest
+
+// XPECT noerrors -->
+function f0() {
+	var b1 : boolean = true;
+    x: y: do {
+		if ( b1 ) {
+	       break x;
+
+	    } else {
+	       continue y;
+		}
+
+	} while(false)
+}
+
+
+// XPECT noerrors -->
+function f1() {
+
+   var b1 : boolean = true;
+
+   y: do  {
+       x: do  {
+           if ( b1 ) {
+               break x;
+
+           } else {
+               break y;
+           }
+   		// XPECT warnings --> "Dead code." at "true"
+       } while ( true )
+       return;
+	// XPECT warnings --> "Dead code." at "true"
+   } while ( true )
+
+}
+
+
+///////////////////
+// Standard expressions in functions
+///////////////////
+function b() : string { return "b"; }
+
+function f2() {
+	console.log("a");
+	b();
+	var c = "hallo"
+}
+
+
+
+function f3() {
+	console.log("a");
+	b();
+	var c = "hallo"
+}
+
+
+/////// break out of try:
+// XPECT errors -->"Missing return or throw statement." at "f4"
+function f4(): number {
+
+   var b1 : boolean = true;
+
+   y: do  {
+       x: do  {
+           if ( b1 ) {
+           	  try {
+                 break x;
+               } finally {
+               	 return 3;
+               }
+           } else {
+               try
+               {
+                 return 1;
+               } catch(e) {
+               	 return 2;
+
+               } finally {
+	               break y;
+	           }
+           }
+		// XPECT warnings --> "Dead code." at "true ) return 4;"
+       } while ( true )
+       return 4;
+	// XPECT warnings --> "Dead code." at "true"
+   } while ( true )
+
+}
+
+
+///// checking behaviour of caught exception control flow.
+// XPECT noerrors -->
+function f5(): number {
+	console.log("a");
+	try {
+
+		try {
+
+			var b : boolean = true;
+
+			do {
+				b = false;
+			} while ( b )
+
+			throw "Error"
+
+		} catch ( e ) {
+
+		}
+
+		return 5;
+
+	} catch ( e2 ) {
+
+	}
+
+	return 6;
+
+	// Dead code
+	// XPECT warnings --> "Dead code. No execution possible after return." at "console.log("b");"
+	console.log("b");
+
+}
+
+
+/////// break out of try:
+// XPECT errors --> "Missing return or throw statement." at "f6"
+function f6(): number {
+
+   var b1 : boolean = true;
+
+   y: do  {
+       z: {
+	       x: do  {
+	           if ( b1 ) {
+	           	  try {
+	                 break z;
+	               } finally {
+	               	 return 3;
+	               }
+	           } else {
+	               try
+	               {
+	                 return 1;
+	               } catch(e) {
+	               	 return 2;
+
+	               } finally {
+		               break y;
+		           }
+	           }
+			// XPECT warnings --> "Dead code." at "true"
+	       } while ( true )
+
+       } // z
+  	   // XPECT warnings --> "Dead code." at "return 4;"
+       return 4;
+	// XPECT warnings --> "Dead code." at "true"
+   } while ( true )
+
+}
+
+
+// XPECT noerrors -->
+function f7() : number {
+	throw 'hallo'
+}
+
+
+
+
+// XPECT noerrors -->
+function f8() : number {
+	try {
+		throw 'hallo'
+	}
+	finally
+	{
+		console.log("hallo")
+	}
+}
+
+//////// try: try+catch: just throws.
+// XPECT noerrors -->
+function f9() : number {
+	try {
+		throw 'hallo'
+	}  catch (e) {
+		throw "e //wrapped in string see IDE-617";
+	}
+}
+
+//////// try: case returns
+function f10a() : number {
+	try {
+		throw 'hallo'
+	}
+	catch (e)
+	{
+		return 10;
+	}
+}
+
+//////// try: case doesn't return
+// XPECT errors --> "Missing return or throw statement." at "f10b"
+function f10b() : number {
+	try {
+		throw 'hallo'
+	}
+	catch (e)
+	{
+		; // nothing.
+	}
+}
+
+////////
+// XPECT noerrors -->
+function f11() : number {
+	try {
+		throw 'hallo'
+	}
+	finally
+	{
+		return 11;
+	}
+}
+
+//////// try: try+catch: just throws.
+// XPECT noerrors -->
+function f12() : number {
+	try {
+		f11(); // don't know if it throws?
+		return 12;
+	}  catch (e) {
+		throw "e //wrapped in string see IDE-617";
+	}
+}
+
+//////// try: try+catch: just throws.
+// XPECT noerrors -->
+function f13() : number {
+	try {
+		f11(); // don't know if it throws?
+		return 12;
+	}  catch (e) {
+		return 13;
+	}
+}
+
+
+//////// try: try+catch: just throws.
+// XPECT errors -->"Missing return or throw statement." at "f14"
+function f14() : number {
+	try {
+		return f12();  // don't know if it throws?
+	}  catch (e) {
+
+	}
+}
+
+//////// try: try+catch: just throws.
+// XPECT noerrors -->
+function f15() : number {
+	try {
+		try {
+			f11(); // don't know if it throws?
+			return 12;
+		}  catch (e) {
+			throw "e //wrapped in string see IDE-617";
+		}
+	} catch (e2) {
+		return 15;
+	}
+}
+
+//////// infinitive loop does not need succeeding return
+// XPECT noerrors -->
+function f16() : number {
+	for (;;) {
+		console.log("loop");
+	}
+}
+
+//////// infinitive loop does not need succeeding return
+// XPECT noerrors -->
+function f17() : number {
+	for (;;) {
+		console.log("loop");
+		return 2;
+	}
+}

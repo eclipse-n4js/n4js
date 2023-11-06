@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt;
 
+import static org.eclipse.n4js.ide.tests.helper.server.xt.EObjectDescriptionToNameWithPositionMapper.descriptionToNameWithPosition;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.newRuleEnvironment;
 
 import java.util.ArrayDeque;
@@ -19,8 +20,8 @@ import java.util.Comparator;
 import java.util.Deque;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -30,6 +31,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.formatting2.N4JSFormatterPreferenceKeys;
 import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.Expression;
@@ -65,6 +67,9 @@ import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.common.types.access.TypeResource;
+import org.eclipse.xtext.formatting2.FormatterPreferenceKeys;
+import org.eclipse.xtext.formatting2.FormatterRequest;
+import org.eclipse.xtext.formatting2.IFormatter2;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -75,12 +80,14 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.IScopeProvider;
+import org.eclipse.xtext.util.ExceptionAcceptor;
 import org.junit.Assert;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  * Class that holds implementations for xt test methods
@@ -104,6 +111,12 @@ public class XtMethods {
 
 	@Inject
 	private IResourceDescription.Manager manager;
+
+	@Inject
+	private Provider<IFormatter2> formatterProvider;
+
+	@Inject
+	private Provider<FormatterRequest> formatterRequestProvider;
 
 	/** Implementation for {@link XtIdeTest#accessModifier(XtMethodData)} */
 	static public String getAccessModifierString(EObject context) {
@@ -399,36 +412,40 @@ public class XtMethods {
 
 	/** Implementation for {@link XtIdeTest#scope(XtMethodData)} */
 	public Set<String> getScopeString(IEObjectCoveringRegion ocr) {
-		return getScopeWithResourceString(ocr, desc -> QualifiedNameUtils.toHumanReadableString(desc.getName()));
+		LinkedHashSet<String> scopeNames = new LinkedHashSet<>();
+		for (IEObjectDescription desc : getElementsFromScope(ocr)) {
+			scopeNames.add(QualifiedNameUtils.toHumanReadableString(desc.getName()));
+		}
+		return scopeNames;
 	}
 
 	/** Implementation for {@link XtIdeTest#scopeWithResource(XtMethodData)} */
 	public Set<String> getScopeWithResourceString(IEObjectCoveringRegion ocr) {
-		return getScopeWithResourceString(ocr, desc -> EObjectDescriptionToNameWithPositionMapper
-				.descriptionToNameWithPosition(desc.getEObjectURI(), false, desc));
+		LinkedHashSet<String> scopeNames = new LinkedHashSet<>();
+		URI uri = ocr.getXtextResource().getURI();
+		for (IEObjectDescription desc : getElementsFromScope(ocr)) {
+			scopeNames.add(descriptionToNameWithPosition(uri, false, desc));
+		}
+		return scopeNames;
 	}
 
 	/** Implementation for {@link XtIdeTest#scopeWithPosition(XtMethodData)} */
 	public Set<String> getScopeWithPositionString(IEObjectCoveringRegion ocr) {
-		return getScopeWithResourceString(ocr, desc -> EObjectDescriptionToNameWithPositionMapper
-				.descriptionToNameWithPosition(desc.getEObjectURI(), true, desc));
+		LinkedHashSet<String> scopeNames = new LinkedHashSet<>();
+		URI uri = ocr.getXtextResource().getURI();
+		for (IEObjectDescription desc : getElementsFromScope(ocr)) {
+			scopeNames.add(descriptionToNameWithPosition(uri, true, desc));
+		}
+		return scopeNames;
 	}
 
-	private LinkedHashSet<String> getScopeWithResourceString(IEObjectCoveringRegion ocr,
-			Function<IEObjectDescription, String> toString) {
-
+	private List<IEObjectDescription> getElementsFromScope(IEObjectCoveringRegion ocr) {
 		Assert.assertNotNull(ocr.getEStructuralFeature());
 		IScope scope = scopeProvider.getScope(ocr.getEObject(), (EReference) ocr.getEStructuralFeature());
 		IScope scopeWithoutErrors = new FilteringScope(scope,
 				desc -> !IEObjectDescriptionWithError.isErrorDescription(desc));
 		List<IEObjectDescription> allElements = Lists.newArrayList(scopeWithoutErrors.getAllElements());
-
-		LinkedHashSet<String> scopeNames = new LinkedHashSet<>();
-		for (IEObjectDescription desc : allElements) {
-			scopeNames.add(toString.apply(desc));
-		}
-
-		return scopeNames;
+		return allElements;
 	}
 
 	private String getLinkedFragment(EObject targetObject, URI baseUri) {
@@ -487,6 +504,41 @@ public class XtMethods {
 		for (EObject child : node.eContents()) {
 			serializeAst(child, sb, identLevel + 1);
 		}
+	}
+
+	// TODO GH-2562
+	@SuppressWarnings("unused")
+	public String getFormattedLines(int startOffset, int lines, Map<String, String> prefsMap) {
+		int length = 0;
+		TextRegion textRegion = new TextRegion(startOffset, length);
+
+		Preferences prefs = new Preferences();
+		// First put some defaults
+		prefs.put(N4JSFormatterPreferenceKeys.FORMAT_PARENTHESIS, true);
+		prefs.put(FormatterPreferenceKeys.lineSeparator, "\n");
+		// Second init from concrete tests - will override defaults.
+		for (Map.Entry<String, String> entry : prefsMap.entrySet()) {
+			prefs.put(entry.getKey(), entry.getValue());
+		}
+
+		IFormatter2 formatter = formatterProvider.get();
+
+		FormatterRequest request = formatterRequestProvider.get();
+		// request.setTextRegionAccess(reg);
+		request.setExceptionHandler(ExceptionAcceptor.THROWING);
+		// needed in case a check like this will be implemented:
+		// org.eclipse.xtext.testing.formatter.FormatterTester.assertAllWhitespaceIsFormatted()
+		request.setAllowIdentityEdits(true);
+		request.setFormatUndefinedHiddenRegionsOnly(false);
+		request.addRegion(textRegion);
+		request.setPreferences(prefs);
+
+		// List<ITextReplacement> replacements = formatter.format(request);
+		// String fmt = reg.getRewriter().renderToString(replacements);
+		// ITextSegment doc = reg.regionForDocument();
+		// int endIndex = textRegion.getEndOffset() + (fmt.length() - doc.getLength()) - 1;
+		// String selection = fmt.substring(textRegion.getOffset(), endIndex);
+		return null;
 	}
 
 }

@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+export public class A {
+	/* XPECT findReferences at 'a' ---
+		classExtension2 - b.a - 54,
+		classExtension2 - bj.a - 49
+	---
+	*/
+	a : A;
+	/* XPECT findReferences at 'i' ---
+		classExtension2 - b.i - 55,
+		classExtension2 - bj.i - 50
+	---
+	*/
+	i : int;
+	/* XPECT findReferences at 'foo' ---
+		classExtension2 - b.foo - 56,
+		classExtension2 - bj.foo - 51
+	---
+	*/
+	foo(){};
+}
+
+interface I {
+// XPECT findReferences at 'a' --> classExtension2 - j.a - 59
+	a : A;
+// XPECT findReferences at 'i' --> classExtension2 - j.i - 60
+	i : int;
+// XPECT findReferences at 'foo' --> classExtension2 - j.foo - 61
+	foo(){};
+}
+
+class AI extends A implements I {}
+
+
+var bj : AI;
+bj.a;
+bj.i;
+bj.foo();
+
+var b : A;
+b.a;
+b.i;
+b.foo();
+
+var j : I;
+j.a;
+j.i;
+j.foo();

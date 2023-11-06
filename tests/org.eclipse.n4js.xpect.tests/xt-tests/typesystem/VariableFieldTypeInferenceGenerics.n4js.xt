@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	Project {
+		ThisFile {}
+		File "VariableFieldTypeInferenceGenerics_Importee.n4js" {}
+	}
+
+	END_SETUP
+ */
+
+import * as N from "VariableFieldTypeInferenceGenerics_Importee"
+
+
+class LocalGen extends N.RemoteGenSuper<number> {
+	field = this.fieldSuperIndirect;
+}
+
+class X {}
+var localGen : LocalGen;
+var remoteGen : N.RemoteGen;
+var remoteGenPrivate : N.RemoteGenPrivate;
+
+
+// test local fields with generics from remote super class
+
+// XPECT errors --> "number is not a subtype of X." at "localGen.fieldSuperDirect"
+var x11 : X = localGen.fieldSuperDirect;
+// XPECT errors --> "number is not a subtype of X." at "localGen.field"
+var x12 : X = localGen.field;
+
+
+// test remote fields with generics from exported remote super class
+
+// XPECT errors --> "string is not a subtype of X." at "remoteGen.fieldSuperDirect"
+var x13 : X = remoteGen.fieldSuperDirect;
+// XPECT errors --> "string is not a subtype of X." at "remoteGen.field"
+var x14 : X = remoteGen.field;
+
+
+// test remote fields with generics from private remote super class
+
+// XPECT errors --> "string is not a subtype of X." at "remoteGenPrivate.fieldSuperDirect"
+var x15 : X = remoteGenPrivate.fieldSuperDirect;
+// XPECT errors --> "string is not a subtype of X." at "remoteGenPrivate.field"
+var x16 : X = remoteGenPrivate.field;

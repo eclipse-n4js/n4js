@@ -1,0 +1,92 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+class A {}
+class B extends A {}
+class C extends B {}
+
+class X {}
+
+
+
+// ------------------------------------------------------------------------
+// case 1.a
+
+class Cls {
+	// XPECT warnings --> "Type variable T2 not used in parameters or return type." at "T2"
+	<T1, T2 extends T1> m() {}
+}
+
+var cls : Cls;
+// XPECT noerrors -->
+cls.<A,B>m();
+// XPECT errors --> "X is not a subtype of A." at "X"
+cls.<A,X>m();
+
+
+
+// ------------------------------------------------------------------------
+// case 1.b
+
+class G2<T1, T2 extends T1> {}
+
+// XPECT noerrors -->
+var v01 : G2<A,B>;
+// XPECT errors --> "X is not a subtype of A." at "X"
+var v02 : G2<A,X>;
+
+// XPECT noerrors -->
+new G2<A,B>();
+// XPECT errors --> "X is not a subtype of A." at "X"
+new G2<A,X>();
+
+// XPECT noerrors -->
+class G3 extends G2<A,B> {}
+// XPECT errors --> "X is not a subtype of A." at "X"
+class G4 extends G2<A,X> {}
+
+
+
+// ------------------------------------------------------------------------
+// case 1.c
+
+// XPECT noerrors -->
+class G5<T extends B> extends G2<A,T> {}
+
+class G6<T extends X>
+	// XPECT errors --> "T is not a subtype of A." at "T"
+	extends G2<A,T> {} // note: T in error message is correct (error message does not & should not take the upper bound)
+
+class G7<T>
+	// XPECT errors --> "T is not a subtype of A." at "T"
+	extends G2<A,T> {}
+
+
+
+// ------------------------------------------------------------------------
+// case 1.d
+
+// XPECT warnings --> "Type variable T2 not used in parameters or return type." at "T2"
+function <T1, T2 extends T1> foo() {}
+
+// XPECT noerrors -->
+<A,B>foo();
+// XPECT errors --> "X is not a subtype of A." at "X"
+<A,X>foo();
+
+
+
+
+// get rid of "unused variable" warnings ...
+console.log(v01);
+console.log(v02);

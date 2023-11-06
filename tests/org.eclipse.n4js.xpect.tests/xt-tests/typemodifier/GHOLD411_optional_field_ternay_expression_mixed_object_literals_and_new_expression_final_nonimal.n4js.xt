@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+ /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+interface ~I {
+	public m?: int;
+}
+
+class C { }
+
+@Final class F { }
+
+let b: boolean;
+const cc: ~C = {}
+const f1 = new F();
+const f2: ~F = {};
+const i0: I = {};
+
+
+// XPECT errors --> "union{~C,C} is not a subtype of I." at "b? cc : new C()"
+var t1: I = b? cc : new C()
+
+// XPECT errors --> "union{F,~Object} is not a subtype of I." at "b? f1 : {}"
+var t2: I = b? f1 : {}
+
+// XPECT noerrors
+var t3: I = b? f2 : {}
+
+// XPECT noerrors
+var t4: I = b? i0 : {}
+
+
+// XPECT errors --> "union{~C,C} is not a subtype of I." at "cc || new C()"
+var b1: I = cc || new C()
+
+// XPECT errors --> "union{F,~Object} is not a subtype of I." at "f1 || {}"
+var b2: I = f1 || {}
+
+// XPECT noerrors
+var b3: I = f2 || {}
+
+// XPECT noerrors
+var b4: I = i0 || {}
+
+
+
+// XPECT noerrors
+var tr1: ~r~I = b? cc : new C() 
+
+// XPECT noerrors
+var tr2: ~r~I = b? f1 : {}
+
+// XPECT noerrors
+var tr3: ~r~I = b? f2 : {}
+
+// XPECT noerrors
+var tr4: ~r~I = b? i0 : {}
+
+
+
+// XPECT noerrors
+var br1: ~r~I = cc || new C() 
+
+// XPECT noerrors
+var br2: ~r~I = f1 || {}
+
+// XPECT noerrors
+var br3: ~r~I = f2 || {}
+
+// XPECT noerrors
+var br4: ~r~I = i0 || {}

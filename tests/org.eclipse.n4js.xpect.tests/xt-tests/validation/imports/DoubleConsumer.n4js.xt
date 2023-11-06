@@ -1,0 +1,29 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	Project {
+		ThisFile {}
+		File "MultipleClasses.n4js" {}
+	}
+	END_SETUP
+ */
+
+
+/* XPECT errors ---
+ "Name Class1 is already used as name for named import Class1 from MultipleClasses." at "Class1"
+--- */
+/* XPECT warnings ---
+ "The import of Class1 is unused." at "Class1"
+ "The import of Class2 is unused." at "Class2"
+--- */
+import {Class1, Class2, Class1} from "MultipleClasses"

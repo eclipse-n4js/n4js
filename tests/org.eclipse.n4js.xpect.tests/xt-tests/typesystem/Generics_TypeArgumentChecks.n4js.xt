@@ -1,0 +1,104 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+class X {}
+
+class G<T extends B>{}
+class H {}
+
+
+new G<B>();
+new G<C>();
+// XPECT errors --> "Incorrect number of type arguments for class G: expected 1, got 0." at "G"
+new G();
+// XPECT errors --> "Incorrect number of type arguments for class G: expected 1, got 2." at "G"
+new G<B,B>();
+// XPECT errors --> "Incorrect number of type arguments for class H: expected 0, got 1." at "H"
+new H<A>();
+// XPECT errors --> "A is not a subtype of B." at "A"
+new G<A>();
+// XPECT errors --> "X is not a subtype of B." at "X"
+new G<X>();
+
+
+var g1 : G<B>;
+var g2 : G<C>;
+// XPECT errors --> "Incorrect number of type arguments for class G: expected 1, got 0." at "G"
+var g3 : G;
+// XPECT errors --> "Incorrect number of type arguments for class G: expected 1, got 2." at "G"
+var g4 : G<B,B>;
+// XPECT errors --> "Incorrect number of type arguments for class H: expected 0, got 1." at "H"
+var g5 : H<A>;
+// XPECT errors --> "A is not a subtype of B." at "A"
+var g6 : G<A>;
+// XPECT errors --> "X is not a subtype of B." at "X"
+var g7 : G<X>;
+
+
+class Dummy {
+	f1 : G<B>;
+	f2 : G<C>;
+	// XPECT errors --> "Incorrect number of type arguments for class G: expected 1, got 0." at "G"
+	f3 : G;
+	// XPECT errors --> "Incorrect number of type arguments for class G: expected 1, got 2." at "G"
+	f4 : G<B,B>;
+	// XPECT errors --> "Incorrect number of type arguments for class H: expected 0, got 1." at "H"
+	f5 : H<A>;
+	// XPECT errors --> "A is not a subtype of B." at "A"
+	f6 : G<A>;
+	// XPECT errors --> "X is not a subtype of B." at "X"
+	f7 : G<X>;
+}
+class GenDummy1<T> {
+	// XPECT errors --> "T is not a subtype of B." at "T"
+	f : G<T>;
+}
+class GenDummy2<T extends A> {
+	// XPECT errors --> "T is not a subtype of B." at "T"
+	f : G<T>;
+}
+class GenDummy3<T extends C> {
+	f : G<T>;
+}
+
+
+class Temp1 extends G<B> {}
+class Temp2 extends G<C> {}
+// XPECT errors --> "Incorrect number of type arguments for class G: expected 1, got 0." at "G"
+class Temp3 extends G {}
+// XPECT errors --> "Incorrect number of type arguments for class G: expected 1, got 2." at "G"
+class Temp4 extends G<B,B> {}
+// XPECT errors --> "Incorrect number of type arguments for class H: expected 0, got 1." at "H"
+class Temp5 extends H<A> {}
+// XPECT errors --> "A is not a subtype of B." at "A"
+class Temp6 extends G<A> {}
+// XPECT errors --> "X is not a subtype of B." at "X"
+class Temp7 extends G<X> {}
+
+
+//
+// some exotic cases
+//
+
+class Exotic<T> {
+	// XPECT errors --> "Incorrect number of type arguments for built-in type void: expected 0, got 1." at "void"
+	m1(t : T) : void<T> { }
+	// XPECT errors --> "Incorrect number of type arguments for built-in type undefined: expected 0, got 1." at "undefined"
+	m2(t : T) : undefined<T> { return undefined; }
+	// XPECT errors --> "Incorrect number of type arguments for built-in type any: expected 0, got 1." at "any"
+	m3(t : T) : any<T> { return null; }
+}

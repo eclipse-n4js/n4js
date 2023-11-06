@@ -1,0 +1,81 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+function b() {
+	/* XPECT scope at '<|>arguments' ---
+	   arguments, Infinity, ...
+	   ---
+	 */
+	var l = arguments.length;
+}
+
+/* No arguments in script XPECT scope at '<|>b' ---
+	   !arguments, ...
+	   ---
+ */
+var a = b;
+
+
+
+class A {
+
+ /* No arguments in class-body XPECT scope at '<|>b' ---
+		   !arguments, ...
+		   ---
+ */
+ a : any = b;
+
+  get d () : string {
+	/* arguments in getter X!PECT scope at '<|>return' ---
+			   arguments, ...
+			   ---
+	 */
+ 		return "";
+ 	}
+
+   set d (d : number) {
+	/* arguments in getter XPECT scope at '<|>d' ---
+			   arguments, ...
+			   ---
+	 */
+ 		var x = d;
+ 	}
+
+
+ constructor() {
+	 /* arguments in constructor XPECT scope at '<|>console' ---
+			   arguments, ...
+			   ---
+	 */
+ 	console.log();
+ }
+
+ meth01() : void {
+	 /* arguments in method XPECT scope at '<|>console' ---
+			   arguments, ...
+			   ---
+	 */
+ 	console.log();
+ }
+
+ static meth02() : void {
+	 /* arguments in static method XPECT scope at '<|>console' ---
+			   arguments, ...
+			   ---
+	 */
+ 	console.log();
+ }
+
+}

@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+
+// NOTE: in this test case we are not interested in the error message; we just want to make sure
+// the function expression in the surplus argument is properly processed during post-processing
+// (see ASTProcessor, TypeProcessor)
+
+
+// XPECT warnings --> "Type variable T not used in parameters or return type." at "T"
+function <T> foo() {}
+
+// XPECT errors --> "Incorrect number of arguments: expected 0, got 1." at "foo( function(p){} )"
+// XPECT type of 'function(p){}' --> {function(any):void}
+foo( function(p){} )

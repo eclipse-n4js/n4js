@@ -1,0 +1,57 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+class C {
+	public get getter?(): string {return null;}
+}
+class D {}
+@Final class F {}
+
+let c: ~C;
+
+
+
+// no transitivity desired via several const variables in use case "object literal":
+
+const ol1 = {};
+const ol2 = ol1;
+
+// XPECT noerrors -->
+c = ol1;
+// XPECT errors --> "~Object is not a structural subtype of ~C: missing getter getter." at "ol2"
+c = ol2;
+
+
+
+// no transitivity desired via several const variables in use case "new expression":
+
+const new1 = new D();
+const new2 = new1;
+
+// XPECT noerrors -->
+c = new1;
+// XPECT errors --> "D is not a structural subtype of ~C: missing getter getter." at "new2"
+c = new2;
+
+
+
+// BUT: we do have transitivity via several const variables in use case "final nominal type":
+
+const finalNominal1 = new F();
+const finalNominal2 = finalNominal1;
+
+// XPECT noerrors -->
+c = finalNominal1;
+// XPECT noerrors --> "transitivity applies in this case"
+c = finalNominal2;

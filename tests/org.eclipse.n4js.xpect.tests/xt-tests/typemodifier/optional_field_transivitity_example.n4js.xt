@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+ /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+class A {
+	public field?: string; // possible new syntax for this:  public field: string = undefined; OR use a dedicated annotation for this
+}
+
+class B {
+}
+
+class C {
+	public field: number;
+}
+
+let sa: ~A = new A();
+let sb: ~B = new B();
+let c: C = new C();
+
+//XPECT noerrors -->
+sa = {};
+
+//XPECT errors --> "~B is not a structural subtype of ~A: missing field field." at "sb"
+sa = sb;
+
+//XPECT errors --> "C is not a structural subtype of ~A: field failed: number is not equal to string." at "c"
+sa = c;
+
+//XPECT noerrors -->
+sb = c;

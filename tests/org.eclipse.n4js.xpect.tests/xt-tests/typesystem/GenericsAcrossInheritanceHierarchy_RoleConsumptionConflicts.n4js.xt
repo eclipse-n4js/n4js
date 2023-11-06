@@ -1,0 +1,52 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+
+class D {}
+
+
+interface R1<T> {
+	f : T;
+	m(param : T) : T { return null }
+// interface conflict validation does not support getters yet!
+//	T get g() {}
+	set s(param : T) {}
+}
+interface R2<T> {
+	f : T;
+	m(param : T) : T { return null }
+// interface conflict validation does not support getters yet!
+//	T get g() {}
+	set s(param : T) {}
+}
+
+
+// XPECT errors ---
+// 	"Redefine ambiguously consumed members: field R1.f and field R2.f." at "Clazz1"
+// 	"Redefine ambiguously consumed members: method R1.m and method R2.m." at "Clazz1"
+// 	"Redefine ambiguously consumed members: setter R1.s and setter R2.s." at "Clazz1"
+// ---
+class Clazz1 implements R1<A>, R2<A> {
+}
+
+// XPECT errors ---
+// "Redefine ambiguously consumed members: field R1.f and field R2.f." at "Clazz2"
+// "Redefine ambiguously consumed members: method R1.m and method R2.m." at "Clazz2"
+// "Redefine ambiguously consumed members: setter R1.s and setter R2.s." at "Clazz2"
+// ---
+class Clazz2 implements R1<A>, R2<D> {
+}

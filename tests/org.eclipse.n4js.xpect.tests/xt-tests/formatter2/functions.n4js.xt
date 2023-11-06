@@ -1,0 +1,75 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest 
+   
+//   Preference "indentation" "    " {}
+   
+   
+   END_SETUP
+ */
+
+
+
+/* XPECT formattedLines 5 ---
+function goo3(bar: int, hoo: int, hoo2: int, hoo3: int, hoo4: int, hoo5: int, hoo6: int,
+	hoo7: int, hoo8: int, hoo9: int, hoo10: int) {
+
+	++hoo;
+}
+--- */
+function goo3(bar: int, hoo: int, hoo2: int, hoo3: int, hoo4: int, hoo5: int, hoo6: int,
+    hoo7: int, hoo8: int, hoo9: int, hoo10: int) {  
+     
+    ++hoo;    
+}
+
+
+/* Special requirement: keep additional empty lines */
+/* XPECT FIXME formattedLines 17 ---
+function goo(bar: int, hoo: int) {
+
+
+
+	// leave the lines as they are, but fix base indentation 
+
+
+
+	let a: int,
+		f = 3;
+
+
+
+	// do not clear up linefeed
+
+
+
+};
+--- */
+function goo(bar: int, hoo: int) {
+
+
+
+    // leave the lines as they are, but fix base indentation 
+
+
+
+    let a: int,
+        f = 3;
+
+
+
+    // do not clear up linefeed
+    
+    
+    
+}
+

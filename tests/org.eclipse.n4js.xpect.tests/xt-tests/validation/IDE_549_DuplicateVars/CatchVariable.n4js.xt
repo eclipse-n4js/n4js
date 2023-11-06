@@ -1,0 +1,106 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+//IDEBUG-192 allows following
+// item Elements defined in catch blocks can shadow elements defined in all parent catch blocks and the (indirectly) parent non-catch-block environment.
+
+
+//====== basic catch
+
+function fd1_1(){
+	var x;
+	try{
+		throw 3;
+	}catch (y){
+		// XPECT noerrors --> "Variable x duplicates variable x (line 22)." at "x"
+		var x;
+	}
+}
+
+function fd1_2(){
+	var x;
+	try{
+		throw 3;
+	// XPECT noerrors --> "Catch variable x duplicates variable x (line 32)." at "x"
+	}catch (x){
+		var y;
+	}
+}
+
+function fd1_3(){
+	var y;
+	try{
+		throw 3;
+	}catch (x){
+	// XPECT errors --> "Variable x duplicates catch variable x (line 44)." at "x"
+		var x;
+	}
+}
+
+//==== nested catch
+
+function fd2_1(){
+	var x;
+	try{
+		throw 3;
+	}catch (y1){
+		try{
+			throw 3;
+		}catch (y2){
+			// XPECT noerrors --> "Variable x duplicates variable x (line 54)." at "x"
+			var x;
+		}
+	}
+}
+
+function fd2(){
+	var x;
+	try{
+		throw 3;
+	}catch (y1){
+		try{
+			throw 3;
+		}catch (y2){
+			// XPECT noerrors --> "Variable y1 duplicates catch variable y1 (line 71)." at "y1"
+			var y1;
+		}
+	}
+}
+
+function fd3(){
+	var x;
+	try{
+		throw 3;
+	}catch (y1){
+		try{
+			throw 3;
+			// XPECT warnings --> "Catch variable y1 shadows catch variable y1 (line 84)." at "y1"
+		}catch (y1){
+		}
+	}
+}
+
+var fd4X
+function fd4(){
+	var x;
+	try{
+		throw 3;
+	}catch (y1){
+		try{
+			throw 3;
+		}catch (y2){
+			// XPECT noerrors --> just shadowing
+			var fd4X;
+		}
+	}
+}

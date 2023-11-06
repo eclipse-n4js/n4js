@@ -1,0 +1,96 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+// this type in function expression
+class A {
+	m1( param : {function(this)}) : string { param(this); return null; }  // ok
+	// {function():this} m4( ) { return null; }  // ok // disabled due to inability to create a corresponding function.
+}
+
+class B extends A{
+	@Override
+	m1( param : {function(this)}) : string { return null; }  // ok
+	//	@Override
+	//	{function():this} m4( ) { return null; }  // ok  // disabled due to inability to create a corresponding function.
+}
+
+
+class C extends B {
+
+	@Override
+	m1( param : {function(this)}) : string {
+		var c : C = new C(); // even though inside of C, c is not necessarily compatible to this-Type (e.g. when called on a subclass of C )
+
+		// Only 'this'-ref is allowed here XPECT noerrors -->
+		param(this);
+
+		// Don't know if a subclass X of C only provides a param of type X
+		// XPECT errors --> "C is not a subtype of this[C]." at "c"
+		param(c);
+
+		//		// X!PECT noerrors -->
+		//		super.m1( super.m4() );
+		//
+		//		// X!PECT noerrors -->
+		//		super.m1( this.m4() )
+		return null;
+	}
+
+}
+
+var a : A ;
+var c : C ;
+var b : B ;
+
+// XPECT noerrors -->
+a.m1( function(p : A) {})
+// XPECT errors --> "{function(B):void} is not a subtype of {function(this[A])}." at "function(p : B) {}"
+a.m1( function(p : B) {})
+// XPECT errors --> "{function(C):void} is not a subtype of {function(this[A])}." at "function(p : C) {}"
+a.m1( function(p : C) {})
+
+// XPECT noerrors -->
+b.m1( function(p : A) {})
+// XPECT noerrors -->
+b.m1( function(p : B) {})
+// XPECT errors --> "{function(C):void} is not a subtype of {function(this[B])}." at "function(p : C) {}"
+b.m1( function(p : C) {})
+
+// XPECT noerrors -->
+c.m1( function(p : A) {})
+// XPECT noerrors -->
+c.m1( function(p : B) {})
+// XPECT noerrors -->
+c.m1( function(p : C) {})
+
+//// The following is disabled due to inability to create a corresponding function. (see above)
+//// X!PECT noerrors -->
+//var {function():A} r1a =  a.m4( );
+//// X!PECT errors --> "{function():this[A]} is not a subtype of {function():B}." at "a.m4( )"
+//var {function():B} r2a =  a.m4( );
+//// X!PECT errors --> "{function():this[A]} is not a subtype of {function():C}." at "a.m4( )"
+//var {function():C} r3a =  a.m4( );
+//
+//// X!PECT noerrors -->
+//var {function():A} r1b =  b.m4( );
+//// X!PECT noerrors -->
+//var {function():B} r2b =  b.m4( );
+//// X!PECT errors --> "{function():this[B]} is not a subtype of {function():C}." at "b.m4( )"
+//var {function():C} r3b =  b.m4( );
+//
+//// X!PECT noerrors -->
+//var {function():A} r1c =  c.m4( );
+//// X!PECT noerrors -->
+//var {function():B} r2c =  c.m4( );
+//// X!PECT noerrors -->
+//var {function():C} r3c =  c.m4( );

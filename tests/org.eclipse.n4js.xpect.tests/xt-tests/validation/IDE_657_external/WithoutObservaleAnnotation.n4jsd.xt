@@ -1,0 +1,51 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+@IgnoreImplementation
+
+@Observable
+/* XPECT errors ---
+"External classes must not have the Observable annotation." at "MyObject"
+ --- */
+export external public class MyObject extends Object {
+
+}
+
+// XPECT errors --> "Cannot subclass primitive type string." at "string"
+export external public class MyObject2 extends string {
+
+}
+
+@Observable
+/* XPECT errors ---
+"External interfaces must not have the Observable annotation." at "MyRole"
+ --- */
+export external public interface ~MyRole {
+	@Observable
+// XPECT errors --> "Fields in external interfaces must not have the Observable annotation." at "field1"
+	field1 : String;
+
+	@Nfon
+// XPECT errors --> "Fields in external interfaces must not have the Nfon annotation." at "field2"
+	field2 : String;
+}
+
+export external public class MyClass {
+
+	@Observable
+// XPECT errors --> "Fields in external classes must not have the Observable annotation." at "field1"
+	field1 : String;
+
+	@Nfon
+// XPECT errors --> "Fields in external classes must not have the Nfon annotation." at "field2"
+	field2 : String;
+}

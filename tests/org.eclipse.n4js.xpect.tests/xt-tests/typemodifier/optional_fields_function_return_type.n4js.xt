@@ -1,0 +1,30 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+function foo(bar: {function(): ~Object with {a?: number, b?: string}} ) {
+	return undefined;
+}
+
+// XPECT noerrors -->
+foo(() => { return {a: 42}; });
+
+// XPECT noerrors --> "~Object with { a: int } is not a structural subtype of ~Object with { a?: number; b?: string }: missing structural field b." at "({ a : 42})"
+foo(() => { return ({a: 42}); });
+
+// does not work with single-expression, implicit return arrow functions, because the {a: 42} is now parsed as a body
+// containing a labelled statement:
+//foo(() => {a: 42});
+
+// XPECT noerrors --> "~Object with { a: int } is not a structural subtype of ~Object with { a?: number; b?: string }: missing structural field b." at "({ a : 42})"
+foo(() => ({a: 42}));

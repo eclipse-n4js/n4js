@@ -1,0 +1,150 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+// found during IDE-1852: XPECT FIXME noerrors
+/* no spaces inside braces of import statements */
+/* XPECT formattedLines 1 ---
+import {Class1} from "formatter2/MultipleClasses";
+--- */
+import  {  Class1  }  from  "formatter2/MultipleClasses"
+
+
+/* single-line block formatting into multiple lines.*/
+/* XPECT formattedLines 1 ---
+{
+	var x = 1
+}
+--- */
+{  var x = 1  }
+
+
+/* keep multi-line formatting */
+/* XPECT formattedLines 3 ---
+{
+	var y = 1;
+}
+--- */
+{
+var y = 1;
+}
+
+
+/* keep multi-line formatting with multiple braces */
+/* XPECT formattedLines 5 ---
+{
+	{
+		var z = [
+				7
+			];
+	}
+}
+--- */
+{ { var z = [
+7
+];
+}
+}
+
+
+/* keep single-line formatting with multiple braces */
+/* XPECT formattedLines 1 ---
+{
+	{
+		var a = [ 7 ];
+	}
+}
+--- */
+{ { var a = [ 7 ]; } }
+
+
+/* indent blocks */
+/* XPECT formattedLines 1 ---
+{
+	{
+		{
+			var b = [ 8 ];
+		}
+	}
+}
+--- */
+{ { { var b = [ 8 ]; } } }
+
+
+/* indent blocks */
+/* XPECT formattedLines 1 ---
+{
+	{
+		{
+			var c = [ 9 ];
+			let d = [ 10 ];
+			let z2 = [ 11 ];
+		}
+	}
+}
+--- */
+{ { { var c = [ 9 ]; let d = [ 10 ]; let z2 = [ 11 ]; } } }
+
+
+/* keep single-line formatting with multiple braces */
+/* XPECT formattedLines 1 ---
+{
+	{
+		{
+			var e = 9;
+			let f = 10;
+		}
+	}
+}
+--- */
+{ { { var e =  9 ; let f =  10 ; } } }
+
+
+/* keep single-line formatting with comma */
+/* XPECT formattedLines 1 ---
+{
+	var x1 = [1, 2, 3]
+}
+--- */
+{  var x1 = [1,2,3]  }
+
+
+/* keep multi-line formatting */
+/* XPECT formattedLines 4 ---
+{
+	var y1 = [1, 2, 3
+		];
+}
+--- */
+{
+var y1 = [1,2,3
+];
+}
+
+
+/* keep multi-line formatting 2 */
+/* XPECT formattedLines 7 ---
+{
+	var y2 = [
+			1,
+			2,
+			3
+		];
+}
+--- */
+{
+var y2 = [
+1    		,
+	    				2,
+		    3
+];
+}

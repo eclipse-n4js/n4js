@@ -1,0 +1,401 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP  org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+
+///////////////////
+// Standard expressions in functions
+///////////////////
+function a() : number { return 77 ; }
+function b() : string { return "b"; }
+
+function c() {
+	console.log("a");
+	b();
+	var d = "hallo"
+}
+
+///////// Simple Switch statements
+// XPECT noerrors -->
+function f0(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+
+// XPECT errors --> "Missing return or throw statement." at "f1"
+function f1(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default : ;
+		case 4: ;
+		case 5: return 2;
+		case 6: ;
+	}
+}
+
+// XPECT errors --> "Missing return or throw statement." at "f2"
+function f2(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: break;
+		case 3: ;
+		default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+// XPECT errors --> "Missing return or throw statement." at "f3"
+function f3(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		// no default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+// XPECT noerrors -->
+function f4(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: {
+			var z : number = 1;
+			return 1;
+		}
+		default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+
+// XPECT errors --> "Missing return or throw statement." at "f5"
+function f5(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: {
+			var z : number = 1;
+			break;
+		}
+		default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+
+// XPECT noerrors -->
+function f6(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: throw 'e';
+		default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+
+//// labeled breaks
+// XPECT noerrors -->
+function f10(a : number) : number {
+	l1: switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+// XPECT errors --> "Missing return or throw statement." at "f11"
+function f11(a : number) : number {
+	l2: switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: break l2;
+		default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+// XPECT noerrors -->
+function f12(a : number) : number {
+	l2: switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: {
+			l3: {
+				break l3;
+			}
+		}
+		default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+// XPECT errors --> "Missing return or throw statement." at "f13"
+function f13(a : number) : number {
+	l2: switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: {
+			l3: {
+				break l2;
+			}
+		}
+		default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+// XPECT errors --> "Missing return or throw statement." at "f14"
+function f14(a : number) : number {
+	l1: {
+		l2: switch(a) {
+			case 1: ;
+			case 2: ;
+			case 3: {
+				l3: {
+					break l1;
+				}
+			}
+			default : ;
+			case 4: ;
+			case 5: ;
+			case 6: return 2;
+		}
+	}
+}
+
+////// subswitch statements:
+// XPECT noerrors -->
+function f20(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default :
+			switch(a) {
+				case 11: ;
+				case 12: ;
+				case 13: ;
+				default :
+				case 14: ;
+				case 15: ;
+				case 16: return 12;
+			}
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+// XPECT noerrors -->
+function f21(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default :
+			switch(a) {
+				case 11: ;
+				case 12: ;
+				case 13: ;
+				default :
+				case 14: ;
+				case 15: return 12;
+				case 16: ;
+			}
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+// XPECT errors --> "Missing return or throw statement." at "f22"
+function f22(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default :
+			switch(a) {
+				case 11: ;
+				case 12: ;
+				case 13: ;
+				default :
+				case 14: ;
+				case 15: return 12;
+				case 16: ;
+			};
+			break;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+// XPECT noerrors -->
+function f23(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default :
+			switch(a) {
+				case 11: ;
+				case 12: ;
+				case 13: ;
+				default :
+				case 14: ;
+				case 15: throw 12;
+				case 16: ;
+			}
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+
+// XPECT noerrors -->
+function f24(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default :
+			switch(a) {
+				case 11: ;
+				case 12: ;
+				case 13: ;
+				default :
+				case 14: ;
+				case 15: throw 12;
+				case 16: return 13;
+			}
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+
+
+////// try-catch in subswitch
+// XPECT noerrors -->
+function f25(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default :
+		    try {
+				switch(a) {
+					case 11: ;
+					case 12: ;
+					case 13: ;
+					default :
+					case 14: ;
+					case 15: throw 12;
+					case 16: return 13;
+				}
+
+			} catch( r ) {  }
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+
+// XPECT noerrors -->
+function f26(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default :
+		    try {
+				switch(a) {
+					case 11: ;
+					case 12: ;
+					case 13: ;
+					default :
+					case 14: ;
+					case 15: throw 12;
+					case 16: ;
+				}
+
+			} catch( r ) { return 13; }
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+
+// XPECT errors --> "Missing return or throw statement." at "f27"
+function f27(a : number) : number {
+	l1: switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default :
+		    try {
+				l2: switch(a) {
+					case 11: ;
+					case 12: ;
+					case 13: ;
+					default :
+					case 14: ;
+					case 15: throw 12;
+					case 16: break l1;
+				}
+
+			} catch( r ) { return 13; }
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}

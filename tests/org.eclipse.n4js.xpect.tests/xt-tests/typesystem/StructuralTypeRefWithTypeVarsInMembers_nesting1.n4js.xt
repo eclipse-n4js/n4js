@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+
+//
+// nesting #1: introduce another structural type in type argument at variable declaration
+//
+
+class C1<T> {
+	public m() : ~Object with { prop: T; } { return null; }
+}
+
+var c1s : C1<~Object with { propInArg: string; }>;
+
+
+// XPECT type of 'c1s.m().prop.<|>propInArg' --> string
+c1s.m().prop.propInArg;
+// XPECT noerrors -->
+c1s.m().prop.propInArg = "Hello prop!";
+// XPECT noerrors -->
+var test11 : string = c1s.m().prop.propInArg;

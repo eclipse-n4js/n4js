@@ -1,0 +1,77 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+class C {
+
+	get test1() { return null; }
+
+	static get test2() { return null; }
+
+	get test3() { return null; }
+	static set test3(p : any) {}
+
+	get test4() { return null; }
+	static get test4() { return null; }
+	static set test4(p : any) {}
+}
+
+var c : C;
+
+
+// non-static member
+
+// wrong read/write access
+// XPECT errors --> "The accessor test1 is read-only." at "test1"
+c.test1 = null;
+
+// wrong static access
+// XPECT errors --> "The non-static member test1 cannot be accessed from a static context." at "test1"
+C.test1;
+
+// wrong read/write access AND wrong static access -> only complain about wrong static
+// XPECT errors --> "The non-static member test1 cannot be accessed from a static context." at "test1"
+C.test1 = null;
+
+
+// static member
+
+// wrong read/write access
+// XPECT errors --> "The accessor test2 is read-only." at "test2"
+C.test2 = null;
+
+// wrong static access
+// XPECT errors --> "The static member test2 cannot be accessed from a non-static context." at "test2"
+c.test2;
+
+// wrong read/write access AND wrong static access -> only complain about wrong static
+// XPECT errors --> "The static member test2 cannot be accessed from a non-static context." at "test2"
+c.test2 = null;
+
+
+
+// two mismatching members exist
+// -> only complain about wrong read/write access, not about wrong static access
+
+// XPECT errors --> "The accessor test3 is read-only." at "test3"
+c.test3 = null;
+
+// XPECT errors --> "The accessor test3 is write-only." at "test3"
+C.test3;
+
+
+
+// three mismatching members exist
+// -> only complain about wrong read/write access, not about wrong static access
+
+// XPECT errors --> "The accessor test4 is read-only." at "test4"
+c.test4 = null;

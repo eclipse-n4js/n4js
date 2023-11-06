@@ -1,0 +1,111 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+
+var a : A;
+var b : B;
+var c : C;
+
+class X {}
+
+class G<T> {}
+
+var gb : G<B>;
+var gextb : G<? extends B>;
+var gsupb : G<? super B>;
+
+function <T> foo(p : T) : T {return null;}
+function <T> fooG(p : G<T>) : G<T> {return null;}
+function <T> fooG_fpar(p : G<T>) : T {return null;}
+function <T> fooG_ret(p : T) : G<T> {return null;}
+
+
+// ========================================================================
+// no generics
+
+// no return type expectation
+// XPECT typeArgs of 'foo' --> B
+var v01 = foo(b);
+// co-variant return type expectation
+// XPECT typeArgs of 'foo' --> B
+var v02 : A = foo(b);
+
+// ========================================================================
+// generic argument
+
+// invariant argument type expectation
+// XPECT typeArgs of 'fooG_fpar' --> B
+var v03 : A = fooG_fpar(gb);
+
+// ========================================================================
+// generic return value
+
+// invariant return type expectation, mismatch
+// XPECT errors ---
+// "B is not a subtype of T." at "b"
+// "G<T> is not a subtype of G<C>." at "fooG_ret(b)"
+// ---
+var v11 : G<C> = fooG_ret(b);
+// invariant return type expectation, match
+// XPECT typeArgs of 'fooG_ret' --> A
+var v12 : G<A> = fooG_ret(b);
+// co-variant return type expectation
+// XPECT typeArgs of 'fooG_ret' --> B
+var v13 : G<? extends A> = fooG_ret(b);
+// contra-variant return type expectation, mismatch (alternatively, this could emit an error)
+// XPECT typeArgs of 'fooG_ret' --> A
+var v14 : G<? super A> = fooG_ret(b);
+// contra-variant return type expectation, match
+// XPECT typeArgs of 'fooG_ret' --> B
+var v15 : G<? super C> = fooG_ret(b);
+
+// ========================================================================
+// generic argument AND return value
+
+// both invariant, mismatch
+// XPECT errors ---
+// "G<B> is not a subtype of G<T>." at "gb"
+// "G<T> is not a subtype of G<A>." at "fooG(gb)"
+// ---
+var v21 : G<A> = fooG(gb);
+// XPECT typeArgs of 'fooG' --> B
+var v22 : G<B> = fooG(gb);
+// co-/invariant
+// XPECT typeArgs of 'fooG' --> B
+var v23 : G<? extends A> = fooG(gb);
+// contra-/invariant, mismatch (now, we have to emit an error; compare with v14)
+// XPECT errors ---
+// "G<B> is not a subtype of G<T>." at "gb"
+// "G<T> is not a subtype of G<? super A>." at "fooG(gb)"
+// ---
+var v24 : G<? super A> = fooG(gb);
+// contra-/invariant, match
+// XPECT typeArgs of 'fooG' --> B
+var v25 : G<? super C> = fooG(gb);
+
+ // argument is generic type with wildcard => cannot choose a non-wildcard T such that G<T> is a super type
+// XPECT errors ---
+// "G<? extends B> is not a subtype of G<T>." at "gextb"
+// "G<T> is not a subtype of G<B>." at "fooG(gextb)"
+// ---
+var v26a : G<B> = fooG(gextb);
+ // argument is generic type with wildcard => cannot choose a non-wildcard T such that G<T> is a super type
+// XPECT errors ---
+// "G<? super B> is not a subtype of G<T>." at "gsupb"
+// "G<T> is not a subtype of G<B>." at "fooG(gsupb)"
+// ---
+var v26b : G<B> = fooG(gsupb);

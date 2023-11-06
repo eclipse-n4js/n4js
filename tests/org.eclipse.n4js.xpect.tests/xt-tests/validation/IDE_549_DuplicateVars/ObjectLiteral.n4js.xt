@@ -1,0 +1,55 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+
+var ol = {
+	x: 5,
+	// XPECT errors --> "Property x duplicates property x (line 16)." at "x"
+	x: 5
+}
+
+var ol2 = {
+		//XPECT noerrors --> No error expected: no conflict on setter and getter
+		get a(): string {return null},
+		//XPECT noerrors --> no conflict on setter and getter
+		set a(value : string) {},
+
+		//XPECT noerrors --> no conflict on setter and getter
+		set v(value : string) {},
+		//XPECT noerrors --> no conflict on setter and getter
+		get v(): string {return null}
+	};
+
+var ol3 = {
+		p : 13,
+		//XPECT errors --> "Property getter p duplicates property p (line 34)." at "p"
+		get p(): any {return null},
+		//XPECT errors --> "Property setter p duplicates property p (line 34)." at "p"
+		set p(value : any) {},
+	};
+
+
+function fd(p){
+	var nol = {
+		//XPECT noerrors --> no conflict with outer scope, as property reciver makes thing clear
+		fd : 5,
+		//XPECT noerrors --> no conflict with outer scope, as property reciver makes thing clear
+		p : 3,
+		//XPECT noerrors --> no conflict with outer scope, as property reciver makes thing clear
+		arguments : 4,
+		x : function y(){
+			//XPECT errors --> "Variable y shadows function expression y (line 50)." at "y"
+			var y = 3;
+		}
+	}
+}

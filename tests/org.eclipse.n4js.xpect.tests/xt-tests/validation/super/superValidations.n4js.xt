@@ -1,0 +1,113 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+
+/* XPECT errors ---
+"Keyword super may only be used in member access expressions, call expressions or new expressions." at "super"
+"Super member access may only be used in constructors, methods, getters, or setters." at "super"
+--- */
+super;
+
+
+// XPECT errors --> "Super calls may only be used in constructors." at "super"
+super();
+
+
+// XPECT errors --> "Super member access may only be used in constructors, methods, getters, or setters." at "super"
+super.m();
+
+
+/* XPECT errors ---
+"Keyword super may only be used in member access expressions, call expressions or new expressions." at "super"
+"Super member access may only be used in constructors, methods, getters, or setters." at "super"
+--- */
+{ super; }
+
+
+// XPECT errors --> "Super calls may only be used in constructors." at "super"
+{ super(); }
+
+
+// XPECT errors --> "Super member access may only be used in constructors, methods, getters, or setters." at "super"
+{ super.m(); }
+
+
+/* XPECT errors ---
+"Keyword super may only be used in member access expressions, call expressions or new expressions." at "super"
+"Super member access may only be used in constructors, methods, getters, or setters." at "super"
+--- */
+{ a: super; }
+
+
+// XPECT errors --> "Super calls may only be used in constructors." at "super"
+{ a: super(); }
+
+
+// XPECT errors --> "Super member access may only be used in constructors, methods, getters, or setters." at "super"
+{ a: super.m(); }
+
+
+/* XPECT errors ---
+"Keyword super may only be used in member access expressions, call expressions or new expressions." at "super"
+"Super member access may only be used in constructors, methods, getters, or setters." at "super"
+--- */
+(function() { super; });
+
+
+// XPECT errors --> "Super calls may only be used in constructors." at "super"
+(function() { super(); });
+
+
+// XPECT errors --> "Super member access may only be used in constructors, methods, getters, or setters." at "super"
+(function() { super.m(); });
+
+
+// XPECT errors --> "Keyword super may only be used in member access expressions, call expressions or new expressions." at "super"
+class C1 { m() { super; } }
+
+
+// XPECT errors --> "Super calls may only be used in constructors." at "super"
+class C2 { m() { super(); } }
+
+
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'a'." at "a"
+class C3 { m() { super.a(); } }
+
+
+// XPECT errors --> "Keyword super may only be used in member access expressions, call expressions or new expressions." at "super"
+class C4 { constructor() { super; } }
+
+
+// XPECT noerrors -->
+class C5 { constructor() { super(); } }
+
+
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'a'." at "a"
+class C6 { constructor() { super.a(); } }
+
+
+/* XPECT errors ---
+"Keyword super may only be used in member access expressions, call expressions or new expressions." at "super"
+"Super member access may not be used in interfaces." at "super"
+--- */
+interface I1 { m() { super; } }
+
+
+// XPECT errors --> "Super calls may only be used in constructors." at "super"
+interface I2 { m() { super(); } }
+
+
+// XPECT errors --> "Super member access may not be used in interfaces." at "super"
+interface I3 { m() { super.a(); } }
+

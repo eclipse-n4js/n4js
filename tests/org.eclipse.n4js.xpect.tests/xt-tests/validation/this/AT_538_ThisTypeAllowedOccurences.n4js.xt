@@ -1,0 +1,47 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+class A {
+
+	constructor(x : ~this) {
+	}
+
+	test1() : this {
+		return this;
+	}
+
+	test2() : this {
+		return this.test1();
+	}
+
+// XPECT errors --> "The this type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
+	test3(myParameter : this) : void {
+
+	}
+
+	test4() : void {
+		// XPECT errors --> "The this type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
+		var x : this;
+	}
+}
+
+// XPECT errors --> "The this type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
+function fun1() : this {
+	return null
+}
+
+// XPECT errors --> "The this type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
+function fun2(param : this) {
+	return null
+}

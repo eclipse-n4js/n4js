@@ -1,0 +1,35 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+
+interface R {
+	// XPECT noerrors --> "error is shown in consumer" at "foo"
+	public foo() : void {}
+}
+
+interface Role extends R {
+
+}
+
+
+class C {
+	@Final foo() : void {}
+	@Final bar() : void {}
+}
+
+// XPECT errors --> "The method C.foo cannot reduce the visibility of method R.foo." at "Role"
+class Consumer extends C implements Role {
+	// XPECT errors --> "The method Consumer.bar cannot override final method C.bar." at "bar"
+	@Override bar() : void {}
+}

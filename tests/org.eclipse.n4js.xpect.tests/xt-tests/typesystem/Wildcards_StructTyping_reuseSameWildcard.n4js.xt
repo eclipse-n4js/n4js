@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+//
+// in this case the type variable bound to a wildcard is used in multiple places
+//
+// THIS CASE IS NOT SUPPORTED YET
+//
+
+
+interface I2<T> {
+	public value1 : T;
+	public value2 : T;
+}
+interface I2_diff<T,S> {
+	public value1 : T;
+	public value2 : S;
+}
+
+var i2 : ~I2<?>;
+var i2ss : ~I2_diff<string,number>;
+var i2sn : ~I2_diff<string,number>;
+
+// XPECT noerrors -->
+i2 = i2ss;
+
+// XPECT FIXME errors --> "should fail because in i2 value1 and value2 must have the same type whereas in i2sn value1 has type string and value2 has number" at "i2sn"
+i2 = i2sn;

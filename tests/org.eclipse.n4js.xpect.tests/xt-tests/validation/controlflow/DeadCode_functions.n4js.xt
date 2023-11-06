@@ -1,0 +1,302 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest  END_SETUP*/
+
+
+// XPECT noerrors --> no missing return or throw statement
+function f0() {
+	var b1 : boolean = true;
+    x: y: do {
+		if ( b1 ) {
+	       break x;
+
+	    } else {
+	       continue y;
+		}
+
+	} while(false)
+}
+
+// Dead Code after break
+// XPECT noerrors --> no missing return or throw statement
+function f0a() {
+	var b1 : boolean = true;
+    x: y: do {
+		if ( b1 )
+		{
+	       break x;
+	       // XPECT warnings --> "Dead code. No execution possible after break." at "f0();"
+	       f0(); // Dead
+
+	    } else {
+	       continue y;
+		}
+
+	} while(false)
+}
+
+
+// Dead Code after continue
+// XPECT noerrors --> no missing return or throw statement
+function f0b() {
+	var b1 : boolean = true;
+    x: y: do {
+		if ( b1 )
+		{
+	       break x;
+
+	    } else {
+	       continue y;
+
+	       // XPECT warnings --> "Dead code. No execution possible after continue." at "f0();"
+	       f0(); // Dead
+		}
+
+	} while(false)
+}
+
+
+// SHOULD SAY: Dead Code after if-else both stop enclosing scope: break/continue
+// XPECT noerrors --> no missing return or throw statement
+function f0c() {
+	var b1 : boolean = true;
+    x: y: do {
+		if ( b1 )
+		{
+	       break x;
+
+	    } else {
+	       continue y;
+		}
+
+	   // XPECT ! warnings --> "warning - Dead code. No execution possible after IfStatement." at "f0()"
+       f0(); // Dead
+
+	} while(false)
+}
+
+
+// Dead Code after if-else both stop with return
+// XPECT noerrors --> no missing return or throw statement
+function f0d() {
+	var b1 : boolean = true;
+	var x = 1;
+	var y = 2;
+
+	if ( b1 )
+	{
+       return x;
+    } else {
+       return y;
+	}
+
+   // XPECT warnings --> "Dead code." at "f0();"
+   f0(); // Dead
+
+}
+
+
+// Dead Code after return
+// XPECT noerrors --> no missing return or throw statement
+function f0e() {
+	var b1 : boolean = true;
+	var x = 1;
+	var y = 2;
+	if ( b1 )
+	{
+       return x;
+       // XPECT warnings --> "Dead code. No execution possible after return." at "f0();"
+	   f0(); // Dead
+
+    } else {
+       return y;
+	}
+
+
+
+}
+
+// XPECT noerrors --> no missing return or throw statement
+function f1() {
+
+   var b1 : boolean = true;
+
+   y: do  {
+       x: do  {
+           if ( b1 )
+           {
+               break x;
+               // XPECT warnings --> "Dead code. No execution possible after break." at "f0();"
+         	   f0();	// Dead
+           } else {
+               break y;
+           }
+       // XPECT warnings --> "Dead code." at "true ) return; f0();"
+       } while ( true )
+       return;
+       f0();  // Dead
+
+   // XPECT warnings --> "Dead code." at "true"
+   } while ( true )
+
+}
+
+
+///////////////////
+// Standard expressions in functions
+///////////////////
+function b() : string { return "b"; }
+
+function f2() {
+	console.log("a");
+	b();
+	var c = "hallo"
+}
+
+
+
+function f3() {
+	console.log("a");
+	b();
+	var c = "hallo"
+}
+
+
+
+/////// break out of try:
+// XPECT errors --> "Missing return or throw statement." at "f4"
+function f4(): number {
+
+   var b1 : boolean = true;
+
+   y: do  {
+       x: do  {
+           if ( b1 ) {
+           	  try {
+                 break x;
+               } finally
+               // XPECT noerrors --> no missing return or throw statement
+               {
+               	 return 3;
+               	 // XPECT warnings --> "Dead code. No execution possible after return." at "f0();"
+               	 f0(); // dead
+               }
+           } else {
+               try
+               {
+                 return 1;
+               } catch(e) {
+               	 return 2;
+
+               } finally {
+	               break y;
+	           }
+           }
+	   // XPECT warnings --> "Dead code." at "true ) return 4;"
+       } while ( true )
+       return 4;
+   // XPECT warnings --> "Dead code." at "true"
+   } while ( true )
+
+}
+
+
+///// checking behaviour of caught exception control flow.
+// XPECT noerrors --> no missing return or throw statement
+function f5(): number {
+	console.log("a");
+	try {
+
+		try {
+
+			var bl : boolean = true;
+
+			do {
+				bl = false;
+			} while ( bl )
+
+			throw "Error"
+
+		} catch ( e ) {
+
+		}
+
+		return 5;
+
+	} catch ( e2 ) {
+
+	}
+
+	return 6;
+
+	// Dead code
+	// XPECT warnings --> "Dead code. No execution possible after return." at "console.log("b");"
+	console.log("b");
+
+}
+
+
+/////// break out of try:
+// XPECT errors --> "Missing return or throw statement." at "f6"
+function f6(): number {
+
+   var b1 : boolean = true;
+
+   // SHOULD SAY:  dead code
+   // XPECT noerrors --> no missing return or throw statement
+   y: do  {
+       z: {
+	       x: do  {
+	           if ( b1 ) {
+	           	  try {
+	                 break z;
+	               } finally {
+	               	 return 3;
+	               }
+
+	           } else
+	           // SHOULD SAY: dead code in Block after completely finished try+catch+finally
+	           // XPECT noerrors --> no missing return or throw statement
+	           {
+	               try
+	               {
+	                 return 1;
+	               } catch(e) {
+	               	 return 2;
+
+	               } finally {
+		               break y;
+		           }
+
+		           // XPECT ! warnings --> "warning - Dead code. No execution possible after IfStatement." at "f0()"
+		           f0(); // Dead Code
+	           }
+		   // XPECT warnings --> "Dead code." at "true"
+	       } while ( true )
+
+       } // z
+	   // XPECT warnings --> "Dead code." at "return 4;"
+       return 4;
+   // XPECT warnings --> "Dead code." at "true"
+   } while ( true )
+
+}
+
+
+// Dead code just after throws.
+// XPECT noerrors --> no missing return or throw statement
+function f7() : number {
+	throw 'hallo';
+	// XPECT warnings --> "Dead code. No execution possible after throw." at "f0();"
+    f0(); // Dead
+
+}

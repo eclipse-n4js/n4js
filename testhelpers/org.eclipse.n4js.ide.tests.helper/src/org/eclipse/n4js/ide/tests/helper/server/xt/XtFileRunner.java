@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Set;
 
@@ -33,20 +32,23 @@ public class XtFileRunner extends Runner {
 	final public File file;
 	/** Issue codes of issues suppressed globally for all tests. Can be changed in Xt setup on a per-file basis. */
 	final public Set<String> globallySuppressedIssues;
-	/** Meta data of xt file */
+	/** Meta data of xt file. Can be null. */
 	final public XtFileData xtFileData;
+	/** Exception that occurred during initialization or null */
+	final public Exception initException;
 
 	private XtIdeTest ideTest;
 	private Description description;
 
 	/** Constructor */
-	public XtFileRunner(XtParentRunner parent, String testClassName, File file, Set<String> globallySuppressedIssues)
-			throws IOException {
+	public XtFileRunner(XtParentRunner parent, String testClassName, File file, Set<String> globallySuppressedIssues,
+			XtFileData xtFileData, Exception initException) {
 		this.parent = parent;
 		this.testClassName = testClassName;
 		this.file = file;
 		this.globallySuppressedIssues = globallySuppressedIssues;
-		this.xtFileData = XtFileDataParser.parse(file);
+		this.xtFileData = xtFileData;
+		this.initException = initException;
 	}
 
 	/** @return a file and folder name */
@@ -60,7 +62,7 @@ public class XtFileRunner extends Runner {
 
 	/** @return {@link XtFileData#setupRunnerName} */
 	public String getSetupRunnerName() {
-		return xtFileData.setupRunnerName;
+		return xtFileData == null ? testClassName : xtFileData.setupRunnerName;
 	}
 
 	@Override
@@ -81,6 +83,9 @@ public class XtFileRunner extends Runner {
 		}
 		if (ideTest == null) {
 			throw new IllegalStateException("ideTest was not set yet");
+		}
+		if (initException != null) {
+			throw new RuntimeException(initException);
 		}
 
 		try {
@@ -105,8 +110,9 @@ public class XtFileRunner extends Runner {
 							notifier.fireTestFinished(testDescription);
 						}
 					} catch (Throwable t) {
-
-						if (testMethodData.isFixme) {
+						if (t instanceof IgnoreTestException) {
+							notifier.fireTestIgnored(testDescription);
+						} else if (testMethodData.isFixme) {
 							notifier.fireTestFinished(testDescription);
 						} else {
 							notifier.fireTestFailure(new Failure(testDescription, t));

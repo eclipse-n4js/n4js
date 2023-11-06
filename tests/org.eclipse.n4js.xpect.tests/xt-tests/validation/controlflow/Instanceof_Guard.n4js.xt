@@ -1,0 +1,260 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+
+function f0() {
+	// XPECT instanceofguard of 'a' -->
+	let a = 2;
+	if (a instanceof Number) {
+		a;
+	}
+}
+
+
+function f1() {
+	let a = 2;
+	if (a instanceof Number) {
+		// XPECT instanceofguard of 'a' --> a<:Number
+		a;
+	}
+}
+
+
+function f2() {
+	let a = 2;
+	if (!(a instanceof Number)) {
+		// XPECT instanceofguard of 'a' --> a!<:Number
+		a;
+	}
+}
+
+
+function f3() {
+	let a = 2;
+	if (a instanceof Number) {
+	}
+	// XPECT instanceofguard of 'a' -->
+	a;
+}
+
+
+function f4() {
+	let a = 2;
+	if (a instanceof Number) {
+		return;
+	}
+	// XPECT instanceofguard of 'a' --> a!<:Number
+	a;
+}
+
+
+function f5() {
+	let a = 2;
+	if (!(a instanceof Number)) {
+		return;
+	}
+	// XPECT instanceofguard of 'a' --> a<:Number
+	a;
+}
+
+
+function f6() {
+	let a = 2;
+	if (a instanceof Number &&
+		// XPECT instanceofguard of 'a' --> a<:Number
+		a
+	) {
+	}
+}
+
+
+function f7() {
+	let a = 2;
+	if (!(a instanceof Number) ||
+		// XPECT instanceofguard of 'a' --> a<:Number
+		a
+	) {
+	}
+}
+
+
+function f8() {
+	let a = 2;
+	if (a instanceof Number ||
+		// XPECT instanceofguard of 'a' --> a!<:Number
+		a
+	) {
+	}
+}
+
+
+function f9() {
+	let a = 2;
+	if (!(a instanceof Number) &&
+		// XPECT instanceofguard of 'a' --> a!<:Number
+		a
+	) {
+	}
+}
+
+
+
+function f10() {
+	let a = 2;
+	if (!(a instanceof Number) &&
+		// XPECT instanceofguard of 'a' --> a!<:Number
+		a
+	) {
+	}
+}
+
+
+function f11() {
+	let a = 2;
+	if (a instanceof Number && a instanceof Object) {
+		// XPECT instanceofguard of 'a' --> a<:Number, a<:Object
+		a;
+	}
+}
+
+
+function f12() {
+	let a = 2;
+	if (a instanceof Number || a instanceof Object) {
+		// XPECT instanceofguard of 'a' --> a<:Number|Object
+		a;
+	}
+}
+
+
+
+
+function f101() {
+	let a = 2;
+	if (a instanceof Number) {
+		// XPECT instanceofguard of 'a' -->
+		a;
+	}
+	
+	let x = () => { a = 0; };
+	x;
+}
+
+function f102() {
+	let x = () => { a = 0; };
+	x;
+	
+	let a = 2;
+	if (a instanceof Number) {
+		// XPECT instanceofguard of 'a' -->
+		a;
+	}
+}
+
+function f103() {
+	let a = 2;
+	if (a instanceof Number) {
+		// XPECT instanceofguard of 'a' --> a<:Number
+		a;
+	}
+	
+	let x = () => { a; };
+	x;
+}
+
+function f104() {
+	let x = () => { a; };
+	x;
+	
+	let a = 2;
+	if (a instanceof Number) {
+		// XPECT instanceofguard of 'a' --> a<:Number
+		a;
+	}
+}
+
+
+
+
+function f111() {
+	let a = 2;
+	if (a instanceof Number) {
+		// XPECT instanceofguard of 'a' --> a<:Number
+		a;
+		// XPECT instanceofguard of 'a' -->
+		a = 0;
+	}
+}
+
+function f112() {
+	let a = 2;
+	if (a instanceof Number) {
+		// XPECT instanceofguard of 'a' -->
+		a = 0;
+		// XPECT instanceofguard of 'a' -->
+		a;
+	}
+}
+
+function f113() {
+	let a: any = 2;
+	if (a instanceof Number) {
+		// XPECT instanceofguard of 'a' -->
+		a = a === new Number() ? "n" : "nn";
+	}
+}
+
+
+
+function f20() {
+	let a = 2;
+	// XPECT instanceofguard of 'a' -->
+	if (a instanceof Number && 2+3) {
+	}
+}
+
+
+function f21() {
+	let a = 2;
+	if (a instanceof Number &&
+		// XPECT instanceofguard of 'a' --> a<:Number
+		a
+	) {
+	}
+}
+
+
+function f30() {
+	let a = 2;
+	// XPECT instanceofguard of 'a' -->
+	(a instanceof Number) ? 3 : 4;
+}
+
+
+function f31() {
+	let a = 2;
+	(a instanceof Number) ?
+		// XPECT instanceofguard of 'a' --> a<:Number
+		a : 4;
+}
+
+
+function f32() {
+	let a = 2;
+	(a instanceof Number) ?
+		// XPECT instanceofguard of 'a' --> a!<:Number
+		3 : a;
+}
+
+

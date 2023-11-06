@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+
+var a : A;
+var b : B;
+var c : C;
+
+class G<T> {}
+
+function <T> foo(p : T) : T {return null;}
+function <T> fooOL(p : ~Object with { prop: T; }) : G<T> {return null;}
+
+
+
+
+// XPECT typeArgs of 'fooOL' --> B
+// XPECT type of '{ prop: b }' --> ~Object with { prop: B }
+var v01 = fooOL( { prop: b } );
+
+// XPECT typeArgs of 'fooOL' --> A
+// XPECT type of '{ prop: b }' --> ~Object with { prop: A }
+var v02 : G<A> = fooOL( { prop: b } );
+
+// XPECT typeArgs of 'fooOL' --> A
+// XPECT type of '{ prop: b }' --> ~Object with { prop: A }
+var v03 : G<A> = foo(foo(foo(fooOL( { prop: b } ))));

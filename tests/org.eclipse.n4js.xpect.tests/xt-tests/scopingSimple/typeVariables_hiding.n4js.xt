@@ -1,0 +1,88 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+// ------------------------------------
+// hiding types:
+
+class C {}
+interface R {}
+interface I {}
+// XPECT warnings --> "The type parameter C hides class C." at "C"
+class A1<C> {}
+// XPECT warnings --> "The type parameter R hides interface R." at "R"
+class A2<R> {}
+// XPECT warnings --> "The type parameter I hides interface I." at "I"
+class A3<I> {}
+
+
+// ------------------------------------
+// hiding a type variable:
+
+class B<T> {
+
+	/* XPECT warnings ---
+		"The type parameter T hides type variable T." at "T"
+		"Type variable T not used in parameters or return type." at "T"
+	--- */
+	<T> m1() : void {}
+
+	m2() : void {
+		/* XPECT warnings ---
+			"The type parameter T hides type variable T." at "T"
+			"Type variable T not used in parameters or return type." at "T"
+		--- */
+		var f = function <T> () {};
+
+		// XPECT errors --> "Unsupported feature: class expressions." at "class"
+		var c = class {
+			/* XPECT warnings ---
+				"The type parameter T hides type variable T." at "T"
+				"Type variable T not used in parameters or return type." at "T"
+			--- */
+			f = function <T> () {};
+
+			/* XPECT warnings ---
+				"The type parameter T hides type variable T." at "T"
+				"Type variable T not used in parameters or return type." at "T"
+			--- */
+			<T> mInner() : void {}
+		};
+
+	}
+
+	// ok:
+
+	// XPECT warnings --> "Type variable T not used in parameters or return type." at "T"
+	static <T> m3() : void {}
+
+	static m4() : void {
+		// XPECT warnings --> "Type variable T not used in parameters or return type." at "T"
+		var f = function <T> () {};
+
+		// XPECT errors --> "Unsupported feature: class expressions." at "class"
+		var c = class {
+			// XPECT warnings --> "Type variable T not used in parameters or return type." at "T"
+			f = function <T> () {};
+			// XPECT warnings --> "Type variable T not used in parameters or return type." at "T"
+			<T> mInner() : void {}
+		};
+	}
+}
+
+
+// ------------------------------------
+// no warning if hiding something other than a type or type variable:
+
+var myVar : string;
+class Clazz<myVar> {}

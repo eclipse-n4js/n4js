@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+// IDE-1099 XPECT ! errors --> "For the given n4jsd file no corresponding external file resp. no matching implemented by expression can be found." at "MyObject"
+export external public class MyObject extends Object {
+
+/* XPECT errors ---
+ "Fields in external classes have to have no right side." at "_value"
+ ""value" is not a subtype of String." at ""value""
+--- */
+	private _value : String = "value";
+
+// XPECT errors --> "Methods in external classes have to have no body." at "method"
+	method() : String {
+		return new String("");
+	}
+
+// XPECT errors --> "Getters in external classes have to have no body." at "value"
+	get value() : String {
+		return new String("");
+	}
+
+// XPECT errors --> "Setters in external classes have to have no body." at "value"
+	set value(value : String) {
+		this._value = value;
+	}
+}
+
+
+// IDE-1099 XPECT ! errors --> "For the given n4jsd file no corresponding external file resp. no matching implemented by expression can be found." at "MyObject2"
+export external public class MyObject2 extends Object {
+
+// 	relaxed by IDEBUG-561:
+// XPECT noerrors --> "External classes have to have a public constructor, unless they are annotated with @N4JS." at "constructor"
+	private constructor(init : String)
+}

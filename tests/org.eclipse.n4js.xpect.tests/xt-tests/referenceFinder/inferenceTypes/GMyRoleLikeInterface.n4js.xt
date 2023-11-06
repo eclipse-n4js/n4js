@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest 
+    
+   Project {
+		ThisFile {  }
+		File "GMyClassOne.n4js" { from = "GMyClassOne.n4js.xt" }
+		File "GMyVariableTwo.n4js" { from = "GMyVariableTwo.n4js.xt" }
+		File "GMyClassTwo.n4js" { from = "GMyClassTwo.n4js.xt" }
+		File "GMyInterfaceFour.n4js" { from = "GMyInterfaceFour.n4js.xt" }
+	}
+
+	END_SETUP   
+*/
+
+import { GMyInterfaceFour } from "GMyInterfaceFour";
+
+export public interface GMyRoleLikeInterface<T extends GMyInterfaceFour> {
+	element:T;
+
+	/* XPECT findReferences at 'getElement' ---
+	GMyClassOne - two.myMethodTwo().getElement - 30
+	---
+	*/
+	getElement():T {
+		return this.element;
+	}
+}

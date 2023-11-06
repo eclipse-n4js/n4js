@@ -1,0 +1,67 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+// cf. https://github.com/meysholdt/Xpect/issues/63
+
+// N4JSSpec, subsection{Duplicates and Shadowing}
+// Function declarations may shadow type declarations. However, both entities are to be handled completely differently, so that error will occur if the shadowing is ignored by the programmer anyway.
+
+
+//--- type shadowing allowed
+
+class A{};
+
+function fd1(){
+	// XPECT warnings --> "Variable names should start with lower case letter." at "A"
+	var A;
+}
+
+//... but not in catch variable as we don't allwo shadowing there
+
+function fd2(){
+	try{
+		throw 2;
+		/* XPECT errors ---
+			"Catch variable A shadows class A (line 22)." at "A"
+		---
+		// XPECT warnings ---
+			"Catch variable names should start with lower case letter." at "A"
+		--- */
+		} catch (A){
+			console.log(A);// output- > 2
+		}
+	}
+
+// ... and no duplication
+
+class F{}
+// XPECT errors --> "Function F duplicates class F (line 47)." at "F"
+function F(){}
+
+
+interface B{};
+/* XPECT errors ---
+"Variable B duplicates interface B (line 52)." at "B"
+---
+// XPECT warnings ---
+"Variable names should start with lower case letter." at "B"
+--- */
+var B;
+
+class X{}
+// XPECT errors --> "Interface X duplicates class X (line 61)." at "X"
+interface X{}
+
+interface Y{}
+// XPECT errors --> "Enum Y duplicates interface Y (line 65)." at "Y"
+enum Y{ry,ey}

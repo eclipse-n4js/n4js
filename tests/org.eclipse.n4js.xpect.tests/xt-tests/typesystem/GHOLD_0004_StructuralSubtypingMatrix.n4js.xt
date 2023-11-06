@@ -1,0 +1,320 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+class A { public f : string = "" }
+
+// Tests for T <: Primitive
+{
+	{
+		// Primitive <: Primitive XPECT noerrors -->
+		let a : int = 3
+	}
+	{
+		// Object !<: Primitive XPECT errors --> "Object is not a subtype of int." at "new Object()"
+		let a : int = new Object();
+	}
+	{
+		// N4Object !<: Primitive XPECT errors --> "N4Object is not a subtype of int." at "new N4Object()"
+		let a : int = new N4Object();
+	}
+	{
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
+		let a : ~int = 3
+		// ~Primitive <: Primitive XPECT noerrors -->
+		let b : int = a;
+	}
+	{
+		let o : ~Object = {}
+		// ~Object without additional members !<: Primitive XPECT errors --> "Structural type ~Object is not a subtype of non-structural type int." at "o"
+		let a : int = o;
+	}
+	{
+		// ~Object with additional members !<: Primitive XPECT errors --> "Structural type ~Object with { f: string } is not a subtype of non-structural type int." at "{f : ""}"
+		let a : int = {f : ""}
+	}
+	{
+		let o : ~N4Object = new N4Object();
+		// ~N4Object without additional  members !<: Primitive XPECT errors --> "Structural type ~N4Object is not a subtype of non-structural type int." at "o"
+		let a : int = o;
+	}
+}
+// Tests for T <: Object
+{
+	{
+		// Primitive !<: Object XPECT errors --> "3 is not a subtype of Object." at "3"
+		let o : Object = 3;
+	}
+	{
+		// Object <: Object XPECT noerrors -->
+		let o : Object = new Object();
+	}
+	{
+		// N4Object <: Object XPECT noerrors -->
+		let o : Object = new N4Object();
+	}
+	{
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
+		let i : ~int = 3
+		// ~Primitive !<: Object XPECT errors --> "~int is not a subtype of Object." at "i"
+		let o : Object = i
+	}
+	{
+		let s_o : ~Object = {};
+		// ~Object without additional members <: Object XPECT noerrors -->
+		let o : Object = s_o;
+	}
+	{
+		// ~Object with additional members <: Object XPECT noerrors -->
+		let o : Object = { f: "" }
+	}
+	{
+		let o : ~N4Object = new N4Object();
+		// ~N4Object without additional  members <: Object XPECT noerrors -->
+		let a : Object = o;
+	}
+}
+// Tests for T <: N4Object
+{
+	{
+		// Primitive !<: N4Object XPECT errors --> "3 is not a subtype of N4Object." at "3"
+		let n4Object : N4Object = 3;
+	}
+	{
+		// Object !<: N4Object XPECT errors --> "Object is not a subtype of N4Object." at "new Object()"
+		let n4Object : N4Object = new Object();
+	}
+	{
+		// N4Object <: N4Object XPECT noerrors -->
+		let n4Object : N4Object = new N4Object();
+	}
+	{
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
+		let a : ~int = 3;
+		// ~Primitive !<: N4Object XPECT errors --> "~int is not a subtype of N4Object." at "a"
+		let n4Object : N4Object = a;
+	}
+	{
+		let o : ~Object = {}
+		// ~Object without additional members !<: N4Object XPECT errors --> "Structural type ~Object is not a subtype of non-structural type N4Object." at "o"
+		let n4Object : N4Object = o;
+	}
+	{
+		// ~Object with additional members !<: N4Object XPECT errors --> "Structural type ~Object with { f: string } is not a subtype of non-structural type N4Object." at "{ f: "" }"
+		let n4Object : N4Object = { f: "" }
+	}
+	{
+		let s_n4Object : ~N4Object = new N4Object();
+		// ~N4Object without additional  members !<: N4Object XPECT errors --> "Structural type ~N4Object is not a subtype of non-structural type N4Object." at "s_n4Object"
+		let n4Object : N4Object = s_n4Object;
+	}
+}
+// Tests for T <: ~Primitive
+{
+	{
+		let p = 1
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
+		let i : ~int = p;
+	}
+	{
+		let o = new Object();
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
+		/* Object !<: ~Primitive XPECT errors ---
+			"Object is not a subtype of ~int." at "o"
+		--- */ 
+		let i : ~int = o;
+	}
+	{
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
+		/* N4Object !<: ~Primitive XPECT errors ---
+			"N4Object is not a subtype of ~int." at "new N4Object()"
+		---  */
+		let i : ~int = new N4Object();
+	}
+	{
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
+		let s_p : ~int = 3
+		// ~Primitive <: ~Primitive XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
+		let p : ~int = s_p
+	}
+	{
+		let o = {};
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
+		/* ~Object without additional members !<: ~Primitive XPECT errors ---
+			"~Object is not a subtype of ~int." at "o"
+		---  */
+		let i : ~int = o;
+	}
+	{
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
+		/* ~Object with additional members !<: ~Primitive XPECT errors ---
+			"~Object with { f: string } is not a subtype of ~int." at "{ f: "" }"
+		--- */
+		let i : ~int = { f: "" }
+	}
+	{
+		let s_n4o : ~N4Object = new N4Object();
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~string"
+		/* ~N4Object without additional  members !<: ~Primitive XPECT errors ---
+			"~N4Object is not a subtype of ~string." at "s_n4o"
+		--- */
+		let p : ~string = s_n4o;
+	}
+	{
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
+		let s_int : ~int = 3;
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~string"
+		let s_string : ~string = "test";
+		// ~int <: ~string XPECT errors --> "~int is not a subtype of ~string." at "s_int"
+		s_string = s_int;
+	}
+}
+// Tests for T <: ~Object without additional members
+{
+	{
+		// Primitive !<: ~Object without additional members XPECT errors --> "int is not a subtype of ~Object." at "3"
+		let o : ~Object = 3;
+	}
+	{
+		// Object <: ~Object without additional members XPECT noerrors -->
+		let o : ~Object = new Object();
+	}
+	{
+		// N4Object <: ~Object without additional members XPECT noerrors -->
+		let o : Object = new A();
+	}
+	{
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
+		let s_i : ~int = 3;
+		// ~Primitive !<: ~Object without additional members XPECT errors --> "~int is not a subtype of ~Object." at "s_i"
+		let o : ~Object =  s_i;
+	}
+	{
+		let s_o : ~Object = {}
+		// ~Object without additional members <: ~Object without additional members XPECT noerrors -->
+		let o : ~Object = s_o;
+	}
+	{
+		// ~Object with additional members <: ~Object without additional members XPECT noerrors -->
+		let o : ~Object = { f: "" }
+	}
+	{
+		let s_n4o : ~N4Object = new N4Object();
+		// ~N4Object without additional  members <: ~Object without additional members XPECT noerrors -->
+		let o : ~Object = s_n4o;
+	}
+}
+// Tests for T <: ~Object with additional members
+{
+	{
+		// Primitive !<: ~Object with additional members XPECT errors --> "int is not a subtype of ~Object with { f: string }." at "3"
+		let o : ~Object with { f : string } = 3
+	}
+	{
+		// Object !<: ~Object with additional members XPECT errors --> "Object is not a structural subtype of ~Object with { f: string }: missing setter or field f." at "new Object()"
+		let o : ~Object with { f : string } = new Object();
+	}
+	{
+		// N4Object !<: ~Object with additional members XPECT errors --> "N4Object is not a structural subtype of ~Object with { f: string }: missing setter or field f." at "new N4Object()"
+		let o : ~Object with { f : string } = new N4Object();
+	}
+	{
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
+		let a : ~int = 3;
+		// ~Primitive !<: ~Object with additional members XPECT errors --> "~int is not a subtype of ~Object with { f: string }." at "a"
+		let o : ~Object with { f : string } = a;
+	}
+	{
+		let s_o : ~Object = {}
+		// ~Object without additional members !<: ~Object with additional members XPECT errors --> "~Object is not a structural subtype of ~Object with { f: string }: missing structural field f." at "s_o"
+		let o : ~Object with { f : string } = s_o;
+	}
+	{
+		// ~Object with additional members <: ~Object with additional members XPECT noerrors -->
+		let o : ~Object with { f : string } = {f: ""}
+	}
+	{
+		let s_n4o : ~N4Object = new N4Object();
+		// ~N4Object without additional  members !<: ~Object with additional members XPECT errors --> "~N4Object is not a structural subtype of ~Object with { f: string }: missing structural field f." at "s_n4o"
+		let o : ~Object with { f : string } = s_n4o;
+	}
+}
+// Tests for T <: ~N4Object without additional  members
+{
+	{
+		// Primitive !<: ~N4Object without additional  members XPECT errors --> "int is not a subtype of ~N4Object." at "1"
+		let sn4O : ~N4Object = 1;
+	}
+	{
+		// Object <: ~N4Object without additional  members XPECT noerrors -->
+		let sn4O : ~N4Object = new Object();
+	}
+	{
+		// N4Object <: ~N4Object without additional  members XPECT noerrors -->
+		let sn4O : ~N4Object = new N4Object();
+	}
+	{
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
+		let a : ~int = 3;
+		// ~Primitive !<: ~N4Object without additional  members XPECT errors --> "~int is not a subtype of ~N4Object." at "a"
+		let sn4O : ~N4Object = a;
+	}
+	{
+		// ~Object without additional members <: ~N4Object without additional  members XPECT noerrors -->
+		let sn4O : ~N4Object = {};
+	}
+	{
+		// ~Object with additional members <: ~N4Object without additional  members noerrors but
+		// XPECT warnings --> "f is not defined in ~N4Object; it will not be accessible from sn4O." at "f"
+		let sn4O : ~N4Object = { f : "" }
+	}
+	{
+		// ~N4Object without additional  members <: ~N4Object without additional  members XPECT noerrors -->
+		let o : ~N4Object = new N4Object();
+	}
+}
+// Tests for T <: ~N4Object with additional members
+{
+	{
+		// Primitive !<: ~N4Object with additional members XPECT errors --> "int is not a subtype of ~A." at "3"
+		let a : ~A = 3;
+	}
+	{
+		let o = new Object();
+		// Object !<: ~N4Object with additional members XPECT errors --> "Object is not a structural subtype of ~A: missing field f." at "o"
+		let a : ~A = o;
+	}
+	{
+		let o = new N4Object();
+		// N4Object !<: ~N4Object with additional members XPECT errors --> "N4Object is not a structural subtype of ~A: missing field f." at "o"
+		let a : ~A = o;
+	}
+	{
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
+		let i : ~int = 3;
+		// ~Primitive !<: ~N4Object with additional members XPECT errors --> "~int is not a subtype of ~A." at "i"
+		let a : ~A = i;
+	}
+	{
+		// ~Object without additional members !<: ~N4Object with additional members XPECT errors --> "~Object is not a structural subtype of ~A: missing field f." at "{}"
+		let a : ~A = {};
+	}
+	{
+		// ~Object with additional members <: ~N4Object with additional members XPECT noerrors -->
+		let a : ~A = { f : "" }
+	}
+	{
+		let sn4O : ~N4Object = new N4Object();
+		// ~N4Object without additional  members !<: ~N4Object with additional members XPECT errors --> "~N4Object is not a structural subtype of ~A: missing field f." at "sn4O"
+		let a : ~A = sn4O;
+	}
+}

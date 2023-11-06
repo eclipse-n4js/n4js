@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+class G<T> {
+	get() : T { return null }
+	set(t : T) : void {}
+}
+
+class A{}
+class B extends A{}
+
+var g : G<? extends A>;
+var a : A;
+
+// XPECT errors --> "A is not a subtype of ? extends A." at "a"
+g.set(a);
+// XPECT errors --> "? extends A is not a subtype of ? extends A." at "g.get()"
+g.set(g.get());
+
+// explanation: actual type of g may have changed in between, e.g.
+
+// should work:
+// in between: g = new G<A>();
+var x = g.get();
+// in between: should work:
+// g = new G<B>();
+// then x (from "old" g is a A, but the new g expects a B):
+
+// XPECT errors --> "A is not a subtype of ? extends A." at "x"
+g.set(x);
+// note:
+// originally, we tested the following expectation in previous line:
+// X#PECT errors --> "? extends A is not a subtype of ? extends A." at "x"
+// But in IDEBUG-276 type inference for variables was changed such that the
+// type of variable x above is now inferred to 'A' instead of '? extends A'.

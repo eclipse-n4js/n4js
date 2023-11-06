@@ -1,0 +1,136 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+
+// deactivated the entire file because as of GHOLD-43 all these cases are disallowed
+// TODO IDE-2226 reenable these test cases if support for definition-site variance is added / otherwise remove this file
+
+
+/*
+
+class A {}
+class B {}
+class C {}
+class D {}
+
+class X {}
+var x : X;
+
+
+// --------------------------------------------------------------------
+// simple diamond case
+
+
+interface I1<T> {
+	m(param : T) : void
+	n() : T
+}
+
+interface I2a<T> extends I1<T> {}
+interface I2b<T> extends I1<T> {}
+
+interface I_test1 extends I2a<A>, I2b<B> {}
+
+var i_test1 : I_test1;
+
+// X---PECT errors --> "X is not a subtype of union{A,B}." at "x"
+i_test1.m(x);
+// X---PECT errors --> "intersection{A,B} is not a subtype of X." at "i_test1.n()"
+x = i_test1.n();
+
+
+// --------------------------------------------------------------------
+// diamond case through invariant type variable assignment in hierarchy
+
+
+interface I3ab extends I2a<A>, I2b<B> {}
+interface I3cd extends I2a<C>, I2b<D> {}
+
+interface I_test2 extends I3ab, I3cd {}
+
+
+var i_test2 : I_test2;
+
+// X---PECT errors --> "X is not a subtype of union{A,B,C,D}." at "x"
+i_test2.m(x);
+// X---PECT errors --> "intersection{A,B,C,D} is not a subtype of X." at "i_test2.n()"
+x = i_test2.n();
+
+
+// --------------------------------------------------------------------
+// diamond ^ 2
+
+
+interface I4a<U,V> extends I2a<U>, I2b<V> {}
+interface I4b<U,V> extends I2a<U>, I2b<V> {}
+
+interface I_test3<S,T,U,V> extends I4a<S,T>, I4b<U,V> {}
+
+
+var i_test3 : I_test3<A,B,C,D>;
+
+// X---PECT errors --> "X is not a subtype of union{A,B,C,D}." at "x"
+i_test3.m(x);
+// X---PECT errors --> "intersection{A,B,C,D} is not a subtype of X." at "i_test3.n()"
+x = i_test3.n();
+
+
+
+
+*/
+
+
+
+/***************************************************************
+
+
+// --------------------------------------------------------------------
+// non-conflicting interface consumption
+
+
+interface R1<T> {
+	void m(T param) {}
+}
+
+interface Rm<T> with R1<T> {
+
+	foo() {
+		this.m();
+	}
+
+}
+
+class C implements R1<string>, Rm<number> {
+
+}
+
+
+var C c;
+c.m("")			// I don't even ...
+
+
+
+
+
+// --------------------------------------------------------------------
+// function overriding
+
+//class C implements I2<string>, I3<number> {
+//
+//	@Override
+//	void m(string param) {}
+//
+//}
+
+
+***************************************************************/

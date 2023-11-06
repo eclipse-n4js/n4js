@@ -1,0 +1,89 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+class N { public s?: string }
+
+@Final
+class F {}
+
+// XPECT warnings -->"Unnecessary cast from F to ~F" at "new F() as ~F"
+const s = new F() as ~F;
+// XPECT warnings -->"Unnecessary cast from F to ~~F" at "new F() as ~~F"
+const sf = new F() as ~~F;
+// XPECT warnings -->"Unnecessary cast from F to ~r~F" at "new F() as ~r~F"
+const sr = new F() as ~r~F;
+// XPECT warnings -->"Unnecessary cast from F to ~w~F" at "new F() as ~w~F"
+const sw = new F() as ~w~F;
+// XPECT warnings -->"Unnecessary cast from F to ~i~F" at "new F() as ~i~F"
+const si = new F() as ~i~F;
+
+let n: ~N;
+let nn: ~~N;
+let nr: ~r~N;
+let nw: ~w~N;
+let ni: ~i~N;
+
+// XPECT errors -->"~F is not a structural subtype of ~N: missing field s." at "s"
+n = s;
+// XPECT errors -->"~~F is not a structural subtype of ~N: missing field s." at "sf"
+n = sf;
+// XPECT errors -->"~r~F is not a structural subtype of ~N: missing field s; s failed: writable field requires a getter/setter pair in subtype." at "sr"
+n = sr;
+// XPECT errors -->"~w~F is not a structural subtype of ~N: missing field s; s failed: writable field requires a getter/setter pair in subtype." at "sw"
+n = sw;
+// XPECT errors -->"~i~F is not a structural subtype of ~N: missing field s; s failed: writable field requires a getter/setter pair in subtype." at "si"
+n = si;
+
+// XPECT errors -->"~F is not a structural subtype of ~~N: missing field s." at "s"
+nn = s;
+// XPECT errors -->"~~F is not a structural subtype of ~~N: missing field s." at "sf"
+nn = sf;
+// XPECT errors -->"~r~F is not a structural subtype of ~~N: missing field s; s failed: writable field requires a getter/setter pair in subtype." at "sr"
+nn = sr;
+// XPECT errors -->"~w~F is not a structural subtype of ~~N: missing field s; s failed: writable field requires a getter/setter pair in subtype." at "sw"
+nn = sw;
+// XPECT errors -->"~i~F is not a structural subtype of ~~N: missing field s; s failed: writable field requires a getter/setter pair in subtype." at "si"
+nn = si;
+
+// XPECT errors -->"~F is not a structural subtype of ~r~N: missing field s; s failed: readable field requires a readable field or a getter in subtype." at "s"
+nr = s;
+// XPECT errors -->"~~F is not a structural subtype of ~r~N: missing field s; s failed: readable field requires a readable field or a getter in subtype." at "sf"
+nr = sf;
+// XPECT errors -->"~r~F is not a structural subtype of ~r~N: missing field s; s failed: readable field requires a readable field or a getter in subtype." at "sr"
+nr = sr;
+// XPECT errors -->"~w~F is not a structural subtype of ~r~N: missing field s; s failed: readable field requires a getter in subtype." at "sw"
+nr = sw;
+// XPECT errors -->"~i~F is not a structural subtype of ~r~N: missing field s; s failed: readable field requires a readable field or a getter in subtype." at "si"
+nr = si;
+
+// XPECT errors -->"~F is not a structural subtype of ~w~N: missing field s; s failed: writable field requires a writable field or a setter in subtype." at "s"
+nw = s;
+// XPECT errors -->"~~F is not a structural subtype of ~w~N: missing field s; s failed: writable field requires a writable field or a setter in subtype." at "sf"
+nw = sf;
+// XPECT errors -->"~r~F is not a structural subtype of ~w~N: missing field s; s failed: writable field requires a setter in subtype." at "sr"
+nw = sr;
+// XPECT errors -->"~w~F is not a structural subtype of ~w~N: missing field s; s failed: writable field requires a writable field or a setter in subtype." at "sw"
+nw = sw;
+// XPECT errors -->"~i~F is not a structural subtype of ~w~N: missing field s; s failed: writable field requires a setter in subtype." at "si"
+nw = si;
+
+// XPECT errors -->"~F is not a structural subtype of ~i~N: missing field s." at "s"
+ni = s;
+// XPECT errors -->"~~F is not a structural subtype of ~i~N: missing field s." at "sf"
+ni = sf;
+// XPECT errors -->"~r~F is not a structural subtype of ~i~N: missing field s." at "sr"
+ni = sr;
+// XPECT errors -->"~w~F is not a structural subtype of ~i~N: missing field s." at "sw"
+ni = sw;
+// XPECT errors -->"~i~F is not a structural subtype of ~i~N: missing field s." at "si"
+ni = si;

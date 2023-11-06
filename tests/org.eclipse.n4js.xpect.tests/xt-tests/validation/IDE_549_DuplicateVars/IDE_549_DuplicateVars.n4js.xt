@@ -1,0 +1,330 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+/*
+all cases should be consideret in all supported JavaScriptVariants, so:
+ - unrestricted : Default non-strict JavaScript varian
+ - strict : Strict mode JavaScript
+ - n4js : N4JS mode
+ - external: external mode
+
+ For each mode each case should define if it is
+  - Error
+  - Warning
+  - no marker
+ (for the time being ignore configurable markers)
+ */
+
+//set #1 - simple name duplication
+
+// case #1a
+// XPECT noerrors --> we mark duplication on lower elements
+var a = 5;
+// XPECT errors --> "Variable a duplicates variable a (line 32)." at "a"
+var a = 4;
+
+// case #1b
+// XPECT noerrors --> we mark duplication on lower elements
+function fdb(s : String){};
+// XPECT errors --> "Function fdb duplicates function fdb (line 38)." at "fdb"
+function fdb(n : Number){};
+
+// case #1ca
+var vdc1a = function feca(s : String){};//ok in all modes?
+var vdc2a = function feca(n : Number){};//ok in all modes?
+
+// case #1cb
+// XPECT noerrors --> we mark duplication on lower elements
+var vdc1b = function fecb(s : String){};//only var decl name issue, not function expression name
+// XPECT errors --> "Variable vdc1b duplicates variable vdc1b (line 48)." at "vdc1b"
+var vdc1b = function fecb(n : Number){};//only var decl name issue, not function expression name
+
+
+// case #1cc
+function fcc(s : String){};//ok in all modes?
+var vdcc = function fcc(n : Number){};//ok in all modes?
+
+// case #1cd
+// XPECT noerrors --> we mark duplication on lower elements
+function fcd(s : String){};
+// XPECT errors --> "Variable fcd duplicates function fcd (line 59)." at "fcd"
+var fcd = function fcd(n : Number){};//only var decl name issue, not function expression name
+
+
+// case #1da
+// XPECT noerrors --> we mark duplication on lower elements
+var varFD = 3;
+// XPECT errors --> "Function varFD duplicates variable varFD (line 66)." at "varFD"
+function varFD (){};
+
+// case #1db
+// XPECT warnings --> "Variable names should start with lower case letter." at "VarClass"
+var VarClass = 1;
+// XPECT errors --> "Class VarClass duplicates variable VarClass (line 72)." at "VarClass"
+class VarClass{};
+
+// case #1dc
+// XPECT noerrors --> we mark duplication on lower elements
+function ClassFunction(){};
+// XPECT errors --> "Class ClassFunction duplicates function ClassFunction (line 78)." at "ClassFunction"
+class ClassFunction{};
+
+// case #1dd
+// XPECT noerrors --> we mark duplication on lower elements
+interface RoleInter{};
+// XPECT errors --> "Interface RoleInter duplicates interface RoleInter (line 84)." at "RoleInter"
+interface RoleInter{};
+
+
+// case #1ea
+/*
+   Assuming const has function scope,
+   should it be affected by the strict mode?
+ */
+// XPECT noerrors --> we mark duplication on lower elements
+var varconst = 2
+// XPECT errors --> "Variable varconst duplicates variable varconst (line 95)." at "varconst"
+const varconst = 3;
+
+// case #1eb
+// XPECT noerrors --> we mark duplication on lower elements
+const dupeConst = 1;
+/* XPECT errors ---
+	"Variable dupeConst duplicates variable dupeConst (line 101)." at "dupeConst"
+--- */
+const dupeConst = 2;
+/* XPECT errors ---
+	"Variable dupeConst duplicates variable dupeConst (line 101)." at "dupeConst"
+--- */
+const dupeConst = 1;
+
+
+//set #2 - name duplication in block / function scope
+/*
+   for simplicity only VariableDeclarations are used, but same applies
+   to other combinations of constructs from set #1
+ */
+
+/*
+ In JavaScript, a name enters a scope in one of four basic ways:
+	- Language-defined: All scopes are, by default, given the names this and arguments.
+	- Formal parameters: Functions can have named formal parameters, which are scoped to the body of that function.
+	- Function declarations: These are of the form function foo() {}.
+	- Variable declarations: These take the form var foo;.
+
+Name Resolution Order
+
+The most important special case to keep in mind is name resolution order. Remember that there are four ways for names to enter a given scope. The order I listed them above is the order they are resolved in. In general, if a name has already been defined, it is never overridden by another property of the same name. This means that a function declaration takes priority over a variable declaration. This does not mean that an assignment to that name will not work, just that the declaration portion will be ignored. There are a few exceptions:
+
+The built-in name arguments behaves oddly. It seems to be declared following the formal parameters, but before function declarations. This means that a formal parameter with the name arguments will take precedence over the built-in, even if it is undefined. This is a bad feature. Don?t use the name arguments as a formal parameter.
+Trying to use the name this as an identifier anywhere will cause a SyntaxError. This is a good feature.
+If multiple formal parameters have the same name, the one occurring latest in the list will take precedence, even if it is undefined.
+
+(http://www.adequatelygood.com/JavaScript-Scoping-and-Hoisting.html)
+ */
+
+
+// case #2a
+// XPECT noerrors --> we mark duplication on lower elements
+for (var i = 0; i < 9; i++) {
+   //console.log(i)
+}
+// XPECT errors --> "Variable i duplicates variable i (line 139)." at "i"
+for (var i = 9; i < 19; i++) {
+   //console.log(i)
+}
+
+// case #2ba
+// XPECT noerrors --> we mark duplication on lower elements
+var fba = 1;
+if(true){
+// XPECT errors --> "Variable fba duplicates variable fba (line 149)." at "fba"
+	var fba = 2;
+}
+
+// case #2bb
+var fbb = 1;
+if(true){
+	var vbb = function(){
+		//XPECT noerrors --> shadowing, no Error, no Warning
+		var fbb = 2;
+	}
+}
+
+// case #2bc
+var fbc = 1;
+if(true){
+	var vbc = (function(){
+		//XPECT noerrors --> shadowing, no Error, no Warning
+		var fbc = 2;
+		return null;
+	})();
+}
+
+// case #2bd
+// XPECT noerrors --> we mark duplication on lower elements
+var fbd = 1;
+if(true){
+	//QUESTION : should we have simmilar warning for VariableDeclarations? Should it prevent duplication/shadowing error from bubbling up?
+/*
+XPECT errors at fbd ---
+"Function fbd duplicates variable fbd (line 176)." at "fbd"
+"Functions must only be declared on script level or as part of other expressions" at "fbd"
+--- */
+	function fbd(){};
+}
+
+// case #2bd_mod
+var fbd_mod = 1;
+if(true){
+	//QUESTION : should we have simmilar warning for VariableDeclarations? Should it prevent duplication/shadowing error from bubbling up?
+/*
+XPECT errors at fbd ---
+"Functions must only be declared on script level or as part of other expressions" at "fbd_modfd"
+--- */
+	function fbd_modfd(){
+		//XPECT noerrors --> shadowing, no Error, no Warning
+		var fbd_mod = 11;
+	};
+}
+
+// case #2be
+if(true){
+/*
+XPECT errors at fbe ---
+"Functions must only be declared on script level or as part of other expressions" at "fbe"
+--- */
+	function fbe(){
+		//XPECT errors --> "Variable fbe shadows function fbe (line 207)." at "fbe"
+		var fbe = function(){};
+	};
+}
+
+// case #2be2
+if(true){
+	var fbe2v = function fbe2(){
+		//XPECT errors --> "Variable fbe2 shadows function expression fbe2 (line 215)." at "fbe2"
+		var fbe2 = 2;
+	};
+}
+
+// case #2bf
+var fbf = 1;
+function fnbf() {
+  if (true) {
+	//XPECT noerrors --> shadowing, no Error, no Warning
+    var fbf = 4;
+  }
+  //console.log(fbf);//refers to shadowed value, not global value
+}
+
+// case #2ca
+class CA {
+    myMethod() {
+		// XPECT noerrors --> we mark duplication on lower elements
+        var ca = 5;
+        // XPECT errors --> "Variable ca duplicates variable ca (line 235)." at "ca"
+        var ca = 4; // should be a warning, but no error as this is allowed in Javascript
+    }
+}
+
+// case #2cb
+var cb = 4;
+class CB {
+    myMethod() {
+		//XPECT noerrors --> shadowing, no Error, no Warning
+        var cb = 5;
+        //console.log(cb) // will print 5
+    }
+}//TODO check other FunctionDEfinitions for this case
+
+
+// case #2da
+var da = 4;
+class DA {
+    // XPECT noerrors --> "shadow" at "..."
+    myMethod(da : any) {
+        //console.log(da) // will resolve to the parameter
+    }
+}//TODO check other FunctionDEfinitions for this case
+
+// case #2db
+class DB {
+	/* XPECT errors ---
+		"Parameter db duplicates parameter db." at "db"
+	--- */
+    myMethod(db : any, db : any) {
+        //console.log(db) // will resolve to the second parameter
+    }
+}//TODO check other FunctionDEfinitions for this case
+
+/*
+	https://people.mozilla.org/~jorendorff/es6-draft.html#sec-method-definitions-static-semantics-early-errors
+	It is a Syntax Error if any element of the BoundNames of StrictFormalParameters also occurs in the LexicallyDeclaredNames of FunctionBody.
+ */
+// case #2dd
+// xPECT errors --> strict&unrestricted modes not checked yet
+
+//set #3 - name from global scope (in some cases depends on global object)
+/*
+   aplies to Classes,Roles, Interfaces, FunctinDeclarations,Methods Fields(?)
+ */
+
+
+// case #3a
+// XPECT errors --> "eval is a reserved identifier." at "eval"
+var eval = function(){};
+
+// case #3b
+/* XPECT errors ---
+"A variable statement must at least contain one variable declaration." at "var"
+"no viable alternative at input 'this'" at "this"
+--- */
+var this = 42;
+
+// case #3d
+/*
+XPECT errors ---
+"Couldn't resolve reference to IdentifiableElement 'any'." at "any"
+"Functions have to have a body." at "fdtd"
+"mismatched input 'this' expecting ')'" at "this"
+"no viable alternative at input ')'" at ")"
+"no viable alternative at input ':'" at ":"
+---
+*/
+function fdtd(this: any){
+}
+
+
+// XPECT errors --> "Unsupported feature: class expressions." at "_"
+var _ = class _ {}
+
+
+function message(){}
+class GettersSetters{
+	private msg : string;
+	//XPECT noerrors --> do not validate class members (there are differetn validations for that)
+	public get message() : string{
+		return this.msg;
+	}
+	//XPECT noerrors --> do not validate class members (there are differetn validations for that)
+	public set message(s : string){
+		this.msg = s;
+	}
+}
+
+function MethodTestMethod(){}
+class MethodTest{
+	//XPECT warnings --> "Method names should start with lower case letter." at "MethodTestMethod"
+	public MethodTestMethod() : void{}
+}

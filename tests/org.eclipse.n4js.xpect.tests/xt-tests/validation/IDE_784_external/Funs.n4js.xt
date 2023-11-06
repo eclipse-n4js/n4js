@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+export public function funWithoutExternal(s : string): number { return 0; }
+
+// XPECT errors --> "Functions have to have a body." at "funWithoutExternalAndWithoutBody"
+export public function funWithoutExternalAndWithoutBody(s : string): number
+
+// XPECT errors --> "Functions declared as external have to be placed in a file with file extension n4jsd." at "funWithExternal"
+export external public function funWithExternal(s : string): number
+
+// XPECT errors --> "Functions declared as external have to be placed in a file with file extension n4jsd." at "funWithoutExport"
+external function funWithoutExport(s : string)
+
+// XPECT errors --> "Functions declared as external have to be placed in a file with file extension n4jsd." at "funWithoutPublic"
+export external function funWithoutPublic(s : string): number
+
+// XPECT errors --> "Functions declared as external have to be placed in a file with file extension n4jsd." at "funWithBody"
+export external public function funWithBody(s : string): number { return 0; }
+
+// XPECT errors --> "Functions declared as external have to be placed in a file with file extension n4jsd." at "funWithoutModifier"
+external function funWithoutModifier(s : string): number

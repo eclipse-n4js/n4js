@@ -1,0 +1,168 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+//========== general shadowing is fine....
+var a = 1;
+function fda(){
+	//XPECT noerrors --> shadowing, no Error, no Warning
+	var a = '2';
+}
+
+function fnMeth(){}
+function fnMeth2(){}
+class C{
+
+	//XPECT noerrors --> not hiding a the func decl, as method and function are invoke differently
+	fnMeth(){
+		//XPECT noerrors --> not hiding a method, as method and function are invoked differently
+		var fnMeth;
+		this.fnMeth();//calls method
+		//XPECT errors --> "Not a function or method: any." at "fnMeth"
+		fnMeth();
+		fnMeth2();//calls function definition
+	}
+}
+
+//========= ... but not shadowing function name inside the funciton body
+function fdb2a(){
+	// XPECT errors --> "Variable fdb2a shadows function fdb2a (line 37)." at "fdb2a"
+	var fdb2a = '2';
+}
+var vdfdb2 = function fdb2b(){
+	// XPECT errors --> "Variable fdb2b shadows function expression fdb2b (line 41)." at "fdb2b"
+	var fdb2b = '2';
+}
+
+//========= ... but not shadowing function name with the function formal parameter
+// XPECT errors --> "Parameter fdb3a shadows function fdb3a." at "fdb3a"
+function fdb3a(fdb3a){
+}
+
+// XPECT errors --> "Parameter fdb3b shadows function expression fdb3b." at "fdb3b"
+var vdfdb3 = function fdb3b(fdb3b){
+}
+
+
+//========= ... but not shadowing/duplicating formal parameters
+/* XPECT errors ---
+	"Parameter x duplicates parameter x." at "x"
+	"Parameter x duplicates parameter x." at "x"
+--- */
+function fdbmp(x, x, x){}
+
+/* XPECT errors ---
+	"Parameter x duplicates parameter x." at "x"
+	"Parameter x duplicates parameter x." at "x"
+--- */
+var vdfdbmp = function fdbmp(x, x, x){}
+
+class Cfdbmp {
+/* XPECT errors ---
+	"Parameter x duplicates parameter x." at "x"
+	"Parameter x duplicates parameter x." at "x"
+--- */
+	mfdbmp(x, x, x){}
+}
+
+interface Rfdbmp {
+/* XPECT errors ---
+	"Parameter x duplicates parameter x." at "x"
+	"Parameter x duplicates parameter x." at "x"
+--- */
+	mfdbmp(x, x, x){}
+}
+
+interface Ifdbmp {
+/* XPECT errors ---
+	"Parameter x duplicates parameter x." at "x"
+	"Parameter x duplicates parameter x." at "x"
+--- */
+	mfdbmp(x, x, x)
+}
+
+
+//========= ... but not shadowing formal parameter related body
+
+function fbp(par){
+	// XPECT errors --> "Variable par duplicates parameter par (line 96)." at "par"
+	var par;
+}
+
+var vdfbp = function fbp(par){
+	// XPECT errors --> "Variable par duplicates parameter par (line 101)." at "par"
+	var par;
+}
+
+class Cfbp{
+	fbp(par){
+	// XPECT errors --> "Variable par duplicates parameter par (line 107)." at "par"
+	var par;
+	}
+}
+
+interface Rfbp{
+	fbp(par){
+	// XPECT errors --> "Variable par duplicates parameter par (line 114)." at "par"
+	var par;
+	}
+}
+
+
+
+//========== ...named expressions don't introduce name in containing scope
+function fde() {
+	//XPECT noerrors --> no error
+	var v = function fde() {
+		fde()
+	}
+}
+
+function fdevd() {
+	var vde = 1;
+	//XPECT noerrors --> no error
+	var vdevd = function vde() {
+		console.log(vde);
+	}
+}
+
+var n4cde = 2;
+
+	//XPECT errors --> "Unsupported feature: class expressions." at "n4cde"
+var n4cdevd = class n4cde {};
+
+
+//========= ... shadow catch variable (allowed as IDEBUG-192)
+(function () {
+	try {
+		throw '3';
+	} catch(x) {
+		// XPECT errors --> "Variable x duplicates catch variable x (line 148)." at "x"
+		var x = 101;
+	}
+})();
+
+(function () {
+	var x = 2;
+	try {
+		throw '3';
+		// XPECT noerrors --> "Catch variable x duplicates variable x (line 144)." at "x"
+	} catch(x) {
+		console.log(x);
+	}
+})();
+
+
+
+var vdfp = 1;
+//XPECT noerrors --> just shadow
+function fdvdfp(vdfp){}

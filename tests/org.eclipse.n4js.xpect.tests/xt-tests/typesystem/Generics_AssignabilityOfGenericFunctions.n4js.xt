@@ -1,0 +1,91 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+
+// note:
+// we just test the most simple cases here; main tests are here (for method redefinition, which uses the same code):
+//   /org.eclipse.n4js.spec.tests/xpect-tests/Ch05_04__RedefinitionOfMembers/RedefineGenericMethods.n4js.xt
+//   /org.eclipse.n4js.spec.tests/xpect-tests/Ch05_04__RedefinitionOfMembers/RedefineGenericMethodsMore.n4js.xt
+//   /org.eclipse.n4js.spec.tests/xpect-tests/Ch05_04__RedefinitionOfMembers/RedefineMethodsCovariantReturn.n4js.xt
+// and here:
+//   /org.eclipse.n4js.xpect.tests/model/Generics_AssignabilityOfGenericFunctions2.n4js.xt
+
+
+//
+// function expressions
+//
+
+var f1 = function <T> (param : T) : void {}
+var f2 = function <S> (param : S) : void {}
+
+var v01 = f1;
+var v02 = f2;
+// XPECT noerrors -->
+v01 = v02;
+// XPECT noerrors -->
+var v03 : {function<T>(T):void} = f2;
+// XPECT errors --> "{function<S>(S):void} is not a subtype of {function<T>(T):T}." at "f2"
+var v04 : {function<T>(T):T} = f2;
+
+
+//
+// declared functions
+//
+
+function <T> fd1(param : T) : void {}
+function <S> fd2(param : S) : void {}
+
+var v11 = fd1;
+var v12 = fd2;
+// XPECT noerrors -->
+v11 = v12;
+// XPECT noerrors -->
+var v13 : {function<T>(T):void} = fd2;
+// XPECT errors --> "{function<S>(S):void} is not a subtype of {function<T>(T):T}." at "fd2"
+var v14 : {function<T>(T):T} = fd2;
+
+
+//
+// methods (instance & static)
+//
+
+class C {
+	@Final <T> m1(param : T) : void {}
+	@Final <S> m2(param : S) : void {}
+
+	@Final static <T> m1(param : T) : void {}
+	@Final static <S> m2(param : S) : void {}
+}
+
+
+var c : C;
+var v21 = c.m1;
+var v22 = c.m2;
+// XPECT noerrors -->
+v21 = v22;
+// XPECT noerrors -->
+var v23 : {function<T>(T):void} = c.m2;
+// TODO see "temporary work-around case" in SubtypeComputer
+// XPECT FIXME errors --> "{function<S>(S):void} is not a subtype of {function<T>(T):T}." at "c.m2"
+//var {function<T>(T):T} v24 = c.m2;
+
+
+var v31 = C.m1;
+var v32 = C.m2;
+// XPECT noerrors -->
+v31 = v32;
+// XPECT noerrors -->
+var v33 : {function<T>(T):void} = C.m2;
+// TODO see "temporary work-around case" in SubtypeComputer
+// XPECT errors --> "{function<S>(S):void} is not a subtype of {function<T>(T):T}." at "C.m2"
+var v34 :{function<T>(T):T} = C.m2;

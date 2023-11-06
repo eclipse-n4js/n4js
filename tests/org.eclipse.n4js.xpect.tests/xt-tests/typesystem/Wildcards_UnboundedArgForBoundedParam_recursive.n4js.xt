@@ -1,0 +1,60 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+
+class Other {}
+
+
+// directly recursive type
+
+// XPECT noerrors -->
+class A<T extends A<?>> {
+	m(): T {return null;}
+}
+
+
+// indirectly recursive type
+
+class X<T extends B<?>> {}
+class Y<T extends X<?>> {}
+// XPECT noerrors -->
+class B<T extends Y<?>> {}
+
+
+// usage
+
+// XPECT noerrors -->
+var a1: A<A<?>>;
+// XPECT errors ---
+// "A<Other> is not a subtype of A<? extends A<?>>." at "A<Other>"
+// "Other is not a subtype of A<? extends A<?>>." at "Other"
+// ---
+var a2: A<A<Other>>;
+// XPECT noerrors -->
+class ASub<T extends ASub<?>> extends A<T> {}
+// XPECT noerrors -->
+class ABot extends ASub<ABot> {}
+
+// XPECT noerrors -->
+var asub1: ASub<?>;
+// XPECT noerrors -->
+var asub2: ASub<ABot>;
+// XPECT noerrors -->
+var abot: ABot;
+
+// XPECT type of 'asub1.m<|>()' --> ? extends ASub<?>
+asub1.m();
+// XPECT type of 'asub2.m<|>()' --> ABot
+asub2.m();
+// XPECT type of 'abot.m()' --> ABot
+abot.m();

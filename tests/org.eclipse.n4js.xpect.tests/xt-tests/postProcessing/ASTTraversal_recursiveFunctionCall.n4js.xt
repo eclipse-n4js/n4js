@@ -1,0 +1,80 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+
+// TODO add getters/setters!
+
+
+// with inferred return type of void
+
+function foo1() {
+	// XPECT noerrors -->
+	foo1();
+}
+
+var a1 = {
+	foo: function() {
+		// XPECT noerrors -->
+		this.foo();
+	},
+	set s(p) {
+		// XPECT noerrors -->
+		this.s = 42;
+	}
+};
+
+class C1 {
+	m() {
+		// XPECT noerrors -->
+		this.m();
+	}
+	set s(p) {
+		// XPECT noerrors -->
+		this.s = 42;
+	}
+}
+
+
+// with inferred return type of non-void
+
+function foo2() {
+	// XPECT noerrors -->
+	var x = foo2();
+	return 42;
+}
+
+var a2 = {
+	foo: function() {
+		// XPECT noerrors -->
+		var x = this.foo();
+		return 42;
+	},
+	get g() {
+		// XPECT noerrors -->
+		var x = this.g;
+		return 42;
+	}
+};
+
+class C2 {
+	m() {
+		// XPECT noerrors -->
+		var x = this.m();
+		return 42;
+	}
+	get g() {
+		// XPECT noerrors -->
+		var x = this.g;
+		return 42;
+	}
+}

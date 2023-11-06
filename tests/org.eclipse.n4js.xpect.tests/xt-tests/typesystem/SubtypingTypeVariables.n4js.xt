@@ -1,0 +1,117 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+
+// these tests are about the subtype relation of unbound(!) type variables
+// that may or may not have declared upper bounds
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+
+class G<T> {}
+
+class X<U, UB extends B, V, VB extends B> {
+
+	m() : void {
+		var u : U;
+		var u2 : U;
+		var ub : UB;
+		var ub2 : UB;
+		var v : V;
+		var vb : VB;
+		var a : A;
+		var b : B;
+		var c : C;
+
+		// ----------------------------
+		// type variable on RIGHT side
+
+		// XPECT errors --> "U is not a subtype of A." at "u"
+		a = u;
+		// XPECT errors --> "U is not a subtype of B." at "u"
+		b = u;
+		// XPECT errors --> "U is not a subtype of C." at "u"
+		c = u;
+
+		a = ub;		// ok!
+		b = ub;		// ok!
+		// XPECT errors --> "UB is not a subtype of C." at "ub"
+		c = ub;
+
+		// ----------------------------
+		// type variable on LEFT side
+
+		// XPECT errors --> "A is not a subtype of U." at "a"
+		u = a;
+		// XPECT errors --> "B is not a subtype of U." at "b"
+		u = b;
+		// XPECT errors --> "C is not a subtype of U." at "c"
+		u = c;
+
+		// XPECT errors --> "A is not a subtype of UB." at "a"
+		ub = a;
+		// XPECT errors --> "B is not a subtype of UB." at "b"
+		ub = b;
+		// XPECT errors --> "C is not a subtype of UB." at "c"
+		ub = c;
+
+		// ----------------------------
+		// type variables on both sides
+
+		u = u2;		// same type var --> ok!
+		ub = ub2;	// same type var --> ok!
+
+		// XPECT errors --> "V is not a subtype of U." at "v"
+		u = v;
+		// XPECT errors --> "V is not a subtype of UB." at "v"
+		ub = v;
+		// XPECT errors --> "VB is not a subtype of U." at "vb"
+		u = vb;
+		// XPECT errors --> "VB is not a subtype of UB." at "vb"
+		ub = vb;
+
+		// ----------------------------
+		// type variables inside another generic type
+
+		var gu : G<U>;
+		var gu2 : G<U>;
+		var gub : G<UB>;
+		var gv : G<V>;
+		var gvb : G<VB>;
+		var ga : G<A>;
+		var gb : G<B>;
+		var gc : G<C>;
+
+		gu = gu2;	// same type var --> ok!
+		// XPECT errors --> "G<V> is not a subtype of G<U>." at "gv"
+		gu = gv;
+		// XPECT errors --> "G<VB> is not a subtype of G<UB>." at "gvb"
+		gub = gvb;
+
+		// XPECT errors --> "G<U> is not a subtype of G<A>." at "gu"
+		ga = gu;
+		// XPECT errors --> "G<U> is not a subtype of G<B>." at "gu"
+		gb = gu;
+		// XPECT errors --> "G<U> is not a subtype of G<C>." at "gu"
+		gc = gu;
+
+		// XPECT errors --> "G<UB> is not a subtype of G<A>." at "gub"
+		ga = gub;
+		// XPECT errors --> "G<UB> is not a subtype of G<B>." at "gub"
+		gb = gub;
+		// XPECT errors --> "G<UB> is not a subtype of G<C>." at "gub"
+		gc = gub;
+	}
+}

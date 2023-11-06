@@ -1,0 +1,55 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+ /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+ 
+interface ~I {
+    public get optional? ();
+} 
+
+interface J {
+    public m?: int;
+}
+
+class C { }
+
+@Final class F { }
+
+let i: I;
+let j: ~r~J;
+let b: boolean;
+let v: ~C = new C();
+const c: ~C = new C();
+
+//////// New expressions ///////
+// XPECT noerrors
+i = b? c: null;
+
+// XPECT noerrors
+i = b? new C() : new C();
+
+// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "b? undefined : undefined"
+i = b? undefined : undefined;
+
+// XPECT noerrors
+i = b?  c : c;
+
+// XPECT errors --> "~C is not a structural subtype of I: missing getter optional." at "b? v : v"
+i = b? v : v;
+
+////// Final nominal //////
+var f1 = new F();
+// XPECT noerrors
+j = b? f1 : f1;
+
+var f2 = new F();
+// XPECT noerrors
+const cff : ~I = 1>2 ? f2 : null;

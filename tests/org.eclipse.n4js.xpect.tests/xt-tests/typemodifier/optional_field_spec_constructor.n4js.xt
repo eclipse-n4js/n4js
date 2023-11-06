@@ -1,0 +1,60 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+ /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+class C {
+	public constructor(@Spec spec: ~i~this with {name?: string}) {}
+}
+class D extends C {
+	public constructor(@Spec spec: ~i~this) {
+		// XPECT errors -->"~i~this[D] is not a structural subtype of ~i~this[C]: missing structural field name." at "spec"
+		super(spec)
+	}
+}
+
+
+class A {
+	public p: number;
+
+	public get s(): string {
+		return "Hi";
+	}
+
+	public set s(c: string) {}
+
+	public constructor(@Spec spec: ~i~this) {
+	}
+}
+let spec = {
+	p: 42
+}
+//XPECT errors --> "~Object with { p: int } is not a structural subtype of ~i~A: missing getter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "spec"
+let a = new A(spec);
+
+
+class D0 {
+    public i : number;
+    public constructor (@Spec spec : ~i~this) {};
+}
+class D1a {
+    public i : number;
+    public s?: string;
+    public constructor (@Spec spec : ~i~this) {};
+}
+function d1a (d : ~D1a) {}
+// XPECT errors -->"D0 is not a structural subtype of ~D1a: missing setter or field s." at "new D0({i: 2})"
+d1a(new D0({i: 2}));
+
+function d1b (d : ~r~D1a) {}
+// XPECT noerrors -->
+d1b(new D0({i: 2}));

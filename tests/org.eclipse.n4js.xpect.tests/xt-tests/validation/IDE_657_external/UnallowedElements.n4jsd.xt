@@ -1,0 +1,160 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+@@IgnoreImplementation
+
+export external public class Point {
+}
+
+export external public interface ~Clonable {
+}
+
+export public interface ~Line {
+	// TODO: should
+	public start : Point;
+	public end : Point;
+}
+
+// XPECT errors --> "Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "InternalPoint"
+export public class InternalPoint {
+}
+
+// 	relaxed visibility constraint by IDEBUG-561:
+// 	No error expected: "External elements have to be exported." at "InternalPoint2"
+@Internal
+/* XPECT errors ---
+	"Unsupported feature: non-exported class with a visibility higher than private." at "InternalPoint2"
+--- */
+external public class InternalPoint2 {
+}
+
+// 	relaxed visibility constraint by IDEBUG-561:
+@Internal
+/* XPECT noerrors ---
+"External classes have to be marked as public (and without @Internal)." at "InternalPoint3"
+ --- */
+export external public class InternalPoint3 {
+}
+
+@Internal
+/* XPECT errors ---
+"A interface with visibility project shouldn't be annotated with @Internal." at "InternalClonable"
+"Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "InternalClonable"
+--- */
+export interface InternalClonable {
+}
+
+// 	relaxed export constraint by IDEBUG-561:  "External elements have to be exported." at "InternalClonable2"
+/* XPECT errors ---
+"Unsupported feature: non-exported interface with a visibility higher than private." at "public"
+--- */
+external public interface ~InternalClonable2 {
+}
+
+
+// 	relaxed visibility constraint by IDEBUG-561:
+@Internal
+/* XPECT noerrors ---
+"External interfaces have to be marked as public (and without @Internal)." at "InternalClonable3"
+ --- */
+export external public interface ~InternalClonable3 {
+}
+
+// XPECT errors --> "Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "NonStructuralTypedLine"
+export public interface NonStructuralTypedLine {
+	public start : Point;
+	public end : Point;
+};
+
+// 	relaxed visibility constraint by IDEBUG-561:
+// 	"External elements have to be exported." at "NonApiStructuralTypedLine"
+@Internal
+/* XPECT errors ---
+	"Unsupported feature: non-exported interface with a visibility higher than private." at "NonApiStructuralTypedLine"
+--- */
+public interface ~NonApiStructuralTypedLine {
+	public start : Point;
+	public end : Point;
+};
+
+// 	relaxed visibility constraint by IDEBUG-561:
+@Internal
+/* XPECT noerrors ---
+"External interfaces have to be marked as public (and without @Internal)." at "NonApiStructuralTypedLine2"
+ --- */
+export public interface ~NonApiStructuralTypedLine2 {
+	public start : Point;
+	public end : Point;
+};
+
+// XPECT errors --> "Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "MyEnum"
+enum MyEnum {
+	LIT1
+};
+
+// XPECT errors --> "Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "foo"
+export function foo() {
+};
+
+// no errors expected XPECT noerrors
+;
+
+// XPECT errors --> "Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "{"
+{
+
+};
+
+// XPECT errors --> "Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "LABEL"
+LABEL: undefined;
+
+// XPECT errors --> "Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "if"
+if(true) {
+
+};
+
+// XPECT errors --> "Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "do"
+do {
+
+} while(true);
+
+// XPECT errors --> "Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "while"
+while(true) {
+
+};
+
+// XPECT errors --> "Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "for"
+for(var i in {}) {
+
+};
+
+// XPECT errors --> "Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "with"
+with (true);
+
+export var a;
+// XPECT errors --> "Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "switch"
+switch(a) {
+
+};
+
+// XPECT errors --> "Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "throw"
+throw(new Error);
+
+// XPECT errors --> "Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "try"
+try {
+
+} catch(e) {
+
+}
+
+// XPECT warnings --> "Dead code." at "debugger;"
+// XPECT errors --> "Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "debugger"
+debugger;

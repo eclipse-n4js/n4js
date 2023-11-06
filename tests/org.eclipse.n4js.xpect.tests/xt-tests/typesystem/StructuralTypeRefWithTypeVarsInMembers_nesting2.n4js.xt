@@ -1,0 +1,62 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+
+//
+// nesting #2: introduce another structural type in member of initial structural type
+//
+
+class C2<T> {
+	public m() : ~Object with { prop1: ~Object with { prop2: T; }; } { return null; }
+}
+
+var c2s : C2<string>;
+
+
+// XPECT type of 'c2s.m().prop1.<|>prop2' --> string
+c2s.m().prop1.prop2;
+// XPECT noerrors -->
+c2s.m().prop1.prop2 = "Hello prop!";
+// XPECT noerrors -->
+var test21 : string = c2s.m().prop1.prop2;
+
+
+
+// same, but with more depth:
+
+
+class C2depth<T> {
+	public m() : ~Object with {
+		prop1: ~Object with {
+			prop2: ~Object with {
+				prop3: ~Object with {
+					prop4: ~Object with {
+						prop5: ~Object with {
+							prop6: ~Object with {prop7: T;};
+						};
+					};
+				};
+			};
+		};
+	} { return null; }
+}
+
+var c2depth : C2depth<string>;
+
+
+// XPECT type of 'c2depth.m().prop1.prop2.prop3.prop4.prop5.prop6.<|>prop7' --> string
+c2depth.m().prop1.prop2.prop3.prop4.prop5.prop6.prop7;
+// XPECT noerrors -->
+c2depth.m().prop1.prop2.prop3.prop4.prop5.prop6.prop7 = "Hello prop!";
+// XPECT noerrors -->
+var test22 : string = c2depth.m().prop1.prop2.prop3.prop4.prop5.prop6.prop7;

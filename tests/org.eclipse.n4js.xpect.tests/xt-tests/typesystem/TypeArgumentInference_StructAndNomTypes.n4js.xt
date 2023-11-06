@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+
+class A<T> {
+	public field : T;
+}
+class B<T> {
+	public field : T;
+}
+class B_of_string extends B<string> {}
+
+function <TF> fooNom( p : A<TF>) {}
+function <TF> fooStruct1(p : ~A<TF>) {}
+function <TF> fooStruct2(p : ~Object with { field: TF; }) {}
+
+
+
+
+// XPECT errors --> "B<string> is not a subtype of A<TF>." at "new B<string>"
+fooNom(new B<string>); // should fail
+// XPECT typeArgs of fooStruct1 --> string
+fooStruct1(new B<string>); // should bind TF->string
+// XPECT typeArgs of fooStruct2 --> string
+fooStruct2(new B<string>); // should bind TF->string
+
+
+
+
+// XPECT errors --> "B_of_string is not a subtype of A<TF>." at "new B_of_string"
+fooNom(new B_of_string); // should fail
+// XPECT typeArgs of fooStruct1 --> string
+fooStruct1(new B_of_string); // should bind TF->string
+// XPECT typeArgs of fooStruct2 --> string
+fooStruct2(new B_of_string); // should bind TF->string

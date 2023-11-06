@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+
+// NOTE: in this test case we are not mainly interested in the type of variable 'x';
+// the important thing is that we have a "semi-cyclic" forward reference to the variable
+// declaration x in the expression following the 'of' keyword.
+//
+// This test is to assert that this situation does not lead to exceptions during post-processing.
+
+
+function foo(p : any) : Iterable<string> {return null;}
+
+// XPECT type of 'x' --> string
+for(var x of foo(x)) {}

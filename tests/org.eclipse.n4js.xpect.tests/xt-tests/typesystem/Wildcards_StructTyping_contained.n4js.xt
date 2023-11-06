@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+
+// WILDCARD CONTAINED IN STRUCTURAL TYPE (i.e. wildcard in type of a member)
+
+
+//
+// IN INVARIANT POSITION
+//
+
+class G<T> {}
+
+interface I1 {
+	public value : G<?>;
+}
+interface I1s {
+	public value : G<string>;
+}
+
+var i1 : ~I1;
+var i1s : ~I1s;
+
+// XPECT errors --> "~I1s is not a structural subtype of ~I1: value failed: G<string> is not equal to G<?>." at "i1s"
+i1 = i1s;
+// explanation:
+// if the above were legal, the following code would break:
+i1.value = new G<number>();  // i1 was set to the value of i1s above, so now 'value' in i1s would be a G<number> !!!
+var check : G<string> = i1s.value;  // no type error but would cause error at run-time
+
+
+//
+// IN COVARIANT POSITION
+//
+
+interface I2 {
+	public m() : G<?>
+}
+interface I2s {
+	public m() : G<string>
+}
+
+var i2 : ~I2;
+var i2s : ~I2s;
+
+// XPECT noerrors -->
+i2 = i2s;
+// XPECT errors --> "~I2 is not a structural subtype of ~I2s: m failed: {function():G<?>} is not a subtype of {function():G<string>}." at "i2"
+i2s = i2;
+
+
+//
+// IN CONTRAVARIANT POSITION
+//
+
+interface I3 {
+	public m(param : G<?>)
+}
+interface I3s {
+	public m(param : G<string>)
+}
+
+var i3 : ~I3;
+var i3s : ~I3s;
+
+// XPECT errors --> "~I3s is not a structural subtype of ~I3: m failed: {function(G<string>):void} is not a subtype of {function(G<?>):void}." at "i3s"
+i3 = i3s;
+// XPECT noerrors -->
+i3s = i3;

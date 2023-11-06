@@ -1,0 +1,66 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+
+class X {}
+
+
+class G<T extends B> {}
+class H<T> {}
+
+
+
+//
+// wildcard used as type argument is unbounded
+//
+
+// XPECT noerrors -->
+var g : G<?>; // no error, because here G<?> is interpreted as G<? extends B> (the B coming from the type parameter)
+
+// XPECT noerrors -->
+var h : H<?>;
+
+
+
+//
+// wildcard used as type argument is bounded
+//
+
+// XPECT noerrors -->
+var g1 : G<? extends B>;
+
+// XPECT noerrors -->
+var g2 : G<? extends C>;
+
+// XPECT errors --> "? extends A is not a subtype of B." at "? extends A"
+var g3 : G<? extends A>;
+
+// XPECT errors --> "? extends X is not a subtype of B." at "? extends X"
+var g4 : G<? extends X>;
+
+
+// XPECT noerrors -->
+var h1 : H<? extends B>;
+
+// XPECT noerrors -->
+var h2 : H<? extends C>;
+
+// XPECT noerrors -->
+var h3 : H<? extends A>;
+
+// XPECT noerrors -->
+var h4 : H<? extends X>;

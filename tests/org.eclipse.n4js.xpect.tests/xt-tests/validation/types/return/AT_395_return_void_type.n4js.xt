@@ -1,0 +1,113 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+//// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Active Testing void required void
+//// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+function foo1(): void {
+	// XPECT errors --> "null is not a subtype of void." at "null"
+	return null;
+}
+function foo2(): void {
+	// XPECT errors --> "1 is not a subtype of void." at "1"
+	return 1;
+}
+
+class F {
+	f() : void {
+		// XPECT errors --> "null is not a subtype of void." at "null"
+		return null;
+	}
+}
+
+
+//// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Testing for missing returns / wrong returns.
+//// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+function k(): number {
+	// XPECT errors --> "Return statement must have an expression of type number" at "return;"
+	return;
+}
+
+
+// XPECT errors --> "Missing return or throw statement." at "k2"
+function k2(): number
+{
+	console.log("Hello");
+}
+
+
+//// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Testing for missing returns / wrong returns in get / set accessor cf. IDE-717
+//// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+// works XPECT errors --> "Missing return or throw statement." at "f"
+function f(): string {}
+
+
+
+class C {
+	// XPECT errors --> "Missing return or throw statement." at "f"
+	f() : string {}
+	// XPECT errors --> "Missing return or throw statement." at "get x() {}"
+	get x() {}
+
+	// XPECT errors --> "Set accessors must not return anything." at "return "Hello";"
+	set x(p) { return "Hello";}
+}
+
+
+
+// XPECT errors --> "Missing return or throw statement." at "function(): number {}"
+var g = function(): number {}
+
+
+
+
+var ol = {
+	// XPECT errors --> "Set accessors must not return anything." at "return "Hello";"
+	set x(p) { return "Hello";},
+	// XPECT errors --> "Missing return or throw statement." at "get x() {}"
+	get x() {}
+};
+
+
+
+
+//////// The following should not issue any warning:
+var ol2 = {
+	name : "ich",
+	adresse : {
+		strasse : "kirchstrasse",
+		nummer : 12+4,
+		set x( a : number ) { this.nummer = a },
+	    get x() { return this.nummer },
+	    str : function() { return this.strasse } (),
+	    get name2(): string { return this.nummer.toString() },
+	}
+}
+
+class A {}
+class B {
+	a : number = 4;
+	b : string = "hallo";
+	private _nummer : number;
+	public get x () : number { return this._nummer; }
+	protected set x ( a2 : number ) { this._nummer = a2; }
+}

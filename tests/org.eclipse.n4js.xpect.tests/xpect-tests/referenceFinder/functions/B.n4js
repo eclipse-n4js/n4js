@@ -1,3 +1,0 @@
-import { foo } from "referenceFinder/functions/A";
-
-foo();

@@ -1,0 +1,183 @@
+/*
+ * Copyright (c) 2018 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+ 
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+class GR<out T> {}
+class GW<in T> {}
+class H<T> {}
+
+function <T> foo(p:H<T>):GR<T> {
+	return null;
+}
+
+function <T> bar(p:H<T>):GW<T> {
+	return null;
+}
+
+let ha: H<A>;
+let hb: H<B>;
+let hc: H<C>;
+
+
+// ======================================================================================================
+// simple cases:
+
+
+// with GR:
+
+// XPECT errors ---
+// "GR<T> is not a subtype of GR<B>." at "foo(ha)"
+// "H<A> is not a subtype of H<T>." at "ha"
+// ---
+let test01: GR<B> = foo(ha);
+// XPECT noerrors
+let test02: GR<B> = foo(hb);
+// XPECT noerrors
+let test03: GR<B> = foo(hc);
+
+// XPECT noerrors
+let test04: GR<A> = foo(hb);
+// XPECT noerrors
+let test05: GR<B> = foo(hb);
+// XPECT errors ---
+// "GR<T> is not a subtype of GR<C>." at "foo(hb)"
+// "H<B> is not a subtype of H<T>." at "hb"
+// ---
+let test06: GR<C> = foo(hb);
+
+
+// with GW:
+
+// XPECT noerrors
+let test11: GW<B> = bar(ha);
+// XPECT noerrors
+let test12: GW<B> = bar(hb);
+// XPECT errors ---
+// "GW<T> is not a subtype of GW<B>." at "bar(hc)"
+// "H<C> is not a subtype of H<T>." at "hc"
+// ---
+let test13: GW<B> = bar(hc);
+
+// XPECT errors ---
+// "GW<T> is not a subtype of GW<A>." at "bar(hb)"
+// "H<B> is not a subtype of H<T>." at "hb"
+// ---
+let test14: GW<A> = bar(hb);
+// XPECT noerrors
+let test15: GW<B> = bar(hb);
+// XPECT noerrors
+let test16: GW<C> = bar(hb);
+
+
+// ======================================================================================================
+// cases with inheritance changing the def-site variance of T to invariant:
+
+
+class GRnasty<T> extends GR<T> {}
+
+function <T> fooNasty(p:H<T>):GRnasty<T> {
+	return null;
+}
+
+// XPECT errors ---
+// "GRnasty<T> is not a subtype of GR<B>." at "fooNasty(ha)"
+// "H<A> is not a subtype of H<T>." at "ha"
+// ---
+let test21: GR<B> = fooNasty(ha);
+// XPECT noerrors
+let test22: GR<B> = fooNasty(hb);
+// XPECT noerrors
+let test23: GR<B> = fooNasty(hc);
+
+// XPECT noerrors
+let test24: GR<A> = fooNasty(hb);
+// XPECT noerrors
+let test25: GR<B> = fooNasty(hb);
+// XPECT errors ---
+// "GRnasty<T> is not a subtype of GR<C>." at "fooNasty(hb)"
+// "H<B> is not a subtype of H<T>." at "hb"
+// ---
+let test26: GR<C> = fooNasty(hb);
+
+
+// ======================================================================================================
+// similar as above, but the return type is fixed, not the argument type:
+
+
+function <T> fooReverse(p:GR<T>):H<T> {
+	return null;
+}
+
+let gra: GR<A>;
+let grb: GR<B>;
+let grc: GR<C>;
+
+// XPECT errors ---
+// "GR<A> is not a subtype of GR<T>." at "gra"
+// "H<T> is not a subtype of H<B>." at "fooReverse(gra)"
+// ---
+let test31: H<B> = fooReverse(gra);
+// XPECT noerrors
+let test32: H<B> = fooReverse(grb);
+// XPECT noerrors
+let test33: H<B> = fooReverse(grc);
+
+
+
+// ======================================================================================================
+// Use invariance in case the right type does not have corresponding type variable, e.g. GR<out IV> :> B
+// (this test case was derived from existing N4JS code)
+
+class X {}
+class Y extends X {}
+class Z extends X {}
+interface GR2<out T extends X> {}
+
+
+interface I<out T1 extends Y> extends GR2<T1> {}
+interface J<out T2 extends Z> extends GR2<T2> {}
+
+class K implements I<Y>, J<Z> {};
+
+async function <T extends X> foo2(p:GR2<T>): T {
+	return null;
+}
+
+async function test() {
+	let y: Y;
+	let k: K;
+	// XPECT noerrors
+	y = (await foo2(k));
+}
+
+
+// ======================================================================================================
+// Test cases when element's expected types are not specified
+
+function f1() {
+	let a : int = null;
+	// A constraint ⟨ Array<α> <: Array<?> ⟩ should be created
+	// XPECT type of 'b' --> int
+	let [b] = [a];
+	b.toString();
+}
+function f2() {
+	let a : int = null;
+	// A constraint ⟨ ~Object with { x: α } <: ~Object with { x: β} ⟩ should be created
+	// XPECT type of 'b' --> int
+	let {x:b} = {x:a};
+	b.toString()
+}

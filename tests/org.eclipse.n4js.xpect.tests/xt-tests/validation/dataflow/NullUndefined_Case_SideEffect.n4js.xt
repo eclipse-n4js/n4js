@@ -1,0 +1,76 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest 
+	IssueConfiguration {
+		IssueCode "DFG_NULL_DEREFERENCE" {enabled=true}
+	}
+	END_SETUP
+ */
+
+
+
+function f1() {
+	let a : int;
+
+	let f = () => {
+		a = null;
+	};
+	f;
+
+	// XPECT warnings --> "Variable a may be undefined" at "a"
+	a.toString();
+}
+
+function f2() {
+	let a : int;
+
+	let f = () => {
+		[a] = [null];
+	};
+	f;
+
+	// XPECT warnings --> "Variable a may be undefined" at "a"
+	a.toString();
+}
+
+function f3() {
+	let a : int;
+
+	let f = () => {
+		// XPECT warnings --> "Unnecessary cast from undefined to int" at "undefined as int"
+		({a} = {a:undefined as int});
+	};
+	f;
+
+	// XPECT warnings --> "Variable a may be undefined" at "a"
+	a.toString();
+}
+
+function f4() {
+	let a : int;
+
+	let f = () => { for (a of [0]) {} }
+	f;
+
+	// XPECT warnings --> "Variable a may be undefined" at "a"
+	a.toString();
+}
+
+function f5() {
+	let a : int;
+
+	let f = () => { for ([a] of [[0]]) {} }
+	f;
+
+	// XPECT warnings --> "Variable a may be undefined" at "a"
+	a.toString();
+}

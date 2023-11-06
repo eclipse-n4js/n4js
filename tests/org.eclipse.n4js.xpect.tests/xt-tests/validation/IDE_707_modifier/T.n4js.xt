@@ -1,0 +1,76 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+interface R<T> {
+	abstract m(t : T) : T;
+
+	protected m2(t : T) : T {
+		return null
+	}
+
+	m4(t : T) : T {
+		return null
+	}
+}
+
+abstract class C0 implements R<string> {
+}
+
+class C01 extends C0 {
+
+	@Override
+	m(t : string) : string {
+		return ""
+	}
+}
+
+// this is expected behavior! XPECT noerrors --> "This class must override abstract non-public members since implementors may not be able to do so due to visibility constraints." at "C1"
+export public abstract class C1 implements R<string> {
+}
+
+export abstract class C implements R<string> {
+	@Override
+	abstract m(t : string) : string;
+
+	// XPECT errors --> "The method C.m2 implementing method R.m2 must be annotated with @Override." at "m2"
+	protected m2(t : string) : string {
+		return null
+	}
+
+	m3(t : string) : string {
+		return this.m2(t);
+	}
+}
+
+export class D extends C {
+
+	@Override
+	m(t : string) : string {
+		return this.m2(t);
+	}
+}
+
+var c01 : C01 = new C01();
+c01.m("");
+c01.m2("");
+c01.m4("");
+
+var c : C = new D();
+c.m("")
+c.m2("")
+c.m4("")
+
+var d : D = new D();
+d.m("")
+d.m2("")
+d.m4("")

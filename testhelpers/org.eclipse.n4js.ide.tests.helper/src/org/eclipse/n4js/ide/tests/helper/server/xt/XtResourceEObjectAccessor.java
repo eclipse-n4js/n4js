@@ -138,14 +138,24 @@ public class XtResourceEObjectAccessor {
 	}
 
 	private String parseArgument(String argumentPlusRest) {
-		if (!argumentPlusRest.startsWith("'")) {
+		if (Strings.isNullOrEmpty(argumentPlusRest)) {
 			return null;
 		}
-		int idxEnd = 1;
-		while (argumentPlusRest.charAt(++idxEnd) != '\'') {
-			Preconditions.checkState(idxEnd < argumentPlusRest.length());
+		if (Character.isDigit(argumentPlusRest.charAt(0))) {
+			int endIdx = 1;
+			while (endIdx < argumentPlusRest.length() && Character.isDigit(argumentPlusRest.charAt(endIdx))) {
+				endIdx++;
+			}
+			return argumentPlusRest.substring(0, endIdx);
 		}
-		return argumentPlusRest.substring(1, idxEnd);
+		if (argumentPlusRest.startsWith("'")) {
+			int idxEnd = 1;
+			while (argumentPlusRest.charAt(++idxEnd) != '\'') {
+				Preconditions.checkState(idxEnd < argumentPlusRest.length());
+			}
+			return argumentPlusRest.substring(1, idxEnd);
+		}
+		return null;
 	}
 
 	private int getOffset(int searchFromOffset, String optionalLocationStr, boolean atEnd) {

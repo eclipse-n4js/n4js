@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+interface I {
+	m(p : string) : void;
+}
+
+class C implements I {
+	@Override
+	m(p : string) : void {}
+}
+
+class D extends C {}
+
+// Check to assure to not destroy something else
+
+interface I2 {
+	bar() : void
+}
+
+//interface are abstract by default, they don't have to implement abstract methods (responsibility is passed on consumer)
+interface R extends I2 {}
+
+// XPECT errors --> "Class F must either be declared abstract or implement method I2.bar." at "F"
+class F implements R {
+}
+
+// ---
+
+export public abstract class A3 {
+	public abstract m() : string
+}
+
+// XPECT errors --> "Class B3 must either be declared abstract or implement method A3.m." at "B3"
+class B3 extends A3 {
+	public static m() : string { return "" }
+}
+
+// ---
+
+interface I06 {
+	s1 : string;
+}
+// XPECT noerrors --> "field is merged, we get another error concerning the meta type compatibility anyway" at "SubClassOfI06"
+class SubClassOfI06 implements I06 {
+// XPECT errors --> "Cannot implement field I06.s1 with method SubClassOfI06.s1." at "s1"
+	s1() : string { return ""; }
+}
+
+// ---
+
+abstract class A {
+	public abstract m() : string
+	public abstract get g() : string
+	public abstract set s(name : string)
+}
+
+abstract class AC extends A {
+}

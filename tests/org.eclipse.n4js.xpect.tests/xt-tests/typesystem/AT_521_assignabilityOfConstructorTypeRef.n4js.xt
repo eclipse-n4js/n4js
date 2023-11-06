@@ -1,0 +1,58 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+
+class A {
+	private x : string;
+
+	constructor(x : string) {
+		this.x = x;
+	}
+}
+class B extends A {
+	private y : string;
+
+	constructor(x : string, y : string) {
+		super(x);
+		this.y = y;
+	}
+}
+
+
+var a = A
+var b = B
+a =
+// XPECT errors --> "constructor{B} is not a subtype of constructor{A}." at "b"
+b		// invalid, as constructor{B} !extends constructor{A}
+
+
+var fun1 = function(typeA : type{A}) {
+	// XPECT errors --> "Cannot instantiate type{A}." at "typeA"
+	return new typeA();	// invalid, as only constructor type ref is allowed in new expression
+}
+
+fun1(b)		// valid, as type{B} extends type{A}
+
+var fun2 = function(ctorA : constructor{A}) {
+	var _s : string;
+	return new ctorA(_s);	// valid
+}
+
+fun2(a)		// valid
+fun2(
+// XPECT errors --> "constructor{B} is not a subtype of constructor{A}." at "b"
+b)		// invalid, as constructor{B} !extends constructor{A}
+
+var aInstance = new a("a")
+var bInstance = new b("a","b")
+aInstance = bInstance	// valid

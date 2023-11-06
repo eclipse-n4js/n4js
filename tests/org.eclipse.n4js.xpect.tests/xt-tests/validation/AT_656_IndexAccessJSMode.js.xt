@@ -1,0 +1,33 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+
+
+var /* any+ */ o;
+// XPECT noerrors --> "Indexed access allowed in JS-mode" at 'o["name"]'
+o["name"]="Hello";
+// XPECT noerrors --> "Indexed access allowed in JS-mode" at 'o["hello"]'
+o["hello"]=1;
+// XPECT noerrors --> "Indexed access allowed in JS-mode" at 'o[5]'
+o[5]="hello";
+// XPECT noerrors --> "Indexed access allowed in JS-mode" at 'o[5]'
+o[5]=42;
+
+var ol = {
+	p1: "Hello",
+}
+// XPECT noerrors --> "Indexed access allowed in JS-mode" at ol.p1
+ol.p1;
+// XPECT noerrors --> "Indexed access allowed in JS-mode" at 'ol["p1"]'
+ol["p1"];

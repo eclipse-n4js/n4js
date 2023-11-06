@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+class Class1 {
+	someField:Class1;
+}
+
+class YStuff {
+    public m234567890(): YStuff { return null; }
+    public m(s: string): YStuff { return null; }
+}
+
+// Additional Linebreak after last statement required!
+// If missing, then automatic semicolon insertion / replacement behaves differently.
+/* XPECT FIXME formattedLines 1 ---
+var x = new Class1().someField.someField.someField.someField.someField.someField.someField.someField.someField.
+	someField.someField.someField.someField;
+--- */
+var x = new Class1().someField . someField . someField.someField.someField.someField.someField.someField.someField.someField.someField.someField.someField
+
+
+
+/* XPECT formattedLines 1 ---
+var z = new YStuff().m234567890().m234567890().m234567890().m234567890().m234567890().m234567890().m234567890().m("012")
+	.m234567890().m234567890();
+--- */
+var z = new YStuff().m234567890().m234567890().m234567890().m234567890().m234567890().m234567890().m234567890().m("012").m234567890().m234567890();
+
+
+// found during IDE-1852: XPECT FIXME noerrors
+/* XPECT formattedLines 1 ---
+var z = new YStuff().m234567890().m234567890().m234567890().m234567890().m234567890().m234567890().m234567890()
+	.m("0123").m234567890().m234567890();
+--- */
+var z = new YStuff().m234567890().m234567890().m234567890().m234567890().m234567890().m234567890().m234567890().m("0123").m234567890().m234567890();
+
+
+// found during IDE-1852: XPECT FIXME noerrors
+/* XPECT formattedLines 2 ---
+var z = new YStuff().m234567890().m234567890().m234567890().m234567890().m234567890().m234567890().m234567890().m("012")
+	.m234567890().m234567890();
+--- */
+var z = new YStuff().m234567890().m234567890().m234567890().m234567890().m234567890().m234567890().m234567890().m("012")
+    .m234567890().m234567890();
+
+
+// found during IDE-1852: XPECT FIXME noerrors
+/* XPECT formattedLines 2 ---
+var z = new YStuff().m234567890().m234567890().m234567890().m234567890().m234567890().m234567890().m234567890()
+	.m("0123").m234567890().m234567890();
+--- */
+var z = new YStuff().m234567890().m234567890().m234567890().m234567890().m234567890().m234567890().m234567890()
+    .m("0123").m234567890().m234567890();

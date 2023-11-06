@@ -1,0 +1,26 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP  */
+
+
+
+var f1 = function <T> (p : T) : T { return p; };
+var x1 = f1("hello");
+var y1 : string = x1;
+// XPECT errors --> "string is not a subtype of number." at "x1"
+var z1 : number = x1;
+
+
+var x2 = function <T> (p : T) : T { return p; }   ("hello");
+var y2 : string = x2;
+// XPECT errors --> "string is not a subtype of number." at "x2"
+var z2 : number = x2;
