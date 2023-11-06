@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-	ResourceSet {
+	Project {
 		ThisFile {}
 		File "Var.n4js" {}
 	}
@@ -20,7 +20,7 @@
 */
 
 
-import myV from "importexport/default/Var"
+import myV from "Var"
 
 
 console.log('running in Var_main.n4js:');

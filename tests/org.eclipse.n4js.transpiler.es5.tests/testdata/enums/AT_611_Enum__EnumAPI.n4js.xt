@@ -9,17 +9,17 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest END_SETUP */
 
 /* XPECT output ---
 RED
 RED
-enums/AT_611_Enum__EnumAPI/Color
+AT_611_Enum__EnumAPI/Color
 RED
 --
 US
 2
-enums/AT_611_Enum__EnumAPI/Country
+AT_611_Enum__EnumAPI/Country
 2
 --
 true

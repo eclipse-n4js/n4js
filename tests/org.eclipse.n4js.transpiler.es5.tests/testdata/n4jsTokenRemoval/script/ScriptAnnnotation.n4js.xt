@@ -9,13 +9,13 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest  END_SETUP */
 
 
 // found during IDE-1852: XPECT FIXME noerrors
-/* XPECT output ~~~
+/* XPECT output ---
 Yay!
-~~~ */
+--- */
 
 
 @@Foo

@@ -9,10 +9,10 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest  END_SETUP */
 
 
-/* XPECT output ~~~
+/* XPECT output ---
 PubEnumEA { name: 'v', value: 'v' }
 PubEnumEA { name: 's', value: 'string' }
 annotations : 
@@ -20,13 +20,13 @@ annotations :
   name: 'Observable',
   details: [],
   target: N4EnumType {
-    origin: 'org.eclipse.n4js.transpiler.es5.tests',
+    origin: 'test-project',
     annotations: [ [Circular *1] ],
     name: 'PubEnumEA',
-    fqn: 'n4jsTokenRemoval/enums/EnumAsAnnotatedExportableElement/PubEnumEA'
+    fqn: 'EnumAsAnnotatedExportableElement/PubEnumEA'
   }
 }
-~~~ */
+--- */
 
 
 @Observable export @Internal public enum PubEnumEA { v, s: 'string' }

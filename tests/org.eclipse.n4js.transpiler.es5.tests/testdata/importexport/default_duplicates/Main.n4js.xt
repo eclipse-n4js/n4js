@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-	ResourceSet {
+	Project {
 		ThisFile {}
 		File "M.n4js" {}
 	}
@@ -21,15 +21,15 @@
 
 
 // XPECT noerrors -->
-import * as NS from "importexport/default_duplicates/M"
+import * as NS from "M"
 
 // duplicate import through namespace is ok!
-// XPECT errors --> "default from importexport/default_duplicates/M is already imported as NS.default." at "DefImp1"
-import DefImp1 from "importexport/default_duplicates/M"
+// XPECT errors --> "default from M is already imported as NS.default." at "DefImp1"
+import DefImp1 from "M"
 
 // duplicate is resolved only against original
-// XPECT errors --> "default from importexport/default_duplicates/M is already imported as NS.default." at "DefImp2"
-import DefImp2 from "importexport/default_duplicates/M"
+// XPECT errors --> "default from M is already imported as NS.default." at "DefImp2"
+import DefImp2 from "M"
 
 
 

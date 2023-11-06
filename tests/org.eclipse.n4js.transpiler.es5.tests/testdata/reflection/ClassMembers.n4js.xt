@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP  */
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest END_SETUP  */
 
 
 
@@ -43,10 +43,10 @@ console.log(C.n4type);
 /* XPECT output ---
 members of C: field, fieldD, getterD, setterD, fooD, sGetterD, sSetterD, sFooD, sField, sFieldD
 <ref *1> N4Class {
-  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  origin: 'test-project',
   annotations: [],
   name: 'C',
-  fqn: 'reflection/ClassMembers/C',
+  fqn: 'ClassMembers/C',
   n4superType: N4Class {
     origin: 'n4js-runtime',
     annotations: [],

@@ -9,12 +9,12 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest  END_SETUP */
 
 
-/* XPECT output ~~~
+/* XPECT output ---
 compiler works as expected
-~~~ */
+--- */
 
 class Promise<S, F> {
 	public <Snew, Fnew> then(onFulfilled : {function(S):union{Snew, Promise<Snew, Fnew>}}, onRejected : {function(F):union{Fnew, Promise<Snew, Fnew>}}=undefined) : Promise<Snew, Fnew> { return null; }

@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-	ResourceSet {
+	Project {
 		ThisFile {}
 		File "A.n4js" {}
 	}
@@ -27,7 +27,7 @@ v1 =  3
 v2 =  2
 --- */
 
-import {v1,v2, do_post_increment_v1_and_assign_old_value_to_v2} from "importexport/export_update/A"
+import {v1,v2, do_post_increment_v1_and_assign_old_value_to_v2} from "A"
 
 console.log( "v1 = ", v1 );  // v1 == 2 --> after postincrement in init of v2
 console.log( "v2 = ", v2 );  // v2 == 1 --> first value of v1 before postincrement

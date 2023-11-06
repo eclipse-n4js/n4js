@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-	ResourceSet {
+	Project {
 		ThisFile {}
 		File "imported/dep.n4js" { from="imported/dep.n4js"}
 	}
@@ -22,7 +22,7 @@
 /* XPECT output ---
 B.f()
 --- */
-import {B as C} from "classes/AT_953_alias/imported/dep"
+import {B as C} from "imported/dep"
 var c = new C();
 class B {}
 class X extends C {}

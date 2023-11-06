@@ -9,12 +9,12 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest  END_SETUP */
 
 // found during IDE-1852: XPECT FIXME nowarnings
-/* XPECT output ~~~
+/* XPECT output ---
 [Function: len] 123
-~~~ */
+--- */
 
 // TODO: see also IDEBUG-121 and restore the original version, when it's been fixed
 function <S extends string, T, P> wrap() : {@This(any)function(S,T,P,any,number,string):number} {

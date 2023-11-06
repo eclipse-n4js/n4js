@@ -9,15 +9,15 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest  END_SETUP */
 
 
-/* XPECT output ~~~
+/* XPECT output ---
 ProjEnum { name: 'v', value: 'v' }
 ProjEnum { name: 's', value: 'string' }
 PubEnumE { name: 'v', value: 'v' }
 PubEnumE { name: 's', value: 'string' }
-~~~ */
+--- */
 
 
 export project enum ProjEnum { v, s: 'string' }

@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-	ResourceSet {
+	Project {
 		ThisFile {}
 		File "ModA.n4js" {}
 		File "ModB.n4js" {}
@@ -21,6 +21,7 @@
 	END_SETUP
  */
 
+// XPECT noerrors -->
 /* XPECT output ---
 module A A.foo
 module B B.foo
@@ -29,9 +30,9 @@ D.foo
 --- */
 
 
-import { A } from "importexport/AT_613_import/ModA"
-import { B as MB } from "importexport/AT_613_import/ModB"
-import * as N from "importexport/AT_613_import/ModC" // containing class C and others
+import { A } from "ModA"
+import { B as MB } from "ModB"
+import * as N from "ModC" // containing class C and others
 
 class D extends N.C {
 	f(p : A) {

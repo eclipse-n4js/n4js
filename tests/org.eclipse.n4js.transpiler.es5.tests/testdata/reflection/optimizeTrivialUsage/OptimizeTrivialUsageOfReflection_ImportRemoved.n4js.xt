@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-    ResourceSet {
+    Project {
 		File "Other.n4js" {}
 		ThisFile {}
 	}
@@ -20,7 +20,7 @@
 */
 
 
-import { C } from "reflection/optimizeTrivialUsage/Other"
+import { C } from "Other"
 
 console.log(C.n4type.name);
 console.log(C.n4type.origin);
@@ -33,5 +33,5 @@ console.log(C.n4type.fqn);
 /* XPECT output ---
 C
 org.eclipse.n4js.transpiler.es5.tests
-reflection/optimizeTrivialUsage/Other/C
+Other/C
 --- */

@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-	ResourceSet {
+	Project {
 		ThisFile {}
 		File "Cls.n4js" {}
 	}
@@ -20,7 +20,7 @@
 */
 
 
-import MyC from "importexport/default/Cls"
+import MyC from "Cls"
 
 
 console.log('running in Cls_main.n4js:');

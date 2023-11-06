@@ -9,24 +9,24 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest  END_SETUP */
 
 
-/* XPECT output ~~~
+/* XPECT output ---
 N4Interface {
-  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  origin: 'test-project',
   annotations: [],
   name: 'I5',
-  fqn: 'n4jsTokenRemoval/interfaces/N4IntDeclAsAnnotatedExportableElement/I5',
+  fqn: 'N4IntDeclAsAnnotatedExportableElement/I5',
   n4superType: undefined,
   allImplementedInterfaces: [
-    'n4jsTokenRemoval/interfaces/N4IntDeclAsAnnotatedExportableElement/I1',
-    'n4jsTokenRemoval/interfaces/N4IntDeclAsAnnotatedExportableElement/I0'
+    'N4IntDeclAsAnnotatedExportableElement/I1',
+    'N4IntDeclAsAnnotatedExportableElement/I0'
   ],
   ownedMembers: [],
   consumedMembers: []
 }
-~~~ */
+--- */
 
 
 

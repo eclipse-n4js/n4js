@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-	ResourceSet {
+	Project {
 		ThisFile {}
 		File "imported/dep.n4js" { from="imported/dep.n4js"}
 	}
@@ -27,10 +27,10 @@ Before bHereClassInstance call
 B.f()
 interfaceElement meta:
 <ref *1> N4Interface {
-  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  origin: 'test-project',
   annotations: [],
   name: 'I',
-  fqn: 'classes/AT_953_alias/imported/dep/I',
+  fqn: 'imported/dep/I',
   n4superType: undefined,
   allImplementedInterfaces: [],
   ownedMembers: [
@@ -47,10 +47,10 @@ interfaceElement meta:
 }
 roleElement meta:
 <ref *1> N4Interface {
-  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  origin: 'test-project',
   annotations: [],
   name: 'R',
-  fqn: 'classes/AT_953_alias/imported/dep/R',
+  fqn: 'imported/dep/R',
   n4superType: undefined,
   allImplementedInterfaces: [],
   ownedMembers: [
@@ -83,7 +83,7 @@ import {
 	fun as funHere,
 	variable as variableHere,
 	constant as constantHere
-} from "classes/AT_953_alias/imported/dep"
+} from "imported/dep"
 
 BHere.staticF()
 

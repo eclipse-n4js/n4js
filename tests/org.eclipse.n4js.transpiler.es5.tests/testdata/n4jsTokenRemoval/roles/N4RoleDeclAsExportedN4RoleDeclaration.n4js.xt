@@ -9,41 +9,41 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest  END_SETUP */
 
 
-/* XPECT output ~~~
+/* XPECT output ---
 N4Interface {
-  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  origin: 'test-project',
   annotations: [],
   name: 'R3',
-  fqn: 'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/R3',
+  fqn: 'N4RoleDeclAsExportedN4RoleDeclaration/R3',
   n4superType: undefined,
   allImplementedInterfaces: [
-    'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/R1',
-    'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/R0',
-    'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/I0',
-    'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/I1'
+    'N4RoleDeclAsExportedN4RoleDeclaration/R1',
+    'N4RoleDeclAsExportedN4RoleDeclaration/R0',
+    'N4RoleDeclAsExportedN4RoleDeclaration/I0',
+    'N4RoleDeclAsExportedN4RoleDeclaration/I1'
   ],
   ownedMembers: [],
   consumedMembers: []
 }
 N4Interface {
-  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  origin: 'test-project',
   annotations: [],
   name: 'R4',
-  fqn: 'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/R4',
+  fqn: 'N4RoleDeclAsExportedN4RoleDeclaration/R4',
   n4superType: undefined,
   allImplementedInterfaces: [
-    'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/R1',
-    'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/R0',
-    'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/I0',
-    'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/I1'
+    'N4RoleDeclAsExportedN4RoleDeclaration/R1',
+    'N4RoleDeclAsExportedN4RoleDeclaration/R0',
+    'N4RoleDeclAsExportedN4RoleDeclaration/I0',
+    'N4RoleDeclAsExportedN4RoleDeclaration/I1'
   ],
   ownedMembers: [],
   consumedMembers: []
 }
-~~~ */
+--- */
 
 
 
