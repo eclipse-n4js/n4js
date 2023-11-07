@@ -225,6 +225,9 @@ public class XtIdeTest extends AbstractIdeTest {
 		case "accessModifier":
 			accessModifier(testMethodData);
 			break;
+		case "compileResult":
+			compileResult(testMethodData);
+			break;
 		case "completion":
 			completion(testMethodData);
 			break;
@@ -676,6 +679,20 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
+	 * Compiles the current xt file and compares the generated file to the expected output
+	 *
+	 * <pre>
+	 * // Xpect compileResult --&gt; &ltCOMPILE RESULT&gt
+	 * </pre>
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void compileResult(XtMethodData data) {
+		FileURI fileUri = getGeneratedFileURI();
+		String generedFileContent = getContentOfFileOnDisk(fileUri);
+		assertEquals(data.expectationRaw, generedFileContent.trim());
+	}
+
+	/**
 	 * Compiles and executes the current xt file and compares the output to the expected output
 	 *
 	 * <pre>
@@ -684,14 +701,19 @@ public class XtIdeTest extends AbstractIdeTest {
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void output(XtMethodData data) {
+		FileURI fileUri = getGeneratedFileURI();
+
+		installN4JSRuntime();
+		assertOutput(fileUri, data.expectation);
+	}
+
+	private FileURI getGeneratedFileURI() {
 		String moduleName = xtData.workspace.moduleNameOfXtFile;
 		int idxStart = Math.max(moduleName.lastIndexOf("/") + 1, 0);
 		int idxEnd = moduleName.lastIndexOf(".");
 		String genModuleName = moduleName.substring(idxStart, idxEnd) + ".js";
 		FileURI fileUri = getFileURIFromModuleName(genModuleName);
-
-		installN4JSRuntime();
-		assertOutput(fileUri, data.expectation);
+		return fileUri;
 	}
 
 	/**
