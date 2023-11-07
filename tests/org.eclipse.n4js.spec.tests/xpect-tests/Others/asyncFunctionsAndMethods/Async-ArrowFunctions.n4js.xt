@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP  */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
 
 function echo(msg : string) : Promise<string,string> {
 	return new Promise<string,string>(function(resolve : {function(string)}, reject : {function(string)}) {

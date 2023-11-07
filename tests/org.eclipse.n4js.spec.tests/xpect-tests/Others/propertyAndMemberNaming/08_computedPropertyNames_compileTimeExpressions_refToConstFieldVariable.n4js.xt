@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "OtherFile.n4js" {}
 	}
@@ -20,8 +20,8 @@
 */
 
 
-import { var_otherFile } from "Others/propertyAndMemberNaming/OtherFile";
-//import { Cls_OtherFile } from "Others/propertyAndMemberNaming/OtherFile";
+import { var_otherFile } from "OtherFile";
+//import { Cls_OtherFile } from "OtherFile";
 
 
 // important to test both with exported and with non-exported variable:

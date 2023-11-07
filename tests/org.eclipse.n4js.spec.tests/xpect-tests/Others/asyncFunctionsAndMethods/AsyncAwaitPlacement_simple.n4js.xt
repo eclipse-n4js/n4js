@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP  */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
 
 
 
@@ -32,18 +32,14 @@ function t() {
 //XPECT noerrors --> "IDE-1494"
 var f =  async function(){};
 
-		/* XPECT issues ---
-		"await is allowed only inside functions annotated with async." at "await undefined"
-		"await should not be used on 'undefined' since it has no effect here." at "await undefined"
-		--- */
+// XPECT errors --> "await is allowed only inside functions annotated with async." at "await undefined"
+// XPECT warnings --> "await should not be used on 'undefined' since it has no effect here." at "await undefined"
 await undefined;
 
 async function t3(): void {
 	function ti(){
-		/* XPECT issues ---
-		"await is allowed only inside functions annotated with async." at "await undefined"
-		"await should not be used on 'undefined' since it has no effect here." at "await undefined"
-		--- */
+		// XPECT errors --> "await is allowed only inside functions annotated with async." at "await undefined"
+		// XPECT warnings --> "await should not be used on 'undefined' since it has no effect here." at "await undefined"
 		await undefined;
 	}
 }

@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		File "Empty1.n4js" { from="ImportsUnresolved_Empty1.n4js" }
 		File "Empty2.n4js" { from="ImportsUnresolved_Empty2.n4js" }
 		ThisFile {}
@@ -25,16 +25,16 @@
 //       in org.eclipse.n4js.ide.tests.spec.ImportsUnresolvedTest!
 //
 
-// XPECT errors --> "Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""Ch09_02_04__ImportStatements/Bad1""
-import {X,Y} from "Ch09_02_04__ImportStatements/Bad1"
+// XPECT errors --> "Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""Bad1""
+import {X,Y} from "Bad1"
 
-// XPECT errors --> "Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""Ch09_02_04__ImportStatements/Bad2""
-import * as N1 from "Ch09_02_04__ImportStatements/Bad2"
+// XPECT errors --> "Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""Bad2""
+import * as N1 from "Bad2"
 
 // XPECT errors --> "Import of DoesNotExist cannot be resolved." at "DoesNotExist"
-import {DoesNotExist} from "Ch09_02_04__ImportStatements/Empty1"
+import {DoesNotExist} from "Empty1"
 
 // XPECT noerrors -->
-import * as N2 from "Ch09_02_04__ImportStatements/Empty2"
+import * as N2 from "Empty2"
 
 N2; // avoid unused import warning

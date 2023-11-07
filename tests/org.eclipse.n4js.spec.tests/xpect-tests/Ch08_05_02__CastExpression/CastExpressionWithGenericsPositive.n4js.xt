@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 
 
 class A<T> {
@@ -23,13 +23,13 @@ class C extends A<string> {
 var as : A<string>;
 
 // found during IDE-1852: XPECT FIXME noerrors
-// XPECT type of 'a as B<string>' --> B<string>
-a as B<string>;
+// XPECT type of 't1' --> B<string>
+let t1 = a as B<string>;
 
 // found during IDE-1852: XPECT FIXME noerrors
-// XPECT type of 'a as C' --> C
-a as C;
+// XPECT type of 't2' --> C
+let t2 = a as C;
 
 // found during IDE-1852: XPECT FIXME noerrors
-// XPECT type of '(a as C).t' --> string
-(a as C).t;
+// XPECT type of 't3' --> string
+let t3 = (a as C).t;

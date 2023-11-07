@@ -9,22 +9,22 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
- 	ResourceSet {
+ 	ProjectWithSourceFolder {
 		ThisFile {}
 		File "Exporter.n4js" {}
 	}
 
 END_SETUP */
 
-import { C1 as RNC1 } from "Ch09_02_04__ImportStatements/Exporter"
-import { I1 as RNI1 } from "Ch09_02_04__ImportStatements/Exporter"
-import { f1 as RNf1} from "Ch09_02_04__ImportStatements/Exporter"
-import { var1 as rnVar1 } from "Ch09_02_04__ImportStatements/Exporter"
-import { let1 as rnLet1 } from "Ch09_02_04__ImportStatements/Exporter"
-import { default as let2asDefault } from "Ch09_02_04__ImportStatements/Exporter"
-import { cnst8 as rnCnst8 } from "Ch09_02_04__ImportStatements/Exporter"
+import { C1 as RNC1 } from "Exporter"
+import { I1 as RNI1 } from "Exporter"
+import { f1 as RNf1} from "Exporter"
+import { var1 as rnVar1 } from "Exporter"
+import { let1 as rnLet1 } from "Exporter"
+import { default as let2asDefault } from "Exporter"
+import { cnst8 as rnCnst8 } from "Exporter"
 
 let c1:RNC1 = new RNC1();
 let i1:RNI1 = null;

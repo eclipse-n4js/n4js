@@ -9,13 +9,13 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 // IDE-980
 
 /* XPECT output ---
-Ch07_04__Reflection_Meta_Information/ReflectionClassifiers/C
+ReflectionClassifiers/C
 class
-Ch07_04__Reflection_Meta_Information/ReflectionClassifiers/I
+ReflectionClassifiers/I
 interface
 --- */
 

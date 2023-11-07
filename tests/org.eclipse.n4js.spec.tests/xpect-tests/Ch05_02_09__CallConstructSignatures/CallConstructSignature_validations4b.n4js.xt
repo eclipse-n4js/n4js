@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "Ext.n4jsd" { from="CallConstructSignature_validations4.n4jsd.xt" }
 	}
@@ -23,8 +23,8 @@ END_SETUP */
 // but implementing class is located in an N4JS file:
 
 
-import { SubIfcCall } from "Ch05_02_09__CallConstructSignatures/Ext"
-import { SubIfcConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { SubIfcCall } from "Ext"
+import { SubIfcConstruct } from "Ext"
 
 
 // XPECT errors --> "An interface with a call or construct signature cannot be implemented by a class." at "SubIfcCall"

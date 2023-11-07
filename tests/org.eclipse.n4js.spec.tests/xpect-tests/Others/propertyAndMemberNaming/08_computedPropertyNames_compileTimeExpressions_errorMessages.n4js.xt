@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "OtherFile.n4js" {}
 	}
@@ -19,8 +19,8 @@
 	END_SETUP
 */
 
-import { var_notConst_otherFile } from "Others/propertyAndMemberNaming/OtherFile";
-import { var_const_notCompileTime_otherFile } from "Others/propertyAndMemberNaming/OtherFile";
+import { var_notConst_otherFile } from "OtherFile";
+import { var_const_notCompileTime_otherFile } from "OtherFile";
 
 
 function foo(): string {

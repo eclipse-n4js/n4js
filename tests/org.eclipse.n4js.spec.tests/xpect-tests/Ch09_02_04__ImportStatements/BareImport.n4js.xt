@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "ExporterWithSideEffect.n4js" {}
 	}
@@ -20,7 +20,7 @@ END_SETUP */
 
 
 // XPECT noerrors -->
-import "Ch09_02_04__ImportStatements/ExporterWithSideEffect"
+import "ExporterWithSideEffect"
 
 
 console.log('importing module');

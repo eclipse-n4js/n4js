@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 
 
 class A {
@@ -23,12 +23,12 @@ class C extends B {
 }
 var a : A;
 
-// XPECT type of 'a as B' --> B
-a as B;
+// XPECT type of 'ta' --> B
+let ta = a as B;
 // XPECT type of 'a'--> A
-a as B;
-// XPECT type of 'a as C' --> C
-a as C;
+let tb = a as B;
+// XPECT type of 'tc' --> C
+let tc = a as C;
 
 // XPECT type of '_b' --> B
 var _b = a as B;

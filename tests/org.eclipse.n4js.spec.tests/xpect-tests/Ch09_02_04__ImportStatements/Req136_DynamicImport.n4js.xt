@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
- 	ResourceSet {
+ 	ProjectWithSourceFolder {
 		ThisFile {}
 		File "JS1.js" {}
 		File "JS2.js" {}
@@ -24,29 +24,29 @@
 END_SETUP */
 
 /* XPECT errors ---
-"Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""Ch09_02_04__ImportStatements/Unknown1""
+"Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""Unknown1""
 --- */
-import * as UnknownStatic from "Ch09_02_04__ImportStatements/Unknown1"
+import * as UnknownStatic from "Unknown1"
 /* XPECT errors ---
-"Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""Ch09_02_04__ImportStatements/Unknown1""
+"Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""Unknown1""
 --- */
-import * as UnknownDynamic+ from "Ch09_02_04__ImportStatements/Unknown1"
+import * as UnknownDynamic+ from "Unknown1"
 
 
-// XPECT errors --> "Use dynamic import in order to access elements of Ch09_02_04__ImportStatements/JS1." at "* as JSStatic"
-import * as JSStatic from "Ch09_02_04__ImportStatements/JS1"
+// XPECT errors --> "Use dynamic import in order to access elements of JS1." at "* as JSStatic"
+import * as JSStatic from "JS1"
 // XPECT noerrors -->
-import * as JSDynamic+ from "Ch09_02_04__ImportStatements/JS2"
-
-// XPECT noerrors -->
-import * as N4JSStatic from "Ch09_02_04__ImportStatements/N4JS1"
-// XPECT errors --> "N4JS module Ch09_02_04__ImportStatements/N4JS2 must not be imported dynamically." at "* as N4JSDynamic+"
-import * as N4JSDynamic+ from "Ch09_02_04__ImportStatements/N4JS2"
+import * as JSDynamic+ from "JS2"
 
 // XPECT noerrors -->
-import * as N4JSDStatic from "Ch09_02_04__ImportStatements/N4JSD1"
-// XPECT warnings --> "The n4jsd module Ch09_02_04__ImportStatements/N4JSD2 should not be imported dynamically." at "* as N4JSDDynamic+"
-import * as N4JSDDynamic+ from "Ch09_02_04__ImportStatements/N4JSD2"
+import * as N4JSStatic from "N4JS1"
+// XPECT errors --> "N4JS module N4JS2 must not be imported dynamically." at "* as N4JSDynamic+"
+import * as N4JSDynamic+ from "N4JS2"
+
+// XPECT noerrors -->
+import * as N4JSDStatic from "N4JSD1"
+// XPECT warnings --> "The n4jsd module N4JSD2 should not be imported dynamically." at "* as N4JSDDynamic+"
+import * as N4JSDDynamic+ from "N4JSD2"
 
 // XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'X'." at "X"
 JSStatic.X;

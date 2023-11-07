@@ -9,8 +9,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
-	ResourceSet {
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "Externals.n4jsd" {}
 	}

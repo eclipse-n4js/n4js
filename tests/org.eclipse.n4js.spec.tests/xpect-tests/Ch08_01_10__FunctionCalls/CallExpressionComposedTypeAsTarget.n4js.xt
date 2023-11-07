@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "Ext.n4jsd" { from="CallExpressionComposedTypeAsTarget__Ext.n4jsd" }
 	}
@@ -19,10 +19,10 @@
 END_SETUP */
 
 
-import { Ifc } from "Ch08_01_10__FunctionCalls/Ext"
-import { IfcWithCallSig } from "Ch08_01_10__FunctionCalls/Ext"
-import { Cls } from "Ch08_01_10__FunctionCalls/Ext"
-import { ClsWithCallableCtor } from "Ch08_01_10__FunctionCalls/Ext"
+import { Ifc } from "Ext"
+import { IfcWithCallSig } from "Ext"
+import { Cls } from "Ext"
+import { ClsWithCallableCtor } from "Ext"
 
 
 let v01: Ifc & (p: string)=>number;
@@ -31,7 +31,7 @@ v01();
 // XPECT errors --> "42 is not a subtype of string." at "42"
 v01(42);
 // XPECT noerrors -->
-// XPECT type of 'v01("hello")' --> number
+// XPECT type of 'v01<|>("hello")' --> number
 v01("hello");
 
 
@@ -42,17 +42,17 @@ v02();
 
 let v11: Cls & (p: string)=>number;
 // XPECT noerrors -->
-// XPECT type of 'v11("hello")' --> number
+// XPECT type of 'v11<|>("hello")' --> number
 v11("hello");
 
 let v12: ClsWithCallableCtor & (p: string)=>number; // instances of ClsWithCallableCtor are not callable; thus no conflict here!
 // XPECT noerrors -->
-// XPECT type of 'v12("hello")' --> number
+// XPECT type of 'v12<|>("hello")' --> number
 v12("hello");
 
 let v13: Cls & (p: string)=>number;
 // XPECT noerrors -->
-// XPECT type of 'v13("hello")' --> number
+// XPECT type of 'v13<|>("hello")' --> number
 v13("hello");
 
 let v14: constructor{ClsWithCallableCtor} & (p: string)=>number; // the ctor of ClsWithCallableCtor is callable; thus we have a conflict here!
@@ -62,12 +62,12 @@ v14();
 
 let v21: Ifc & Function;
 // XPECT noerrors -->
-// XPECT type of 'v21("arg1", "arg2", "arg3")' --> any
+// XPECT type of 'v21<|>("arg1", "arg2", "arg3")' --> any
 v21("arg1", "arg2", "arg3");
 
 let v22: Ifc & Function+;
 // XPECT noerrors -->
-// XPECT type of 'v22("arg1", "arg2", "arg3")' --> any+
+// XPECT type of 'v22<|>("arg1", "arg2", "arg3")' --> any+
 v22("arg1", "arg2", "arg3");
 
 let v23: Function & (p: string)=>number;
@@ -76,7 +76,7 @@ v23();
 // XPECT errors --> "42 is not a subtype of string." at "42"
 v23(42);
 // XPECT noerrors -->
-// XPECT type of 'v23("hello")' --> number
+// XPECT type of 'v23<|>("hello")' --> number
 v23("hello");
 
 

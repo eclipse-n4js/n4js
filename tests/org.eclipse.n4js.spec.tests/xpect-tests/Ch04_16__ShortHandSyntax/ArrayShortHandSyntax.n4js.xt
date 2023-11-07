@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 
 
 // XPECT type of 'a01' --> Array<string>
@@ -124,8 +124,8 @@ let a57: (in undefined)[][];
 // XPECT type of 'a61' --> Array<Object+>
 let a61: Object+[];
 
-// XPECT type of 'a62' --> Array<~Object with {prop: string}>
-let a62: ~Object with {prop: string}[];
+// XPECT type of 'a62' --> Array<~Object with { prop: string }>
+let a62: ~Object with { prop: string }[];
 
 // XPECT type of 'a63' --> Array<Iterable2<string,number>>
 let a63: Iterable2<string,number>[];

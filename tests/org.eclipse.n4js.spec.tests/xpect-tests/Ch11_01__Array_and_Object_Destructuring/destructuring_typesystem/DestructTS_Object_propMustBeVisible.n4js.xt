@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "M.n4js" {}
 	}
@@ -20,7 +20,7 @@
 */
 
 
-import { Cls } from "Ch11_01__Array_and_Object_Destructuring/destructuring_typesystem/M"
+import { Cls } from "M"
 
 var cls : Cls;
 

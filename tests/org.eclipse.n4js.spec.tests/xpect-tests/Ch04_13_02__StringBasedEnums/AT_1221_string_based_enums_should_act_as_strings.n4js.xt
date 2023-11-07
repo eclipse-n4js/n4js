@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 
 @StringBased
 enum Color {
@@ -43,18 +43,3 @@ for(var idx=0;idx<lits.length;idx++) {
 }
 
 
-// methods 'findLiteralByName' and 'findLiteralByValue' return 'undefined'
-// ==> they should be properly supported OR removed from built-in type N4StringBasedEnum
-/* XPECT output ---
-LITERAL: RED
-LITERAL: GREEN
-LITERAL: BLUE
-LITERAL: 
---- */
-
-// findLiteralByName is not defined anymore
-// following test & codeline disabled in order to not interfere with output test above.X!PECT errors --> "Couldn't resolve reference to IdentifiableElement 'findLiteralByName'." at "findLiteralByName"
-// console.log(Color.findLiteralByName('RED'));
-// findLiteralByValue is not defined anymore for string-based enums
-// following test & codeline disabled in order to not interfere with output test above.X!PECT errors --> "Couldn't resolve reference to IdentifiableElement 'findLiteralByName'." at "findLiteralByName"
-// console.log(Color.findLiteralByValue('GREEN'));

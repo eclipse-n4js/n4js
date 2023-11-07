@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 
 // IDE-1804 support computed-names of string-literal form in indexed-accesses
 
@@ -25,7 +25,7 @@ class C1 {
 
 var c = new C1
 
-// XPECT FIXME errors --> private method not visible
+// XPECT FIXME errors --> "private method not visible" at "m"
 C1['m']();
 
 // XPECT errors --> "string is not a subtype of number." at "C1['f']"

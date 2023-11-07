@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 
 
 // Testing cases where we have a getter/setter pair on the LHS of a compound assignment, possibly leading to
@@ -86,8 +86,8 @@ c3.n += 42;  // error: number is a valid write-access type on LHS but X is not a
 // ---
 c0.n *= 42;  // setter:string ; no getter
 // XPECT errors ---
-// "string is not a subtype of number." at "c1.n"
 // "expecting write-access for type number but X is not a super type of number." at "c1.n"
+// "string is not a subtype of number." at "c1.n"
 // ---
 c1.n *= 42;  // setter:X ; getter:string
 // XPECT errors ---

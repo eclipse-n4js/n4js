@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP  */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
 
 // IDE-1534
 
@@ -18,14 +18,14 @@ interface I {
 	// XPECT type of 'm1' --> {function():Promise<undefined,?>}
 	async m1() : void // void left out, irrespective whether body is missing or not
 
-	// XPECT type of 'm2' --> {function():Promise<undefined, ?>}
+	// XPECT type of 'm2' --> {function():Promise<undefined,?>}
 	async m2() : void {} // note: got a body in this case
 
-	// XPECT type of 'm3' --> {function():Promise<undefined, ?>}
+	// XPECT type of 'm3' --> {function():Promise<undefined,?>}
 	m3() : Promise<undefined, ?> // no body
 
 	// found during IDE-1852: XPECT FIXME noerrors
-	// XPECT type of 'm4' --> {function():Promise<undefined, ?>}
+	// XPECT type of 'm4' --> {function():Promise<undefined,?>}
 	m4() : Promise<undefined, ?> {} // note: got a body in this case
 
 }

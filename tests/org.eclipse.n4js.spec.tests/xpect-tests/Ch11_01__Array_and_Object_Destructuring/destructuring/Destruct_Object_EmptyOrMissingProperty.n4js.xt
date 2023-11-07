@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP  */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
 
                                            // casts required because type system would detect and disallow the error cases we wanna test below:
 var objEmpty = {}                          as ~Object with {one: number; two: number; three: number;};

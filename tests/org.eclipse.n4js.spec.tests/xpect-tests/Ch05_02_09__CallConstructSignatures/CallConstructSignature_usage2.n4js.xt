@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "Ext.n4jsd" { from="CallConstructSignature_usage__Ext.n4jsd" }
 	}
@@ -19,8 +19,8 @@
 END_SETUP */
 
 
-import { IfcOnlyCall } from "Ch05_02_09__CallConstructSignatures/Ext"
-import { IfcOnlyConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { IfcOnlyCall } from "Ext"
+import { IfcOnlyConstruct } from "Ext"
 
 
 // more counter-examples:
@@ -29,8 +29,8 @@ import { IfcOnlyConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
 // not to the interface itself (n.b.: this is a difference to call signatures in classes!)
 
 /* XPECT errors ---
-"IfcOnlyCall cannot be used as a value." at "IfcOnlyCall"
 "Cannot directly invoke interface IfcOnlyCall; its call signature applies to values of type IfcOnlyCall, not to IfcOnlyCall itself." at "IfcOnlyCall"
+"IfcOnlyCall cannot be used as a value." at "IfcOnlyCall"
 --- */
 IfcOnlyCall();
 

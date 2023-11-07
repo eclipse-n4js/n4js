@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 
 // USING STRUCTURAL OBJECT LITERALS
 
@@ -54,7 +54,7 @@ var xMethTyped2 : { @This(~Object with { n : number; } ) function():number };
 xMethTyped2 = (  @This( ~Object with {n : number;} ) function (): number {
 	// XPECT type of 'this' --> ~this[Object]
 	this;
-	// XPECT type of 'this.n' --> number
+	// XPECT type of 'this.<|>n' --> number
 	return this.n;
 } )
 

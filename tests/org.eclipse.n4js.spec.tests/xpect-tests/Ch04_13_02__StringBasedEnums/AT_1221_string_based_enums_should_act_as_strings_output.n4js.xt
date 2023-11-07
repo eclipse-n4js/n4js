@@ -1,0 +1,55 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+@StringBased
+enum Color {
+    RED, GREEN, BLUE, NONE: ''
+}
+
+var c : Color;
+c = Color.RED;
+
+// literals of string-based enums should act like strings:
+
+// ok
+var str : string = c;
+// XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'charAt'."
+c.charAt(0);
+
+
+// literals of string-based enums should NOT act like literals of NON-string-based enums:
+
+
+// static getter 'literals' works as intended:
+// TODO is this cast here really necessary ?
+var lits : Array<?> = Color.literals;
+for(var idx=0;idx<lits.length;idx++) {
+    console.log('LITERAL: '+lits[idx]);
+}
+
+
+// methods 'findLiteralByName' and 'findLiteralByValue' return 'undefined'
+// ==> they should be properly supported OR removed from built-in type N4StringBasedEnum
+/* XPECT output ---
+LITERAL: RED
+LITERAL: GREEN
+LITERAL: BLUE
+LITERAL: 
+--- */
+
+// findLiteralByName is not defined anymore
+// following test & codeline disabled in order to not interfere with output test above.X!PECT errors --> "Couldn't resolve reference to IdentifiableElement 'findLiteralByName'." at "findLiteralByName"
+// console.log(Color.findLiteralByName('RED'));
+// findLiteralByValue is not defined anymore for string-based enums
+// following test & codeline disabled in order to not interfere with output test above.X!PECT errors --> "Couldn't resolve reference to IdentifiableElement 'findLiteralByName'." at "findLiteralByName"
+// console.log(Color.findLiteralByValue('GREEN'));

@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP  */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
 
 
 // NOTE: many more tests in N6_1_03_LiteralsTypesystemTest.xtend in bundle org.eclipse.n4js.xsemantics.tests!

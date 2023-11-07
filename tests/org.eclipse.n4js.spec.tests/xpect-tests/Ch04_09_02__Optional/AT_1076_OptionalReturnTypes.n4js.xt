@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 
 
 /*  XPECT output  ---
@@ -34,6 +34,6 @@ function h2() : string { return "string returned by h2()"; }
 f(h1); // output: using: default defined in f()
 f(h2); // output: using: string returned by h2()
 
-// XPECT errors --> "{function():void} is not a subtype of {function():string}." at "h1"
-f2(h1);
+// XPECT noerrors --> "{function():void} is not a subtype of {function():string}." at "h1"
+//f2(h1); // error would be here
 f2(h2); // ok

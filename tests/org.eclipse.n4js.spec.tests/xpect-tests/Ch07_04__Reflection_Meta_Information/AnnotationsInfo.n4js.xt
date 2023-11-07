@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
    IssueConfiguration { IssueCode "ANN__TEST_ONLY_IN_TEST_SOURCES" {enabled=false} }
    END_SETUP */
 // IDE-561
@@ -31,10 +31,10 @@ class annotations
   name: 'Group',
   details: [ 'IT' ],
   target: N4Class {
-    origin: 'org.eclipse.n4js.spec.tests',
+    origin: 'test-project',
     annotations: [ [N4Annotation], [N4Annotation], [Circular *1] ],
     name: 'ClassWithAnnotations',
-    fqn: 'Ch07_04__Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
+    fqn: 'AnnotationsInfo/ClassWithAnnotations',
     n4superType: N4Class {
       origin: 'n4js-runtime',
       annotations: [],
@@ -55,10 +55,10 @@ class annotations
   name: 'Ignore',
   details: [ 'because of reasons' ],
   target: N4Class {
-    origin: 'org.eclipse.n4js.spec.tests',
+    origin: 'test-project',
     annotations: [ [Circular *1], [N4Annotation], [N4Annotation] ],
     name: 'ClassWithAnnotations',
-    fqn: 'Ch07_04__Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
+    fqn: 'AnnotationsInfo/ClassWithAnnotations',
     n4superType: N4Class {
       origin: 'n4js-runtime',
       annotations: [],
@@ -79,10 +79,10 @@ class annotations
   name: 'Group',
   details: [ 'UT' ],
   target: N4Class {
-    origin: 'org.eclipse.n4js.spec.tests',
+    origin: 'test-project',
     annotations: [ [N4Annotation], [Circular *1], [N4Annotation] ],
     name: 'ClassWithAnnotations',
-    fqn: 'Ch07_04__Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
+    fqn: 'AnnotationsInfo/ClassWithAnnotations',
     n4superType: N4Class {
       origin: 'n4js-runtime',
       annotations: [],
@@ -102,10 +102,10 @@ class annotations
   name: 'Group',
   details: [ 'IT' ],
   target: N4Class {
-    origin: 'org.eclipse.n4js.spec.tests',
+    origin: 'test-project',
     annotations: [ [N4Annotation], [N4Annotation], [Circular *1] ],
     name: 'ClassWithAnnotations',
-    fqn: 'Ch07_04__Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
+    fqn: 'AnnotationsInfo/ClassWithAnnotations',
     n4superType: N4Class {
       origin: 'n4js-runtime',
       annotations: [],

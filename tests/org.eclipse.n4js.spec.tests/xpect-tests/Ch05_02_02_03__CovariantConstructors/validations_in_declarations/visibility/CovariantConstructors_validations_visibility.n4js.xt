@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		File "M.n4js" {}
 		ThisFile {}
 	}
@@ -19,7 +19,7 @@
 	END_SETUP
 */
 
-import { C, C_cc } from "Ch05_02_02_03__CovariantConstructors/validations_in_declarations/visibility/M";
+import { C, C_cc } from "M";
 
 
 /*

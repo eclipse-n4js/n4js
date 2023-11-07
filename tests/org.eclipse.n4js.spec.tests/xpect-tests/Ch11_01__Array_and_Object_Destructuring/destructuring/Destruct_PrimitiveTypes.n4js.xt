@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP  */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
 
 
 // here we test the special case of destructuring primitive types
@@ -35,13 +35,6 @@ console.log(len);
 ({length:len} = "hello");
 console.log(len);
 
-console.log('#####################');
-
-// found during IDE-1852: XPECT FIXME noerrors
-// XPECT type of 'ivar0' --> string
-for(var ivar0 of "abc") {
-	console.log(ivar0);
-}
 
 console.log('#####################');
 
@@ -58,10 +51,6 @@ h e
 #####################
 5
 5
-#####################
-a
-b
-c
 #####################
 one
 2

@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
- 	ResourceSet {
+ 	ProjectWithSourceFolder {
 		ThisFile {}
 		File "Exporter.n4js" {}
 	}
@@ -19,7 +19,7 @@
 END_SETUP */
 
 // XPECT warnings --> "The import of f1 is unused." at "f1"
-import { f1 } from "Ch09_02_04__ImportStatements/Exporter";
+import { f1 } from "Exporter";
 
 // redefintion
 // XPECT errors --> "Function f1 duplicates named import f1 (line 22)." at "f1"

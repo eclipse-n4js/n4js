@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 
 
 class X {}
@@ -51,8 +51,8 @@ class D03 extends C03 {
 class C04 implements I {}
 class D04 extends C04 implements I {
 	// XPECT errors ---
-	// "Signature of constructor of class D04 does not conform to overridden constructor of class N4Object: {function(X)} is not a subtype of {function()}. Also cf. constructor in interface I." at "constructor"
 	// "Signature of constructor of class D04 does not conform to implemented constructor in interface I: {function(X)} is not a subtype of {function(string)}." at "constructor"
+	// "Signature of constructor of class D04 does not conform to overridden constructor of class N4Object: {function(X)} is not a subtype of {function()}. Also cf. constructor in interface I." at "constructor"
 	// ---
 	constructor(p: X) {}
 }
@@ -105,8 +105,8 @@ class D13 extends C13 {
 class C14 implements I, J {}
 class D14 extends C14 implements I, J {
 	// XPECT errors ---
-	// "Signature of constructor of class D14 does not conform to overridden constructor of class N4Object: {function(X)} is not a subtype of {function()}. Also cf. constructor in interface I and constructor in interface J." at "constructor"
 	// "Signature of constructor of class D14 does not conform to implemented constructor in interface I: {function(X)} is not a subtype of {function(string)}. Also cf. constructor in interface J." at "constructor"
+	// "Signature of constructor of class D14 does not conform to overridden constructor of class N4Object: {function(X)} is not a subtype of {function()}. Also cf. constructor in interface I and constructor in interface J." at "constructor"
 	// ---
 	constructor(p: X) {}
 }

@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "Ext.n4jsd" { from="CallConstructSignature_subtyping__Ext.n4jsd" }
 	}
@@ -19,12 +19,12 @@
 END_SETUP */
 
 
-import { IfcCall } from "Ch05_02_09__CallConstructSignatures/Ext"
-import { IfcCallWithField } from "Ch05_02_09__CallConstructSignatures/Ext"
-import { structTypeRefCall } from "Ch05_02_09__CallConstructSignatures/Ext"
-import { IfcConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
-import { IfcConstructWithField } from "Ch05_02_09__CallConstructSignatures/Ext"
-import { structTypeRefConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { IfcCall } from "Ext"
+import { IfcCallWithField } from "Ext"
+import { structTypeRefCall } from "Ext"
+import { IfcConstruct } from "Ext"
+import { IfcConstructWithField } from "Ext"
+import { structTypeRefConstruct } from "Ext"
 
 
 let ifcCall: IfcCall;

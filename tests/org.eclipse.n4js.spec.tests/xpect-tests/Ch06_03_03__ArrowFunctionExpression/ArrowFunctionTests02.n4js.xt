@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 
 var a = [
   "a",
@@ -55,5 +55,5 @@ var f5 = (s : string) => { const s2 = s + s ; return s2.length }
 // XPECT FIXME type of 'a5' --> Array<number>
 var a5 = a.map( f5 );
 
-// XPECT type of 'a.map( s => { const s2 = s + s ; return s2.length } )' --> Array<number>
+// XPECT type of 'a.map<|>( s => { const s2 = s + s ; return s2.length } )' --> Array<number>
 var a5WithExpectedTypeForLambda_1 : Array<number> = a.map( s => { const s2 = s + s ; return s2.length } );

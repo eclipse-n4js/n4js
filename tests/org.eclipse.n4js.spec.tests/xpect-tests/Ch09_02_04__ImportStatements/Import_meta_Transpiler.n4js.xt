@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 END_SETUP */
 
 
@@ -18,5 +18,5 @@ let urlTail = url.substring(url.length - 54);
 console.log(urlTail);
 
 /*  XPECT output  ---
-Ch09_02_04__ImportStatements/Import_meta_Transpiler.js
+Import_meta_Transpiler.js
 --- */

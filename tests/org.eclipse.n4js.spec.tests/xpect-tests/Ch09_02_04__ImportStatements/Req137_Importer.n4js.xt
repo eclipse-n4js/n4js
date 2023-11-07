@@ -9,22 +9,22 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
- 	ResourceSet {
+ 	ProjectWithSourceFolder {
 		ThisFile {}
 		File "Exporter.n4js" {}
 	}
 
 END_SETUP */
 
-import { C1 } from "Ch09_02_04__ImportStatements/Exporter"
-import { I1 } from "Ch09_02_04__ImportStatements/Exporter"
-import { f1 } from "Ch09_02_04__ImportStatements/Exporter"
-import { var1 } from "Ch09_02_04__ImportStatements/Exporter"
-import { let1 } from "Ch09_02_04__ImportStatements/Exporter"
-import let2asDefault from "Ch09_02_04__ImportStatements/Exporter"
-import { cnst8 } from "Ch09_02_04__ImportStatements/Exporter"
+import { C1 } from "Exporter"
+import { I1 } from "Exporter"
+import { f1 } from "Exporter"
+import { var1 } from "Exporter"
+import { let1 } from "Exporter"
+import let2asDefault from "Exporter"
+import { cnst8 } from "Exporter"
 
 let c1:C1 = new C1();
 let i1:I1 = null;

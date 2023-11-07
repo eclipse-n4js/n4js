@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 
 /////////////////
 // Additive Expression '+' or '-'
@@ -23,21 +23,21 @@ let bns: string|number|boolean = 1;
 let i1: int = 1, i2:int = 1;
 let s = "x";
 
-// XPECT type of ni+1 --> number
+// XPECT type of 'ni+1' --> number
 ni+1;
-// XPECT type of ni+1.5 --> number
+// XPECT type of 'ni+1.5' --> number
 ni+1.5;
-// XPECT type of i1+i2 --> number
+// XPECT type of 'i1+i2' --> number
 i1+i2;
-// XPECT type of bni+i2 --> number
+// XPECT type of 'bni+i2' --> number
 bni+i2;
-// XPECT type of bns+i2 --> union{number,string}
+// XPECT type of 'bns+i2' --> union{number,string}
 bns+i2;
-// XPECT type of bns+bns --> union{number,string}
+// XPECT type of 'bns+bns' --> union{number,string}
 bns+bns;
-// XPECT type of ni+s --> string
+// XPECT type of 'ni+s' --> string
 ni+s;
-// XPECT type of bni+s --> string
+// XPECT type of 'bni+s' --> string
 bni+s;
-// XPECT type of bns+s --> string
+// XPECT type of 'bns+s' --> string
 bns+s;

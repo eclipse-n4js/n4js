@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 
 
 interface I_fail {
@@ -54,7 +54,7 @@ var ctor_ext_d: constructor{D};
 // normal behavior (i.e. without @CovariantConstructor)
 
 
-// XPECT type of 'i.constructor' --> constructor{? extends I}
+// XPECT type of 'i.<|>constructor' --> constructor{? extends I}
 i.constructor;
 
 // XPECT errors --> "constructor{? extends I} is not a subtype of constructor{I}." at "i.constructor"
@@ -72,7 +72,7 @@ ctor_ext_i = ii.constructor;
 // behavior with @CovariantConstructor
 
 
-// XPECT type of 'j.constructor' --> constructor{J}
+// XPECT type of 'j.<|>constructor' --> constructor{J}
 j.constructor;
 
 // XPECT noerrors -->
@@ -88,7 +88,7 @@ ctor_ext_j = jj.constructor;
 
 // implementing classes:
 
-// XPECT type of 'd.constructor' --> constructor{D}
+// XPECT type of 'd.<|>constructor' --> constructor{D}
 d.constructor;
 
 // XPECT noerrors -->

@@ -9,17 +9,17 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 // IDE-561
 
 /* XPECT output ---
 name ClassWithStuff
-fqn Ch07_04__Reflection_Meta_Information/ClassReflectionBasicInfo/ClassWithStuff
+fqn ClassReflectionBasicInfo/ClassWithStuff
 annotations : 
  - Ignore
 interfaces : 
- - Ch07_04__Reflection_Meta_Information/ClassReflectionBasicInfo/R
- - Ch07_04__Reflection_Meta_Information/ClassReflectionBasicInfo/RR
+ - ClassReflectionBasicInfo/R
+ - ClassReflectionBasicInfo/RR
 super chain
  - S
  - SS

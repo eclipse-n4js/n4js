@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "Ext.n4jsd" { from="CallConstructSignature_usage__Ext.n4jsd" }
 	}
@@ -19,14 +19,14 @@
 END_SETUP */
 
 
-import { IfcNone } from "Ch05_02_09__CallConstructSignatures/Ext"
-import { IfcOnlyCall } from "Ch05_02_09__CallConstructSignatures/Ext"
-import { IfcOnlyConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
-import { IfcBoth } from "Ch05_02_09__CallConstructSignatures/Ext"
-import { structTypeRefNone } from "Ch05_02_09__CallConstructSignatures/Ext"
-import { structTypeRefOnlyCall } from "Ch05_02_09__CallConstructSignatures/Ext"
-import { structTypeRefOnlyConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
-import { structTypeRefBoth } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { IfcNone } from "Ext"
+import { IfcOnlyCall } from "Ext"
+import { IfcOnlyConstruct } from "Ext"
+import { IfcBoth } from "Ext"
+import { structTypeRefNone } from "Ext"
+import { structTypeRefOnlyCall } from "Ext"
+import { structTypeRefOnlyConstruct } from "Ext"
+import { structTypeRefBoth } from "Ext"
 
 
 let ifcNone: IfcNone;

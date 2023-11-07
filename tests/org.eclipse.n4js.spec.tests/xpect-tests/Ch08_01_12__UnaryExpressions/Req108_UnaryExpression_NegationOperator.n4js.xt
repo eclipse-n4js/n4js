@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
-    ResourceSet {
+    ProjectWithSourceFolder {
 		ThisFile {}
 		File "ExampleClasses.n4js" {}
 	}
@@ -19,7 +19,7 @@
    END_SETUP
  */
 
-import * as EC from "Ch08_01_12__UnaryExpressions/ExampleClasses";
+import * as EC from "ExampleClasses";
 
 
 

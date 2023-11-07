@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "Ext.n4jsd" { from="CallConstructSignature_usage__Ext.n4jsd" }
 	}
@@ -19,10 +19,10 @@
 END_SETUP */
 
 
-import { AliasedIfcOnlyCall } from "Ch05_02_09__CallConstructSignatures/Ext"
-import { AliasedIfcOnlyConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
-import { AliasedStructTypeRefOnlyCall } from "Ch05_02_09__CallConstructSignatures/Ext"
-import { AliasedStructTypeRefOnlyConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { AliasedIfcOnlyCall } from "Ext"
+import { AliasedIfcOnlyConstruct } from "Ext"
+import { AliasedStructTypeRefOnlyCall } from "Ext"
+import { AliasedStructTypeRefOnlyConstruct } from "Ext"
 
 
 // assert that it works as well if the call/construct signature is behind a type alias

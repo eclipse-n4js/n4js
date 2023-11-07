@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "express.n4jsd" {}
 	}
@@ -20,8 +20,8 @@
 */
 
 
-import express from "Ch05_02_09__CallConstructSignatures/express"
-import {expressAbstract} from "Ch05_02_09__CallConstructSignatures/express"
+import express from "express"
+import {expressAbstract} from "express"
 
 
 // XPECT type of 'result00' --> App
