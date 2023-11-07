@@ -43,7 +43,7 @@ var i12: I1&I2;
 // XPECT noerrors
 i12.m1;
 
-// XPECT type of 'i12.m1' --> A
+// XPECT type of 'm1' --> A
 i12.m1;
 
 // XPECT noerrors
@@ -55,7 +55,7 @@ i12.m1 = b;
 // XPECT noerrors
 i12.m2;
 
-// XPECT type of 'i12.m2' --> A
+// XPECT type of 'm2' --> A
 i12.m2;
 
 // XPECT noerrors
@@ -75,7 +75,7 @@ var i13: I1&I3;
 // XPECT noerrors
 i13.m1;
 
-// XPECT type of 'i13.m1' --> intersection{A,B}
+// XPECT type of 'm1' --> intersection{A,B}
 i13.m1;
 
 // XPECT noerrors
@@ -87,7 +87,7 @@ i13.m1 = b;
 // XPECT noerrors
 i13.m2;
 
-// XPECT type of 'i13.m2' --> intersection{A,B}
+// XPECT type of 'm2' --> intersection{A,B}
 i13.m2;
 
 // XPECT errors --> "A is not a subtype of B." at "a"
@@ -106,7 +106,7 @@ var i23: I2&I3;
 // XPECT noerrors
 i23.m1;
 
-// XPECT type of 'i23.m1' --> intersection{A,B}
+// XPECT type of 'm1' --> intersection{A,B}
 i23.m1;
 
 // XPECT errors --> "The accessor m1 is read-only." at "m1"
@@ -115,7 +115,7 @@ i23.m1 = null;
 // XPECT noerrors
 i23.m2;
 
-// XPECT type of 'i23.m2' --> intersection{A,B}
+// XPECT type of 'm2' --> intersection{A,B}
 i23.m2;
 
 // XPECT noerrors

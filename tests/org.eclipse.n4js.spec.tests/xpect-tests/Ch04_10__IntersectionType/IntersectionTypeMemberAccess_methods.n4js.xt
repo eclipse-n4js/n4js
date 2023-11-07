@@ -83,7 +83,7 @@ i12.onlyIn1(a);
 // XPECT errors --> "B is not a subtype of A." at "b"
 i12.onlyIn1(b);
 
-// XPECT type of 'i12.onlyIn1(a)' --> B
+// XPECT type of 'onlyIn1(a)' --> B
 i12.onlyIn1(a);
 
 
@@ -96,7 +96,7 @@ i12.onlyIn2(b);
 // XPECT errors --> "A is not a subtype of B." at "a"
 i12.onlyIn2(a);
 
-// XPECT type of 'i12.onlyIn2(b)' --> A
+// XPECT type of 'onlyIn2(b)' --> A
 i12.onlyIn2(b);
 
 
@@ -109,14 +109,14 @@ i12.onlyIn3(b);
 // XPECT errors --> "A is not a subtype of B." at "a"
 i12.onlyIn3(a);
 
-// XPECT type of 'i12.onlyIn3(b)' --> A
+// XPECT type of 'onlyIn3(b)' --> A
 i12.onlyIn3(b);
 
 
 
 // sameReturnType():A
 
-// XPECT type of 'i12.sameReturnType()' --> A
+// XPECT type of 'sameReturnType()' --> A
 i12.sameReturnType();
 
 
@@ -133,7 +133,7 @@ i12.sameParType1(b);
 
 // diffReturnType():A&B
 
-// XPECT type of 'i12.diffReturnType()' --> intersection{A,B}
+// XPECT type of 'diffReturnType()' --> intersection{A,B}
 i12.diffReturnType();
 
 
@@ -216,7 +216,7 @@ i12.varArgBoth(b, aub, aub);
 // XPECT noerrors
 i12.inBothInheritedAllDiffTypes(aub);
 
-// XPECT type of 'i12.inBothInheritedAllDiffTypes(aub)' --> intersection{B,A}
+// XPECT type of 'inBothInheritedAllDiffTypes(aub)' --> intersection{B,A}
 i12.inBothInheritedAllDiffTypes(aub);
 
 

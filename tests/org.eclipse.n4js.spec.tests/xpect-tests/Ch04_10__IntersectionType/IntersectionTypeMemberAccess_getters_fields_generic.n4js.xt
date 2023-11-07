@@ -42,7 +42,7 @@ var i12: I1<A> & I2<B>;
 // XPECT noerrors
 i12.m1;
 
-// XPECT type of 'i12.m1' --> intersection{A,B}
+// XPECT type of 'm1' --> intersection{A,B}
 i12.m1;
 
 // XPECT noerrors
@@ -55,7 +55,7 @@ i12.m1 = a;
 // XPECT noerrors
 i12.m2;
 
-// XPECT type of 'i12.m2' --> intersection{A,B}
+// XPECT type of 'm2' --> intersection{A,B}
 i12.m2;
 
 // XPECT noerrors
@@ -69,7 +69,7 @@ var i13: I1<A> & I3<B>;
 // XPECT noerrors
 i13.m1;
 
-// XPECT type of 'i13.m1' --> intersection{A,B}
+// XPECT type of 'm1' --> intersection{A,B}
 i13.m1;
 
 // XPECT noerrors
@@ -82,7 +82,7 @@ i13.m1 = a;
 // XPECT noerrors
 i13.m2;
 
-// XPECT type of 'i13.m2' --> intersection{A,B}
+// XPECT type of 'm2' --> intersection{A,B}
 i13.m2;
 
 // XPECT noerrors
@@ -96,7 +96,7 @@ var i23: I2<A> & I3<B>;
 // XPECT noerrors
 i23.m1;
 
-// XPECT type of 'i23.m1' --> intersection{A,B}
+// XPECT type of 'm1' --> intersection{A,B}
 i23.m1;
 
 // XPECT errors --> "The accessor m1 is read-only." at "m1"
@@ -108,7 +108,7 @@ i23.m1 = null;
 // XPECT noerrors
 i23.m2;
 
-// XPECT type of 'i23.m2' --> intersection{A,B}
+// XPECT type of 'm2' --> intersection{A,B}
 i23.m2;
 
 // XPECT noerrors

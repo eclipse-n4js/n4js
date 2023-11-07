@@ -17,8 +17,8 @@ class G1<T extends Array<string>> {
 
 	m1() {
 		// XPECT noerrors -->
-		// XPECT type of 'this.arr[42]' --> string
-		this.arr[42];
+		// XPECT type of 'elem' --> string
+		let elem = this.arr[42];
 	}
 }
 
@@ -28,8 +28,8 @@ class G2<T1, T2 extends Array<T1>> {
 
 	m2() {
 		// XPECT noerrors -->
-		// XPECT type of 'this.arr[42]' --> T1
-		this.arr[42];
+		// XPECT type of 'elem' --> T1
+		let elem = this.arr[42];
 	}
 }
 
@@ -38,8 +38,8 @@ class G3<T3> extends G2<T3, Array<T3>> {
 
 	m3() {
 		// XPECT noerrors -->
-		// XPECT type of 'this.arr[42]' --> T3
-		this.arr[42];
+		// XPECT type of 'elem' --> T3
+		let elem = this.arr[42];
 	}
 }
 
@@ -48,8 +48,8 @@ class G4 extends G3<number> {
 
 	m4() {
 		// XPECT noerrors -->
-		// XPECT type of 'this.arr[42]' --> number
-		this.arr[42];
+		// XPECT type of 'elem' --> number
+		let elem = this.arr[42];
 	}
 }
 
@@ -68,8 +68,8 @@ class C<E_Element, T_Iterable extends IterableExt<E_Element>> extends B<E_Elemen
 
     foo() {
         // XPECT noerrors --> "Not a function or method: any." at "this.iterable[Symbol.iterator]"
-        // XPECT type of 'this.iterable[Symbol.iterator]()' --> Iterator<E_Element>
-        this.iterable[Symbol.iterator]();
+        // XPECT type of 'elem' --> Iterator<E_Element>
+       let elem =  this.iterable[Symbol.iterator]();
 
 // work-around no longer required after fix:
 

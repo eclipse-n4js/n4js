@@ -20,8 +20,8 @@ class A {
 class B extends A {
 
     public g() {
-    	// XPECT type of 'super.f()' --> this[B]
-        super.f();
+    	// XPECT type of 'f0' --> this[B]
+        let f0 = super.f();
 
         // found during IDE-1852: XPECT FIXME nowarnings
     	// XPECT type of 'x0' --> {function():B}

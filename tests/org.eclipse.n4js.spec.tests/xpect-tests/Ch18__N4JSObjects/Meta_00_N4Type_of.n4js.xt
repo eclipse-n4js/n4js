@@ -21,7 +21,7 @@ let c = new C();
 let ci = new CI();
 
 
-// XPECT type of 'N4Type.of(null)' --> N4Type
+// XPECT type of 'of<|>(null)' --> N4Type
 N4Type.of(null);
 
 

@@ -19,11 +19,11 @@ enum Color {
 }
 
 let color: Color = Color.RED;
-// XPECT type of 'color[0]' --> string
+// XPECT type of 'v01' --> string
 // XPECT noerrors -->
 let v01 = color[0];
 
-// XPECT type of 'color[color.length - 1]' --> string
+// XPECT type of 'v02' --> string
 // XPECT noerrors -->
 let v02 = color[color.length - 1];
 

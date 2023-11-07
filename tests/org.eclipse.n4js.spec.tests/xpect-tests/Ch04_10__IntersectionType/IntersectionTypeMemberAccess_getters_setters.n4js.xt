@@ -43,7 +43,7 @@ var i12: I1&I2;
 // XPECT noerrors
 i12.a
 
-// XPECT type of 'i12.a' --> A
+// XPECT type of 'a' --> A
 i12.a
 
 // XPECT noerrors
@@ -60,7 +60,7 @@ i12.a = b;
 // XPECT noerrors
 i12.b
 
-// XPECT type of 'i12.b' --> B
+// XPECT type of 'b' --> B
 i12.b
 
 // XPECT noerrors
@@ -76,7 +76,7 @@ i12.b = a;
 // XPECT noerrors
 i12.ab
 
-// XPECT type of 'i12.ab' --> A
+// XPECT type of 'ab' --> A
 i12.ab
 
 // XPECT errors --> "A is not a subtype of B." at "a"
@@ -92,7 +92,7 @@ i12.ab = b;
 // XPECT noerrors
 i12.ba
 
-// XPECT type of 'i12.ba' --> B
+// XPECT type of 'ba' --> B
 i12.ba
 
 // XPECT noerrors

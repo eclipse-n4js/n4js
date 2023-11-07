@@ -10,9 +10,9 @@
  */
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
-/* XPECT output ~~~
+/* XPECT output ---
 Color { name: 'R', value: 'R' }
-~~~ */
+--- */
 
 enum Color { R, G, B}
 

@@ -18,5 +18,5 @@ class H<T> {
 }
 
 // XPECT noerrors -->
-// XPECT type of x --> H<?>
+// XPECT type of 'x' --> H<?>
 var x = H.m();

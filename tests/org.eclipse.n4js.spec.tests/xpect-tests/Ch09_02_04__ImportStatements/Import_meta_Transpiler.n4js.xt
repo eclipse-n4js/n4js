@@ -14,7 +14,7 @@ END_SETUP */
 
 
 let url = import.meta.url;
-let urlTail = url.substring(url.length - 54);
+let urlTail = url.substring(url.length - 25);
 console.log(urlTail);
 
 /*  XPECT output  ---

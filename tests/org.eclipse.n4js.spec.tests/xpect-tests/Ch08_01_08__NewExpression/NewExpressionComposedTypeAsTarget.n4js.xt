@@ -19,9 +19,9 @@
 END_SETUP */
 
 
-import { Ifc } from "Ch08_01_08__NewExpression/Ext"
-import { IfcWithConstructSig } from "Ch08_01_08__NewExpression/Ext"
-import { Cls } from "Ch08_01_08__NewExpression/Ext"
+import { Ifc } from "Ext"
+import { IfcWithConstructSig } from "Ext"
+import { Cls } from "Ext"
 
 
 let v01: Ifc & boolean;

@@ -44,7 +44,7 @@ var i13 : I1&I3;
 // XPECT noerrors
 i13.onlyIn1;
 
-// XPECT type of 'i13.onlyIn1' --> A
+// XPECT type of 'onlyIn1' --> A
 i13.onlyIn1
 
 // XPECT noerrors
@@ -61,7 +61,7 @@ i13.onlyIn1 = b;
 // XPECT noerrors
 i13.onlyIn2;
 
-// XPECT type of 'i13.onlyIn2' --> B
+// XPECT type of 'onlyIn2' --> B
 i13.onlyIn2
 
 // XPECT errors --> "A is not a subtype of B." at "a"
@@ -78,7 +78,7 @@ i13.onlyIn2 = b;
 // XPECT noerrors
 i13.onlyIn3;
 
-// XPECT type of 'i13.onlyIn3' --> B
+// XPECT type of 'onlyIn3' --> B
 i13.onlyIn3
 
 // XPECT errors --> "A is not a subtype of B." at "a"
@@ -95,7 +95,7 @@ i13.onlyIn3 = b;
 // XPECT noerrors
 i13.inBothSameType;
 
-// XPECT type of 'i13.inBothSameType' --> A
+// XPECT type of 'inBothSameType' --> A
 i13.inBothSameType
 
 // XPECT noerrors
@@ -112,7 +112,7 @@ i13.inBothSameType = b;
 // XPECT noerrors
 i13.inBothDiffType;
 
-// XPECT type of 'i13.inBothDiffType' --> intersection{A,B}
+// XPECT type of 'inBothDiffType' --> intersection{A,B}
 i13.inBothDiffType;
 
 // XPECT noerrors
@@ -126,7 +126,7 @@ i13.inBothDiffType = aub;
 // XPECT noerrors
 i13.inBothInheritedDiffType;
 
-// XPECT type of 'i13.inBothInheritedDiffType' --> intersection{A,B}
+// XPECT type of 'inBothInheritedDiffType' --> intersection{A,B}
 i13.inBothInheritedDiffType;
 
 // XPECT noerrors
