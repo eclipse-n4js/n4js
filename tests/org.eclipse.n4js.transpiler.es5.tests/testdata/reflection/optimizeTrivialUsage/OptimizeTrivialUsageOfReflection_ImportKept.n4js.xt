@@ -11,7 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-    Project {
+    ProjectWithSourceFolder {
 		File "Other.n4js" {}
 		ThisFile {}
 	}
@@ -32,6 +32,6 @@ new C();
 /* XPECT output ---
 module Other.n4js is being loaded ...
 C
-org.eclipse.n4js.transpiler.es5.tests
+test-project
 Other/C
 --- */

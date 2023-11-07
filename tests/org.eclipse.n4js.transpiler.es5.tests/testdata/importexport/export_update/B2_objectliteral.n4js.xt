@@ -11,7 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-	Project {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "A2_objectliteral.n4js" {}
 	}

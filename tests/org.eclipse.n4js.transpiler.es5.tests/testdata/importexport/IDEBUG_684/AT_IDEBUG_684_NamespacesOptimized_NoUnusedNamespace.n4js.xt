@@ -11,7 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-	Project {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "Err.n4js" {}
 		File "Stuff.n4js" {}
@@ -30,6 +30,7 @@ import * as S from './Stuff.js'
 
 console.log(N.Error);
 console.log(S);
+//# sourceMappingURL=AT_IDEBUG_684_NamespacesOptimized_NoUnusedNamespace.map
 --- */
 
 

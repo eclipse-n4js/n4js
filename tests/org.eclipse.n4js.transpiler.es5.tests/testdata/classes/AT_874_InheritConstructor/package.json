@@ -9,11 +9,14 @@
     "output": "src-gen",
     "sources": {
       "source": [
-        "testdata"
+        "src"
       ],
       "external": [
-        "testdata_external_impls"
+        "external"
       ]
     }
+  },
+  "dependencies": {
+    "n4js-runtime": ""
   }
 }

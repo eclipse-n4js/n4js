@@ -12,8 +12,14 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
     Project {
-		ThisFile {}
-		File "AT_874_ExternalClasses.n4jsd" {}
+    	SrcFolder {
+			ThisFile {}
+			File "AT_874_ExternalClasses.n4jsd" {}
+    	}
+    	Folder "external" {
+			File "AT_874_ExternalClasses.js" {}
+    	}
+    	File "package.json" {}
 	}
 
    END_SETUP

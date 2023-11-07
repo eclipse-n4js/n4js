@@ -11,7 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-	Project {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "ModA.n4js" {}
 		File "ModB.n4js" {}
