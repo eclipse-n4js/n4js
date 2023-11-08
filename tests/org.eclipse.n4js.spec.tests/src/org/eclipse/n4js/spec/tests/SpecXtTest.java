@@ -32,6 +32,6 @@ public class SpecXtTest {
 
 	@XtFolder
 	static String getFolder() {
-		return "xpect-tests";
+		return "xt-tests";
 	}
 }
