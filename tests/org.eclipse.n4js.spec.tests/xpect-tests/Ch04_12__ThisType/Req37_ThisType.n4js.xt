@@ -20,8 +20,8 @@ class A {
 
 	f() : this {
 		/* XPECT errors ---
-			"Incorrect number of arguments: expected 1, got 0." at "new A()"
 			"A is not a subtype of this[A]." at "new A()"
+			"Incorrect number of arguments: expected 1, got 0." at "new A()"
 		--- */
 		return new A();
 	}

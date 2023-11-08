@@ -29,8 +29,8 @@ n++;
 n--;
 
 // XPECT errors ---
-//"Invalid increment operand." at ""hallo""
 //""hallo" is not a subtype of number." at ""hallo""
+//"Invalid increment operand." at ""hallo""
 //---
 "hallo"++;
 // XPECT errors --> "Invalid increment operand." at "1"
@@ -64,8 +64,8 @@ f2()++;
 
 function f3() : Date { return new Date(); }
 // XPECT errors ---
-// "Invalid increment operand."  at "f3()"
 // "Date is not a subtype of number." at "f3()"
+// "Invalid increment operand."  at "f3()"
 // ---
 f3()++;
 
@@ -104,8 +104,8 @@ new B().giveA().x++;
 
 
 // XPECT errors ---
-// "Invalid increment operand."  at "new B().giveA()"
 // "A is not a subtype of number." at "new B().giveA()"
+// "Invalid increment operand."  at "new B().giveA()"
 // ---
 new B().giveA()++;
 class D {

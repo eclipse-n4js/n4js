@@ -62,7 +62,7 @@ i12.onlyIn1(a);
 // XPECT errors --> "B is not a subtype of A." at "b"
 i12.onlyIn1(b);
 
-// XPECT type of 'onlyIn1(a)' --> B
+// XPECT type of 'onlyIn1<|>(a)' --> B
 i12.onlyIn1(a);
 
 
@@ -75,14 +75,14 @@ i12.onlyIn2(b);
 // XPECT errors --> "A is not a subtype of B." at "a"
 i12.onlyIn2(a);
 
-// XPECT type of 'onlyIn2(b)' --> A
+// XPECT type of 'onlyIn2<|>(b)' --> A
 i12.onlyIn2(b);
 
 
 
 // sameReturnType():A
 
-// XPECT type of 'sameReturnType()' --> A
+// XPECT type of 'sameReturnType<|>()' --> A
 i12.sameReturnType();
 
 
@@ -99,7 +99,7 @@ i12.sameParType1(b);
 
 // diffReturnType():A&B
 
-// XPECT type of 'diffReturnType()' --> intersection{A,B}
+// XPECT type of 'diffReturnType<|>()' --> intersection{A,B}
 i12.diffReturnType();
 
 

@@ -31,12 +31,12 @@ interface G<T> {}
 
 // union{ G<? extends A>, G<? extends B> }  <:  G<? extends union{A,B}>
 
-var ugeageb : union{G<? extends A>,G<? extends B>};
+var ugeageb : union{G<? extends A>, G<? extends B>};
 var geuab : G<? extends union{A,B}>;
 
 // XPECT noerrors -->
 geuab = ugeageb;
-// XPECT errors --> "G<? extends union{A,B}> is not a subtype of union{G<? extends A>, G<? extends B>}." at "geuab"
+// XPECT errors --> "G<? extends union{A,B}> is not a subtype of union{G<? extends A>,G<? extends B>}." at "geuab"
 ugeageb = geuab;
 
 
@@ -47,7 +47,7 @@ var igeageb : intersection{G<? extends A>,G<? extends B>};
 
 // XPECT noerrors -->
 igeageb = geiab;
-// XPECT errors --> "intersection{G<? extends A>, G<? extends B>} is not a subtype of G<? extends intersection{A,B}>." at "igeageb"
+// XPECT errors --> "intersection{G<? extends A>,G<? extends B>} is not a subtype of G<? extends intersection{A,B}>." at "igeageb"
 geiab = igeageb;
 
 
@@ -62,7 +62,7 @@ var gsiab : G<? super intersection{A,B}>;
 
 // XPECT noerrors -->
 gsiab = ugsagsb;
-// XPECT errors --> "G<? super intersection{A,B}> is not a subtype of union{G<? super A>, G<? super B>}." at "gsiab"
+// XPECT errors --> "G<? super intersection{A,B}> is not a subtype of union{G<? super A>,G<? super B>}." at "gsiab"
 ugsagsb = gsiab;
 
 
@@ -73,5 +73,5 @@ var igsagsb : intersection{G<? super A>, G<? super B>};
 
 // XPECT noerrors -->
 igsagsb = gsuab;
-// XPECT errors --> "intersection{G<? super A>, G<? super B>} is not a subtype of G<? super union{A,B}>." at "igsagsb"
+// XPECT errors --> "intersection{G<? super A>,G<? super B>} is not a subtype of G<? super union{A,B}>." at "igsagsb"
 gsuab = igsagsb;

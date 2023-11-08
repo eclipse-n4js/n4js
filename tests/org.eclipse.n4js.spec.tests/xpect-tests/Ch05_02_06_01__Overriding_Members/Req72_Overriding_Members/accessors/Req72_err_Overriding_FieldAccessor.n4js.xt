@@ -28,8 +28,8 @@ class B extends A {
 
 class C extends A {
 	/* XPECT errors ---
-		"The getter x must override or implement a getter from a super class or interface." at "x"
 		"Getter C.x cannot be overridden without overriding the corresponding setter." at "x"
+		"The getter x must override or implement a getter from a super class or interface." at "x"
 	--- */
 	@Override get x() : string { return this._x}
 }
@@ -49,8 +49,8 @@ class E extends D {
 
 class F extends D {
 	/* XPECT errors ---
-		"The setter x must override or implement a setter from a super class or interface." at "x"
 		"Setter F.x cannot be overridden without overriding the corresponding getter." at "x"
+		"The setter x must override or implement a setter from a super class or interface." at "x"
 	--- */
 	@Override set x(s : string) { this._x = s}
 }

@@ -31,7 +31,7 @@ var gc: G<C>;
 // G<out B> should behave like G<? extends B>
 
 function foo(param: G<out B>) {
-	// XPECT type of 'param.read()' --> ? extends B
+	// XPECT type of 'param.read<|>()' --> ? extends B
 	param.read();
 	// XPECT errors --> "B is not a subtype of ? extends B." at "new B()"
 	param.write(new B());
@@ -49,7 +49,7 @@ foo(gc);
 // G<in B> should behave like G<? super B>
 
 function foo2(param: G<in B>) {
-	// XPECT type of 'param.read()' --> ? super B
+	// XPECT type of 'param.read<|>()' --> ? super B
 	param.read();
 	// XPECT noerrors -->
 	param.write(new B());

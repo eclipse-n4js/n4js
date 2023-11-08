@@ -11,10 +11,10 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 
-/* XPECT output ~~~
+/* XPECT output ---
 top
 nested
-~~~ */
+--- */
 
 // XPECT noerrors --> "functions on top level are allowed in N4JS and JS" at "top"
 function top() {

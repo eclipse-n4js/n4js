@@ -11,7 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 
-/* XPECT  output ~~~
+/* XPECT  output ---
 C.m
 S.m
 R.m
@@ -19,7 +19,7 @@ S.m
 C.m
 C.m
 C.m
-~~~ */
+--- */
 
 class S { m() { console.log("S.m");} }
 

@@ -19,7 +19,7 @@ var n1: number = 1;
 var s: string = "x";
 var c: C = new C();
 
-// XPECT type of 'n/n' --> number
+// XPECT type of 'n<|>/n' --> number
 n/n;
 // XPECT type of 'n/i' --> number
 n/i;

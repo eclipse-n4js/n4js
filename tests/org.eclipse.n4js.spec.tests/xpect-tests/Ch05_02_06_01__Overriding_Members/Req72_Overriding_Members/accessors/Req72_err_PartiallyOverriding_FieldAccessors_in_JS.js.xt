@@ -15,9 +15,6 @@ class A {
 	set a(v) {}
 }
 class B extends A {
-	/* XPECT warnings ---
-	   "Setter B.a should not be declared without overriding the corresponding getter." at "a"
-	---
-	 */
+	// no errors in js XPECT noerrors --> "Setter B.a should not be declared without overriding the corresponding getter." at "a"
 	set a(v) {}
 }

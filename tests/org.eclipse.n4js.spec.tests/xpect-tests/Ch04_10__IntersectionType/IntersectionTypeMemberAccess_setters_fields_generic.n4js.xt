@@ -107,7 +107,7 @@ i23.m1 = aub;
 // XPECT noerrors
 i23.m2;
 
-// XPECT type of 'm2' --> intersection{A, B}
+// XPECT type of 'm2' --> intersection{A,B}
 i23.m2;
 
 // XPECT noerrors

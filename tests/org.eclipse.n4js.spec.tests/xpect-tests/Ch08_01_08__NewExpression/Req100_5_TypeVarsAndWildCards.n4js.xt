@@ -33,7 +33,7 @@ class D<T extends C> {
         // XPECT type of 's' --> string
         s;
 
-        // XPECT type of t.constructor --> constructor{? extends T}
+        // XPECT type of 'constructor' --> constructor{? extends T}
         t.constructor;
 
         var ctor_T = t.constructor;

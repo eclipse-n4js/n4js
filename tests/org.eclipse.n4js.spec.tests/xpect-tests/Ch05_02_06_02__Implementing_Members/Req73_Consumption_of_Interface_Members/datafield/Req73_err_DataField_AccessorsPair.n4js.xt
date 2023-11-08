@@ -18,12 +18,12 @@ interface R1 {
 	x : string;
 }
 
-// XPECT errors --> "Missing setter to completely override consumed field R1.x." " at "C1"
+// XPECT errors --> "Missing setter to completely override consumed field R1.x." at "C1"
 class C1 implements R1 {
 	@Override get x() : string { return ""}
 }
 
-// XPECT errors --> "Missing getter to completely override consumed field R1.x." " at "C2"
+// XPECT errors --> "Missing getter to completely override consumed field R1.x." at "C2"
 class C2 implements R1 {
 	@Override  set x(s : string) {}
 }

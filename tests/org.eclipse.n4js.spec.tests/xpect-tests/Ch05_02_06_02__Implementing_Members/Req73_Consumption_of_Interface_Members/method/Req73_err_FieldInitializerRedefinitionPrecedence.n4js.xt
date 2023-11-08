@@ -11,13 +11,13 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 
-/* XPECT  output ~~~
+/* XPECT  output ---
 C.x
 S.x
 R.x
 S.x
 C.x
-~~~ */
+--- */
 
 class S { x : string = "S.x"; }
 

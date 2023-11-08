@@ -80,22 +80,22 @@ for (var l0 : string in ol){}
 for (var l1 : any in ol){}
 
 
-// XPECT errors --> "Type of for-in-loop variable must be a super type of string but String is not. " at "l2 : String"
+// XPECT errors --> "Type of for-in-loop variable must be a super type of string but String is not." at "l2 : String"
 for (var l2 : String in ol){}
 var l2a : String;
-// XPECT errors --> "Type of for-in-loop variable must be a super type of string but String is not. " at "l2a"
+// XPECT errors --> "Type of for-in-loop variable must be a super type of string but String is not." at "l2a"
 for (l2a in ol){}
 
-// XPECT errors --> "Type of for-in-loop variable must be a super type of string but C is not. " at "l3 : C"
+// XPECT errors --> "Type of for-in-loop variable must be a super type of string but C is not." at "l3 : C"
 for (var l3 : C in ol){}
 var l3a : C;
-// XPECT errors --> "Type of for-in-loop variable must be a super type of string but C is not. " at "l3a"
+// XPECT errors --> "Type of for-in-loop variable must be a super type of string but C is not." at "l3a"
 for (l3a in ol){}
 
-// XPECT errors --> "Type of for-in-loop variable must be a super type of string but number is not. " at "l4 : number"
+// XPECT errors --> "Type of for-in-loop variable must be a super type of string but number is not." at "l4 : number"
 for (var l4 : number in ol) {}
 var l4a : number;
-// XPECT errors --> "Type of for-in-loop variable must be a super type of string but number is not. " at "l4a"
+// XPECT errors --> "Type of for-in-loop variable must be a super type of string but number is not." at "l4a"
 for (l4a in ol) {}
 
 // --------------------------------------------------------------------------

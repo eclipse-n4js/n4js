@@ -42,7 +42,7 @@
  = inspect test as N4NamedElement
   - test.name is a string TestN4Provider
  = inspect test as N4Element
-  - test.origin is a string org.eclipse.n4js.spec.tests
+  - test.origin is a string test-project
   - test.annotations is empty
   - test.allAnnotations is a function allAnnotations
   - test.anyAnnotation is a function allAnnotations

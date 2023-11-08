@@ -57,7 +57,7 @@ function func04(b : boolean) : A {
 	}
 }
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ------------------------~~
 // checking controlflow
 //
 // ok: all paths have either throw or return
