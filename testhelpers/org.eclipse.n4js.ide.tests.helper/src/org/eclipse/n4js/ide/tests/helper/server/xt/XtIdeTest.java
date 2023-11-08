@@ -704,7 +704,7 @@ public class XtIdeTest extends AbstractIdeTest {
 		FileURI fileUri = getGeneratedFileURI();
 
 		installN4JSRuntime();
-		assertOutput(fileUri, data.expectation);
+		assertOutput(fileUri, data.expectationRaw);
 	}
 
 	private FileURI getGeneratedFileURI() {
