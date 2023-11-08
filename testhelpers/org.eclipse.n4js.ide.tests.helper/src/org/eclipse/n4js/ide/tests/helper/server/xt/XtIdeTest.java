@@ -718,9 +718,16 @@ public class XtIdeTest extends AbstractIdeTest {
 
 	private FileURI getGeneratedFileURI() {
 		String moduleName = xtData.workspace.moduleNameOfXtFile;
-		int idxStart = Math.max(moduleName.lastIndexOf("/") + 1, 0);
 		int idxEnd = moduleName.lastIndexOf(".");
-		String genModuleName = "src-gen/" + moduleName.substring(idxStart, idxEnd) + ".js";
+		String genModuleName;
+		if (moduleName.contains("/src/")) {
+			// poor-man's identification in case of module name clashes
+			int idxStart = Math.max(moduleName.lastIndexOf("/src/") + 5, 0);
+			genModuleName = "src-gen/" + moduleName.substring(idxStart, idxEnd) + ".js";
+		} else {
+			int idxStart = Math.max(moduleName.lastIndexOf("/") + 1, 0);
+			genModuleName = moduleName.substring(idxStart, idxEnd) + ".js";
+		}
 		FileURI fileUri = getFileURIFromModuleName(genModuleName);
 		return fileUri;
 	}
