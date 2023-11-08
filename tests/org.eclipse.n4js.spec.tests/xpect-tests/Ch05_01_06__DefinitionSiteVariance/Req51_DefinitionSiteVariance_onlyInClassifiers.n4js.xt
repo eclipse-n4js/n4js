@@ -19,42 +19,34 @@ interface I<out T> {}
 
 
 class D {
-	/* XPECT issues ---
-		"Declaration of definition-site variance only allowed in generic classes and interfaces, not in generic functions or methods." at "out"
-		"Type variable T not used in parameters or return type." at "T"
-	--- */
+
+	// XPECT errors --> "Declaration of definition-site variance only allowed in generic classes and interfaces, not in generic functions or methods." at "out"
+	// XPECT warnings --> "Type variable T not used in parameters or return type." at "T"
 	<out T> m1() {}
 
-	/* XPECT issues ---
-		"Declaration of definition-site variance only allowed in generic classes and interfaces, not in generic functions or methods." at "in"
-		"Type variable T not used in parameters or return type." at "T"
-	--- */
+
+	// XPECT errors --> "Declaration of definition-site variance only allowed in generic classes and interfaces, not in generic functions or methods." at "in"
+	// XPECT warnings --> "Type variable T not used in parameters or return type." at "T"
 	<in T> m2() {}
 }
 
 interface J {
-	/* XPECT issues ---
-		"Declaration of definition-site variance only allowed in generic classes and interfaces, not in generic functions or methods." at "out"
-		"Type variable T not used in parameters or return type." at "T"
-	--- */
+
+	// XPECT errors --> "Declaration of definition-site variance only allowed in generic classes and interfaces, not in generic functions or methods." at "out"
+	// XPECT warnings --> "Type variable T not used in parameters or return type." at "T"
 	<out T> m1()
 
-	/* XPECT issues ---
-		"Declaration of definition-site variance only allowed in generic classes and interfaces, not in generic functions or methods." at "in"
-		"Type variable T not used in parameters or return type." at "T"
-	--- */
+
+	// XPECT errors --> "Declaration of definition-site variance only allowed in generic classes and interfaces, not in generic functions or methods." at "in"
+	// XPECT warnings --> "Type variable T not used in parameters or return type." at "T"
 	<in T> m2()
 }
 
 
-/* XPECT issues ---
-	"Declaration of definition-site variance only allowed in generic classes and interfaces, not in generic functions or methods." at "out"
-	"Type variable T not used in parameters or return type." at "T"
---- */
+// XPECT errors --> "Declaration of definition-site variance only allowed in generic classes and interfaces, not in generic functions or methods." at "out"
+// XPECT warnings --> "Type variable T not used in parameters or return type." at "T"
 function <out T> foo1() {}
 
-/* XPECT issues ---
-	"Declaration of definition-site variance only allowed in generic classes and interfaces, not in generic functions or methods." at "in"
-	"Type variable T not used in parameters or return type." at "T"
---- */
+// XPECT errors --> "Declaration of definition-site variance only allowed in generic classes and interfaces, not in generic functions or methods." at "in"
+// XPECT warnings --> "Type variable T not used in parameters or return type." at "T"
 function <in T> foo2() {}

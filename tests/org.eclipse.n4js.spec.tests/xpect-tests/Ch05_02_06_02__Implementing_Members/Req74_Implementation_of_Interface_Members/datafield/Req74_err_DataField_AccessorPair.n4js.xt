@@ -21,12 +21,12 @@ class C implements I {
 	@Override set s(s : string) {}
 }
 
-// XPECT errors --> "Missing setter to completely override consumed field I.s." " at "C1"
+// XPECT errors --> "Missing setter to completely override consumed field I.s." at "C1"
 class C1 implements I {
 	@Override get s() : string { return "" }
 }
 
-// XPECT errors --> "Missing getter to completely override consumed field I.s." " at "C2"
+// XPECT errors --> "Missing getter to completely override consumed field I.s." at "C2"
 class C2 implements I {
 	@Override set s(s : string) {}
 }

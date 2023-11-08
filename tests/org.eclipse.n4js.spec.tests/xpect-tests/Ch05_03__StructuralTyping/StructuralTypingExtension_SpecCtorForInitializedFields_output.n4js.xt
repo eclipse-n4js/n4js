@@ -11,6 +11,14 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 
+/* XPECT output ---
+A1.s
+new A1.s
+A2.s
+A3.s
+new A3.s
+A3.s
+--- */
 
 class A1 {
     @Final public s : string = 'A1.s';
@@ -32,8 +40,6 @@ class A2 {
     constructor(@Spec spec : ~i~this) { }
 }
 
-// XPECT errors --> "~Object is not a structural subtype of ~i~A2: missing field s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "{}"
-new A2({});
 
 // XPECT noerrors --> "this is the proper way."
 var a2 = new A2({s: 'A2.s'});

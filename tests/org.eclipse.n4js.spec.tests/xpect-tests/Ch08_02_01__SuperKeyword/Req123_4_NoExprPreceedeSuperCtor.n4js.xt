@@ -58,7 +58,7 @@ class D extends A {
 		if (true) {
 			return;
 		}
-		// XPECT errors --> "Super constructor call must not be preceded by return  (line 59)." at "super"
+		// XPECT errors --> "Super constructor call must not be preceded by return (line 59)." at "super"
 		super();
 	}
 }
@@ -76,10 +76,8 @@ class F extends A {
 	constructor() {
 		var a = 1;
 		return;
-		/* XPECT issues ---
-			"Dead code. No execution possible after return." at "super();"
-			"Super constructor call must not be preceded by return  (line 78)." at "super"
-		--- */
+		// XPECT warnings --> "Dead code. No execution possible after return." at "super();"
+		// XPECT errors --> "Super constructor call must not be preceded by return (line 78)." at "super"
 		super();
 	}
 }

@@ -17,11 +17,10 @@ var sortedV1 = (... elems : number) => elems.sort;
 
 
 /* Make sure the old syntax is invalid XPECT errors ---
+"no viable alternative at input 'elems'" at "elems"
 "Couldn't resolve reference to IdentifiableElement 'elems'." at "elems"
 "Couldn't resolve reference to IdentifiableElement 'number'." at "number"
 "no viable alternative at input '...'" at "..."
 "no viable alternative at input '>'" at ">"
-"no viable alternative at input 'elems'" at "elems"
-"no viable alternative at input 'elems'" at "elems"
 --- */
 var sortedV2 = number... elems => elems.sort;

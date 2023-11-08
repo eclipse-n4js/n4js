@@ -44,12 +44,12 @@ var test = ca_struct.field; // <-- works, but for the wrong reasons! type inferr
 
 // XPECT noerrors -->
 cb.acc = {name:"x"};
-// XPECT type of cb.acc --> ~B
+// XPECT type of 'cb.acc' --> ~B
 cb.acc;
 
 // XPECT noerrors -->
 cb.method({name:"x"});
-// XPECT type of cb.method(null) --> ~B
+// XPECT type of 'cb.method(null)' --> ~B
 cb.method(null);
 
 

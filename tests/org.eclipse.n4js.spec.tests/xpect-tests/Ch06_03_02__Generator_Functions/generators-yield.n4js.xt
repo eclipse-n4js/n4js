@@ -15,15 +15,15 @@
 // yield is only allowed in generators
 function g0() {
 	/* XPECT errors ---
-	"yield is a reserved identifier." at "yield"
 	"Couldn't resolve reference to IdentifiableElement 'yield'." at "yield"
+	"yield is a reserved identifier." at "yield"
 	--- */
 	yield;
 }
 async function ag0() {
 	/* XPECT errors ---
-	"yield is a reserved identifier." at "yield"
 	"Couldn't resolve reference to IdentifiableElement 'yield'." at "yield"
+	"yield is a reserved identifier." at "yield"
 	--- */
 	yield;
 }

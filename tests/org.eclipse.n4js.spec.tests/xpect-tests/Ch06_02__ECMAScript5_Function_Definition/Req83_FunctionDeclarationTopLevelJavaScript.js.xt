@@ -18,7 +18,7 @@ nested
 
 // XPECT noerrors --> "functions on top level are allowed in N4JS and JS" at "top"
 function top() {
-	// XPECT warnings --> "Functions declarations should not be placed in blocks. Use a function expression or move the statement to the top of the outer function." at "nested"
+	// no warnings in js XPECT nowarnings --> "Functions declarations should not be placed in blocks. Use a function expression or move the statement to the top of the outer function." at "nested"
 	function nested() {
 		console.log("nested")
 	}

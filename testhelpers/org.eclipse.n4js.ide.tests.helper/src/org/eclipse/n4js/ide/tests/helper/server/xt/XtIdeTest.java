@@ -225,6 +225,9 @@ public class XtIdeTest extends AbstractIdeTest {
 		case "accessModifier":
 			accessModifier(testMethodData);
 			break;
+		case "binding":
+			binding(testMethodData);
+			break;
 		case "compileResult":
 			compileResult(testMethodData);
 			break;
@@ -273,11 +276,17 @@ public class XtIdeTest extends AbstractIdeTest {
 		case "scopeWithPosition":
 			scopeWithPosition(testMethodData);
 			break;
+		case "expectedType":
+			expectedType(testMethodData);
+			break;
 		case "type":
 			type(testMethodData);
 			break;
 		case "typeArgs":
 			typeArgs(testMethodData);
+			break;
+		case "typeWithAliasResolution":
+			typeWithAliasResolution(testMethodData);
 			break;
 
 		// flow graph test methods
@@ -711,7 +720,7 @@ public class XtIdeTest extends AbstractIdeTest {
 		String moduleName = xtData.workspace.moduleNameOfXtFile;
 		int idxStart = Math.max(moduleName.lastIndexOf("/") + 1, 0);
 		int idxEnd = moduleName.lastIndexOf(".");
-		String genModuleName = moduleName.substring(idxStart, idxEnd) + ".js";
+		String genModuleName = "src-gen/" + moduleName.substring(idxStart, idxEnd) + ".js";
 		FileURI fileUri = getFileURIFromModuleName(genModuleName);
 		return fileUri;
 	}
@@ -789,6 +798,24 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
+	 * Checks that a given element is bound to something identified by (simple) qualified name. The given expression is
+	 * tested, and within that we expect a property access or a direct identifiable element. The compared name is the
+	 * simple qualified name, that is container (type) followed by elements name, without URIs of modules etc. Usage:
+	 *
+	 * <pre>
+	 * // Xpect binding at '&ltLOCATION&gt' --&gt; &ltQUALIFIED NAME&gt
+	 * </pre>
+	 *
+	 * The location is optional.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void binding(XtMethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "binding", "at");
+		String bindingName = xtMethods.getBindingName(ocr);
+		assertEquals(data.expectation, bindingName);
+	}
+
+	/**
 	 * Checks the scope at a given location. Usage:
 	 *
 	 * <pre>
@@ -843,6 +870,22 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
+	 * Checks that an element/expression has a certain expected type (i.e. judgment expectedTypeIn). Usage:
+	 *
+	 * <pre>
+	 * // Xpect expectedType at '&ltLOCATION&gt' --&gt; &ltTYPE&gt
+	 * </pre>
+	 *
+	 * The location is optional.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void expectedType(XtMethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "expectedType", "at");
+		String typeStr = xtMethods.getTypeString(ocr.getEObject(), true, false);
+		assertEquals(data.expectation, typeStr);
+	}
+
+	/**
 	 * Checks that an element/expression has a certain type. Usage:
 	 *
 	 * <pre>
@@ -880,6 +923,23 @@ public class XtIdeTest extends AbstractIdeTest {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "typeArgs", "of");
 		String typeArgStr = xtMethods.getTypeArgumentsString(ocr.getEObject());
 		assertEquals(data.expectation, typeArgStr);
+	}
+
+	/**
+	 * Same as {œcode type}, but includes resolution of type aliases.Usage:
+	 *
+	 * <pre>
+	 * // Xpect typeWithAliasResolution of '&ltLOCATION&gt' --&gt; &ltTYPE&gt
+	 * </pre>
+	 *
+	 * The location is optional.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void typeWithAliasResolution(XtMethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "typeWithAliasResolution",
+				"of");
+		String typeStr = xtMethods.getTypeString(ocr.getEObject(), false, true);
+		assertEquals(data.expectation, typeStr);
 	}
 
 	/**

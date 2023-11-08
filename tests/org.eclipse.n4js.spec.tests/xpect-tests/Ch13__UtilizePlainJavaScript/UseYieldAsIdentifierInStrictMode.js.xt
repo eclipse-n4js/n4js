@@ -18,7 +18,7 @@ function nonStrict() {
 }
 function strictMode() {
 	'use strict';
-	// XPECT errors --> "yield is a reserved identifier." at "yield"
+	// no errors in js XPECT noerrors --> "yield is a reserved identifier." at "yield"
 	var yield = 4;
 }
 function nonStrict1() {
