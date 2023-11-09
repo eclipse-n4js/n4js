@@ -1,5 +1,5 @@
 {
-	"name": "org.eclipse.n4js.bugreports.tests",
+	"name": "test-project",
 	"version": "0.0.1",
 	"type": "module",
 	"n4js": {
@@ -9,11 +9,10 @@
 		"output": "src-gen",
 		"sources": {
 			"source": [
-				"bugreports-tests",
-				"bugreports-pending"
+				"src"
 			],
 			"test": [
-				"bugreports-tests_in-test"
+				"test"
 			]
 		}
 	}

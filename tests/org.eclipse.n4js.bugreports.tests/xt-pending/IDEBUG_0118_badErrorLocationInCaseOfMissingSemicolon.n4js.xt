@@ -9,9 +9,11 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-// any missing toString()
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.PendingSpecXtTest END_SETUP  */
 
-var something : any = "party";
 
-// XPECT FIXME noerrors --> "any should be autoboxed to Object, but only if receiver is not a literal"
-console.log(something.toString());
+// XPECT FIXME errors --> "No semicolon after function expression"
+var safeEval = function safeEval(dyn) { eval(dyn) }
+(function(){
+	safeEval('logFactors(1)');
+})();

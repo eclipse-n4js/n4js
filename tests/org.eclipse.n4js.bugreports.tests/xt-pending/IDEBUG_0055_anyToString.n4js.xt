@@ -9,8 +9,11 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-class A<T> {}
-class Foo {
-    // XPECT FIXME noerrors --> "The this type isn't allowed on this place. You can only use it as return type of instance methods or structurally on use site in the constructor."
-    a: A<{function(this): void}>;
-}
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.PendingSpecXtTest END_SETUP  */
+
+// any missing toString()
+
+var something : any = "party";
+
+// XPECT FIXME noerrors -->
+console.log(something.toString());

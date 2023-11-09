@@ -9,7 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-class A{
-	// XPECT FIXME errors --> "Cannot redefine constructor property name" at "name"
-	private static name: string = 'foo';
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.PendingSpecXtTest END_SETUP  */
+
+
+// XPECT FIXME errors --> "Cannot extend final class Function." at "Function"
+class A extends Function {
 }

@@ -9,7 +9,19 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTestInTest END_SETUP  */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest
+   
+	Project {
+		Folder "test" {
+			ThisFile {}
+		}
+		File "package.json" {}
+	}
+   
+   END_SETUP
+ */
+
 
 // XPECT noerrors --> "class is abstract, no need for export"
 abstract class B {

@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportPendingTest END_SETUP  */
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.PendingSpecXtTest END_SETUP  */
 
 // This is due to the missing constructor: Array access doesn't work or any+ or Objects when trying to get typed members
 

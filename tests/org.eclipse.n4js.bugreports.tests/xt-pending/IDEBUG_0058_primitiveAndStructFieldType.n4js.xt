@@ -9,10 +9,13 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-// found during IDE-1852: XPECT FIXME nowarnings
-// XPECT FIXME noerrors --> "return type should be inferred"
-var boolean b1 = function() { return true; }();
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.PendingSpecXtTest END_SETUP  */
 
-// found during IDE-1852: XPECT FIXME nowarnings
-// XPECT FIXME noerrors --> "return type should be inferred"
-var boolean b2 = (() => { return true })();
+
+class A {
+    constructor(@Spec spec : ~i~this) {
+    }
+}
+
+// XPECT FIXME errors --> "string is not a subtype of ~~A."
+new A("hello");

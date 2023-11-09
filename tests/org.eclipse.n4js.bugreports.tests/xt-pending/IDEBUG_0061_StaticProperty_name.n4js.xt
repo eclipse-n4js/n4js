@@ -9,8 +9,10 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-// XPECT FIXME errors --> "No semicolon after function expression"
-var safeEval = function safeEval(dyn) { eval(dyn) }
-(function(){
-	safeEval('logFactors(1)');
-})();
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.PendingSpecXtTest END_SETUP  */
+
+
+class A{
+	// XPECT FIXME errors --> "Cannot redefine constructor property name" at "name"
+	private static name: string = 'foo';
+}
