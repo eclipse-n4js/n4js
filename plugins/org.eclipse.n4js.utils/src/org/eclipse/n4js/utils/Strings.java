@@ -255,4 +255,37 @@ abstract public class Strings {
 		String rangeB = strB.substring(idxStartB, idxEndB);
 		return new String[] { rangeA, rangeB };
 	}
+
+	public static String trimIndentation(String str) {
+		String[] lines = str.split("\n");
+		int indents = Integer.MAX_VALUE;
+		for (int i = 1; i < lines.length; i++) {
+			String line = lines[i];
+			if (!line.isBlank()) {
+				for (int j = 0; j < line.length(); j++) {
+					char curChar = line.charAt(j);
+					if (curChar != ' ' && curChar != '\t') {
+						indents = Math.min(indents, j);
+						break;
+					}
+				}
+			}
+		}
+		for (int i = 1; i < lines.length; i++) {
+			if (lines[i].isBlank()) {
+				lines[i] = lines[i].trim();
+			} else {
+				lines[i] = lines[i].substring(indents);
+			}
+		}
+		return Strings.join("\n", (Object[]) lines);
+	}
+
+	public static String stripAllTrailing(String str) {
+		String[] lines = str.split("\n");
+		for (int i = 1; i < lines.length; i++) {
+			lines[i] = lines[i].stripTrailing();
+		}
+		return Strings.join("\n", (Object[]) lines);
+	}
 }
