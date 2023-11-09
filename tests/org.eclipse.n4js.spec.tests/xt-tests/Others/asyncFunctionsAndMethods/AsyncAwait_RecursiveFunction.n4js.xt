@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+async function foo01() {
+	// XPECT noerrors -->
+	await foo01();
+}
+
+async function foo02(): void {
+	// XPECT noerrors -->
+	await foo02();
+}
+
+async function foo03(): number {
+	// XPECT type of 'n' --> number
+	let n = await foo03();
+	return 42;
+}
+
+
+class C {
+
+	async m01() {
+		// XPECT noerrors -->
+		await this.m01();
+	}
+
+	async m02(): void {
+		// XPECT noerrors -->
+		await this.m02();
+	}
+
+	async m03(): number {
+		// XPECT type of 'n' --> number
+		let n = await this.m03();
+		return 42;
+	}
+}

@@ -1,0 +1,115 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+// ##########################################################################
+// PART 1: abstract members (methods, getters, setters) are inherited from an abstract class
+
+
+abstract class A {
+	public abstract m() : string
+	public abstract get g() : string
+	public abstract set s(name : string)
+}
+
+
+// --------------------------------------------------------------------------
+// simple success case #1: ok if subclass implements abstract member
+
+class B extends A {
+	@Override
+	public m() : string { return "" }
+	@Override
+	public get g() : string { return "" }
+	@Override
+	public set s(name : string) {}
+}
+
+
+// --------------------------------------------------------------------------
+// simple success case #2: ok if subclass declared abstract
+
+abstract class C extends A {
+}
+
+
+// --------------------------------------------------------------------------
+// simple failure case
+
+// XPECT errors --> "Class D must either be declared abstract or implement getter A.g, method A.m and setter A.s." at "D"
+class D extends A {
+}
+
+
+// --------------------------------------------------------------------------
+// class need not be abstract if inherited abstract method is implemented by a consumed interface!
+
+
+
+
+
+// ##########################################################################
+// PART 2: abstract members (fields(!), methods, getters, setters) are inherited from an interface
+
+
+interface I {
+	public f : string;
+	public m() : string
+	public get g() : string
+	public set s(name : string)
+}
+
+
+// --------------------------------------------------------------------------
+// simple success case #1: ok if subclass implements abstract member
+
+class B2 implements I {
+	@Override
+	public f : string;
+	@Override
+	public m() : string { return "" }
+	@Override
+	public get g() : string { return "" }
+	@Override
+	public set s(name : string) {}
+}
+
+
+// --------------------------------------------------------------------------
+// simple success case #2: ok if subclass declared abstract
+
+abstract class C2 implements I {
+}
+
+
+// --------------------------------------------------------------------------
+// simple failure case
+
+// XPECT errors --> "Class D2 must either be declared abstract or implement getter I.g, method I.m and setter I.s." at "D2"
+class D2 implements I {
+}
+
+// XPECT errors ---
+// "Class D3 must either be declared abstract or implement getter I.g, method I.m and setter I.s." at "D3"
+// "Missing setter to completely override consumed field I.f." at "D3"
+// ---
+class D3 implements I {
+	@Override
+	public get f() : string { return ""; }
+}
+
+
+// --------------------------------------------------------------------------
+// class need not be abstract if inherited abstract method is implemented by a consumed interface!
+
+// TODO interfaces not implemented yet

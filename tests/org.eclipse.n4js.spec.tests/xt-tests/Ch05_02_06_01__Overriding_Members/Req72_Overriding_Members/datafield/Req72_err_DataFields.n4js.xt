@@ -1,0 +1,94 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class A{}
+class B extends A{}
+
+class C {
+	private a1 : A;
+	a : A;
+}
+
+// single (and wrong) member override:
+
+class D1 extends C {
+	// XPECT errors --> "The field D1.a overriding field C.a must be annotated with @Override." at "a"
+	a : A;
+}
+
+class D2 extends C {
+	// XPECT errors --> "The getter D2.a cannot override field C.a, matching setter missing." at "a"
+	get a() : A {return null};
+}
+
+class D3 extends C {
+	// XPECT errors --> "The setter D3.a cannot override field C.a, matching getter missing." at "a"
+	set a(a : A) {};
+}
+
+class D4 extends C {
+	// XPECT errors --> "Cannot override field C.a with method D4.a." at "a"
+	a() {};
+}
+
+// getter-setter pair override:
+
+class D5 extends C {
+	// XPECT noerrors --> No error expected: "ok, setter is there as well" at "a"
+	@Override get a() : A {return null};
+
+	// XPECT noerrors --> No error expected: "ok, getter is there as well" at "a"
+	@Override set a(a : A) {};
+}
+
+class D5a extends C {
+	// XPECT errors --> "The getter D5a.a overriding field C.a must be annotated with @Override." at "a"
+	get a() : A {return null};
+
+	// XPECT errors --> "The setter D5a.a overriding field C.a must be annotated with @Override." at "a"
+	set a(a : A) {};
+}
+
+class D6 extends C {
+	// XPECT noerrors --> No error expected: "ok, setter is there as well, B <: A" at "a"
+	@Override get a() : B {return null};
+
+	// XPECT noerrors --> No error expected: "ok, getter is there as well, A <: Object" at "a"
+	@Override set a(a : Object) {};
+}
+
+class D6a extends C {
+	// XPECT errors --> "The getter D6a.a overriding field C.a must be annotated with @Override." at "a"
+	get a() : B {return null};
+
+	// XPECT errors --> "The setter D6a.a overriding field C.a must be annotated with @Override." at "a"
+	set a(a : Object) {};
+}
+
+class D7 extends C {
+	// XPECT errors --> "Type of getter D7.a does not conform to overridden field C.a: Object is not a subtype of A." at "a"
+	get a() : Object {return null};
+
+	// XPECT errors --> "Type of setter D7.a does not conform to overridden field C.a: A is not a subtype of B." at "a"
+	set a(a : B) {};
+}
+
+// accessibility
+
+class D8 extends C {
+	// XPECT errors --> "The getter D8.a cannot reduce the visibility of field C.a." at "a"
+	private get a() : A {return null};
+
+	// XPECT errors --> "The setter D8.a cannot reduce the visibility of field C.a." at "a"
+	private set a(a : A) {};
+}

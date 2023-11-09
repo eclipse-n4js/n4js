@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+//
+// testing here the case that a type expectation is available for an async function expression.
+//
+
+
+function foo1( p : {function():number} ) {}
+
+foo1(
+	// XPECT errors --> "{function():Promise<any,?>} is not a subtype of {function():number}." at "async function() {return 42;}"
+	async function() {return 42;}
+);
+
+
+
+
+function foo2( p : {function():Promise<number,?>} ) {}
+
+foo2(
+	// XPECT noerrors -->
+	async function() {return 42;}
+);
+
+
+
+
+function foo3( p : {function():Promise<number,?>} ) {}
+
+foo3(
+	// XPECT errors --> ""hello" is not a subtype of number." at "'hello'"
+	async function() {return 'hello';}
+);
+
+
+
+
+function foo4( p : {function():Promise<number,?>} ) {}
+
+foo4(
+	// XPECT errors --> "{function():Promise<string,?>} is not a subtype of {function():Promise<number,?>}." at "async function() : string {return 'hello';}"
+	async function() : string {return 'hello';}
+);

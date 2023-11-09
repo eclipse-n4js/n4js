@@ -1,0 +1,456 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+class A5 {
+	get x() {return null;}
+}
+
+class B5 extends A5 {
+	@Override get x() {return null;}
+}
+
+// ------------------------------------------------
+
+class A6 {
+	get x() {return null;}
+}
+
+class B6 extends A6 {
+	// XPECT errors -->"Setter B6.x cannot be declared without overriding the corresponding getter." at "x"
+	set x(v) {}
+}
+
+// ------------------------------------------------
+
+class A7 {
+	get x() {return null;}
+}
+
+class B7 extends A7 {
+	@Override get x() {return null;}
+	set x(v) {}
+}
+
+// ------------------------------------------------
+
+class A9 {
+	set x(v) {}
+}
+
+class B9 extends A9 {
+	// XPECT errors -->"Getter B9.x cannot be declared without overriding the corresponding setter." at "x"
+	get x() {return null;}
+}
+
+// ------------------------------------------------
+
+class A10 {
+	set x(v) {}
+}
+
+class B10 extends A10 {
+	@Override set x(v) {}
+}
+
+// ------------------------------------------------
+
+class A11 {
+	set x(v) {}
+}
+
+class B11 extends A11 {
+	get x() {return null;}
+	@Override set x(v) {}
+}
+
+// ------------------------------------------------
+
+class A13 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class B13 extends A13 {
+	// XPECT errors -->"Getter B13.x cannot be overridden without overriding the corresponding setter." at "x"
+	@Override get x() {return null;}
+}
+
+// ------------------------------------------------
+
+class A14 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class B14 extends A14 {
+	// XPECT errors -->"Setter B14.x cannot be overridden without overriding the corresponding getter." at "x"
+	@Override set x(v) {}
+}
+
+// ------------------------------------------------
+
+interface I15 {
+	// Unrelated accessor
+	get y() {return null;}
+}
+
+class A15 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class B15 extends A15 implements I15 {
+	@Override get x() {return null;}
+	@Override set x(v) {}
+}
+
+// ------------------------------------------------
+
+interface I18 {
+	get x() {return null;}
+}
+
+class A18 {}
+
+class B18 extends A18 implements I18 {
+	set x(v) {}
+}
+
+// ------------------------------------------------
+
+interface I20 {
+	get x() {return null;}
+}
+
+class A20 {
+	get x() {return null;}
+}
+
+class B20 extends A20 implements I20 {}
+
+// ------------------------------------------------
+
+interface I22 {
+	get x() {return null;}
+}
+
+class A22 {
+	get x() {return null;}
+}
+
+class B22 extends A22 implements I22 {
+	// XPECT errors -->"Setter B22.x cannot be declared without overriding the corresponding getter." at "x"
+	set x(v) {}
+}
+
+// ------------------------------------------------
+
+interface I25 {
+	get x() {return null;}
+}
+
+class A25 {
+	set x(v) {}
+}
+
+class B25 extends A25 implements I25 {
+	// XPECT errors -->"Getter B25.x cannot be overridden without overriding the corresponding setter." at "x"
+	@Override get x() {return null;}
+}
+
+// ------------------------------------------------
+
+interface I26 {
+	get x() {return null;}
+}
+
+class A26 {
+	set x(v) {}
+}
+
+class B26 extends A26 implements I26 {
+	@Override set x(v) {}
+}
+
+// ------------------------------------------------
+
+interface I27 {
+	get x() {return null;}
+}
+
+class A27 {
+	set x(v) {}
+}
+
+class B27 extends A27 implements I27 {
+	@Override get x() {return null;}
+	@Override set x(v) {}
+}
+
+// ------------------------------------------------
+
+interface I29 {
+	get x() {return null;}
+}
+
+class A29 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class B29 extends A29 implements I29 {
+	// XPECT errors -->"Getter B29.x cannot be overridden without overriding the corresponding setter." at "x"
+	@Override get x() {return null;}
+}
+
+// ------------------------------------------------
+
+interface I30 {
+	get x() {return null;}
+}
+
+class A30 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class B30 extends A30 implements I30 {
+	// XPECT errors -->"Setter B30.x cannot be overridden without overriding the corresponding getter." at "x"
+	@Override set x(v) {}
+}
+
+// ------------------------------------------------
+
+interface I32 {
+	set x(v) {}
+}
+
+class A32 {}
+
+class B32 extends A32 implements I32 {}
+
+// ------------------------------------------------
+
+interface I38 {
+	set x(v) {}
+}
+
+class A38 {
+	get x() {return null;}
+}
+
+class B38 extends A38 implements I38 {
+	// XPECT errors -->"Setter B38.x cannot be overridden without overriding the corresponding getter." at "x"
+	@Override set x(v) {}
+}
+
+// ------------------------------------------------
+
+interface I39 {
+	set x(v) {}
+}
+
+class A39 {
+	get x() {return null;}
+}
+
+class B39 extends A39 implements I39 {
+	@Override get x() {return null;}
+	@Override set x(v) {}
+}
+
+// ------------------------------------------------
+
+interface I41 {
+	set x(v) {}
+}
+
+class A41 {
+	set x(v) {}
+}
+
+class B41 extends A41 implements I41 {
+	// XPECT errors -->"Getter B41.x cannot be declared without overriding the corresponding setter." at "x"
+	get x() {return null;}
+}
+
+// ------------------------------------------------
+
+interface I44 {
+	set x(v) {}
+}
+
+class A44 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class B44 extends A44 implements I44 {}
+
+// ------------------------------------------------
+
+interface I45 {
+	set x(v) {}
+}
+
+class A45 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class B45 extends A45 implements I45 {
+	// XPECT errors -->"Getter B45.x cannot be overridden without overriding the corresponding setter." at "x"
+	@Override get x() {return null;}
+}
+
+// ------------------------------------------------
+
+interface I46 {
+	set x(v) {}
+}
+
+class A46 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class B46 extends A46 implements I46 {
+	// XPECT errors -->"Setter B46.x cannot be overridden without overriding the corresponding getter." at "x"
+	@Override set x(v) {}
+}
+
+// ------------------------------------------------
+
+interface I50 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class A50 {}
+
+class B50 extends A50 implements I50 {
+	@Override set x(v) {}
+}
+
+
+// ------------------------------------------------
+
+interface I53 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class A53 {
+	get x() {return null;}
+}
+
+class B53 extends A53 implements I53 {
+	@Override get x() {return null;}
+}
+
+// ------------------------------------------------
+
+interface I54 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class A54 {
+	get x() {return null;}
+}
+
+class B54 extends A54 implements I54 {
+	// XPECT errors -->"Setter B54.x cannot be overridden without overriding the corresponding getter." at "x"
+	@Override set x(v) {}
+}
+
+// ------------------------------------------------
+
+interface I57 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class A57 {
+	set x(v) {}
+}
+
+class B57 extends A57 implements I57 {
+	// XPECT errors -->"Getter B57.x cannot be overridden without overriding the corresponding setter." at "x"
+	@Override get x() {return null;}
+}
+
+// ------------------------------------------------
+
+interface I58 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class A58 {
+	set x(v) {}
+}
+
+class B58 extends A58 implements I58 {
+	@Override set x(v) {}
+}
+
+// ------------------------------------------------
+
+interface I61 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class A61 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class B61 extends A61 implements I61 {
+	// XPECT errors -->"Getter B61.x cannot be overridden without overriding the corresponding setter." at "x"
+	@Override get x() {return null;}
+}
+
+// ------------------------------------------------
+
+interface I62 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class A62 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class B62 extends A62 implements I62 {
+	// XPECT errors -->"Setter B62.x cannot be overridden without overriding the corresponding getter." at "x"
+	@Override set x(v) {}
+}
+
+// ------------------------------------------------
+
+interface I63 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class A63 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class B63 extends A63 implements I63 {
+	@Override get x() {return null;}
+	@Override set x(v) {}
+}

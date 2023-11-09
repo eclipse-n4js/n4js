@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+interface R {
+	public abstract m() : string;
+}
+
+// XPECT errors --> "Class A must either be declared abstract or implement method R.m." at "A"
+class A implements R {}
+
+// XPECT noerrors --> "B implements abstract method" at "B"
+class B implements R {
+	@Override
+	public m() : string { return "" }
+}
+
+class S {
+	public m() : string { return "" }
+}
+
+// XPECT noerrors --> "Super class S implements abstract method" at "C"
+class C extends S implements R {}
+
+interface R2 extends R {
+	@Override
+	public m() : string { return "" }
+}
+
+// XPECT noerrors --> "Role R2 implements abstract method defined in R" at "D"
+class D implements R, R2 {}

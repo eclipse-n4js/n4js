@@ -1,0 +1,171 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+/////////////////
+// Bitwise Sift Expression
+// '>>' - SHR
+// '>>>' - USHR
+// '<<' - SHL
+// Constraint 74
+////////
+
+var n: number = 1;
+var n1: number = 2;
+var i: int = 1;
+var s: string = "x";
+var b: boolean = true;
+var o: Object = {};
+
+//////////////
+// SHL (SHR and USHR similar)
+//////////////
+
+// XPECT type of 'n>>>n' --> number
+n>>>n;
+// XPECT type of 'n<<n' --> number
+n<<n;
+
+
+// XPECT type of 'n>>n' --> number
+n>>n;
+// XPECT type of 'n>>b' --> number
+n>>b;
+// XPECT type of 'n>>i' --> number
+n>>i;
+// XPECT type of 'n>>s' --> number
+n>>s;
+// XPECT type of 'n>>o' --> number
+n>>o;
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
+// XPECT type of 'n>>null' --> number
+n>>null;
+// XPECT warnings --> "Operand of type undefined will always result in NaN." at "undefined"
+// XPECT type of 'n>>undefined' --> number
+n>>undefined;
+
+
+// XPECT type of 'i>>i' --> number
+i>>i;
+// XPECT type of 'i>>b' --> number
+i>>b;
+// XPECT type of 'i>>n' --> number
+i>>n;
+// XPECT type of 'i>>s' --> number
+i>>s;
+// XPECT type of 'i>>o' --> number
+i>>o;
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
+// XPECT type of 'i>>null' --> number
+i>>null;
+// XPECT warnings --> "Operand of type undefined will always result in NaN." at "undefined"
+// XPECT type of 'i>>undefined' --> number
+i>>undefined;
+
+// XPECT type of 'b>>b' --> number
+b>>b;
+// XPECT type of 'b>>i' --> number
+b>>i;
+// XPECT type of 'b>>n' --> number
+b>>n;
+// XPECT type of 'b>>s' --> number
+b>>s;
+// XPECT type of 'b>>o' --> number
+b>>o;
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
+// XPECT type of 'b>>null' --> number
+b>>null;
+// XPECT warnings --> "Operand of type undefined will always result in NaN." at "undefined"
+// XPECT type of 'b>>undefined' --> number
+b>>undefined;
+
+// XPECT type of 's>>s' --> number
+s>>s;
+// XPECT type of 's>>i' --> number
+s>>i;
+// XPECT type of 's>>n' --> number
+s>>n;
+// XPECT type of 's>>b' --> number
+s>>b;
+// XPECT type of 's>>o' --> number
+s>>o;
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
+// XPECT type of 's>>null' --> number
+s>>null;
+// XPECT warnings --> "Operand of type undefined will always result in NaN." at "undefined"
+// XPECT type of 's>>undefined' --> number
+s>>undefined;
+
+/* XPECT warnings ---
+"Operand of type null will be interpreted as 0." at "null"
+"Operand of type null will be interpreted as 0." at "null"
+--- */
+// XPECT type of 'null>>null' --> number
+null>>null;
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
+// XPECT type of 'null>>i' --> number
+null>>i;
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
+// XPECT type of 'null>>n' --> number
+null>>n;
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
+// XPECT type of 'null>>b' --> number
+null>>b;
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
+// XPECT type of 'null>>o' --> number
+null>>o;
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
+// XPECT type of 'null>>s' --> number
+null>>s;
+/* XPECT warnings ---
+"Operand of type null will be interpreted as 0." at "null"
+"Operand of type undefined will always result in NaN." at "undefined"
+--- */
+// XPECT type of 'null>>undefined' --> number
+null>>undefined;
+
+/* XPECT warnings ---
+"Operand of type undefined will always result in NaN." at "undefined"
+"Operand of type undefined will always result in NaN." at "undefined"
+--- */
+// XPECT type of 'undefined>>undefined' --> number
+undefined>>undefined;
+// XPECT warnings --> "Operand of type undefined will always result in NaN." at "undefined"
+// XPECT type of 'undefined>>i' --> number
+undefined>>i;
+// XPECT warnings --> "Operand of type undefined will always result in NaN." at "undefined"
+// XPECT type of 'undefined>>n' --> number
+undefined>>n;
+// XPECT warnings --> "Operand of type undefined will always result in NaN." at "undefined"
+// XPECT type of 'undefined>>b' --> number
+undefined>>b;
+// XPECT warnings --> "Operand of type undefined will always result in NaN." at "undefined"
+// XPECT type of 'undefined>>o' --> number
+undefined>>o;
+// XPECT warnings --> "Operand of type undefined will always result in NaN." at "undefined"
+// XPECT type of 'undefined>>s' --> number
+undefined>>s;
+/* XPECT warnings ---
+"Operand of type null will be interpreted as 0." at "null"
+"Operand of type undefined will always result in NaN." at "undefined"
+--- */
+// XPECT type of 'undefined>>null' --> number
+undefined>>null;
+
+
+let sym: symbol = Symbol.iterator;
+// XPECT errors --> "Operand of type symbol cannot be converted to number." at "sym"
+// XPECT type of 'n<<sym' --> number
+n<<sym
+// XPECT errors --> "Operand of type symbol cannot be converted to number." at "sym"
+// XPECT type of 'sym<<n' --> number
+sym<<n

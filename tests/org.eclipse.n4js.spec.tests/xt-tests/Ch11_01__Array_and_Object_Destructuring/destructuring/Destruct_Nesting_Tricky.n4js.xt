@@ -1,0 +1,53 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+/*
+ * In this file we test a tricky corner case of nested destructuring.
+ *
+ * Normally, nested destructuring means something like:
+ *   var [a,[b,c]] = [1,[2,3]]
+ * Here, the nested pattern [b,c] is part of the variable declaration and will take its value
+ * from the right-hand side of the '='.
+ *
+ * However, there is a very different form of nesting:
+ *   var [a,b=([c,d]=[2,3])] = [1,2]
+ * Here, the nested pattern [c,d] is part of a second, completely independent destructuring and
+ * is not part of the outer variable declaration (meaning that in the above line no variables c
+ * and d will be declared!).
+ *
+ * The second form of nesting above is important to test, in order to make sure that the inner
+ * destructuring does not mess up the outer destructuring.
+ */
+
+
+var x,y; // note: have to declare x and y up-front!
+
+var [a=(  [x,y]=[6,7,8]  ),b,c] = [undefined,2,3]; // 1st elem must be undefined, otherwise default expression won't be evaluated!
+
+// result of the inner destructuring is the right-hand side of the AssignmentExpression
+console.log('expecting: [ 6, 7, 8 ]');
+console.log(a);
+
+// this is the important check:
+console.log('expecting: 2 3');
+console.log(b,c);
+
+
+
+/* XPECT output ---
+expecting: [ 6, 7, 8 ]
+[ 6, 7, 8 ]
+expecting: 2 3
+2 3
+--- */

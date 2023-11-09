@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class C {
+	@Promisifiable
+	a(path : string, cb : {function(Error, string)}) : void {}
+	@Promisifiable
+	b(path : string, cb : {function(Error)}) : void {}
+	@Promisifiable
+	// this case is no longer allowed XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+	c(path : string, cb : {function(Error, void)}) : void {}
+	@Promisifiable
+	d(path : string, cb : {function(Error, string, int)}) : void {}
+	@Promisifiable
+	e(path : string, cb : {function(string, int)}) : void {}
+	@Promisifiable
+	f(path : string, cb : {function()}) : void {}
+	@Promisifiable
+	// this case is no longer allowed XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+	g(path : string, cb : {function(void)}) : void {}
+}
+
+async function testWithMethod(allDone : {function()}) {
+	var c:C = new C();
+
+	// XPECT nowarnings
+	await @Promisify c.a('some path');
+	// XPECT nowarnings
+	await @Promisify c.b('some path');
+	// XPECT nowarnings
+	await @Promisify c.c('some path');
+	// XPECT nowarnings
+	await @Promisify c.d('some path');
+	// XPECT nowarnings
+	await @Promisify c.e('some path');
+	// XPECT nowarnings
+	await @Promisify c.f('some path');
+}

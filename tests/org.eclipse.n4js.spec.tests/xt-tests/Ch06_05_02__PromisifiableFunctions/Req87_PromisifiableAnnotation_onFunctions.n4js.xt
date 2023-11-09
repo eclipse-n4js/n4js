@@ -1,0 +1,57 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class MyError extends Error {}
+
+
+// negative cases:
+
+// XPECT errors --> "The annotation @Promisifiable is only allowed on functions/methods that take a function as a last argument (i.e. the callback)." at "Promisifiable"
+@Promisifiable function f01() {}
+
+// XPECT errors --> "The annotation @Promisifiable is only allowed on functions/methods that take a function as a last argument (i.e. the callback)." at "Promisifiable"
+@Promisifiable function f02(cb : {function()}, arg1 : string) {}
+
+// XPECT errors --> "The callback of a @Promisifiable function/method must not have more than one parameter of type Error." at "Promisifiable"
+@Promisifiable function f03(arg0 : string, cb : {function(Error,string,Error)}) {}
+
+// XPECT errors --> "If the callback of a @Promisifiable function/method has a parameter of type Error, this parameter must be the first parameter." at "Promisifiable"
+@Promisifiable function f04(arg0 : string, cb : {function(string,Error)}) {}
+
+
+// positive cases:
+
+// XPECT noerrors -->
+@Promisifiable function f11(arg0 : string, cb : {function(Error,string)}) {}
+
+// XPECT noerrors -->
+@Promisifiable function f12(arg0 : string, cb : {function(Error,string,number,N4Object)}) {}
+
+// XPECT noerrors -->
+@Promisifiable function f13(arg0 : string, cb : {function(Error)}) {}
+
+// XPECT noerrors -->
+@Promisifiable function f14(arg0 : string, cb : {function(string)}) {}
+
+// XPECT noerrors -->
+@Promisifiable function f15(arg0 : string, cb : {function(string,number,N4Object)}) {}
+
+// XPECT noerrors -->
+@Promisifiable function f16(arg0 : string, cb : {function()}) {}
+
+// XPECT noerrors -->
+@Promisifiable function f17(arg0 : string, cb : {function(string):number}) {}
+
+// XPECT noerrors -->
+@Promisifiable function f18(arg0 : string, cb : {function(MyError,string)}) {}

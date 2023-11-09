@@ -1,0 +1,185 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class A {}
+function getA() : A { return null;}
+let v = "string";
+
+/** Test starts with plain Functions */
+
+// XPECT type of 'z' --> int
+function fa1(z=2) {}
+
+// XPECT type of 'function fa2(z=2) {}' --> {function(int=…):void}
+function fa2(z=2) {}
+
+// XPECT type of 'function fa3(z=v) {}' --> {function(string=…):void}
+function fa3(z=v) {}
+
+// XPECT type of 'function fa4(z=getA()) {}' --> {function(A=…):void}
+function fa4(z=getA()) {}
+
+// XPECT type of 'z' --> any
+function fa5(z=undefined) {}
+
+// XPECT type of 'z' --> any
+function fa6(z=null) {}
+
+// XPECT type of 'z' --> any
+function fa7(z=) {}
+
+
+/** Now the same tests on Methods */
+
+class Y {
+	// XPECT type of 'z' --> int
+	fb1(z=2) {}
+
+	// XPECT type of 'fb2(z=2) {}' --> {function(int=…):void}
+	fb2(z=2) {}
+
+	// XPECT type of 'fb3(z=v) {}' --> {function(string=…):void}
+	fb3(z=v) {}
+
+	// XPECT type of 'fb4(z=getA()) {}' --> {function(A=…):void}
+	fb4(z=getA()) {}
+
+	// XPECT type of 'z' --> any
+	fb5(z=undefined) {}
+
+	// XPECT type of 'z' --> any
+	fb6(z=null) {}
+
+	// XPECT type of 'z' --> any
+	fb7(z=) {}
+}
+
+
+/** Now the same tests on Function Expressions */
+// XPECT type of 'z' --> int
+let fc1 = function (z=2) {}
+fc1;
+
+// XPECT type of 'function (z=2) {}' --> {function(int=…):void}
+let fc2 = function (z=2) {}
+fc2;
+
+// XPECT type of 'function (z=v) {}' --> {function(string=…):void}
+let fc3 = function (z=v) {}
+fc3;
+
+// XPECT type of 'function (z=getA()) {}' --> {function(A=…):void}
+let fc4 = function (z=getA()) {}
+fc4;
+
+// XPECT type of 'z' --> any
+let fc5 = function (z=undefined) {}
+fc5;
+
+// XPECT type of 'z' --> any
+let fc6 = function (z=null) {}
+fc6;
+
+// XPECT type of 'z' --> any
+let fc7 = function (z=) {}
+fc7;
+
+
+/** Now the same tests on Arrow Function Expressions */
+// XPECT type of 'z' --> int
+let fd1 = (z=2) => {}
+fd1;
+
+// XPECT type of 'fd2' --> {function(int=…):void}
+let fd2 = (z=2) => {}
+fd2;
+
+// XPECT type of 'fd3' --> {function(string=…):void}
+let fd3 = (z=v) => {}
+fd3;
+
+// XPECT type of 'fd4' --> {function(A=…):void}
+let fd4 = (z=getA()) => {}
+fd4;
+
+// XPECT type of 'z' --> any
+let fd5 = (z=undefined) => {}
+fd5;
+
+// XPECT type of 'z' --> any
+let fd6 = (z=null) => {}
+fd6;
+
+// XPECT type of 'z' --> any
+let fd7 = (z=) => {}
+fd7;
+
+
+/** (Arrow) Function Type Expressions always define a type and thus don't need type inferrence */
+
+
+/** The given initializer only defines a contra-variant constraint, but not the type itself */
+class B extends A {}
+class C extends B {}
+
+// XPECT type of 'function (x=new A()) : void {}' --> {function(A=…):void}
+let fe1: {function(B=)} = function (x=new A()) : void {};
+fe1;
+
+// XPECT type of 'function (x=new B()) : void {}' --> {function(B=…):void}
+let fe2: {function(B=)} = function (x=new B()) : void {};
+fe2;
+
+// XPECT type of 'function (x=new C()) : void {}' --> {function(B=…):void}
+let fe3: {function(B=)} = function (x=new C()) : void {};
+fe3;
+
+// XPECT type of 'function (x=undefined) : void {}' --> {function(B=…):void}
+let fe4: {function(B=)} = function (x=undefined) : void {};
+fe4;
+
+// XPECT type of 'function (x=null) : void {}' --> {function(B=…):void}
+let fe5: {function(B=)} = function (x=null) : void {};
+fe5;
+
+// XPECT type of 'function (x=) : void {}' --> {function(B=…):void}
+let fe6: {function(B=)} = function (x=) : void {};
+fe6;
+
+
+/** Now the same tests on Arrow Function Expressions */
+
+// XPECT type of '(x=new A()) : void => {}' --> {function(A=…):void}
+let ff1: {function(B=)} = (x=new A()) : void => {};
+ff1;
+
+// XPECT type of '(x=new B()) : void => {}' --> {function(B=…):void}
+let ff2: {function(B=)} = (x=new B()) : void => {};
+ff2;
+
+// XPECT type of '(x=new C()) : void => {}' --> {function(B=…):void}
+let ff3: {function(B=)} = (x=new C()) : void => {};
+ff3;
+
+// XPECT type of '(x=undefined) : void => {}' --> {function(B=…):void}
+let ff4: {function(B=)} = (x=undefined) : void => {};
+ff4;
+
+// XPECT type of '(x=null) : void => {}' --> {function(B=…):void}
+let ff5: {function(B=)} = (x=null) : void => {};
+ff5;
+
+// XPECT type of '(x=) : void => {}' --> {function(B=…):void}
+let ff6: {function(B=)} = (x=) : void => {};
+ff6;

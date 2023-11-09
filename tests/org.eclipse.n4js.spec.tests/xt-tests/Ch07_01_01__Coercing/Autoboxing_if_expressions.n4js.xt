@@ -1,0 +1,81 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+    ProjectWithSourceFolder {
+		ThisFile {}
+	}
+   END_SETUP
+*/
+
+// Generic output function for if-expression assessment
+function A(b,prefix) {if( b ) { console.log(prefix+': true'); } else { console.log(prefix+':  else'); } }
+function NL() { console.log('')}
+
+
+
+/* Ensure JS-like eval of Object in 'if(...)' XPECT output ---
+vb:  else
+vBo: true
+vBoPlus: true
+
+vs:  else
+vSo: true
+vSoPlus: true
+
+vn:  else
+vNo: true
+vNoPlus: true
+
+undefined:  else
+null:  else
+--- */
+
+var vb : boolean = false;
+var vBo : Boolean = new Boolean(false);
+var vBoPlus : Boolean+ = new Boolean(false);
+vBoPlus.foo='XX';
+
+
+A(vb,'vb');
+A(vBo,'vBo');
+A(vBoPlus,'vBoPlus');
+NL();
+
+
+var vs : string = '';
+var vSo : String = new String('');
+var vSoPlus : String+ = new String('');
+vSoPlus.foo='XY'
+
+
+A(vs,'vs');
+A(vSo,'vSo');
+A(vSoPlus,'vSoPlus');
+NL();
+
+
+var vn : number = 0;
+var vNo : Number = new Number(0);
+var vNoPlus : Number+ = new Number(0);
+vNoPlus.foo='XZ'
+
+A(vn,'vn');
+A(vNo,'vNo');
+A(vNoPlus,'vNoPlus');
+NL();
+
+// undefined + null
+var u;
+var nll = null;
+
+A(u,'undefined')
+A(nll,'null')

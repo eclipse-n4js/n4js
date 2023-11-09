@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+// cf. https://github.com/NumberFour/n4js/issues/221
+
+class C {
+	static x: int;
+	static foo() {}
+}
+
+class D extends C {}
+
+ function <T extends C> f(meta_t: type{T}, meta_c: type{C}, meta_d: type{D}) {
+ 	// XPECT noerrors -->
+ 	meta_t.foo();
+ 	// XPECT noerrors -->
+ 	meta_c.foo();
+ 	// XPECT noerrors -->
+ 	meta_d.foo();
+
+ 	// XPECT noerrors -->
+ 	meta_t.x;
+ 	// XPECT noerrors -->
+ 	meta_c.x;
+ 	// XPECT noerrors -->
+ 	meta_d.x;
+
+ 	// XPECT errors --> "Write access to the static member x defined in C must use C directly." at "x"
+ 	meta_t.x = 1;
+ 	// XPECT errors --> "Write access to the static member x defined in C must use C directly." at "x"
+ 	meta_c.x = 2;
+ 	// XPECT errors --> "Write access to the static member x defined in C must use C directly." at "x"
+ 	meta_d.x = 3;
+}

@@ -1,0 +1,100 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+interface I {}
+interface J {
+	public f2;
+}
+
+
+
+class A {
+	public f1;
+	@CovariantConstructor constructor(@Spec spec: ~i~this) {}
+}
+
+// XPECT noerrors -->
+class AA1 extends A {
+}
+
+// XPECT errors --> "Inherited constructor of class A in context of class AA2 not compatible to itself in context of class A." at "AA2"
+class AA2 extends A {
+	public f2;
+}
+
+// XPECT noerrors --> no duplicate error
+class AA3 extends A {
+	public f2;
+	// XPECT errors --> "Signature of constructor of class AA3 does not conform to overridden constructor of class A: {function(~i~this[AA3])} is not a subtype of {function(~i~this[A])}." at "constructor"
+	constructor(@Spec spec: ~i~this) { super(null); }
+}
+
+// XPECT noerrors -->
+class AA4 extends A implements I {}
+
+// XPECT errors --> "Inherited constructor of class A in context of class AA5 not compatible to itself in context of class A." at "AA5"
+class AA5 extends A implements J {}
+
+
+
+
+// --------------------------------------------------------------------------------------------------------------------
+// same as AA3, AA5 above, but without @CovariantConstructor:
+
+class B {
+	public f1;
+	constructor(@Spec spec: ~i~this) {}
+}
+
+// XPECT noerrors -->
+class BB3 extends B {
+	public f2;
+	// XPECT noerrors -->
+	constructor(@Spec spec: ~i~this) { super(null); }
+}
+
+// XPECT noerrors -->
+class BB5 extends B implements J {}
+
+
+
+
+// --------------------------------------------------------------------------------------------------------------------
+// same as AA1-5 but with interfaces:
+
+interface C {
+	public f1;
+	@CovariantConstructor constructor(@Spec spec: ~i~this)
+}
+
+// XPECT noerrors -->
+interface CC1 extends C {
+}
+
+// XPECT errors --> "Inherited constructor in interface C in context of interface CC2 not compatible to itself in context of interface C." at "CC2"
+interface CC2 extends C {
+	public f2;
+}
+
+interface CC3 extends C {
+	public f2;
+	// XPECT errors --> "Signature of constructor in interface CC3 does not conform to implemented constructor in interface C: {function(~i~this[CC3])} is not a subtype of {function(~i~this[C])}." at "constructor"
+	@CovariantConstructor constructor(@Spec spec: ~i~this)
+}
+
+// XPECT noerrors -->
+interface CC4 extends C, I {}
+
+// XPECT errors --> "Inherited constructor in interface C in context of interface CC5 not compatible to itself in context of interface C." at "CC5"
+interface CC5 extends C, J {}

@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class A {}
+class B {}
+class C {}
+class D {}
+
+
+interface I1<T> {}
+interface I2<T> {}
+
+// ---------
+
+interface I1ext1<T> extends I1<T> {}
+interface I1ext2<T> extends I1<T> {}
+
+// XPECT errors --> "Cannot extend interface I1 multiple times with different type arguments for invariant T: A, B." at "I_test1"
+interface I_test1 extends I1ext1<A>, I1ext2<B> {}
+
+// XPECT errors --> "Cannot extend interface I1 multiple times with different type arguments for invariant T: T1, T2." at "I_test2"
+interface I_test2<T1,T2> extends I1ext1<T1>, I1ext2<T2> {}
+
+// ---------
+
+interface I1a2b extends I1<A>, I2<B> {}
+interface I1c2d extends I1<C>, I2<D> {}
+
+// XPECT errors ---
+// "Cannot extend interface I1 multiple times with different type arguments for invariant T: A, C." at "I_test3"
+// "Cannot extend interface I2 multiple times with different type arguments for invariant T: B, D." at "I_test3"
+// ---
+interface I_test3 extends I1a2b, I1c2d {}
+
+// ---------
+
+interface I1s2t_1<S,T> extends I1<S>, I2<T> {}
+interface I1s2t_2<S,T> extends I1<S>, I2<T> {}
+
+// XPECT errors ---
+// "Cannot extend interface I1 multiple times with different type arguments for invariant T: A, C." at "I_test4"
+// "Cannot extend interface I2 multiple times with different type arguments for invariant T: B, D." at "I_test4"
+// ---
+interface I_test4 extends I1s2t_1<A,B>, I1s2t_2<C,D> {}
+
+// XPECT noerrors -->
+interface I_test5 extends I1s2t_1<A,B>, I1s2t_2<A,B> {}
+
+// XPECT errors --> "Cannot extend interface I1 multiple times with different type arguments for invariant T: T1, T3." at "I_test6"
+interface I_test6<T1,T2,T3> extends I1s2t_1<T1,T2>, I1s2t_2<T3,T2> {} // note: no error about multiple extension of interface I2!

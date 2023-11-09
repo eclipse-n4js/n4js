@@ -1,0 +1,27 @@
+/*
+ * Copyright (c) 2018 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+//
+// This is tricky, because the inner expression of the single-expression arrow function, i.e. the "[i]" after "=>", is
+// itself a poly expression and will thus ask for its expected type which will ask for the single-expression arrow
+// function's type (i.e. cylce).
+//
+
+
+function <T> foo(p: {function(int):T}) {
+	return undefined;
+}
+
+// must not throw exception(s) XPECT noerrors -->
+foo( (i) => [i] );

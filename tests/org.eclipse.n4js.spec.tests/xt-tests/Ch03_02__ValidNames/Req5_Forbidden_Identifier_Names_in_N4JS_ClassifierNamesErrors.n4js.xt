@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// XPECT errors --> "Class private may be indistinguishable with access modifier." at "private"
+class private {
+}
+// XPECT errors --> "Class public may be indistinguishable with access modifier." at "public"
+class public {
+}
+// XPECT errors --> "Class project may be indistinguishable with access modifier." at "project"
+class project {
+}
+// XPECT errors --> "Class protected may be indistinguishable with access modifier." at "protected"
+class protected {
+}
+
+// XPECT errors --> "Class get may be indistinguishable with getter/setter." at "get"
+class get {
+}
+// XPECT errors --> "Class set may be indistinguishable with getter/setter." at "set"
+class set {
+}
+
+// XPECT errors --> "Class string may be indistinguishable with base type." at "string"
+class string {
+}
+// XPECT errors --> "Class any may be indistinguishable with base type." at "any"
+class any {
+}

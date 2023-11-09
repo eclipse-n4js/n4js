@@ -1,0 +1,22 @@
+{
+  "name": "org.eclipse.n4js.transpiler.es5.tests",
+  "version": "0.0.1",
+  "type": "module",
+  "n4js": {
+    "projectType": "library",
+    "vendorId": "org.eclipse.n4js",
+    "vendorName": "Eclipse N4JS Project",
+    "output": "src-gen",
+    "sources": {
+      "source": [
+        "src"
+      ],
+      "external": [
+        "external"
+      ]
+    }
+  },
+  "dependencies": {
+    "n4js-runtime": ""
+  }
+}

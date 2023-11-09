@@ -1,0 +1,77 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class C {
+    public s : string;
+    n : number;
+    constructor(@Spec spec : ~i~this) {}
+}
+
+// XPECT warnings --> "n is not defined in ~i~this[C]; it will not have any effect in the spec constructor." at "n"
+new C( { s: "Hello", n: 42 });
+
+var ol = { s: "Hello", n: 42 };
+// XPECT nowarnings --> "ol may be used elsewhere, we cannot issue warning here" at "ol"
+new C(ol) ;
+
+// XPECT warnings --> "weird is not defined in ~i~this[C]; it will not have any effect in the spec constructor." at "weird"
+new C( { s: "Hello", weird: true } );
+
+class D extends C {
+	public b : boolean;
+	s2 : string;
+	constructor(@Spec spec : ~i~this) {
+		super(spec)
+	}
+}
+
+// XPECT nowarnings -->
+new D( { s: "Hello", b: true} )
+
+// XPECT warnings --> "weird is not defined in ~i~this[D]; it will not have any effect in the spec constructor." at "weird"
+new D( {s: "Hello", b: true, weird: true} )
+
+// XPECT warnings ---
+// "anotherWeird is not defined in ~i~this[D]; it will not have any effect in the spec constructor." at "anotherWeird"
+// "weird is not defined in ~i~this[D]; it will not have any effect in the spec constructor." at "weird"
+// ---
+new D( {s: "Hello", b: true, weird: true, anotherWeird: false} )
+
+class E extends D {
+	// intentionally empty
+}
+
+// XPECT nowarnings -->
+new E( { s: "Hello", b: true} )
+
+// XPECT warnings --> "weird is not defined in ~i~this[E]; it will not have any effect in the spec constructor." at "weird"
+new E( {s: "Hello", b: true, weird: true} )
+
+class F<T> {
+	public t : T;
+	public s : string;
+	constructor(@Spec spec : ~i~this) {}
+}
+
+// XPECT nowarnings --> type is inferred here and since number is a subtype of T here it is allowed
+new F<number>( {s:"Hello", t: 42} )
+
+
+class G<T> {
+	t : T;
+	public s : string;
+	constructor(@Spec spec : ~i~this with { t : T; }) {}
+}
+
+// XPECT nowarnings --> type can be the subtype of the additional type
+new G<number>( {s:"Hello", t: 42} )

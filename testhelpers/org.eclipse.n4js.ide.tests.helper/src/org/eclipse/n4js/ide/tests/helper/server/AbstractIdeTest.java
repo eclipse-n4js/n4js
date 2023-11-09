@@ -174,6 +174,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** Name of the npm node_modules folder. */
 	protected static final String NODE_MODULES = N4JSGlobals.NODE_MODULES;
 
+	static final String OUTPUT_ERR_DELIMITER = "=== stderr ===";
+
 	private static GlobalStateMemento oldGlobalState;
 	private static boolean oldOpaqueJsModules;
 
@@ -1860,10 +1862,21 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		ProcessResult result = runInNodejs(fileToRun);
 		assertNull("exception while running: " + fileToRun, result.getException());
 		assertEquals("unexpected exit code from running: " + fileToRun, 0, result.getExitCode());
+		String expStr = expectedOutput.toString().trim();
+		String output = expStr;
+		String err = null;
+		if (expStr.contains(OUTPUT_ERR_DELIMITER)) {
+			String[] expSplit = expStr.split(OUTPUT_ERR_DELIMITER);
+			output = expSplit[0].trim();
+			err = expSplit[1].trim();
+			assertEquals("unexpected err from running: " + fileToRun,
+					err, result.getErrOut().trim());
+		} else {
+			assertEquals("stderr was non-empty after running: " + fileToRun,
+					"", result.getErrOut().trim());
+		}
 		assertEquals("unexpected output from running: " + fileToRun,
-				expectedOutput.toString().trim(), result.getStdOut().trim());
-		assertEquals("stderr was non-empty after running: " + fileToRun,
-				"", result.getErrOut().trim());
+				output, result.getStdOut().trim());
 	}
 
 	/** Asserts the workspace contains the given file. {@link #getFileURIFromModuleName(String)} */

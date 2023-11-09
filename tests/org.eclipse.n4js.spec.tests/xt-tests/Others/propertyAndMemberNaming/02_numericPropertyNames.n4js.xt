@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+console.log('####### class/interface');
+
+interface I {
+	// XPECT noerrors -->
+	public 1: string;
+	// XPECT noerrors -->
+	get 2(): string
+	// XPECT noerrors -->
+	set 2(value: string)
+	// XPECT noerrors -->
+	3()
+}
+class C implements I {
+	private value: string = 'hello from private field';
+	// XPECT noerrors -->
+	@Override public 1: string = 'hello from public field';
+	// XPECT noerrors -->
+	@Override get 2(): string { return this.value; }
+	// XPECT noerrors -->
+	@Override set 2(value: string) { this.value = value; }
+	// XPECT noerrors -->
+	@Override 3() { console.log('hello from method'); }
+}
+
+let i: I = new C();
+console.log(i['1']);
+console.log(i['2']);
+i['2'] = 'hello from private field (new value!)';
+console.log(i['2']);
+i['3']();
+
+
+console.log('####### object literal');
+
+let ol = {
+	value: 'hello from private property',
+	// XPECT noerrors -->
+	1: 'hello from public property',
+	// XPECT noerrors -->
+	get 2(): string { return this.value; },
+	// XPECT noerrors -->
+	set 2(value: string) { this.value = value; },
+	// XPECT noerrors -->
+	3() { console.log('hello from method'); }
+}
+
+console.log(ol['1']);
+console.log(ol['2']);
+ol['2'] = 'hello from private property (new value!)';
+console.log(ol['2']);
+ol['3']();
+
+
+/* XPECT output ---
+####### class/interface
+hello from public field
+hello from private field
+hello from private field (new value!)
+hello from method
+####### object literal
+hello from public property
+hello from private property
+hello from private property (new value!)
+hello from method
+--- */

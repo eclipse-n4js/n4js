@@ -1,0 +1,74 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+interface A {}
+interface ASub extends A {}
+interface B {}
+
+
+class T1 {
+
+	f_onlyInT1 : A;
+
+	f1 : A;
+
+	public f2 : A;
+
+	f3 : A;
+
+	f4 : A;
+
+	f5? : A;
+}
+
+
+class T2 {
+
+	f_onlyInT2 : A;
+
+	f1 : A;
+
+	private f2 : A;
+
+	f3 : ASub;
+
+	f4 : B;
+
+	f5? : B;
+}
+
+
+var u : union{T1,T2};
+
+
+// XPECT errors --> "Member f_onlyInT1 not present in all types of union; missing from: T2." at "f_onlyInT1"
+u.f_onlyInT1;
+// XPECT errors --> "Member f_onlyInT2 not present in all types of union; missing from: T1." at "f_onlyInT2"
+u.f_onlyInT2;
+// XPECT type of 'u.f1' --> A
+u.f1;
+// private fields are visible inside same module XPECT noerrors -->
+u.f2;
+// XPECT type of 'u.f3' --> A
+u.f3;
+// XPECT expectedType at 'null' --> ASub
+u.f3 = null;
+// XPECT type of 'u.f4' --> union{A,B}
+u.f4;
+// XPECT expectedType at 'null' --> intersection{A,B}
+u.f4 = null;
+// XPECT type of 'u.f5' --> union{A,B}
+u.f5;
+// XPECT expectedType at 'null' --> intersection{A,B}
+u.f5 = null;

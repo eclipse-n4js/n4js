@@ -9,8 +9,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
-   ResourceSet {
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
+   ProjectWithSourceFolder {
 		ThisFile {}
 		File "Defs.n4js" {}
 	}
@@ -40,7 +40,7 @@ X { name: 'X3', value: 'x three' }
 ]
 --- */
 
-import * as N from "enums/Defs";
+import * as N from "Defs";
 
 console.log(N.X.X1);
 console.log((N.X).X2);

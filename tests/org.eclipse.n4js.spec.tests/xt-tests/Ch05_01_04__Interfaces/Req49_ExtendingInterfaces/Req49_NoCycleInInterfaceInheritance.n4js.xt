@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+interface A {}
+interface B {}
+interface C {}
+
+// XPECT errors --> "Inheritance cycle detected: I, I." at "I"
+interface I extends A, I, C {}
+
+// XPECT errors --> "Inheritance cycle detected: I1, I3, I2, I1." at "I3"
+interface I1 extends A, B, I3 {}
+// XPECT errors --> "Inheritance cycle detected: I2, I1, I3, I2." at "I1"
+interface I2 extends A, I1, C {}
+// XPECT errors --> "Inheritance cycle detected: I3, I2, I1, I3." at "I2"
+interface I3 extends I2, B, C {}
+
+// XPECT noerrors --> "J does not lie within the cycle, so no error here!"
+interface J extends C {}
+
+// XPECT errors --> "Inheritance cycle detected: J1, J3, J2, J1." at "J3"
+interface J1 extends J3 {}
+// XPECT errors --> "Inheritance cycle detected: J2, J1, J3, J2." at "J1"
+interface J2 extends J1 {}
+// don't show error at C but must still find the cycle 'behind' C via J2
+// XPECT errors --> "Inheritance cycle detected: J3, J2, J1, J3." at "J2"
+interface J3 extends C, J2 {}

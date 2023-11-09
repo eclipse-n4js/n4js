@@ -1,0 +1,52 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+// 4 access modifier
+class C {
+	private set xPrivate(p : any) { }
+	set xProject(p : any) { }
+	protected set xProtect(p : any) { }
+	public set xPublic(p : any) { }
+}
+
+class D extends C {
+	// since private is module-relative (not type-relative), private members can be overridden as usual
+	// XPECT noerrors -->
+	@Override private set xPrivate(p : any) { }
+	// ok, acc is greater
+	@Override public set xProject(p : any) { }
+	// ok acc is equal
+	@Override protected set xProtect(p : any) { }
+	// XPECT errors --> "The setter D.xPublic cannot reduce the visibility of setter C.xPublic." at "xPublic"
+	@Override private set xPublic(p : any) { }
+}
+
+class E {
+	private get xPrivate() : any { return null }
+	get xProject() : any { return null }
+	protected get  xProtect() : any { return null }
+	public get xPublic() : any { return null }
+}
+
+class F extends E{
+	// since private is module-relative (not type-relative), private members can be overridden as usual
+	// XPECT noerrors -->
+	@Override private get xPrivate() : any { return null }
+	// ok, acc is greater
+	@Override get xProject() : any { return null }
+	// ok acc is equal
+	@Override protected get  xProtect() : any { return null }
+	// XPECT errors --> "The getter F.xPublic cannot reduce the visibility of getter E.xPublic." at "xPublic"
+	@Override protected get xPublic() : any { return null }
+}

@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+class A {
+
+	foo(s : string, y : string) : void {}
+	bar(s : string, y : string=undefined) : void {}
+	baz(s : string, ... y : string) : void {}
+
+
+}
+
+var a : A;
+
+// ok
+a.foo("Hello", "world");
+// XPECT errors --> "1 is not a subtype of string." at "1"
+a.foo("Hello", 1);
+// XPECT errors --> "Incorrect number of arguments: expected 2, got 1." at "a.foo("Hello")"
+a.foo("Hello");
+// XPECT errors --> "Incorrect number of arguments: expected 2, got 3." at "a.foo("Hello", "world", "!")"
+a.foo("Hello", "world", "!");
+
+// ok
+a.bar("Hello", "world");
+// XPECT errors --> "1 is not a subtype of string." at "1"
+a.bar("Hello", 1);
+// ok
+a.bar("Hello");
+// XPECT errors --> "Incorrect number of arguments: expected 2, got 3." at "a.bar("Hello", "world", "!")"
+a.bar("Hello", "world", "!");
+
+// ok
+a.baz("Hello", "world");
+// XPECT errors --> "1 is not a subtype of string." at "1"
+a.baz("Hello", 1);
+// ok
+a.baz("Hello");
+// ok
+a.baz("Hello", "world", "!");

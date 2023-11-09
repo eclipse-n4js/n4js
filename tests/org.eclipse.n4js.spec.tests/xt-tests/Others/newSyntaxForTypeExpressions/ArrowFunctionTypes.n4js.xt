@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+// XPECT type of 'v01' --> {function():void}
+var v01 : ()=>void
+
+// XPECT type of 'v02' --> {function(String):void}
+var v02 : (String)=>void
+
+// XPECT type of 'v03' --> {function(String):void}
+var v03 : (p:String)=>void
+
+
+// XPECT type of 'foo' --> {function():{function():void}}
+function foo(): ()=>void { return null }
+
+
+class C {
+	// XPECT type of 'f1' --> {function():void}
+	f1 : ()=>void
+	// XPECT type of 'f2' --> {function(String):void}
+	f2 : (String)=>void
+	// XPECT type of 'f3' --> {function(String):void}
+	f3 : (p:String)=>void
+
+	// XPECT type of 'm' --> {function():{function():void}}
+	m(): ()=>void { return null }
+}

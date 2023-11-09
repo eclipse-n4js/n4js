@@ -1,0 +1,164 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class A {
+	public f1 : string;
+	@Final public f2 : string = 'init';
+	public get f3() : string { return null; }
+	public set f3(s : string) { }
+	public get f4() : string { return null; }
+	public set f5(s : string) { }
+}
+
+// XPECT noerrors --> ""
+var afs : ~~A = {
+	f1: 'foo',
+	f2: 'this is not optional either',
+	f3: 'foo',
+	get f4() : string { return null; },
+	set f5(s : string) { }
+};
+
+// XPECT errors --> "~Object is not a structural subtype of ~r~A: missing field f1 and 3 more; f1 failed: readable field requires a readable field or a getter in subtype. and 3 more problems." at "{ }"
+var aro0 : ~r~A = { };
+
+// XPECT errors --> "~Object with { get f1(): string } is not a structural subtype of ~r~A: missing field f2 and 2 more; f2 failed: readable field requires a readable field or a getter in subtype. and 2 more problems." at "{ get f1(): string { return null; } }"
+var aro1 : ~r~A = { get f1(): string { return null; } };
+
+// XPECT errors --> "~Object with { get f1(): string; get f2(): string } is not a structural subtype of ~r~A: missing getter f3 and 1 more; f3 failed: readable field requires a readable field or a getter in subtype. and 1 more problems." at "{ get f1(): string { return null; }, get f2(): string { return null; } }"
+var aro2 : ~r~A = { get f1(): string { return null; }, get f2(): string { return null; } };
+
+// XPECT errors --> "~Object with { get f1(): string; get f2(): string; get f3(): string } is not a structural subtype of ~r~A: missing getter f4; f4 failed: readable field requires a readable field or a getter in subtype." at "{ get f1(): string { return null; }, get f2(): string { return null; }, get f3(): string { return null; } }"
+var aro3 : ~r~A = { get f1(): string { return null; }, get f2(): string { return null; }, get f3(): string { return null; } };
+
+// XPECT noerrors --> ""
+var aro4 : ~r~A = {
+	get f1(): string { return null; },
+	get f2(): string { return null; },
+	get f3(): string { return null; },
+	get f4(): string { return null; }
+};
+
+// XPECT noerrors --> ""
+var aro5 : ~r~A = {
+	f1: '',
+	f2: '',
+	f3: '',
+	f4: ''
+};
+
+// XPECT errors --> "~Object is not a structural subtype of ~r~A: missing field f1 and 3 more; f1 failed: readable field requires a readable field or a getter in subtype. and 3 more problems." at "{ }"
+var awo0 : ~r~A = { };
+
+// XPECT errors --> "~Object with { set f1(s: string) } is not a structural subtype of ~r~A: missing field f2 and 2 more; f1 failed: readable field requires a readable field or a getter in subtype. and 3 more problems." at "{ set f1(s : string) { } }"
+var awo1 : ~r~A = { set f1(s : string) { } };
+
+// XPECT errors --> "~Object with { set f1(s: string); set f3(s: string) } is not a structural subtype of ~r~A: missing field f2 and 2 more; f1 failed: readable field requires a readable field or a getter in subtype. and 3 more problems." at "{ set f1(s : string) { }, set f3(s : string) { } }"
+var awo2 : ~r~A = { set f1(s : string) { }, set f3(s : string) { } };
+
+// XPECT noerrors --> ""
+var awo3 : ~w~A = {
+	set f1(s : string) { },
+	set f3(s : string) { },
+	set f5(s : string) { }
+};
+
+// XPECT noerrors --> ""
+var awo4 : ~w~A = {
+	f1: '',
+	f3: '',
+	f5: ''
+};
+
+// XPECT errors --> "~Object is not a structural subtype of ~i~A: missing field f1 and 2 more; f1 failed: non-optional writable field requires a readable field or a getter in subtype. and 2 more problems." at "{ }"
+var ai0 : ~i~A = { };
+
+// XPECT errors --> "~Object with { get f1(): string } is not a structural subtype of ~i~A: missing getter f3 and 1 more; f3 failed: non-optional writable field requires a readable field or a getter in subtype. and 1 more problems." at "{ get f1(): string { return null; } }"
+var ai1 : ~i~A = { get f1(): string { return null; } };
+
+// XPECT errors --> "~Object with { get f1(): string; get f3(): string } is not a structural subtype of ~i~A: missing getter f5; f5 failed: non-optional writable field requires a readable field or a getter in subtype." at "{ get f1(): string { return null; }, get f3(): string { return null; } }"
+var ai2 : ~i~A = { get f1(): string { return null; }, get f3(): string { return null; } };
+
+// XPECT noerrors --> ""
+var ai3 : ~i~A = {
+	get f1(): string { return null; },
+	get f3(): string { return null; },
+	get f5(): string { return null; }
+};
+
+// XPECT noerrors --> ""
+var ai4 : ~i~A = {
+	f1: '',
+	f3: '',
+	f5: '',
+};
+
+
+class B {
+	public os? : string;
+}
+
+
+// -------------   ~r~   ----------------
+// XPECT noerrors --> ""
+var rb : ~r~B = {
+
+}
+
+// XPECT noerrors --> ""
+rb = {
+	get os(): string { return null; }
+}
+
+// XPECT noerrors --> ""
+rb = {
+	os: ''
+}
+
+
+// -------------   ~w~   ----------------
+// IDE-2405 XPECT noerrors --> "~Object is not a structural subtype of ~w~B: os failed: writable field requires a writable field or a setter in subtype." at "{ 	 }"
+var wb : ~w~B = {
+
+}
+
+// XPECT noerrors --> ""
+wb = {
+	set os(s : string) { }
+}
+
+// XPECT noerrors --> ""
+wb = {
+	os: ''
+}
+
+// IDE-2405 XPECT noerrors --> "~Object with { get os(): string } is not a structural subtype of ~w~B: os failed: writable field requires a writable field or a setter in subtype." at "{ 	get os(): string { return null; } }"
+wb = {
+	get os(): string { return null; }
+}
+
+// -------------   ~i~   ----------------
+// XPECT noerrors --> ""
+var ib : ~i~B = {
+
+}
+
+// XPECT noerrors --> ""
+ib = {
+	get os(): string { return null; }
+}
+
+// XPECT noerrors --> ""
+ib = {
+	set os(s : string) { }
+}

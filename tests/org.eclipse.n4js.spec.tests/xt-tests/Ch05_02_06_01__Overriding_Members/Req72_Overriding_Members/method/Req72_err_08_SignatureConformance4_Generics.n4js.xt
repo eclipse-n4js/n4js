@@ -1,0 +1,63 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+
+
+class X<T> {
+	m(param : T) : T { return null; }
+}
+class X1 extends X<B> {
+	@Override
+	m(param : A) : C { return null; }		// fine
+}
+class X2 extends X<B> {
+	@Override
+	// XPECT errors --> "Signature of method X2.m does not conform to overridden method X.m: {function(C):A} is not a subtype of {function(B):B}." at "m"
+	m(param : C) : A { return null; }		// should fail!
+}
+@Final class FinalX1 extends X<B> {
+	@Override
+	m(param : A) : C { return null; }		// fine
+}
+@Final class FinalX2 extends X<B> {
+	@Override
+	// XPECT errors --> "Signature of method FinalX2.m does not conform to overridden method X.m: {function(C):A} is not a subtype of {function(B):B}." at "m"
+	m(param : C) : A { return null; }		// should fail!
+}
+
+
+class Y<T,U> {
+	m(param : U) : T { return null; }
+}
+class Y1 extends Y<A,C> {
+	@Override
+	m(param : B) : B { return null; }		// fine
+}
+class Y2 extends Y<C,A> {
+	@Override
+	// XPECT errors --> "Signature of method Y2.m does not conform to overridden method Y.m: {function(B):B} is not a subtype of {function(A):C}." at "m"
+	m(param : B) : B { return null; }		// should fail!
+}
+@Final class FinalY1 extends Y<A,C> {
+	@Override
+	m(param : B) : B { return null; }		// fine
+}
+@Final class FinalY2 extends Y<C,A> {
+	@Override
+	// XPECT errors --> "Signature of method FinalY2.m does not conform to overridden method Y.m: {function(B):B} is not a subtype of {function(A):C}." at "m"
+	m(param : B) : B { return null; }		// should fail!
+}

@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// adapted from http://wiki.ecmascript.org/doku.php?id=harmony:arrow_function_syntax
+
+function assert(actual : boolean) {
+	if (actual != true) {
+		throw new Error("Asssertion failure")
+	}
+}
+
+// Empty arrow function returns undefined
+// TODO check a more recent conforming implementation
+var empty = () => {};
+
+// Single parameter case needs no parentheses around parameter list
+// XPECT type of 'identity' --> {function(any):any}
+var identity = x => x;
+
+// No need for parentheses even for lower-precedence expression body
+// XPECT FIXME type of 'square' --> {function(number):number}
+var square = (x : number) => x * x;
+
+// Parenthesize the body to return an object literal expression
+// XPECT FIXME type of 'key_maker' --> {function(any):~Object with {key: any}}
+var key_maker    = val          => ({key: val});
+
+// XPECT FIXME type of 'strkey_maker' --> {function(string):~Object with {key: string}}
+var strkey_maker = (val : string) => ({key: val});
+
+// Statement body needs braces, must use 'return' explicitly if not void
+var evens = [0, 2];
+
+// XPECT FIXME type of 'odds_SomeArgsOmitted' --> Array<number>
+var odds_SomeArgsOmitted              = evens.map( (v : number) => v + 1 );
+
+// XPECT FIXME type of 'odds_SomeArgsOmitted_Traditional' --> Array<number>
+var odds_SomeArgsOmitted_Traditional  = evens.map( function (v : number) { return v + 1 } );
+
+// XPECT FIXME type of 'odds_ArgsIncluded' --> Array<number>
+var odds_ArgsIncluded              = evens.map( (v : number, index : number, traversedObject : Array<number>) => v + 1 );
+
+// XPECT FIXME type of 'odds_ArgsIncluded_Traditional' --> Array<number>
+var odds_ArgsIncluded_Traditional  = evens.map( function (v : number, index : number, traversedObject : Array<number>) { return v + 1 } );

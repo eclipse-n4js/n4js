@@ -410,6 +410,30 @@ public class XtMethods {
 		return sb.toString();
 	}
 
+	/** Implementation for {@link XtIdeTest#binding(XtMethodData)} */
+	public String getBindingName(IEObjectCoveringRegion ocr) {
+		EObject eobj = ocr.getEObject();
+		ParameterizedPropertyAccessExpression ppae = EcoreUtil2.getContainerOfType(eobj,
+				ParameterizedPropertyAccessExpression.class);
+		IdentifiableElement element;
+
+		if (ppae != null) {
+			element = ppae.getProperty();
+		} else if (eobj instanceof IdentifiableElement) {
+			element = (IdentifiableElement) eobj;
+		} else {
+			throw new IllegalArgumentException("Cannot check binding for "
+					+ (eobj == null ? "null" : eobj.eClass().getName()));
+		}
+		String container = "";
+		if (element instanceof TMember) {
+			container = ((TMember) element).getContainingType().getName() + ".";
+		}
+		final String qn = container + element.getName();
+
+		return qn;
+	}
+
 	/** Implementation for {@link XtIdeTest#scope(XtMethodData)} */
 	public Set<String> getScopeString(IEObjectCoveringRegion ocr) {
 		LinkedHashSet<String> scopeNames = new LinkedHashSet<>();

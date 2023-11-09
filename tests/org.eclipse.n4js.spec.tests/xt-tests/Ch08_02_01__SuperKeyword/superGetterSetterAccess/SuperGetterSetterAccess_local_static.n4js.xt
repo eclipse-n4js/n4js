@@ -1,0 +1,157 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// This test file was modified as part of IDE-2228. Field accessor related test cases might have reduced relevance.
+// As a part of this modification some tests were removed.
+// See 192980b3133a5a7fce70630c70d577a8fd410002, c74c82650408278a26d1d3433b780122e7a63ce5, 9732be951c73ac638d7a12c5d6767fb5e5d4f7cd, cd24fa1498702f9a6fd731916b3caa413f0fabc6.
+
+class A {
+	static set s(n : number) {
+		console.log('called A#s');
+	}
+	static get g() : number {
+		console.log('called A#g');
+		return 0;
+	}
+	static set p(n : number) {
+		console.log('called A#p (setter)');
+	}
+	static get p() : number {
+		console.log('called A#p (getter)');
+		return 0;
+	}
+}
+
+class B extends A {
+	// empty
+}
+class B_withSetters extends A {
+	@Override
+	static set s(n : number) {
+		console.log('called B_withSetters#s');
+	}
+	@Override
+	static set p(n : number) {
+		console.log('called B_withSetters#p (setter)');
+	}
+	@Override static get p() : number { return super.p; }
+}
+class B_withGetters extends A {
+	@Override
+	static get g() : number {
+		console.log('called B_withGetters#g');
+		return 0;
+	}
+	@Override
+	static get p() : number {
+		console.log('called B_withGetters#p (getter)');
+		return 0;
+	}
+	@Override static set p(n : number) { A.p = n; }
+}
+
+class Test1 extends B {
+	static run() {
+		console.log('===================================================');
+		console.log('* Test1 (intermediate super class is empty)');
+		console.log('* testing access with this');
+		this.g;
+		/*this*/A.s = 42; // this-Dissallowed since IDE-1071
+		this.p;
+		/*this*/A.p = 42; // this-Dissallowed since IDE-1071
+		console.log('* testing access with super');
+		super.g;
+		/*super*/A.s = 42; // super-Dissallowed since IDE-1071
+		super.p;
+		/*super*/A.p = 42; // super-Dissallowed since IDE-1071
+	}
+	// TODO same in getter and in setter
+}
+
+class Test2 extends B_withSetters {
+	static run() {
+		console.log('===================================================');
+		console.log('* Test2 (intermediate super class has setters)');
+		console.log('* testing access with this');
+		this.g;
+		/*this*/A.s = 42; // this-Dissallowed since IDE-1071
+		this.p;
+		/*this*/A.p = 42; // this-Dissallowed since IDE-1071
+		console.log('* testing access with super');
+		super.g;
+		/*super*/B_withSetters.s = 42; // super-Dissallowed since IDE-1071
+		super.p;
+		/*super*/B_withSetters.p = 42; // super-Dissallowed since IDE-1071
+	}
+}
+
+class Test3 extends B_withGetters {
+	static run() {
+		console.log('===================================================');
+		console.log('* Test3 (intermediate super class has getters)');
+		console.log('* testing access with this');
+		this.g;
+		/*this*/A.s = 42; // this-Dissallowed since IDE-1071
+		this.p;
+		/*this*/A.p = 42; // this-Dissallowed since IDE-1071
+		console.log('* testing access with super');
+		super.g;
+		/*super*/A.s = 42; // super-Dissallowed since IDE-1071
+		super.p;
+		/*super*/A.p = 42; // super-Dissallowed since IDE-1071
+	}
+}
+
+Test1.run();
+Test2.run();
+Test3.run();
+
+
+/* XPECT output ---
+===================================================
+* Test1 (intermediate super class is empty)
+* testing access with this
+called A#g
+called A#s
+called A#p (getter)
+called A#p (setter)
+* testing access with super
+called A#g
+called A#s
+called A#p (getter)
+called A#p (setter)
+===================================================
+* Test2 (intermediate super class has setters)
+* testing access with this
+called A#g
+called A#s
+called A#p (getter)
+called A#p (setter)
+* testing access with super
+called A#g
+called B_withSetters#s
+called A#p (getter)
+called B_withSetters#p (setter)
+===================================================
+* Test3 (intermediate super class has getters)
+* testing access with this
+called B_withGetters#g
+called A#s
+called B_withGetters#p (getter)
+called A#p (setter)
+* testing access with super
+called B_withGetters#g
+called A#s
+called B_withGetters#p (getter)
+called A#p (setter)
+--- */

@@ -1,0 +1,93 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+class G<T> {}
+class G_out<out T> {}
+class G_in<in T> {}
+
+
+class C_out<out T> {
+
+	// XPECT errors --> "Cannot use covariant (out) type variable at invariant position." at "T"
+	f1: G<T>;
+	// XPECT errors --> "Cannot use covariant (out) type variable at invariant position." at "T"
+	f2: G_out<T>;
+	// XPECT errors --> "Cannot use covariant (out) type variable at invariant position." at "T"
+	f3: G_in<T>;
+
+	// XPECT errors --> "Cannot use covariant (out) type variable at invariant position." at "T"
+	@Final ff1: G<T>;
+	// XPECT noerrors -->
+	@Final ff2: G_out<T>;
+	// XPECT errors --> "Cannot use covariant (out) type variable at contravariant position." at "T"
+	@Final ff3: G_in<T>;
+
+	// XPECT errors --> "Cannot use covariant (out) type variable at invariant position." at "T"
+	g1(): G<T> {return null;}
+	// XPECT noerrors -->
+	g2(): G_out<T> {return null;}
+	// XPECT errors --> "Cannot use covariant (out) type variable at contravariant position." at "T"
+	g3(): G_in<T> {return null;}
+
+	// XPECT errors --> "Cannot use covariant (out) type variable at invariant position." at "T"
+	s1(value: G<T>) {}
+	// XPECT errors --> "Cannot use covariant (out) type variable at contravariant position." at "T"
+	s2(value: G_out<T>) {}
+	// XPECT noerrors -->
+	s3(value: G_in<T>) {}
+
+	constructor() {
+		this.ff1 = null;
+		this.ff2 = null;
+		this.ff3 = null;
+	}
+}
+
+
+class C_in<in T> {
+
+	// XPECT errors --> "Cannot use contravariant (in) type variable at invariant position." at "T"
+	f1: G<T>;
+	// XPECT errors --> "Cannot use contravariant (in) type variable at invariant position." at "T"
+	f2: G_out<T>;
+	// XPECT errors --> "Cannot use contravariant (in) type variable at invariant position." at "T"
+	f3: G_in<T>;
+
+	// XPECT errors --> "Cannot use contravariant (in) type variable at invariant position." at "T"
+	@Final ff1: G<T>;
+	// XPECT errors --> "Cannot use contravariant (in) type variable at covariant position." at "T"
+	@Final ff2: G_out<T>;
+	// XPECT noerrors -->
+	@Final ff3: G_in<T>;
+
+	// XPECT errors --> "Cannot use contravariant (in) type variable at invariant position." at "T"
+	g1(): G<T> {return null;}
+	// XPECT errors --> "Cannot use contravariant (in) type variable at covariant position." at "T"
+	g2(): G_out<T> {return null;}
+	// XPECT noerrors -->
+	g3(): G_in<T> {return null;}
+
+	// XPECT errors --> "Cannot use contravariant (in) type variable at invariant position." at "T"
+	s1(value: G<T>) {}
+	// XPECT noerrors -->
+	s2(value: G_out<T>) {}
+	// XPECT errors --> "Cannot use contravariant (in) type variable at covariant position." at "T"
+	s3(value: G_in<T>) {}
+
+	constructor() {
+		this.ff1 = null;
+		this.ff2 = null;
+		this.ff3 = null;
+	}
+}

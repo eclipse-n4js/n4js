@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+interface SuperI {
+	m0() : string
+	m1() : string {
+		return "SuperI.m1";
+	}
+}
+
+interface I1 extends SuperI {
+	m2() : string
+}
+
+interface I2 {
+	m3() : string
+}
+
+
+abstract class SuperClass implements I1, I2 {}
+
+export public class ThreeLevelsHierarchy extends SuperClass {
+	@Override
+	m0() : string {
+		// Invoking abstract super method in interface (3 levels) XPECT errors --> "Cannot call super method since it is abstract." at "m0"
+		return super.m0();
+	}
+	@Override
+	m1() : string {
+		// Invoking super method with default implementation in interface (3 levels) XPECT noerrors
+		return super.m1();
+	}
+	@Override
+	m2() : string {
+		// Invoking abstract super method in interface (2 levels) XPECT errors --> "Cannot call super method since it is abstract." at "m2"
+		return super.m2();
+	}
+	@Override
+	m3() : string {
+		// Invoking abstract super method in interface (2 levels) XPECT errors --> "Cannot call super method since it is abstract." at "m3"
+		return super.m3();
+	}
+
+}

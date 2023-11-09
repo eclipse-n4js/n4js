@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	ProjectWithSourceFolder {
+		ThisFile {}
+		File "ExporterWithSideEffect.n4js" {}
+	}
+
+END_SETUP */
+
+
+// XPECT noerrors -->
+import "ExporterWithSideEffect"
+
+
+console.log('importing module');
+
+
+/* XPECT output ---
+some side effect
+importing module
+--- */

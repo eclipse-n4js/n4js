@@ -1,0 +1,128 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+interface I_nonStatic {
+
+	f2 = 39;
+
+	// XPECT errors --> "In interfaces, the this literal may not be used in initializers of data fields." at "this"
+	f = 3 + this.f2;
+
+	get g() {
+		// XPECT noerrors -->
+		this;
+		return null;
+	}
+
+	set s(value : any) {
+		// XPECT noerrors -->
+		this;
+	}
+
+	m() {
+		// XPECT noerrors -->
+		this;
+	}
+
+	// XPECT noerrors -->
+	mRet() : this {
+		return null;
+	}
+}
+
+
+interface I_static {
+
+	static f2 = 39;
+
+	// XPECT errors --> "In interfaces, the this literal may not be used in static methods or field accessors and in initializers of static data fields." at "this"
+	static f = 3 + this.f2;
+
+	static get g() {
+		// XPECT errors --> "In interfaces, the this literal may not be used in static methods or field accessors and in initializers of static data fields." at "this"
+		this;
+		return null;
+	}
+
+	static set s(value : any) {
+		// XPECT errors --> "In interfaces, the this literal may not be used in static methods or field accessors and in initializers of static data fields." at "this"
+		this;
+	}
+
+	static m() {
+		// XPECT errors --> "In interfaces, the this literal may not be used in static methods or field accessors and in initializers of static data fields." at "this"
+		this;
+	}
+
+	// in case of return type, there is already another validation in place to disallow 'this' for all static methods:
+	// XPECT errors --> "The this type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
+	static mRet() : this {
+		return null;
+	}
+}
+
+
+//
+// but all fine in a class (except for static fields):
+//
+
+
+class C_nonStatic {
+
+	f2 = 39;
+
+	// XPECT noerrors -->
+	f = 3 + this.f2;
+
+	get g() {
+		// XPECT noerrors -->
+		this;
+		return null;
+	}
+
+	set s(value : any) {
+		// XPECT noerrors -->
+		this;
+	}
+
+	m() {
+		// XPECT noerrors -->
+		this;
+	}
+}
+
+
+class C_static {
+
+	static f2 = 39;
+
+	// XPECT errors --> "The this literal may not be used in initializers of static data fields." at "this"
+	static f = 3 + this.f2;
+
+	static get g() {
+		// XPECT noerrors -->
+		this;
+		return null;
+	}
+
+	static set s(value : any) {
+		// XPECT noerrors -->
+		this;
+	}
+
+	static m() {
+		// XPECT noerrors -->
+		this;
+	}
+}

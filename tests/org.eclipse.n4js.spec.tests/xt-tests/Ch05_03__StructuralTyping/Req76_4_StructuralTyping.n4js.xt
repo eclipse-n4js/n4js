@@ -1,0 +1,67 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class T {
+	public n : number;
+	public foo() {}
+
+	private pn : number;
+	private pfoo() {}
+
+	public static SN : number;
+	public static SFOO() {}
+}
+
+class X {
+	public n : number;
+	public foo() {}
+
+	public s : string;
+}
+
+class Y {
+	public n : number;
+	public s : string;
+}
+
+var ol = {
+	n: 10,
+	foo: function() {},
+	s: "hello"
+}
+
+var ol2 = {
+	foo: function() {},
+	s: "hello"
+}
+
+var t : ~T;
+var x : ~X;
+var y : ~Y;
+
+// XPECT noerrors -->
+t = x;
+// XPECT errors --> "~T is not a structural subtype of ~X: missing field s." at "t"
+x = t;
+
+// XPECT errors --> "~Y is not a structural subtype of ~T: missing method foo." at "y"
+t = y;
+// XPECT errors --> "~T is not a structural subtype of ~Y: missing field s." at "t"
+y = t;
+
+
+// XPECT noerrors -->
+t = ol;
+
+// XPECT errors --> "~Object with { foo: {function():void}; s: string } is not a structural subtype of ~T: missing field n." at "ol2"
+t = ol2;

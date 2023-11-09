@@ -1,0 +1,102 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+    ProjectWithSourceFolder {
+		ThisFile {}
+		File "Externals.n4jsd" {}
+	}
+   END_SETUP
+*/
+
+class A{
+	// Typecheck in member declaration XPECT errors --> "2 is not a subtype of string." at "2"
+	b : string = 2;
+
+	// Typecheck in member declaration XPECT errors -->  "true is not a subtype of string." at "true"
+	sB : string = true;
+
+	// Typecheck in member declaration XPECT errors -->  "false is not a subtype of number." at "false"
+	nB : number = false;
+
+	// Typecheck in member declaration XPECT errors --> ""ss" is not a subtype of number." at ""ss""
+	nS : number = "ss";
+
+	// Typecheck in member declaration  XPECT errors --> ""hello" is not a subtype of boolean." at ""hello""
+	boolS : boolean = "hello";
+
+	// Typecheck in member declaration XPECT errors --> "55 is not a subtype of boolean." at "55"
+	boolN : boolean = 55;
+
+	constructor() {
+		// XPECT errors --> "2 is not a subtype of string." at "2"
+		this.b = 2;
+
+		// XPECT errors -->  "true is not a subtype of string." at "true"
+		this.sB = true;
+
+		// XPECT errors -->  "false is not a subtype of number." at "false"
+		this.nB = false;
+
+		// XPECT errors --> ""ss" is not a subtype of number." at ""ss""
+		this.nS = "ss";
+
+		// XPECT errors --> ""hello" is not a subtype of boolean." at ""hello""
+		this.boolS = "hello";
+
+		// XPECT errors --> "55 is not a subtype of boolean." at "55"
+		this.boolN = 55;
+	}
+}
+
+class B extends A {
+	constructor() {
+		// XPECT errors --> "2 is not a subtype of string." at "2"
+		this.b = 2;
+
+		// XPECT errors -->  "true is not a subtype of string." at "true"
+		this.sB = true;
+
+		// XPECT errors -->  "false is not a subtype of number." at "false"
+		this.nB = false;
+
+		// XPECT errors --> ""ss" is not a subtype of number." at ""ss""
+		this.nS = "ss";
+
+		// XPECT errors --> ""hello" is not a subtype of boolean." at ""hello""
+		this.boolS = "hello";
+
+		// XPECT errors --> "55 is not a subtype of boolean." at "55"
+		this.boolN = 55;
+	}
+}
+
+
+var a : A = new A();
+console.log(a);
+console.log(typeof a.b);
+
+// OK, no error XPECT noerrors
+a.b = "3";
+
+console.log(a);
+
+// XPECT noerrors -->
+a['b']="xx";
+console.log(a);
+console.log(typeof a.b);
+
+
+// XPECT errors -->"Indexed access is only allowed for strings, arrays and iterables and for immediate(!) instances of Object." at "a[0]"
+a[0]=11;
+console.log(a);
+// XPECT errors -->"Indexed access is only allowed for strings, arrays and iterables and for immediate(!) instances of Object." at "a[0]"
+console.log(typeof a[0]);

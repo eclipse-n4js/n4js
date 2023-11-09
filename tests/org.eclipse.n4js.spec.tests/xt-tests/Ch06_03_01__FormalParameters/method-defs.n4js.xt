@@ -1,0 +1,86 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+let tmp1 = 1;
+let tmp2 = 2;
+var x:int = 3;
+
+class C {
+
+	// XPECT noerrors -->
+	m0(int=undefined) {}
+
+	// XPECT noerrors -->
+	m1(i:int=undefined) {}
+
+
+	// XPECT noerrors -->
+	m2(int=x) {}
+
+
+	// XPECT noerrors -->
+	m3(i:int=x) {}
+
+
+	// XPECT noerrors -->
+	m4(int=) {}
+
+
+	// XPECT noerrors -->
+	m5(i:int=) {}
+
+
+	// XPECT noerrors -->
+	m6(i=1, j=i) {}
+
+
+	// XPECT errors --> "Illegal forward reference to formal parameter of same function." at "j"
+	m7(i=j, j=1) {}
+
+
+	// XPECT errors --> "Initializer of parameter 'i' cannot reference the identifier 'tmp1' declared in the body." at "tmp1"
+	m8(i=tmp1) { let tmp1 = 1; tmp1; }
+
+	// XPECT noerrors -->
+	m9(i=tmp2) { let tmp3 = 3; tmp3; }
+
+
+    field = "hello";
+    // XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'field'." at "field"
+    m13(a = this.field) {}
+
+
+	// XPECT errors --> "Variadic parameters must not have a default initializer." at "...c="
+	m14(...c=){}
+
+
+	// XPECT errors --> "Only the last formal parameter can be variadic." at "...c"
+	m16(...c, ...d){}
+
+
+	// XPECT noerrors -->
+	m17(a=,...b){}
+
+
+	// XPECT noerrors -->
+	m20(i:int=1){};
+
+
+	// XPECT errors --> ""1" is not a subtype of int." at ""1""
+	m21(i:int="1"){};
+
+
+	async asfoo(): int { return 0; }
+	// XPECT errors --> "Illegal await-expression in initializer of formal parameter 'int'." at "await this.asfoo()"
+	async m30(int = await this.asfoo()) {}
+}

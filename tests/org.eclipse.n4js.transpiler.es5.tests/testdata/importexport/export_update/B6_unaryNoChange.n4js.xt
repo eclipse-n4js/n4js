@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "A6_unaryNoChange.n4js" {}
 	}
@@ -33,7 +33,7 @@ v9 =  9
 v10 =  10
 --- */
 
-import {bTrue,v1,v2,v3,v4,v5,v6,v7,v8,v9,v10} from "importexport/export_update/A6_unaryNoChange"
+import {bTrue,v1,v2,v3,v4,v5,v6,v7,v8,v9,v10} from "A6_unaryNoChange"
 
 console.log( "true = ", bTrue );  // !!true --> true
 console.log( "v1 = ", v1 );  // v1 == 2 --> '++' increments

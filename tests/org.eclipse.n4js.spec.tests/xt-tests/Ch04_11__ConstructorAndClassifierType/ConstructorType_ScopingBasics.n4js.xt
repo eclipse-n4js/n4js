@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+// cf. https://github.com/NumberFour/n4js/issues/219
+
+class A {
+	instField: string;
+    static staticField: string;
+    static get staticGetter() { return null; }
+    static set staticSetter(s:string) {}
+}
+
+var a = new A();
+
+// XPECT noerrors -->
+A.staticField;
+// XPECT noerrors -->
+A.staticGetter;
+// XPECT noerrors -->
+A.staticSetter = "x";
+
+// XPECT errors --> "The non-static member instField cannot be accessed from a static context." at "instField"
+A.instField;
+
+// XPECT type of 'ctorCtor' --> constructor{Function}
+var ctorCtor = A.constructor;
+
+// XPECT type of 'ctor' --> constructor{? extends A}
+var ctor = a.constructor;
+
+// XPECT errors --> "Write access to the static member staticField defined in A must use A directly." at "staticField"
+ctor.staticField = "x";
+
+// XPECT noerrors -->
+a.instField;

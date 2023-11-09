@@ -1,0 +1,109 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class A {} class B extends A {} class C extends B {}
+
+// 2 data fields and field accessors
+abstract class D {
+
+	// abstract:
+	abstract get x () : B
+	abstract set y(p : B)
+	// pair:
+	abstract get z () : B
+	abstract set z(p : B)
+
+	// concrete:
+	get cx () : B { return null }
+	set cy(p : B) {}
+	// pair:
+	get cz() : B { return null }
+	set cz(p : B) {}
+}
+
+class E extends D {
+
+	// override abstract:
+	// XPECT noerrors --> "perfect fit" at "y"
+	@Override get x () : B { return null }
+	// XPECT noerrors --> "perfect fit" at "y"
+	@Override set y(p : B) {}
+	// pair:
+	// XPECT noerrors --> "perfect fit" at "y"
+	@Override get z () : B { return null }
+	// XPECT noerrors --> No error expected: "perfect fit" at "y"
+	@Override set z(p : B) {}
+
+	// override concrete:
+	// XPECT noerrors --> "perfect fit" at "y"
+	@Override get cx () : B { return null }
+	// XPECT noerrors --> No error expected: "perfect fit" at "y"
+	@Override set cy(p : B) {}
+	// pair:
+	// XPECT noerrors --> "perfect fit" at "y"
+	@Override get cz() : B { return null }
+	// XPECT noerrors --> No error expected: "perfect fit" at "y"
+	@Override set cz(p : B) {}
+}
+
+// getter: more specific, setter: less specific --> ok
+class F extends D {
+
+	// override abstract:
+	// XPECT noerrors --> "getter: more specific is ok" at "y"
+	@Override get x () : C { return null }
+	// XPECT noerrors --> "setter: less specific is ok" at "y"
+	@Override set y(p : A) {}
+	// pair:
+	// XPECT noerrors --> "getter: more specific is ok" at "y"
+	@Override get z () : C { return null }
+	// XPECT noerrors --> No error expected: "setter: less specific is ok" at "y"
+	@Override set z(p : A) {}
+
+	// override concrete:
+	// XPECT noerrors --> "getter: more specific is ok" at "y"
+	@Override get cx () : C { return null }
+	// XPECT noerrors --> No error expected: "setter: less specific is ok" at "y"
+	@Override set cy(p : A) {}
+	// pair:
+	// XPECT noerrors --> "getter: more specific is ok" at "y"
+	@Override get cz() : C { return null }
+	// XPECT noerrors --> No error expected: "setter: less specific is ok" at "y"
+	@Override set cz(p : A) {}
+}
+
+// getter: less specific, setter: more specific --> errors
+class G extends D {
+
+	// override abstract:
+	// XPECT errors --> "Type of getter G.x does not conform to overridden getter D.x: A is not a subtype of B." at "x"
+	@Override get x () : A { return null }
+	// XPECT errors --> "Type of setter G.y does not conform to overridden setter D.y: B is not a subtype of C." at "y"
+	@Override set y(p : C) {}
+	// pair:
+	// XPECT errors --> "Type of getter G.z does not conform to overridden getter D.z: A is not a subtype of B." at "z"
+	@Override get z () : A { return null }
+	// XPECT errors --> "Type of setter G.z does not conform to overridden setter D.z: B is not a subtype of C." at "z"
+	@Override set z(p : C) {}
+
+	// override concrete:
+	// XPECT errors --> "Type of getter G.cx does not conform to overridden getter D.cx: A is not a subtype of B." at "cx"
+	@Override get cx () : A { return null }
+	// XPECT errors --> "Type of setter G.cy does not conform to overridden setter D.cy: B is not a subtype of C." at "cy"
+	@Override set cy(p : C) {}
+	// pair:
+	// XPECT errors --> "Type of getter G.cz does not conform to overridden getter D.cz: A is not a subtype of B." at "cz"
+	@Override get cz() : A { return null }
+	// XPECT errors --> "Type of setter G.cz does not conform to overridden setter D.cz: B is not a subtype of C." at "cz"
+	@Override set cz(p : C) {}
+}

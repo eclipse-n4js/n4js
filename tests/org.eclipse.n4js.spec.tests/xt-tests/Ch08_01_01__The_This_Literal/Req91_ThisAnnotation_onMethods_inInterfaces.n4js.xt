@@ -1,0 +1,82 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+interface X {}
+
+interface I {
+	mi() {}
+}
+
+
+interface C {
+
+	// XPECT errors --> "Declared @This type of method C.m01 in interface C must be a subtype of C." at "X"
+	@This(X) m01() {}
+	// XPECT noerrors -->
+	@This(C) m02() {}
+	// XPECT noerrors -->
+	@This(CC) m03() {
+		// XPECT noerrors -->
+		this.mcc();
+	}
+	// XPECT noerrors -->
+	@This(C&I) m04() {
+		// requires property access for intersection types XPECT noerrors -->
+		this.mi();
+	}
+
+	// ================================================================
+
+	// static cases do not apply in interfaces:
+
+	// XPECT errors --> "@This annotation not allowed on static members of interfaces." at "This"
+	@This(X) static m11() {}
+	// XPECT errors --> "@This annotation not allowed on static members of interfaces." at "This"
+	@This(C) static m12() {}
+}
+interface CC extends C {
+	mcc() {}
+}
+interface CC1 extends C, I {}
+
+
+let c: C;
+let cc: CC;
+let cc1: CC1;
+
+
+// XPECT noerrors -->
+c.m02();
+// XPECT noerrors -->
+cc.m02();
+// XPECT noerrors -->
+cc1.m02();
+
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of method C.m03: C is not a subtype of CC." at "m03"
+c.m03();
+// XPECT noerrors -->
+cc.m03();
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of method C.m03: CC1 is not a subtype of CC." at "m03"
+cc1.m03();
+
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of method C.m04: C is not a subtype of intersection{C,I}." at "m04"
+c.m04();
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of method C.m04: CC is not a subtype of intersection{C,I}." at "m04"
+cc.m04();
+// XPECT noerrors -->
+cc1.m04();
+
+// ================================================================
+
+// static cases do not apply in interfaces

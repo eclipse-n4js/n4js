@@ -1,0 +1,62 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// \begin{constraints}[Consumed Methods]\label{cnstr:Consumed_Methods}
+
+//part 1 - copying method to consumer
+
+interface R{
+	protected protectedMethod(){}
+	public publicMethod(){}
+}
+
+class Ca {}
+var ca : Ca;
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'publicMethod'." at "publicMethod"
+ca.publicMethod();
+
+interface Ra{}
+var ra : Ra;
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'publicMethod'." at "publicMethod"
+ra.publicMethod();
+
+class Cb implements R{}
+var cb : Cb;
+cb.publicMethod();
+
+interface Rb extends R{}
+var rb : Rb;
+rb.publicMethod();
+
+
+//private is not consumed
+
+class Cc implements R{}
+var cc : Cc;
+cc.protectedMethod();
+
+interface Rc extends R{}
+var rc : Rc;
+rc.protectedMethod();
+
+
+//but owned private is ok
+
+
+//interface member is not consumed, but now class api is not compatible with consumed R
+class Ce implements R{
+	/* XPECT errors ---
+	"Signature of method Ce.publicMethod does not conform to implemented method R.publicMethod: {function(number):string} is not a subtype of {function():void}." at "publicMethod"
+	--- */
+	private publicMethod(n : number) : string{return null;}
+}

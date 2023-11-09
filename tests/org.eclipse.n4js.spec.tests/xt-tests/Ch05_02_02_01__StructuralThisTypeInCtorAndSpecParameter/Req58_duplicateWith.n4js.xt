@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+// IDEBUG_81
+
+class A {
+	public n : number;
+	constructor (@Spec spec : ~i~this with {x : number;}) { }
+}
+
+class B extends A {
+	public s : string;
+}
+
+// XPECT noerrors -->
+new B( {n:4, s:"", x:5}  )
+
+class D {
+	public x : number;
+// XPECT errors --> "The structural field x (line 30) duplicates field x (line 28)." at "x : number"
+	constructor (@Spec spec : ~i~this with {x : number;}) { }
+}
+
+class E {
+	public get x() : number {
+		return 45;
+	}
+	constructor (@Spec spec : ~i~this with {
+// XPECT noerrors --> No error expected: "as getter won't be part of the structural this type, so no conflict"
+		get x() : number
+	} ) { }
+}
+
+class F {
+	private internal : number = 6;
+	public set x(n : number) {
+		this.internal = n;
+	}
+	constructor (@Spec spec : ~i~this with {
+// XPECT errors --> "The structural setter x (line 50) duplicates setter x (line 45)." at "set x(n : number)"
+		set x(n : number)
+	}) { }
+}
+
+class G {
+	private x : number;
+// XPECT noerrors --> No error expected: "as non-public field won't be part of the structural this type, so no conflict"
+	constructor (@Spec spec : ~i~this with {x : number;}) { }
+}
+
+class H extends A {
+	public s : string;
+// XPECT noerrors --> "as non-public field won't be part of the structural this type, so no conflict"
+	x : number;
+}

@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+
+@StringBased
+enum Color {
+	RED
+}
+
+let color: Color = Color.RED;
+// XPECT type of 'v01' --> string
+// XPECT noerrors -->
+let v01 = color[0];
+
+// XPECT type of 'v02' --> string
+// XPECT noerrors -->
+let v02 = color[color.length - 1];
+
+
+console.log(v01);
+console.log(v02);
+
+
+/* XPECT output ---
+R
+D
+--- */

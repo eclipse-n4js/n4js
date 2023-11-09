@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+export public interface I {
+	m0() : string
+
+	public m1() : string
+	protected m2() : string
+// actually, that is possible and expected XPECT noerrors --> "Cannot define abstract method to be project as its implementors may not be able to override it due to visibility constraints." at "m3"
+	project m3() : string
+// XPECT errors --> "Members of interfaces must not be declared private." at "m4"
+	private m4() : string
+}
+
+
+export project interface I2 {
+	m0() : string
+
+	public m1() : string
+	protected m2() : string
+// XPECT noerrors -->
+	project m3() : string
+// XPECT errors --> "Members of interfaces must not be declared private." at "m4"
+	private m4() : string
+
+}
+
+
+interface I3 {
+
+	public m0() : string
+
+	public m1() : string
+	protected m2() : string
+// XPECT noerrors -->
+	project m3() : string
+// XPECT errors --> "Members of interfaces must not be declared private." at "m4"
+	private m4() : string
+}

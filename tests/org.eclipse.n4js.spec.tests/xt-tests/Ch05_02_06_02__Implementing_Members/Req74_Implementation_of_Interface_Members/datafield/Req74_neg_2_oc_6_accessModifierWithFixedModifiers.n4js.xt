@@ -1,0 +1,42 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+interface I {
+	// XPECT errors --> "Members of interfaces must not be declared private." at "s"
+	private s : string;
+}
+
+// in the following, the "private" modifier of s is fixed to "project"
+
+// XPECT noerrors --> "s is implemented by accessor pair"
+class A implements I {
+
+	// since private is module-relative (not type-relative), it can be overridden as usual
+	// XPECT noerrors -->
+	@Override private set s(p : string) { console.log("A.set s")}
+	// XPECT noerrors -->
+	@Override private get s() : string { console.log("A.get s"); return "" }
+}
+
+var a : A = new A();
+var i : I= new A();
+
+// XPECT binding --> A.s
+a.s = "";
+// XPECT binding --> A.s
+a.s;
+// XPECT binding --> I.s
+i.s = "";
+// XPECT binding --> I.s
+i.s;

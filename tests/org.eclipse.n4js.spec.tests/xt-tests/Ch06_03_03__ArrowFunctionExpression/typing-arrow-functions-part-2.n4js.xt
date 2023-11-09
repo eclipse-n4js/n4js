@@ -1,0 +1,47 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class A {
+
+	m2() : any {
+		// FIXME(IDE-1287) consider improving error message XPECT errors ---> "{function(any):void} is not a subtype of {function(string,number,Array<string>):U}." at "s => { console.log(s); ; }"
+        var arrayOfVoid = ["a", "b"].map(s => { console.log(s); ; })
+		return arrayOfVoid
+	}
+
+	m3() : void {
+		// FIXME(IDE-1287) consider improving error message XPECT errors ---> "{function(any):void} is not a subtype of {function(string,number,Array<string>):U}." at "s => { console.log(s); return; }"
+		["a", "b"].map(s => { console.log(s); return; })
+	}
+
+	m4() : void {
+		// XPECT noerrors ---> "{function(string):void} is ok for the forEach."
+		["a", "b"].forEach(s => { console.log(s); return; })
+	}
+
+	m11() : void {
+		// XPECT noerrors ---> "{function(string):void} is ok for the forEach."
+		["a", "b"].forEach(s => console.log(s));
+	}
+
+	m22() : void {
+		// XPECT noerrors ---> "{function(string):void} is ok for the forEach."
+        ["a", "b"].forEach(s => { console.log(s); ; })
+	}
+
+	m33() : void {
+		// XPECT noerrors ---> "{function(string):void} is ok for the forEach."
+		["a", "b"].forEach(s => { console.log(s); return; })
+	}
+
+}

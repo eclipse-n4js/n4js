@@ -1,0 +1,87 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+// XPECT type of 'x01' --> boolean
+// XPECT noerrors -->
+let x01 = false;
+
+// XPECT type of 'x02' --> false
+// XPECT noerrors -->
+let x02: false = false;
+
+// XPECT type of 'x03' --> false
+// XPECT errors --> "true is not a subtype of false." at "true"
+let x03: false = true;
+
+// XPECT type of 'x04' --> false
+// XPECT noerrors -->
+const x04 = false;
+
+
+
+// XPECT type of 'x11' --> int
+// XPECT noerrors -->
+let x11 = 0;
+
+// XPECT type of 'x12' --> 0
+// XPECT noerrors -->
+let x12: 0 = 0;
+
+// XPECT type of 'x13' --> 0
+// XPECT errors --> "1 is not a subtype of 0." at "1"
+let x13: 0 = 1;
+
+// XPECT type of 'x14' --> 0
+// XPECT noerrors -->
+const x14 = 0;
+
+
+
+// XPECT type of 'x21' --> string
+// XPECT noerrors -->
+let x21 = "hello";
+
+// XPECT type of 'x22' --> "hello"
+// XPECT noerrors -->
+let x22: "hello" = "hello";
+
+// XPECT type of 'x23' --> "hello"
+// XPECT errors --> ""world" is not a subtype of "hello"." at ""world""
+let x23: "hello" = "world";
+
+// XPECT type of 'x24' --> "hello"
+// XPECT noerrors -->
+const x24 = "hello";
+
+
+
+enum Color {
+	RED, GREEN, BLUE
+}
+
+// XPECT type of 'x31' --> Color
+// XPECT noerrors -->
+let x31 = Color.RED;
+
+// XPECT type of 'x32' --> Color.RED
+// XPECT noerrors -->
+let x32: Color.RED = Color.RED;
+
+// XPECT type of 'x33' --> Color.RED
+// XPECT errors --> "Color.GREEN is not a subtype of Color.RED." at "Color.GREEN"
+let x33: Color.RED = Color.GREEN;
+
+// XPECT type of 'x34' --> Color.RED
+// XPECT noerrors -->
+const x34 = Color.RED;

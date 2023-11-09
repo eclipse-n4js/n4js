@@ -1,0 +1,136 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*  XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class A {}
+class C {
+	private _data : A = null;
+	public get data() {
+		if (this._data==null) {
+			this._data = new A();
+		}
+		return this._data;
+	}
+	public set data(data : A) {
+		this._data = data;
+		this.notifyListeners();
+	}
+	notifyListeners() : void { // ...
+	}
+}
+
+// typeless
+class D
+{
+	// inferred numeric return	XPECT noerrors -->
+	get a() {
+		return 44;
+	}
+	// 	XPECT noerrors -->
+	set a ( n ) {
+	}
+
+	/* XPECT errors ---
+		"Missing return or throw statement." at "get b () {}"
+	--- */
+	get b () {}
+	// 	XPECT errors -->"Set accessors must not return anything." at "return 17;"
+	set b ( n ) { return 17; }
+
+	// 	throw or return, complete XPECT noerrors -->
+	get c() { var b = this.a as number; if( b>44 ) return 2; else throw new A(); }
+
+	// throw in setter is possible XPECT noerrors -->
+	set c(n) { var b : number = this.a as number;  if( b>44 ) throw new A();}
+}
+
+// typed
+class E
+{
+	// numeric return	XPECT noerrors -->
+	get  a() : number {
+		return 44;
+	}
+	// 	XPECT noerrors -->
+	set a ( n : number ) {
+	}
+
+	// 	XPECT errors -->"Missing return or throw statement." at "get b() : number {}"
+	get b() : number {}
+	// 	XPECT errors -->"Set accessors must not return anything." at "return 17;"
+	set b ( n : number ) { return 17; }
+
+	// 	throw or return, complete XPECT noerrors -->
+	get c() : number { var b = this.a; if( b>44 ) return 2; else throw new A(); }
+
+	// throw in setter is possible XPECT noerrors -->
+	set c(n : number) {  if( n>44 ) throw new A(); }
+
+	// throw in setter is possible, empty return as well XPECT noerrors -->
+	set c1(n : number) {  if( n>44 ) throw new A(); else return; }
+
+	// throw in setter is possible, but no returned value XPECT errors -->"Set accessors must not return anything." at "return new A();"
+	set c2(n : number) {  if( n>44 ) throw new A(); else return new A(); }
+
+	// throw & return without value XPECT noerrors -->
+	set c3(n : number) {  if( n>44 ) throw new A(); else return; }
+}
+
+// abstract
+abstract class F
+{
+	abstract get a() : number;
+	/*  no body in abstract. XPECT errors --> "Abstract methods do not specify a body." at "a2"
+	 */
+	abstract get a2() : number { return 43 };
+}
+
+// typed
+interface RE
+{
+	// numeric return	XPECT noerrors -->
+	get  a() : number {
+		return 44;
+	}
+	// 	XPECT noerrors -->
+	set a ( n : number ) {
+	}
+
+	// 	XPECT errors -->"Missing return or throw statement." at "get b() : number {}"
+	get b() : number {}
+	// 	XPECT errors -->"Set accessors must not return anything." at "return 17;"
+	set b ( n : number ) { return 17; }
+
+	// 	throw or return, complete XPECT noerrors -->
+	get c() : number { var b = this.a; if( b>44 ) return 2; else throw new A(); }
+
+	// throw in setter is possible XPECT noerrors -->
+	set c(n : number) {  if( n>44 ) throw new A(); }
+
+	// throw in setter is possible, empty return as well XPECT noerrors -->
+	set c1(n : number) {  if( n>44 ) throw new A(); else return; }
+
+	// throw in setter is possible, but no returned value XPECT errors -->"Set accessors must not return anything." at "return new A();"
+	set c2(n : number) {  if( n>44 ) throw new A(); else return new A(); }
+
+	// throw & return without value XPECT noerrors -->
+	set c3(n : number) {  if( n>44 ) throw new A(); else return; }
+}
+
+// Roles are abstract by default.
+/*abstract*/ interface RF
+{
+	abstract get a() : number;
+	/*  no body in abstract. XPECT errors --> "Abstract methods do not specify a body." at "a2"
+	 */
+	abstract get a2() : number { return 43 };
+}

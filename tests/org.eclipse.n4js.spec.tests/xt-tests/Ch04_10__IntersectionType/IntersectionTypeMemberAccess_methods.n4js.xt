@@ -1,0 +1,275 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+interface A {}
+interface B {}
+
+let a:A;
+let b:B;
+let aub:A|B;
+
+interface I1 {
+	onlyIn1(a:A):B;
+
+	sameReturnType():A;
+	sameParType1(a:A);
+
+	diffReturnType():A;
+	diffParType1(a:A);
+
+	diffNoOfParmsSameType(a:A);
+
+	diffNoOfParmsDiffType(a:A);
+
+	varArg(...a:A);
+	varArgBoth(...a:A);
+
+	inBothInheritedAllDiffTypes(a:A):B;
+
+	defaultFpar(a:A=);
+	defaultFparBoth(a:A=);
+
+	complicated1(i:int, a:A=, ...b:B);
+	complicated2(a:string=, ...b:int);
+}
+
+interface I3<S,T> {
+	onlyIn3(b:T):S;
+
+	inBothInheritedAllDiffTypes(b:T):S;
+}
+
+interface I2 extends I3<A,B> {
+	onlyIn2(b:B):A;
+
+	sameReturnType():A;
+	sameParType1(a:A);
+
+	diffReturnType():B;
+	diffParType1(b:B);
+
+	diffNoOfParmsSameType(a:A, b:B);
+
+	diffNoOfParmsDiffType(a:B, b:B);
+
+	varArg(a:A, b:B);
+	varArgBoth(a:A, ...b:B);
+
+	defaultFpar(a:B);
+	defaultFparBoth(a:B=);
+
+	complicated1(i:int=, ...b:B);
+	// XPECT warnings at 'n:number' --> "This parameter is changed to the default parameter 'n=undefined' since it follows a default parameter." at "n:number"
+	complicated2(a:string=, n:number, ...b:int);
+}
+
+var i12 : I1&I2;
+
+// onlyIn1(a:A):B
+
+// XPECT noerrors
+i12.onlyIn1(a);
+
+// XPECT errors --> "B is not a subtype of A." at "b"
+i12.onlyIn1(b);
+
+// XPECT type of 'onlyIn1<|>(a)' --> B
+i12.onlyIn1(a);
+
+
+
+// onlyIn2(b:B):A
+
+// XPECT noerrors
+i12.onlyIn2(b);
+
+// XPECT errors --> "A is not a subtype of B." at "a"
+i12.onlyIn2(a);
+
+// XPECT type of 'onlyIn2<|>(b)' --> A
+i12.onlyIn2(b);
+
+
+
+// onlyIn3(b:B):A
+
+// XPECT noerrors
+i12.onlyIn3(b);
+
+// XPECT errors --> "A is not a subtype of B." at "a"
+i12.onlyIn3(a);
+
+// XPECT type of 'onlyIn3<|>(b)' --> A
+i12.onlyIn3(b);
+
+
+
+// sameReturnType():A
+
+// XPECT type of 'sameReturnType<|>()' --> A
+i12.sameReturnType();
+
+
+
+// sameParType(a:A)
+
+// XPECT noerrors
+i12.sameParType1(a);
+
+// XPECT errors --> "B is not a subtype of A." at "b"
+i12.sameParType1(b);
+
+
+
+// diffReturnType():A&B
+
+// XPECT type of 'diffReturnType<|>()' --> intersection{A,B}
+i12.diffReturnType();
+
+
+
+// diffParType1(aub:A|B)
+
+// XPECT noerrors
+i12.diffParType1(aub);
+
+
+
+// diffNoOfParmsSameType(a:A, b:B)
+
+// XPECT noerrors
+i12.diffNoOfParmsSameType(a, b);
+
+// XPECT errors --> "B is not a subtype of A." at "b"
+i12.diffNoOfParmsSameType(b, b);
+
+// XPECT errors --> "A is not a subtype of B." at "a"
+i12.diffNoOfParmsSameType(a, a);
+
+
+
+// diffNoOfParmsDiffType(aub:A|B, b:B)
+
+// XPECT noerrors
+i12.diffNoOfParmsDiffType(aub, b);
+
+// XPECT errors --> "A is not a subtype of B." at "a"
+i12.diffNoOfParmsDiffType(aub, a);
+
+
+// varArg(a:A, aub:A|B, ...a:A)
+
+// XPECT type of 'varArg' --> {function(A=…,union{A,B}=…,...A):void}
+i12.varArg(a, b);
+
+// XPECT noerrors
+i12.varArg(a, a);
+
+// XPECT noerrors
+i12.varArg(a, aub);
+
+// XPECT errors --> "B is not a subtype of A." at "b"
+i12.varArg(b, aub);
+
+// XPECT noerrors
+i12.varArg(a, aub, a);
+
+// XPECT errors --> "B is not a subtype of A." at "b"
+i12.varArg(a, aub, b);
+
+
+
+// varArgBoth(a:A, ...aub:A|B)
+
+// XPECT noerrors
+i12.varArgBoth(a);
+
+// XPECT errors --> "B is not a subtype of A." at "b"
+i12.varArgBoth(b);
+
+// XPECT noerrors
+i12.varArgBoth(a, aub);
+
+// XPECT errors --> "B is not a subtype of A." at "b"
+i12.varArgBoth(b, aub);
+
+// XPECT noerrors
+i12.varArgBoth(a, aub, aub);
+
+// XPECT errors --> "B is not a subtype of A." at "b"
+i12.varArgBoth(b, aub, aub);
+
+
+
+// inBothInheritedAllDiffTypes(aub:A|B):A&B
+
+// XPECT noerrors
+i12.inBothInheritedAllDiffTypes(aub);
+
+// XPECT type of 'inBothInheritedAllDiffTypes<|>(aub)' --> intersection{B,A}
+i12.inBothInheritedAllDiffTypes(aub);
+
+
+
+// defaultFpar(a:A|B);
+// XPECT type of 'defaultFpar' --> {function(union{A,B}=…):void}
+i12.defaultFpar(a);
+
+// defaultFparBoth(a:{A|B}=);
+// XPECT type of 'defaultFparBoth' --> {function(union{A,B}=…):void}
+i12.defaultFparBoth(a);
+
+
+// complicated1(i:int, a:A|B=, ...b:B);
+// XPECT type of 'complicated1' --> {function(int=…,union{A,B}=…,...B):void}
+i12.complicated1(undefined, undefined, undefined);
+
+// complicated2(a:string=…, n:int|number=…, ...b:int);
+// XPECT type of 'complicated2' --> {function(string=…,int=…,...int):void}
+i12.complicated2();
+
+
+
+
+var a1 : A;
+var a2 : A;
+var a3 : A;
+
+interface T1err {
+	// invalid use of optional/variadic fpar in next two lines
+	// IDE-145 XPECT warnings --> "This parameter is changed to the default parameter 'p2=undefined' since it follows a default parameter." at "p2 : A"
+	mErr1(p1 : A=undefined, p2 : A) : void {}
+	// XPECT errors --> "Only the last formal parameter can be variadic." at "... p1 : A"
+	mErr2(... p1 : A, p2 : A) : void {}
+}
+
+interface T2err {
+	// IDE-145 XPECT warnings --> "This parameter is changed to the default parameter 'p2=undefined' since it follows a default parameter." at "p2 : A"
+	mErr1(p1 : A=undefined, p2 : A) : void {}
+	// XPECT errors --> "Only the last formal parameter can be variadic." at "... p1 : A"
+	mErr2(... p1 : A, p2 : A) : void {}
+}
+
+interface T3err {
+	// IDE-145 XPECT warnings --> "This parameter is changed to the default parameter 'p2=undefined' since it follows a default parameter." at "p2 : A"
+	mErr1(p1 : A=undefined, p2 : A) : void {}
+	// XPECT errors --> "Only the last formal parameter can be variadic." at "... p1 : A"
+	mErr2(... p1 : A, p2 : A) : void {}
+}
+
+var i_err : intersection{T1err,T2err,T3err};
+
+// IDE-145 XPECT noerrors --> "Member mErr1 not present in all types of union or incompatible." at "mErr1"
+i_err.mErr1(a1,a2);
+// XPECT errors --> "Member mErr2 is incompatible in types of intersection." at "mErr2"
+i_err.mErr2(a1,a2,a3);

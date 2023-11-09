@@ -1,0 +1,80 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class G1<T extends Array<string>> {
+	public arr: T;
+
+	m1() {
+		// XPECT noerrors -->
+		// XPECT type of 'elem' --> string
+		let elem = this.arr[42];
+	}
+}
+
+
+class G2<T1, T2 extends Array<T1>> {
+	public arr: T2;
+
+	m2() {
+		// XPECT noerrors -->
+		// XPECT type of 'elem' --> T1
+		let elem = this.arr[42];
+	}
+}
+
+
+class G3<T3> extends G2<T3, Array<T3>> {
+
+	m3() {
+		// XPECT noerrors -->
+		// XPECT type of 'elem' --> T3
+		let elem = this.arr[42];
+	}
+}
+
+
+class G4 extends G3<number> {
+
+	m4() {
+		// XPECT noerrors -->
+		// XPECT type of 'elem' --> number
+		let elem = this.arr[42];
+	}
+}
+
+
+// ------------------------------------------------------------------------------------
+// original use case (see GHOLD-54):
+
+
+interface IterableExt<T> extends Iterable<T> {}
+
+class B<E_Element, T_Iterable extends Iterable<E_Element>> {
+    public iterable: T_Iterable;
+}
+
+class C<E_Element, T_Iterable extends IterableExt<E_Element>> extends B<E_Element, T_Iterable> {
+
+    foo() {
+        // XPECT noerrors --> "Not a function or method: any." at "this.iterable[Symbol.iterator]"
+        // XPECT type of 'elem' --> Iterator<E_Element>
+       let elem =  this.iterable[Symbol.iterator]();
+
+// work-around no longer required after fix:
+
+        // Unfortunately static cast is necessary :(
+        // X--PECT warnings --> "Unnecessary cast from T_Iterable to IterableExt<E_Element>" at "this.iterable as IterableExt<E_Element>"
+//      var workaroundIt = (this.iterable as IterableExt<E_Element>)[Symbol.iterator]();
+    }
+}

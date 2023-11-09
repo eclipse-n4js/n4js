@@ -1,0 +1,26 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+ 	ProjectWithSourceFolder {
+		ThisFile {}
+		File "Exporter.n4js" {}
+	}
+
+END_SETUP */
+
+// XPECT warnings --> "The import of f1 is unused." at "f1"
+import { f1 } from "Exporter";
+
+// redefintion
+// XPECT errors --> "Function f1 duplicates named import f1 (line 22)." at "f1"
+function f1():string { return null; }

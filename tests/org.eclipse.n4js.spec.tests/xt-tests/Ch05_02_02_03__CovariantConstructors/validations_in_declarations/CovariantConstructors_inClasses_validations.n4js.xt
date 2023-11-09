@@ -1,0 +1,85 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class X {}
+
+
+// ------------------------------------------------------------------
+
+
+class A1 {
+}
+
+@CovariantConstructor
+class B1 extends A1 {
+}
+
+// XPECT noerrors -->
+class C1 extends B1 {
+}
+
+// XPECT noerrors -->
+class D1 extends C1 {
+}
+class D1_ctor extends C1 {
+	// XPECT noerrors -->
+	public constructor() {}
+}
+class D1_ctor_bad1 extends C1 {
+	// XPECT errors --> "The constructor of class D1_ctor_bad1 cannot reduce the visibility of constructor of class N4Object." at "constructor"
+	constructor() {}
+}
+class D1_ctor_bad2 extends C1 {
+	// XPECT errors --> "Signature of constructor of class D1_ctor_bad2 does not conform to overridden constructor of class N4Object: {function(X)} is not a subtype of {function()}." at "constructor"
+	public constructor(p: X) {}
+}
+
+
+// ------------------------------------------------------------------
+
+
+class A2 {
+	// XPECT noerrors -->
+	public constructor(p: string) {}
+}
+
+@CovariantConstructor
+class B2 extends A2 {
+	// NOTE: the class that first introduces @CovariantConstructor is allowed to change the signature, reduce the visibility, etc.!
+	// XPECT noerrors -->
+	constructor(p: number) { super(""); }
+}
+
+// XPECT noerrors -->
+class C2 extends B2 {
+}
+
+// XPECT noerrors -->
+class D2 extends C2 {
+}
+class D2_ctor extends C2 {
+	// XPECT noerrors -->
+	constructor(p: number) { super(42); }
+}
+class D2_ctor_bad1 extends C2 {
+	// XPECT errors --> "The constructor of class D2_ctor_bad1 cannot reduce the visibility of constructor of class B2." at "constructor"
+	private constructor(p: number) { super(42); }
+}
+class D2_ctor_bad2 extends C2 {
+	// XPECT errors --> "Signature of constructor of class D2_ctor_bad2 does not conform to overridden constructor of class B2: {function(X)} is not a subtype of {function(number)}." at "constructor"
+	constructor(p: X) { super(42); }
+}
+
+
+// ------------------------------------------------------------------

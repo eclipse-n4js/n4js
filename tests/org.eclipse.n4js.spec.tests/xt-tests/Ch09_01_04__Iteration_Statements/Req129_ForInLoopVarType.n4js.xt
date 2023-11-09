@@ -1,0 +1,101 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+var ol = {
+	prop1: 42,
+	prop2: "world"
+}
+
+var al = [ 42, "world" ];
+
+class C {
+	field1 = 42;
+	field2 = "world";
+}
+
+var c = new C();
+
+// --------------------------------------------------------------------------
+
+// XPECT noerrors --> "objct (literal) is a subtype of Object."
+for (var x in ol) {
+	// XPECT type of 'x' --> string
+	x;
+}
+
+
+// XPECT noerrors --> "array is a subtype of Object."
+for (var y in al) {
+	// XPECT type of 'y' --> string
+	y;
+}
+
+// XPECT noerrors --> "class instance is a subtype of Object."
+for (var z in c) {
+	// XPECT type of 'z' --> string
+	z
+}
+
+// XPECT noerrors --> "string is ok"
+for (var a in "Hello") {
+}
+
+function foo() {
+
+	// XPECT noerrors --> "IArguments is ok"
+	for (var s in arguments) {
+		console.log(s);
+	}
+}
+
+// --------------------------------------------------------------------------
+
+// XPECT errors --> "42 is not a subtype of union{Object,string,IArguments}." at "42"
+for (var b in 42) {
+}
+
+// --------------------------------------------------------------------------
+
+// XPECT errors --> "The iteration variable of a for..in or for..of loop must not be provided with an initializer." at "a="1""
+for (a="1" in "Hello") {}
+
+// XPECT errors --> "The iteration variable of a for..in or for..of loop must not be provided with an initializer." at ""1""
+for (var k="1" in "Hello") {}
+
+// --------------------------------------------------------------------------
+
+// XPECT noerrors --> No error expected:  No error expected: "string is a super type of string"
+for (var l0 : string in ol){}
+// XPECT noerrors --> No error expected:  No error expected: "any is a super type of string"
+for (var l1 : any in ol){}
+
+
+// XPECT errors --> "Type of for-in-loop variable must be a super type of string but String is not." at "l2 : String"
+for (var l2 : String in ol){}
+var l2a : String;
+// XPECT errors --> "Type of for-in-loop variable must be a super type of string but String is not." at "l2a"
+for (l2a in ol){}
+
+// XPECT errors --> "Type of for-in-loop variable must be a super type of string but C is not." at "l3 : C"
+for (var l3 : C in ol){}
+var l3a : C;
+// XPECT errors --> "Type of for-in-loop variable must be a super type of string but C is not." at "l3a"
+for (l3a in ol){}
+
+// XPECT errors --> "Type of for-in-loop variable must be a super type of string but number is not." at "l4 : number"
+for (var l4 : number in ol) {}
+var l4a : number;
+// XPECT errors --> "Type of for-in-loop variable must be a super type of string but number is not." at "l4a"
+for (l4a in ol) {}
+
+// --------------------------------------------------------------------------

@@ -1,0 +1,51 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// IDEBUG-575
+
+class A  {
+	// XPECT noerrors --> "s is set via spec constructor"
+	@Final public s : string;
+
+	public constructor(@Spec spec : ~i~this){}
+}
+
+class B extends A {
+	// XPECT noerrors --> "s is set via spec constructor of super class"
+	@Final public t : string;
+}
+
+class C extends A {
+	// XPECT noerrors --> "s is set via spec constructor of super class"
+	@Final public t : string;
+
+	public constructor(@Spec spec : ~i~this){
+		super(spec);
+	}
+}
+
+
+
+class X {
+	// XPECT errors --> "Final field x must be provided with an initializer or must be initialized in the constructor." at "x"
+	@Final private x : string;
+
+	public constructor(@Spec spec : ~i~this) {}
+}
+
+class Y {
+	// XPECT noerrors --> "x is set via spec constructor"
+	@Final private x : string;
+
+	public constructor(@Spec spec : ~i~this with { x : string; }) {}
+}

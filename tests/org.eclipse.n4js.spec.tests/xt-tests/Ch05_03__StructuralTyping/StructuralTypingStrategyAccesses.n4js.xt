@@ -1,0 +1,127 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class C {
+	@Final
+	public finalField1 : int = 0;
+	@Final
+	public finalField2 : int;
+	public datafield: int;
+	public initField = "string";
+	public anyField? : any;
+	public get accessor(): int { return 0; }
+	public set accessor(v: int) { }
+	public get accRead() : int { return 0; }
+	public set accWrite(v: int) { }
+	public foo() {}
+	constructor() {
+		this.finalField2 = 0;
+	}
+}
+
+let cf: ~~C;
+let cr: ~r~C;
+let cw: ~w~C;
+let ci: ~i~C;
+
+// XPECT noerrors
+cf.datafield = 5;
+// XPECT noerrors
+cf.datafield;
+// XPECT noerrors
+cf.accessor = 5;
+// XPECT noerrors
+cf.accessor;
+// XPECT errors --> "The accessor accRead is read-only." at "accRead"
+cf.accRead = 5;
+// XPECT noerrors
+cf.accRead;
+// XPECT noerrors
+cf.accWrite = 5;
+// XPECT errors --> "The accessor accWrite is write-only." at "accWrite"
+cf.accWrite;
+// XPECT errors --> "method foo is not available for fields-only-referenced type ~~C." at "foo"
+cf.foo();
+
+// XPECT errors --> "field datafield is not available for structurally referenced type ~r~C." at "datafield"
+cr.datafield = 5;
+// XPECT noerrors
+cr.datafield;
+// XPECT errors --> "setter accessor is not available for structurally referenced type ~r~C." at "accessor"
+cr.accessor = 5;
+// XPECT noerrors
+cr.accessor;
+// XPECT errors --> "The accessor accRead is read-only." at "accRead"
+cr.accRead = 5;
+// XPECT noerrors
+cr.accRead;
+// XPECT errors --> "setter accWrite is not available for structurally referenced type ~r~C." at "accWrite"
+cr.accWrite = 5;
+// XPECT errors --> "The accessor accWrite is write-only." at "accWrite"
+cr.accWrite;
+// XPECT errors --> "method foo is not available for structurally referenced type ~r~C." at "foo"
+cr.foo();
+
+// XPECT noerrors
+cw.datafield = 5;
+// XPECT errors --> "field datafield is not available for structurally referenced type ~w~C." at "datafield"
+cw.datafield;
+// XPECT noerrors
+cw.accessor = 5;
+// XPECT errors --> "getter accessor is not available for structurally referenced type ~w~C." at "accessor"
+cw.accessor;
+// XPECT errors --> "The accessor accRead is read-only." at "accRead"
+cw.accRead = 5;
+// XPECT errors --> "getter accRead is not available for structurally referenced type ~w~C." at "accRead"
+cw.accRead;
+// XPECT noerrors
+cw.accWrite = 5;
+// XPECT errors --> "The accessor accWrite is write-only." at "accWrite"
+cw.accWrite;
+// XPECT errors --> "method foo is not available for structurally referenced type ~w~C." at "foo"
+cw.foo();
+
+// XPECT errors --> "The final field finalField1 is read-only." at "finalField1"
+ci.finalField1 = 5;
+// XPECT errors --> "field finalField1 is not available for structurally referenced type ~i~C." at "finalField1"
+ci.finalField1;
+// XPECT errors --> "The final field finalField2 is read-only." at "finalField2"
+ci.finalField2 = 5;
+// XPECT noerrors
+ci.finalField2;
+// XPECT errors --> "field datafield is not available for structurally referenced type ~i~C." at "datafield"
+ci.datafield = 5;
+// XPECT noerrors
+ci.datafield;
+// XPECT errors --> "field initField is not available for structurally referenced type ~i~C." at "initField"
+ci.initField = "traumzauberbaum";
+// XPECT noerrors
+ci.initField;
+// XPECT errors --> "field anyField is not available for structurally referenced type ~i~C." at "anyField"
+ci.anyField = "47";
+// XPECT noerrors
+ci.anyField;
+// XPECT errors --> "setter accessor is not available for structurally referenced type ~i~C." at "accessor"
+ci.accessor = 5;
+// XPECT noerrors
+ci.accessor;
+// XPECT errors --> "The accessor accRead is read-only." at "accRead"
+ci.accRead = 5;
+// XPECT errors --> "getter accRead is not available for structurally referenced type ~i~C." at "accRead"
+ci.accRead;
+// XPECT errors --> "setter accWrite is not available for structurally referenced type ~i~C." at "accWrite"
+ci.accWrite = 5;
+// XPECT noerrors -->
+ci.accWrite;
+// XPECT errors --> "method foo is not available for structurally referenced type ~i~C." at "foo"
+ci.foo();

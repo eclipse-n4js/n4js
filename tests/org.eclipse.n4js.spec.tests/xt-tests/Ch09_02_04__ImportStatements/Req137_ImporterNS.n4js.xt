@@ -1,0 +1,98 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+ 	ProjectWithSourceFolder {
+		ThisFile {}
+		File "Exporter.n4js" {}
+	}
+
+END_SETUP */
+
+import * as NS from "Exporter"
+
+let c1:NS.C1 = new NS.C1();
+let i1:NS.I1 = null;
+let f1im  = NS.f1;
+
+
+// in all cases we expect an error:
+// XPECT errors --> "Imported element NS.C1 is read-only." at "NS.C1"
+NS.C1 = null;
+// XPECT errors --> "Imported element NS.I1 is read-only." at "NS.I1"
+NS.I1 = null;
+// XPECT errors --> "Imported element NS.f1 is read-only." at "NS.f1"
+NS.f1 = function(){ return "redefined imported function f1"; };
+// XPECT errors --> "Imported element NS.var1 is read-only." at "NS.var1"
+NS.var1 = 15;
+// XPECT errors --> "Imported element NS.let1 is read-only." at "NS.let1"
+NS.let1 = 17;
+// Instead of "NS.let2 = 14;" use:
+// XPECT errors --> "Imported element NS.default is read-only." at "NS.default"
+NS.default = 14;
+
+// XPECT errors --> "Imported element NS.var1 is read-only." at "NS.var1"
+NS.var1++;
+// XPECT errors --> "Imported element NS.var1 is read-only." at "NS.var1"
+NS.var1--;
+// XPECT errors --> "Imported element NS.var1 is read-only." at "NS.var1"
+NS.var1+=1;
+// XPECT errors --> "Imported element NS.var1 is read-only." at "NS.var1"
+NS.var1*=1;
+// XPECT errors --> "Imported element NS.var1 is read-only." at "NS.var1"
+NS.var1/=1;
+// XPECT errors --> "Imported element NS.var1 is read-only." at "NS.var1"
+NS.var1-=1;
+// XPECT errors --> "Imported element NS.var1 is read-only." at "NS.var1"
+++NS.var1;
+// XPECT errors --> "Imported element NS.var1 is read-only." at "NS.var1"
+++NS.var1;
+
+// XPECT errors --> "Imported element NS.var1 is read-only." at "NS.var1"
+--(NS.var1);
+// XPECT errors --> "Imported element NS.var1 is read-only." at "NS.var1"
+(NS.var1)--;
+// XPECT errors --> "Imported element NS.var1 is read-only." at "NS.var1"
+(NS.var1)+=1;
+
+/* **** **** **** **** ***** ***** */
+// As long as the following NameSpace access pattern fail, we do not need a read-only validation.
+// If at some time the parenthesized patter are allowed, enable the validation:
+/* **** **** **** **** ***** ***** */
+
+// XPECT errors --> "Imported element ((NS)).var1 is read-only." at "((NS)).var1"
+// X-PECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
+( 12, ((((NS)).var1)) = 17);
+// XPECT errors --> "Imported element (NS).var1 is read-only." at "(NS).var1"
+// X-PECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
+++( ((NS).var1) );
+
+// XPECT errors --> "Imported element (NS).var1 is read-only." at "(NS).var1"
+// X-PECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
+--((NS).var1);
+
+// XPECT errors --> "Imported element (NS).var1 is read-only." at "(NS).var1"
+// X-PECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
+((NS).var1)--;
+
+// XPECT errors --> "Imported element (NS).var1 is read-only." at "(NS).var1"
+// X-PECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
+((NS).var1)+=1;
+
+
+// XPECT errors --> "Imported element (NS).var1 is read-only." at "(NS).var1"
+// X-PECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
+( 12, (((NS).var1)) = 17);
+
+// XPECT errors --> "Imported element (NS).var1 is read-only." at "(NS).var1"
+// X-PECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
+++( ((NS).var1) );

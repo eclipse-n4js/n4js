@@ -1,0 +1,58 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class C {
+
+	//IDEBUG-304 allows that
+	// XPECT noerrors --> "Method catch may be confused with keyword." at "catch"
+	catch() {}
+
+	// XPECT warnings --> "Field private may be confused with access modifier." at "private"
+	private;
+
+	//IDEBUG-304 allows js keywords as member names
+	// XPECT nowarnings
+	class;
+
+	// XPECT warnings --> "Field string is not of type string but of type any." at "string"
+	string;
+
+	// XPECT nowarnings -->
+	any;
+
+	// XPECT nowarnings -->
+	const RED = null;
+
+	// XPECT warnings --> "Field names should start with lower case letter." at "BLUE"
+	BLUE;
+
+	// XPECT nowarnings -->
+	static GREEN;
+
+	// XPECT warnings --> "Method names should start with lower case letter." at "Foo"
+	Foo() {}
+
+	// XPECT nowarnings -->
+	foo() {}
+
+}
+
+class D {
+	// XPECT nowarnings -->
+	string : string;
+}
+
+class E {
+	// XPECT nowarnings -->
+	string = "Hello";
+}

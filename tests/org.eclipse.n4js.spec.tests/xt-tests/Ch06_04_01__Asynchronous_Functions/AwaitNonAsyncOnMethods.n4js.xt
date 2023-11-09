@@ -1,0 +1,87 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class C {
+
+	async foo() {
+	    return "World";
+	}
+	async bar() {
+		// XPECT nowarnings
+	    var s = await (this.foo());
+	    // XPECT warnings --> "await should only be used on expressions of type Promise<?,?> since otherwise it has no effect." at "await (7 + 2)"
+	    var i = await (7 + 2);
+	    return "Hello " + i;
+	}
+
+
+	nf1(path : string, cb : {function(Error,string)}) : string {
+		return null;
+	}
+	nf2(path : string, cb : {function(Error,string)}) : Promise<any, any> {
+		return null;
+	}
+	async nfT() {
+		// XPECT warnings --> "await should only be used on expressions of type Promise<?,?> since otherwise it has no effect." at "await this.nf1("", null)"
+		await this.nf1("", null);
+		// XPECT nowarnings
+		await this.nf2("", null);
+	}
+
+
+
+	g1: G<Promise<?,?>>;
+	async f1() {
+		// XPECT nowarnings
+		await this.g1.m();
+	}
+	g2: G<string>;
+	async f2() {
+		// XPECT warnings --> "await should only be used on expressions of type Promise<?,?> since otherwise it has no effect." at "await this.g2.m()"
+		await this.g2.m();
+	}
+
+
+
+	pf1(path : string, cb : {function(Error,string)}) : string {
+		return null;
+	}
+	@Promisifiable
+	pf2(path : string, cb : {function(Error,string)}) {
+	}
+	async pfT() {
+		// XPECT warnings --> "await should only be used on expressions of type Promise<?,?> since otherwise it has no effect." at "await this.pf1("", null)"
+		await this.pf1("", null);
+		await @Promisify this.pf2("");
+	}
+
+}
+
+class G<T> {
+	m(): T {
+		return null;
+	}
+}
+class H1 extends G<Promise<?,?>> {
+	async m2() {
+		// XPECT nowarnings
+		await this.m();
+	}
+}
+class H2 extends G<string> {
+	async m2() {
+		// XPECT warnings --> "await should only be used on expressions of type Promise<?,?> since otherwise it has no effect." at "await this.m()"
+		await this.m();
+	}
+}

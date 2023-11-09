@@ -1,0 +1,67 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class A {}
+class B {}
+
+class G0<T0=A,T1=A> {}
+class G1<T0,T1=A> {}
+
+
+// part #1: in ParameterizedTypeRef
+
+// XPECT noerrors -->
+let t01: G0;
+// XPECT noerrors -->
+let t02: G0<B>;
+// XPECT noerrors -->
+let t03: G0<B,B>;
+// XPECT errors --> "Incorrect number of type arguments for class G0: expected not more than 2, got 3." at "G0"
+let t04: G0<B,B,B>;
+
+
+// XPECT errors --> "Incorrect number of type arguments for class G1: expected at least 1, got 0." at "G1"
+let t11: G1;
+// XPECT noerrors -->
+let t12: G1<B>;
+// XPECT noerrors -->
+let t13: G1<B,B>;
+// XPECT errors --> "Incorrect number of type arguments for class G1: expected not more than 2, got 3." at "G1"
+let t14: G1<B,B,B>;
+
+
+// part #2: in NewExpression
+
+// XPECT noerrors -->
+new G0;
+// XPECT noerrors -->
+new G0();
+// XPECT noerrors -->
+new G0<B>();
+// XPECT noerrors -->
+new G0<B,B>();
+// XPECT errors --> "Incorrect number of type arguments for class G0: expected not more than 2, got 3." at "G0"
+new G0<B,B,B>();
+
+
+// XPECT errors --> "Incorrect number of type arguments for class G1: expected at least 1, got 0." at "G1"
+new G1;
+// XPECT errors --> "Incorrect number of type arguments for class G1: expected at least 1, got 0." at "G1"
+new G1();
+// XPECT noerrors -->
+new G1<B>();
+// XPECT noerrors -->
+new G1<B,B>();
+// XPECT errors --> "Incorrect number of type arguments for class G1: expected not more than 2, got 3." at "G1"
+new G1<B,B,B>();

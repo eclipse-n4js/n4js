@@ -1,0 +1,193 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+// --------------------------------------------------------------------------
+// simple success case:
+
+class A01 {
+	public x() : void {}
+}
+
+class B01 extends A01 {
+	@Override
+	public x() : void {}
+}
+
+// ----
+
+interface I_A01 {
+	public f : string;
+    public x() : void
+}
+
+interface I_B01 extends I_A01 {
+	@Override
+	public f : string;
+	@Override
+	public x() : void
+}
+
+
+// --------------------------------------------------------------------------
+// simple failure case:
+
+class A02 {
+}
+
+class B02 extends A02 {
+	@Override
+// XPECT errors --> "The method x must override or implement a method from a super class or interface." at "x"
+	public x() : void {}
+}
+
+// ----
+
+interface I_A02 {
+}
+
+interface I_B02 extends I_A02 {
+	@Override
+// XPECT errors --> "The field f must override or implement a field from a super class or interface." at "f"
+	public f : string;
+	@Override
+// XPECT errors --> "The method x must override or implement a method from a super class or interface." at "x"
+	public x() : void
+}
+
+
+// --------------------------------------------------------------------------
+// success case with indirect super class/interface:
+
+class A03 {
+	public x() : void {}
+}
+class B03 extends A03 {}
+class C03 extends B03 {}
+class D03 extends C03 {
+	@Override
+	public x() : void {}
+}
+
+// ----
+
+interface I_A03 {
+	public f : string;
+    public x() : void
+}
+interface I_B03 extends I_A03 {}
+interface I_C03 extends I_B03 {}
+interface I_D03 extends I_C03 {
+	@Override
+	public f : string;
+	@Override
+	public x() : void
+}
+
+
+// --------------------------------------------------------------------------
+// missing @Override annotation
+
+class A04 {
+	public x() : void {}
+}
+
+class B04 extends A04 {
+// XPECT errors --> "The method B04.x overriding method A04.x must be annotated with @Override." at "x"
+	public x() : void {}
+}
+
+// ----
+
+interface I_A04 {
+	public f : string;
+	public x() : void
+}
+
+interface I_B04 extends I_A04 {
+// XPECT errors --> "The field I_B04.f overriding field I_A04.f must be annotated with @Override." at "f"
+	public f : string;
+// XPECT errors --> "The method I_B04.x overriding method I_A04.x must be annotated with @Override." at "x"
+	public x() : void
+}
+
+
+// --------------------------------------------------------------------------
+// @Override annotation not required & not allowed for constructors
+
+class A05 {
+	constructor (p : string) {}
+}
+
+class B05 extends A05 {
+	constructor (p : string) {
+		super(p);
+	}
+}
+
+class C05 extends A05 {
+	@Override
+// XPECT errors --> "A constructor must not be declared abstract, static or final and may not be annotated with @Override." at "constructor"
+	constructor (p : string) {
+		super(p);
+	}
+}
+
+
+// --------------------------------------------------------------------------
+// static members of interfaces are not inherited, so no @Override necessary/allowed
+
+interface I06 {
+	static field;
+	static get getter() {return null;}
+	static set setter(value) {}
+	static method() {}
+}
+
+interface J06 extends I06 {
+	// XPECT warnings --> "The static field J06.field does not override static field I06.field (no inheritance of static members in interfaces); remove annotation @Override." at "field"
+	@Override static field;
+	// XPECT warnings --> "The static getter J06.getter does not override static getter I06.getter (no inheritance of static members in interfaces); remove annotation @Override." at "getter"
+	@Override static get getter() {return null;}
+	// XPECT warnings --> "The static setter J06.setter does not override static setter I06.setter (no inheritance of static members in interfaces); remove annotation @Override." at "setter"
+	@Override static set setter(value) {}
+	// XPECT warnings --> "The static method J06.method does not override static method I06.method (no inheritance of static members in interfaces); remove annotation @Override." at "method"
+	@Override static method() {}
+}
+
+class C06 implements I06 {
+	// XPECT warnings --> "The static field C06.field does not override static field I06.field (no inheritance of static members in interfaces); remove annotation @Override." at "field"
+	@Override static field;
+	// XPECT warnings --> "The static getter C06.getter does not override static getter I06.getter (no inheritance of static members in interfaces); remove annotation @Override." at "getter"
+	@Override static get getter() {return null;}
+	// XPECT warnings --> "The static setter C06.setter does not override static setter I06.setter (no inheritance of static members in interfaces); remove annotation @Override." at "setter"
+	@Override static set setter(value) {}
+	// XPECT warnings --> "The static method C06.method does not override static method I06.method (no inheritance of static members in interfaces); remove annotation @Override." at "method"
+	@Override static method() {}
+}
+
+// but here @Override is required:
+
+class D06 extends C06 implements I06 {
+	// XPECT noerrors -->
+	@Override static field;
+	// XPECT noerrors -->
+	@Override static get getter() {return null;}
+	// XPECT noerrors -->
+	@Override static set setter(value) {}
+	// XPECT noerrors -->
+	@Override static method() {}
+}
+
+
+// --------------------------------------------------------------------------

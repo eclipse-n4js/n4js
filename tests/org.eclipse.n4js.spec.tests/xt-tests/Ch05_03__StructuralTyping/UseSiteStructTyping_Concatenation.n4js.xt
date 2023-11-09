@@ -1,0 +1,316 @@
+/*
+ * Copyright (c) 2018 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+class C {
+	public field: int;
+	public get acc(): int { return 0; }
+	public set acc(v: int) {}
+	public method() {}
+}
+
+class GD<T>   { t:    T; } // D stands for typing strategy "DEFAULT"
+class GS<T>   { t:   ~T; }
+class GSF<T>  { t:  ~~T; }
+class GSFR<T> { t: ~r~T; }
+class GSFW<T> { t: ~w~T; }
+class GSFI<T> { t: ~i~T; }
+class GSFE<T> { t: ~∅~T; }
+
+
+// ======================================================
+
+let gd_d: GD<C>;
+// XPECT type of 'gd_d.t' --> C
+gd_d.t;
+
+let gd_s: GD<~C>;
+// XPECT type of 'gd_s.t' --> ~C
+gd_s.t;
+
+let gd_sf: GD<~~C>;
+// XPECT type of 'gd_sf.t' --> ~~C
+gd_sf.t;
+
+let gd_sfr: GD<~r~C>;
+// XPECT type of 'gd_sfr.t' --> ~r~C
+gd_sfr.t;
+
+let gd_sfw: GD<~w~C>;
+// XPECT type of 'gd_sfw.t' --> ~w~C
+gd_sfw.t;
+
+let gd_sfi: GD<~i~C>;
+// XPECT type of 'gd_sfi.t' --> ~i~C
+gd_sfi.t;
+
+let gd_sfe: GD<~∅~C>;
+// XPECT type of 'gd_sfe.t' --> ~∅~C
+gd_sfe.t;
+
+// ======================================================
+
+let gs_d: GS<C>;
+// XPECT type of 'gs_d.t' --> ~C
+gs_d.t;
+
+let gs_s: GS<~C>;
+// XPECT type of 'gs_s.t' --> ~C
+gs_s.t;
+
+let gs_sf: GS<~~C>;
+// XPECT type of 'gs_sf.t' --> ~~C
+gs_sf.t;
+
+let gs_sfr: GS<~r~C>;
+// XPECT type of 'gs_sfr.t' --> ~r~C
+gs_sfr.t;
+
+let gs_sfw: GS<~w~C>;
+// XPECT type of 'gs_sfw.t' --> ~w~C
+gs_sfw.t;
+
+let gs_sfi: GS<~i~C>;
+// XPECT type of 'gs_sfi.t' --> ~i~C
+gs_sfi.t;
+
+let gs_sfe: GS<~∅~C>;
+// XPECT type of 'gs_sfe.t' --> ~∅~C
+gs_sfe.t;
+
+// ======================================================
+
+let gsf_d: GSF<C>;
+// XPECT type of 'gsf_d.t' --> ~~C
+gsf_d.t;
+
+let gsf_s: GSF<~C>;
+// XPECT type of 'gsf_s.t' --> ~~C
+gsf_s.t;
+
+let gsf_sf: GSF<~~C>;
+// XPECT type of 'gsf_sf.t' --> ~~C
+gsf_sf.t;
+
+let gsf_sfr: GSF<~r~C>;
+// XPECT type of 'gsf_sfr.t' --> ~r~C
+gsf_sfr.t;
+
+let gsf_sfw: GSF<~w~C>;
+// XPECT type of 'gsf_sfw.t' --> ~w~C
+gsf_sfw.t;
+
+let gsf_sfi: GSF<~i~C>;
+// XPECT type of 'gsf_sfi.t' --> ~i~C
+gsf_sfi.t;
+
+let gsf_sfe: GSF<~∅~C>;
+// XPECT type of 'gsf_sfe.t' --> ~∅~C
+gsf_sfe.t;
+
+// ======================================================
+
+let gsfr_d: GSFR<C>;
+// XPECT type of 'gsfr_d.t' --> ~r~C
+gsfr_d.t;
+
+let gsfr_s: GSFR<~C>;
+// XPECT type of 'gsfr_s.t' --> ~r~C
+gsfr_s.t;
+
+let gsfr_sf: GSFR<~~C>;
+// XPECT type of 'gsfr_sf.t' --> ~r~C
+gsfr_sf.t;
+
+let gsfr_sfr: GSFR<~r~C>;
+// XPECT type of 'gsfr_sfr.t' --> ~r~C
+gsfr_sfr.t;
+
+let gsfr_sfw: GSFR<~w~C>;
+// XPECT type of 'gsfr_sfw.t' --> ~∅~C
+gsfr_sfw.t;
+
+let gsfr_sfi: GSFR<~i~C>;
+// XPECT type of 'gsfr_sfi.t' --> ~i~C
+gsfr_sfi.t;
+
+let gsfr_sfe: GSFR<~∅~C>;
+// XPECT type of 'gsfr_sfe.t' --> ~∅~C
+gsfr_sfe.t;
+
+// ======================================================
+
+let gsfw_d: GSFW<C>;
+// XPECT type of 'gsfw_d.t' --> ~w~C
+gsfw_d.t;
+
+let gsfw_s: GSFW<~C>;
+// XPECT type of 'gsfw_s.t' --> ~w~C
+gsfw_s.t;
+
+let gsfw_sf: GSFW<~~C>;
+// XPECT type of 'gsfw_sf.t' --> ~w~C
+gsfw_sf.t;
+
+let gsfw_sfr: GSFW<~r~C>;
+// XPECT type of 'gsfw_sfr.t' --> ~∅~C
+gsfw_sfr.t;
+
+let gsfw_sfw: GSFW<~w~C>;
+// XPECT type of 'gsfw_sfw.t' --> ~w~C
+gsfw_sfw.t;
+
+let gsfw_sfi: GSFW<~i~C>;
+// XPECT type of 'gsfw_sfi.t' --> ~∅~C
+gsfw_sfi.t;
+
+let gsfw_sfe: GSFW<~∅~C>;
+// XPECT type of 'gsfw_sfe.t' --> ~∅~C
+gsfw_sfe.t;
+
+// ======================================================
+
+let gsfi_d: GSFI<C>;
+// XPECT type of 'gsfi_d.t' --> ~i~C
+gsfi_d.t;
+
+let gsfi_s: GSFI<~C>;
+// XPECT type of 'gsfi_s.t' --> ~i~C
+gsfi_s.t;
+
+let gsfi_sf: GSFI<~~C>;
+// XPECT type of 'gsfi_sf.t' --> ~i~C
+gsfi_sf.t;
+
+let gsfi_sfr: GSFI<~r~C>;
+// XPECT type of 'gsfi_sfr.t' --> ~∅~C
+gsfi_sfr.t;
+
+let gsfi_sfw: GSFI<~w~C>;
+// XPECT type of 'gsfi_sfw.t' --> ~i~C
+gsfi_sfw.t;
+
+let gsfi_sfi: GSFI<~i~C>;
+// XPECT type of 'gsfi_sfi.t' --> ~∅~C
+gsfi_sfi.t;
+
+let gsfi_sfe: GSFI<~∅~C>;
+// XPECT type of 'gsfi_sfe.t' --> ~∅~C
+gsfi_sfe.t;
+
+// ======================================================
+
+let gsfe_d: GSFE<C>;
+// XPECT type of 'gsfe_d.t' --> ~∅~C
+gsfe_d.t;
+
+let gsfe_s: GSFE<~C>;
+// XPECT type of 'gsfe_s.t' --> ~∅~C
+gsfe_s.t;
+
+let gsfe_sf: GSFE<~~C>;
+// XPECT type of 'gsfe_sf.t' --> ~∅~C
+gsfe_sf.t;
+
+let gsfe_sfr: GSFE<~r~C>;
+// XPECT type of 'gsfe_sfr.t' --> ~∅~C
+gsfe_sfr.t;
+
+let gsfe_sfw: GSFE<~w~C>;
+// XPECT type of 'gsfe_sfw.t' --> ~∅~C
+gsfe_sfw.t;
+
+let gsfe_sfi: GSFE<~i~C>;
+// XPECT type of 'gsfe_sfi.t' --> ~∅~C
+gsfe_sfi.t;
+
+let gsfe_sfe: GSFE<~∅~C>;
+// XPECT type of 'gsfe_sfe.t' --> ~∅~C
+gsfe_sfe.t;
+
+// ======================================================
+
+// to avoid too many test cases, we test the following only once for each kind of structural typing
+// and not in each of the above test cases:
+
+let cs: ~C;
+// XPECT noerrors -->
+cs.field;
+// XPECT noerrors -->
+cs.field = 42;
+// XPECT noerrors -->
+cs.acc;
+// XPECT noerrors -->
+cs.acc = 42;
+// XPECT noerrors -->
+cs.method();
+
+let csf: ~~C;
+// XPECT noerrors -->
+csf.field;
+// XPECT noerrors -->
+csf.field = 42;
+// XPECT noerrors -->
+csf.acc;
+// XPECT noerrors -->
+csf.acc = 42;
+// XPECT errors --> "method method is not available for fields-only-referenced type ~~C." at "method"
+csf.method();
+
+let csfr: ~r~C;
+// XPECT noerrors -->
+csfr.field;
+// XPECT errors --> "field field is not available for structurally referenced type ~r~C." at "field"
+csfr.field = 42;
+// XPECT noerrors -->
+csfr.acc;
+// XPECT errors --> "setter acc is not available for structurally referenced type ~r~C." at "acc"
+csfr.acc = 42;
+// XPECT errors --> "method method is not available for structurally referenced type ~r~C." at "method"
+csfr.method();
+
+let csfw: ~w~C;
+// XPECT errors --> "field field is not available for structurally referenced type ~w~C." at "field"
+csfw.field;
+// XPECT noerrors -->
+csfw.field = 42;
+// XPECT errors --> "getter acc is not available for structurally referenced type ~w~C." at "acc"
+csfw.acc;
+// XPECT noerrors -->
+csfw.acc = 42;
+// XPECT errors --> "method method is not available for structurally referenced type ~w~C." at "method"
+csfw.method();
+
+let csfi: ~i~C;
+// XPECT noerrors -->
+csfi.field;
+// XPECT errors --> "field field is not available for structurally referenced type ~i~C." at "field"
+csfi.field = 42;
+// XPECT noerrors -->
+csfi.acc;
+// XPECT errors --> "setter acc is not available for structurally referenced type ~i~C." at "acc"
+csfi.acc = 42;
+// XPECT errors --> "method method is not available for structurally referenced type ~i~C." at "method"
+csfi.method();
+
+let csfe: ~∅~C;
+// XPECT errors --> "field field is not available for structurally referenced type ~∅~C." at "field"
+csfe.field;
+// XPECT errors --> "field field is not available for structurally referenced type ~∅~C." at "field"
+csfe.field = 42;
+// XPECT errors --> "getter acc is not available for structurally referenced type ~∅~C." at "acc"
+csfe.acc;
+// XPECT errors --> "setter acc is not available for structurally referenced type ~∅~C." at "acc"
+csfe.acc = 42;
+// XPECT errors --> "method method is not available for structurally referenced type ~∅~C." at "method"
+csfe.method();

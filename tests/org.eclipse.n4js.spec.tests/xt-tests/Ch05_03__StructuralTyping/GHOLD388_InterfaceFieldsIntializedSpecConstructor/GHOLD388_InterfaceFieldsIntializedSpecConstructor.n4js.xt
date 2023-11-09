@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// Test case 1
+interface ~IThing {
+    public dog: string;
+}
+
+class SomeThing implements IThing {
+    public constructor(@Spec spec:~i~this) {}
+}
+
+//let st = new SomeThing({}) //correctly errors '~Object is not a structural subtype of ~i~SomeThing: missing field dog; dog failed: non-optional writable field requires a readable field or a getter in subtype.'
+
+let st2 = new SomeThing({dog:"barker"})
+console.log(st2.dog)
+
+// Test case 2
+export public interface ~MyInterface {
+    public second: boolean;
+}
+
+export public class MyClass implements MyInterface {
+    public first: boolean;
+    public constructor(@Spec spec: ~i~this) {}
+}
+
+let obj = { first: true, second: true } as MyClass;
+let instance = new MyClass(obj);
+
+console.log(instance);
+
+/* XPECT output ---
+barker
+MyClass { first: true, second: true }
+--- */

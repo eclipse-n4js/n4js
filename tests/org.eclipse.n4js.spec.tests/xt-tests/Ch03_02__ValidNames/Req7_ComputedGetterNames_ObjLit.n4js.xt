@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+var c1 = {
+
+	// XPECT FIXME errors --> "The getter m (line 6) duplicates getter m (line 8)." at "['m']"
+	get ['m']() : string { return "1"; } ,
+	// XPECT FIXME errors --> "The getter m (line 8) duplicates getter m (line 6)." at "m"
+	get m() : string { return "2"; } ,
+
+	// XPECT noerrors -->
+	get["@abc"]() : string { return "3"; } ,
+
+	// XPECT noerrors -->
+	get[    '@abc1'    ]() : string { return "4"; } ,
+
+	// XPECT noerrors -->
+	get[ /*comment*/ '@abc2']() : string { return "5"; } ,
+
+	// XPECT noerrors -->
+	get ['@abc3'  /*comment*/ ]() : string { return "6"; }
+
+}
+
+// XPECT errors --> "Member xyz not found." at "c1['xyz']"
+var xyz = c1['xyz']
+
+// XPECT noerrors -->
+var abc = c1['@abc']

@@ -1,0 +1,78 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+/* XPECT output ---
+-- field read/write
+hello
+world
+-- getter
+bye bye
+42
+-- method
+Greetings from A!
+84
+--- */
+
+
+class A {
+	f : string;
+	private hidden : string;
+	set h(param : string) { this.hidden = param; }
+	get h() : string { return this.hidden; }
+	m(n : number) : string { return "Greetings from A!"; }
+}
+
+class B {
+	f : string;
+	private hidden : number;
+	set h(param : number) { this.hidden = param; }
+	get h() : number { return this.hidden; }
+	m(n : number) : number { return n; }
+}
+
+
+function readField(obj : union{A,B}) {
+	console.log(obj.f);
+}
+
+function readGetter(obj : union{A,B}) {
+	console.log(obj.h);
+}
+
+function invokeMethod(obj : union{A,B}) {
+	console.log(obj.m(84));
+}
+
+
+var a : A = new A();
+var b : B = new B();
+
+a.f = "hello";
+b.f = "world";
+
+a.h = "bye bye";
+b.h = 42;
+
+
+
+console.log("-- field read/write");
+readField(a);  // hello
+readField(b);  // world
+
+console.log("-- getter");
+readGetter(a);  // bye bye
+readGetter(b);  // 42
+
+console.log("-- method");
+invokeMethod(a);  // Greetings from A!
+invokeMethod(b);  // 84

@@ -1,0 +1,59 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+var a = [
+  "a",
+  "b",
+  "c"
+];
+
+// XPECT FIXME type of 'a2' --> Array<number>
+var a2 = a.map(function(s){ return s.length });
+
+/*
+ * Function body: As per ES6 spec, a single expression (making up the body of a lambda) is taken for the lambda's
+ * implicit return value (whether that expression is enclosed in braces or not). If body contains more than a single
+ * expression, braces are needed. Braces are also needed in case of explicit return.
+ */
+
+// XPECT FIXME type of 'f3' --> {function(string):number}
+var f3 = (s : string) => { return s.length }
+
+// XPECT FIXME type of 'a3' --> Array<number>
+var a3 = a.map( f3 );
+
+// XPECT FIXME type of 'f4' --> {function(string):number}
+var f4 = (s : string) => s.length
+
+// XPECT FIXME type of 'a4' --> Array<number>
+var a4 = a.map( f4 );
+
+// XPECT FIXME type of 'a4WithExpectedTypeForLambda_1' --> Array<number>
+var a4WithExpectedTypeForLambda_1 = a.map( s => s.length );
+
+// found during IDE-1852: XPECT FIXME noerrors
+// XPECT FIXME type of 'a4WithExpectedTypeForLambda_2' --> Array<number>
+var a4WithExpectedTypeForLambda_2 = a.map( s => { s.length } );
+
+// XPECT FIXME type of 'a4WithExpectedTypeForLambda_3' --> Array<number>
+var a4WithExpectedTypeForLambda_3 = a.map( s => { return s.length } );
+
+
+// XPECT FIXME type of 'f5' --> {function(string):number}
+var f5 = (s : string) => { const s2 = s + s ; return s2.length }
+
+// XPECT FIXME type of 'a5' --> Array<number>
+var a5 = a.map( f5 );
+
+// XPECT type of 'a.map<|>( s => { const s2 = s + s ; return s2.length } )' --> Array<number>
+var a5WithExpectedTypeForLambda_1 : Array<number> = a.map( s => { const s2 = s + s ; return s2.length } );

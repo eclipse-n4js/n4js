@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// classes:
+
+class E {
+	public s : string;
+	public foo(p : number) : void{};
+	private n : number;
+	private bar(p : string) : void{};
+}
+var x : E;
+function f(e : E) {}
+
+// OK
+f(new E());
+// OK
+f(x);
+
+
+// same setup for interface:
+
+interface ~I {
+	public s : string;
+	public foo(p : number) : void
+	// XPECT warnings --> "Non-public members of structural interfaces are effectless." at "n"
+	n : number;
+	// XPECT warnings --> "Non-public members of structural interfaces are effectless." at "bar"
+	bar(p : string) : void
+}
+var y : I;
+function g(i : I) {}
+// OK
+g(y);

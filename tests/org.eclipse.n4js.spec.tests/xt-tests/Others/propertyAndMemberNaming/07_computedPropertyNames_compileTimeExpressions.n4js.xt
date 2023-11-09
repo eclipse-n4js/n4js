@@ -1,0 +1,58 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+// more tests for constant expressions in class
+// org.eclipse.n4js.utils.tests.N4JSLanguageUtils_computeValueIfConstantExpressionTest
+
+
+@StringBased
+enum Color {
+	R,
+	G: 'GREEN',
+	B
+}
+
+interface I {
+	public get ['fo'+Color.G+'o'](): string;
+}
+
+class IImpl implements I {
+	@Override
+	public get [!true ? 'nope' : `fo${ Color.G }o`](): string { return 'hello from IImpl'; }
+}
+
+class C implements Iterable<string> {
+	@Override
+	public [Symbol.iterator](): Iterator<string> { return ['hello from C'][Symbol.iterator](); }
+}
+
+
+let i: I = new IImpl();
+// XPECT type of 'v1' --> string
+// XPECT noerrors -->
+let v1 = i.foGREENo;
+
+let c: C = new C();
+// XPECT type of 'v2' --> Iterator<string>
+// XPECT noerrors -->
+let v2: Iterator<string> = c[Symbol.iterator]();
+
+console.log(v1);
+console.log(v2.next().value);
+
+
+/* XPECT output ---
+hello from IImpl
+hello from C
+--- */

@@ -1,0 +1,65 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+/* XPECT output ---
+A1.s
+new A1.s
+A2.s
+A3.s
+new A3.s
+A3.s
+--- */
+
+class A1 {
+    @Final public s : string = 'A1.s';
+    constructor(@Spec spec : ~i~this) { }
+}
+
+// XPECT noerrors --> "s is initialized at A1".
+var a1_1 = new A1({});
+console.log(a1_1.s); // This should print 'A1.s' to the console.
+
+// XPECT noerrors --> No error expected: "final fields can be re-initialized in spec ctor"
+var a1_2 = new A1({s: 'new A1.s'});
+console.log(a1_2.s);
+
+//-------------------------
+
+class A2 {
+    @Final public s : string;
+    constructor(@Spec spec : ~i~this) { }
+}
+
+
+// XPECT noerrors --> "this is the proper way."
+var a2 = new A2({s: 'A2.s'});
+console.log(a2.s); // This should print 'A2.s' to the console.
+
+//-------------------------
+
+class A3 {
+    public s : string = 'A3.s';
+    constructor(@Spec spec : ~i~this) { }
+}
+
+// XPECT noerrors --> "s on A3 can be omitted, since that is already initialized."
+var a3_1 = new A3({});
+console.log(a3_1.s); // This should print 'A3.s' to the console.
+
+// XPECT noerrors --> "Initialized s can be mutated on A3."
+var a3_2 = new A3({s : 'new A3.s'});
+console.log(a3_2.s); // This should print 'new A3.s' to the console.
+
+// XPECT noerrors --> "a property with value 'undefined' should be treated as if the property was omitted"
+var a3_3 = new A3({s: undefined});
+console.log(a3_3.s); // This should print 'A3.s' to the console.

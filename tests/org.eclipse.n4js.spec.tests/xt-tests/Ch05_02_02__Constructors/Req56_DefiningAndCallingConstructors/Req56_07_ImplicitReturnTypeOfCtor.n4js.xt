@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class C1 {
+	constructor() {
+		// XPECT errors --> "42 is not a subtype of this[C1]." at "42"
+		return 42;
+	}
+}
+
+class C2 {
+	// XPECT noerrors -->
+	constructor() {
+		// should be ok to not return anything
+	}
+}
+
+class C3 {
+	constructor() {
+		// XPECT noerrors -->
+		return this;
+	}
+}
+
+class C4 {
+	constructor() {
+		if(2<3) {
+			// XPECT noerrors -->
+			return this.m();
+		} else {
+			// XPECT noerrors -->
+			console.log("don't return anything in this case");
+		}
+	}
+
+	m(): this {
+		return null;
+	}
+}

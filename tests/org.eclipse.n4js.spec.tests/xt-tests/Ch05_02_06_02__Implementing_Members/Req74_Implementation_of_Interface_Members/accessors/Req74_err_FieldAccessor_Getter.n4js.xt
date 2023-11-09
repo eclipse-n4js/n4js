@@ -1,0 +1,65 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// 1 getter
+
+class A{} class B extends A{} class C extends B{}
+
+interface I {
+	public get x() : B
+}
+
+// XPECT noerrors --> "abstract class has not to define interface's members" at C0
+abstract class C0 implements I {
+}
+
+// XPECT errors --> "Class C1 must either be declared abstract or implement getter I.x." at "C1"
+class C1 implements I {
+}
+
+// XPECT noerrors --> "" at "C2"
+class C2 implements I {
+	// XPECT errors --> "Type of getter C2.x does not conform to implemented getter I.x: A is not a subtype of B." at "x"
+	@Override public get x() : A { return null }
+}
+class C3 implements I {
+	// XPECT noerrors --> "" at "x"
+	@Override public get x() : B { return null }
+}
+class C4 implements I {
+	// XPECT noerrors --> "" at "x"
+	@Override public get x() : C { return null }
+}
+// XPECT noerrors --> "member related error precedes classifier error" at "D1"
+class D1 implements I {
+	// XPECT errors --> "Type of field D1.x does not conform to implemented getter I.x: A is not a subtype of B." at "x"
+	@Override public x : A;
+}
+// XPECT noerrors --> "getter via field is ok" at "D2"
+class D2 implements I {
+	// XPECT noerrors --> "" at "x"
+	@Override public x : B;
+}
+// XPECT noerrors --> "member related error precedes classifier error" at "D1"
+class D3 implements I {
+	// XPECT noerrors --> "" at "x"
+	@Override public x : C;
+}
+
+class E1 implements I {
+	// XPECT errors --> "The getter E1.x cannot reduce the visibility of getter I.x." at "x"
+	@Override private get x() : C { return null }
+}
+class E2 implements I {
+	@Override public get x() : C { return null }
+}

@@ -1,0 +1,123 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class A {}
+class B extends A {}
+@Final class F {}
+class X {}
+interface I{}
+interface R{}
+enum E { a,b}
+enum E2 { c,d}
+
+var a : A, b : B, f : F, i : I, r : R, e : E, e2 : E2;
+
+// XPECT errors --> "Cannot cast from A to X" at "a as X"
+a as X;
+// OK, B <: A
+a as B;
+// OK, some sub class of A may implement I
+a as I;
+// OK, some sub class of A may consume interface R
+a as I;
+
+// XPECT errors --> "Cannot cast from F to I" at "f as I"
+f as I;
+// XPECT errors --> "Cannot cast from F to R" at "f as R"
+f as R;
+// XPECT warnings --> "Unnecessary cast from B to A" at "b as A"
+b as A;
+
+// OK, some implementing class of I may consume R as well
+i as R;
+// OK, some consumer of R may implement I as well
+r as I;
+// OK, some subtype of A may implement I
+i as A;
+// XPECT errors --> "Cannot cast from I to F" at "i as F"
+i as F;
+
+var ax : union{A,X};
+// ok, A is contained in ax
+ax as A;
+// ok, X is contained in ax
+ax as X;
+// ok, ax may be an A, which may be a B
+ax as B;
+// XPECT errors --> "Cannot cast from union{A,X} to F" at "ax as F"
+ax as F;
+
+var s : any;
+s as number;
+s as string;
+s as boolean;
+s as Object;
+s as A;
+s as X;
+s as F;
+
+// XPECT warnings --> "Unnecessary cast from any to any" at "s as any"
+s as any;
+
+// XPECT errors --> "Cannot cast from "string" to number" at ""string" as number"
+"string" as number;
+// XPECT errors --> "Cannot cast from 1 to string" at "1 as string"
+1 as string;
+// XPECT errors --> "Cannot cast from true to number" at "true as number"
+true as number;
+
+// XPECT warnings --> "Unnecessary cast from "string" to string" at ""string" as string"
+"string" as string;
+// XPECT warnings --> "Unnecessary cast from 1 to number" at "1 as number"
+1 as number;
+// XPECT warnings --> "Unnecessary cast from true to boolean" at "true as boolean"
+true as boolean;
+
+// XPECT errors --> "Cannot cast from "string" to A" at ""string" as A"
+"string" as A;
+// XPECT errors --> "Cannot cast from 1 to A" at "1 as A"
+1 as A;
+// XPECT errors --> "Cannot cast from 1 to I" at "1 as I"
+1 as I;
+
+// XPECT errors --> "Cannot cast from A to number" at "a as number"
+a as number;
+// XPECT errors --> "Cannot cast from I to number" at "i as number"
+i as number;
+// XPECT errors --> "Cannot cast from R to number" at "r as number"
+r as number;
+// XPECT errors --> "Cannot cast from A to string" at "a as string"
+a as string;
+
+// XPECT errors --> "Cannot cast from E to A" at "e as A"
+e as A;
+// XPECT errors --> "Cannot cast from E to E2" at "e as E2"
+e as E2;
+// XPECT warnings --> "Unnecessary cast from E to E" at "e as E"
+e as E;
+// XPECT errors --> "Cannot cast from E to I" at "e as I"
+e as I;
+// XPECT errors --> "Cannot cast from E to R" at "e as R"
+e as R;
+// XPECT errors --> "Cannot cast from E to number" at "e as number"
+e as number;
+// XPECT errors --> "Cannot cast from E to string" at "e as string"
+e as string;
+
+// XPECT errors --> "Cannot cast from A to E" at "a as E"
+a as E;
+// XPECT errors --> "Cannot cast from "string" to E" at ""string" as E"
+"string" as E;
+// XPECT errors --> "Cannot cast from I to E" at "i as E"
+i as E;

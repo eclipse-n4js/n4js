@@ -1,0 +1,107 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+var cnt = 0;
+var arr : Array<number> = [1,2,3,4,5,6,7,8,9];
+var arr2 : Array<Array<number>> = [[1,2,3],[4,5,6],[7,8,9]];
+
+
+console.log('### array binding pattern');
+var [a1,b1,c1] = arr;
+console.log(a1,b1,c1);
+
+
+console.log('### array binding pattern (for..of loop, single expression)');
+for(var [a2,b2,c2] of arr2)
+	console.log(a2,b2,c2);
+
+
+console.log('### array binding pattern (for..of loop, block)');
+for(var [a3,b3,c3] of arr2) {
+	var str = ''+a3;
+	str += ' '+b3;
+	str += ' '+c3;
+	console.log(str);
+}
+
+
+console.log('### array binding pattern (plain for loop)');
+cnt = 3;
+for(var [a4,b4,c4] = arr ; cnt>0 ; cnt--)
+	console.log(a4,b4,c4); // note: will print always "1 2 3" (only cnt is changed)
+
+
+// clear all variables
+a1 = undefined; a2 = undefined; a3 = undefined; a4 = undefined;
+b1 = undefined; b2 = undefined; b3 = undefined; b4 = undefined;
+c1 = undefined; c2 = undefined; c3 = undefined; c4 = undefined;
+
+
+console.log('### array assignment pattern');
+[a1,b1,c1] = arr;
+console.log(a1,b1,c1);
+
+
+console.log('### array assignment pattern (for..of loop, single expression)');
+for([a2,b2,c2] of arr2)
+	console.log(a2,b2,c2);
+
+
+console.log('### array assignment pattern (for..of loop, block)');
+for([a3,b3,c3] of arr2) {
+	var str2 = ''+a3;
+	str2+=' '+b3;
+	str2+=' '+c3;
+	console.log(str2);
+}
+
+
+console.log('### array assignment pattern (plain for loop)');
+cnt = 3;
+for([a4,b4,c4] = arr ; cnt>0 ; cnt--)
+	console.log(a4,b4,c4); // note: will print always "1 2 3" (only cnt is changed)
+
+
+
+
+/* XPECT output ---
+### array binding pattern
+1 2 3
+### array binding pattern (for..of loop, single expression)
+1 2 3
+4 5 6
+7 8 9
+### array binding pattern (for..of loop, block)
+1 2 3
+4 5 6
+7 8 9
+### array binding pattern (plain for loop)
+1 2 3
+1 2 3
+1 2 3
+### array assignment pattern
+1 2 3
+### array assignment pattern (for..of loop, single expression)
+1 2 3
+4 5 6
+7 8 9
+### array assignment pattern (for..of loop, block)
+1 2 3
+4 5 6
+7 8 9
+### array assignment pattern (plain for loop)
+1 2 3
+1 2 3
+1 2 3
+--- */

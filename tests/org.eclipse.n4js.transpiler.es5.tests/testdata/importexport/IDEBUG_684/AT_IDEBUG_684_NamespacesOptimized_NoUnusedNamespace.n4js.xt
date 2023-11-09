@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "Err.n4js" {}
 		File "Stuff.n4js" {}
@@ -30,6 +30,7 @@ import * as S from './Stuff.js'
 
 console.log(N.Error);
 console.log(S);
+//# sourceMappingURL=AT_IDEBUG_684_NamespacesOptimized_NoUnusedNamespace.map
 --- */
 
 
@@ -38,10 +39,10 @@ console.log(S);
 [Module: null prototype] { C1: [class C1 extends N4Object] }
 --- */
 
-import * as N from "importexport/IDEBUG_684/Err"
-import * as S from "importexport/IDEBUG_684/Stuff"
-//XPECT warnings --> "The import of * as Z from importexport/IDEBUG_684/Zonk is unused." at "* as Z"
-import * as Z from "importexport/IDEBUG_684/Zonk"
+import * as N from "Err"
+import * as S from "Stuff"
+//XPECT warnings --> "The import of * as Z from Zonk is unused." at "* as Z"
+import * as Z from "Zonk"
 
 console.log(N.Error)
 console.log(S)

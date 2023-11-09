@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+abstract class C {}
+
+interface I {}
+
+
+// customized error messages for instantiation of abstract classes and interfaces:
+
+// XPECT errors --> "Cannot instantiate abstract class C." at "C"
+new C();
+// XPECT errors --> "Cannot instantiate interface I." at "I"
+new I();
+
+
+// but if the type of the classifier is not directly given, we want to see the generic error message:
+
+let typeC: type{C};
+let typeI: type{I};
+
+// XPECT errors --> "Cannot instantiate type{C}." at "typeC"
+new typeC();
+// XPECT errors --> "Cannot instantiate type{I}." at "typeI"
+new typeI();

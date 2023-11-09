@@ -1,0 +1,67 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+// NOTE: many more tests included in ThisAnnotation_onMethods.n4js.xt!
+
+
+class C {
+	// XPECT noerrors -->
+	@This(CC) get g(): number {
+		// XPECT noerrors -->
+		return this.prop;
+	}
+	// XPECT noerrors -->
+	@This(CC) set s(value: number) {
+		// XPECT noerrors -->
+		this.prop = value;
+	}
+
+	// XPECT noerrors -->
+	@This(type{CC}) static get g(): number {
+		// XPECT noerrors -->
+		return this.sprop;
+	}
+	// XPECT noerrors -->
+	@This(type{CC}) static set s(value: number) {
+		// XPECT errors --> "Write access to the static member sprop defined in CC must use CC directly." at "sprop"
+		this.sprop = value;
+	}
+}
+class CC extends C {
+	prop: number;
+	static sprop: number;
+}
+
+
+let c: C;
+let cc: CC;
+
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of getter C.g: C is not a subtype of CC." at "g"
+c.g;
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of setter C.s: C is not a subtype of CC." at "s"
+c.s = 42;
+// XPECT noerrors -->
+cc.g;
+// XPECT noerrors -->
+cc.s = 42;
+
+
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of static getter C.g: constructor{C} is not a subtype of type{CC}." at "g"
+C.g;
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of static setter C.s: constructor{C} is not a subtype of type{CC}." at "s"
+C.s = 42;
+// XPECT noerrors -->
+CC.g;
+// XPECT errors --> "Write access to the static member s defined in C must use C directly." at "s"
+CC.s = 42;

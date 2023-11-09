@@ -1,0 +1,62 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+/////////////////
+// Additive Expression '+' or '-'
+//
+// Requirement 111
+////////
+
+let s: string ="x", s1: string="y";
+let b: boolean =true;
+let n: number = 1;
+
+//////////////////////////////////////
+// SUB : return type number expected:
+
+// XPECT type of 'b-b' --> number
+b-b
+// XPECT type of 'n-n' --> number
+n-n
+// XPECT type of 'n-b' --> number
+n-b
+// XPECT type of 'b-n' --> number
+b-n
+// XPECT type of 's-n' --> number
+s-n
+// XPECT type of 'n-s' --> number
+n-s
+// XPECT type of 's1-s' --> number
+s1-s
+// XPECT type of 's-b' --> number
+s-b
+// XPECT type of 'b-s' --> number
+b-s
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
+// XPECT type of 'n-null' --> number
+n-null
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
+// XPECT type of 'null-n' --> number
+null-n
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
+// XPECT type of 's-null' --> number
+s-null
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
+// XPECT type of 'null-s' --> number
+null-s
+// XPECT warnings --> "Operand of type undefined will always result in NaN." at "undefined"
+// XPECT type of 'n-undefined' --> number
+n-undefined;
+// XPECT warnings --> "Operand of type undefined will always result in NaN." at "undefined"
+// XPECT type of 'undefined-n' --> number
+undefined-n;

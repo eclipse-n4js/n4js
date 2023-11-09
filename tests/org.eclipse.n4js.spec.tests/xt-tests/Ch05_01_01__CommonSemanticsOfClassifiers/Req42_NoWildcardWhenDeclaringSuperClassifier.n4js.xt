@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class A {}
+
+interface I<T1,T2,T3> {}
+class G<T1,T2,T3> {}
+
+
+// XPECT errors --> "Wildcards may not be used as type argument when declaring an extended or implemented type." at "?"
+class C1 extends G<string,?,number> {}
+// XPECT errors --> "Wildcards may not be used as type argument when declaring an extended or implemented type." at "? extends A"
+class C2 extends G<string,? extends A,number> {}
+// XPECT errors --> "Wildcards may not be used as type argument when declaring an extended or implemented type." at "?"
+class C3 implements I<string,?,number> {}
+// XPECT errors --> "Wildcards may not be used as type argument when declaring an extended or implemented type." at "? extends A"
+class C4 implements I<string,? extends A,number> {}
+
+// XPECT errors --> "Wildcards may not be used as type argument when declaring an extended or implemented type." at "?"
+interface I1 extends I<string,?,number> {}
+// XPECT errors --> "Wildcards may not be used as type argument when declaring an extended or implemented type." at "? extends A"
+interface I2 extends I<string,? extends A,number> {}
+
+
+// but nested wildcards are ok:
+
+// XPECT noerrors -->
+class C_OK extends G<string,Array<? extends A>,number> {}
+// XPECT noerrors -->
+interface I_OK extends I<string,Array<? extends A>,number> {}

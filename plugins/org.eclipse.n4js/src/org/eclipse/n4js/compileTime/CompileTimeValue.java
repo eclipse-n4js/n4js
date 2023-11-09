@@ -10,9 +10,12 @@
  */
 package org.eclipse.n4js.compileTime;
 
+import static org.eclipse.n4js.utils.Strings.join;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -563,7 +566,8 @@ public abstract class CompileTimeValue {
 		if (value == null) {
 			return null;
 		} else if (!value.isValid()) {
-			return null;
+			String serErrs = join("!", err -> err.message.replace('!', ' '), ((ValueInvalid) value).getErrors());
+			return "!" + serErrs;
 		} else if (value == UNDEFINED || value == NULL) {
 			return value.toString();
 		} else if (value instanceof ValueBoolean) {
@@ -597,6 +601,16 @@ public abstract class CompileTimeValue {
 				final char head = str.charAt(0);
 				final String tail = str.substring(1);
 				switch (head) {
+				case '!':
+					String[] errMsgs = tail.split("!");
+					if (errMsgs != null) {
+						List<CompileTimeEvaluationError> errs = new ArrayList<>();
+						for (String errMsg : errMsgs) {
+							errs.add(new CompileTimeEvaluationError(errMsg, null, null));
+						}
+						return new CompileTimeValue.ValueInvalid(errs.toArray(new CompileTimeEvaluationError[0]));
+					}
+					break;
 				case '?':
 					if ("true".equalsIgnoreCase(tail)) {
 						return TRUE;

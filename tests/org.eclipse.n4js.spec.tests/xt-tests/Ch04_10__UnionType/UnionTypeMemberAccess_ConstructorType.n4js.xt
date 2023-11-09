@@ -1,0 +1,226 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+interface A {}
+interface B {}
+interface C {}
+interface D {}
+
+class X {}
+
+
+//
+// use-site structural types with additional members
+//
+// (note: other cases, i.e. def-site and use-site without add. members) are trivial,
+//  because union type member access follows structural typing semantics anyway)
+//
+
+class T1 {
+	f : A;
+	get g() : A { return null; }
+	set s(param : A) {}
+	m(p1 : A, p2 : A) : A { return null; }
+}
+class T2 {
+}
+
+var u : union{T1, ~T2 with {
+	f : A;
+	get g() : B
+	set s(param : B)
+	m(p1 : C, p2 : D) : B
+}};
+
+u.f;
+u.f = null;
+
+u.g;
+// XPECT errors --> "The accessor g is read-only." at "g"
+u.g = null;
+
+// XPECT errors --> "The accessor s is write-only." at "s"
+u.s;
+u.s = null;
+
+u.m(null,null);
+
+
+//
+// enum
+//
+
+enum Color {
+	RED, GREEN, BLUE
+}
+
+enum Mode {
+	ON, OFF, KAPUTT
+}
+
+class E {
+	get name() : string {return null;}
+	value : string;
+	get n4type() : N4Class {return null;}
+}
+
+
+var u_enum : union{Color,E};
+
+var s1 : string = u_enum.name;
+var s2 : string = u_enum.value;
+var s3 : string = N4Type.of(u_enum).fqn;
+
+// XPECT errors --> "The accessor name is read-only." at "name"
+u_enum.name = null;
+// XPECT errors --> "Union combines fields and getters with name value and therefore property value is read-only." at "value"
+u_enum.value = null;
+// XPECT errors --> "The accessor n4type is read-only in E. The static member n4type cannot be accessed from a non-static context in Color." at "n4type"
+u_enum.n4type = null;
+
+u_enum.toString();
+
+
+var u_enum2 : union{Color,Mode};
+
+var s4 : string = u_enum2.name;
+var s5 : string = u_enum2.value;
+var s6 : string = N4Type.of(u_enum2).fqn;
+
+// XPECT errors --> "The accessor name is read-only." at "name"
+u_enum2.name = null;
+// XPECT errors --> "The accessor value is read-only." at "value"
+u_enum2.value = null;
+// XPECT errors --> "The static member n4type cannot be accessed from a non-static context." at "n4type"
+u_enum2.n4type = null;
+
+u_enum2.toString();
+
+
+//
+// primitive types
+//
+
+class S {
+	length : number;
+	public toLowerCase() : string { return null; }
+}
+
+var u_prim : union{S,string};
+
+u_prim.length;
+// XPECT errors --> "Union combines fields and getters with name length and therefore property length is read-only." at "length"
+u_prim.length = 42;
+
+u_prim.toLowerCase();
+
+
+//
+// classifier types
+//
+
+var u_type1 : union{ type{A}, type{B} };
+// XPECT noerrors -->
+u_type1.constructor;
+
+var u_type2 : union{ type{A}, B };
+// XPECT noerrors -->
+u_type2.constructor;
+
+var u_type3 : union{ type{A}, string };
+// XPECT noerrors -->
+u_type3.constructor;
+
+
+//
+// function types
+//
+
+function funA (p1 : A) : B       {return null;}
+function funBC(p1 : B, p2 : C) : D {return null;}
+function funX (p1 : A) : X       {return null;}
+
+var u_fte : union{ {function(A) : B } , {function(B, C) : D} };
+
+u_fte = funA;
+u_fte = funBC;
+// XPECT errors --> "{function(A):X} is not a subtype of union{{function(A):B},{function(B,C):D}}." at "funX"
+u_fte = funX;
+
+u_fte.length;
+
+// XPECT errors --> "Incorrect number of arguments: expected 2, got 0." at "u_fte.apply()"
+u_fte.apply();
+
+u_fte.call(null);
+
+
+//
+// type variables
+//
+
+class T1_typevar {
+
+	field : A;
+	get g() : A {return null;}
+}
+
+class T2_typevar {
+
+	field : A;
+	get g() : B {return null;}
+}
+
+
+class Container1<T extends T2_typevar> {
+
+	foo() : void {
+		var u : union{T1_typevar,T};
+
+		u.field;
+		u.field = null;
+		// XPECT type of 'u.field' --> A
+		u.field;
+
+		u.g;
+		// XPECT errors --> "The accessor g is read-only." at "g"
+		u.g = null;
+		// XPECT type of 'u.g' --> union{A,B}
+		u.g;
+	}
+
+	<U extends T1_typevar> bar() : void {
+		var u : union{T,U};
+
+		u.field;
+		u.field = null;
+		// XPECT type of 'u.field' --> A
+		u.field;
+
+		u.g;
+		// XPECT errors --> "The accessor g is read-only." at "g"
+		u.g = null;
+		// XPECT type of 'u.g' --> union{A,B}
+		u.g;
+	}
+}
+
+class Container2<T> {
+
+	<U> foo() : void {
+		var u : union{T,U};
+
+		// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'toString'." at "toString"
+		u.toString();  // unbound type variable are of type any, so even #toString() is unavailable
+	}
+}

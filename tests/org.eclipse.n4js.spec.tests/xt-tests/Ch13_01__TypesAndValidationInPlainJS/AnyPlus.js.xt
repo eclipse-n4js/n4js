@@ -1,0 +1,71 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+
+
+
+var someglobal;
+// XPECT noerrors --> "in plain JS, variables are inferred to any+"
+someglobal.name;
+
+function require() {}
+// XPECT noerrors --> "in plain JS, all functions return any+"
+var X = require("unknown");
+
+function f() {
+	if (true) {
+		// XPECT noerrors --> "in plain JS, return is not validated"
+		return;
+	}
+	// XPECT noerrors --> "in plain JS, return is not validated"
+	return 1;
+}
+
+// XPECT noerrors --> "in plain JS, no type arguments are required"
+var /* Array<any+> */ a = new Array /* <any+> */ ();
+
+
+// XPECT noerrors --> "in plain JS, new expression is allowed with any+"
+var x  = new X();
+// XPECT noerrors --> "in plain JS, new expression is allowed with any+"
+var z = X.z();
+
+function CatchedErrorsError(errors, message) {
+// XPECT noerrors --> "in plain JS, new expression is allowed with any+"
+    Error.call(this, message || "Any errors happens and catched");
+// XPECT noerrors --> "in plain JS, new expression is allowed with any+"
+    this.errors = errors;
+}
+
+// XPECT noerrors --> "in plain JS, new expression is allowed with any+"
+CatchedErrorsError.prototype = Object.create(Error.prototype);
+// XPECT noerrors --> "in plain JS, new expression is allowed with any+"
+CatchedErrorsError.prototype.constructor = CatchedErrorsError;
+
+
+var handler;
+// XPECT noerrors --> "in plain JS, call expression is allowed with any+"
+handler();
+
+
+var args = (true) ? x : z;
+// XPECT noerrors --> "in plain JS, call expression is allowed with any+"
+args.foo();
+
+var a2;
+// XPECT noerrors --> "in plain JS, call expression is allowed with any+"
+a2[0].bar();
+
+// XPECT noerrors --> "in plain JS, call expression is allowed with any+"
+someUnknown.bar;

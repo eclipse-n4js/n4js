@@ -1,0 +1,87 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+ 	ProjectWithSourceFolder {
+		ThisFile {}
+		File "JS1.js" {}
+		File "JS2.js" {}
+		File "N4JS1.n4js" {}
+		File "N4JS2.n4js" {}
+		File "N4JSD1.n4jsd" {}
+		File "N4JSD2.n4jsd" {}
+	}
+
+END_SETUP */
+
+/* XPECT errors ---
+"Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""Unknown1""
+--- */
+import * as UnknownStatic from "Unknown1"
+/* XPECT errors ---
+"Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""Unknown1""
+--- */
+import * as UnknownDynamic+ from "Unknown1"
+
+
+// XPECT errors --> "Use dynamic import in order to access elements of JS1." at "* as JSStatic"
+import * as JSStatic from "JS1"
+// XPECT noerrors -->
+import * as JSDynamic+ from "JS2"
+
+// XPECT noerrors -->
+import * as N4JSStatic from "N4JS1"
+// XPECT errors --> "N4JS module N4JS2 must not be imported dynamically." at "* as N4JSDynamic+"
+import * as N4JSDynamic+ from "N4JS2"
+
+// XPECT noerrors -->
+import * as N4JSDStatic from "N4JSD1"
+// XPECT warnings --> "The n4jsd module N4JSD2 should not be imported dynamically." at "* as N4JSDDynamic+"
+import * as N4JSDDynamic+ from "N4JSD2"
+
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'X'." at "X"
+JSStatic.X;
+// XPECT noerrors -->
+JSDynamic.X;
+
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'X'." at "X"
+UnknownStatic.X;
+// XPECT noerrors -->
+UnknownDynamic.X;
+
+// XPECT noerrors -->
+N4JSStatic.C;
+// XPECT noerrors -->
+N4JSDynamic.C;
+// XPECT noerrors -->
+N4JSDynamic.X;
+
+// XPECT noerrors -->
+N4JSDStatic.D;
+// XPECT noerrors -->
+N4JSDDynamic.D;
+// XPECT noerrors -->
+N4JSDDynamic.X;
+
+// XPECT type of 'n4jsDynamic' --> N4JSDynamic+
+let n4jsDynamic = N4JSDynamic;
+// XPECT noerrors -->
+n4jsDynamic.C;
+// XPECT noerrors -->
+n4jsDynamic.X;
+
+// XPECT type of 'n4jsdDynamic' --> N4JSDDynamic+
+let n4jsdDynamic = N4JSDDynamic;
+// XPECT noerrors -->
+n4jsdDynamic.C;
+// XPECT noerrors -->
+n4jsdDynamic.X;

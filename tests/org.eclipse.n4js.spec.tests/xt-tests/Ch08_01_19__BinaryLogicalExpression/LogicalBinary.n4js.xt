@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+// IDE-775 Logical And (&&), Logical Or(||)
+
+
+// OK,  expect 8
+var n1 : number = 7 && 8;
+
+// OK, expect 7
+var n2 : number = 7 || 8;
+
+class A{}
+interface IB {}
+class B implements IB {}
+class C{}
+class D extends A implements IB {}
+
+var result : union{A,IB};
+
+// OK
+result = new A() || new B();
+// OK
+result = new A() && new B();
+// OK
+result = new D() && new D();
+
+// XPECT errors --> "union{C,B} is not a subtype of union{A,IB}." at "new C() || new B()"
+result = new C() || new B();
+// XPECT errors --> "union{C,B} is not a subtype of union{A,IB}." at "new C() && new B()"
+result = new C() && new B();
+
+// XPECT errors --> "union{A,C} is not a subtype of union{A,IB}." at "new A() || new C()"
+result = new A() || new C();
+// XPECT errors --> "union{A,C} is not a subtype of union{A,IB}." at "new A() && new C()"
+result = new A() && new C();

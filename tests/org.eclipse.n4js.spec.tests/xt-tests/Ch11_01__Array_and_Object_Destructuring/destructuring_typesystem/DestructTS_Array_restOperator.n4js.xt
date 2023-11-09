@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+class A {}
+class B {}
+class C {}
+class X {}
+
+
+// simple success case
+
+var v1 : Array<C>;
+// XPECT type of 'a1' --> C
+// XPECT type of 'b1' --> Array<C>
+var [a1,...b1] = v1;
+
+
+// check against type of existing var (success case)
+
+var v2 : Iterable2<A,B>;
+var a2 : A, b2 : Array<B>;
+// XPECT noerrors -->
+[a2,...b2] = v2;
+
+
+// check against type of existing var (failure case)
+
+var v3 : Iterable2<A,B>;
+var a3 : A, x3 : X;
+// XPECT errors --> "Variable x3 cannot hold destructured value at index 1: Array<B> is not a subtype of X." at "x3"
+[a3,...x3] = v3;
+
+
+// with default value ...
+
+var v4 : Array<A>;
+// XPECT type of 'a4' --> A
+// XPECT type of 'b4' --> Array<A>
+var [a4,...b4 = [new A, new A]] = v4;
+
+
+// for..of loop
+
+var v5 : Array<Array<A>>;
+// XPECT type of 'head' --> A
+// XPECT type of 'tail' --> Array<A>
+for(var [head,...tail] of v5) {}
+// XPECT type of 'head' --> A
+// XPECT type of 'tail' --> Array<A>
+for([head,...tail] of v5) {}

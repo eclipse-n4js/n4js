@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "imported/dep.n4js" { from="imported/dep.n4js"}
 	}
@@ -28,7 +28,7 @@ c.bHere == b2: true
 --- */
 import {
 	B as BHere
-} from "classes/AT_953_alias/imported/dep"
+} from "imported/dep"
 
 var b : BHere = new BHere();
 console.log("Before BHere b call")

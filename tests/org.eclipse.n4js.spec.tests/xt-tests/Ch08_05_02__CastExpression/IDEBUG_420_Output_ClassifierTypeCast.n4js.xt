@@ -1,0 +1,86 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+/* XPECT output ---
+42
+A
+42
+B
+42
+foo
+B
+36
+A
+36
+B
+36
+A
+36
+static foo
+B
+--- */
+
+class A {
+	n = 42;
+	static sn = 36;
+}
+
+class B extends A {
+	s = 'foo';
+	static ss = 'static foo';
+}
+
+//Constructor types
+var ctorA : constructor{A} = null;
+var a : any = A;
+ctorA = a as constructor{A};
+console.log((new ctorA).n); //42
+console.log(N4Type.of(new ctorA).name); //A
+
+ctorA = null;
+a = B;
+ctorA = a as constructor{B};
+console.log((new ctorA).n); //42
+console.log(N4Type.of(new ctorA).name); //B
+
+var ctorB : constructor{B} = null;
+var b : any = B;
+ctorB = b as constructor{B};
+console.log((new ctorB).n); //42
+console.log((new ctorB).s); //foo
+console.log(N4Type.of(new ctorB).name); //B
+
+//Classifier types
+var typeA : type{A} = null;
+a = A;
+typeA = a as type{A};
+console.log(typeA.sn); //36
+console.log(typeA.n4type.name); //A
+
+typeA = null;
+a = B;
+typeA = a as type{B};
+console.log(typeA.sn); //36
+console.log(typeA.n4type.name); //B
+
+typeA = null;
+a = A;
+typeA = a as constructor{A};
+console.log(typeA.sn); //36
+console.log(typeA.n4type.name); //A
+
+var typeB : type{B} = null;
+b = B;
+typeB = b as type{B};
+console.log(typeB.sn); //36
+console.log(typeB.ss); //static foo
+console.log(typeB.n4type.name); //B

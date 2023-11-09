@@ -1,0 +1,246 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// See also Ch06_05_02__GenericFunctions/NoUnusedTypeVariables.n4js.xt
+
+class C<S> {
+    // XPECT nowarnings -->
+    m1(s: string): void {}
+
+    // XPECT warnings --> "Type variable T not used in parameters or return type." at "T"
+    <T> m2(s: string): void {}
+
+    // XPECT nowarnings -->
+    <T> m3(s: T): void {}
+
+    // XPECT nowarnings -->
+    <T> m4(s: Array<T>): void {}
+
+    // XPECT nowarnings -->
+    <T> m5(s: Array<Array<T>>): void {}
+
+	// XPECT nowarnings -->
+	<T> m6(): T { return null; }
+
+	// XPECT nowarnings -->
+	<T> m7(): Array<T> { return null; }
+
+	// XPECT nowarnings -->
+	<T> m8(): Array<Array<T>> { return null; }
+
+    // XPECT warnings --> "Type variable X not used in parameters or return type." at "X"
+    <T,X> m9(s: T): void {}
+
+	// XPECT nowarnings -->
+	<T,X> m10(t: T, x: X): void {}
+
+	// XPECT nowarnings -->
+	<T> m11(t: Array<? super T>): void {}
+
+	// XPECT nowarnings -->
+	<T> m12(): Array<? extends T> { return null; }
+
+	/* XPECT warnings ---
+		"Type variable T not used in parameters or return type." at "T"
+		"Type variable X not used in parameters or return type." at "X"
+	--- */
+	<T,X> m13(s: string): void {}
+
+	// XPECT nowarnings -->
+	<T> m14(a: T & string) {}
+
+	// XPECT nowarnings -->
+	<T> m15(a: string | T) {}
+
+	// XPECT nowarnings -->
+	<T> m16() : string & T { return null; }
+
+	// XPECT nowarnings -->
+	<T> m17() : T | string { return null; }
+
+	// XPECT nowarnings -->
+	<T,X> m18(a : T & X) { return null; }
+
+	// XPECT nowarnings -->
+	<T,X> m19(a : T | X) { return null; }
+
+	// XPECT nowarnings -->
+	<T,X> m20(): T & X { return null; }
+
+	// XPECT nowarnings -->
+	<T,X> m21(): X | T { return null; }
+
+    // XPECT warnings --> "Type variable S not used in parameters or return type." at "S"
+    static <S> s1(s: string): void {}
+
+    // XPECT nowarnings -->
+    static <S> s2(s: S): void {}
+
+    // XPECT nowarnings -->
+    static <S> s3(s: Array<S>): void {}
+
+    // XPECT nowarnings -->
+    static <S> s4(s: Array<Array<S>>): void {}
+
+    // XPECT nowarnings -->
+    static <S> s5(): S { return null; }
+
+    // XPECT nowarnings -->
+    static <S> s6(): Array<S> { return null; }
+
+    // XPECT nowarnings -->
+    static <S> s7(): Array<Array<S>> { return null; }
+
+	/* XPECT warnings ---
+		"Type variable T not used in parameters or return type." at "T"
+		"Type variable X not used in parameters or return type." at "X"
+	--- */
+	static <T,X> s8(s: string): void {}
+
+	// XPECT nowarnings -->
+	static <T,S> s21(): S | T { return null; }
+}
+
+class D<S> extends C<S> {
+	@Override
+	// XPECT nowarnings -->
+	<T> m3(): void {}
+
+	@Override
+	// XPECT nowarnings -->
+	<T,X> m9(): void {}
+
+	@Override
+    // XPECT nowarnings -->
+    static <S> s2(): void {}
+}
+
+class E<S> extends C<S> {
+	@Override
+	// XPECT nowarnings -->
+	<T,X> m9(t: T): void {}
+}
+
+interface I<S> {
+    // XPECT nowarnings -->
+    m1(s: string): void;
+
+    // XPECT warnings --> "Type variable T not used in parameters or return type." at "T"
+    <T> m2(s: string): void;
+
+    // XPECT nowarnings -->
+    <T> m3(s: T): void;
+
+    // XPECT nowarnings -->
+    <T> m4(s: Array<T>): void;
+
+    // XPECT nowarnings -->
+    <T> m5(s: Array<Array<T>>): void;
+
+	// XPECT nowarnings -->
+	<T> m6(): T;
+
+	// XPECT nowarnings -->
+	<T> m7(): Array<T>;
+
+	// XPECT nowarnings -->
+	<T> m8(): Array<Array<T>>;
+
+    // XPECT warnings --> "Type variable X not used in parameters or return type." at "X"
+    <T,X> m9(s: T): void;
+
+	// XPECT nowarnings -->
+	<T,X> m10(t: T, x: X): void;
+
+	// XPECT nowarnings -->
+	<T> m11(t: Array<? super T>): void;
+
+	// XPECT nowarnings -->
+	<T> m12(): Array<? extends T>;
+
+	/* XPECT warnings ---
+		"Type variable T not used in parameters or return type." at "T"
+		"Type variable X not used in parameters or return type." at "X"
+	--- */
+	<T,X> m13(s: string): void;
+
+    // XPECT warnings --> "Type variable S not used in parameters or return type." at "S"
+    static <S> s1(s: string): void {}
+
+    // XPECT nowarnings -->
+    static <S> s2(s: S): void {}
+
+    // XPECT nowarnings -->
+    static <S> s3(s: Array<S>): void {}
+
+    // XPECT nowarnings -->
+    static <S> s4(s: Array<Array<S>>): void {}
+
+    // XPECT nowarnings -->
+    static <S> s5(): S { return null; }
+
+    // XPECT nowarnings -->
+    static <S> s6(): Array<S> { return null; }
+
+    // XPECT nowarnings -->
+    static <S> s7(): Array<Array<S>> { return null; }
+
+	/* XPECT warnings ---
+		"Type variable T not used in parameters or return type." at "T"
+		"Type variable X not used in parameters or return type." at "X"
+	--- */
+	static <T,X> s8(s: string): void {}
+}
+
+interface J<S> extends I<S> {
+	@Override
+	// XPECT nowarnings -->
+	<T> m3(): void;
+
+	@Override
+	// XPECT nowarnings -->
+	<T,X> m9(): void;
+
+	// following warning required, because J#s2 is independent from I#s2 (no inheritance of static members in interfaces)
+    // XPECT warnings --> "Type variable S not used in parameters or return type." at "S"
+    static <S> s2(): void {}
+}
+
+
+interface K<S> extends I<S> {
+	@Override
+	// XPECT nowarnings -->
+	<T,X> m9(t: T): void;
+}
+
+interface L<S> {
+	<T> m(p: T) : void;
+}
+
+interface M<S> extends L<S> {
+	@Override
+    // XPECT nowarnings -->
+	<T> m() : void;
+}
+
+class F<S> implements L<S> {
+	@Override
+    // XPECT nowarnings -->
+	<T> m() : void {}
+}
+
+class G<S> implements M<S> {
+	@Override
+    // XPECT nowarnings -->
+	<T> m() : void {}
+}

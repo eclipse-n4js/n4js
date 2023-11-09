@@ -1,0 +1,129 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+    ProjectWithSourceFolder {
+		ThisFile {}
+		File "Externals.n4jsd" {}
+	}
+   END_SETUP
+*/
+
+
+class A1 {
+	_s_a : String;
+
+	get a() : String { return this._s_a; }
+	// OK XPECT noerrors
+	set a(s : String) { this._s_a = s; }
+}
+
+// XPECT errors --> ""a" is not a subtype of String." at ""a""
+new A1().a="a";
+
+
+class A2 {
+	_s_a : string;
+
+	get a() : string { return this._s_a; }
+	// Shadowed XPECT errors -->  "String is not a subtype of string." at "s"
+ 	set a(s : String) { this._s_a = s; }
+}
+// XPECT errors --> ""a" is not a subtype of String." at ""a""
+new A2().a="a"
+
+class Ae1 extends A1 {
+
+	@Override
+	get
+	/* XPECT errors ---
+		"String is not a subtype of string." at "this._s_a"
+		"Type of getter Ae1.a does not conform to overridden getter A1.a: string is not a subtype of String." at "a"
+	---
+	*/
+	a() : string { return this._s_a; }
+
+
+	@Override
+	set /* XPECT errors---
+		"string is not a subtype of String." at "s"
+		"Type of setter Ae1.a does not conform to overridden setter A1.a: String is not a subtype of string." at "a"
+	--- */
+		a(s : string) { this._s_a = s; }
+}
+
+class Ae2 extends A2 {
+
+	@Override
+	get // c.f. IDE-666 X!PECT errors --> "Signature of getter a does not conform to signature of overridden getter a from class A2: failed: string is not a subtype of String." at "a"
+	a() : string { return this._s_a; }
+
+
+	@Override
+	set // XPECT errors--> "Type of setter Ae2.a does not conform to overridden setter A2.a: String is not a subtype of string." at "a"
+	a(s : string) { this._s_a = s; }
+}
+
+
+
+interface X {
+	meth01(b : string) : void;
+}
+
+class B implements X {
+
+	@Override
+	// XPECT errors --> "Signature of method B.meth01 does not conform to implemented method X.meth01: {function(String):void} is not a subtype of {function(string):void}." at "meth01"
+	meth01(b : String) : void {
+		// ...
+	}
+}
+
+
+interface R {
+	meth01(b : String) : void {
+		//...
+	}
+	meth02(b : string) : void {
+		//...
+	}
+}
+
+
+enum E {
+	e1 : "stringE1",
+	e3 : "stringE2"
+}
+
+
+// XPECT errors --> "Redefine ambiguously consumed members: method R.meth01 and method X.meth01." at "C"
+class C implements R, X {}
+
+class F implements R {}
+// XPECT errors --> ""hallo" is not a subtype of String." at ""hallo""
+new F().meth01("hallo");
+// OK XPECT noerrors
+new F().meth02("hallo");
+
+// XPECT errors --> "string is not a subtype of String." at "E.e1.value"
+new F().meth01(E.e1.value);
+// OK, enum-literal's string XPECT noerrors
+new F().meth02(E.e1.value);
+
+// XPECT errors --> "string is not a subtype of String." at "E.e1.name"
+new F().meth01(E.e1.name);
+// OK, enum-literal's string XPECT noerrors
+new F().meth02(E.e1.name);
+
+// XPECT errors --> "string is not a subtype of String." at "E.e1.toString()"
+new F().meth01(E.e1.toString());
+// OK, enum-literal's string XPECT noerrors
+new F().meth02(E.e1.toString());

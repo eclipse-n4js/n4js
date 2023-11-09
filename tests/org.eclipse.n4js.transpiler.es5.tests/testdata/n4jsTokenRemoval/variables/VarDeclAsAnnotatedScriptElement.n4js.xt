@@ -9,14 +9,14 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest  END_SETUP */
 
 
-/* XPECT ! output ~~~
+/* XPECT ! output ---
 b1
 c1_1
 c1_2
-~~~ */
+--- */
 
 
 // had to disable this test, because there does no longer exist an annotation that can be put on VariableDeclarations

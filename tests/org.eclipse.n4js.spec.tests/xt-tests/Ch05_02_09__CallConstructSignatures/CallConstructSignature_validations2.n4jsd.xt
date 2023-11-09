@@ -1,0 +1,209 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+export external class SomeCls {}
+
+
+// ------------------------------------------------------------------------------------------------------------------------
+// positive cases:
+
+export external public interface ~I {
+
+	// XPECT noerrors -->
+	(): number;
+
+	// XPECT noerrors -->
+	new(): SomeCls;
+}
+
+@EcmaScript
+export external class C {
+
+	// XPECT noerrors -->
+	(): number;
+
+	// treated as an ordinary method with name "new" XPECT noerrors -->
+	new(): SomeCls;
+}
+
+export let o: ~Object with {
+
+	// XPECT noerrors -->
+	(): number;
+
+	// XPECT noerrors -->
+	new(): SomeCls;
+};
+
+
+// ------------------------------------------------------------------------------------------------------------------------
+// @N4JS
+
+// XPECT warnings --> "This annotation is deprecated and has no effect." at "N4JS"
+// XPECT errors --> "Only nominal interfaces can be annotated with @N4JS." at "N4JS"
+@N4JS
+export external public interface ~I1 {
+
+	// XPECT noerrors --> "Call and construct signatures are not allowed in classifiers annotated with @N4JS." at "(): number;"
+	(): number;
+
+	// XPECT noerrors --> "Call and construct signatures are not allowed in classifiers annotated with @N4JS." at "new(): SomeCls;"
+	new(): SomeCls;
+}
+
+// XPECT warnings --> "This annotation is deprecated and has no effect." at "N4JS"
+@N4JS
+export external class C1 {
+
+	// XPECT errors --> "Call and construct signatures are not allowed in n4js classifiers. Use shapes or @EcmaScript." at "(): number;"
+	(): number;
+
+	// treated as an ordinary method with name "new" XPECT noerrors -->
+	new(): SomeCls;
+}
+
+export let o1: ~Object with {
+	// does not apply here (cannot annotate a StructuralTypeRef with @N4JS)
+};
+
+
+// ------------------------------------------------------------------------------------------------------------------------
+// bodies:
+
+export external public interface ~I2 {
+
+	// XPECT errors --> "Call and construct signatures must not have a body." at "(): number { return 0; }"
+	(): number { return 0; }
+
+	// XPECT errors --> "Call and construct signatures must not have a body." at "new(): SomeCls { return undefined; }"
+	new(): SomeCls { return undefined; }
+}
+
+@EcmaScript
+export external class C2 {
+
+	// XPECT errors --> "Call and construct signatures must not have a body." at "(): number { return 0; }"
+	(): number { return 0; }
+
+	// treated as an ordinary method with name "new" XPECT errors --> "Methods in external classes have to have no body." at "new"
+	new(): SomeCls { return undefined; }
+}
+
+export let o2: ~Object with {
+	// does not apply here (grammar does not allow bodies for methods in StructuralTypeRef)
+};
+
+
+// ------------------------------------------------------------------------------------------------------------------------
+// duplicates:
+
+export external public interface ~I3 {
+
+	// XPECT errors --> "Duplicate call signature." at "(): number;"
+	(): number;
+	// XPECT errors --> "Duplicate call signature." at "(): number;"
+	(): number;
+
+	// XPECT errors --> "Duplicate construct signature." at "new(): SomeCls;"
+	new(): SomeCls;
+	// XPECT errors --> "Duplicate construct signature." at "new(): SomeCls;"
+	new(): SomeCls;
+}
+
+@EcmaScript
+export external class C3 {
+
+	// XPECT errors --> "Duplicate call signature." at "(): number;"
+	(): number;
+	// XPECT errors --> "Duplicate call signature." at "(): number;"
+	(): number;
+
+	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 133) duplicates method new (line 135)." at "new"
+	new(): SomeCls;
+	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 135) duplicates method new (line 133)." at "new"
+	new(): SomeCls;
+}
+
+export let o3: ~Object with {
+
+	// XPECT errors --> "Duplicate call signature." at "(): number"
+	(): number;
+	// XPECT errors --> "Duplicate call signature." at "(): number"
+	(): number;
+
+	// XPECT errors --> "Duplicate construct signature." at "new(): SomeCls"
+	new(): SomeCls;
+	// XPECT errors --> "Duplicate construct signature." at "new(): SomeCls"
+	new(): SomeCls;
+};
+
+
+// ------------------------------------------------------------------------------------------------------------------------
+// void as return type
+
+export external public interface ~I4a {
+
+	// XPECT noerrors -->
+	();
+
+	// XPECT errors --> "Construct signatures must have a non-void return type." at "new();"
+	new();
+}
+
+export external public interface ~I4b {
+
+	// XPECT noerrors -->
+	(): void;
+
+	// XPECT errors --> "Construct signatures must have a non-void return type." at "new(): void;"
+	new(): void;
+}
+
+@EcmaScript
+export external class C4a {
+
+	// XPECT noerrors -->
+	();
+
+	// treated as an ordinary method with name "new" XPECT noerrors -->
+	new();
+}
+
+@EcmaScript
+export external class C4b {
+
+	// XPECT noerrors -->
+	(): void;
+
+	// treated as an ordinary method with name "new" XPECT noerrors -->
+	new(): void;
+}
+
+export let o4a: ~Object with {
+
+	// XPECT noerrors -->
+	();
+
+	// XPECT errors --> "Construct signatures must have a non-void return type." at "new()"
+	new();
+}
+
+export let o4b: ~Object with {
+
+	// XPECT noerrors -->
+	(): void;
+
+	// XPECT errors --> "Construct signatures must have a non-void return type." at "new(): void"
+	new(): void;
+}

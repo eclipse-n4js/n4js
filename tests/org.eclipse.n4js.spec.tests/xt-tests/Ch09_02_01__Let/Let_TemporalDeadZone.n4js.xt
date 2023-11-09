@@ -1,0 +1,42 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+function foo() {
+	// <-- temporal dead zone (TDZ) of 'l' starts
+
+
+	// XPECT warnings --> "Variable l is used before it is declared" at "l"
+	l; // ReferenceError at runtime, due to TDZ (but see **)
+
+	let fun = function() {
+		// XPECT noerrors -->
+		return l; // ok iff(!) fun invoked after TDZ of 'l' ends, RuntimeError otherwise (see **)
+	};
+
+	// XPECT noerrors -->
+	fun(); // ReferenceError at runtime, due to TDZ (but see **)
+
+
+	let l = 42; // <-- TDZ of 'l' ends after(!) assignment is completed
+
+
+	// XPECT noerrors -->
+	l; // ok
+	// XPECT noerrors -->
+	fun(); // ok
+}
+
+
+// ** note: would be nice to show a validation error in the lines marked with **, but this cannot be validated easily at
+// compile time, as shown in the example using a function expression above.

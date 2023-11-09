@@ -1,0 +1,122 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class A {
+	constructor() {}
+
+	m() : void {}
+	get g() : string { return null; }
+	set s(param : string) {}
+}
+
+class B extends A {
+
+	constructor() {
+		super();					// ok
+
+		if(true) {
+			while(true) {
+				// XPECT errors --> "Super constructor call must only be directly contained in constructor body, i.e. not nested in while statement (line 29)." at "super"
+				super();
+			}
+		}
+
+		var f = function() {
+			// XPECT errors --> "Super constructor call must only be directly contained in constructor body, i.e. not nested in function expression (line 35)." at "super"
+			super();				// should fail
+		};
+
+		var f2 = () => {
+			// XPECT errors --> "Super constructor call must only be directly contained in constructor body, i.e. not nested in function expression (line 40)." at "super"
+			super();				// should fail
+		};
+	}
+
+	@Override
+	m() : void {
+
+		super.m();					// ok
+
+		if(true) {
+			while(true) {
+				super.m();			// ok
+			}
+		}
+
+		var f = function() {
+			// XPECT errors --> "Super call must not be nested in function expressions." at "super"
+			super.m();				// should fail
+		};
+
+		var f2 = () => {
+			// XPECT errors --> "Super call must not be nested in function expressions." at "super"
+			super.m();				// should fail
+		};
+
+		// XPECT errors --> "Super calls may only be used in constructors." at "super"
+		super();					// should fail
+	}
+
+	@Override
+	get g() : string {
+
+		super.g;					// ok
+
+		if(true) {
+			while(true) {
+				super.g;			// ok
+			}
+		}
+
+		var f = function() {
+			// XPECT errors --> "Super call must not be nested in function expressions." at "super"
+			super.g;				// should fail
+		};
+
+		var f2 = () => {
+			// XPECT errors --> "Super call must not be nested in function expressions." at "super"
+			super.g;				// should fail
+		};
+
+		// XPECT errors --> "Super calls may only be used in constructors." at "super"
+		super();					// should fail
+
+		return null;
+	}
+
+	@Override
+	set s(param : string) {
+
+		super.s = "";				// ok
+
+		if(true) {
+			while(true) {
+				super.s = "";		// ok
+			}
+		}
+
+		var f = function() {
+			// XPECT errors --> "Super call must not be nested in function expressions." at "super"
+			super.s = "";			// should fail
+		};
+
+		var f2 = () => {
+			// XPECT errors --> "Super call must not be nested in function expressions." at "super"
+			super.s = "";			// should fail
+		};
+
+		// XPECT errors --> "Super calls may only be used in constructors." at "super"
+		super();					// should fail
+	}
+}

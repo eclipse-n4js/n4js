@@ -143,15 +143,18 @@ public class XtFileRunner extends Runner {
 			description = Description.createSuiteDescription(msg, file);
 			return description;
 		}
-		if (xtFileData.noTests()) {
+		if (xtFileData != null && xtFileData.noTests()) {
 			String msg = getName() + ": No tests found.";
 			description = Description.createSuiteDescription(msg, file);
 			return description;
 		}
 
 		description = Description.createSuiteDescription(getName(), file);
-		for (XtMethodData testMethodData : xtFileData.getTestMethodData()) {
-			description.addChild(testMethodData.getDescription(xtFileData));
+
+		if (xtFileData != null) {
+			for (XtMethodData testMethodData : xtFileData.getTestMethodData()) {
+				description.addChild(testMethodData.getDescription(xtFileData));
+			}
 		}
 		return description;
 	}

@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+interface Identifiable {}
+class X implements Identifiable {}
+enum Color { R, G, B }
+class A {}
+
+class Map<T extends union{number, string, N4Enum, Identifiable}> {}
+
+// XPECT noerrors -->
+let dict: Map<string>
+// XPECT noerrors -->
+let sparseList: Map<int>
+// XPECT noerrors -->
+let enumMap: Map<Color>
+// XPECT noerrors -->
+let idMap: Map<X>
+
+// XPECT errors --> "A is not a subtype of union{number,string,N4Enum,Identifiable}." at "A"
+let amap: Map<A>

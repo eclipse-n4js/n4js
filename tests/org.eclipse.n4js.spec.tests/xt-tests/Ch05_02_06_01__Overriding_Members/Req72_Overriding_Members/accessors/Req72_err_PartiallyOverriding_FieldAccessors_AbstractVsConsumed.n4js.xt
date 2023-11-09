@@ -1,0 +1,137 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+abstract class AbstractClass1 {
+	abstract get g() : string
+	abstract set g(s : string)
+}
+interface I1 {
+	get g() : string { return 'Default implementation'; }
+	set g(s : string) {}
+}
+// XPECT noerrors --> "Both accessors originate from I1"
+class SubClass1 extends AbstractClass1 implements I1 {}
+
+
+abstract class AbstractClass2 {
+	abstract get g() : string
+	abstract set g(s : string)
+}
+interface I2 {
+	get g() : string { return 'Default implementation'; }
+}
+
+// Consumed partial default implementation of abstract inherited getter XPECT errors --> "Getter I2.g cannot be consumed without overriding the corresponding setter." at "SubClass2"
+abstract class SubClass2 extends AbstractClass2 implements I2 {}
+
+
+abstract class AbstractClass3 {
+	abstract get g() : string
+	abstract set g(s : string)
+}
+interface I3 {
+	set g(s : string) {}
+}
+// Consumed partial default implementation of abstract inherited setter XPECT errors --> "Setter I3.g cannot be consumed without overriding the corresponding getter." at "SubClass3"
+abstract class SubClass3 extends AbstractClass3 implements I3 {}
+
+
+abstract class AbstractClass5 {
+	abstract get g() : string
+	set g(s : string) {}
+}
+interface I5 {
+	get g() : string { return 'Default implementation'; }
+	set g(s : string) {}
+}
+
+// Consumed partial default implementation of abstract inherited getter XPECT errors --> "Getter I5.g cannot be consumed without overriding the corresponding setter." at "SubClass5"
+class SubClass5 extends AbstractClass5 implements I5 {}
+
+
+abstract class AbstractClass7 {
+	abstract get g() : string
+	set g(s : string) {}
+}
+interface I7 {
+	set g(s : string) {}
+}
+
+// XPECT noerrors --> "No errors here since inherited setter AbstractClass7.g has priority over implemented setter I7.g"
+abstract class SubClass7 extends AbstractClass7 implements I7 {}
+
+
+abstract class AbstractClass9 {
+	get g() : string { return ''; }
+	abstract set g(s : string)
+}
+interface I9 {
+	get g() : string { return 'Default implementation'; }
+	set g(s : string) {}
+}
+
+// Consumed partial default implementation for abstract inherited setter XPECT errors --> "Setter I9.g cannot be consumed without overriding the corresponding getter." at "SubClass9"
+class SubClass9 extends AbstractClass9 implements I9 {}
+
+
+abstract class AbstractClass10 {
+	get g() : string { return ''; }
+	abstract set g(s : string)
+}
+interface I10 {
+	get g() : string { return 'Default implementation'; }
+}
+
+// XPECT noerrors --> "Inherited getter AbstractClass10.g has priority over implemented getter I10.g"
+abstract class SubClass10 extends AbstractClass10 implements I10 {}
+
+
+abstract class AbstractClass11 {
+	get g() : string { return ''; }
+	abstract set g(s : string)
+}
+interface I11 {
+	set g(s : string) {}
+}
+
+// Consumed partial default implementation for setter g XPECT errors --> "Setter I11.g cannot be consumed without overriding the corresponding getter." at "SubClass11"
+class SubClass11 extends AbstractClass11 implements I11 {}
+
+
+abstract class AbstractClass13 {
+	get g() : string { return ''; }
+	set g(s : string) {}
+}
+interface I13 {
+	get g() : string { return 'Default implementation'; }
+	set g(s : string) {}
+}
+
+// XPECT noerrors --> "Inherited accessor pair has priority over accessor pair of I13"
+class SubClass13 extends AbstractClass13 implements I13 {}
+
+
+abstract class AbstractClassMultipleInterface {
+	abstract get g() : string
+	abstract set g(s : string)
+}
+
+export interface IMultipleInterface {
+	get g() : string { return "Default implementation"; }
+}
+interface I2MultipleInterface {
+	set g(s : string) {}
+}
+
+// XPECT noerrors --> "The default accessor implementation should be consumed properly"
+class SubClass extends AbstractClassMultipleInterface implements IMultipleInterface, I2MultipleInterface {}

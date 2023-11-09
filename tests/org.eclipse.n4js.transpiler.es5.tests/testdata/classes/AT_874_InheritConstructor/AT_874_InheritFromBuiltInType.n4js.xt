@@ -9,15 +9,15 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest END_SETUP */
 
-/* XPECT output ~~~
+/* XPECT output ---
 B { prop1: 'test' }
 <ref *1> N4Class {
-  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  origin: 'test-project',
   annotations: [],
   name: 'B',
-  fqn: 'classes/AT_874_InheritConstructor/AT_874_InheritFromBuiltInType/B',
+  fqn: 'AT_874_InheritFromBuiltInType/B',
   n4superType: N4Class {
     origin: 'n4js-runtime',
     annotations: [],
@@ -40,7 +40,7 @@ B { prop1: 'test' }
   ],
   consumedMembers: []
 }
-~~~ */
+--- */
 
 class B {
 	prop1 : string = "test";

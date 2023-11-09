@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "Err.n4js" {}
 	}
@@ -31,12 +31,14 @@ var x = N;
 console.log(x);
 class ASD extends N.Error {
 	static get n4type() {
-		return $getReflectionForClass(this, '["ASD","importexport/IDEBUG_684/AT_IDEBUG_684_NamespacesOptimized_NoDuplicateDeclarartions","org.eclipse.n4js.transpiler.es5.tests"]');
+		return $getReflectionForClass(this, '["ASD","AT_IDEBUG_684_NamespacesOptimized_NoDuplicateDeclarartions","test-project"]');
 	}
 }
+//# sourceMappingURL=AT_IDEBUG_684_NamespacesOptimized_NoDuplicateDeclarartions.map
+
 --- */
 
-import * as N from "importexport/IDEBUG_684/Err"
+import * as N from "Err"
 
 console.log(N.Error)//use thing from namespace N
 console.log(N.Error)//use again

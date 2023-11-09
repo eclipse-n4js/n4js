@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class D{
+	public s : string;
+
+	constructor( spec : ~~this) {
+		// XPECT noerrors --> "same type => same structural type"
+		new D(spec);
+		// XPECT noerrors --> "same structural type"
+		new F(spec);
+
+		// XPECT errors --> "~~this[D] is not a structural subtype of ~~this[E]: missing field n." at "spec"
+		new E(spec)
+	}
+}
+class E {
+	public n : number;
+	constructor(spec : ~~this) {
+	}
+}
+
+class F{
+	public s : string;
+	constructor( spec : ~~this) {}
+}

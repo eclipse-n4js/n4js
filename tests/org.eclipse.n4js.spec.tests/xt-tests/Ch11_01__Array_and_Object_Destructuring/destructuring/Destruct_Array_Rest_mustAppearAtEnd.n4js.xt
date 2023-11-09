@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+//
+// testing the validation that enforeces the correct positioning of rest operator in array destructuring patterns
+// (only on last element)
+//
+
+
+// negative cases:
+
+// XPECT errors --> "Rest operator only allowed on last element in an array destructuring pattern." at "..."
+var [a,...b,c] = null;
+
+// XPECT errors --> "Rest operator only allowed on last element in an array destructuring pattern." at "..."
+[a,...b,c] = null;
+
+
+
+// positive cases:
+
+// XPECT noerrors -->
+var [x,y,...z] = null;
+
+// XPECT noerrors -->
+[x,y,...z] = null;

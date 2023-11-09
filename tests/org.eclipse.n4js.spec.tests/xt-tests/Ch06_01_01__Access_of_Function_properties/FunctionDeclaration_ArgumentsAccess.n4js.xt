@@ -1,0 +1,176 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// Acceptance Test IDE-662
+
+
+// Ok, nameless function XPECT  noerrors
+var x = function() {
+	// Ok, XPECT  noerrors
+	var l : number = arguments.length;
+
+	// Ok, XPECT  noerrors
+	var arg_0 = arguments[0];
+
+	// Ok, XPECT  noerrors
+	var arg_1 = arguments[1];
+
+
+	// XPECT  errors --> "any is not a subtype of string." at "arguments[1]"
+	var s : string = arguments[1];
+
+	// Ok, setting XPECT  noerrors
+	arguments[10] = "hallo";
+}
+
+// Ok, function
+function fa(aa : string, bb : number)  {
+	// Ok, XPECT  noerrors
+	var l : number = arguments.length;
+
+	// Ok, XPECT  noerrors
+	var arg_0 = arguments[0];
+
+	// Ok, XPECT  noerrors
+	var arg_1 = arguments[1];
+
+
+	// XPECT  errors --> "any is not a subtype of string." at "arguments[1]"
+	var s : string = arguments[1];
+
+	// Ok, setting XPECT  noerrors
+	arguments[10] = "hallo";
+}
+
+export function exp_a(a : string, b : number)  {
+	// Ok, XPECT  noerrors
+	var l : number = arguments.length;
+
+	// Ok, XPECT  noerrors
+	var arg_0 = arguments[0];
+
+	// Ok, XPECT  noerrors
+	var arg_1 = arguments[1];
+
+	// XPECT  errors --> "any is not a subtype of string." at "arguments[1]"
+	var s : string = arguments[1];
+
+	// Ok, setting XPECT  noerrors
+	arguments[10] = "hallo";
+}
+
+/////  --- ---- ----- Method ----- ---- ---
+
+class A {
+	x : string;
+	public m1(s : string, o : Object) : void {
+		// Ok, XPECT  noerrors
+		var l : number = arguments.length;
+
+		// Ok, XPECT  noerrors
+		var arg_0 = arguments[0];
+
+		// Ok, XPECT  noerrors
+		var arg_1 = arguments[1];
+
+
+		/* XPECT  errors ---
+				"Variable s duplicates parameter s (line 76)." at "s"
+				"any is not a subtype of string." at "arguments[1]"
+		--- */
+		var s : string = arguments[1];
+
+		// Ok, setting XPECT  noerrors
+		arguments[10] = "hallo";
+
+		return;
+	}
+
+	// Constructor
+	constructor(ss : string) {
+		// Ok, XPECT  noerrors
+		var l : number = arguments.length;
+
+		// Ok, XPECT  noerrors
+		var arg_0 = arguments[0];
+
+		// Ok, XPECT  noerrors
+		var arg_1 = arguments[1];
+
+
+		// XPECT  errors --> "any is not a subtype of string." at "arguments[1]"
+		var s : string = arguments[1];
+
+		// Ok, setting XPECT  noerrors
+		arguments[10] = "hallo";
+	}
+}
+
+/////  --- ---- ----- Nesting ----- ---- ---
+
+class B {
+	x : string;
+	public m1(ss : string, o : Object) : void {
+
+		// Ok, XPECT  noerrors
+		var l : number = arguments.length;
+
+		// -- -- --- nesting
+        var f1 = function(sss : string, n : number) {
+
+			// Ok, XPECT  noerrors
+			var l : number = arguments.length;
+
+			// Ok, XPECT  noerrors
+			var arg_0 = arguments[0];
+
+			// Ok, XPECT  noerrors
+			var arg_1 = arguments[1];
+
+			/* XPECT  errors ---
+				"Variable sss duplicates parameter sss (line 129)." at "sss"
+				"any is not a subtype of string." at "arguments[1]"
+			--- */
+			var sss : string = arguments[1];
+
+			// Ok, setting XPECT  noerrors
+			arguments[10] = "hallo";
+		}
+
+		return;
+	}
+}
+
+/////  --- ---- -----Role  ----- ---- ---
+interface R {
+	x : string;
+	public m1(ss : string, o : Object) : void {
+		// Ok, XPECT  noerrors
+		var l : number = arguments.length;
+
+		// Ok, XPECT  noerrors
+		var arg_0 = arguments[0];
+
+		// Ok, XPECT  noerrors
+		var arg_1 = arguments[1];
+
+
+		// XPECT  errors --> "any is not a subtype of string." at "arguments[1]"
+		var s : string = arguments[1];
+
+		// Ok, setting XPECT  noerrors
+		arguments[10] = "hallo";
+
+		return;
+	}
+}

@@ -9,46 +9,44 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest  END_SETUP */
 
 
-/* XPECT output ~~~
+/* XPECT output ---
 N4Interface {
-  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  origin: 'test-project',
   annotations: [],
   name: 'I0',
-  fqn: 'n4jsTokenRemoval/interfaces/N4IntDeclAsAnnotatedScriptElement/I0',
+  fqn: 'N4IntDeclAsAnnotatedScriptElement/I0',
   n4superType: undefined,
   allImplementedInterfaces: [],
   ownedMembers: [],
   consumedMembers: []
 }
 N4Interface {
-  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  origin: 'test-project',
   annotations: [],
   name: 'I1',
-  fqn: 'n4jsTokenRemoval/interfaces/N4IntDeclAsAnnotatedScriptElement/I1',
+  fqn: 'N4IntDeclAsAnnotatedScriptElement/I1',
   n4superType: undefined,
-  allImplementedInterfaces: [
-    'n4jsTokenRemoval/interfaces/N4IntDeclAsAnnotatedScriptElement/I0'
-  ],
+  allImplementedInterfaces: [ 'N4IntDeclAsAnnotatedScriptElement/I0' ],
   ownedMembers: [],
   consumedMembers: []
 }
 N4Interface {
-  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  origin: 'test-project',
   annotations: [],
   name: 'I2',
-  fqn: 'n4jsTokenRemoval/interfaces/N4IntDeclAsAnnotatedScriptElement/I2',
+  fqn: 'N4IntDeclAsAnnotatedScriptElement/I2',
   n4superType: undefined,
   allImplementedInterfaces: [
-    'n4jsTokenRemoval/interfaces/N4IntDeclAsAnnotatedScriptElement/I1',
-    'n4jsTokenRemoval/interfaces/N4IntDeclAsAnnotatedScriptElement/I0'
+    'N4IntDeclAsAnnotatedScriptElement/I1',
+    'N4IntDeclAsAnnotatedScriptElement/I0'
   ],
   ownedMembers: [],
   consumedMembers: []
 }
-~~~ */
+--- */
 
 
 interface I0{}

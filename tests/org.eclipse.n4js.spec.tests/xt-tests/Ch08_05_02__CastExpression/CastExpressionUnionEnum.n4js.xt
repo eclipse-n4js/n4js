@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+@StringBased enum E { L1, L2 }
+let e: int|E;
+// XPECT noerrors -->
+e as string;
+
+// XPECT noerrors -->
+e as E;
+
+// XPECT noerrors -->
+e as int;
+
+// XPECT errors --> "Cannot cast from union{int,E} to boolean" at "e as boolean"
+e as boolean;
+
+enum V { L1, L2 }
+let v: int|V;
+// XPECT errors --> "Cannot cast from union{int,V} to string" at "v as string"
+v as string;
+
+// XPECT noerrors -->
+v as V;
+
+// XPECT noerrors -->
+v as int;
+
+// XPECT errors --> "Cannot cast from union{int,V} to boolean" at "v as boolean"
+v as boolean;

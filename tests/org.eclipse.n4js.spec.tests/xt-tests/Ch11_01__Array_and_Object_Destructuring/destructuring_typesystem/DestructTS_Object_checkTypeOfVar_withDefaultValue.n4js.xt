@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+class A_super {}
+class A extends A_super {}
+class A2 extends A_super {}
+class B {}
+
+class X {}
+
+var v : ~Object with { prop: A; };
+
+
+
+// all fine
+
+// XPECT noerrors -->
+var { prop: a1 : A_super=new A2() } = v;
+// XPECT noerrors -->
+({ prop: a1=new A2() } = v);
+
+
+
+
+// default value is of wrong type
+
+// XPECT errors --> "X is not a subtype of A_super." at "new X()"
+var { prop: a2 : A_super=new X() } = v;
+// XPECT errors --> "X is not a subtype of A_super." at "new X()"
+({ prop: a2=new X() } = v);
+
+
+
+
+// destructured value is of wrong type
+
+// XPECT errors --> "Variable a3 cannot hold destructured value of property 'prop': union{A,X} is not a subtype of X." at "a3"
+var { prop: a3 : X=new X() } = v;
+// XPECT errors --> "Variable a3 cannot hold destructured value of property 'prop': union{A,X} is not a subtype of X." at "a3"
+({ prop: a3=new X() } = v);
+
+
+
+
+// both default value and destructured value are of wrong type
+
+// XPECT errors --> "B is not a subtype of X." at "new B()"
+var { prop: a4 : X=new B() } = v;
+// XPECT errors --> "B is not a subtype of X." at "new B()"
+({ prop: a4=new B() } = v);

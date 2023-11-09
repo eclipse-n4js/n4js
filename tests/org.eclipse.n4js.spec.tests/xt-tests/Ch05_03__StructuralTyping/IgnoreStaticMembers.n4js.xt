@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class A {
+	public stuff : string;
+
+	public static radness : string;
+	public static get g() : string { return null; }
+	public static set s(param : number) {}
+	public static m(param : number) : string { return null; }
+
+	public constructor (@Spec spec : ~i~this) {}
+}
+
+
+// XPECT noerrors --> "static is ignored, not: ObjectLiteral is not a subtype of ~~this[A]." at '{stuff:""}'
+new A({stuff:""});
+
+
+var a_struct : ~A;
+var a_structField : ~~A;
+
+// XPECT noerrors --> "static is ignored, not: ObjectLiteral is not a subtype of ~A." at '{stuff:""}'
+a_struct = {stuff:""};
+// XPECT noerrors --> "static is ignored, not: ObjectLiteral is not a subtype of ~~A." at '{stuff:""}'
+a_structField = {stuff:""};

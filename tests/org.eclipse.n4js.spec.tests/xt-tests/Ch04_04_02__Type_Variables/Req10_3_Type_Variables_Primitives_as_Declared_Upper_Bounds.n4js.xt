@@ -1,0 +1,55 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// XPECT warnings --> "Final type number should not be used as upper bound of type parameter T. Final types cannot be extended." at "number"
+function <T extends number> g(t : T) {};
+
+interface I {
+	// XPECT warnings ---
+	// "Final type number should not be used as upper bound of type parameter T. Final types cannot be extended." at "number"
+	// "Final type string should not be used as upper bound of type parameter S. Final types cannot be extended." at "string"
+	// ---
+	<T extends number, S extends string> m(t : T) : S;
+}
+
+// XPECT warnings ---
+// "Final type number should not be used as upper bound of type parameter T. Final types cannot be extended." at "number"
+// "Final type string should not be used as upper bound of type parameter S. Final types cannot be extended." at "string"
+// ---
+function <T extends number, S extends string> fd(t : T) : S { return null; };
+
+// XPECT warnings ---
+// "Final type number should not be used as upper bound of type parameter T. Final types cannot be extended." at "number"
+// "Final type string should not be used as upper bound of type parameter S. Final types cannot be extended." at "string"
+// ---
+var f = function <T extends number, S extends string> fe(t : T) : S { return null; };
+
+// XPECT errors --> "Cannot subclass primitive type number." at "number"
+class A extends number {}
+
+// XPECT errors --> "Cannot subclass primitive type boolean." at "boolean"
+interface I2 extends boolean {}
+
+// XPECT warnings --> "Final type string should not be used as upper bound of type parameter T. Final types cannot be extended." at "string"
+class G<T extends string> {}
+
+class C{
+
+    // XPECT warnings --> "Final type string should not be used as upper bound of type parameter S. Final types cannot be extended." at "string"
+    public static <S extends string, T, P> mLen(s : S, t : T,p : P, a, n : number=undefined, ...vas : string) : number  {
+        return (s+t+p+a+n+vas).length
+    }
+}
+
+// XPECT nowarnings -->
+var a : Array<? extends string> = [];

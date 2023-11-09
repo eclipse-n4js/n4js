@@ -1,0 +1,67 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+interface I {
+	m : string;
+}
+
+let i: I;
+//XPECT elementKeyword at 'i'--> variable
+i.m;
+
+//XPECT elementKeyword at 'm'--> field
+i.m;
+
+//XPECT elementKeyword at 'm'--> field
+i.m = "Hi";
+
+
+
+interface A {}
+interface B {}
+
+interface I1 {
+	m1 : A;
+	m2: A;
+
+}
+
+interface I2 {
+	get m1() : B;
+	get m2(): A;
+}
+
+let a: A;
+let b: B;
+let aub:A|B;
+let aib:A&B;
+
+let u12: I1|I2;
+//XPECT elementKeyword at 'm1' --> getter
+u12.m1;
+
+//XPECT errors --> "Union combines fields and getters with name m1 and therefore property m1 is read-only." at "m1"
+u12.m1 = undefined;
+
+let i12:I1&I2;
+
+//XPECT elementKeyword at 'm1' --> getter
+i12.m1;
+//XPECT elementKeyword at 'm1' --> setter
+i12.m1 = a;
+
+//XPECT elementKeyword at 'm2' --> field
+i12.m2;
+
+//XPECT elementKeyword at 'm2' --> field
+i12.m2 = a;

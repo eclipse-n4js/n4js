@@ -1,0 +1,63 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+
+class G<T> {
+	read(): T {return null;}
+	write(value: T) {}
+}
+
+
+var ga: G<A>;
+var gb: G<B>;
+var gc: G<C>;
+
+
+// -------------------------------------------------------------------------------------------
+// G<out B> should behave like G<? extends B>
+
+function foo(param: G<out B>) {
+	// XPECT type of 'param.read<|>()' --> ? extends B
+	param.read();
+	// XPECT errors --> "B is not a subtype of ? extends B." at "new B()"
+	param.write(new B());
+}
+
+// XPECT errors --> "G<A> is not a subtype of G<? extends B>." at "ga"
+foo(ga);
+// XPECT noerrors -->
+foo(gb);
+// XPECT noerrors -->
+foo(gc);
+
+
+// -------------------------------------------------------------------------------------------
+// G<in B> should behave like G<? super B>
+
+function foo2(param: G<in B>) {
+	// XPECT type of 'param.read<|>()' --> ? super B
+	param.read();
+	// XPECT noerrors -->
+	param.write(new B());
+}
+
+// XPECT noerrors -->
+foo2(ga);
+// XPECT noerrors -->
+foo2(gb);
+// XPECT errors --> "G<C> is not a subtype of G<? super B>." at "gc"
+foo2(gc);

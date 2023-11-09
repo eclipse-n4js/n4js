@@ -1,0 +1,78 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class Chain<C extends Chain<C, T>, T> {
+	next() : C { return null; }
+	m() : T { return null; }
+}
+
+class MyChain extends Chain<MyChain, string> {
+}
+
+var c = new MyChain();
+
+// XPECT errors --> "string is not a subtype of number." at "c.next().m()"
+var n : number = c.next().m()
+
+
+// XPECT noerrors -->
+class Edge<V extends Vertex<V, E>, E extends Edge<V, E>> {
+	source() : V { return null; }
+	target() : V { return null; }
+}
+// XPECT noerrors -->
+class EdgeChain<V extends Vertex<V, E>, E extends Edge<V, E>> extends Chain<EdgeChain<V, E>, E> {
+}
+// XPECT noerrors -->
+class Vertex<V extends Vertex<V, E>, E extends Edge<V, E>> {
+	outgoing() : EdgeChain<V, E> { return null; }
+	incoming() : EdgeChain<V, E> { return null; }
+}
+
+// XPECT noerrors -->
+class GraphEdge extends Edge<GraphVertex, GraphEdge> {
+	name() : string { return ""; }
+}
+// XPECT noerrors -->
+class GraphVertex extends Vertex<GraphVertex, GraphEdge> {
+	name() : string { return ""; }
+}
+
+// XPECT noerrors -->
+var edge = new GraphEdge()
+// XPECT noerrors -->
+var vertex = new GraphVertex()
+
+// XPECT noerrors -->
+var _edge : Edge<GraphVertex, GraphEdge> = edge
+// XPECT noerrors -->
+var _vertex : Vertex<GraphVertex, GraphEdge> = vertex
+
+// XPECT noerrors -->
+var _vertex2 : GraphVertex = edge.source();
+
+// XPECT noerrors -->
+var _outgoing : EdgeChain<GraphVertex, GraphEdge> = _vertex2.outgoing();
+
+// XPECT noerrors -->
+var _next : EdgeChain<GraphVertex, GraphEdge> = _outgoing.next();
+
+// XPECT noerrors -->
+var _edge2 : GraphEdge = _next.m()
+
+// XPECT noerrors -->
+var _next2 : EdgeChain<GraphVertex, GraphEdge> = edge.source().outgoing().next();
+// XPECT noerrors -->
+var _edge3 : GraphEdge = edge.source().outgoing().next().m()
+// XPECT noerrors -->
+var _edge4 : GraphEdge = edge.source().outgoing().next().m().target().incoming().next().next().next().m()

@@ -1,0 +1,47 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+interface R1 {
+	get x() : string { return null }
+}
+
+class S1{
+	x : string;
+}
+
+class S2 {
+	x : number;
+}
+
+class C1 implements R1 {
+	// XPECT noerrors --> "Can override getter" at "x"
+	@Override x : string;
+
+	f() {
+		// XPECT noerrors --> "field precedes getter, we can write field" at "x"
+		this.x = "hello"
+	}
+}
+
+// XPECT noerrors --> "field precedes getter" at "C1S"
+class C1S1 extends S1 implements R1 {
+	f() {
+		// XPECT noerrors --> "field precedes getter, we can write field" at "x"
+		this.x = "hello"
+	}
+}
+
+// XPECT errors --> "Type of inherited field S2.x does not conform to implemented getter R1.x: number is not a subtype of string." at "R1"
+class C1S2 extends S2 implements R1 {
+}

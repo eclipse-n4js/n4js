@@ -1,0 +1,134 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+// XPECT noerrors -->
+function foo1a(): void {}
+
+/* XPECT errors ---
+	"Missing return or throw statement." at "foo1b"
+	"Type void may only be used to declare the return type of functions and methods." at "void"
+--- */
+function foo1b(): any|void {}
+
+// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+function foo1c(p: void) {}
+
+
+
+class C1a {
+	// XPECT noerrors -->
+	m1(): void {}
+	/* XPECT errors ---
+		"Type void may only be used to declare the return type of functions and methods." at "void"
+		"Missing return or throw statement." at "m2"
+	--- */
+	m2(): any|void {}
+}
+
+class C1b {
+	// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+	m(p: void) {}
+}
+
+
+
+let ol1 = {
+	// XPECT noerrors -->
+	void m1() {},
+	/* XPECT errors ---
+		"Type void may only be used to declare the return type of functions and methods." at "void"
+		"Missing return or throw statement." at "union{any,void} m2() {}"
+	--- */
+	union{any,void} m2() {}
+};
+
+let ol2 = {
+	// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+	m(p: void) {}
+};
+
+
+
+// XPECT noerrors -->
+let f1a: {function():void};
+
+// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+let f1b: {function():any|void};
+
+// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+let f1c: {function(void)};
+
+
+
+// XPECT noerrors -->
+let f2a = function(): void {};
+
+/* XPECT errors ---
+	"Type void may only be used to declare the return type of functions and methods." at "void"
+	"Missing return or throw statement." at "function(): any|void {}"
+--- */
+let f2b = function(): any|void {};
+
+// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+let f2c = function(p: void) {}
+
+
+
+// XPECT noerrors -->
+let f3a = (): void => {};
+
+/* XPECT errors ---
+	"Missing return or throw statement." at "(): any|void => {}"
+	"Type void may only be used to declare the return type of functions and methods." at "void"
+--- */
+let f3b = (): any|void => {};
+
+// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+let f3c = (p: void) => {};
+
+
+
+// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+class G1a<T extends any|void> {}
+
+// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+let g: G1a<any|void>;
+
+// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+class G1b<T extends {function(void)}> {}
+
+// XPECT noerrors -->
+class G1c<T extends {function():void}> {}
+
+
+
+// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+let x: void;
+
+class C2 {
+	// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+	field: void;
+}
+
+interface I {
+	// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+	field: void;
+}
+
+
+
+// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+let ttr: type{void};
+// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+let ctr: constructor{void};

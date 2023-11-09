@@ -1,0 +1,188 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+//taken from /xpect-tests/ChD/D_6_3_ES7_Async_Functions/dboTests.n4js.xt
+function setTimeout(fn:{function():void}, t:number):void{
+	(new Function("_fn", "_t","return setTimeout(_fn,_t);"))(fn,t);
+}
+
+
+@Promisifiable
+function fooOne(path : string, cb : {function(Error,string)}) {
+	setTimeout(function(){ cb(new Error('this is an expected error'), 'this should never show up!'); }, 100);
+}
+@Promisifiable
+function fooMany(path : string, cb : {function(Error,string,number,Object)}) {
+	setTimeout(function(){ cb(new Error('this is an expected error'), 'this should never show up!', -1, {}); }, 100);
+}
+@Promisifiable
+function fooNone(path : string, cb : {function(Error)}) {
+	setTimeout(function(){ cb(new Error('this is an expected error')); }, 100);
+}
+
+
+async function testWithFooOne(allDone : {function()}) {
+	console.log();
+	console.log('****** function funOne:');
+
+	console.log('use case #1: with await, long syntax');
+	try { console.log(await @Promisify fooOne('some path')); }
+	catch(err01) { console.log('-> got expected error err01:', (err01  as Object).toString()); }
+
+	console.log('use case #2: with await, short syntax');
+	try { console.log(await @Promisify fooOne('some path')); }
+	catch(err02) { console.log('-> got expected error err02:', (err02 as Object).toString()); }
+
+	console.log('use case #3: use Promise directly');
+	var p = @Promisify fooOne('some path');
+	p.then(
+		function(res = undefined){
+			console.log('TEST FAILURE:', res);
+		},
+		function(err03 = undefined){
+			console.log('-> got expected error err03:', err03.toString());
+
+			console.log('use case #4: pass in a callback (don\'t use promisify at all)');
+			fooOne('some path', function(err04,res) {
+				if(err04) {
+					console.log('-> got expected error err04:', err04.toString());
+				} else {
+					console.log('TEST FAILURE:', res);
+				}
+
+				allDone();
+			});
+		}
+	);
+}
+
+
+async function testWithFooMany(allDone : {function()}) {
+	console.log();
+	console.log('****** function funMany:');
+
+	console.log('use case #1: with await, long syntax');
+	try { console.log(await @Promisify fooMany('some path')); }
+	catch(err11) { console.log('-> got expected error err11:', (err11 as Object).toString()); }
+
+	console.log('use case #2: with await, short syntax');
+	try { console.log(await @Promisify fooMany('some path')); }
+	catch(err12) { console.log('-> got expected error err12:', (err12 as Object).toString()); }
+
+	console.log('use case #3: use Promise directly');
+	var p = @Promisify fooMany('some path');
+	p.then(
+		function(res = undefined){
+			console.log('TEST FAILURE:', res);
+		},
+		function(err13 = undefined){
+			console.log('-> got expected error err13:', err13.toString());
+
+			console.log('use case #4: pass in a callback (don\'t use promisify at all)');
+			fooMany('some path', function(err14,res) {
+				if(err14) {
+					console.log('-> got expected error err14:', err14.toString());
+				} else {
+					console.log('TEST FAILURE:', res);
+				}
+
+				allDone();
+			});
+		}
+	);
+}
+
+
+async function testWithFooNone(allDone : {function()}) {
+	console.log();
+	console.log('****** function funNone:');
+
+	console.log('use case #1: with await, long syntax');
+	try { await @Promisify fooNone('some path'); }
+	catch(err21) { console.log('-> got expected error err21:', (err21 as Object).toString()); }
+
+	console.log('use case #2: with await, short syntax');
+	try { await @Promisify fooNone('some path'); }
+	catch(err22) { console.log('-> got expected error err22:', (err22 as Object).toString()); }
+
+	console.log('use case #3: use Promise directly');
+	var p = @Promisify fooNone('some path');
+	p.then(
+		function(){
+			console.log('TEST FAILURE');
+		},
+		function(err23 = undefined){
+			console.log('-> got expected error err23:', err23.toString());
+
+			console.log('use case #4: pass in a callback (don\'t use promisify at all)');
+			fooNone('some path', function(err24) {
+				if(err24) {
+					console.log('-> got expected error err24:', err24.toString());
+				} else {
+					console.log('TEST FAILURE');
+				}
+
+				allDone();
+			});
+		}
+	);
+}
+
+
+console.log('starting ...');
+testWithFooOne(async function() {
+	await testWithFooMany(async function() {
+		await testWithFooNone(async function() {
+			console.log();
+			console.log('... done!');
+		});
+	});
+});
+
+
+/* XPECT output ---
+starting ...
+
+****** function funOne:
+use case #1: with await, long syntax
+-> got expected error err01: Error: this is an expected error
+use case #2: with await, short syntax
+-> got expected error err02: Error: this is an expected error
+use case #3: use Promise directly
+-> got expected error err03: Error: this is an expected error
+use case #4: pass in a callback (don't use promisify at all)
+-> got expected error err04: Error: this is an expected error
+
+****** function funMany:
+use case #1: with await, long syntax
+-> got expected error err11: Error: this is an expected error
+use case #2: with await, short syntax
+-> got expected error err12: Error: this is an expected error
+use case #3: use Promise directly
+-> got expected error err13: Error: this is an expected error
+use case #4: pass in a callback (don't use promisify at all)
+-> got expected error err14: Error: this is an expected error
+
+****** function funNone:
+use case #1: with await, long syntax
+-> got expected error err21: Error: this is an expected error
+use case #2: with await, short syntax
+-> got expected error err22: Error: this is an expected error
+use case #3: use Promise directly
+-> got expected error err23: Error: this is an expected error
+use case #4: pass in a callback (don't use promisify at all)
+-> got expected error err24: Error: this is an expected error
+
+... done!
+--- */

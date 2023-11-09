@@ -1,0 +1,108 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+class A {}
+class B {}
+
+interface MyIter<K, V> extends Iterable2<K, V> {}
+interface MyIterSub<K, V> extends MyIter<K, V> {}
+
+
+// --------------------------------------------------------------------------------
+// part #0: type of value to be destructured is an unbound type variable
+
+
+class C <K, V, W extends MyIter<K, V>> {
+	field: W;
+
+	mc() {
+		let iter01: W;
+		// XPECT type of 'value01' --> V
+		let [,value01] = iter01;
+
+		// XPECT type of 'value02' --> V
+		let [,value02] = this.field;
+	}
+}
+
+
+// --------------------------------------------------------------------------------
+// part #1: type of value to be destructured is a bound type variable
+
+
+class D extends C<A,B,MyIterSub<A,B>> {
+	md() {
+		// XPECT type of 'value11' --> B
+		let [,value11] = this.field;
+	}
+}
+
+
+let iter12: MyIter<A,B>;
+// XPECT type of 'value12' --> B
+let [,value12] = iter12;
+
+
+let iter13: C<A,B,MyIterSub<A,B>>;
+// XPECT type of 'value13' --> B
+let [,value13] = iter13.field;
+
+
+let iter14: D;
+// XPECT type of 'value14' --> B
+let [,value14] = iter14.field;
+
+
+// --------------------------------------------------------------------------------
+// part #2: type of value to be destructured is an ExistentialTypeRef
+
+
+class G21<T> {
+	field: T;
+}
+let iter21: G21<? extends MyIterSub<A,B>>;
+// XPECT type of 'value21' --> B
+let [,value21] = iter21.field;
+
+
+class G22<T extends MyIter<A,B>> {
+	field: T;
+}
+let iter22: G22<?>;
+// XPECT type of 'value22' --> B
+let [,value22] = iter22.field;
+
+
+// --------------------------------------------------------------------------------
+// part #3: type of value to be destructured is a BoundThisTypeRef
+
+
+abstract class E implements MyIterSub<A,B> {
+	me() {
+		// XPECT type of 'value31' --> B
+		let [,value31] = this;
+	}
+}
+
+
+// --------------------------------------------------------------------------------
+// part #4: type of value to be destructured is an alias
+//
+// NOTE: more tests for destructuring with alias can be found here:
+// org.eclipse.n4js.spec.tests/xpect-tests/Ch04_14__TypeAlias/TypeAlias_destructuring_*.n4js.xt
+
+type MyAlias = MyIter<A,B>;
+let iter41: MyAlias;
+// XPECT type of 'value41' --> B
+let [,value41] = iter41;

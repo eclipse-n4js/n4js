@@ -1,0 +1,47 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+interface A {}
+interface B {}
+interface C {}
+
+//
+// generic types - binding to conflicting types
+//
+
+class Gen1<T> {
+	f : T;
+	get g() : T {return null;}
+	set s(param : T) {}
+}
+
+class Gen2Super<T> {
+	set s(param : T) {}
+}
+class Gen2<T> extends Gen2Super<C> {
+	f : T;
+	get g() : T {return null;}
+}
+
+
+var u : union{Gen1<A>,Gen2<B>};
+
+
+// XPECT type of 'u.f' --> union{A,B}
+u.f;
+// XPECT expectedType at 'null' --> intersection{A,B}
+u.f = null;
+// XPECT type of 'u.g' --> union{A,B}
+u.g;
+// XPECT expectedType at 'null' --> intersection{A,C}
+u.s = null;

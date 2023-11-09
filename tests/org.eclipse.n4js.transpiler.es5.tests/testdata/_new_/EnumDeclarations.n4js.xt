@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest END_SETUP */
 
 
 /* XPECT output ---
@@ -18,12 +18,12 @@ Color { name: 'RED', value: 'RED' }
 RED
 RED
 RED
-_new_/EnumDeclarations/Color
+EnumDeclarations/Color
 Country { name: 'GB', value: 'Great Britain' }
 GB
 Great Britain
 Great Britain
-_new_/EnumDeclarations/Country
+EnumDeclarations/Country
 Great Britain
 string
 ========================================

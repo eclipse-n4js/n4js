@@ -1,0 +1,72 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+var obj = {one:1, two:2};
+var arr = [ {first:1, second:2} ];
+
+
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "three": ~Object with { one: int; two: int }." at "three"
+var {one:a1,two:b1,three:c1} = obj;
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "three": ~Object with { one: int; two: int }." at "three"
+({one:a1,two:b1,three:c1} = obj);
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "third": ~Object with { first: int; second: int }." at "third"
+for(var {first:a2,second:b2,third:c2} of arr) {}
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "third": ~Object with { first: int; second: int }." at "third"
+for({first:a2,second:b2,third:c2} of arr) {}
+
+
+// -----------------------------
+
+
+// correct position of error message in case of single name bindings:
+
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "three": ~Object with { one: int; two: int }." at "three"
+var {one,two,three} = obj;
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "three": ~Object with { one: int; two: int }." at "three"
+({one,two,three} = obj);
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "third": ~Object with { first: int; second: int }." at "third"
+for(var {first,second,third} of arr) {}
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "third": ~Object with { first: int; second: int }." at "third"
+for({first,second,third} of arr) {}
+
+
+// -----------------------------
+
+
+// nesting, etc. ...
+
+interface Ifc {
+	fieldI : Cls;
+	get getterI() : Array<number>;
+}
+abstract class Cls implements Ifc {
+	fieldC : number;
+	get getterC() : number {return null;}
+}
+
+var cls : Cls;
+
+var {
+	fieldI: {
+		fieldI:  a6i,
+		getterI: [a6ii,a6iii],
+		fieldC:  a6iv,
+		getterC: a6v
+	},
+	getterI: [b6i,b6ii,b6iii],
+	fieldC: c6,
+	getterC: d6,
+	// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "notFound": Cls." at "notFound"
+	notFound: e6
+} = cls;

@@ -1,0 +1,33 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class C1 {
+
+	// XPECT errors --> "The setter m (line 17) duplicates setter m (line 19)." at "['m']"
+	set['m'](arg : string) {}
+	// XPECT errors --> "The setter m (line 19) duplicates setter m (line 17)." at "m"
+	set m(arg : string) {}
+
+	// XPECT noerrors -->
+	set["@abc"](arg : string) {}
+
+	// XPECT noerrors -->
+	set[    '@abc1'    ](arg : string) {}
+
+	// XPECT noerrors -->
+	set[ /*comment*/ '@abc2'](arg : string) {}
+
+	// XPECT noerrors -->
+	set['@abc3'  /*comment*/ ](arg : string) {}
+
+}

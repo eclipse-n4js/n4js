@@ -1,0 +1,52 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	ProjectWithSourceFolder {
+		ThisFile {}
+		File "Ext.n4jsd" { from="CallConstructSignature_usage__Ext.n4jsd" }
+	}
+
+END_SETUP */
+
+
+import { AliasedIfcOnlyCall } from "Ext"
+import { AliasedIfcOnlyConstruct } from "Ext"
+import { AliasedStructTypeRefOnlyCall } from "Ext"
+import { AliasedStructTypeRefOnlyConstruct } from "Ext"
+
+
+// assert that it works as well if the call/construct signature is behind a type alias
+
+
+let aliasedIfcOnlyCall: AliasedIfcOnlyCall;
+let aliasedIfcOnlyConstruct: AliasedIfcOnlyConstruct;
+
+// XPECT noerrors -->
+// XPECT type of 'result01' --> CallResultCls
+let result01 = aliasedIfcOnlyCall("");
+
+// XPECT noerrors -->
+// XPECT type of 'result02' --> ConstructResultCls
+let result02 = new aliasedIfcOnlyConstruct("", true);
+
+
+let aliasedStructTypeRefOnlyCall: AliasedStructTypeRefOnlyCall;
+let aliasedStructTypeRefOnlyConstruct: AliasedStructTypeRefOnlyConstruct;
+
+// XPECT noerrors -->
+// XPECT type of 'result11' --> CallResultCls
+let result11 = aliasedStructTypeRefOnlyCall("");
+
+// XPECT noerrors -->
+// XPECT type of 'result12' --> ConstructResultCls
+let result12 = new aliasedStructTypeRefOnlyConstruct("", true);

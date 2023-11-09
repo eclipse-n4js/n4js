@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+/* XPECT  output ---
+C.x
+S.x
+R.x
+S.x
+C.x
+--- */
+
+class S { x : string = "S.x"; }
+
+interface R { x : string = "R.x"; }
+
+class C0  { x : string = "C.x"; }
+// XPECT linkedPathname at 'x' --> C0/x
+console.log(new C0().x);
+
+class C1 extends S {}
+// XPECT linkedPathname at 'x' --> S/x
+console.log(new C1().x);
+
+class C2  implements R {}
+// XPECT linkedPathname at 'x' --> R/x
+console.log(new C2().x);
+
+// new with IDE-1236
+class C3 extends S implements R {}
+// XPECT linkedPathname at 'x' --> S/x
+console.log(new C3().x);
+
+class C4 implements R { @Override x : string  = "C.x"; }
+// XPECT linkedPathname at 'x' --> C4/x
+console.log(new C4().x);

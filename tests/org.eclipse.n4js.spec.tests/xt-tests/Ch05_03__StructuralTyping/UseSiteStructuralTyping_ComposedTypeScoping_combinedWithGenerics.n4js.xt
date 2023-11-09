@@ -1,0 +1,59 @@
+/*
+ * Copyright (c) 2018 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+class C {
+	public field: int;
+}
+
+
+// simple generics:
+
+class G<T> {
+	value: T;
+}
+
+// GH-787 XPECT FIXME nowarnings -->
+let gi: G<~r~C> & G<~w~C>;
+let gu: G<~r~C> | G<~w~C>;
+
+// XPECT noerrors -->
+gi.value.field;
+// XPECT noerrors -->
+gi.value.field = 0;
+
+// XPECT errors --> "field field is not available for structurally referenced type ~w~C." at "field"
+gu.value.field;
+// XPECT errors --> "field field is not available for structurally referenced type ~r~C." at "field"
+gu.value.field = 0;
+
+
+// concatenation of structural typing modifiers via generics:
+
+class GS<T> {
+	value: ~r~T;
+}
+
+// GH-787 XPECT FIXME nowarnings -->
+let gsi: GS<~r~C> & GS<~w~C>;
+let gsu: GS<~r~C> | GS<~w~C>;
+
+// XPECT noerrors -->
+gsi.value.field;
+// XPECT errors --> "field field is not available for structurally referenced type ~r~C." at "field"
+gsi.value.field = 0;
+
+// XPECT errors --> "field field is not available for structurally referenced type ~∅~C." at "field"
+gsu.value.field;
+// XPECT errors --> "field field is not available for structurally referenced type ~r~C." at "field"
+gsu.value.field = 0;

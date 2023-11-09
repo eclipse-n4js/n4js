@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+// XPECT type of '{ prop: 42 }' --> ~Object with { prop: union{0,42} }
+let obj1: ~Object with { prop: 0 | 42 } = { prop: 42 };
+
+// XPECT type of 'obj2' --> ~Object with { prop: int }
+// XPECT type of '{ prop: 42 }' --> ~Object with { prop: int }
+let obj2 = { prop: 42 };
+
+
+
+// The next test case is special, because we have one property with a type expectation and
+// another property without. In the latter case (and only in that case), the literal type
+// is resolved, for consistency with cases such as: let num = 42; (where 'num' is also
+// inferred to type 'int' instead of '42')
+
+// XPECT type of '{ prop: 42, propWithoutExpectation: 43 }' --> ~Object with { prop: union{0,42}; propWithoutExpectation: int }
+// XPECT warnings --> "propWithoutExpectation is not defined in ~Object with { prop: union{0,42} }; it will not be accessible from obj3." at "propWithoutExpectation"
+let obj3: ~Object with { prop: 0 | 42 } = { prop: 42, propWithoutExpectation: 43 };
+
+
+
+// In the next test case, we want to avoid seeing the following extremely confusing error message:
+// ~Object with { prop1: "hello"; prop2: "BAD!" } is not a structural subtype of ~Object with { prop1: string; prop2: number }: prop1 failed: "hello" is not equal to string and 1 more problems.
+
+// XPECT errors --> "~Object with { prop1: string; prop2: "BAD!" } is not a structural subtype of ~Object with { prop1: string; prop2: number }: prop2 failed: "BAD!" is not equal to number." at "{ prop1: "hello", prop2: "BAD!" }"
+let obj4: ~Object with { prop1: string, prop2: number } = { prop1: "hello", prop2: "BAD!" };

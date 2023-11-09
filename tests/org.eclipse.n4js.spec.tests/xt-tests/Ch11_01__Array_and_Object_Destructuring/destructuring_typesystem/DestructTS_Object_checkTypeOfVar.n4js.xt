@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+class A_super {}
+class A extends A_super {}
+class B {}
+
+class X {}
+
+var v : ~Object with { prop1 : A; prop2 : B; };
+
+
+
+
+// case 1: variable declared in pattern with an explicitly declared type:
+
+// XPECT errors --> "Variable x1 cannot hold destructured value of property 'prop2': B is not a subtype of X." at "x1"
+var {prop1: a1 : A_super, prop2: x1 : X} = v;
+
+
+
+
+// case 2: existing variable reused in pattern:
+
+var a2 : A_super, x2 : X;
+// XPECT errors --> "Variable x2 cannot hold destructured value of property 'prop2': B is not a subtype of X." at "x2"
+({prop1: a2, prop2: x2} = v);
+
+
+
+
+// same two cases with single name binding:
+
+// TODO disabled, no type annotation allowd in object descrution X-PECT! errors --> "Variable prop2 cannot hold destructured value of property 'prop2': B is not a subtype of X." at "prop2"
+// var {A_super prop1, X prop2} = v;
+// TODO disabled, no type annotation allowd in object descrution X-PECT! errors --> "Variable prop2 cannot hold destructured value of property 'prop2': B is not a subtype of X." at "prop2"
+// ({A_super prop1, X prop2} = v);

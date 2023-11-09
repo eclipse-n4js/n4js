@@ -1,0 +1,66 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+interface I24 {
+	get x() {return null;}
+}
+
+class A24 {
+	set x(v) {}
+}
+
+// XPECT errors -->"Getter I24.x cannot be consumed without overriding the corresponding setter." at "B24"
+class B24 extends A24 implements I24 {}
+
+// ------------------------------------------------
+
+interface I36 {
+	set x(v) {}
+}
+
+class A36 {
+	get x() {return null;}
+}
+
+// XPECT errors -->"Setter I36.x cannot be consumed without overriding the corresponding getter." at "B36"
+class B36 extends A36 implements I36 {}
+
+// ------------------------------------------------
+
+interface I56 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class A56 {
+	set x(v) {}
+}
+
+// XPECT errors -->"Getter I56.x cannot be consumed without overriding the corresponding setter." at "B56"
+class B56 extends A56 implements I56 {}
+
+// ------------------------------------------------
+
+
+interface I52 {
+	get x() {return null;}
+	set x(v) {}
+}
+
+class A52 {
+	get x() {return null;}
+}
+// XPECT errors -->"Setter I52.x cannot be consumed without overriding the corresponding getter." at "B52"
+class B52 extends A52 implements I52 {}
+
+// ------------------------------------------------

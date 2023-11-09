@@ -720,7 +720,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 			val nonInjectableParams = tMethod.fpars.filter[fpar| !(fpar.typeRef.isInjectableType)]
 			nonInjectableParams.forEach[fpar|
 				addIssue(
-					getMessageForDI_NOT_INJECTABLE(fpar.typeRef.typeRefAsString, '''at «fpar.name»'''),
+					getMessageForDI_NOT_INJECTABLE(fpar.typeRef.typeRefAsString, ''' at «fpar.name»'''),
 					fpar.astElement,
 					N4JSPackage.eINSTANCE.abstractVariable_Name,
 					DI_NOT_INJECTABLE
@@ -860,7 +860,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 			}
 		}
 		if (!typeRef.isInjectableType) {
-			val description = if (null === name) '''''' else '''at «name»''';
+			val description = if (null === name) '''''' else ''' at «name»''';
 			addIssue(getMessageForDI_NOT_INJECTABLE(typeRef.typeRefAsString, description), ann, DI_NOT_INJECTABLE);
 			return false;
 		}

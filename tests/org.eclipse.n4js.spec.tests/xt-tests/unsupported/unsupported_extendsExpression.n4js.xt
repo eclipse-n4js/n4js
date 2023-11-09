@@ -1,0 +1,28 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+function foo() {}
+
+
+// cannot test the following case (seems to be parsed incorrectly, i.e. not ES6 compliant)
+//class A extends foo() {}
+
+// XPECT errors --> "Unsupported feature: extends <expression>." at "(foo())"
+class B extends (foo()) {}
+
+// XPECT errors --> "Unsupported feature: extends <expression>." at "'nope'"
+class C extends 'nope' {}
+
+// XPECT errors --> "Unsupported feature: extends <expression>." at "null"
+class D extends null {}

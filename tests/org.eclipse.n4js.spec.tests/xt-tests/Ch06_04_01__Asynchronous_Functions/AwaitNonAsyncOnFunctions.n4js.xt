@@ -1,0 +1,76 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+
+async function foo() {
+    return "World";
+}
+async function bar() {
+	// XPECT nowarnings
+    var s = await (foo());
+    // XPECT warnings --> "await should only be used on expressions of type Promise<?,?> since otherwise it has no effect." at "await (7 + 2)"
+    var i = await (7 + 2);
+    return "Hello " + i;
+}
+
+
+function nf1(path : string, cb : {function(Error,string)}) : string {
+	return null;
+}
+function nf2(path : string, cb : {function(Error,string)}) : Promise<any, any> {
+	return null;
+}
+async function nfT() {
+	// XPECT warnings --> "await should only be used on expressions of type Promise<?,?> since otherwise it has no effect." at "await nf1("", null)"
+	await nf1("", null);
+	// XPECT nowarnings
+	await nf2("", null);
+}
+
+
+class G<T> {
+	m(): T {
+		return null;
+	}
+}
+var g1: G<Promise<?,?>>;
+async function f1() {
+	// XPECT nowarnings
+	await g1.m();
+}
+var g2: G<string>;
+async function f2() {
+	// XPECT warnings --> "await should only be used on expressions of type Promise<?,?> since otherwise it has no effect." at "await g2.m()"
+	await g2.m();
+}
+
+
+function pf1(path : string, cb : {function(Error,string)}) : string {
+	return null;
+}
+@Promisifiable
+function pf2(path : string, cb : {function(Error,string)}) {
+}
+async function pfT() {
+	// XPECT warnings --> "await should only be used on expressions of type Promise<?,?> since otherwise it has no effect." at "await pf1("", null)"
+	await pf1("", null);
+	await @Promisify pf2("");
+}
+
+class MyPromise extends Promise<any,any> {}
+function mp() : MyPromise { return null; }
+async function mpc() {
+	// XPECT nowarnings
+	await mp();
+}

@@ -1,0 +1,298 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+//taken from /xpect-tests/ChD/D_6_3_ES7_Async_Functions/dboTests.n4js.xt
+function setTimeout(fn:{function():void}, t:number):void{
+	(new Function("_fn", "_t","return setTimeout(_fn,_t);"))(fn,t);
+}
+
+
+@Promisifiable
+function foo(path : string, cb : {function(Error,string)}) {
+	setTimeout(function(){ cb(undefined, 'hello from foo!'); }, 100);
+}
+
+
+class C {
+	field : string;
+	static fieldStatic : string;
+
+	@Promisifiable
+	mOne(path : string, cb : {function(Error,string)}) : void {
+		setTimeout(()=>{ cb(undefined, 'hello from C#mOne! (value of field: ' + this.field + ')'); }, 100);
+	}
+	@Promisifiable
+	mMany(path : string, cb : {function(Error,string,number,Object)}) : void {
+		setTimeout(()=>{ cb(undefined, 'hello from C#mMany! (value of field: ' + this.field + ')', 42, {prop:"value"}); }, 100);
+	}
+	@Promisifiable
+	mNone(path : string, cb : {function(Error)}) : void {
+		setTimeout(()=>{ cb(undefined); }, 100);
+	}
+
+	@Promisifiable
+	mOneNoErr(path : string, cb : {function(string)}) : void {
+		setTimeout(()=>{ cb('hello from C#mOneNoErr! (value of field: ' + this.field + ')'); }, 100);
+	}
+	@Promisifiable
+	mManyNoErr(path : string, cb : {function(string,number,Object)}) : void {
+		setTimeout(()=>{ cb('hello from C#mManyNoErr! (value of field: ' + this.field + ')', 42, {prop:"value"}); }, 100);
+	}
+	@Promisifiable
+	mNoneNoErr(path : string, cb : {function()}) : void {
+		setTimeout(()=>{ cb(); }, 100);
+	}
+
+	@Promisifiable
+	static mStatic(path : string, cb : {function(Error,string)}) : void {
+		setTimeout(()=>{ cb(undefined, 'hello from C#mStatic! (value of fieldStatic: ' + this.fieldStatic + ')'); }, 100);
+	}
+}
+
+
+async function testWithFunction(allDone : {function()}) {
+	console.log();
+	console.log('****************** using promisifiable function:');
+
+	console.log('use case #1: with await, long syntax');
+	var res01 = await @Promisify foo('some path');
+	console.log('-> res01:', res01);
+
+	console.log('use case #2: with await, short syntax');
+	// XPECT nowarnings -->
+	var res02 = await foo('some path');
+	console.log('-> res02:', res02);
+
+	console.log('use case #3: use Promise directly');
+	var p = @Promisify foo('some path');
+	p.then(function(res03 = undefined){
+		console.log('-> res03:', res03);
+
+		console.log('use case #4: pass in a callback (don\'t use promisify at all)');
+		foo('some path', function(err,res04) {
+			console.log('-> callback got res04:', res04);
+
+			allDone();
+		});
+	});
+}
+
+
+async function testWithMethod(allDone : {function()}) {
+	console.log();
+	console.log('****************** using promisifiable method (non-static):');
+
+	var c:C = new C();
+	c.field = 'valueOfField';
+
+	console.log('****** method mOne:');
+
+	console.log('use case #1: with await, long syntax');
+	var res11 = await @Promisify c.mOne('some path');
+	console.log('-> res11:', res11);
+
+	console.log('use case #2: with await, short syntax');
+	var res12 = await @Promisify c.mOne('some path');
+	console.log('-> res12:', res12);
+
+	console.log('****** method mMany:');
+
+	console.log('use case #1: with await, long syntax');
+	var res21 = await @Promisify c.mMany('some path');
+	console.log('-> res21:');
+	[...res21].forEach(o => console.log(o));
+
+	console.log('use case #2: with await, short syntax');
+	var res22 = await @Promisify c.mMany('some path');
+	console.log('-> res22:');
+	[...res22].forEach(o => console.log(o));
+	
+	console.log('****** method mNone:');
+
+	console.log('use case #1: with await, long syntax');
+	// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "(await @Promisify c.mNone('some path'))"
+	var res31 = (await @Promisify c.mNone('some path')); // assigning undefined to Object here to be able to assert that 'undefined' is returned at runtime
+	console.log('-> res31:', res31);
+
+	console.log('use case #2: with await, short syntax');
+	// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "(await @Promisify c.mNone('some path'))"
+	var res32 = (await @Promisify c.mNone('some path')); // assigning undefined to Object here to be able to assert that 'undefined' is returned at runtime
+	console.log('-> res32:', res32);
+
+	console.log('****** method mOneNoErr:');
+
+	console.log('use case #1: with await, long syntax');
+	var res41 = await @Promisify c.mOneNoErr('some path');
+	console.log('-> res41:', res41);
+
+	console.log('use case #2: with await, short syntax');
+	var res42 = await @Promisify c.mOneNoErr('some path');
+	console.log('-> res42:', res42);
+
+	console.log('****** method mManyNoErr:');
+
+	console.log('use case #1: with await, long syntax');
+	var res51 = await @Promisify c.mManyNoErr('some path');
+	console.log('-> res51:');
+	[...res51].forEach(o => console.log(o));
+
+	console.log('use case #2: with await, short syntax');
+	var res52 = await @Promisify c.mManyNoErr('some path');
+	console.log('-> res52:');
+	[...res52].forEach(o => console.log(o));
+
+	console.log('****** method mNoneNoErr:');
+
+	console.log('use case #1: with await, long syntax');
+	// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "(await @Promisify c.mNoneNoErr('some path'))"
+	var res61 = (await @Promisify c.mNoneNoErr('some path')); // assigning undefined to Object here to be able to assert that 'undefined' is returned at runtime
+	console.log('-> res61:', res61);
+
+	console.log('use case #2: with await, short syntax');
+	// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "(await @Promisify c.mNoneNoErr('some path'))"
+	var res62 = (await @Promisify c.mNoneNoErr('some path')); // assigning undefined to Object here to be able to assert that 'undefined' is returned at runtime
+	console.log('-> res62:', res62);
+
+	console.log('****** back to method mOne:');
+
+	console.log('use case #3: use Promise directly');
+	var p = @Promisify c.mOne('some path');
+	p.then(function(res73 = undefined){
+		console.log('-> res73:', res73);
+
+		console.log('use case #4: pass in a callback (don\'t use promisify at all)');
+		c.mOne('some path', function(err,res74) {
+			console.log('-> callback got res74:', res74);
+
+			allDone();
+		});
+	});
+}
+
+
+async function testWithMethodStatic(allDone : {function()}) {
+	console.log();
+	console.log('****************** using promisifiable method (STATIC):');
+
+	C.fieldStatic = 'valueOfFieldStatic';
+
+	console.log('use case #1: with await, long syntax');
+	var res91 = await @Promisify C.mStatic('some path');
+	console.log('-> res91:', res91);
+
+	console.log('use case #2: with await, short syntax');
+	var res92 = await @Promisify C.mStatic('some path');
+	console.log('-> res92:', res92);
+
+	console.log('use case #3: use Promise directly');
+	var p = @Promisify C.mStatic('some path');
+	p.then(function(res93 = undefined){
+		console.log('-> res93:', res93);
+
+		console.log('use case #4: pass in a callback (don\'t use promisify at all)');
+		C.mStatic('some path', function(err,res94) {
+			console.log('-> callback got res94:', res94);
+
+			allDone();
+		});
+	});
+}
+
+
+console.log('starting ...');
+testWithFunction(async function() {
+	await testWithMethod(async function() {
+		await testWithMethodStatic(async function() {
+			console.log();
+			console.log('... done!');
+		});
+	});
+});
+
+
+
+/* XPECT output ---
+starting ...
+
+****************** using promisifiable function:
+use case #1: with await, long syntax
+-> res01: hello from foo!
+use case #2: with await, short syntax
+-> res02: hello from foo!
+use case #3: use Promise directly
+-> res03: hello from foo!
+use case #4: pass in a callback (don't use promisify at all)
+-> callback got res04: hello from foo!
+
+****************** using promisifiable method (non-static):
+****** method mOne:
+use case #1: with await, long syntax
+-> res11: hello from C#mOne! (value of field: valueOfField)
+use case #2: with await, short syntax
+-> res12: hello from C#mOne! (value of field: valueOfField)
+****** method mMany:
+use case #1: with await, long syntax
+-> res21:
+hello from C#mMany! (value of field: valueOfField)
+42
+{ prop: 'value' }
+use case #2: with await, short syntax
+-> res22:
+hello from C#mMany! (value of field: valueOfField)
+42
+{ prop: 'value' }
+****** method mNone:
+use case #1: with await, long syntax
+-> res31: undefined
+use case #2: with await, short syntax
+-> res32: undefined
+****** method mOneNoErr:
+use case #1: with await, long syntax
+-> res41: hello from C#mOneNoErr! (value of field: valueOfField)
+use case #2: with await, short syntax
+-> res42: hello from C#mOneNoErr! (value of field: valueOfField)
+****** method mManyNoErr:
+use case #1: with await, long syntax
+-> res51:
+hello from C#mManyNoErr! (value of field: valueOfField)
+42
+{ prop: 'value' }
+use case #2: with await, short syntax
+-> res52:
+hello from C#mManyNoErr! (value of field: valueOfField)
+42
+{ prop: 'value' }
+****** method mNoneNoErr:
+use case #1: with await, long syntax
+-> res61: undefined
+use case #2: with await, short syntax
+-> res62: undefined
+****** back to method mOne:
+use case #3: use Promise directly
+-> res73: hello from C#mOne! (value of field: valueOfField)
+use case #4: pass in a callback (don't use promisify at all)
+-> callback got res74: hello from C#mOne! (value of field: valueOfField)
+
+****************** using promisifiable method (STATIC):
+use case #1: with await, long syntax
+-> res91: hello from C#mStatic! (value of fieldStatic: valueOfFieldStatic)
+use case #2: with await, short syntax
+-> res92: hello from C#mStatic! (value of fieldStatic: valueOfFieldStatic)
+use case #3: use Promise directly
+-> res93: hello from C#mStatic! (value of fieldStatic: valueOfFieldStatic)
+use case #4: pass in a callback (don't use promisify at all)
+-> callback got res94: hello from C#mStatic! (value of fieldStatic: valueOfFieldStatic)
+
+... done!
+--- */

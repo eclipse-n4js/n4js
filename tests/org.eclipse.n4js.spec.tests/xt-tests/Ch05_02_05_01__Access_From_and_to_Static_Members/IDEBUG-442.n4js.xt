@@ -1,0 +1,35 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+class A {
+	public static field1;
+}
+class B extends A {
+}
+
+console.log(A.field1) // prints: undefined
+console.log(B.field1) // prints: undefined
+
+A.field1 = "wrote in A"
+
+console.log(A.field1) // prints: wrote in A
+
+// XPECT  noerrors --> "The static property field1 of class A is not accessible via it's subtype B."
+console.log(B.field1) // prints: wrote in A
+
+// XPECT errors --> "Write access to the static member field1 defined in A must use A directly." at "field1"
+B.field1 = "wrote in B"
+
+console.log(A.field1) // prints: wrote in A  (sic!)
+
+// XPECT noerrors --> "The static property field1 of class A is not accessible via it's subtype B."
+console.log(B.field1) // prints: wrote in B

@@ -1,0 +1,27 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// IDE-1804 support computed-names of string-literal form in indexed-accesses
+
+var c = {
+
+	get ['g'](): string { return "1" },
+	set ['g'](arg : string) { console.log(arg); },
+
+}
+
+// XPECT errors ---> "string is not a subtype of number." at "c['g']"
+var v : number = c['g']
+
+// XPECT errors ---> "2 is not a subtype of string." at "2"
+c['g'] = 2

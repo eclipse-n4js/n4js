@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "Fun.n4js" {}
 	}
@@ -20,7 +20,7 @@
 */
 
 
-import myF from "importexport/default/Fun"
+import myF from "Fun"
 
 
 console.log('running in Fun_main.n4js:');

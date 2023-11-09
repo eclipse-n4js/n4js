@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+abstract class A {
+
+	static m() {
+		// XPECT type of 'typeThis' --> constructor{this[A]}
+		let typeThis = this;
+
+		let typeA: type{A};
+		let typeExtA: type{? extends A};
+
+		// XPECT noerrors -->
+		typeA = typeThis;
+		// XPECT noerrors -->
+		typeExtA = typeThis;
+
+		// XPECT errors --> "Cannot instantiate this[A], because A does not have a @CovariantConstructor." at "typeThis"
+		new typeThis();
+	}
+}
+
+
+
+class B {
+
+	// note below: 'this' in a static method of a class B must be inferred to type{this[B]} (instead of
+	// constructor{this[B]}) even if B isn't abstract, because there might always be abstract subclasses!
+
+	static m() {
+		// XPECT type of 'typeThis' --> constructor{this[B]}
+		let typeThis = this;
+
+		// XPECT errors --> "Cannot instantiate this[B], because B does not have a @CovariantConstructor." at "typeThis"
+		new typeThis();
+	}
+}

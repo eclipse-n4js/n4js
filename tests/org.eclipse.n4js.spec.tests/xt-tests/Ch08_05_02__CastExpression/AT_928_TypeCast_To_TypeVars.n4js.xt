@@ -1,0 +1,126 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class X {}
+class Y extends X {}
+class Y2 extends X {}
+class Z extends Y {}
+
+
+class B < V > {
+	pullFrom0(obj : number) : V {
+		// if V==number this is ok XPECT noerrors -->
+		return obj as V;
+	}
+	pullFrom(obj) : V {
+		// XPECT noerrors -->
+		return obj as V;
+	}
+	pullFrom2(obj : Object) : V {
+		// XPECT noerrors -->
+		return obj as V;
+	}
+	pullFrom3(obj : V) : V {
+		// XPECT warnings --> "Unnecessary cast from V to V" at "obj as V"
+		return obj as V;
+	}
+}
+
+class C < V extends X > {
+	pullFrom00(obj : number) : X {
+		// X !<: number XPECT errors --> "Cannot cast from number to X" at "obj as X"
+		return obj as X;
+	}
+	pullFrom0(obj : number) : X {
+		// V <: X !<: number XPECT errors --> "Cannot cast from number to V" at "obj as V"
+		return obj as V;
+	}
+	pullFrom(obj) : X {
+		// XPECT noerrors -->
+		return obj as V;
+	}
+	pullFrom2(obj : Object) : X {
+		// XPECT noerrors -->
+		return obj as V;
+	}
+	pullFrom3(obj : V) : X {
+		// XPECT warnings --> "Unnecessary cast from V to X" at "obj as X"
+		return obj as X;
+	}
+}
+
+
+// The following tests are disabled until BUG IDEBUG-65  is resolved.
+
+// V <: W <: X
+class D < W extends X, V extends W > {
+	pullFrom(obj) : X {
+		// XPECT noerrors -->
+		return obj as V;
+	}
+	pullFrom2(obj : Object) : X {
+		// XPECT noerrors -->
+		return obj as V;
+	}
+	pullFrom3(obj : V) : X {
+		// XPECT warnings --> "Unnecessary cast from V to X" at "obj as X"
+		return obj as X;
+	}
+	pullFrom4(obj : number) : X {
+		// XPECT errors --> "Cannot cast from number to V" at "obj as V"
+		return obj as V;
+	}
+	pullFrom5(obj : number) : X {
+		// XPECT errors --> "Cannot cast from number to W" at "obj as W"
+		return obj as W;
+	}
+	pullFrom6(obj : number) : X {
+		// XPECT errors --> "Cannot cast from number to X" at "obj as X"
+		return obj as X;
+	}
+	pushTo( ox : X ) : V
+	{
+		// XPECT noerrors -->
+		return (ox as W) as V;
+	}
+	pushTo2( ox : X ) : W
+	{
+		// XPECT noerrors -->
+		return ox as V;
+	}
+}
+
+// Instanciate transitive TypeVar binding  XPECT noerrors -->
+var d1 : D<X,X>;
+// Instanciate transitive TypeVar binding  XPECT noerrors -->
+var d2 : D<X,Y>;
+// Instanciate transitive TypeVar binding  XPECT noerrors -->
+var d3 : D<Y,Z>;
+// Instanciate transitive TypeVar binding  XPECT noerrors -->
+var d4 : D<X,Z>;
+// Instanciate transitive TypeVar binding  XPECT noerrors -->
+var d5 : D<Z,Z>;
+
+// Instanciate transitive TypeVar binding  XPECT errors -->"X is not a subtype of Y." at "X"
+var d6 : D<Y,X>;
+// Instanciate transitive TypeVar binding  XPECT errors -->"Y is not a subtype of Z." at "Y"
+var d7 : D<Z,Y>;
+// Instanciate transitive TypeVar binding  XPECT errors -->"X is not a subtype of Z." at "X"
+var d8 : D<Z,X>;
+// Instanciate transitive TypeVar binding  XPECT errors -->"Z is not a subtype of Y2." at "Z"
+var d9 : D<Y2,Z>;
+class M {}
+class N extends M {}
+// Instanciate transitive TypeVar binding  XPECT errors -->"M is not a subtype of X." at "M"
+var d10 : D<M, N>;

@@ -1,0 +1,84 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class A {
+
+	// XPECT nowarnings -->
+	const AA_BB_CC = null;
+
+	// XPECT warnings --> "Name should not contain dollar sign character." at "AA_BB_CC$"
+	const AA_BB_CC$ = null;
+
+	//IDEBUG-304 allows js keywords as member names
+	// XPECT nowarnings
+	const yield = null;
+
+	// XPECT warnings --> "Field let may be confused with future reserved word." at "let"
+	const let = null;
+
+	// XPECT warnings --> "Field await may be confused with future reserved word." at "await"
+	const await = null;
+
+}
+
+class B {
+
+	// XPECT nowarnings -->
+	static AA_BB_CC;
+
+	// XPECT warnings --> "Name should not contain dollar sign character." at "AA_BB_CC$"
+	static AA_BB_CC$;
+
+	//IDEBUG-304 allows js keywords as member names
+	// XPECT nowarnings
+	static yield;
+
+	// XPECT warnings --> "Field let may be confused with future reserved word." at "let"
+	static let;
+
+	// XPECT warnings --> "Field await may be confused with future reserved word." at "await"
+	static await;
+
+	// XPECT warnings --> "Name may be confused with constructor." at "constructor"
+	static constructor;
+
+}
+
+class C {
+
+	// XPECT nowarnings -->
+	aa_bb_cc;
+
+	// XPECT warnings --> "Name should not contain dollar sign character." at "aa$bb$cc"
+	aa$bb$cc;
+
+	//IDEBUG-304 allows js keywords as member names
+	// XPECT nowarnings
+	yield;
+
+	// XPECT warnings --> "Field let may be confused with future reserved word." at "let"
+	let;
+
+	// XPECT warnings --> "Field await may be confused with future reserved word." at "await"
+	await;
+
+}
+
+// XPECT nowarnings -->
+var aa_bb_cc;
+
+// XPECT warnings --> "Name should not contain dollar sign character." at "aa$bb$cc"
+var	aa$bb$cc;
+
+// XPECT warnings --> "Name may be confused with constructor." at "constructor"
+var constructor;

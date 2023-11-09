@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+interface Rinit{}
+
+// XPECT errors --> "Cannot instantiate interface Rinit." at "Rinit"
+var r = new Rinit()
+
+
+interface A{}
+interface B{}
+
+interface R1 {
+  foo(a : A) : A { return null; }
+}
+interface R2 {
+  foo(b : B) : B { return null; }
+}
+
+class C implements R1  {
+}
+var c : C;
+var a : A;
+c.foo(a);
+// XPECT errors --> ""x" is not a subtype of A." at ""x""
+c.foo("x");
+
+
+class E implements R1, R2 {
+  @Override
+  // XPECT errors --> "Signature of method E.foo does not conform to implemented method R2.foo: {function(A):A} is not a subtype of {function(B):B}. Also cf. method R1.foo." at "foo"
+  foo(a : A) : A { return null; }
+}
+class E2 implements R1, R2 {
+  // ok:
+  @Override
+  public foo(ab : union{A,B}) : intersection{A,B} { return null; }
+}
+
+interface I {
+	bar() : void
+}
+
+//interface are abstract by default, they don't have to implement abstract methods (responsibility is passed on consumer)
+interface R extends I {}
+
+// XPECT errors --> "Class F must either be declared abstract or implement method I.bar." at "F"
+class F implements R {
+}
+
+//interface are abstract by default, they don't have to implement abstract methods (responsibility is passed on consumer)
+interface G extends R {
+}

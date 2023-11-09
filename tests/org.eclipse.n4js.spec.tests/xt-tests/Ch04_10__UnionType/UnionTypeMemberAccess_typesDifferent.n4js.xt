@@ -1,0 +1,147 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+interface A {}
+interface B {}
+interface C {}
+interface D {}
+interface E {}
+interface F {}
+
+
+class T1 {
+
+	get acc1() : A { return null; }
+
+	get acc2() : A { return null; }
+	set acc2(param : B) {}
+
+	m3 : A;
+
+	m4 : A;
+
+	m5 : A;
+
+	@Final
+	m6 : A = null;
+}
+
+class T2 {
+
+	set acc1(param : A) {}
+
+	get acc2() : C { return null; }
+	set acc2(param : D) {}
+
+	get m3() : A { return null; }
+
+	set m4(param : A) {}
+
+	get m5() : C { return null; }
+	set m5(param : D) {}
+
+	get m6() : A { return null; }
+	set m6(param : A) {}
+}
+
+
+var u : union{T1,T2};
+
+
+// COMBINING GETTERS AND SETTERS
+
+// a getter in one type and a setter in the other is *NOT* sufficient! (neither for read-access nor write-access)
+// XPECT errors --> "Member acc1 not of same kind in all types of union: getter in T1; setter in T2." at "acc1"
+u.acc1;
+// XPECT errors --> "Member acc1 not of same kind in all types of union: getter in T1; setter in T2." at "acc1"
+u.acc1 = null;
+
+
+// in these cases, all types in the union must have a getter *AND* a setter
+u.acc2;
+u.acc2 = null;
+
+
+// ... and the types of the getter and setter are combined independently
+// XPECT type of 'u.acc2' --> union{A,C}
+u.acc2;
+// XPECT expectedType at 'null' --> intersection{B,D}
+u.acc2 = null;
+
+
+// COMBINING FIELDS AND GETTERS AND/OR SETTERS
+
+// field + getter behaves like a getter: read access ok, no write access
+u.m3;
+// XPECT errors --> "Union combines fields and getters with name m3 and therefore property m3 is read-only." at "m3"
+u.m3 = null;
+
+// field + setter behaves like a setter: write access ok, no read access
+// XPECT errors --> "The accessor m4 is write-only in T2." at "m4"
+u.m4;
+u.m4 = null;
+
+// field + getter & setter behaves like a field: both read and write access, BUT: types can be different for reading and writing!
+// XPECT type of 'u.m5' --> union{A,C}
+u.m5;
+// XPECT expectedType at 'null' --> intersection{A,D}
+u.m5 = null;
+
+// const(!) field + getter is ok but does not work with setter
+// XPECT type of 'u.m6' --> A
+u.m6;
+// XPECT errors --> "Union combines fields and setters with name m6 but still write-access is not allowed because one or more fields are read-only (const or @Final)." at "m6"
+u.m6 = null;
+
+
+//
+// same cases, just with more types in union and distinct base types:
+//
+
+//         field + getter                 field + setter        field + getter *OR* setter     field + getter *AND* setter
+//         = read-only                    = write-only          = ERROR                        = full-access (read & write)
+//         ---------------------------    ------------------    ---------------------------    -----------------------------------------------
+class S1 { m1 : A;                          set m2(param : B) {}    set m3(param : B) {}             m4 : A;                                           }
+class S2 { get m1() : B { return null; }    m2 : A;                 get m3() : A { return null; }    m4 : B;                                           }
+class S3 { get m1() : A { return null; }    set m2(param : D) {}    set m3(param : D) {}             m4 : A;                                           }
+class S4 { m1 : C;                          m2 : A;                 m3 : A;                          set m4(param : C) {}  get m4() : E { return null; } }
+class S5 { get m1() : D { return null; }    set m2(param : C) {}    set m3(param : C) {}             set m4(param : D) {}  get m4() : F { return null; } }
+
+
+var v : union{S1,S2,S3,S4,S5};
+
+
+v.m1;
+// XPECT errors --> "Union combines fields and getters with name m1 and therefore property m1 is read-only." at "m1"
+v.m1 = null;
+// XPECT type of 'v.m1' --> union{A,B,C,D}
+v.m1;
+
+// XPECT errors --> "The accessor m2 is write-only in S1, S3, S5." at "m2"
+v.m2;
+v.m2 = null;
+// XPECT expectedType at 'null' --> intersection{B,A,D,C}
+v.m2 = null;
+
+// XPECT errors --> "Member m3 not of same kind in all types of union: field in S4; getter in S2; setter in S1, S3, S5." at "m3"
+v.m3;
+// XPECT errors --> "Member m3 not of same kind in all types of union: field in S4; getter in S2; setter in S1, S3, S5." at "m3"
+v.m3 = null;
+
+v.m4;
+v.m4 = null;
+// XPECT type of 'v.m4' --> union{A,B,E,F}
+v.m4;
+// XPECT expectedType at 'null' --> intersection{A,B,C,D}
+v.m4 = null;

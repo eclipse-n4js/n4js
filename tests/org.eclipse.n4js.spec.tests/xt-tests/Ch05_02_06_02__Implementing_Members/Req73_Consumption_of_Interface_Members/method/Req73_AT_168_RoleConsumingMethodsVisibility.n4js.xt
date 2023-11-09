@@ -1,0 +1,76 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// \begin{constraints}[Consumed Method Visibility]\label{cnstr:Consumed_Method_Visibility}
+
+
+interface AllAccessMods{
+	public publicM(){}
+	protected protectedM(){}
+	project projectM(){}
+	// XPECT errors --> "Members of interfaces must not be declared private." at "privateM"
+	private privateM(){}
+	defaultM(){}
+}
+
+
+class Ca implements AllAccessMods{
+
+	@Override
+	// XPECT errors --> "The method Ca.publicM cannot reduce the visibility of method AllAccessMods.publicM." at "publicM"
+	protected publicM(){}
+	@Override
+	// XPECT errors --> "The method Ca.protectedM cannot reduce the visibility of method AllAccessMods.protectedM." at "protectedM"
+	project protectedM(){}
+	@Override
+	// XPECT errors --> "The method Ca.projectM cannot reduce the visibility of method AllAccessMods.projectM." at "projectM"
+	private projectM(){}
+
+	// since private is module-relative (not type-relative), it can be implemented/overridden as usual
+	// XPECT noerrors -->
+	@Override private privateM(){}
+
+	@Override
+	// XPECT errors --> "The method Ca.defaultM cannot reduce the visibility of method AllAccessMods.defaultM." at "defaultM"
+	private defaultM(){}
+}
+
+interface Ra extends AllAccessMods{
+
+	@Override
+	// XPECT errors --> "The method Ra.publicM cannot reduce the visibility of method AllAccessMods.publicM." at "publicM"
+	protected publicM(){}
+	@Override
+	// XPECT errors --> "The method Ra.protectedM cannot reduce the visibility of method AllAccessMods.protectedM." at "protectedM"
+	project protectedM(){}
+	@Override
+	/* XPECT errors ---
+		"Members of interfaces must not be declared private." at "projectM"
+		"The method Ra.projectM cannot reduce the visibility of method AllAccessMods.projectM." at "projectM"
+	---
+	*/
+	private projectM(){}
+
+	// XPECT errors ---
+	//	"Members of interfaces must not be declared private." at "privateM"
+	//	"The method Ra.privateM overriding method AllAccessMods.privateM must be annotated with @Override." at "privateM"
+	// ---
+	private privateM(){}
+	@Override
+	/* XPECT errors ---
+		"Members of interfaces must not be declared private." at "defaultM"
+		"The method Ra.defaultM cannot reduce the visibility of method AllAccessMods.defaultM." at "defaultM"
+	---
+	*/
+	private defaultM(){}
+}

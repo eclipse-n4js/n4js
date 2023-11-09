@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+ 	ProjectWithSourceFolder {
+		ThisFile {}
+		File "Exporter.n4js" {}
+	}
+
+END_SETUP */
+
+import { C1 } from "Exporter"
+import { I1 } from "Exporter"
+import { f1 } from "Exporter"
+import { var1 } from "Exporter"
+import { let1 } from "Exporter"
+import let2asDefault from "Exporter"
+import { cnst8 } from "Exporter"
+
+let c1:C1 = new C1();
+let i1:I1 = null;
+let f1im: ()=>string = f1;
+let valCnst8 = cnst8;
+
+// in all cases we expect an error:
+// XPECT errors --> "Imported element C1 is read-only." at "C1"
+C1 = null;
+// XPECT errors --> "Imported element I1 is read-only." at "I1"
+I1 = null;
+// XPECT errors --> "Imported element f1 is read-only." at "f1"
+f1 = function(){ return "redefined imported function f1"; };
+// XPECT errors --> "Imported element var1 is read-only." at "var1"
+var1 = 15;
+// XPECT errors --> "Imported element let1 is read-only." at "let1"
+let1 = 17;
+// XPECT errors --> "Imported element let2asDefault is read-only." at "let2asDefault"
+let2asDefault = 14;
+/* XPECT errors ---
+	"Const variable cnst8 is read-only." at "cnst8"
+--- */
+cnst8 = 18; // const read only
+
+// XPECT errors --> "Imported element var1 is read-only." at "var1"
+var1++;
+// XPECT errors --> "Imported element var1 is read-only." at "var1"
+var1--;
+// XPECT errors --> "Imported element var1 is read-only." at "var1"
+var1+=1;
+// XPECT errors --> "Imported element var1 is read-only." at "var1"
+var1*=1;
+// XPECT errors --> "Imported element var1 is read-only." at "var1"
+var1/=1;
+// XPECT errors --> "Imported element var1 is read-only." at "var1"
+var1-=1;
+// XPECT errors --> "Imported element var1 is read-only." at "var1"
+++var1;
+// XPECT errors --> "Imported element var1 is read-only." at "var1"
+--var1;
+
+// XPECT errors --> "Imported element var1 is read-only." at "var1"
+--(var1);
+// XPECT errors --> "Imported element var1 is read-only." at "var1"
+(var1)--;
+// XPECT errors --> "Imported element var1 is read-only." at "var1"
+(var1)+=1;
+
+// XPECT errors --> "Imported element var1 is read-only." at "var1"
+( 12, ((var1)) = 17);
+// XPECT errors --> "Imported element var1 is read-only." at "var1"
+++( (var1) );

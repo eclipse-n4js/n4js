@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "Cls1.n4js" {}
 		File "Cls2.n4js" {}
@@ -24,12 +24,12 @@
 //
 // combining default import with named import
 //
-import MyDef1, {A as MyA1, C as MyC1} from "importexport/default_combined/Cls1"
+import MyDef1, {A as MyA1, C as MyC1} from "Cls1"
 
 //
 // combining default import with namespace import, is not allowed, but use default through the namespace
 //
-import * as NS from "importexport/default_combined/Cls2"
+import * as NS from "Cls2"
 
 
 console.log('running in Cls_main.n4js:');

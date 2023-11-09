@@ -1,0 +1,53 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// IDEBUG-134
+
+/* XPECT output ---
+greet= Hello , n= 0
+greet= Hello , n= 0
+greet= Hello , n= 42
+greet= Hello , n= 42
+--- */
+class A {
+	public greet : string = 'hi';
+	private n : number = 0;
+	constructor(@Spec spec : ~i~this) {}
+	log() : void {
+		console.log("greet=", this.greet, ", n=", this.n)
+	}
+}
+class B {
+	public greet : string = 'hi';
+	private n : number = 0;
+	constructor(@Spec spec : ~i~this with { n : number; }) {}
+	log() : void {
+		console.log("greet=", this.greet, ", n=", this.n)
+	}
+}
+class C {
+	public greet : string = 'hi';
+	private n : number = 0;
+	constructor(@Spec spec : ~i~this with { n : number; s : string; }) {}
+	log() : void {
+		console.log("greet=", this.greet, ", n=", this.n)
+	}
+}
+
+new A({greet:'Hello'}).log();
+// XPECT warnings --> "n is not defined in ~i~this[A]; it will not have any effect in the spec constructor." at "n"
+new A({greet:'Hello', n: 42}).log();
+// XPECT nowarnings --> "n is given via the with keyword and assigned to the non-public field"
+new B({greet:'Hello', n: 42}).log();
+// XPECT nowarnings --> "both n and s are given via the with keyword and assigned to the non-public fields"
+new C({greet:'Hello', n: 42, s: "ignoreme"}).log();

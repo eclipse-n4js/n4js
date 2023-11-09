@@ -1,0 +1,29 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+/* XPECT output ---
+Color { name: 'R', value: 'R' }
+--- */
+
+enum Color { R, G, B}
+
+class Container<T extends N4Enum> {
+	slot : T;
+
+	add(t : T) { this.slot = t;}
+ 	get() : T { return this.slot }
+}
+
+var colors : Container<Color> = new Container<Color>();
+colors.add(Color.R);
+
+console.log(colors.get());

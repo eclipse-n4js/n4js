@@ -1,0 +1,81 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+
+class D {}
+
+
+class X {
+	m() : B { return null; }
+}
+interface I_X {
+	m() : B
+}
+
+
+// --------------------------------------------------------------------------
+// for classes inheriting from a class:
+
+class Y1a extends X {
+	@Override
+	m() : C { return null; }
+}
+class Y2a extends X {
+	@Override
+	m() : B { return null; }
+}
+class Y3a extends X {
+	@Override
+	// XPECT errors --> "Signature of method Y3a.m does not conform to overridden method X.m: {function():A} is not a subtype of {function():B}." at "m"
+	m() : A { return null; }
+}
+
+
+// --------------------------------------------------------------------------
+// for classes inheriting from an interface:
+
+class Y1b implements I_X {
+	@Override
+	m() : C { return null; }
+}
+class Y2b implements I_X {
+	@Override
+	m() : B { return null; }
+}
+class Y3b implements I_X {
+	@Override
+	// XPECT errors --> "Signature of method Y3b.m does not conform to implemented method I_X.m: {function():A} is not a subtype of {function():B}." at "m"
+	m() : A { return null; }
+}
+
+
+// --------------------------------------------------------------------------
+// for interfaces inheriting from an interface:
+
+interface I_Y1 extends I_X {
+	@Override
+	m() : C
+}
+interface I_Y2 extends I_X {
+	@Override
+	m() : B
+}
+interface I_Y3 extends I_X {
+	@Override
+	// XPECT errors --> "Signature of method I_Y3.m does not conform to implemented method I_X.m: {function():A} is not a subtype of {function():B}." at "m"
+	m() : A
+}

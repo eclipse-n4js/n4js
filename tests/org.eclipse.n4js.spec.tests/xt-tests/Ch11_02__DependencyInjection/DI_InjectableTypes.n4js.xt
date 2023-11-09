@@ -1,0 +1,304 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class C {}
+class D extends C {}
+interface I {}
+enum Color { RED, GREEN, BLUE }
+class G<T> {}
+
+//
+// field injection (type of field must be injectable)
+//
+
+class Test1<T> {
+
+	// XPECT noerrors -->
+	@Inject field01 : C;
+
+	// XPECT noerrors -->
+	@Inject field02 : I;
+
+	// XPECT errors --> "Type G<?> is not injectable at field02a: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject field02a : G<?>;
+
+	// XPECT errors --> "Type G<string> is not injectable at field02b: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject field02b : G<string>;
+
+	// XPECT errors --> "Type type{C} is not injectable at field03: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject field03 : type{C};
+
+	// XPECT errors --> "Type constructor{C} is not injectable at field04: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject field04 : constructor{C};
+
+	// XPECT errors --> "Type union{C,I} is not injectable at field05: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject field05 : union{C,I};
+
+	// XPECT errors --> "Type intersection{C,I} is not injectable at field06: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject field06 : intersection{C,I};
+
+	// XPECT errors --> "Type string is not injectable at field07: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject field07 : string;
+
+	// XPECT errors --> "Type number is not injectable at field08: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject field08 : number;
+
+	// XPECT errors --> "Type String is not injectable at field09: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject field09 : String;
+
+	// XPECT errors --> "Type Function is not injectable at field10: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject field10 : Function;
+
+	// XPECT errors --> "Type Object is not injectable at field11: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject field11 : Object;
+
+	// XPECT errors --> "Type Color is not injectable at field12: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject field12 : Color;
+
+	// XPECT noerrors --> ""
+	@Inject field13 : ~C;
+
+	// XPECT errors --> "Type T is not injectable at field15: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject field15 : T;
+}
+
+
+//
+// method injection (types of fpars must be injectable)
+//
+
+class Test2 {
+
+	// XPECT noerrors -->
+	@Inject constructor(param1 : C, param2 : I) {}
+
+}
+
+class Test3 {
+
+	// XPECT errors --> "Type Object is not injectable at param: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject constructor(param : Object) {}
+}
+
+
+//
+// bind (first argument must refer to an injectable type)
+//
+
+// XPECT noerrors -->
+@Binder @Bind(C,D) class Bin01 {}
+
+// XPECT errors --> "Type Object is not injectable: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Bind(Object,D)"
+@Binder @Bind(Object,D) class Bin02 {}
+
+
+//
+// provider method (return type must be injectable)
+//
+
+@Binder class Bin03 {
+	// XPECT noerrors -->
+	@Provides m() : C {return null;}
+}
+
+@Binder class Bin04 {
+	// XPECT errors --> "Type Object is not injectable: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Provides"
+	@Provides m() : Object {return null;}
+}
+
+class C1 {}
+class C2 {}
+class C3 {}
+class C4 {}
+class C5 {}
+class C6 {}
+class C7 {}
+class C8 {}
+class C9 {}
+class C10 {}
+class C11 {}
+
+@Binder class Bin05 {
+	// XPECT errors --> "Type string is not injectable at s: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "s"
+	@Provides c1(s : string) : C1 { return null; }
+
+	// XPECT errors --> "Type Object is not injectable at o: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "o"
+	@Provides c2(o : Object) : C2 { return null; }
+
+	// XPECT errors --> "Type constructor{C} is not injectable at c: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "c"
+	@Provides c3(c : constructor{C}) : C3 { return null; }
+
+	// XPECT errors --> "Type type{C} is not injectable at t: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "t"
+	@Provides c4(t : type{C}) : C4 { return null; }
+
+	// XPECT noerrors --> ""
+	@Provides c5(c : ~C) : C5 { return null; }
+
+	// XPECT errors --> "Type Color is not injectable at color: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "color"
+	@Provides c6(color : Color) : C6 { return null; }
+
+	// XPECT errors --> "Type union{C,I} is not injectable at u: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "u"
+	@Provides c7(u : union{C,I}) : C7 { return null; }
+
+	// XPECT noerrors -->
+	@Provides c8(c : C) : C8 { return null; }
+
+	// XPECT noerrors -->
+	@Provides c9(i : I) : C9 { return null; }
+
+	// XPECT errors --> "Type G<?> is not injectable at g: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "g"
+	@Provides c10(g : G<?>) : C10 { return null; }
+
+	// XPECT errors --> "Type G<string> is not injectable at g: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "g"
+	@Provides c11(g : G<string>) : C11 { return null; }
+}
+
+class YY {}
+class XX {
+    @Inject
+    // XPECT errors --> "Injection of parameters that are variadic or optional is not supported." at "yys"
+    constructor(... yys : YY) {
+    }
+}
+
+class XX2 {
+    @Inject
+    // XPECT errors --> "Injection of parameters that are variadic or optional is not supported." at "optyys"
+    constructor(optyys : YY=undefined) {
+    }
+}
+
+class T1 {
+	// XPECT noerrors --> ""
+	@Inject
+	constructor(c : C) {}
+}
+
+class T2 {
+	// XPECT noerrors --> ""
+	@Inject
+	constructor(d : D) {}
+}
+
+class T3 {
+	// XPECT noerrors --> ""
+	@Inject
+	constructor(i : I) {}
+}
+
+class T4 {
+	// XPECT errors --> "Type Color is not injectable at c: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject
+	constructor(c : Color) {}
+}
+
+class T5<T> {
+	// XPECT errors --> "Type G<T> is not injectable at g: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject
+	constructor(g : G<T>) {}
+}
+
+class T6 {
+	// XPECT errors --> "Type constructor{C} is not injectable at c: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject
+	constructor(c : constructor{C}) {}
+}
+
+class T7 {
+	// XPECT errors --> "Type string is not injectable at s: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject
+	constructor(s : string) {}
+}
+
+class T8 {
+	// XPECT errors --> "Type Array<string> is not injectable at a: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject
+	constructor(a : Array<string>) {}
+}
+
+class AAA {
+	c : CCC;
+	@Inject
+	constructor(c : CCC) {
+		this.c = c;
+	}
+}
+
+class BBB extends AAA {
+	// XPECT warnings --> "Constructor at super class AAA is annotated with @Inject. Omitting the @Inject annotation from constructor at class BBB could break injection chain." at "constructor"
+	constructor(c : CCC) {
+		super(c);
+	}
+}
+
+class CCC { }
+
+class X { }
+class Y<T> { }
+class Z { }
+
+interface GenericProvider<T> extends N4Provider<T> {}
+abstract class GenericProviderImpl<T> implements N4Provider<T> {}
+interface XProvider extends N4Provider<X> {}
+abstract class XProviderImpl implements N4Provider<X> {}
+
+class Root {
+	// XPECT noerrors -->
+	@Inject xp1 : N4Provider<X>;
+
+	// XPECT noerrors -->
+	@Inject xp2 : GenericProvider<X>;
+
+	// XPECT noerrors -->
+	@Inject xp3 : GenericProviderImpl<X>;
+
+	// XPECT noerrors -->
+	@Inject xp4 : XProvider;
+
+	// XPECT noerrors -->
+	@Inject xp5 : XProviderImpl;
+
+	// XPECT errors --> "Type N4Provider<string> is not injectable at xp6: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject xp6 : N4Provider<string>;
+
+	// XPECT errors --> "Type GenericProvider<string> is not injectable at xp7: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject xp7 : GenericProvider<string>;
+
+	// XPECT errors --> "Type GenericProviderImpl<string> is not injectable at xp8: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject xp8 : GenericProviderImpl<string>;
+
+	// XPECT errors --> "Type N4Provider<Y<Z>> is not injectable at xp9: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject xp9 : N4Provider<Y<Z>>;
+
+	// XPECT errors --> "Type GenericProvider<Y<Z>> is not injectable at xp10: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject xp10 : GenericProvider<Y<Z>>;
+
+	// XPECT errors --> "Type GenericProviderImpl<Y<Z>> is not injectable at xp11: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject xp11 : GenericProviderImpl<Y<Z>>;
+
+	// XPECT errors --> "Type N4Provider<constructor{Z}> is not injectable at xp12: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject xp12 : N4Provider<constructor{Z}>;
+
+	// XPECT errors --> "Type GenericProvider<constructor{Z}> is not injectable at xp13: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject xp13 : GenericProvider<constructor{Z}>;
+
+	// XPECT errors --> "Type GenericProviderImpl<constructor{Z}> is not injectable at xp14: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject xp14 : GenericProviderImpl<constructor{Z}>;
+
+	// XPECT errors --> "Type N4Provider<N4Provider<string>> is not injectable at xp15: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject xp15 : N4Provider<N4Provider<string>>;
+
+	// XPECT errors --> "Type N4Provider<N4Provider<N4Provider<Y<Z>>>> is not injectable at xp16: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Inject"
+	@Inject xp16 : N4Provider<N4Provider<N4Provider<Y<Z>>>>;
+
+}

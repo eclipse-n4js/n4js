@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+/* Test case for IDEBUG-561 relaxing visibility constraints in external definitions. */
+
+
+export external public abstract class Base {
+	constructor();
+	public x() : void;
+}
+
+@Internal
+// XPECT  noerrors --> "External classes have to be marked as public (and without @Internal)." at "BaseInternal"
+export external public abstract class BaseInternal {
+	@Internal public constructor();
+	public x() : void;
+}
+
+// XPECT  noerrors --> "External elements have to be exported." at "BasePrivate"
+external abstract class BasePrivate {
+	constructor();
+	public x() : void;
+}
+
+// XPECT  noerrors --> "External classes have to be marked as public (and without @Internal)." at "BaseProject"
+export external project abstract class BaseProject {
+	project constructor();
+	public x() : void;
+}
+
+
+export external public class A extends Base {}
+export external public class Ainternal extends BaseInternal {}
+export external public class Aprivate extends BasePrivate {}
+export external public class Aproject extends BaseProject {}
+
+///////// below a non-N4JS variant:
+
+export external public abstract class OBase {
+	constructor();
+	public x() : void;
+}
+
+@Internal
+// XPECT  noerrors --> "External classes have to be marked as public (and without @Internal)." at "OBaseInternal"
+export external public abstract class OBaseInternal {
+	@Internal public constructor();
+	public x() : void;
+}
+
+
+// XPECT  noerrors --> "External elements have to be exported." at "OBasePrivate"
+external abstract class OBasePrivate {
+	constructor();
+	public x() : void;
+}
+
+
+// XPECT  noerrors --> "External classes have to be marked as public (and without @Internal)." at "OBaseProject"
+export external project abstract class OBaseProject {
+	project constructor();
+	public x() : void;
+}
+
+
+ export external public class O extends OBase {}
+ export external public class Ointernal extends OBaseInternal {}
+ export external public class Oprivate extends OBasePrivate {}
+ export external public class Oproject extends OBaseProject {}

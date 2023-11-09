@@ -1,0 +1,75 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+var obj = {a:42,b:43};
+                                                   // casts required because type system would detect and disallow the error cases we wanna test below:
+var obj_missingA_v1 = {b:43}                       as ~Object with {a: number; b: number;};
+var obj_missingA_v2 = {number a:undefined,b:43};
+
+// -----
+
+(function() { // wrap into a function, because we wanna test three different cases of declaring variable 'a'
+	var {a=99}=obj;
+	console.log('expecting: 42');
+	console.log(a);
+
+	a = undefined;
+	({a=99}=obj);
+	console.log('expecting: 42');
+	console.log(a);
+})();
+
+// -----
+
+(function() {
+	var {a=99}=obj_missingA_v1;
+	console.log('expecting: 99');
+	console.log(a);
+
+	a = undefined;
+	({a=99}=obj_missingA_v1);
+	console.log('expecting: 99');
+	console.log(a);
+})();
+
+// -----
+
+(function() {
+	var {a=99}=obj_missingA_v2;
+	console.log('expecting: 99');
+	console.log(a);
+
+	a = undefined;
+	({a=99}=obj_missingA_v2);
+	console.log('expecting: 99');
+	console.log(a);
+})();
+
+
+
+
+/* XPECT output ---
+expecting: 42
+42
+expecting: 42
+42
+expecting: 99
+99
+expecting: 99
+99
+expecting: 99
+99
+expecting: 99
+99
+--- */

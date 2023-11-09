@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+class A_super {}
+class A extends A_super {}
+class B {}
+
+class X {}
+
+var v : Array<Iterable2<A,B>>;
+
+
+
+
+// case 1: variable declared in pattern with an explicitly declared type:
+
+// XPECT errors --> "Variable x1 cannot hold destructured value at index 1: B is not a subtype of X." at "x1"
+for(var [a1 : A_super,x1 : X] of v) {}
+
+
+
+
+// case 2: existing variable reused in pattern:
+
+var a2 : A_super, x2 : X;
+// XPECT errors --> "Variable x2 cannot hold destructured value at index 1: B is not a subtype of X." at "x2"
+for([a2,x2] of v) {}

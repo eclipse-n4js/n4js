@@ -1,0 +1,29 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+function someFun() {
+	// XPECT errors --> "Super member access may only be used in constructors, methods, getters, or setters." at "super"
+	super.m();						// should fail
+	// XPECT errors --> "Super member access may only be used in constructors, methods, getters, or setters." at "super"
+	super['m']();					// should fail
+	// XPECT errors --> "Super calls may only be used in constructors." at "super"
+	super();						// should fail
+
+	// XPECT errors --> "Super member access may only be used in constructors, methods, getters, or setters." at "super"
+	() => { super.m() };						// should fail
+	// XPECT errors --> "Super member access may only be used in constructors, methods, getters, or setters." at "super"
+	() => { return super['m']() };					// should fail
+	// XPECT errors --> "Super calls may only be used in constructors." at "super"
+	() => super();						// should fail
+}

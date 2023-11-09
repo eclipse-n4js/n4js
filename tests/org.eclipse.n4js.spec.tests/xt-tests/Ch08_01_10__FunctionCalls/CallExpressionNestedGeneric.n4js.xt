@@ -1,0 +1,90 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+//
+// nested calls of generic function
+//
+
+class C<T> {}
+
+function <S> f(param : S) : C<S> {return null;}
+
+
+// XPECT noerrors -->
+var v01 : C<C<string>> = f(f("hello"));
+
+// XPECT noerrors -->
+var v02 : C<C<C<string>>> = f(f(f("hello")));
+
+// XPECT noerrors -->
+var v03 : C<C<C<C<C<C<C<C<C<string>>>>>>>>> = f(f(f(f(f(f(f(f(f("hello")))))))));
+
+
+
+//
+// nested calls of generic method
+//
+
+class Cls {
+	<S> m(param : S) : C<S> {return null;}
+
+	static <S> m(param : S) : C<S> {return null;}
+}
+var cls : Cls;
+
+
+// XPECT noerrors -->
+var v11 : C<C<string>> = cls.m(cls.m("hello"));
+
+// XPECT noerrors -->
+var v12 : C<C<C<string>>> = cls.m(cls.m(cls.m("hello")));
+
+// XPECT noerrors -->
+var v13 : C<C<C<C<C<C<C<C<C<string>>>>>>>>> = cls.m(cls.m(cls.m(cls.m(cls.m(cls.m(cls.m(cls.m(cls.m("hello")))))))));
+
+
+
+//
+// nested calls of generic method (static)
+//
+
+// XPECT noerrors -->
+var v21 : C<C<string>> = Cls.m(Cls.m("hello"));
+
+// XPECT noerrors -->
+var v22 : C<C<C<string>>> = Cls.m(Cls.m(Cls.m("hello")));
+
+// XPECT noerrors -->
+var v23 : C<C<C<C<C<C<C<C<C<string>>>>>>>>> = Cls.m(Cls.m(Cls.m(Cls.m(Cls.m(Cls.m(Cls.m(Cls.m(Cls.m("hello")))))))));
+
+
+
+//
+// nested calls of generic method (single class)
+//
+
+class D<T> {
+	<S> m(param : S) : D<S> {return null;}
+}
+var dStr : D<string>;
+
+
+// XPECT noerrors -->
+var v31 : D<D<string>> = dStr.m(dStr.m("hello"));
+
+// XPECT noerrors -->
+var v32 : D<D<D<string>>> = dStr.m(dStr.m(dStr.m("hello")));
+
+// XPECT noerrors -->
+var v33 : D<D<D<D<D<D<D<D<D<string>>>>>>>>> = dStr.m(dStr.m(dStr.m(dStr.m(dStr.m(dStr.m(dStr.m(dStr.m(dStr.m("hello")))))))));

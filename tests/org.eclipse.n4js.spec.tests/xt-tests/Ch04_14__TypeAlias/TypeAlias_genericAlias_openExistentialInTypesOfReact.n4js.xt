@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+// some types copied here from react, to make test self-contained:
+interface ~RefObject<T> {
+    public current: T;
+}
+type RefCallback<T> = (instance: T) => void;
+type Ref<T> = RefCallback<T> | RefObject<T>;
+// (end of react types)
+
+
+class C {}
+
+function <TF> combineRef(p1: Ref<TF>, p2: Ref<TF>): Ref<TF> {
+	return null;
+}
+
+
+let refC: Ref<C>;
+// XPECT noerrors -->
+let result0: Ref<?> = refC;
+
+
+let ref1: RefObject<C>;
+let ref2: Ref<?>;
+// GH-2437 XPECT FIXME errors ---
+// "RefObject<C> is not a subtype of Ref<TF>." at "ref1"
+// "Ref<?> is not a subtype of Ref<TF>." at "ref2"
+// ---
+combineRef(ref1, ref2); // should not work
+
+// XPECT noerrors -->
+combineRef(ref1, ref2 as Ref<C>); // a cast should fix it
+
+// XPECT noerrors -->
+let result1 = combineRef(ref1, ref2 as Ref<C>);
+// GH-2437 XPECT FIXME typeWithAliasResolution of 'result1' --> Ref<C> <=> union{{function(C):void},RefObject<C>}
+result1;
+
+let result2: Ref<?>;
+// XPECT noerrors -->
+result2 = combineRef(ref1, ref2 as Ref<C>);

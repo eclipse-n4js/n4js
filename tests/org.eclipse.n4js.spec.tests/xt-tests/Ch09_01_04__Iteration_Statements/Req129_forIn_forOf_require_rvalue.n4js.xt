@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+// for..in and for..of loops require an rvalue as init expression (in case *no* variable declaration is given)
+// (note: in case a variable declaration is given, it must not have an initializer expression, which is tested
+// in file Constraints118_ForInLoopVarType.n4js.xt)
+
+
+var obj : Object;
+var arr : Array<?>;
+var arrarrStr : Array<Array<string>>;
+
+var v1 : string, v2 : string;
+
+// XPECT errors --> "Invalid assignment left-hand side." at "'I am not an rvalue!'"
+for('I am not an rvalue!' in obj) {}
+
+// XPECT errors --> "Invalid assignment left-hand side." at "'I am not an rvalue!'"
+for('I am not an rvalue!' of arr) {}
+
+// XPECT noerrors -->
+for([v1,v2] in obj) {}
+
+// XPECT noerrors -->
+for([v1,v2] of arrarrStr) {}

@@ -1,0 +1,232 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+// Simple types
+var s : string;
+var n : number;
+var b : boolean;
+var d : Date;
+
+// XPECT errors --> "string is not a subtype of number." at "s"
+s++;
+// XPECT errors --> "string is not a subtype of number." at "s"
+s--;
+
+// ok
+n++;
+// ok
+n--;
+
+// XPECT errors ---
+//""hallo" is not a subtype of number." at ""hallo""
+//"Invalid increment operand." at ""hallo""
+//---
+"hallo"++;
+// XPECT errors --> "Invalid increment operand." at "1"
+1++;
+
+// any , void , null, undefined
+// Number - number
+// String - string
+// Boolean - boolean
+// Array
+// Math
+// Date
+// RegExp
+// Error
+// JSON
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Functions
+
+function f(): number { return 5; }
+// XPECT errors --> "Invalid increment operand." at "f()"
+f()++;
+
+function f2() : any { return 4; }
+// XPECT errors ---
+// "Invalid increment operand."  at "f2()"
+// "any is not a subtype of number." at "f2()"
+// ---
+f2()++;
+
+function f3() : Date { return new Date(); }
+// XPECT errors ---
+// "Date is not a subtype of number." at "f3()"
+// "Invalid increment operand."  at "f3()"
+// ---
+f3()++;
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Objects
+class A {
+   x : number;
+}
+
+class B {
+	public a : A = new A();
+    giveA() : A  {
+    	// ohne this geht nicht?
+    	return this.a;
+    }
+}
+
+
+// XPECT errors ---
+//"A is not a subtype of number." at "new A()"
+//"Invalid increment operand." at "new A()"
+//---
+new A()++;
+// ok
+new A().x++;
+
+
+
+// ok
+new B().a.x++;
+
+
+// OK
+new B().giveA().x++;
+
+
+// XPECT errors ---
+// "A is not a subtype of number." at "new B().giveA()"
+// "Invalid increment operand."  at "new B().giveA()"
+// ---
+new B().giveA()++;
+class D {
+	s : string;
+}
+
+
+// noerrors
+var d2 = new D();
+// XPECT errors --> "string is not a subtype of number." at "d2.s"
+d2.s++;
+
+
+class E {
+	a : number = 4;
+	get b() : number {
+		return this.a;
+	}
+	get c() : number { return this.a;}
+	set c (c : number) { this.a = c;}
+
+    _d : number;
+	// number get d() { return this._d;}
+	set d (c : number) { this._d = c;}
+}
+
+var e = new E();
+// ok
+e.a++
+// ok
+e.c++
+e.
+/* XPECT errors ---
+"Property b has no setter." at "b"
+"The operation requires both read and write access, but only read-access is available." at "b"
+--- */
+b++
+
+e.
+// XPECT errors --> "The operation requires both read and write access, but only write-access is available." at "d"
+d++
+
+///////////////////////////////////////////////////////////////////////////////
+//////// Generics
+class C<T> {
+	x : T;
+
+	get py() : T { return this.x; }
+	set py(v : T) { this.x = v; }
+
+	get pz() : T { return this.x; }
+}
+
+var cstring = new C<string>();
+cstring.x = "Hallo"
+
+// This test ist not recognized due to a lack in the xpect-parsing facility (file on 2014-05-26 by tk).
+// X-PECT errors --> "string is not a subtype of number."
+// cstring.x++;
+
+// X-PECT errors ---
+//  "string is not a subtype of number."
+// ---
+// cstring.py++;
+
+// X-PECT errors ---
+// "string is not a subtype of number."
+// "Property pz has no setter."
+// ---
+// cstring.pz++;
+
+
+
+// ok
+var cnumber = new C<number>();
+cnumber.x = 7;
+cnumber.x++
+
+// Nested Generics
+// ok
+var c2number = new C<C<number>>()
+c2number.x = new C<number>()
+c2number.x.x++
+
+
+class G<T> {
+	constructor (d : T) {
+		this.x = d;
+	}
+	x : T;
+
+	get py() : T { return this.x; }
+	set py(v : T) { this.x = v; }
+
+	get pz() : T { return this.x; }
+}
+
+var gnum2 : G<G<number>> = new G<G<number>> (new G<number>( 5 ));
+
+gnum2.x.x++;
+(gnum2.py).x++;
+gnum2.pz.x++;
+(gnum2.pz).py++;
+
+var erg = new G<G<number>> (new G<number>( 5 )).x.x++
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Arrays.
+var ar1 = [1,1,1,1];
+ar1[0]++
+// ok, but runtime-Error with Arrayoutofbounds
+ar1[5]++
+
+// This test ist not recognized due to a lack in the xpect-parsing facility (file on 2014-05-26 by tk).
+// X-PECT errors --> "Array<number> is not a subtype of number." at "ar1"
+// ar1 ++
+
+///////////////////////////////////////////////////////////////////////////////
+// Regexp to selekt brace-content: 123 ( 123 21 ) 234
+var reg1 = /\([\d\w]*\)/;
+
+// XPECT errors --> "RegExp is not a subtype of number." at "reg1"
+reg1++

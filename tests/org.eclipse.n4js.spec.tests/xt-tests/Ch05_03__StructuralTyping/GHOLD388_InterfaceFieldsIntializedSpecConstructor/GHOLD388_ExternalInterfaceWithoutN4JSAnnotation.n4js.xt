@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+ 
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+ 
+    ProjectWithSourceFolder {
+		ThisFile {}
+		File "GHOLD388_Interface.n4jsd" {}
+	}
+	
+	END_SETUP
+*/
+
+import { I } from "GHOLD388_Interface";
+
+// I is an external interface WITHOUT @N4JS annotation
+class C implements I {
+	constructor(@Spec spec:~i~this) {}
+}
+
+// changed in GH-2529 XPECT nowarnings --> "m is a property of a built-in, provided by runtime, or external module without @N4JS annotation. Hence the interface I can not be initialized in a spec constructor." at "m"
+let c:C = new C({m: "Hi"});
+console.log(c.m)
+
+// This test is intentionally disabled because it is difficult to test the case with nominal interfaces.  
+// Nominal interfaces imply that their implementation is provided e.g. by runtime.
+/* X_PECT output --- 
+Hi
+--- */

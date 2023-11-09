@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class A {
+	foo() : void {}
+}
+
+// XPECT noerrors --> "this annotation is used"
+@IDEBUG(1234,"The method B.foo overriding method A.foo must be annotated with @Override.")
+// XPECT errors --> "No matching error found, apparently bug IDEBUG-1235 has been fixed or does not occur here." at "IDEBUG(1235,"This error does not occur.")"
+@IDEBUG(1235,"This error does not occur.")
+class B extends A {
+	// XPECT warnings --> "IDEBUG-1234: The method B.foo overriding method A.foo must be annotated with @Override." at "foo"
+	foo() : void {}
+}

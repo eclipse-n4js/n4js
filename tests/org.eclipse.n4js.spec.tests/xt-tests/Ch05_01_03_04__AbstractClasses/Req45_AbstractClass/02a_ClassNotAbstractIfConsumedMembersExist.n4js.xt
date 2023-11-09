@@ -1,0 +1,65 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+// ##########################################################################
+// PART 1: abstract members (methods, getters, setters) are inherited from an abstract class
+
+abstract class A {
+	public abstract m() : string
+	public abstract get g() : string
+	public abstract set s(name : string)
+}
+
+// --------------------------------------------------------------------------
+// class need not be abstract if inherited abstract method is implemented by a consumed interface!
+
+interface R {
+	public m() : string { return "" }
+	public get g() : string { return "" }
+	public set s(name : string) { }
+}
+
+// XPECT noerrors --> "abstract methods implemented by R" at "B"
+class B extends A implements R {}
+
+// ##########################################################################
+// PART 2: abstract members (fields(!), methods, getters, setters) are inherited from an interface
+
+
+interface I {
+	public m() : string
+	public get g() : string
+	public set s(name : string)
+}
+
+interface J extends I {
+	public f : string;
+}
+
+
+// --------------------------------------------------------------------------
+// class need not be abstract if inherited abstract method is implemented by a consumed interface!
+
+interface RI {
+	public f : string;
+	public m() : string { return "" }
+	public get g() : string { return "" }
+	public set s(name : string) { }
+}
+
+// XPECT noerrors --> "f,g,s and m are abstract in I and concrete in RI, so RI's versions are merged"
+class C implements RI, I  {}
+
+// fields are handles as "concrete" XPECT errors --> "Redefine ambiguously consumed members: field RI.f and field J.f." at "C2"
+class C2 implements RI, J  {}

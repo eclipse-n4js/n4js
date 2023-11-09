@@ -1,0 +1,122 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class A {}
+class B extends A {}
+class C extends B {}
+
+class X {}
+
+class D {
+    public field : B;
+}
+
+class E<GETTER, SETTER> {
+	public get field() : GETTER { return null; }
+    public set field(p : SETTER) {}
+}
+
+var s : ~D;
+var fs : ~~D;
+
+var sSetterA : ~E<B, A>;
+var sSetterB : ~E<B, B>;
+var sSetterC : ~E<B, C>;
+var sSetterX : ~E<B, X>;
+
+var fsSetterA : ~~E<B, A>;
+var fsSetterB : ~~E<B, B>;
+var fsSetterC : ~~E<B, C>;
+var fsSetterX : ~~E<B, X>;
+
+var sGetterA : ~E<A, B>;
+var sGetterB : ~E<B, B>;
+var sGetterC : ~E<C, B>;
+var sGetterX : ~E<X, B>;
+
+var fsGetterA : ~~E<A, B>;
+var fsGetterB : ~~E<B, B>;
+var fsGetterC : ~~E<C, B>;
+var fsGetterX : ~~E<X, B>;
+
+// XPECT noerrors -->
+s = sSetterA;
+// XPECT noerrors -->
+s = sSetterB;
+// XPECT errors --> "~E<B,C> is not a structural subtype of ~D: field failed: C is not a super type of B." at "sSetterC"
+s = sSetterC;
+// XPECT errors --> "~E<B,X> is not a structural subtype of ~D: field failed: X is not a super type of B." at "sSetterX"
+s = sSetterX;
+
+// XPECT errors --> "~E<A,B> is not a structural subtype of ~D: field failed: A is not a subtype of B." at "sGetterA"
+s = sGetterA;
+// XPECT noerrors -->
+s = sGetterB;
+// XPECT noerrors -->
+s = sGetterC;
+// XPECT errors --> "~E<X,B> is not a structural subtype of ~D: field failed: X is not a subtype of B." at "sGetterX"
+s = sGetterX;
+
+// XPECT errors --> "~D is not a structural subtype of ~E<B,A>: field failed: B is not a super type of A." at "s"
+sSetterA = s;
+// XPECT noerrors -->
+sSetterB = s;
+// XPECT noerrors -->
+sSetterC = s;
+// XPECT errors --> "~D is not a structural subtype of ~E<B,X>: field failed: B is not a super type of X." at "s"
+sSetterX = s;
+
+// XPECT noerrors -->
+sGetterA = s;
+// XPECT noerrors -->
+sGetterB = s;
+// XPECT errors --> "~D is not a structural subtype of ~E<C,B>: field failed: B is not a subtype of C." at "s"
+sGetterC = s;
+// XPECT errors --> "~D is not a structural subtype of ~E<X,B>: field failed: B is not a subtype of X." at "s"
+sGetterX = s;
+
+// XPECT noerrors -->
+fs = fsSetterA;
+// XPECT noerrors -->
+fs = fsSetterB;
+// XPECT errors --> "~~E<B,C> is not a structural subtype of ~~D: field failed: C is not a super type of B." at "fsSetterC"
+fs = fsSetterC;
+// XPECT errors --> "~~E<B,X> is not a structural subtype of ~~D: field failed: X is not a super type of B." at "fsSetterX"
+fs = fsSetterX;
+
+// XPECT errors --> "~~E<A,B> is not a structural subtype of ~~D: field failed: A is not a subtype of B." at "fsGetterA"
+fs = fsGetterA;
+// XPECT noerrors -->
+fs = fsGetterB;
+// XPECT noerrors -->
+fs = fsGetterC;
+// XPECT errors --> "~~E<X,B> is not a structural subtype of ~~D: field failed: X is not a subtype of B." at "fsGetterX"
+fs = fsGetterX;
+
+// XPECT errors --> "~~D is not a structural subtype of ~~E<B,A>: field failed: B is not a super type of A." at "fs"
+fsSetterA = fs;
+// XPECT noerrors -->
+fsSetterB = fs;
+// XPECT noerrors -->
+fsSetterC = fs;
+// XPECT errors --> "~~D is not a structural subtype of ~~E<B,X>: field failed: B is not a super type of X." at "fs"
+fsSetterX = fs;
+
+// XPECT noerrors -->
+fsGetterA = fs;
+// XPECT noerrors -->
+fsGetterB = fs;
+// XPECT errors --> "~~D is not a structural subtype of ~~E<C,B>: field failed: B is not a subtype of C." at "fs"
+fsGetterC = fs;
+// XPECT errors --> "~~D is not a structural subtype of ~~E<X,B>: field failed: B is not a subtype of X." at "fs"
+fsGetterX = fs;

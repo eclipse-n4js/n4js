@@ -1,0 +1,98 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+interface I {}
+class C implements I {}
+class D extends C {}
+
+class X {}
+
+
+// XPECT noerrors -->
+@Binder @Bind(I,C) class Bin01 {}
+
+// XPECT noerrors -->
+@Binder @Bind(C,D) class Bin02 {}
+
+// XPECT errors --> "Second argument to @Bind must be a subtype of the first." at "X"
+@Binder @Bind(I,X) class Bin03 {}
+
+
+interface I98 {}
+class C98 implements I98 {}
+
+@Binder
+// XPECT errors -->"Duplicate @Binding-s (two different bindings share the same key, for the same @Binder)." at "Bind"
+@Bind(I98, C98)
+// XPECT errors -->"Duplicate @Binding-s (two different bindings share the same key, for the same @Binder)." at "Bind"
+@Bind(I98, C98)
+class Bin98 {}
+
+@Binder
+@Bind(I98, C98)
+class Bin101 {}
+
+class C99 implements I98 {}
+
+@Binder
+@Bind(I98, C99)
+class Bin102 {}
+
+@GenerateInjector
+// XPECT errors -->"Duplicate @Binding-s (two different bindings share the same key, for the same @Binder)." at "UseBinder"
+@UseBinder(Bin101)
+// XPECT errors -->"Duplicate @Binding-s (two different bindings share the same key, for the same @Binder)." at "UseBinder"
+@UseBinder(Bin102)
+class ThisInjectorHasDuplicateBindings {} // duplicate bindings are contributed by Bin101 and Bin102
+
+abstract class C101 implements I98 {}
+interface I99 extends I98 {}
+
+@Binder
+// XPECT errors -->"The target of a @Binding must be a non-abstract class." at "Bind"
+@Bind(I98, C101)
+class Bin103 {}
+
+@Binder
+// XPECT errors -->"The target of a @Binding must be a non-abstract class." at "Bind"
+@Bind(I99, I99)
+class Bin104 {}
+
+class D2 {
+	// XPECT errors -->"Method injection not supported yet." at "Inject"
+	@Inject m() {}
+}
+
+// XPECT errors -->"Classes annotated with @Binder may not extend another class." at "Binder"
+@Binder
+class Bin105 extends Bin104 {}
+
+
+@GenerateInjector
+class Tor01 {
+	constructor() {} // no-args ctor need not be itself injected
+}
+
+@GenerateInjector
+@UseBinder(Bin102)
+class Tor02 {
+	// XPECT errors -->"The constructor of an injector must itself be injected unless it declares no parameters." at "constructor(i : I98) {}"
+	constructor(i : I98) {} // no-args ctor need not be itself injected
+}
+
+@GenerateInjector
+@UseBinder(Bin102)
+class Tor03 {
+	@Inject constructor(i : I98) {} // no-args ctor need not be itself injected
+}

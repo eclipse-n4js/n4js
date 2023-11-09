@@ -50,6 +50,6 @@ public class CompileTimeExpressionIdeTest extends ConvertedIdeTest {
 		assertIssues2(
 				Pair.of("Main", List.of(
 						"(Error, [3:4 - 3:10], Not a compile-time expression: reference must point to a directly owned field (i.e. not inherited, consumed, or polyfilled) and the field must not have a computed name.)",
-						"(Error, [4:4 - 4:10], Not a compile-time expression: field field2 is const but does not have a compile-time expression as initializer.)")));
+						"(Error, [4:4 - 4:10], Not a compile-time expression: field field2 is const but does not have a compile-time expression as initializer: a call expression is never a compile-time expression.)")));
 	}
 }

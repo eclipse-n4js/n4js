@@ -1,0 +1,66 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class A {
+	// XPECT noerrors -->
+	@Internal public x;
+	// XPECT noerrors -->
+	@Internal protected u;
+
+	// XPECT errors --> "@Internal is only allowed for public and protected." at "y"
+	@Internal project y;
+	// XPECT errors --> "@Internal is only allowed for public and protected." at "y1"
+	@Internal y1;
+	// XPECT errors --> "@Internal is only allowed for public and protected." at "z"
+	@Internal private z;
+}
+
+class B {
+	// XPECT noerrors -->
+	@Internal public x() {}
+	// XPECT noerrors -->
+	@Internal protected u() {}
+
+	// XPECT errors --> "@Internal is only allowed for public and protected." at "y"
+	@Internal project y() {}
+	// XPECT errors --> "@Internal is only allowed for public and protected." at "y1"
+	@Internal y1() {}
+	// XPECT errors --> "@Internal is only allowed for public and protected." at "z"
+	@Internal private z() {}
+}
+
+class C {
+	// XPECT errors -->"@Internal is only allowed for public and protected." at "x"
+	@Internal get x() : number { return 1 }
+	// XPECT noerrors -->
+	@Internal protected get () : number { return 1 }
+
+	// XPECT errors --> "@Internal is only allowed for public and protected." at "y"
+	@Internal project get y() : number { return 1 }
+	// XPECT errors --> "@Internal is only allowed for public and protected." at "y1"
+	@Internal get y1() : number { return 1 }
+	// XPECT errors --> "@Internal is only allowed for public and protected." at "z"
+	@Internal private get z() : number { return 1 }
+}
+
+// special case for interfaces (default member visibility depends on container visibility)
+export interface B1 {
+    // XPECT errors --> "@Internal is only allowed for public and protected." at "y1"
+    @Internal y1;
+}
+
+// special case for interfaces (default member visibility depends on container visibility)
+export public interface B2 {
+    // Xpect noerrors -->
+    @Internal y1;
+}

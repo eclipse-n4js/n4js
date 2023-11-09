@@ -1,0 +1,93 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class A1 { public s : string; }
+class A2 { public set s(s : string) { } }
+
+var ai1 : ~i~A1;
+var ai2 : ~i~A2;
+
+class B1 { public s : string; }
+
+var b1 : B1;
+var b2 : ~B1;
+var b3 : ~~B1;
+var b4 : ~i~B1;
+
+// XPECT noerrors --> ""
+ai1 = b1;
+// XPECT noerrors --> ""
+ai1 = b2;
+// XPECT noerrors --> ""
+ai1 = b3;
+// XPECT noerrors --> ""
+ai1 = b4;
+
+// XPECT noerrors --> ""
+ai2 = b1;
+// XPECT noerrors --> ""
+ai2 = b2;
+// XPECT noerrors --> ""
+ai2 = b3;
+// XPECT noerrors --> ""
+ai2 = b4;
+
+class B2 { @Final public s : string = 'initialized'; }
+
+var b5 : B2;
+var b6 : ~B2;
+var b7 : ~~B2;
+var b8 : ~i~B2;
+
+// XPECT noerrors --> ""
+ai1 = b5;
+// XPECT noerrors --> ""
+ai1 = b6;
+// XPECT noerrors --> ""
+ai1 = b7;
+// XPECT noerrors --> ""
+ai1 = b8;
+
+// XPECT noerrors --> ""
+ai2 = b5;
+// XPECT noerrors --> ""
+ai2 = b6;
+// XPECT noerrors --> ""
+ai2 = b7;
+// XPECT noerrors --> ""
+ai2 = b8;
+
+class B3 { public get s() : string { return null; } }
+
+var b9 : B3;
+var b10 : ~B3;
+var b11 : ~~B3;
+var b12 : ~i~B3;
+
+// XPECT noerrors --> ""
+ai1 = b9;
+// XPECT noerrors --> ""
+ai1 = b10;
+// XPECT noerrors --> ""
+ai1 = b11;
+// XPECT noerrors --> ""
+ai1 = b12;
+
+// XPECT noerrors --> ""
+ai2 = b9;
+// XPECT noerrors --> ""
+ai2 = b10;
+// XPECT noerrors --> ""
+ai2 = b11;
+// XPECT noerrors --> ""
+ai2 = b12;

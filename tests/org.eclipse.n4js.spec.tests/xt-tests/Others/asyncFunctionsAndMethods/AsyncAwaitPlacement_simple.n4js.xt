@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+
+//==== allowed
+
+//XPECT noerrors --> "should pass"
+async function t2(): void {
+	//XPECT warnings --> "await should not be used on 'undefined' since it has no effect here." at "await undefined"
+	await undefined;
+}
+
+
+//==== not allowed
+
+function t() {
+	//XPECT noerrors --> "IDE-1494"
+	var f =  async function(){};
+}
+
+//XPECT noerrors --> "IDE-1494"
+var f =  async function(){};
+
+// XPECT errors --> "await is allowed only inside functions annotated with async." at "await undefined"
+// XPECT warnings --> "await should not be used on 'undefined' since it has no effect here." at "await undefined"
+await undefined;
+
+async function t3(): void {
+	function ti(){
+		// XPECT errors --> "await is allowed only inside functions annotated with async." at "await undefined"
+		// XPECT warnings --> "await should not be used on 'undefined' since it has no effect here." at "await undefined"
+		await undefined;
+	}
+}

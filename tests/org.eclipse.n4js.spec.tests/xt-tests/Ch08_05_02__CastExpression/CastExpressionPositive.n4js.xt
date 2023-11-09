@@ -1,0 +1,60 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class A {
+	f_a() {};
+}
+class B extends A {
+	f_b() {};
+}
+class C extends B {
+	f_c() {};
+}
+var a : A;
+
+// XPECT type of 'ta' --> B
+let ta = a as B;
+// XPECT type of 'a'--> A
+let tb = a as B;
+// XPECT type of 'tc' --> C
+let tc = a as C;
+
+// XPECT type of '_b' --> B
+var _b = a as B;
+
+// XPECT type of 'x' --> any
+var x : any;
+//  XPECT type of 'i' --> number
+var i =
+//  XPECT type of 'x' --> any
+x as number;
+
+
+// no error in the following:
+
+
+var b : B;
+b = a as B;
+
+var c : C;
+c = a as C;
+c = b as C;
+
+(a as B).f_a();
+(a as B).f_b();
+(a as C).f_c();
+
+_b.f_b();
+
+(x as number) -1;

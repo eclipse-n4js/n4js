@@ -1,0 +1,123 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+// IDE-773
+
+// interfaces and interfaces to be testet
+
+////////  ////////  ////////  ////////  ////////  ////////  ////////  ////////  ////////  ////////
+//// Setup /////
+class A {}
+class B {}
+interface I {}
+interface R {}
+
+interface Ra { a : number; }
+interface Rb extends Ra { b : number; }
+interface Rb2 extends Ra { b2 : number; }
+interface Rc extends Rb, Rb2, Ra { c : number; }
+interface Rd extends Rc {}
+interface R3 extends I {}
+interface R2 {
+	i : Array<string>; l : number;
+}
+
+function funcU ( ui : union{ A,I,R } ) :union{ A,I,R } { return ui; }
+function funcB() : B { return new B() }
+interface I2<T> { memB(t : T) : void; }
+
+// This type:
+class TA {
+	q() : this { return this; }
+}
+class TB extends TA {}
+class Crc implements Rd { }
+
+enum Ea {
+	one,two
+}
+
+var ta : TA;
+var tb : TB;
+
+
+var i2 : I2<string>;
+var i2a : I2<number>;
+
+var	ub : union{ A, I, R };
+var o : Object;
+var p : Object;
+var anA : A;
+var aB : B;
+var r : R;
+var rd : Rd;
+var ra : Ra;
+var i : I;
+var r3 : R3;
+var ea : Ea;
+var anyA : any = 0;
+var anyB : any+;
+var n4o : N4Object, nfo;
+var ur : union{R2,Object};
+var r2 : ~R2;
+var owa : ~Object with {i : Array<string>; al : number;};
+var udef : undefined; // = void anA;
+
+var s : string;
+var n : number;
+var b : boolean;
+
+//// End Setup ////////
+////////  ////////  ////////  ////////  ////////  ////////  ////////  ////////  ////////  ////////
+
+// OK
+r === o;
+
+// OK
+r2 === owa;
+// OK
+r2 === o;
+// OK
+r2 === nfo;
+// OK
+o === nfo;
+
+
+// OK
+i === o;
+// OK
+i === nfo;
+
+
+// OK
+r3 === i;
+// OK
+r3 === o;
+
+
+// OK
+i2 === i2a;
+
+// should issue NO warnings, since both sides are interfaces and we cannot ensure any fixed relationship.
+i === i2;
+
+// OK
+ra === rd;
+
+// XPECT warnings --> "Neither I is a subtype of Ea nor Ea is a subtype of I. The expression will always evaluate to true." at "i !== ea"
+i !== ea;
+
+// XPECT warnings --> "Neither R is a subtype of Ea nor Ea is a subtype of R. The expression will always evaluate to true." at "r !== ea"
+r !== ea;
+
+// OK
+ur !== ea;

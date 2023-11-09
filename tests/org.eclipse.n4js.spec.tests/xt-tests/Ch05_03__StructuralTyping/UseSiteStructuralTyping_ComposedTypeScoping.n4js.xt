@@ -1,0 +1,99 @@
+/*
+ * Copyright (c) 2018 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+class C {
+	public field: int;
+	public set acc(value: int) {}
+	public m() {}
+}
+class D {
+	public get acc(): int { return 42; }
+}
+
+// ============================================================
+
+let i01: ~~C & Object;
+// XPECT noerrors -->
+i01.field;
+// XPECT noerrors -->
+i01.field = 42;
+// XPECT errors --> "method m is not available for fields-only-referenced type ~~C." at "m"
+i01.m();
+
+let u01: ~~C | Object;
+// XPECT errors --> "Member field not present in all types of union; missing from: Object." at "field"
+u01.field;
+// XPECT errors --> "Member field not present in all types of union; missing from: Object." at "field"
+u01.field = 42;
+// XPECT errors --> "Member m not present in all types of union; missing from: Object." at "m"
+u01.m();
+
+// ============================================================
+
+let i02: ~~C & ~C;
+// XPECT noerrors -->
+i02.field;
+// XPECT noerrors -->
+i02.field = 42;
+// XPECT noerrors -->
+i02.m();
+
+let u02: ~~C | ~C;
+// XPECT noerrors -->
+u02.field;
+// XPECT noerrors -->
+u02.field = 42;
+// XPECT errors --> "method m is not available for fields-only-referenced type ~~C." at "m"
+u02.m();
+
+// ============================================================
+
+let i03: ~i~C & Object;
+// XPECT noerrors -->
+i03.acc;
+// XPECT errors --> "setter acc is not available for structurally referenced type ~i~C." at "acc"
+i03.acc = 42;
+
+let u03: ~i~C | Object;
+// XPECT errors --> "Member acc not present in all types of union; missing from: Object." at "acc"
+u03.acc;
+// XPECT errors --> "Member acc not present in all types of union; missing from: Object." at "acc"
+u03.acc = 42;
+
+// ============================================================
+
+let i04: ~i~C & ~~D;
+// XPECT noerrors -->
+i04.acc;
+// XPECT errors --> "setter acc is not available for structurally referenced type ~i~C. The accessor acc is read-only in ~~D." at "acc"
+i04.acc = 42;
+
+let u04: ~i~C | ~~D;
+// XPECT noerrors -->
+u04.acc;
+// XPECT errors --> "setter acc is not available for structurally referenced type ~i~C. The accessor acc is read-only in ~~D." at "acc"
+u04.acc = 42;
+
+// ============================================================
+
+let i05: ~r~C & ~w~C;
+// XPECT noerrors -->
+i05.field;
+// XPECT noerrors -->
+i05.field = 0;
+
+let u05: ~r~C | ~w~C;
+// XPECT errors --> "field field is not available for structurally referenced type ~w~C." at "field"
+u05.field;
+// XPECT errors --> "field field is not available for structurally referenced type ~r~C." at "field"
+u05.field = 0;

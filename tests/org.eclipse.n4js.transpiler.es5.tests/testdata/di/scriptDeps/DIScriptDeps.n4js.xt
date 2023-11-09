@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "ScriptDeps.n4js" {}
 	}
@@ -24,7 +24,7 @@
 
 
 import { A , B , C , D , E , F, G, H, I, J, K, L, M, N, O, P } from
-"di/scriptDeps/ScriptDeps"
+"ScriptDeps"
 
 //=============================================================================
 // Test Data

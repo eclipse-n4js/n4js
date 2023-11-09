@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+//
+// here we check cases of the subtype relation for ConstructorTypeRef
+// when having a [~]~this in the constructor
+//
+
+
+class C {
+    public constructor(spec : ~~this) {
+    }
+}
+class D extends C {
+	public fieldD : string;
+}
+class E extends D {
+}
+class F extends E {
+	public fieldF : number;
+}
+
+var c : constructor{C};
+var c2 : constructor{C};
+var d : constructor{D};
+var e : constructor{E};
+var f : constructor{F};
+
+
+// most simple case
+
+// XPECT noerrors -->
+c = c2;
+
+
+// different classes, same constructor
+
+// XPECT errors --> "constructor{D} is not a subtype of constructor{C}." at "d"
+c = d;
+
+// XPECT errors --> "constructor{E} is not a subtype of constructor{C}." at "e"
+c = e;
+
+// XPECT noerrors -->
+d = e;
+
+// XPECT errors --> "constructor{F} is not a subtype of constructor{D}." at "f"
+d = f;
+
+// XPECT errors --> "constructor{F} is not a subtype of constructor{E}." at "f"
+e = f;
+
+
+// reverse
+
+// XPECT errors --> "constructor{C} is not a subtype of constructor{D}." at "c"
+d = c; // here, already requirement #1 C<:D fails (without taking into account the signature of constructors)

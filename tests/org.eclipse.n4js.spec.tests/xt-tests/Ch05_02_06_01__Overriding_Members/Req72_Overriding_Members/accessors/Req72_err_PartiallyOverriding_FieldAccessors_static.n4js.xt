@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class OnlyGetter {
+	static get field() : string { return "OnlyGetter.field get"; }
+}
+class OnlySetter {
+	static set field(v: string) {}
+}
+class GetterAndSetter {
+	static get field() : string { return "GetterAndSetter.field get"; }
+	static set field(v: string) {}
+}
+
+
+class OverrideGetter extends OnlyGetter {
+	@Override
+	// XPECT noerrors --> "There is no setter to override"
+	static get field() : string { return "A.field get";}
+}
+class OverrideSetter extends OnlySetter {
+	@Override
+	// XPECT noerrors --> "There is not getter to override"
+	static set field(v: string) {}
+}
+class DeclareMissingSetter extends OnlyGetter {
+	get field() : string { return "Unrelated non-static getter"; }
+	// XPECT errors --> "Static setter DeclareMissingSetter.field cannot be declared without overriding the corresponding getter." at "field"
+	static set field(v: string) {}
+}
+class DeclareMissingGetter extends OnlySetter {
+	// XPECT errors -->"Static getter DeclareMissingGetter.field cannot be declared without overriding the corresponding setter." at "field"
+	static get field() : string { return "DeclareMissingGetter.field get"; }
+}
+
+class OverrideGetterOnly extends GetterAndSetter {
+	@Override
+	// XPECT errors -->"Static getter OverrideGetterOnly.field cannot be overridden without overriding the corresponding setter." at "field"
+	static get field() : string { return "OverrideGetterOnly.field get"; }
+}
+
+class OverrideSetterOnly extends GetterAndSetter {
+	@Override
+	// XPECT errors -->"Static setter OverrideSetterOnly.field cannot be overridden without overriding the corresponding getter." at "field"
+	static set field(v: string) {}
+}
+
+class OverrideGetterAndDeclareSetter extends OnlyGetter {
+	@Override
+	// XPECT noerrors --> "The getter was correctly overridden"
+	static get field() : string { return "OverrideGetterAndDeclareSetter.field get"; }
+	// XPECT noerrors --> "There was no setter to override"
+	static set field(v: string) {}
+}
+class OverrideSetterAndDeclareGetter extends OnlySetter {
+	// XPECT noerrors --> "There was no getter to override"
+	static get field() : string { return "OverrideGetterAndDeclareSetter.field get"; }
+	@Override
+	// XPECT noerrors --> "The setter was correctly overridden"
+	static set field(v: string) {}
+}
+class OverrideGetterAndSetter extends GetterAndSetter {
+	@Override
+	// XPECT noerrors --> "Both accessors were overridden"
+	static get field() : string { return "OverrideGetterAndDeclareSetter.field get"; }
+	@Override
+	// XPECT noerrors --> "Both accessors were overridden"
+	static set field(v: string) {}
+}

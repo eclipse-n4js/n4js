@@ -1,0 +1,33 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+interface IBase {
+	public first: string;
+}
+
+interface I extends IBase {
+	public second: string;
+}
+
+class C implements I {
+	public third: string;
+
+	public constructor(@Spec spec: ~i~this) {}
+}
+
+let c = new C({first: "1st", second: "2nd", third: "3rd" });
+console.log(c);
+
+/* XPECT output ---
+C { third: '3rd', second: '2nd', first: '1st' }
+--- */

@@ -1,0 +1,98 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// ##########################################################################
+// PART 1: in classes
+
+abstract class C {
+
+	// --------------------------------------------------------------------------
+	// for methods
+
+	// XPECT errors --> "The method m1 has to have either a body or must be defined abstract." at "m1"
+	public m1() : string
+
+	// XPECT errors --> "Abstract methods do not specify a body." at "m2"
+	public abstract m2() : string { return "" }
+
+
+
+	// --------------------------------------------------------------------------
+	// for getters
+
+	// XPECT errors --> "The getter g1 has to have either a body or must be defined abstract." at "g1"
+	public get g1() : string
+
+	// XPECT errors --> "Abstract methods do not specify a body." at "g2"
+	public abstract get g2() : string { return "" }
+
+
+
+	// --------------------------------------------------------------------------
+	// for setters
+
+	// XPECT errors --> "The setter s1 has to have either a body or must be defined abstract." at "s1"
+	public set s1(i : number)
+
+	/* XPECT errors ---
+		"Abstract methods do not specify a body." at "s2"
+		"Set accessors must not return anything." at "return """
+		---
+	 */
+	public abstract set s2(i : number) { return "" }
+
+}
+
+// ##########################################################################
+// PART 2: in interfaces
+
+interface I {
+
+	// --------------------------------------------------------------------------
+	// for methods
+
+	public m1() : string
+
+	// XPECT errors --> "Abstract methods do not specify a body." at "m2"
+	public abstract m2() : string { return "" }
+
+
+
+	// --------------------------------------------------------------------------
+	// for getters
+
+	public get g1() : string
+
+	// XPECT errors --> "Abstract methods do not specify a body." at "g2"
+	public abstract get g2() : string { return "" }
+
+
+
+	// --------------------------------------------------------------------------
+	// for setters
+
+	public set s1(i : number)
+
+	/* XPECT errors ---
+		"Abstract methods do not specify a body." at "s2"
+		"Set accessors must not return anything." at "return """
+	---
+	*/
+	public abstract set s2(i : number) { return "" }
+
+}
+
+// ##########################################################################
+// PART 3: in interfaces
+
+// TODO abstract-XOR-body in Roles

@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+// NOTE: many more tests in N6_1_03_LiteralsTypesystemTest.xtend in bundle org.eclipse.n4js.xsemantics.tests!
+
+
+// XPECT type of 'v01' --> int
+var v01 = 0;
+// XPECT type of 'v02a' --> int
+var v02a = +1;
+// XPECT type of 'v02b' --> int
+var v02b = -1;
+// XPECT type of 'v03' --> int
+var v03 = 1;
+
+
+// XPECT type of 'v04a' --> number
+var v04a = 0.0;
+// XPECT type of 'v04b' --> number
+var v04b = 42.0;
+// XPECT type of 'v04c' --> number
+var v04c = +1.0;
+// XPECT type of 'v04d' --> number
+var v04d = -1.0;
+// XPECT type of 'v05' --> number
+var v05 = 4.2;
+
+
+// XPECT type of 'v10' --> int
+var v10 = -2147483647;
+// XPECT type of 'v11' --> int
+var v11 = -2147483648;
+// XPECT type of 'v12' --> number
+var v12 = -2147483649;
+// XPECT type of 'v13' --> number
+var v13 = -2147483650;
+
+
+// XPECT type of 'v20' --> int
+var v20 = 2147483646;
+// XPECT type of 'v21' --> int
+var v21 = 2147483647;
+// XPECT type of 'v22' --> number
+var v22 = 2147483648;
+// XPECT type of 'v23' --> number
+var v23 = 2147483649;
+
+
+// XPECT type of 'v30' --> number
+var v30 = -10000000000;
+// XPECT type of 'v31' --> number
+var v31 = 10000000000;
+
+
+// XPECT type of 'v40' --> int
+var v40 = -(2147483648);
+// XPECT type of 'v41' --> number
+var v41 = -(2147483649);

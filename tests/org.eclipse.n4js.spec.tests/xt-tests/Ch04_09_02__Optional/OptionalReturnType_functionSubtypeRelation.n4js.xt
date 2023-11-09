@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class A {}
+class B extends A {}
+
+class X {}
+
+//
+// test all cases using function type expressions
+//
+
+var fte_void : {function():void};
+var fte_x : {function():X};
+var fte_xo : {function():X?};
+var fte_b : {function():B};
+var fte_bo : {function():B?};
+
+
+// XPECT noerrors -->
+var t01 : {function():void} = fte_void;       // f():void <: f():void
+// XPECT noerrors -->
+var t02 : {function():void} = fte_x;          // f():X <: f():void
+// XPECT noerrors -->
+var t03 : {function():void} = fte_xo;         // f():B? <: f():void
+
+
+// XPECT errors --> "{function():void} is not a subtype of {function():A}." at "fte_void"
+var t11 : {function():A} = fte_void;          // f():void <: f():A
+// XPECT errors --> "{function():X} is not a subtype of {function():A}." at "fte_x"
+var t12 : {function():A} = fte_x;             // f():X <: f():A
+// XPECT errors --> "{function():X?} is not a subtype of {function():A}." at "fte_xo"
+var t13 : {function():A} = fte_xo;            // f():X? <: f():A
+// XPECT noerrors -->
+var t14 : {function():A} = fte_b;             // f():B <: f():A
+// XPECT errors --> "{function():B?} is not a subtype of {function():A}." at "fte_bo"
+var t15 : {function():A} = fte_bo;            // f():B? <: f():A
+
+
+// XPECT noerrors -->
+var t21 : {function():A?} = fte_void;         // f():void <: f():A?
+// XPECT errors --> "{function():X} is not a subtype of {function():A?}." at "fte_x"
+var t22 : {function():A?} = fte_x;            // f():X <: f():A?
+// XPECT errors --> "{function():X?} is not a subtype of {function():A?}." at "fte_xo"
+var t23 : {function():A?} = fte_xo;           // f():X? <: f():A?
+// XPECT noerrors -->
+var t24 : {function():A?} = fte_b;            // f():B <: f():A?
+// XPECT noerrors -->
+var t25 : {function():A?} = fte_bo;           // f():B? <: f():A?
+
+
+//
+// test some selected cases using function expressions and declared functions
+//
+
+// function expressions
+
+// XPECT errors --> "{function():void} is not a subtype of {function():A}." at "function():void{}"
+var t31 : {function():A} = function():void{};
+// XPECT noerrors -->
+var t32 : {function():A?} = function():void{};
+
+// declared functions
+
+function fd_void() {}
+// XPECT errors --> "{function():void} is not a subtype of {function():A}." at "fd_void"
+var t41 : {function():A} = fd_void;
+// XPECT noerrors -->
+var t42 : {function():A?} = fd_void;

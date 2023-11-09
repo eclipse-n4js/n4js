@@ -1,0 +1,26 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+interface ~T {
+	public n : number;
+	public foo();
+}
+class X {
+	public n : number;
+	public foo() {}
+}
+
+var x : X;
+var t : T;
+// changed in GH-2529 XPECT noerrors --> "All N4Objects must explicitly extend/implement definition site structural type T." at "x"
+t = x;

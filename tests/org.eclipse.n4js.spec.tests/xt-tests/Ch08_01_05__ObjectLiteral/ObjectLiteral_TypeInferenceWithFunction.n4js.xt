@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// from IDEBUG-154:
+
+var olFun = {
+	fn: function(a) : number {
+		return 0;
+	},
+};
+var st2 : ~Object with { fn : {function(any) : number};};
+
+// XPECT type of 'olFun' --> ~Object with { fn: {function(any):number} }
+olFun;
+// XPECT noerrors -->
+st2 = olFun;
+// XPECT noerrors -->
+olFun = st2;
+
+
+// same with single name syntax:
+
+let fn = function(a) : number {
+	return 0;
+};
+let olFun_sn = {
+	fn
+};
+
+// XPECT type of 'olFun_sn' --> ~Object with { fn: {function(any):number} }
+olFun_sn;
+// XPECT noerrors -->
+st2 = olFun_sn;
+// XPECT noerrors -->
+olFun_sn = st2;

@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+// IDE-1534
+
+class X {
+	m1() : Promise<X, ?> { return undefined }
+
+	// XPECT type of 'm2' --> {function():Promise<X,?>}
+	async m2() : X { return undefined }
+}
+
+class Y extends X {
+
+	// XPECT noerrors --> 'As long as method signature conforms, overriding method is free to be tagged async or not'
+	@Override async m1() : X { return undefined } // overriding non-async with async
+
+	// XPECT noerrors --> 'As long as method signature conforms, overriding method is free to be tagged async or not'
+	@Override m2() : Promise<X, ?> { return undefined } // overriding async with non-async
+
+}

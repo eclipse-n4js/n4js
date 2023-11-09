@@ -1,0 +1,86 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+var n : number;
+
+
+// function declaration
+
+// XPECT noerrors --> "" at "fd" and "string?"
+function fd() : string? {
+	// function may or may not leave with return statement;
+	// return statements may or may not have an expression
+	if(n>10) {
+		// XPECT noerrors -->
+		return "hello";
+	}
+	else if(n>0) {
+		// XPECT noerrors -->
+		return;
+	}
+	// XPECT noerrors -->
+}
+
+
+// function expression
+
+// XPECT noerrors --> "" at "string?"
+var fe = function() : string? {}
+
+
+// function type expression
+
+// XPECT noerrors --> "" at "string?"
+var fte : {function():string?};
+
+
+// methods (but not getters!)
+
+class C {
+
+	// note: not checking fields and setters here (different topic)
+
+	// XPECT errors ---
+	// "The optional modifier isn't allowed here." at "string?"
+	// "Missing return or throw statement." at "get g() : string? {}"
+	// ---
+	get g() : string? {}
+
+	// XPECT noerrors --> "" at "string?"
+	m() : string? {}
+}
+
+
+// object literal
+
+var ol = {
+
+	// XPECT errors ---
+	// "The optional modifier isn't allowed here." at "string?"
+	// "Missing return or throw statement." at "get g() : string? {}"
+	// ---
+	get g() : string? {}
+};
+
+
+// with-clause in structural type refs
+
+var obj : ~Object with {
+
+	// XPECT errors --> "The optional modifier isn't allowed here." at "string?"
+	get g() : string?
+
+	// XPECT noerrors --> "" at "string?"
+	m() : string?
+
+};

@@ -1,0 +1,47 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class A { x : string; }
+interface R{ x : string; }
+interface I{ x : string; }
+enum E { X }
+
+function f(a : A, r : R, i : I, s : ~Object with { x : string; }) {
+	// XPECT noerrors --> "Dot Access OK" at "x"
+	a.x;
+	// XPECT noerrors --> "Dot Access OK" at "x"
+	r.x;
+	// XPECT noerrors --> "Dot Access OK" at "x"
+	i.x;
+	// XPECT noerrors --> "Dot Access OK" at "X"
+	E.X;
+	// XPECT noerrors --> "Dot Access OK" at "x"
+	s.x;
+
+	// XPECT noerrors --> "Indexed access is not allowed for class instances." at "a['x']"
+	a['x'];
+	// XPECT noerrors --> "Indexed access is not allowed for interface instances." at "r['x']"
+	r['x'];
+	// XPECT noerrors --> "Indexed access is not allowed for interface instances." at "i['x']"
+	i['x'];
+	// XPECT errors --> "Indexed access is not allowed for enumerations." at "E['X']"
+	E['X'];
+	// XPECT noerrors --> "Indexed access is only allowed for strings, arrays and iterables and for immediate(!) instances of Object." at "s['x']"
+	s['x'];
+}
+
+var ol = { x: "hello"}
+// XPECT noerrors --> "Indexed access is only allowed for strings, arrays and iterables and for immediate(!) instances of Object." at "ol['x']"
+ol['x']
+// XPECT noerrors --> "Dot Access OK" at "x"
+ol.x;

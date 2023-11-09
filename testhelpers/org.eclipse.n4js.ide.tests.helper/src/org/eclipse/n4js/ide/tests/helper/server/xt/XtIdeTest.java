@@ -225,6 +225,12 @@ public class XtIdeTest extends AbstractIdeTest {
 		case "accessModifier":
 			accessModifier(testMethodData);
 			break;
+		case "binding":
+			binding(testMethodData);
+			break;
+		case "compileResult":
+			compileResult(testMethodData);
+			break;
 		case "completion":
 			completion(testMethodData);
 			break;
@@ -270,11 +276,17 @@ public class XtIdeTest extends AbstractIdeTest {
 		case "scopeWithPosition":
 			scopeWithPosition(testMethodData);
 			break;
+		case "expectedType":
+			expectedType(testMethodData);
+			break;
 		case "type":
 			type(testMethodData);
 			break;
 		case "typeArgs":
 			typeArgs(testMethodData);
+			break;
+		case "typeWithAliasResolution":
+			typeWithAliasResolution(testMethodData);
 			break;
 
 		// flow graph test methods
@@ -676,6 +688,20 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
+	 * Compiles the current xt file and compares the generated file to the expected output
+	 *
+	 * <pre>
+	 * // Xpect compileResult --&gt; &ltCOMPILE RESULT&gt
+	 * </pre>
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void compileResult(XtMethodData data) {
+		FileURI fileUri = getGeneratedFileURI();
+		String generedFileContent = getContentOfFileOnDisk(fileUri);
+		assertEquals(data.expectationRaw, generedFileContent.trim());
+	}
+
+	/**
 	 * Compiles and executes the current xt file and compares the output to the expected output
 	 *
 	 * <pre>
@@ -684,14 +710,26 @@ public class XtIdeTest extends AbstractIdeTest {
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void output(XtMethodData data) {
-		String moduleName = xtData.workspace.moduleNameOfXtFile;
-		int idxStart = Math.max(moduleName.lastIndexOf("/") + 1, 0);
-		int idxEnd = moduleName.lastIndexOf(".");
-		String genModuleName = moduleName.substring(idxStart, idxEnd) + ".js";
-		FileURI fileUri = getFileURIFromModuleName(genModuleName);
+		FileURI fileUri = getGeneratedFileURI();
 
 		installN4JSRuntime();
-		assertOutput(fileUri, data.expectation);
+		assertOutput(fileUri, data.expectationRaw);
+	}
+
+	private FileURI getGeneratedFileURI() {
+		String moduleName = xtData.workspace.moduleNameOfXtFile;
+		int idxEnd = moduleName.lastIndexOf(".");
+		String genModuleName;
+		if (moduleName.contains("/src/")) {
+			// poor-man's identification in case of module name clashes
+			int idxStart = Math.max(moduleName.lastIndexOf("/src/") + 5, 0);
+			genModuleName = "src-gen/" + moduleName.substring(idxStart, idxEnd) + ".js";
+		} else {
+			int idxStart = Math.max(moduleName.lastIndexOf("/") + 1, 0);
+			genModuleName = moduleName.substring(idxStart, idxEnd) + ".js";
+		}
+		FileURI fileUri = getFileURIFromModuleName(genModuleName);
+		return fileUri;
 	}
 
 	/**
@@ -767,6 +805,24 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
+	 * Checks that a given element is bound to something identified by (simple) qualified name. The given expression is
+	 * tested, and within that we expect a property access or a direct identifiable element. The compared name is the
+	 * simple qualified name, that is container (type) followed by elements name, without URIs of modules etc. Usage:
+	 *
+	 * <pre>
+	 * // Xpect binding at '&ltLOCATION&gt' --&gt; &ltQUALIFIED NAME&gt
+	 * </pre>
+	 *
+	 * The location is optional.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void binding(XtMethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "binding", "at");
+		String bindingName = xtMethods.getBindingName(ocr);
+		assertEquals(data.expectation, bindingName);
+	}
+
+	/**
 	 * Checks the scope at a given location. Usage:
 	 *
 	 * <pre>
@@ -821,6 +877,22 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
+	 * Checks that an element/expression has a certain expected type (i.e. judgment expectedTypeIn). Usage:
+	 *
+	 * <pre>
+	 * // Xpect expectedType at '&ltLOCATION&gt' --&gt; &ltTYPE&gt
+	 * </pre>
+	 *
+	 * The location is optional.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void expectedType(XtMethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "expectedType", "at");
+		String typeStr = xtMethods.getTypeString(ocr.getEObject(), true, false);
+		assertEquals(data.expectation, typeStr);
+	}
+
+	/**
 	 * Checks that an element/expression has a certain type. Usage:
 	 *
 	 * <pre>
@@ -858,6 +930,23 @@ public class XtIdeTest extends AbstractIdeTest {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "typeArgs", "of");
 		String typeArgStr = xtMethods.getTypeArgumentsString(ocr.getEObject());
 		assertEquals(data.expectation, typeArgStr);
+	}
+
+	/**
+	 * Same as {œcode type}, but includes resolution of type aliases.Usage:
+	 *
+	 * <pre>
+	 * // Xpect typeWithAliasResolution of '&ltLOCATION&gt' --&gt; &ltTYPE&gt
+	 * </pre>
+	 *
+	 * The location is optional.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void typeWithAliasResolution(XtMethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "typeWithAliasResolution",
+				"of");
+		String typeStr = xtMethods.getTypeString(ocr.getEObject(), false, true);
+		assertEquals(data.expectation, typeStr);
 	}
 
 	/**

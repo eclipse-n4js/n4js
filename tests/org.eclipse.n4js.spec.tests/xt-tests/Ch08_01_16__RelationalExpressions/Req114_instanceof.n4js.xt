@@ -1,0 +1,58 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+// IDE-652, IDE-980
+
+class A {}
+interface I {}
+interface R {}
+enum E { L }
+
+function func() {}
+
+function foo(a : A, b : A, c : I, d : R) {
+
+	// XPECT noerrors --> "Class=Function on right side" at "A"
+	a instanceof A;
+	// XPECT noerrors --> "Function on right side" at "A"
+	a instanceof func;
+	// XPECT noerrors --> "Interface is rewritten" at "A"
+	a instanceof I;
+	// XPECT noerrors --> "Role is rewritten" at "A"
+	a instanceof R;
+	// XPECT noerrors --> "Enum is a function" at "A"
+	a instanceof E;
+
+
+	// XPECT errors  --> "1 is not a subtype of union{Function,type{Object},type{N4Enum}}." at "1"
+	a instanceof 1;
+	// XPECT errors  --> ""Hello" is not a subtype of union{Function,type{Object},type{N4Enum}}." at ""Hello""
+	a instanceof "Hello";
+	// XPECT errors  --> "A is not a subtype of union{Function,type{Object},type{N4Enum}}." at "b"
+	a instanceof b;
+	// XPECT errors  --> "I is not a subtype of union{Function,type{Object},type{N4Enum}}." at "c"
+	a instanceof c;
+	// XPECT errors  --> "R is not a subtype of union{Function,type{Object},type{N4Enum}}." at "d"
+	a instanceof d;
+}
+
+
+// left hand side is not validated, as we may want to test "any":
+function bar(a : A, x : any) {
+	// XPECT noerrors --> "Class=Function on right side" at "A"
+	a instanceof A;
+	// XPECT noerrors --> "String is a builtin class=Function on right side" at "A"
+	"Hello" instanceof String;
+	// XPECT noerrors --> "Class=Function on right side" at "A"
+	x instanceof A;
+
+}

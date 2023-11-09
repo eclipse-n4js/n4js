@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class B {
+	public data : string;
+
+	public set pair(x : string) {}
+	public get pair() : string { return "x" }
+
+	public set setter(x : string) {}
+
+	public get getter() { return "x" }
+
+	constructor(@Spec spec : ~i~this) {}
+}
+
+new B({
+	// XPECT nowarnings --> "" at data
+	data: "",
+	// XPECT nowarnings --> "" at pair
+	pair: "",
+	// XPECT nowarnings --> "" at setter
+	setter: "",
+	// XPECT warnings --> "getter is not defined in ~i~this[B]; it will not have any effect in the spec constructor." at "getter"
+	getter: ""
+});
+
+class C<T> {
+	private x : T;
+	public set t(t : T) { this.x = t; }
+	public get t() : T { return this.x; }
+	constructor(@Spec spec : ~i~this) { }
+}
+
+// XPECT noerrors --> "" at "t"
+new C<number>({ t: 42 })
+
+// XPECT errors --> "~Object with { t: 42 } is not a structural subtype of ~i~C<string>: t failed: 42 is not a super type of string." at "{ t: 42 }"
+new C<string>({ t: 42 })

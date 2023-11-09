@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class B {
+	z : number;
+	m() : number { return 0 }
+}
+
+
+class C extends B {
+
+  @Override
+  z : number;
+
+  @Override
+  m() : number { return 1 }
+
+  m2() : any {
+      return y => // XPECT linkedPathname at 'y'      --> y
+                  y +
+                  // found during IDE-1852: XPECT FIXME noerrors
+                  // XPECT linkedPathname at 'm()' --> B/m
+                  super.m() +
+                  // XPECT linkedPathname at 'm()' --> C/m
+                  this.m();
+  }
+
+}

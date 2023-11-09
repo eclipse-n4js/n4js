@@ -1,0 +1,87 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class C {
+	constructor(p: number) {}
+}
+class CC1 extends C {}
+class CC2 extends C {
+	constructor(p: string) { super(42); }
+}
+class D {
+	@CovariantConstructor constructor(p: number) {}
+}
+class DD extends D {}
+
+
+let ctorC: constructor{C};
+let ctorCC1: constructor{CC1};
+let ctorCC2: constructor{CC2};
+let ctorExtC: constructor{? extends C};
+let ctorExtCC1: constructor{? extends CC1};
+let ctorExtCC2: constructor{? extends CC2};
+
+let ctorD: constructor{D};
+let ctorDD: constructor{DD};
+let ctorExtD: constructor{? extends D};
+let ctorExtDD: constructor{? extends DD};
+
+
+// ------------------------------------------------------------------------------------------
+
+// XPECT noerrors -->
+ctorC = ctorC;
+// XPECT noerrors -->
+ctorC = ctorCC1;
+// XPECT errors --> "constructor{CC2} is not a subtype of constructor{C}." at "ctorCC2"
+ctorC = ctorCC2;
+// XPECT errors --> "constructor{? extends C} is not a subtype of constructor{C}." at "ctorExtC"
+ctorC = ctorExtC;
+// XPECT errors --> "constructor{? extends CC1} is not a subtype of constructor{C}." at "ctorExtCC1"
+ctorC = ctorExtCC1;
+// XPECT errors --> "constructor{? extends CC2} is not a subtype of constructor{C}." at "ctorExtCC2"
+ctorC = ctorExtCC2;
+
+// XPECT noerrors -->
+ctorExtC = ctorC;
+// XPECT noerrors -->
+ctorExtC = ctorCC1;
+// XPECT noerrors -->
+ctorExtC = ctorCC2;
+// XPECT noerrors -->
+ctorExtC = ctorExtC;
+// XPECT noerrors -->
+ctorExtC = ctorExtCC1;
+// XPECT noerrors -->
+ctorExtC = ctorExtCC2;
+
+// ------------------------------------------------------------------------------------------
+
+// XPECT noerrors -->
+ctorD = ctorD;
+// XPECT noerrors -->
+ctorD = ctorDD;
+// XPECT noerrors -->
+ctorD = ctorExtD;
+// XPECT noerrors -->
+ctorD = ctorExtDD;
+
+// XPECT noerrors -->
+ctorExtD = ctorD;
+// XPECT noerrors -->
+ctorExtD = ctorDD;
+// XPECT noerrors -->
+ctorExtD = ctorExtD;
+// XPECT noerrors -->
+ctorExtD = ctorExtDD;

@@ -1,0 +1,52 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+// use case:
+// using array destructuring to iterate over entries in a map
+
+class G<T> {}
+
+abstract class MyMap<K,V> implements Iterable<Iterable2<K,V>>  {
+
+	public entries() : Iterable<Iterable2<K,V>> {
+		return null;
+	}
+}
+abstract class MyWrappingMap<K,V> extends MyMap<G<K>,G<V>> {
+}
+
+var m : MyMap<string,number>;
+var mw : MyWrappingMap<string,number>;
+
+
+// using #entries() method:
+
+// XPECT type of 'key' --> string
+// XPECT type of 'value' --> number
+for(var [key,value] of m.entries()) {}
+
+// XPECT type of 'keyInG' --> G<string>
+// XPECT type of 'valueInG' --> G<number>
+for(var [keyInG,valueInG] of mw.entries()) {}
+
+
+// using map directly:
+
+// XPECT type of 'key2' --> string
+// XPECT type of 'value2' --> number
+for(var [key2,value2] of m) {}
+
+// XPECT type of 'keyInG2' --> G<string>
+// XPECT type of 'valueInG2' --> G<number>
+for(var [keyInG2,valueInG2] of mw) {}

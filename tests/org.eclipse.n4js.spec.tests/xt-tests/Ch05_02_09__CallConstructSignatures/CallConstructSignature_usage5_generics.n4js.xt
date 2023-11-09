@@ -1,0 +1,112 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	ProjectWithSourceFolder {
+		ThisFile {}
+		File "Ext.n4jsd" { from="CallConstructSignature_usage__Ext.n4jsd" }
+	}
+
+END_SETUP */
+
+
+import { IfcGen } from "Ext"
+import { structTypeRefGen } from "Ext"
+
+class ClsArg {}
+let clsArg: ClsArg;
+
+let ifcGen: IfcGen;
+
+
+// XPECT errors --> "Incorrect number of type arguments for call signature (): expected 1, got 2." at "ifcGen"
+// XPECT type of 'result01' --> CallResultGenCls<ClsArg>
+let result01 = <ClsArg,string>ifcGen(null);
+// XPECT errors --> ""bad" is not a subtype of ClsArg." at ""bad""
+// XPECT type of 'result02' --> CallResultGenCls<ClsArg>
+let result02 = <ClsArg>ifcGen("bad");
+// XPECT noerrors -->
+// XPECT type of 'result03' --> CallResultGenCls<ClsArg>
+let result03 = <ClsArg>ifcGen(clsArg);
+
+// XPECT errors --> "Incorrect number of type arguments for call signature (): expected 1, got 2." at "structTypeRefGen"
+// XPECT type of 'result04' --> CallResultGenCls<ClsArg>
+let result04 = <ClsArg,string>structTypeRefGen(null);
+// XPECT errors --> ""bad" is not a subtype of ClsArg." at ""bad""
+// XPECT type of 'result05' --> CallResultGenCls<ClsArg>
+let result05 = <ClsArg>structTypeRefGen("bad");
+// XPECT noerrors -->
+// XPECT type of 'result06' --> CallResultGenCls<ClsArg>
+let result06 = <ClsArg>structTypeRefGen(clsArg);
+
+// ------------------------------------------------------------------------------------------------------------------------
+
+// XPECT noerrors -->
+// XPECT type of 'result11' --> CallResultGenCls<ClsArg>
+let result11 = ifcGen(clsArg);
+
+// XPECT noerrors -->
+// XPECT type of 'result12' --> CallResultGenCls<ClsArg>
+let result12 = structTypeRefGen(clsArg);
+
+// ------------------------------------------------------------------------------------------------------------------------
+
+// XPECT errors --> "Incorrect number of type arguments for construct signature new: expected 1, got 2." at "ifcGen"
+// XPECT type of 'result21' --> ConstructResultGenCls<ClsArg>
+let result21 = new ifcGen<ClsArg,string>(null);
+// XPECT errors --> ""bad" is not a subtype of ClsArg." at ""bad""
+// XPECT type of 'result22' --> ConstructResultGenCls<ClsArg>
+let result22 = new ifcGen<ClsArg>("bad");
+// XPECT noerrors -->
+// XPECT type of 'result23' --> ConstructResultGenCls<ClsArg>
+let result23 = new ifcGen<ClsArg>(clsArg);
+
+// XPECT errors --> "Incorrect number of type arguments for construct signature new: expected 1, got 2." at "structTypeRefGen"
+// XPECT type of 'result21' --> ConstructResultGenCls<ClsArg>
+let result24 = new structTypeRefGen<ClsArg,string>(null);
+// XPECT errors --> ""bad" is not a subtype of ClsArg." at ""bad""
+// XPECT type of 'result22' --> ConstructResultGenCls<ClsArg>
+let result25 = new structTypeRefGen<ClsArg>("bad");
+// XPECT noerrors -->
+// XPECT type of 'result23' --> ConstructResultGenCls<ClsArg>
+let result26 = new structTypeRefGen<ClsArg>(clsArg);
+
+// ------------------------------------------------------------------------------------------------------------------------
+
+// XPECT type of 'result01.getValue<|>()' --> ClsArg
+result01.getValue();
+// XPECT type of 'result02.getValue<|>()' --> ClsArg
+result02.getValue();
+// XPECT type of 'result03.getValue<|>()' --> ClsArg
+result03.getValue();
+// XPECT type of 'result04.getValue<|>()' --> ClsArg
+result04.getValue();
+// XPECT type of 'result05.getValue<|>()' --> ClsArg
+result05.getValue();
+// XPECT type of 'result06.getValue<|>()' --> ClsArg
+result06.getValue();
+// XPECT type of 'result11.getValue<|>()' --> ClsArg
+result11.getValue();
+// XPECT type of 'result12.getValue<|>()' --> ClsArg
+result12.getValue();
+// XPECT type of 'result21.getValue<|>()' --> ClsArg
+result21.getValue();
+// XPECT type of 'result22.getValue<|>()' --> ClsArg
+result22.getValue();
+// XPECT type of 'result23.getValue<|>()' --> ClsArg
+result23.getValue();
+// XPECT type of 'result24.getValue<|>()' --> ClsArg
+result24.getValue();
+// XPECT type of 'result25.getValue<|>()' --> ClsArg
+result25.getValue();
+// XPECT type of 'result26.getValue<|>()' --> ClsArg
+result26.getValue();

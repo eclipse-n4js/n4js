@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP  */
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest END_SETUP  */
 
 
 
@@ -46,23 +46,20 @@ console.log(CS.n4type.allImplementedInterfaces);
 
 /* XPECT output ---
 CI
-[ 'reflection/ClassImplementsInterfaces/I' ]
+[ 'ClassImplementsInterfaces/I' ]
 J
-[
-  'reflection/ClassImplementsInterfaces/J',
-  'reflection/ClassImplementsInterfaces/I'
-]
+[ 'ClassImplementsInterfaces/J', 'ClassImplementsInterfaces/I' ]
 CR
 [
-  'reflection/ClassImplementsInterfaces/R',
-  'reflection/ClassImplementsInterfaces/I',
-  'reflection/ClassImplementsInterfaces/J'
+  'ClassImplementsInterfaces/R',
+  'ClassImplementsInterfaces/I',
+  'ClassImplementsInterfaces/J'
 ]
 CS
 [
-  'reflection/ClassImplementsInterfaces/S',
-  'reflection/ClassImplementsInterfaces/I',
-  'reflection/ClassImplementsInterfaces/J',
-  'reflection/ClassImplementsInterfaces/R'
+  'ClassImplementsInterfaces/S',
+  'ClassImplementsInterfaces/I',
+  'ClassImplementsInterfaces/J',
+  'ClassImplementsInterfaces/R'
 ]
 --- */

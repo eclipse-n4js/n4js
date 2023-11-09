@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class C {}
+class G<T> {
+	field: T;
+	fieldDyn: T+;
+
+	m(p: T): T {return null;}
+	mDyn(p: T+): T+ {return null;}
+}
+
+
+var g: G<C>;
+var gDyn: G<C+>;
+
+
+// part #1: reading
+
+// XPECT type of 'v01' --> C
+var v01 = g.field;
+// XPECT type of 'v02' --> C+
+var v02 = g.fieldDyn;
+// XPECT type of 'v03' --> C
+var v03 = g.m(undefined);
+// XPECT type of 'v04' --> C+
+var v04 = g.mDyn(undefined);
+
+// XPECT type of 'v11' --> C+
+var v11 = gDyn.field;
+// XPECT type of 'v12' --> C+
+var v12 = gDyn.fieldDyn;
+// XPECT type of 'v13' --> C+
+var v13 = gDyn.m(undefined);
+// XPECT type of 'v14' --> C+
+var v14 = gDyn.mDyn(undefined);
+
+
+// part #2: writing
+
+// XPECT errors --> """ is not a subtype of C." at """"
+g.field = "";
+// XPECT errors --> """ is not a subtype of C+." at """"
+g.fieldDyn = "";
+// XPECT errors --> """ is not a subtype of C." at """"
+g.m("");
+// XPECT errors --> """ is not a subtype of C+." at """"
+g.mDyn("");
+
+// XPECT errors --> """ is not a subtype of C+." at """"
+gDyn.field = "";
+// XPECT errors --> """ is not a subtype of C+." at """"
+gDyn.fieldDyn = "";
+// XPECT errors --> """ is not a subtype of C+." at """"
+gDyn.m("");
+// XPECT errors --> """ is not a subtype of C+." at """"
+gDyn.mDyn("");

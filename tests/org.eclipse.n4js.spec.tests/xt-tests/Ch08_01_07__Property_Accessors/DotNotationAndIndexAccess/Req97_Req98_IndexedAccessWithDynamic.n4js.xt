@@ -1,0 +1,81 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class Foo {
+	public vvv = "vvv";
+}
+
+let objN: Foo = new Foo();
+let objD: Foo+ = new Foo();
+let objDS: ~Foo+ = new Foo();
+
+const cvx = "vvv";
+var zzz = "zzz";
+
+function f(): string {return ""}
+
+
+// nominal
+// XPECT noerrors
+objN.vvv;
+// XPECT noerrors
+objN["vvv"];
+// XPECT noerrors
+objN[cvx];
+
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'zzz'." at "zzz"
+objN.zzz = "zzz";
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'zzz'." at "zzz"
+objN.zzz;
+// XPECT errors --> "Member zzz not found." at "objN["zzz"]"
+objN["zzz"];
+// XPECT errors --> "Not a compile-time expression: variable zzz is not const." at "zzz"
+objN[zzz];
+// XPECT errors --> "Not a compile-time expression: a call expression is never a compile-time expression." at "f()"
+objN[f()];
+
+// dynamic
+// XPECT noerrors
+objD.vvv;
+// XPECT noerrors
+objD["vvv"];
+// XPECT noerrors
+objD[cvx];
+
+objD.zzz = "zzz";
+// XPECT noerrors
+objD.zzz;
+// XPECT noerrors
+objD["zzz"];
+// XPECT noerrors
+objD[zzz];
+// XPECT noerrors
+objD[f()];
+
+// dynamic and structural
+// XPECT noerrors
+objDS.vvv;
+// XPECT noerrors
+objDS["vvv"];
+// XPECT noerrors
+objDS[cvx];
+
+objDS.zzz = "zzz";
+// XPECT noerrors
+objDS.zzz;
+// XPECT noerrors
+objDS["zzz"];
+// XPECT noerrors
+objDS[zzz];
+// XPECT noerrors
+objDS[f()];

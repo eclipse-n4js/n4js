@@ -1,0 +1,53 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class A {}
+class AA extends A {}
+
+class G<T> {}
+class GG<T> extends G<T> {}
+
+interface I {}
+
+
+
+
+// XPECT nowarnings -->
+var a1 : intersection{A};
+// XPECT nowarnings -->
+var a2 : intersection{AA};
+// XPECT nowarnings -->
+var a3 : intersection{I, AA};
+// XPECT nowarnings -->
+var a4 : intersection{~A, AA};
+// XPECT nowarnings -->
+var a5 : intersection{~A, AA, I};
+
+
+
+
+// XPECT warnings --> "The use of redundant supertypes is discouraged." at "A"
+var b1 : intersection{A, AA};
+
+
+// XPECT warnings --> "The use of redundant supertypes is discouraged." at "A"
+var b2 : intersection{A, I, AA};
+
+
+// XPECT warnings --> "The use of redundant supertypes is discouraged." at "A"
+var b3 : intersection{A, intersection{AA, I}};
+
+
+// XPECT warnings --> "The use of redundant supertypes is discouraged." at "G<A>"
+var b4 : intersection{G<A>, intersection{GG<A>, I}};

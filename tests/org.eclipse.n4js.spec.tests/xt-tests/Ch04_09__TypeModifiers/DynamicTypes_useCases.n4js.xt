@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+var a: any+;
+// XPECT type of 'p1' --> any+
+var p1 = a.prop;
+// XPECT type of 'res0' --> any+
+// XPECT noerrors -->
+var res0 = a.m();
+// XPECT type of 'res1' --> any+
+// XPECT noerrors -->
+var res1 = a();
+// XPECT type of 'res2' --> any+
+var res2 = a[0];
+
+
+class C {
+	knownProp: string;
+}
+
+var c: C+;
+// XPECT type of 'p2' --> any+
+var p2 = c.prop;
+// XPECT type of 'p3' --> string
+var p3 = c.knownProp;
+
+
+var arr : Array<any+>;
+// XPECT type of 'e0' --> any+
+var e0 = arr[0];

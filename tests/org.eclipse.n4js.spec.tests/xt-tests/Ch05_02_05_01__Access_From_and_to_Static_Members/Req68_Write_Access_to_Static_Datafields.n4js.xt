@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class A {
+	public static field1;
+	private static x : number;
+	public static get fg() : number { return this.x; }
+	// XPECT errors --> "Write access to the static member x defined in A must use A directly." at "x"
+	public static set fg(f : number) { this.x = f; }
+}
+class B extends A {
+}
+
+class F {
+	public m = A;
+}
+
+//
+var ta : type{A} = A;
+// XPECT errors --> "Write access to the static member x defined in A must use A directly." at "x"
+ta.x = 45;
+
+var ca : constructor{A} = A;
+// XPECT errors --> "Write access to the static member x defined in A must use A directly." at "x"
+ca.x = 45;
+
+// XPECT errors --> "Write access to the static member x defined in A must use A directly." at "x"
+new F().m.x = 33;
+
+function d() : type{A} { return A; }
+
+// XPECT errors --> "Write access to the static member x defined in A must use A directly." at "x"
+d().x = 34;
+
+function dd() : {function():type{A}} { return d;}
+
+// XPECT errors --> "Write access to the static member x defined in A must use A directly." at "x"
+dd()().x =5;

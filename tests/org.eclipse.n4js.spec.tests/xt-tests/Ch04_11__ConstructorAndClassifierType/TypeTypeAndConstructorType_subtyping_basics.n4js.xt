@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class A {}
+
+
+let typeA: type{A};
+let typeExtA: type{? extends A};
+let ctorA: constructor{A};
+let ctorExtA: constructor{? extends A};
+
+// we duplicate each variable to make sure the type system is performing actual subtype checks
+// instead of using a short cut due to getting the identical TypeRef on lhs and rhs:
+let _typeA: type{A};
+let _typeExtA: type{? extends A};
+let _ctorA: constructor{A};
+let _ctorExtA: constructor{? extends A};
+
+
+// XPECT noerrors -->
+typeA = _typeA;
+// XPECT noerrors -->
+typeA = _typeExtA;
+// XPECT noerrors -->
+typeA = _ctorA;
+// XPECT noerrors -->
+typeA = _ctorExtA;
+
+
+// XPECT noerrors -->
+typeExtA = _typeA;
+// XPECT noerrors -->
+typeExtA = _typeExtA;
+// XPECT noerrors -->
+typeExtA = _ctorA;
+// XPECT noerrors -->
+typeExtA = _ctorExtA;
+
+
+// XPECT errors --> "type{A} is not a subtype of constructor{A}." at "_typeA"
+ctorA = _typeA;
+// XPECT errors --> "type{? extends A} is not a subtype of constructor{A}." at "_typeExtA"
+ctorA = _typeExtA;
+// XPECT noerrors -->
+ctorA = _ctorA;
+// XPECT errors --> "constructor{? extends A} is not a subtype of constructor{A}." at "_ctorExtA"
+ctorA = _ctorExtA;
+
+
+// XPECT errors --> "type{A} is not a subtype of constructor{? extends A}." at "_typeA"
+ctorExtA = _typeA;
+// XPECT errors --> "type{? extends A} is not a subtype of constructor{? extends A}." at "_typeExtA"
+ctorExtA = _typeExtA;
+// XPECT noerrors -->
+ctorExtA = _ctorA;
+// XPECT noerrors -->
+ctorExtA = _ctorExtA;

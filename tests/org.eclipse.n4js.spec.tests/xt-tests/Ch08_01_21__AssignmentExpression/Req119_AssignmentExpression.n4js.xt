@@ -1,0 +1,75 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+// IDE-777 Assignment Expression
+
+class A{}
+class B extends A{}
+class C{}
+class D extends A{}
+class G<T> { field : T; }
+
+var ga : G<A>, gb : G<B>;
+
+var a : A, b : B, c : C, d : D;
+var s : string, n : number, bo : boolean;
+var o : Object;
+var n4o : N4Object;
+function fVoid(): void {}
+
+// XPECT errors --> "string is not a subtype of A." at "s"
+a = s;
+// XPECT errors --> "number is not a subtype of A." at "n"
+a = n;
+// XPECT errors --> "boolean is not a subtype of A." at "bo"
+a = bo;
+// XPECT errors --> "G<A> is not a subtype of A." at "ga"
+a = ga;
+// XPECT errors --> "G<B> is not a subtype of A." at "gb"
+a = gb;
+// XPECT errors --> "Object is not a subtype of A." at "o"
+a = o;
+// XPECT errors --> "N4Object is not a subtype of A." at "n4o"
+a = n4o;
+// XPECT errors --> "void is not a subtype of A." at "fVoid()"
+a = fVoid();
+
+
+a = a;
+a = b;
+// XPECT errors --> "C is not a subtype of A." at "c"
+a = c;
+a = d;
+
+// XPECT errors --> "A is not a subtype of B." at "a"
+b = a;
+b = b;
+// XPECT errors --> "C is not a subtype of B." at "c"
+b = c;
+// XPECT errors --> "D is not a subtype of B." at "d"
+b = d;
+
+// XPECT errors --> "A is not a subtype of C." at "a"
+c = a;
+// XPECT errors --> "B is not a subtype of C." at "b"
+c = b;
+c = c;
+// XPECT errors --> "D is not a subtype of C." at "d"
+c = d;
+
+// XPECT errors --> "A is not a subtype of D." at "a"
+d = a;
+// XPECT errors --> "B is not a subtype of D." at "b"
+d = b;
+// XPECT errors --> "C is not a subtype of D." at "c"
+d = c;
+d = d;

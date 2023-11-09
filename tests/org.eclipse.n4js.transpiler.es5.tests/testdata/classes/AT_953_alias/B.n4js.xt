@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-	ResourceSet {
+	ProjectWithSourceFolder {
 		ThisFile {}
 		File "A.n4js" {}
 	}
@@ -37,7 +37,7 @@ D.Super call --> A (B.A)
 B.A.foo
 --- */
 
-import { A as C, R as S} from "classes/AT_953_alias/A"
+import { A as C, R as S} from "A"
 
 class A {
     foo() : void {

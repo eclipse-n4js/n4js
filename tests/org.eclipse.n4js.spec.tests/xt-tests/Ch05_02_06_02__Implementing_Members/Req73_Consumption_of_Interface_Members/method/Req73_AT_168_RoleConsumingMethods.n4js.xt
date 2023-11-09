@@ -1,0 +1,121 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// \begin{constraints}[Consumed Methods]\label{cnstr:Consumed_Methods}
+
+//part 1 - copying method to consumer
+
+interface AllAccessMods{
+	public tst(){}
+	public publicM(){console.log('AllAccessMods.publicM()')}
+	project projectM(){console.log('AllAccessMods.projectM()')}
+	protected protectedM(){console.log('AllAccessMods.protectedM()')}
+	defaultM(){console.log('AllAccessMods.defaultM()')}
+}
+
+interface R{
+	public foo(){}
+}
+
+//part 1.1 if consumer has no conflicting method, all but private are accessible
+
+class Ca implements AllAccessMods, R{}
+var ca : Ca = new Ca();
+ca.publicM();
+ca.projectM();
+ca.protectedM();
+ca.defaultM();
+ca.foo();
+
+//simplified checks for interfaces
+interface Ra extends AllAccessMods, R{}
+var ra : Ra;
+ra.publicM();
+ra.projectM();
+ra.protectedM();
+ra.defaultM();
+ra.foo();
+
+
+//part 1.2 if consumer method, and interface method is not copied
+
+class ClassWithOwnedMethods implements AllAccessMods, R{
+	// XPECT errors --> "The method ClassWithOwnedMethods.tst implementing method AllAccessMods.tst must be annotated with @Override." at "tst"
+	public tst(){}
+
+	@Override
+	public publicM(){console.log('ClassWithOwnedMethods.publicM()')}
+	@Override
+	project projectM(){console.log('ClassWithOwnedMethods.projectM()')}
+	@Override
+	protected protectedM(){console.log('ClassWithOwnedMethods.protectedM()')}
+
+	@Override
+	defaultM(){console.log('ClassWithOwnedMethods.defaultM()')}
+}
+var cb : ClassWithOwnedMethods = new ClassWithOwnedMethods();
+cb.publicM();
+cb.projectM();
+cb.protectedM();
+cb.defaultM();
+cb.foo();
+
+interface RoleWithOwnedMethods extends AllAccessMods, R{
+	@Override
+	public publicM(){console.log(' RoleWithOwnedMethods.publicM()')}
+	@Override
+	project projectM(){console.log(' RoleWithOwnedMethods.projectM()')}
+	@Override
+	protected protectedM(){console.log(' RoleWithOwnedMethods.protectedM()')}
+
+	@Override
+	defaultM(){console.log(' RoleWithOwnedMethods.defaultM()')}
+}
+var rb : RoleWithOwnedMethods;
+rb.publicM();
+rb.projectM();
+rb.protectedM();
+rb.defaultM();
+rb.foo();
+
+// part 1.3 - multiple members with the same name
+
+interface AllAccessMods2{
+	public publicM(){console.log('AllAccessMods2.publicM()')}
+	project projectM(){console.log('AllAccessMods2.projectM()')}
+	protected protectedM(){console.log('AllAccessMods2.protectedM()')}
+	defaultM(){console.log('AllAccessMods2.defaultM()')}
+}
+
+
+class CresolvingIssues implements AllAccessMods,AllAccessMods2, R{
+	// XPECT errors --> "The method CresolvingIssues.tst implementing method AllAccessMods.tst must be annotated with @Override." at "tst"
+	public tst(){}
+
+	@Override
+	public publicM(){console.log('CresolvingIssues.publicM()')}
+	@Override
+	project projectM(){console.log('CresolvingIssues.projectM()')}
+	@Override
+	protected protectedM(){console.log('CresolvingIssues.protectedM()')}
+
+	@Override
+	defaultM(){console.log('CresolvingIssues.defaultM()')}
+}
+
+var cc : CresolvingIssues = new CresolvingIssues();
+cc.publicM();
+cc.projectM();
+cc.protectedM();
+cc.defaultM();
+cc.foo();

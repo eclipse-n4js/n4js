@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+// most tests are contained all across the spec tests (and elsewhere);
+// here, we just test a few special aspects of the related validations
+
+
+// XPECT errors --> "Modifier protected is not allowed on a class." at "protected"
+protected class C {
+
+	// XPECT noerrors -->
+	const f01 = null;
+
+	// XPECT errors --> "Modifier const is not allowed on a method." at "const"
+	const m01() {}
+
+	// XPECT errors --> "Duplicate modifier public." at "public"
+	public static public m02() {}
+
+	// XPECT errors --> "Only a single access modifier may be provided." at "private"
+	public private m03() {}
+
+	// XPECT errors --> "Only a single access modifier may be provided." at "private"
+	static public private m04() {} // should not show an 'incorrect order' error here
+
+	// XPECT errors ---
+	// "Only a single access modifier may be provided." at "protected"
+	// "Only a single access modifier may be provided." at "private"
+	// ---
+	public protected static private m05() {}
+
+	// XPECT errors --> "Modifiers should appear in this order: public static." at "static public"
+	static public m06() {}
+
+	// XPECT noerrors -->
+	public static m07() {}
+}

@@ -1,0 +1,74 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+var v0 = 0;
+
+if(true) {
+
+	var v1 = 1;
+
+	for(var v2a=2;v2a<10;v2a++) {
+
+		var v3 = 3;
+		var {prop: v4} = {prop: 4};
+		var {prop: [,v5]} = {prop: [0,5]};
+
+		// XPECT noerrors -->
+		v0;
+		// XPECT noerrors -->
+		v1;
+		// XPECT noerrors -->
+		v2a;
+		// XPECT noerrors -->
+		v3;
+		// XPECT noerrors -->
+		v4;
+		// XPECT noerrors -->
+		v5;
+	}
+
+	for(var v2b=2;v2b<10;v2b++)
+		// XPECT noerrors -->
+		(v0,v1,v2b);
+
+	// XPECT noerrors -->
+	v0;
+	// XPECT noerrors -->
+	v1;
+	// XPECT noerrors -->
+	v2a;
+	// XPECT noerrors -->
+	v2b;
+	// XPECT noerrors -->
+	v3;
+	// XPECT noerrors -->
+	v4;
+	// XPECT noerrors -->
+	v5;
+}
+
+// XPECT noerrors -->
+v0;
+// XPECT noerrors -->
+v1;
+// XPECT noerrors -->
+v2a;
+// XPECT noerrors -->
+v2b;
+// XPECT noerrors -->
+v3;
+// XPECT noerrors -->
+v4;
+// XPECT noerrors -->
+v5;

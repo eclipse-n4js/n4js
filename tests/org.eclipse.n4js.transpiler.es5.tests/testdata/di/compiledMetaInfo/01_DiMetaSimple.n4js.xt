@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest END_SETUP */
 
 /* XPECT output --- 
 when needed DI data is there
@@ -22,10 +22,10 @@ when needed DI data is there
 	]
 }
 fTypeVal N4Class {
-  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  origin: 'test-project',
   annotations: [],
   name: 'Foo',
-  fqn: 'di/compiledMetaInfo/01_DiMetaSimple/Foo',
+  fqn: '01_DiMetaSimple/Foo',
   n4superType: N4Class {
     origin: 'n4js-runtime',
     annotations: [],

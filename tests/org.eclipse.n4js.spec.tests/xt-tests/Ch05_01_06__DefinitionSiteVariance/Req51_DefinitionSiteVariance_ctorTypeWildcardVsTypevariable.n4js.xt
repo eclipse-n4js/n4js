@@ -1,0 +1,55 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+// type{X} or ctor{? extends/super X} is comparable to an covariant generic type:
+// ctor{X} is invariant, as in this case the constructor signature is taken into account as well
+class Type<out X> {}
+
+class H<out T> {
+	// XPECT noerrors -->
+    ret_ext_ctor():constructor{? extends T} {return null;}
+	// XPECT noerrors -->
+    ret_ext_gen():Type<? extends T> {return null;}
+
+	// XPECT errors --> "Cannot use covariant (out) type variable at contravariant position." at "T"
+    ret_sup_ctor():constructor{? super T} {return null;}
+	/* XPECT errors ---
+		"Cannot use covariant (out) type variable at contravariant position." at "T"
+		"Cannot use wildcard with lower bound as argument to a covariant (out) type parameter." at "? super T"
+	--- */
+    ret_sup_gen():Type<? super T> {return null;}
+
+	// XPECT errors --> "Cannot use covariant (out) type variable at invariant position." at "T"
+    ret_ctor():constructor{T} {return null;}
+	// XPECT noerrors -->
+    ret_gen():Type<T> {return null;}
+	// XPECT noerrors -->
+    ret_type():type{T} {return null;}
+
+	// XPECT errors --> "Cannot use covariant (out) type variable at contravariant position." at "T"
+    par_ext_ctor(ctor: constructor{? extends T}) {}
+	// XPECT errors --> "Cannot use covariant (out) type variable at contravariant position." at "T"
+    par_ext_gen(ctor: Type<? extends T>) {}
+
+	// XPECT noerrors -->
+    par_super_ctor(ctor: constructor{? super T}) {}
+	// XPECT errors --> "Cannot use wildcard with lower bound as argument to a covariant (out) type parameter." at "? super T"
+    par_super_gen(ctor: Type<? super T>) {}
+
+	// XPECT errors --> "Cannot use covariant (out) type variable at invariant position." at "T"
+    par_ctor(ctor: constructor{T}) {}
+	// XPECT errors --> "Cannot use covariant (out) type variable at contravariant position." at "T"
+    par_gen(ctor: Type<T>) {}
+    // XPECT errors --> "Cannot use covariant (out) type variable at contravariant position." at "T"
+    par_type(ctor: type{T}) {}
+}

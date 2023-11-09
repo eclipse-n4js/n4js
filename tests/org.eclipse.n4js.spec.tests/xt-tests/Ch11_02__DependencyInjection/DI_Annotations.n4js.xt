@@ -1,0 +1,144 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class C {}
+interface I {}
+
+
+//
+// @GenerateInjector
+//
+
+// XPECT noerrors -->
+@GenerateInjector
+class Inj01 {}
+
+// XPECT noerrors -->
+@GenerateInjector
+export public class Inj02 {}
+
+// XPECT errors --> "The annotation @GenerateInjector is disallowed for this location." at "GenerateInjector"
+@GenerateInjector
+interface Inj03 {}
+
+// XPECT errors --> "The annotation @GenerateInjector is disallowed for this location." at "GenerateInjector"
+@GenerateInjector
+export public interface Inj03b {}
+
+
+//
+// @Binder
+//
+
+// XPECT noerrors -->
+@Binder
+class Bin01 {}
+
+// XPECT noerrors -->
+@Binder
+export public class Bin02 {}
+
+/* XPECT errors ---
+"Annotation @Binder is applicable only for (exported) non-abstract class definitions." at "Binder"
+"The annotation @Binder is disallowed for this location." at "Binder"
+---
+*/
+@Binder
+interface Bin03 {}
+
+/* XPECT errors ---
+"Annotation @Binder is applicable only for (exported) non-abstract class definitions." at "Binder"
+"The annotation @Binder is disallowed for this location." at "Binder"
+---
+*/
+@Binder
+export public interface Bin04 {}
+
+// XPECT errors -->"Annotation @Binder is applicable only for (exported) non-abstract class definitions." at "Binder"
+@Binder
+abstract class Bin95 {}
+
+// XPECT errors -->"Annotations @Binder and @GenerateInjector may not be applied both on the same class definition." at "Binder"
+@Binder
+@GenerateInjector
+class Bin96 {}
+
+
+//
+// @Bind
+//
+
+// XPECT noerrors -->
+@Binder @Bind(C,C) class Bin05 {}
+
+// XPECT errors --> "The annotation @Bind is only allowed on classes annotated with @Binder." at "Bind"
+@Bind(C,C) class Bin06 {}
+
+
+//
+// @WithParentInjector
+//
+
+// XPECT noerrors -->
+@GenerateInjector @WithParentInjector(Inj01) class Inj04 {}
+
+// XPECT errors --> "The annotation @WithParentInjector is only allowed on classes annotated with @GenerateInjector." at "WithParentInjector"
+@WithParentInjector(Inj01) class Inj05 {}
+
+// XPECT errors --> "Wrong number of annotation arguments: @WithParentInjector expects 1 but got 0." at "WithParentInjector"
+@GenerateInjector @WithParentInjector class Inj06 {}
+
+// XPECT errors --> "Argument to annotation @WithParentInjector must be a class annotated with @GenerateInjector." at "C"
+@GenerateInjector @WithParentInjector(C) class Inj07 {}
+
+
+//
+// @UseBinder
+//
+
+// XPECT noerrors -->
+@GenerateInjector @UseBinder(Bin01) class Inj08 {}
+
+// XPECT errors --> "The annotation @UseBinder is only allowed on classes annotated with @GenerateInjector." at "UseBinder"
+@UseBinder(Bin01) class Inj09 {}
+
+// XPECT errors --> "Wrong number of annotation arguments: @UseBinder expects 1 but got 0." at "UseBinder"
+@GenerateInjector @UseBinder class Inj10 {}
+
+// XPECT errors --> "Argument to annotation @UseBinder must be a class annotated with @Binder." at "C"
+@GenerateInjector @UseBinder(C) class Inj11 {}
+
+
+//
+// @Provides
+//
+
+@Binder class Bin07 {
+	// XPECT noerrors -->
+	@Provides m() : C { return null; }
+}
+
+class Bin08 {
+	// XPECT errors --> "The annotation @Provides is only allowed on methods contained in a class annotated with @Binder." at "Provides"
+	@Provides m() : C { return null; }
+}
+
+@Binder class Bin09 {
+	// XPECT errors --> "Type string is not injectable at param: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "param"
+	@Provides m1(param : string) : C { return null; }
+	// XPECT errors --> "A provider method must return a value." at "m2"
+	@Provides m2() {}
+	// XPECT errors --> "Type Object is not injectable: only user-defined, non-generic, nominally typed interfaces and classes are allowed." at "Provides"
+	@Provides m3() : Object { return null; }
+}

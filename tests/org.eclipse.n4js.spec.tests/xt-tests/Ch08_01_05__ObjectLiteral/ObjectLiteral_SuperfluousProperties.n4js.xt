@@ -1,0 +1,72 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// Cf. requirement IDE-22501
+
+
+interface I {
+	public x?: int;
+	public get y?(): int;
+	public set z?(v: int);
+	public f();
+}
+
+// XPECT warnings --> "u is not defined in ~I; it will not be accessible from s." at "u"
+let s: ~I = 	{u: 1, x: 1, y: 1, z: 1, f: function(){}}; s; 
+/* XPECT warnings ---
+"f is not defined in ~~I; it will not be accessible from fs." at "f"
+"u is not defined in ~~I; it will not be accessible from fs." at "u"
+--- */
+let fs: ~~I = 	{u: 1, x: 1, y: 1, z: 1, f: function(){}}; fs; 
+/* XPECT warnings --- 
+"u is not defined in ~r~I; it will not be accessible from rs." at "u"
+"z is not defined in ~r~I; it will not be accessible from rs." at "z"
+"f is not defined in ~r~I; it will not be accessible from rs." at "f"
+--- */
+let rs: ~r~I = 	{u: 1, x: 1, y: 1, z: 1, f: function(){}}; rs; 
+/* XPECT warnings --- 
+"u is not defined in ~w~I; it will not be accessible from ws." at "u"
+"y is not defined in ~w~I; it will not be accessible from ws." at "y"
+"f is not defined in ~w~I; it will not be accessible from ws." at "f"
+--- */
+let ws: ~w~I = 	{u: 1, x: 1, y: 1, z: 1, f: function(){}}; ws; 
+/* XPECT warnings --- 
+"f is not defined in ~i~I; it will not be accessible from is." at "f"
+"u is not defined in ~i~I; it will not be accessible from is." at "u"
+"y is not defined in ~i~I; it will not be accessible from is." at "y"
+--- */
+let is: ~i~I = 	{u: 1, x: 1, y: 1, z: 1, f: function(){}}; is;
+
+// dynamic type XPECT nowarnings -->
+let id: ~I+ = {u: 1, x: 1, y: 1, z: 1, f: function(){}}; id;
+
+function f(p: ~~I) {}
+// XPECT warnings --> "u is not defined in ~~I; it will not be accessible from the receiving parameter." at "u"
+f({u: 1, x: 1, y: 1, z: 1}) 
+
+// no warnings if type is plain object XPECT nowarnings -->
+let os:~Object = {u: 1, x: 1, y: 1, z: 1, f: function(){}}; os;
+
+/* XPECT warnings --- 
+"f is not defined in ~Object with { x: int; y: int; z: int }; it will not be accessible from osw." at "f"
+"u is not defined in ~Object with { x: int; y: int; z: int }; it will not be accessible from osw." at "u"
+--- */
+let osw:~Object with {x:int, y:int,z:int} = {u: 1, x: 1, y: 1, z: 1, f: function(){}}; osw;
+
+class C {
+	public x: int
+	constructor(@Spec spec: ~i~this){}
+}
+
+// XPECT warnings --> "y is not defined in ~i~this[C]; it will not have any effect in the spec constructor." at "y"
+new C({x:42, y:1});

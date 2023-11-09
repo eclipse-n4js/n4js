@@ -9,11 +9,17 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest
 
-    ResourceSet {
-		ThisFile {}
-		File "AT_874_ExternalClasses.n4jsd" {}
+    Project {
+    	SrcFolder {
+			ThisFile {}
+			File "AT_874_ExternalClasses.n4jsd" {}
+    	}
+    	Folder "external" {
+			File "AT_874_ExternalClasses.js" {}
+    	}
+    	File "package.json" {}
 	}
 
    END_SETUP
@@ -22,7 +28,7 @@
 /* XPECT output ---
 {"stuff":"stuff","myField":2}
 --- */
-import { MyExternalClass } from "classes/AT_874_InheritConstructor/AT_874_ExternalClasses"
+import { MyExternalClass } from "AT_874_ExternalClasses"
 
 class A extends MyExternalClass {
 	public myField : number = 6;

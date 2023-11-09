@@ -1,0 +1,90 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+
+class C1{
+	public constructor() {}
+}
+var c1 : C1;
+
+c1 = new C1(); //ok
+// // XPECT errors --> "Incorrect number of arguments: expected 0, got 1." at "new C1('foo')"
+c1 = new C1('foo');
+
+class C2{
+	public constructor(s : string) {}
+}
+var c2 : C2;
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "new C2()"
+c2 = new C2();
+c2 = new C2('foo');
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 2." at "new C2('foo','bar')"
+c2 = new C2('foo','bar');
+
+class C3{
+	public constructor(s : string=undefined) {}
+}
+var c3 : C3;
+c3 = new C3();
+c3 = new C3('foo');
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 2." at "new C3('foo','bar')"
+c3 = new C3('foo','bar');
+
+class C4{
+	public constructor(... s : string) {}
+}
+var c4 : C4;
+c4 = new C4();
+c4 = new C4('foo');
+c4 = new C4('foo','bar');
+c4 = new C4('foo','bar', 'baz');
+c4 = new C4('foo','bar', 'baz', 'qux');
+c4 = new C4('foo','bar', 'baz', 'qux', 'something');
+
+class C5{
+	public constructor(s : string, ss : string=undefined) {}
+}
+var c5 : C5;
+// XPECT errors --> "Incorrect number of arguments: expected 2, got 0." at "new C5()"
+c5 = new C5();
+c5 = new C5('foo');
+c5 = new C5('foo','bar');
+// XPECT errors --> "Incorrect number of arguments: expected 2, got 3." at "new C5('foo','bar', 'baz')"
+c5 = new C5('foo','bar', 'baz');
+
+class C6{
+	public constructor(s : string, ... sss : string) {}
+}
+var c6 : C6;
+// XPECT errors --> "Incorrect number of arguments: expected 2, got 0." at "new C6()"
+c6 = new C6();
+c6 = new C6('foo');
+c6 = new C6('foo','bar');
+c6 = new C6('foo','bar', 'baz');
+c6 = new C6('foo','bar', 'baz', 'qux');
+c6 = new C6('foo','bar', 'baz', 'qux', 'something');
+
+class C7{
+	public constructor(s : string, ss : string=undefined, ... sss : string) {}
+}
+var c7 : C7;
+// XPECT errors --> "Incorrect number of arguments: expected 3, got 0." at "new C7()"
+c7 = new C7();
+// XPECT noerrors --> "fpar 2 is optional, 3 is variadic (0..), so 1 is ok" at "new C7('foo')"
+c7 = new C7('foo');
+// XPECT noerrors --> "variadic is optional (0..), so 2 is ok" at "new C7('foo','bar')"
+c7 = new C7('foo','bar');
+c7 = new C7('foo','bar', 'baz');
+c7 = new C7('foo','bar', 'baz', 'qux');
+c7 = new C7('foo','bar', 'baz', 'qux', 'something');

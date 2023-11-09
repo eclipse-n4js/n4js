@@ -1,0 +1,104 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+
+class D {}
+
+
+class X {
+	get m() : B { return null; }
+	set m(p : B) {}
+}
+interface I {
+	get m() : B
+	set m(p : B)
+}
+
+
+// --------------------------------------------------------------------------
+// for classes inheriting from a class:
+
+class Y1 extends X {
+	@Override
+	get m() : C { return null; }
+	@Override
+	set m(p : A) {}
+}
+class Y2 extends X {
+	@Override
+	get m() : B { return null; }
+	@Override
+	set m(p : B) {}
+}
+class Y3 extends X {
+	@Override
+	// XPECT errors --> "Type of getter Y3.m does not conform to overridden getter X.m: A is not a subtype of B." at "m"
+	get m() : A { return null; }
+	@Override
+	// XPECT errors --> "Type of setter Y3.m does not conform to overridden setter X.m: B is not a subtype of C." at "m"
+	set m(p : C) {}
+}
+
+
+// --------------------------------------------------------------------------
+// for classes inheriting from an interface:
+
+class Y4 implements I {
+	@Override
+	get m() : C { return null; }
+	@Override
+	set m(p : A) {}
+}
+class Y5 implements I {
+	@Override
+	get m() : B { return null; }
+	@Override
+	set m(p : B) {}
+}
+class Y6 implements I {
+	@Override
+	// XPECT errors --> "Type of getter Y6.m does not conform to implemented getter I.m: A is not a subtype of B. Also cf. setter I.m." at "m"
+	get m() : A { return null; }
+	@Override
+	// XPECT errors --> "Type of setter Y6.m does not conform to implemented setter I.m: B is not a subtype of C. Also cf. getter I.m." at "m"
+	set m(p : C) {}
+}
+
+
+// --------------------------------------------------------------------------
+// for interfaces inheriting from an interface:
+
+interface I1 extends I {
+	@Override
+	get m() : C
+	@Override
+	set m(p : A)
+}
+interface I2 extends I {
+	@Override
+	get m() : B
+	@Override
+	set m(p : B)
+}
+interface I3 extends I {
+	@Override
+	// XPECT errors --> "Type of getter I3.m does not conform to implemented getter I.m: A is not a subtype of B. Also cf. setter I.m." at "m"
+	get m() : A
+	@Override
+	// XPECT errors --> "Type of setter I3.m does not conform to implemented setter I.m: B is not a subtype of C. Also cf. getter I.m." at "m"
+	set m(p : C)
+}

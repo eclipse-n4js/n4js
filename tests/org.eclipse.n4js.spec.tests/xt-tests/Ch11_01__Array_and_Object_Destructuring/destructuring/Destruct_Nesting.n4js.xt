@@ -1,0 +1,129 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+var arr = [
+	1,
+	2,
+	{
+		frst: 3,
+		snd: {
+			a: [
+				4,
+				5,
+				6
+			],
+			b: 7
+		},
+		thrd: [
+			[
+				8,
+				9
+			],
+			10
+		]
+	},
+	11
+] as Iterable4<
+	number,
+	number,
+	~Object with { frst: number; snd: ~Object with { a: Array<number>; b: number; } ; thrd: Iterable2<Array<number>,number> ; },
+	number
+>;
+
+
+var obj = {
+	one: arr,
+	two: arr
+}
+
+
+var [ x1, x2, {frst:x3, snd:{a:[x4,x5,x6], b:x7}, thrd:[[x8,x9],x10] }, x11 ] = arr;
+console.log(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11);
+
+
+console.log('########');
+
+
+x1=undefined;
+x2=undefined;
+x3=undefined;
+x4=undefined;
+x5=undefined;
+x6=undefined;
+x7=undefined;
+x8=undefined;
+x9=undefined;
+x10=undefined;
+x11=undefined;
+
+[ x1, x2, {frst:x3, snd:{a:[x4,x5,x6], b:x7}, thrd:[[x8,x9],x10] }, x11 ] = arr;
+console.log(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11);
+
+
+console.log('########');
+
+
+var {
+	one: [ y1, y2, {frst:y3, snd:{a:[y4,y5,y6], b:y7}, thrd:[[y8,y9],y10] }, y11 ],
+	two: [ z1, z2, {frst:z3, snd:{a:[z4,z5,z6], b:z7}, thrd:[[z8,z9],z10] }, z11 ]
+} = obj;
+console.log(y1,y2,y3,y4,y5,y6,y7,y8,y9,y10,y11);
+console.log(z1,z2,z3,z4,z5,z6,z7,z8,z9,z10,z11);
+
+
+console.log('########');
+
+
+y1=undefined;
+y2=undefined;
+y3=undefined;
+y4=undefined;
+y5=undefined;
+y6=undefined;
+y7=undefined;
+y8=undefined;
+y9=undefined;
+y10=undefined;
+y11=undefined;
+z1=undefined;
+z2=undefined;
+z3=undefined;
+z4=undefined;
+z5=undefined;
+z6=undefined;
+z7=undefined;
+z8=undefined;
+z9=undefined;
+z10=undefined;
+z11=undefined;
+
+({
+	one: [ y1, y2, {frst:y3, snd:{a:[y4,y5,y6], b:y7}, thrd:[[y8,y9],y10] }, y11 ],
+	two: [ z1, z2, {frst:z3, snd:{a:[z4,z5,z6], b:z7}, thrd:[[z8,z9],z10] }, z11 ]
+} = obj);
+console.log(y1,y2,y3,y4,y5,y6,y7,y8,y9,y10,y11);
+console.log(z1,z2,z3,z4,z5,z6,z7,z8,z9,z10,z11);
+
+
+/* XPECT output ---
+1 2 3 4 5 6 7 8 9 10 11
+########
+1 2 3 4 5 6 7 8 9 10 11
+########
+1 2 3 4 5 6 7 8 9 10 11
+1 2 3 4 5 6 7 8 9 10 11
+########
+1 2 3 4 5 6 7 8 9 10 11
+1 2 3 4 5 6 7 8 9 10 11
+--- */

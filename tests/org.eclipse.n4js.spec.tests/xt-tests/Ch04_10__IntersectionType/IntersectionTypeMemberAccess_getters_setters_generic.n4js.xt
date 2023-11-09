@@ -1,0 +1,102 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+interface A {}
+interface B {}
+
+let a:A;
+let b:B;
+
+let ab:A|B;
+
+interface I1<S,T> {
+	get a():S;
+	set b(b:T);
+
+	get ab():S;
+	set ba(a:S);
+}
+
+interface I2<S,T> {
+	set a(a:S);
+	get b():T;
+
+	set ab(b:T);
+	get ba():T;
+}
+
+var i12: I1<A,B> & I2<A,B>;
+
+// get a():A
+// set a(a:A)
+
+// XPECT noerrors
+i12.a
+
+// XPECT type of 'a' --> A
+i12.a
+
+// XPECT noerrors
+i12.a = a;
+
+// XPECT errors --> "B is not a subtype of A." at "b"
+i12.a = b;
+
+
+
+// get b():B
+// set b(b:B)
+
+// XPECT noerrors
+i12.b
+
+// XPECT type of 'b' --> B
+i12.b
+
+// XPECT noerrors
+i12.b = b;
+
+// XPECT errors --> "A is not a subtype of B." at "a"
+i12.b = a;
+
+
+// get ab():A
+// set ab(b:B)
+
+// XPECT noerrors
+i12.ab
+
+// XPECT type of 'ab' --> A
+i12.ab
+
+// XPECT errors --> "A is not a subtype of B." at "a"
+i12.ab = a;
+
+// XPECT noerrors
+i12.ab = b;
+
+
+// get ba():B
+// set ba(a:A)
+
+// XPECT noerrors
+i12.ba
+
+// XPECT type of 'ba' --> B
+i12.ba
+
+// XPECT noerrors
+i12.ba = a;
+
+// XPECT errors --> "B is not a subtype of A." at "b"
+i12.ba = b;

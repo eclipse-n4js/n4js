@@ -1,0 +1,82 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+// IDE-775 Logical And (&&), Logical Or(||)
+
+// ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~
+// Req. 117 (Binary Logical Expression Constraints): For a given binary logical expression e with e.lhs.type : L
+// and e.rhs.type : R the following constraints must hold:
+//  * In N4JS mode, neither L nor R must be undefined or null.
+// ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~  ~~
+
+// XPECT errors --> "null is not allowed on the left hand side of a logical expression." at "null"
+var n4 : number = null && 5;
+// ok
+var n5 : number = 5 || null;
+// ok
+var n4a : number = 5 && null ;
+// XPECT errors -->  "null is not allowed on the left hand side of a logical expression." at "null"
+var n5a : number = null || 5;
+
+
+
+function xx() : boolean { return true; }
+function xy() : void {}
+
+// -VOID type in expression.
+// XPECT errors ---
+// "union{void,boolean} is not a subtype of any." at "xy() || xx()"
+// "void is not a subtype of any." at "xy()"
+// ---
+var n6 = xy() || xx() ;
+
+
+// @Undefined not working yet!
+//var @Undefined any myundefined;
+
+// XPECT errors --> "undefined is not allowed on the left hand side of a logical expression." at "void "h""
+var n7 = void "h" || "hll";
+
+// XPECT errors --> "undefined is not allowed on the left hand side of a logical expression." at "void "h""
+var n8 = void "h" && "hll";
+
+// ok
+var n9 = "hll" || void "h";
+
+// ok
+var n10 ="hll" && void "h";
+
+// XPECT errors --> "undefined is not allowed on the left hand side of a logical expression." at "undefined"
+undefined && xy;
+
+
+
+// ///////// NODE transcript ////////
+//	> function x() {
+//	... console.log("a");
+//	... }
+//	undefined
+//	> x()
+//	a
+//	undefined
+//	> null && x()
+//	null
+//	> null || x()
+//	a
+//	undefined
+//	>  x() && null
+//	a
+//	undefined
+//	>  x() || null
+//	a
+//	null
+//	>

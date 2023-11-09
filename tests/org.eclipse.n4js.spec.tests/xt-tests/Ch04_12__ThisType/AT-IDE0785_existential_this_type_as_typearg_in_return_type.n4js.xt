@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class C {
+
+	// XPECT noerrors --> No error expected: "The this type isn't allowed on this place. You can only use it as return type of instance methods or structurally on use site in the constructor." at "this"
+	m2() : Array<? extends this> {
+		return null;
+	}
+
+}
+
+class D extends C {}
+
+var f : Array<? extends C> = new C().m2();
+var f1 : Array<? extends C> = new D().m2();
+// XPECT errors -->"Array<? extends this[C]> is not a subtype of Array<? extends D>." at "new C().m2()"
+var af : Array<? extends D> = new C().m2();
+var af1 : Array<? extends D> = new D().m2();
+// XPECT errors -->"Array<? extends this[C]> is not a subtype of Array<C>." at "new C().m2()"
+var f2 : Array<C> = new C().m2();

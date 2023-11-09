@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class X {
+	constructor(n : number) { this.n = n; }
+	n : number;
+	x1() : number { return 42 / this.n; }
+}
+
+var x = new X(9);
+
+// XPECT warnings --> "A reference to method x1 is created detached from a (correct) this-instance." at "x1"
+var xMeth = x.x1;
+xMeth();
+
+
+
+// NOTE:
+// the below example of using a plain function as a constructor does not make sense
+// in the current form (e.g. BaxA does not return anything) and needs to be cleaned
+// up; but this probably requires to solve task IDE-522 first.
+
+// this-type annotation for function XPECT noerrors -->
+@This(
+~Object with {
+w : number; h : number;
+})
+function BoxA(w : number,h : number) {
+  this.w = w;
+  this.h = h;
+
+  var area = function() {
+  	return (
+  	// no this in inner function XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'w'." at "w"
+  	this.w *
+  	// no this in inner function XPECT errors -->"Couldn't resolve reference to IdentifiableElement 'h'." at "h"
+  	this.h )
+  }
+}
+// XPECT errors --> "void is not a subtype of any." at "BoxA(1,2)"
+var bError = BoxA(1,2)
+
+
+var obj = {w:7,h:8}
+BoxA.apply(obj, [1,2] )

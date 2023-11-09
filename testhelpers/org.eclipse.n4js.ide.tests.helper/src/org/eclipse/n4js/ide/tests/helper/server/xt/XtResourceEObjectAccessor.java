@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractStructuredIdeTest;
 import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -50,11 +51,13 @@ public class XtResourceEObjectAccessor {
 	 * @return {@link EObject} with offset for a given offset in this resource.
 	 */
 	public IEObjectCoveringRegion getObjectCoveringRegion(int searchFromOffset, String optionalLocationStr) {
-		int offset = getOffset(searchFromOffset, optionalLocationStr, false);
+		Pair<Integer, Integer> offsetAndLength = getOffsetAndLength(searchFromOffset, optionalLocationStr, false);
+		int offset = offsetAndLength.getKey();
+		int length = offsetAndLength.getValue();
 		if (offset < 0) {
 			return null;
 		}
-		int length = optionalLocationStr == null ? 0 : lengthWithoutCursor(optionalLocationStr);
+		// int length = optionalLocationStr == null ? 0 : lengthWithoutCursor(optionalLocationStr);
 		EObject eObject = XtResourceUtil.findEObject(resource, offset, length);
 		EStructuralFeature structuralFeature = XtResourceUtil.findStructuralFeature(resource, offset);
 		return new EObjectCoveringRegion(resource, eObject, offset, structuralFeature);
@@ -70,7 +73,7 @@ public class XtResourceEObjectAccessor {
 	 */
 	public Position checkAndGetPosition(XtMethodData data, String methodName, String arg1) {
 		String optionalLocationStr = checkAndGetArgAfter(data, methodName, arg1);
-		int offset = getOffset(data.offset, optionalLocationStr, true);
+		int offset = getOffsetAndLength(data.offset, optionalLocationStr, true).getKey();
 		Position position = xtData.getPosition(offset);
 		if (position == null) {
 			Preconditions.checkState(false, "Position not found for string: " + optionalLocationStr);
@@ -91,11 +94,13 @@ public class XtResourceEObjectAccessor {
 			String arg1) {
 
 		String optionalLocationStr = checkAndGetArgAfter(data, methodName, arg1);
-		int offset = getOffset(data.offset, optionalLocationStr, false);
+		Pair<Integer, Integer> offsetAndLength = getOffsetAndLength(data.offset, optionalLocationStr, false);
+		int offset = offsetAndLength.getKey();
+		int length = offsetAndLength.getValue();
 		if (offset < 0) {
 			return null;
 		}
-		EObject eObject = XtResourceUtil.findEObject(resource, offset, 0);
+		EObject eObject = XtResourceUtil.findEObject(resource, offset, length);
 		EStructuralFeature structuralFeature = XtResourceUtil.findStructuralFeature(resource, offset);
 		return new EObjectCoveringRegion(resource, eObject, offset, structuralFeature);
 	}
@@ -158,14 +163,18 @@ public class XtResourceEObjectAccessor {
 		return null;
 	}
 
-	private int getOffset(int searchFromOffset, String optionalLocationStr, boolean atEnd) {
-		int offset;
+	private Pair<Integer, Integer> getOffsetAndLength(int searchFromOffset, String optionalLocationStr, boolean atEnd) {
+		int offset = 0;
+		int length = 0;
 		if (!Strings.isNullOrEmpty(optionalLocationStr)) {
+			length = lengthWithoutCursor(optionalLocationStr);
 			int relOffset = 0;
 			if (atEnd) {
 				relOffset = lengthWithoutCursor(optionalLocationStr) - 1;
+				length = 0;
 			} else if (optionalLocationStr.contains(CURSOR)) {
 				relOffset = optionalLocationStr.indexOf(CURSOR);
+				length = 0;
 			}
 			relOffset = Math.max(0, relOffset);
 
@@ -175,7 +184,7 @@ public class XtResourceEObjectAccessor {
 		} else {
 			offset = skipCommentsAndWhitespace(xtData.content, null, searchFromOffset);
 		}
-		return offset;
+		return Pair.of(offset, length);
 	}
 
 	private int lengthWithoutCursor(String str) {

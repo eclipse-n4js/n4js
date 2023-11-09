@@ -1,0 +1,88 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+class C{}
+
+// XPECT noerrors --> "static primitive string" at "string"
+var s : string;
+// XPECT errors --> "Primitive type string must not be referenced dynamically." at "string"
+var sd : string+;
+// XPECT noerrors --> "static primitive number" at "number"
+var n : number;
+// XPECT errors --> "Primitive type number must not be referenced dynamically." at "number"
+var nd : number+;
+// XPECT noerrors --> "static primitive boolean" at "boolean"
+var b : boolean;
+// XPECT errors --> "Primitive type boolean must not be referenced dynamically." at "boolean"
+var bd : boolean+;
+// XPECT noerrors --> "static primitive any" at "any"
+var a : any;
+// XPECT noerrors --> "dynamic primitive any allowed" at "any"
+var ad : any+;
+// XPECT noerrors --> "static primitive pathSelector" at "pathSelector<C>"
+var ps : pathSelector<C>;
+// XPECT errors --> "Primitive type pathSelector must not be referenced dynamically." at "pathSelector<C>"
+var psd : pathSelector<C>+;
+// XPECT noerrors --> "static primitive typeName" at "typeName<C>"
+var tn : typeName<C>;
+// XPECT errors --> "Primitive type typeName must not be referenced dynamically." at "typeName<C>"
+var tnd : typeName<C>+;
+// XPECT noerrors --> "static primitive i18nKey" at "i18nKey"
+var i : i18nKey;
+// XPECT errors --> "Primitive type i18nKey must not be referenced dynamically." at "i18nKey"
+var id : i18nKey+;
+
+// XPECT noerrors --> "static class" at "C"
+var c : C;
+// XPECT noerrors --> "dynamic class allowed" at "C"
+var cd : C+;
+
+// XPECT noerrors --> "static Object" at "Object"
+var o : Object;
+// XPECT noerrors --> "dynamic Object allowed" at "Object"
+var od : Object+;
+
+// XPECT noerrors --> "static Array" at "Array<string>"
+var as : Array<string>;
+// XPECT noerrors --> "dynamic Array allowed" at "Array<string>"
+var das : Array<string>+;
+
+/* XPECT errors ---
+"no viable alternative at input '+'" at "+"
+"no viable alternative at input ';'" at ";"
+--- */
+var un: union{string,number}+;
+
+/* XPECT errors ---
+"no viable alternative at input '+'" at "+"
+"no viable alternative at input ';'" at ";"
+--- */
+var inter: intersection{string,number}+;
+
+/*
+XPECT errors ---
+"no viable alternative at input '+'" at "+"
+"no viable alternative at input ';'" at ";"
+--- */
+var ctor: constructor{C}+;
+
+/* XPECT errors ---
+"no viable alternative at input '+'" at "+"
+"no viable alternative at input ';'" at ";"
+--- */
+var typ: type{C}+;
+
+/* XPECT errors ---
+"no viable alternative at input '+'" at "+"
+"no viable alternative at input ';'" at ";"
+--- */
+var fct: {function()}+;

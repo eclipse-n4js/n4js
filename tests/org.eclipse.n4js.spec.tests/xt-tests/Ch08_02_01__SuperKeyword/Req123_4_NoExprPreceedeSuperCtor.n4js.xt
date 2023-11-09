@@ -1,0 +1,100 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// IDEBUG-147
+
+class A {
+	n : number;
+	constructor() {}
+}
+
+
+class Java extends A {
+	constructor() {
+		// XPECT noerrors -->
+		super();
+
+		var a = 1;
+		if (true) {
+		}
+	}
+}
+
+
+class B extends A {
+	constructor() {
+		var a = 1;
+		if (true) {
+		}
+		// XPECT noerrors -->
+		super();
+	}
+}
+
+class C extends A {
+	constructor() {
+		var a = 1;
+		if (true) {
+			this.n = 19;
+		}
+		// XPECT errors --> "Super constructor call must not be preceded by this keyword (line 48)." at "super"
+		super();
+	}
+}
+
+class D extends A {
+	constructor() {
+		var a = 1;
+		if (true) {
+			return;
+		}
+		// XPECT errors --> "Super constructor call must not be preceded by return (line 59)." at "super"
+		super();
+	}
+}
+
+class E extends A {
+	constructor() {
+		var a = 1;
+		this.n = a;
+		// XPECT errors --> "Super constructor call must not be preceded by this keyword (line 69)." at "super"
+		super();
+	}
+}
+
+class F extends A {
+	constructor() {
+		var a = 1;
+		return;
+		// XPECT warnings --> "Dead code. No execution possible after return." at "super();"
+		// XPECT errors --> "Super constructor call must not be preceded by return (line 78)." at "super"
+		super();
+	}
+}
+
+class Other {
+    value : number;
+}
+
+class G extends A {
+
+    constructor() {
+
+        var x = @This(Other) function() {
+            this.value;
+        }
+
+		// XPECT noerrors --> "this above is in function expression, that is, it is a different this."
+        super();
+    }
+}

@@ -1,0 +1,273 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+// IDE-777 Constraints84 Compound Assignment
+
+class A{}
+class B extends A{}
+class C{}
+class D extends A{}
+class G<T> { field : T; }
+
+var ga : G<A>, gb : G<B>;
+
+var a : A, b : B, c : C, d : D;
+var cond : boolean;
+
+var s1 : string, s2 : string;
+var ba : boolean=true;
+var n1 : number, n2 : number;
+var h1,h2;
+
+
+//	*=
+
+// OK
+n1 *= n2;
+// XPECT errors ---
+// "expecting write-access for type number but boolean is not a super type of number." at "ba"
+// "boolean is not a subtype of number." at "cond"
+// ---
+ba *= cond;
+// XPECT errors ---
+// "expecting write-access for type number but string is not a super type of number." at "s1"
+// "string is not a subtype of number." at "s2"
+// ---
+s1 *= s2;
+// XPECT errors ---
+// "any is not a subtype of number." at "h2"
+// ---
+h1 *= h2;
+//---------------------------------------------------------
+
+
+
+//	/=
+
+// OK
+n1 /= n2;
+// XPECT errors ---
+// "expecting write-access for type number but boolean is not a super type of number." at "ba"
+// "boolean is not a subtype of number." at "cond"
+// ---
+ba /= cond;
+// XPECT errors ---
+// "expecting write-access for type number but string is not a super type of number." at "s1"
+// "string is not a subtype of number." at "s2"
+// ---
+s1 /= s2;
+// XPECT errors ---
+// "any is not a subtype of number." at "h2"
+// ---
+h1 /= h2;
+//---------------------------------------------------------
+
+
+//	%=
+
+// OK
+n1 %= n2;
+// XPECT errors ---
+// "expecting write-access for type number but boolean is not a super type of number." at "ba"
+// "boolean is not a subtype of number." at "cond"
+// ---
+ba %= cond;
+// XPECT errors ---
+// "expecting write-access for type number but string is not a super type of number." at "s1"
+// "string is not a subtype of number." at "s2"
+// ---
+s1 %= s2;
+// XPECT errors ---
+// "any is not a subtype of number." at "h2"
+// ---
+h1 %= h2;
+//---------------------------------------------------------
+
+
+//	-=
+
+// OK
+n1 |= n2;
+// XPECT errors ---
+// "expecting write-access for type number but boolean is not a super type of number." at "ba"
+// "boolean is not a subtype of number." at "cond"
+// ---
+ba |= cond;
+// XPECT errors ---
+// "expecting write-access for type number but string is not a super type of number." at "s1"
+// "string is not a subtype of number." at "s2"
+// ---
+s1 |= s2;
+// XPECT errors ---
+// "any is not a subtype of number." at "h2"
+// ---
+h1 |= h2;
+//---------------------------------------------------------
+
+
+//	<<=
+
+// OK
+n1 <<= n2;
+// XPECT errors ---
+// "expecting write-access for type number but boolean is not a super type of number." at "ba"
+// "boolean is not a subtype of number." at "cond"
+// ---
+ba <<= cond;
+// XPECT errors ---
+// "expecting write-access for type number but string is not a super type of number." at "s1"
+// "string is not a subtype of number." at "s2"
+// ---
+s1 <<= s2;
+// XPECT errors ---
+// "any is not a subtype of number." at "h2"
+// ---
+h1 <<= h2;
+//---------------------------------------------------------
+
+
+//	>>=
+
+// OK
+n1 >>= n2;
+// XPECT errors ---
+// "expecting write-access for type number but boolean is not a super type of number." at "ba"
+// "boolean is not a subtype of number." at "cond"
+// ---
+ba >>= cond;
+// XPECT errors ---
+// "expecting write-access for type number but string is not a super type of number." at "s1"
+// "string is not a subtype of number." at "s2"
+// ---
+s1 >>= s2;
+// XPECT errors ---
+// "any is not a subtype of number." at "h2"
+// ---
+h1 >>= h2;
+//---------------------------------------------------------
+
+
+//	>>>=
+
+// OK
+n1 >>>= n2;
+// XPECT errors ---
+// "expecting write-access for type number but boolean is not a super type of number." at "ba"
+// "boolean is not a subtype of number." at "cond"
+// ---
+ba >>>= cond;
+// XPECT errors ---
+// "expecting write-access for type number but string is not a super type of number." at "s1"
+// "string is not a subtype of number." at "s2"
+// ---
+s1 >>>= s2;
+// XPECT errors ---
+// "any is not a subtype of number." at "h2"
+// ---
+h1 >>>= h2;
+//---------------------------------------------------------
+
+
+//	&=
+
+// OK
+n1 &= n2;
+// XPECT errors ---
+// "expecting write-access for type number but boolean is not a super type of number." at "ba"
+// "boolean is not a subtype of number." at "cond"
+// ---
+ba &= cond;
+// XPECT errors ---
+// "expecting write-access for type number but string is not a super type of number." at "s1"
+// "string is not a subtype of number." at "s2"
+// ---
+s1 &= s2;
+// XPECT errors ---
+// "any is not a subtype of number." at "h2"
+// ---
+h1 &= h2;
+//---------------------------------------------------------
+
+
+//	^=
+
+// OK
+n1 ^= n2;
+// XPECT errors ---
+// "expecting write-access for type number but boolean is not a super type of number." at "ba"
+// "boolean is not a subtype of number." at "cond"
+// ---
+ba ^= cond;
+// XPECT errors ---
+// "expecting write-access for type number but string is not a super type of number." at "s1"
+// "string is not a subtype of number." at "s2"
+// ---
+s1 ^= s2;
+// XPECT errors ---
+// "any is not a subtype of number." at "h2"
+// ---
+h1 ^= h2;
+//---------------------------------------------------------
+
+
+//	|=
+
+// OK
+n1 |= n2;
+// XPECT errors ---
+// "expecting write-access for type number but boolean is not a super type of number." at "ba"
+// "boolean is not a subtype of number." at "cond"
+// ---
+ba |= cond;
+// XPECT errors ---
+// "expecting write-access for type number but string is not a super type of number." at "s1"
+// "string is not a subtype of number." at "s2"
+// ---
+s1 |= s2;
+// XPECT errors ---
+// "any is not a subtype of number." at "h2"
+// ---
+h1 |= h2;
+//---------------------------------------------------------
+
+
+
+
+/////// The next part differs on purpose from the above scheme:
+
+//
+//	+=
+
+// OK
+n1 += n2;
+// XPECT errors ---
+// "expecting write-access for type intersection{number,string} but boolean is not a super type of intersection{number,string}." at "ba"
+// ---
+ba += cond;
+
+// OK
+s1 += s2;
+// OK
+h1 += h2;
+
+// XPECT errors ---
+// "string is not a subtype of number." at "s2"
+// ---
+n1 += s2;
+
+// OK
+s1 += n2;
+// OK
+s1 += h2;
+
+
+//---------------------------------------------------------

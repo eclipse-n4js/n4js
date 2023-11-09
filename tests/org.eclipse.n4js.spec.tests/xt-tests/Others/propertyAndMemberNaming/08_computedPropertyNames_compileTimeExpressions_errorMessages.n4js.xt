@@ -1,0 +1,88 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	ProjectWithSourceFolder {
+		ThisFile {}
+		File "OtherFile.n4js" {}
+	}
+
+	END_SETUP
+*/
+
+import { var_notConst_otherFile } from "OtherFile";
+import { var_const_notCompileTime_otherFile } from "OtherFile";
+
+
+function foo(): string {
+	return null;
+}
+
+var var_notConst = 'propName';
+export var var_notConst_exported = 'propName';
+
+// XPECT noerrors -->
+const var_const_compileTime = 'propName';
+// XPECT noerrors -->
+const var_const_notCompileTime = foo(); // having a compile-time expression is optional here!
+// XPECT noerrors -->
+export const var_const_notCompileTime_exported = foo(); // having a compile-time expression is optional here!
+
+const zero = 0;
+
+
+class C {
+
+	// TODO consider getting rid of duplicate error messages
+	// XPECT errors ---
+	// "Not a compile-time expression: a call expression is never a compile-time expression." at "foo()"
+	// "Not a compile-time expression: left operand must be a number." at "'world'"
+	// "Not a compile-time expression: right operand must be a number." at "'hello'"
+	// ---
+	[foo() ? 3-'hello' : 'world'-2] = 'some value';
+
+	// XPECT errors --> "Not a compile-time expression: variable var_notConst is not const." at "var_notConst"
+	[1 + var_notConst] = 'some value';
+
+	// XPECT errors --> "Not a compile-time expression: variable var_notConst_exported is not const." at "var_notConst_exported"
+	[1 + var_notConst_exported] = 'some value';
+
+	// XPECT errors --> "Not a compile-time expression: variable var_notConst_otherFile is not const." at "var_notConst_otherFile"
+	[1 + var_notConst_otherFile] = 'some value';
+
+	// XPECT noerrors -->
+	[2 + var_const_compileTime] = 'some value';
+
+	// XPECT errors --> "Not a compile-time expression: variable var_const_notCompileTime is const but does not have a compile-time expression as initializer: a call expression is never a compile-time expression at "foo()"." at "var_const_notCompileTime"
+	[3 + var_const_notCompileTime] = 'some value';
+
+	// XPECT errors --> "Not a compile-time expression: variable var_const_notCompileTime_exported is const but does not have a compile-time expression as initializer: a call expression is never a compile-time expression at "foo()"." at "var_const_notCompileTime_exported"
+	[3 + var_const_notCompileTime_exported] = 'some value';
+
+	// XPECT errors --> "Not a compile-time expression: variable var_const_notCompileTime_otherFile is const but does not have a compile-time expression as initializer: a call expression is never a compile-time expression." at "var_const_notCompileTime_otherFile"
+	[3 + var_const_notCompileTime_otherFile] = 'some value';
+
+	// XPECT noerrors -->
+	[4/2] = 'some value';
+
+	// XPECT errors --> "Not a compile-time expression: division by zero not allowed in compile-time expressions." at "0"
+	[4/0] = 'some value';
+
+	// XPECT errors --> "Not a compile-time expression: division by zero not allowed in compile-time expressions." at "zero"
+	[4/zero] = 'some value';
+
+	// XPECT errors --> "Not a compile-time expression: a call expression is never a compile-time expression." at "foo()"
+	[''+foo()+4] = 'some value';
+
+	// XPECT errors --> "Not a compile-time expression: an object literal is never a compile-time expression." at "{}"
+	[''+{}+5] = 'some value';
+}

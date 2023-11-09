@@ -1,0 +1,27 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+interface ~T {
+	public n : number;
+	public foo();
+}
+
+var t : T;
+
+var o : Object;
+var n4o : N4Object;
+
+// XPECT noerrors --> No error expected: "def site is an Object" at "t"
+o = t;
+// XPECT errors --> "Structural type T is not a subtype of non-structural type N4Object." at "t"
+n4o = t;

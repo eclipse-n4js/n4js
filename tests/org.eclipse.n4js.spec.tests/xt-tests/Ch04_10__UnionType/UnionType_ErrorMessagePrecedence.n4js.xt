@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class A { private prop: string; }
+class C { private prop: number; }
+class D { prop() {} }
+
+var x0: union{~A, C};
+// XPECT errors --> "field prop is not available for structurally referenced type ~A." at "prop"
+x0.prop;
+
+var x1: union{ union{~A, C}, C };
+// XPECT errors --> "field prop is not available for structurally referenced type ~A in union{~A,C}." at "prop"
+x1.prop;
+
+var x2: union{ C, D };
+// // XPECT errors --> "Member prop not of same kind in all types of union: field in C; method in D." at "prop"
+x2.prop;
+
+var x3: union{ union{~A, C}, D };
+// // XPECT errors --> "Member prop not of same kind in all types of union: getter in union{~A,C}; method in D." at "prop"
+x3.prop;
+
+var x4: union{ union{C, D}, ~A };
+// // XPECT errors --> "field prop is not available for structurally referenced type ~A. Member prop not of same kind in all types of union: field in C; method in D in union{C,D}." at "prop"
+x4.prop;

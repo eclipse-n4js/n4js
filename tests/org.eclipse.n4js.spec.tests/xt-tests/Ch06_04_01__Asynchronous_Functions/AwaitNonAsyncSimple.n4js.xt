@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+
+async function testWithMethod(allDone : {function()}) {
+
+	// XPECT warnings -->"await should not be used on 'null' since it has no effect here." at "await null"
+	await null;
+	// XPECT warnings -->"await should not be used on 'undefined' since it has no effect here." at "await undefined"
+	await undefined;
+	// XPECT warnings -->"await should only be used on expressions of type Promise<?,?> since otherwise it has no effect." at "await 47"
+	await 47;
+
+}

@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+interface I {
+	m0() {
+		return "I.m0";
+	}
+	m1()
+}
+
+abstract class SuperClass implements I {
+	abstract m2() : string
+	m3() : string { return "SuperClass.m3" }
+}
+
+export public class OtherMemberInvokation extends SuperClass {
+	otherM0() {
+		// Invoke consumed method with default implementation in interface (2 levels) XPECT noerrors
+		super.m0();
+	}
+	@Override
+	m1() {}
+	otherM1() {
+		// Invoke abstract consumed method in interface from other method (2 levels) XPECT errors --> "Cannot call super method since it is abstract." at "m1"
+		super.m1();
+	}
+	@Override
+	m2() : string {
+		// Invoke abstract super method XPECT errors --> "Cannot call super method since it is abstract." at "m2"
+		return super.m2();
+	}
+	otherM2() : string {
+		// Invoke abstract super method from different method XPECT errors --> "Cannot call super method since it is abstract." at "m2"
+		return super.m2();
+	}
+	otherM3() : string {
+		return super.m3();
+	}
+}

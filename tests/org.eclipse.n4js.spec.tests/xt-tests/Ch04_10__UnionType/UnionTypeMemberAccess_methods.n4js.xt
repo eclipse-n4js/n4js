@@ -1,0 +1,62 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+interface A {}
+interface ASub extends A {}
+interface B {}
+
+
+class T1 {
+
+	m_onlyInT1() : void {}
+
+	m1() : A { return null; }
+
+	public m2() : A { return null; }
+
+	m3() : A { return null; }
+
+	m4() : A { return null; }
+}
+
+
+class T2 {
+
+	m_onlyInT2() : void {}
+
+	m1() : A { return null; }
+
+	private m2() : A { return null; }
+
+	m3() : ASub { return null; }
+
+	m4() : B { return null; }
+}
+
+
+var u : union{T1,T2};
+
+
+// XPECT errors --> "Member m_onlyInT1 not present in all types of union; missing from: T2." at "m_onlyInT1"
+u.m_onlyInT1;
+// XPECT errors --> "Member m_onlyInT2 not present in all types of union; missing from: T1." at "m_onlyInT2"
+u.m_onlyInT2;
+// XPECT type of 'u.m1()' --> A
+u.m1();
+// private members are visible inside module XPECT noerrors
+u.m2();
+// XPECT type of 'u.m3()' --> A
+u.m3();
+// XPECT type of 'u.m4()' --> union{A,B}
+u.m4();

@@ -1,0 +1,147 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class X {}
+
+@CovariantConstructor
+interface I {
+	constructor(p: string)
+}
+@CovariantConstructor
+interface J {
+	constructor(p: number)
+}
+
+
+// ------------------------------------------------------------------
+
+
+// XPECT noerrors -->
+class C00 implements I {
+	// note: the constructor inherited from N4Object fulfills the contract of I.constructor: {function()} is a subtype of {function(string)}
+}
+
+// XPECT noerrors -->
+class C01 extends Object {
+	// note: the constructor inherited from Object fulfills the contract of I.constructor: {function(any?)} is a subtype of {function(string)}
+}
+
+class C02 implements I {
+	// XPECT errors --> "Signature of constructor of class C02 does not conform to implemented constructor in interface I: {function(X)} is not a subtype of {function(string)}." at "constructor"
+	constructor(p: X) {}
+}
+
+class C03 implements I {}
+class D03 extends C03 {
+	// XPECT errors --> "Signature of constructor of class D03 does not conform to overridden constructor of class N4Object: {function(X)} is not a subtype of {function()}." at "constructor"
+	constructor(p: X) {}
+}
+
+class C04 implements I {}
+class D04 extends C04 implements I {
+	// XPECT errors ---
+	// "Signature of constructor of class D04 does not conform to implemented constructor in interface I: {function(X)} is not a subtype of {function(string)}." at "constructor"
+	// "Signature of constructor of class D04 does not conform to overridden constructor of class N4Object: {function(X)} is not a subtype of {function()}. Also cf. constructor in interface I." at "constructor"
+	// ---
+	constructor(p: X) {}
+}
+
+class C05 {
+	// XPECT noerrors -->
+	constructor(p: X) {}
+}
+// XPECT errors --> "Signature of inherited constructor of class C05 does not conform to implemented constructor in interface I: {function(X)} is not a subtype of {function(string)}." at "I"
+class D05 extends C05 implements I {
+}
+
+
+// ------------------------------------------------------------------
+
+
+// XPECT noerrors -->
+class C10 implements I {
+	// note: the constructor inherited from N4Object fulfills the contract of both I.constructor and J.constructor: {function()} is a subtype of {function(string)} and of {function(number)}
+}
+
+// XPECT noerrors -->
+class C11 extends Object implements I {
+	// note: the constructor inherited from Object fulfills the contract of both I.constructor and J.constructor: {function(any?)} is a subtype of {function(string)} and of {function(number)}
+}
+
+class C12 implements I, J {
+	// XPECT errors --> "Signature of constructor of class C12 does not conform to implemented constructor in interface I: {function(X)} is not a subtype of {function(string)}. Also cf. constructor in interface J." at "constructor"
+	constructor(p: X) {}
+}
+class C12b implements I, J {
+	// XPECT errors --> "Signature of constructor of class C12b does not conform to implemented constructor in interface I: {function(number)} is not a subtype of {function(string)}. Also cf. constructor in interface J." at "constructor"
+	constructor(p: number) {}
+}
+class C12c implements I, J {
+	// XPECT errors --> "Signature of constructor of class C12c does not conform to implemented constructor in interface J: {function(string)} is not a subtype of {function(number)}. Also cf. constructor in interface I." at "constructor"
+	constructor(p: string) {}
+}
+class C12d implements I, J {
+	// XPECT noerrors -->
+	constructor(p: number|string) {}
+}
+
+class C13 implements I, J {}
+class D13 extends C13 {
+	// XPECT errors --> "Signature of constructor of class D13 does not conform to overridden constructor of class N4Object: {function(X)} is not a subtype of {function()}." at "constructor"
+	constructor(p: X) {}
+}
+
+class C14 implements I, J {}
+class D14 extends C14 implements I, J {
+	// XPECT errors ---
+	// "Signature of constructor of class D14 does not conform to implemented constructor in interface I: {function(X)} is not a subtype of {function(string)}. Also cf. constructor in interface J." at "constructor"
+	// "Signature of constructor of class D14 does not conform to overridden constructor of class N4Object: {function(X)} is not a subtype of {function()}. Also cf. constructor in interface I and constructor in interface J." at "constructor"
+	// ---
+	constructor(p: X) {}
+}
+
+class C15 {
+	// XPECT noerrors -->
+	constructor(p: X) {}
+}
+// XPECT errors --> "Signature of inherited constructor of class C15 does not conform to implemented constructor in interface I: {function(X)} is not a subtype of {function(string)}. Also cf. constructor in interface J." at "I"
+class D15 extends C15 implements I, J {
+}
+
+class C15b {
+	// XPECT noerrors -->
+	constructor(p: number) {}
+}
+// XPECT errors --> "Signature of inherited constructor of class C15b does not conform to implemented constructor in interface I: {function(number)} is not a subtype of {function(string)}. Also cf. constructor in interface J." at "I"
+class D15b extends C15b implements I, J {
+}
+
+class C15c {
+	// XPECT noerrors -->
+	constructor(p: string) {}
+}
+// XPECT errors --> "Signature of inherited constructor of class C15c does not conform to implemented constructor in interface J: {function(string)} is not a subtype of {function(number)}. Also cf. constructor in interface I." at "J"
+class D15c extends C15c implements I, J {
+}
+
+class C15d {
+	// XPECT noerrors -->
+	constructor(p: string|number) {}
+}
+// XPECT noerrors -->
+class D15d extends C15d implements I, J {
+}
+
+
+// ------------------------------------------------------------------

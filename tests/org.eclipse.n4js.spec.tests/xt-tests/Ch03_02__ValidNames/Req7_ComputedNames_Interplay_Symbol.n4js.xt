@@ -1,0 +1,30 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+// interplay between IDE-1734 (computed-names) and IDE-1220 (symbols support)
+
+class A {
+	// XPECT errors --> "The field #iterator (line 19) duplicates field #iterator (line 21)." at "["#iterator"]"
+    public ["#iterator"] = 42;
+	// XPECT errors --> "The field #iterator (line 21) duplicates field #iterator (line 19)." at "[Symbol.iterator]"
+    public [Symbol.iterator] = 43;
+}
+
+class B {
+	// two different object keys: one a string, the other a symbol
+	// XPECT warnings --> "Field names should start with lower case letter." at "["Symbol.iterator"]"
+    public ["Symbol.iterator"] = 42;
+	// XPECT noerrors --> one is a string, the other a symbol
+    public [Symbol.iterator] = 43;
+}

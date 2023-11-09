@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// IDE-1825 interplay with Symbol.iterator
+
+
+class Cls {
+	[Symbol.iterator] = 42;
+}
+console.log(
+	// XPECT errors -->  "Implementation restriction: member name clashes with compiler-internal, synthetic, mangled name." at "new Cls()["#iterator"]"
+	new Cls()["#iterator"] // <-- no error; returns 42
+);
+
+interface I extends Iterable<string> {
+	@Override
+	public [Symbol.iterator]() : Iterator<string> { console.log("iterator called"); return null }
+}
+
+class A implements I {}
+
+var a = new A();
+// XPECT noerrors -->
+a[Symbol.iterator]();
+
+// XPECT errors --> "Implementation restriction: member name clashes with compiler-internal, synthetic, mangled name." at "a['#iterator']"
+a['#iterator']();

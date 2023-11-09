@@ -1,0 +1,51 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+interface A {}
+interface B {}
+
+
+
+// XPECT nowarnings -->
+var a1 : intersection{A, B};
+
+// XPECT warnings --> "The use of the any type in an intersection type is discouraged." at "any"
+var a2 : intersection{A, B, any};
+
+var a3 : intersection{A, B,
+	// XPECT warnings --> "The use of the any type in an intersection type is discouraged." at "any"
+	any,
+	// XPECT warnings --> "The use of the any type in an intersection type is discouraged." at "any"
+	any
+};
+
+
+
+// XPECT nowarnings -->
+var b1 : intersection{A};
+
+// XPECT warnings --> "The use of the any type in an intersection type is discouraged." at "any"
+var b2 : intersection{any};
+
+
+
+// XPECT warnings --> "The use of the any type in an intersection type is discouraged." at "any"
+var c1 : intersection{A, intersection{B, any}};
+
+// XPECT warnings --> "The use of the any type in an intersection type is discouraged." at "any"
+var c2 : intersection{intersection{A, B}, any};
+
+
+// XPECT warnings --> "The use of the any type in an intersection type is discouraged." at "any"
+var d1 : union{A, intersection{B, any}};

@@ -1,0 +1,70 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+class S {
+
+	constructor(n : number) {}
+
+	static m_0() : this { return null } // only for N4JSD.
+	static k_0() : type{this} { return this; }
+	// BROKEN: static constructor{this} l_0() { return null; } // not possible.
+	// BROKEN: static constructor{this} l_01() { return ""; } // not possible.
+
+	static m_1() : S { return null } // only for N4JSD.
+	static k_1() : type{S} { return this; }
+	static l_1() : constructor{S} { return S; } // not possible.
+
+//	static this m_2() { return null } // only for N4JSD.
+//	static type{this} k_2() { return this; }
+//	static constructor{this} l_2() { return S; } // not possible.
+}
+
+
+var s0 : S = S.m_0();
+var type_s0 : type{S} = S.k_0();
+//var constructor{S} ctor_s0 = S.l_0();
+var s1 : S = S.m_1();
+var type_s1 : type{S} = S.k_1();
+var ctor_s1 : constructor{S} = S.l_1();
+
+class T extends S { }
+
+var t0 : T = T.m_0();
+var type_t0 : type{T} = T.k_0();
+//var constructor{T} ctor_t0 = T.l_0();
+var st1 : S = T.m_1();
+var type_st1 : type{S} = T.k_1();
+var ctor_t1 : constructor{S} = T.l_1();
+
+class U extends T {
+
+	@Override
+	static m_0() : this { return null } // only for N4JSD.
+	@Override
+	static k_0() : type{this} { return this; }
+//	@Override
+//	static constructor{this} l_0() { return S; } // not possible.
+
+	@Override
+	static m_1() : S { return null } // only for N4JSD.
+	@Override
+	static k_1() : type{S} { return this; }
+	@Override
+	static l_1() : constructor{S} { return S; } // not possible.
+}
+
+var u0 : U = U.m_0();
+var type_u0 : type{U} = U.k_0();
+//var constructor{U} ctor_u0 = U.l_0();
+var su1 : S = U.m_1();
+var type_su1 : type{S} = U.k_1();
+var ctor_u1 : constructor{S} = U.l_1();

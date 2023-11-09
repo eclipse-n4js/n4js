@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class C {};
+enum E {L};
+
+var f: Function;
+
+// XPECT errors --> "Cannot cast from Function to string" at "f as string"
+f as string;
+// XPECT warnings --> "Unnecessary cast from Function to any" at "f as any"
+f as any;
+// XPECT warnings --> "Unnecessary cast from Function to Object" at "f as Object"
+f as Object;
+// XPECT errors --> "Cannot cast from Function to E" at "f as E"
+f as E;
+// TODO "Cannot cast from Function to constructor{C}" at "f as constructor{C}" see GHOLD-227
+// XPECT noerrors -->
+f as constructor{C};
+// XPECT errors --> "Cannot cast from Function to type{C}" at "f as type{C}"
+f as type{C};

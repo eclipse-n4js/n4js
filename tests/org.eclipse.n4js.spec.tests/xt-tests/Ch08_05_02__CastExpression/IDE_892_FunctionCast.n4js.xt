@@ -1,0 +1,29 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+var something : any;
+
+something = function(party : string):string{return "";};
+
+//XPECT noerrors --> "able to cast to functions"
+var anyFunction : {function(string):string} = something as {function(string):string}
+
+
+class C{}
+class SC extends C{}
+
+var f : any = function (p : SC):C{return null;}
+
+//XPECT noerrors --> "covariance + contravariance -> bivariance !!"
+var casted : {function(p : SC):C} = f as {function(p:C):SC};
+//XPECT errors --> "{function(SC):C} is not a subtype of {function(C):SC}." at "f as {function(p:SC):C}"
+var casted2 : {function(p:C):SC} = f as {function(p:SC):C};

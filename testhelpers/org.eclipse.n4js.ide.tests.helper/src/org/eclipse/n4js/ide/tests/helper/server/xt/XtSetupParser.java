@@ -188,11 +188,17 @@ public class XtSetupParser {
 				result.workspace = parseWorkspace(tokens, xtFile, xtFileContent);
 				break;
 			case "Project":
-			case "JavaProject":
+			case "JavaProject": // legacy
 				Preconditions.checkState(result.workspace == null,
 						ERROR + "Multiple Workspace nodes in file " + xtFile.getPath());
 
-				result.workspace = parseProject(tokens, xtFile, xtFileContent);
+				result.workspace = parseProject(tokens, xtFile, xtFileContent, false);
+				break;
+			case "ProjectWithSourceFolder":
+				Preconditions.checkState(result.workspace == null,
+						ERROR + "Multiple Workspace nodes in file " + xtFile.getPath());
+
+				result.workspace = parseProject(tokens, xtFile, xtFileContent, true);
 				break;
 			case "File":
 				parseFile(tokens, result);
@@ -282,7 +288,8 @@ public class XtSetupParser {
 		return xtWorkspace;
 	}
 
-	private static XtWorkspace parseProject(TokenStream tokens, File xtFile, String xtFileContent) {
+	private static XtWorkspace parseProject(TokenStream tokens, File xtFile, String xtFileContent,
+			boolean withSrcFolder) {
 		WorkspaceBuilder builder = new WorkspaceBuilder(new BuilderInfo());
 		YarnProjectBuilder yarnProjectBuilder = builder.addYarnProject(TestWorkspaceManager.YARN_TEST_PROJECT);
 
@@ -292,7 +299,11 @@ public class XtSetupParser {
 			projectName = tokens.expectNameInQuotes();
 		}
 		ProjectBuilder prjBuilder = yarnProjectBuilder.addProject(projectName);
-		parseContainerRest(tokens, xtFile, xtFileContent, prjBuilder, ".", "Project");
+		if (withSrcFolder) {
+			parseFolder(tokens, xtFile, xtFileContent, prjBuilder, ".", "src");
+		} else {
+			parseContainerRest(tokens, xtFile, xtFileContent, prjBuilder, ".", "Project");
+		}
 
 		XtWorkspace xtWorkspace = builder.build(new XtWorkspace());
 		xtWorkspace.moduleNameOfXtFile = ((BuilderInfo) builder.builderInfo).moduleNameOfXtFile;

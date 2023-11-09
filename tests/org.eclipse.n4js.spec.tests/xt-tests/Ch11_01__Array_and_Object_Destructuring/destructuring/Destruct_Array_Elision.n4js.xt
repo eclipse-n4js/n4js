@@ -1,0 +1,201 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+var arr = [1,2,3,4,5,6,7,8,9,10,11,12];
+
+
+// destructuring binding
+
+var [,a01,,,b01,,,] = arr;
+console.log('expecting: 2 5');
+console.log(a01,b01);
+
+
+// destructuring assignment
+
+var a02,b02;
+[,,a02,,,b02,,] = arr;
+console.log('expecting: 3 6');
+console.log(a02,b02);
+
+
+
+
+class MyIterator implements Iterator<number> {
+	private i = 0;
+	@Override
+	public next() : IteratorEntry<number> {
+		console.log('reading element at index '+this.i);
+		return {
+			value: arr[this.i++],
+			done: this.i>=10
+		};
+	}
+}
+class MyArray implements Iterable<number> {
+	@Override
+	public [Symbol.iterator]() : Iterator<number> {
+		console.log('iterator created');
+		return new MyIterator();
+	}
+}
+
+
+console.log('############################################################');
+
+
+var a11,b11;
+console.log('expecting: exactly two elements should be read (not three or more!!)');
+[a11,b11,] = new MyArray();
+console.log('expecting: 1 2');
+console.log(a11,b11);
+
+console.log('####');
+
+console.log('expecting: exactly two elements should be read (not three or more!!)');
+var [a12,b12,] = new MyArray();
+console.log('expecting: 1 2');
+console.log(a12,b12);
+
+console.log('####');
+
+console.log('expecting: exactly two elements should be read (not three or more!!)');
+for(var [a13,b13,] of [new MyArray()]) {
+	console.log('expecting: 1 2');
+	console.log(a13,b13);
+}
+
+console.log('####');
+
+console.log('expecting: exactly two elements should be read (not three or more!!)');
+var a14, b14;
+for([a14,b14,] of [new MyArray()]) {
+	console.log('expecting: 1 2');
+	console.log(a14,b14);
+}
+
+
+console.log('############################################################');
+
+
+var a21,b21;
+console.log('expecting: exactly six elements should be read (not seven or more!!)');
+[a21,,b21,,,,] = new MyArray();
+console.log('expecting: 1 3');
+console.log(a21,b21);
+
+console.log('####');
+
+console.log('expecting: exactly six elements should be read (not seven or more!!)');
+var [a22,,b22,,,,] = new MyArray();
+console.log('expecting: 1 3');
+console.log(a22,b22);
+
+console.log('####');
+
+console.log('expecting: exactly six elements should be read (not seven or more!!)');
+for(var [a23,,b23,,,,] of [new MyArray()]) {
+	console.log('expecting: 1 3');
+	console.log(a23,b23);
+}
+
+console.log('####');
+
+console.log('expecting: exactly six elements should be read (not seven or more!!)');
+var a24, b24;
+for([a24,,b24,,,,] of [new MyArray()]) {
+	console.log('expecting: 1 3');
+	console.log(a24,b24);
+}
+
+
+
+/* XPECT output ---
+expecting: 2 5
+2 5
+expecting: 3 6
+3 6
+############################################################
+expecting: exactly two elements should be read (not three or more!!)
+iterator created
+reading element at index 0
+reading element at index 1
+expecting: 1 2
+1 2
+####
+expecting: exactly two elements should be read (not three or more!!)
+iterator created
+reading element at index 0
+reading element at index 1
+expecting: 1 2
+1 2
+####
+expecting: exactly two elements should be read (not three or more!!)
+iterator created
+reading element at index 0
+reading element at index 1
+expecting: 1 2
+1 2
+####
+expecting: exactly two elements should be read (not three or more!!)
+iterator created
+reading element at index 0
+reading element at index 1
+expecting: 1 2
+1 2
+############################################################
+expecting: exactly six elements should be read (not seven or more!!)
+iterator created
+reading element at index 0
+reading element at index 1
+reading element at index 2
+reading element at index 3
+reading element at index 4
+reading element at index 5
+expecting: 1 3
+1 3
+####
+expecting: exactly six elements should be read (not seven or more!!)
+iterator created
+reading element at index 0
+reading element at index 1
+reading element at index 2
+reading element at index 3
+reading element at index 4
+reading element at index 5
+expecting: 1 3
+1 3
+####
+expecting: exactly six elements should be read (not seven or more!!)
+iterator created
+reading element at index 0
+reading element at index 1
+reading element at index 2
+reading element at index 3
+reading element at index 4
+reading element at index 5
+expecting: 1 3
+1 3
+####
+expecting: exactly six elements should be read (not seven or more!!)
+iterator created
+reading element at index 0
+reading element at index 1
+reading element at index 2
+reading element at index 3
+reading element at index 4
+reading element at index 5
+expecting: 1 3
+1 3
+--- */

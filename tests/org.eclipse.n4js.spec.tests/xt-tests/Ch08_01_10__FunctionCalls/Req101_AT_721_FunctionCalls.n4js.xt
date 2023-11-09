@@ -1,0 +1,95 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+
+function f1(){}
+f1(); //ok
+// // XPECT errors --> "Incorrect number of arguments: expected 0, got 1." at "f1('foo')"
+f1('foo');
+
+function f2(s : string){}
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "f2()"
+f2();
+f2('foo');
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 2." at "f2('foo','bar')"
+f2('foo','bar');
+
+function f3(s : string=undefined){}
+f3();
+f3('foo');
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 2." at "f3('foo','bar')"
+f3('foo','bar');
+
+function f4(... s : string){}
+f4();
+f4('foo');
+f4('foo','bar');
+f4('foo','bar', 'baz');
+f4('foo','bar', 'baz', 'qux');
+f4('foo','bar', 'baz', 'qux', 'something');
+
+function f5(s : string, ss : string=undefined){}
+// XPECT errors --> "Incorrect number of arguments: expected 2, got 0." at "f5()"
+f5();
+f5('foo');
+f5('foo','bar');
+// XPECT errors --> "Incorrect number of arguments: expected 2, got 3." at "f5('foo','bar', 'baz')"
+f5('foo','bar', 'baz');
+
+function f6(s : string, ... sss : string){}
+// XPECT errors --> "Incorrect number of arguments: expected 2, got 0." at "f6()"
+f6();
+f6('foo');
+f6('foo','bar');
+f6('foo','bar', 'baz');
+f6('foo','bar', 'baz', 'qux');
+f6('foo','bar', 'baz', 'qux', 'something');
+
+function f7(s : string, ss : string=undefined, ... sss : string){}
+// XPECT errors --> "Incorrect number of arguments: expected 3, got 0." at "f7()"
+f7();
+// XPECT noerrors --> "fpar 2 is optional, 3 is variadic (0..), so 1 is ok" at "f7('foo')"
+f7('foo');
+// XPECT noerrors --> "variadic is optional (0..), so 2 is ok" at "f7('foo','bar')"
+f7('foo','bar');
+f7('foo','bar', 'baz');
+f7('foo','bar', 'baz', 'qux');
+f7('foo','bar', 'baz', 'qux', 'something');
+
+
+function f8(s1 : string=undefined, s2 : string=undefined, s3 : string=undefined, s4 : string=undefined) {}
+// XPECT noerrors --> "all args are optional, so 0 args are ok" at "f8()"
+f8();
+// XPECT noerrors --> "all args are optional, so 1 arg is ok" at "f8('1')"
+f8('1');
+// XPECT noerrors --> "all args are optional, so 2 args are ok" at "f8('1','2')"
+f8('1','2');
+// XPECT noerrors --> "all args are optional, so 3 args are ok" at "f8('1','2','3')"
+f8('1','2','3');
+// XPECT noerrors --> "all args are specified" at "f8('1','2','3','4')"
+f8('1','2','3','4');
+// XPECT errors --> "Incorrect number of arguments: expected 4, got 5." at "f8('1','2','3','4','5')"
+f8('1','2','3','4','5');
+
+
+function ft(s : string, ssa : string=undefined, ssb : string=undefined, ... sss : string){}
+// XPECT errors --> "Incorrect number of arguments: expected 4, got 0." at "ft()"
+ft();
+// XPECT noerrors --> "fpar 2 is optional, 3 is optional, 4 is variadic (0..), so 1 is ok" at "ft('foo')"
+ft('foo');
+// XPECT noerrors --> "variadic is optional (0..), so 2 is ok" at "ft('foo','bar')"
+ft('foo','bar');
+ft('foo','bar', 'baz');
+ft('foo','bar', 'baz', 'qux');
+ft('foo','bar', 'baz', 'qux', 'something', 'something_else');

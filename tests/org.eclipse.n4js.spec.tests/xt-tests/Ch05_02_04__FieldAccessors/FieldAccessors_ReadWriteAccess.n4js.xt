@@ -1,0 +1,70 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+//
+// with class
+//
+
+class C {
+	get g() : string { return null; }
+	set s(p : string) {}
+}
+
+var c : C;
+
+c.g;		// ok
+// XPECT errors --> "The accessor g is read-only." at "g"
+c.g = "";	// nok
+
+// XPECT errors --> "The accessor s is write-only." at "s"
+c.s;		// nok
+c.s = "";	// ok
+
+
+
+//
+// with object literal
+//
+
+var ol = {
+	get g() : string { return null; },
+	set s(p : string) {}
+};
+
+ol.g;		// ok
+// XPECT errors --> "The accessor g is read-only." at "g"
+ol.g = "";	// nok
+
+// XPECT errors --> "The accessor s is write-only." at "s"
+ol.s;		// nok
+ol.s = "";	// ok
+
+
+
+//
+// with structural typing
+//
+
+var st : ~Object with {
+		get g() : string
+		set s(p : string)
+	};
+
+st.g;		// ok
+// XPECT errors --> "The accessor g is read-only." at "g"
+st.g = "";	// nok
+
+// XPECT errors --> "The accessor s is write-only." at "s"
+st.s;		// nok
+st.s = "";	// ok

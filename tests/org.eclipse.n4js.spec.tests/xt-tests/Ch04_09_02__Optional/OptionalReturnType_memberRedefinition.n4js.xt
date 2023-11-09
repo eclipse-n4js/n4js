@@ -1,0 +1,76 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class A {}
+class B extends A {}
+
+class X {}
+
+
+class C {
+
+	mA() : A { return null; }
+	mAO() : A? {}
+
+}
+
+
+class C_void extends C {
+
+	// XPECT errors --> "Signature of method C_void.mA does not conform to overridden method C.mA: {function():void} is not a subtype of {function():A}." at "mA"
+	@Override mA() : void {}
+
+	// XPECT noerrors -->
+	@Override mAO() : void {}
+}
+
+
+class C_B extends C {
+
+	// XPECT noerrors -->
+	@Override mA() : B {return null}
+
+	// XPECT noerrors -->
+	@Override mAO() : B {return null}
+}
+
+
+class C_Bopt extends C {
+
+	// XPECT errors --> "Signature of method C_Bopt.mA does not conform to overridden method C.mA: {function():B?} is not a subtype of {function():A}." at "mA"
+	@Override mA() : B? {}
+
+	// XPECT noerrors -->
+	@Override mAO() : B? {}
+}
+
+
+class C_X extends C {
+
+	// XPECT errors --> "Signature of method C_X.mA does not conform to overridden method C.mA: {function():X} is not a subtype of {function():A}." at "mA"
+	@Override mA() : X {return null}
+
+	// XPECT errors --> "Signature of method C_X.mAO does not conform to overridden method C.mAO: {function():X} is not a subtype of {function():A?}." at "mAO"
+	@Override mAO() : X {return null}
+}
+
+
+class C_Xopt extends C {
+
+	// XPECT errors --> "Signature of method C_Xopt.mA does not conform to overridden method C.mA: {function():X?} is not a subtype of {function():A}." at "mA"
+	@Override mA() : X? {}
+
+	// XPECT errors --> "Signature of method C_Xopt.mAO does not conform to overridden method C.mAO: {function():X?} is not a subtype of {function():A?}." at "mAO"
+	@Override mAO() : X? {}
+}

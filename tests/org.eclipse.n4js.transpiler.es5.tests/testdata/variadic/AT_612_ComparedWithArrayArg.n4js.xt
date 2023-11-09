@@ -9,23 +9,23 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.N4jsXtTest END_SETUP */
 
-/* XPECT output ~~~
---------f_array:
+/* XPECT output ---
+========f_array:
 Hello, l=1
 World, l=2
 out of range, l=2
---------f_variadic:
+========f_variadic:
 out of range, l=-1
 Hello, l=1
 World, l=2
 out of range, l=2
---------f_opt_variadic:
+========f_opt_variadic:
 Hello, l=1
 World, l=2
 out of range, l=2
-~~~
+---
 */
 
 
@@ -44,7 +44,7 @@ function f_opt_variadic(i : number=undefined, ... names : string) {
 	console.log(name + ', l='+ (names && names.length || '-1'))
 }
 
-console.log('--------f_array:')
+console.log('========f_array:')
 // not possible anymore
 //f_array(); // no args
 //not possible anymore
@@ -53,7 +53,7 @@ f_array(0, ['Hello']); // 'Hello'
 f_array(1, ['Hello', 'World']); // 'World'
 f_array(2, ['Hello', 'World']); // out of range
 
-console.log('--------f_variadic:')
+console.log('========f_variadic:')
 //not possible anymore
 //f_variadic(); // no args
 f_variadic(0); // out of range -- empty array
@@ -61,7 +61,7 @@ f_variadic(0, 'Hello'); // 'Hello''
 f_variadic(1, 'Hello', 'World'); // 'World'
 f_variadic(2, 'Hello', 'World'); // out of range
 
-console.log('--------f_opt_variadic:')
+console.log('========f_opt_variadic:')
 //not possible anymore
 //f_opt_variadic(); // no args
 //not possible anymore

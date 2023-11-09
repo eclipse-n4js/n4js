@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+interface B {}
+interface C extends B {};
+interface D extends C {};
+
+class CC implements C {};
+
+var c = new CC();
+var a: any;
+
+// XPECT errors --> "Cannot cast from CC to intersection{int,string}" at "c as intersection{int,string}"
+c as intersection{int,string};
+// XPECT errors --> "Cannot cast from CC to intersection{C,string}" at "c as intersection{C,string}"
+c as intersection{C,string};
+
+// XPECT warnings --> "Unnecessary cast from CC to intersection{B,C}" at "c as intersection{B,C}"
+c as intersection{B,C};
+
+
+// XPECT noerrors -->
+c as intersection{C, D};
+// XPECT noerrors -->
+a as intersection{C, D};
+// XPECT noerrors -->
+a as intersection{B, D};

@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+// 2 types
+
+class A{} class B extends A{} class C extends B{}
+
+interface I {
+	public b : B;
+}
+
+class C1 implements I {
+	// XPECT errors --> "Type of field C1.b must equal type of implemented field I.b." at "b"
+	@Override public b : A;
+}
+class C2 implements I {
+	// ok
+	@Override public b : B;
+}
+class C3 implements I {
+	// XPECT errors --> "Type of field C3.b must equal type of implemented field I.b." at "b"
+	@Override public b : C;
+}
+
+// XPECT noerrors --> No error expected:  No error expected: "D implements I via field accessors, that's ok" at "s"
+class D1 implements I {
+	// XPECT errors --> "Type of getter D1.b does not conform to implemented field I.b: A is not a subtype of B." at "b"
+	@Override public get b() : A { return null}
+	// ok
+	@Override public set b(p : A) {}
+}
+// XPECT noerrors --> No error expected:  No error expected: "D implements I via field accessors, that's ok" at "s"
+class D2 implements I {
+	// XPECT noerrors --> No error expected:  No error expected: "" at "b"
+ 	@Override public get b() : B { return null}
+	// XPECT noerrors --> "" at "b"
+	@Override public set b(p : B) {}
+}
+// XPECT noerrors --> No error expected:  No error expected: "D implements I via field accessors, that's ok" at "s"
+class D3 implements I {
+	// XPECT noerrors --> No error expected:  No error expected: "" at "b"
+	@Override public get b() : C { return null}
+	// XPECT errors --> "Type of setter D3.b does not conform to implemented field I.b: B is not a subtype of C." at "b"
+	@Override public set b(p : C) {}
+}
+
+class E1 implements I {
+	// XPECT errors --> "The field E1.b cannot reduce the visibility of field I.b." at "b"
+	@Override private b : B;
+}
+// XPECT noerrors --> No error expected:  No error expected: "visibility error should precede implementation error" at "E2"
+class E2 implements I {
+	// XPECT errors --> "The getter E2.b cannot reduce the visibility of field I.b." at "b"
+	@Override private  get b() : B { return null}
+	// XPECT errors --> "The setter E2.b cannot reduce the visibility of field I.b." at "b"
+	@Override private set b(p : B) {}
+
+}

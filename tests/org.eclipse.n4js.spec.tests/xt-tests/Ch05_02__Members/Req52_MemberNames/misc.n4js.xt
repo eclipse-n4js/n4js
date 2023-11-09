@@ -1,0 +1,42 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+class A {
+// XPECT errors --> "The field a (line 16) duplicates field a (line 20)." at "a"
+	a : any;
+// XPECT errors --> "The field b (line 18) duplicates getter b (line 35)." at "b"
+	b : any;
+// XPECT errors --> "The field a (line 20) duplicates field a (line 16)." at "a"
+	a : any;
+// XPECT errors --> "The field d (line 22) duplicates setter d (line 40)." at "d"
+	d : any;
+
+// XPECT errors --> "The method c (line 25) duplicates method c (line 30)." at "c"
+	c(x : number) : string {
+	  return null;
+	}
+
+// XPECT errors --> "The method c (line 30) duplicates method c (line 25)." at "c"
+	c(v : string) : string {
+	 return null;
+	}
+
+// XPECT errors --> "The getter b (line 35) duplicates field b (line 18)." at "b"
+	get b() : string {
+	 return null;
+	}
+
+// XPECT errors --> "The setter d (line 40) duplicates field d (line 22)." at "d"
+	set d(u : string) {
+	}
+}

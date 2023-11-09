@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+class A {}
+class B {}
+
+class X {}
+class Y {}
+class Z {}
+
+
+// for..of
+
+var v1 : Array<~Object with {prop1: A; prop2: B;}>;
+// XPECT type of 'a1' --> A
+// XPECT type of 'b1' --> B
+for(var {prop1: a1, prop2: b1} of v1) {}
+
+
+var v2 : Iterable2<
+	~Object with {prop1: A; prop2: B;},
+	~Object with {prop1: X; prop2: Y;}
+>;
+// XPECT type of 'a2' --> union{A,X}
+// XPECT type of 'b2' --> union{B,Y}
+for(var {prop1: a2, prop2: b2} of v2) {
+	// XPECT errors --> "union{A,X} is not a subtype of string." at "a2"
+	var test : string = a2;
+}

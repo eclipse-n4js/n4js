@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class X {
+
+	f : string;
+
+	m() : void {}
+	get g() : string { return null; }
+	set s(param : string) {}
+}
+
+class Y extends X {
+
+
+	@Override
+	m() : void {}
+	@Override
+	get g() : string { return null; }
+	@Override
+	set s(param : string) {}
+
+
+	test() : void {
+
+		super.m();				// ok (method)
+		var r1 = super.g;		// ok (getter)
+		super.s = "";			// ok (setter)
+		// XPECT errors --> "Super member access may not be used to access a field." at "f"
+		super.f = "";			// fail (field)
+		// XPECT errors --> "Super member access may not be used to access a field." at "f"
+		var r2 = super.f;		// fail (field)
+	}
+}

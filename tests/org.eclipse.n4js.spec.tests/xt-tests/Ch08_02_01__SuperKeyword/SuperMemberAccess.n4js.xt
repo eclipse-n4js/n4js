@@ -1,0 +1,110 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+
+
+class X {
+
+	f : B;
+
+	m(param : B) : B {return null;}
+	get g() : B { return null; }
+	set s(param : B) {}
+}
+
+class Y extends X {
+
+
+	@Override
+	m(age : A) : C {return null;}
+	@Override
+	get g() : C { return null; }
+	@Override
+	set s(param : A) {}
+
+
+	test() : void {
+		var propName : string;
+
+		var a : A;
+		var b : B;
+		var c : C;
+
+
+		// methods - types of parameters
+
+		// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'm'." at "m"
+		m(a);					// should fail
+
+		this.m(a);				// ok (this makes sure we are referencing the m() in Y, not the one in X)
+		this.m(b);				// ok
+		this.m(c);				// ok
+
+		// XPECT errors --> "A is not a subtype of B." at "a"
+		super.m(a);				// should fail (this makes sure we are referencing the m() in X, not the one in Y)
+		super.m(b);				// ok
+		super.m(c);				// ok
+
+
+		// methods - return type
+
+		var r1 : A = this.m(b);	// ok
+		var r2 : B = this.m(b);	// ok
+		var r3 : C = this.m(b);	// ok (this makes sure we are referencing the m() in Y, not the one in X)
+
+		var r4 : A = super.m(b);	// ok
+		var r5 : B = super.m(b);	// ok
+		// XPECT errors --> "B is not a subtype of C." at "super.m(b)"
+		var r6 : C = super.m(b);	// should fail (this makes sure we are referencing the m() in X, not the one in Y)
+
+		// getters - return type
+
+		var r11 : A = this.g;		// ok
+		var r12 : B = this.g;		// ok
+		var r13 : C = this.g;		// ok (this makes sure we are referencing the g() in Y, not the one in X)
+
+		var r14 : A = super.g;	// ok
+		var r15 : B = super.g;	// ok
+		// XPECT errors --> "B is not a subtype of C." at "super.g"
+		var r16 : C = super.g;	// should fail (this makes sure we are referencing the g() in X, not the one in Y)
+
+
+
+		// setters - type of parameter
+
+		// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 's'." at "s"
+		s = a;					// should fail
+
+		this.s = a;				// ok (this makes sure we are referencing the s() in Y, not the one in X)
+		this.s = b;				// ok
+		this.s = c;				// ok
+
+		// XPECT errors --> "A is not a subtype of B." at "a"
+		super.s = a;			// should fail (this makes sure we are referencing the s() in X, not the one in Y)
+		super.s = b;			// ok
+		super.s = c;			// ok
+
+
+		// fields
+
+		// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'f'." at "f"
+		f=b;			// should fail
+		this.f=b;		// ok
+		// XPECT errors --> "Super member access may not be used to access a field." at "f"
+		super.f=b;		// should fail
+	}
+}
