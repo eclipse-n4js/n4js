@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Object.constructor
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+// Empty
+var oEmpty = new Object();
+var oUndef = new Object(undefined);
+var oNull = new Object(null);
+
+// Objects
+var oBool = new Object(true);
+var oNumber = new Object(3);
+var oString = new Object("hippopotamus");
+var oObject = new Object({a: "a", b: 3, c: false});
+
+console.log("Empty: " + JSON.stringify(oEmpty));
+console.log("Undefined: " + JSON.stringify(oUndef));
+console.log("Null: " + JSON.stringify(oNull));
+
+console.log("True: " + oBool);
+console.log("3: " + oNumber);
+console.log("Hippo: " + oString);
+console.log("a 3 false: " + JSON.stringify(oObject));
+
+/* XPECT output ---
+Empty: {}
+Undefined: {}
+Null: {}
+True: true
+3: 3
+Hippo: hippopotamus
+a 3 false: {"a":"a","b":3,"c":false}
+--- */

@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+////////////////////
+// As an argument //
+////////////////////
+
+class A1 {
+	public a : number;
+}
+
+class B1<T> extends A1 {
+	public s : T;
+}
+
+// structural as argument XPECT noerrors -->
+function h1 (b : ~A1) : number { return b.a; }
+
+// function call with structural; return primitive XPECT type of 't1' --> number
+var t1 = h1({a: 4});
+
+// structural parameterized as argument; primitive parameter XPECT noerrors -->
+function h2 (b : ~B1<string>) : string { return b.s; }
+
+// function call with structural parameterized; primitive parameter XPECT noerrors
+h2({a: 3, s: "b"});
+
+// function call with structural parameterized; return primitive parameter XPECT type of 't2' --> string
+var t2 = h2({a: 3, s: "b"});
+
+// structural parameterized as argument; structural parameter XPECT noerrors -->
+function h3 (b : ~B1<~A1>) : ~A1 { return b.s; }
+
+// function call with structural parameterized; structural parameter XPECT noerrors -->
+h3({a: 3, s: {a: 4}});
+
+// function call with structural parameterized; return structural parameter XPECT type of 't3' --> ~A1
+var t3 = h3({a: 3, s: {a: 4}});

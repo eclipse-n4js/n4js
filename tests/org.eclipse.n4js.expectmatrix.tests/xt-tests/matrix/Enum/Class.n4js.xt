@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+// String based enum as type parameter in generic class
+
+@StringBased enum SBEnum {
+	a: "a",
+	b: "b"
+}
+
+class A<T extends N4Enum> {}
+class B<T extends N4StringBasedEnum> {}
+class C<T> {}
+
+// Constr.36.1: Every string based enumeration ES is a subtype of the base type N4StringBasedEnum
+// which itself is not related to the standard enumeration type N4Enum
+// IDEBUG-294 SBEnum !<: N4Enum
+/* XPECT errors ---
+	"SBEnum is not a subtype of N4Enum." at "SBEnum"
+	"SBEnum is not a subtype of N4Enum." at "SBEnum"
+--- */
+var a : A<SBEnum> = new A<SBEnum>();
+
+// SBEnum <: N4StringBasedEnum XPECT noerrors -->
+var b : B<SBEnum> = new B<SBEnum>();
+
+// no constraints for type variable XPECT noerrors -->
+var c : C<SBEnum> = new C<SBEnum>();

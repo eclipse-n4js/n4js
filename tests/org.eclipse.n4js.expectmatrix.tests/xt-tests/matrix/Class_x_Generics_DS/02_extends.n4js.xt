@@ -1,0 +1,47 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+///////////////////////////////////////
+// Generic type extends generic type //
+///////////////////////////////////////
+
+class A<T> {}
+class B1<T,S> {}
+
+// subclass has fewer parameters than superclass XPECT errors --> "Couldn't resolve reference to Type 'S'." at "S"
+class B1a<T> extends B1<T,S> {}
+
+// subclass has more parameters than superclass XPECT noerrors -->
+class B1b<T,R,S> extends B1<T,S> {}
+
+// superclass missing arguments XPECT errors --> "Incorrect number of type arguments for class B1: expected 2, got 1." at "B1"
+class B1c<T> extends B1<T> {}
+
+// two similar arguments in superclass => one in subclass XPECT noerrors -->
+class B1d<T> extends B1<T,T> {}
+
+/////////////////////////////////////////
+// Type parameter extends generic type //
+/////////////////////////////////////////
+
+// supertype parameterized with primitive XPECT noerrors -->
+class B2a<T,S extends A<string>> {}
+
+// supertype parameterized with another type variable XPECT noerrors -->
+class B2b<T,S extends A<T>> {}
+
+// OK XPECT noerrors -->
+class B2c<T,S extends A<S>> {}
+
+// incorrect argument XPECT errors --> "number is not a subtype of A<string>." at "number"
+class B2d<T,S extends B2a<number,number>> {}

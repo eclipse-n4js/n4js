@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Date.prototype.setUTCMonth()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setMonth
+
+var theBigDay = new Date(Date.UTC(2003,11,2));
+console.log(theBigDay.toUTCString());
+
+// XPECT noerrors -->
+theBigDay.setUTCMonth(6);
+console.log(theBigDay.toUTCString());
+
+// XPECT noerrors -->
+theBigDay.setUTCMonth(3,14);
+console.log(theBigDay.toUTCString());
+
+/* XPECT output ---
+Tue, 02 Dec 2003 00:00:00 GMT
+Wed, 02 Jul 2003 00:00:00 GMT
+Mon, 14 Apr 2003 00:00:00 GMT
+--- */

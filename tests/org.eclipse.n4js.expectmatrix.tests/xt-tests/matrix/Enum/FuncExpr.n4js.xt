@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+// String based enum with function expressions
+
+@StringBased enum SBEnum {
+	a: "a",
+	b: "b"
+}
+
+// SBEnum as return value //
+////////////////////////////
+
+var f = function () : SBEnum { return SBEnum.a; }
+
+// XPECT type of 'f1a' --> SBEnum
+var f1a = f();
+
+// SBEnum is SBEnum XPECT noerrors -->
+var f2 : SBEnum = f();
+
+// SBEnum is string, too XPECT noerrors -->
+var f3 : string = f();
+
+
+// SBEnum as parameter & return value //
+////////////////////////////////////////
+
+var g = function (s : SBEnum) : SBEnum { return s; }
+
+// XPECT type of 'g1a' --> SBEnum
+var g1a = g(SBEnum.b);
+
+// SBEnum is SBEnum XPECT noerrors -->
+var g2 : SBEnum = g(SBEnum.b);
+
+// SBEnum is string, too XPECT noerrors -->
+var g3 : string = g(SBEnum.b);

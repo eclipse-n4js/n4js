@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+////////////////////////////
+// Methods: return values //
+////////////////////////////
+
+interface A {
+	f1 (n : number) : void {}
+	f2 (n : number) : void {}
+	f3 (n : number) : number { return n; }
+	f4 (n : number) : number { return n; }
+}
+
+interface B {
+	f1 (n : number) : void {}				// same ret: void
+	f2 (n : number) : number { return n; }	// diff ret: void
+	f3 (n : number) : number { return n; }	// same ret: non-void
+	f4 (n : number) : string { return "a"; }// diff ret: non-void
+}
+
+var a : union{A,B};
+
+// union{A,B}.f1(number) : void -> all well XPECT noerrors -->
+a.f1(3);
+
+// return type void XPECT errors --> "void is not a subtype of number." at "a.f1(3)"
+var b1 : number = a.f1(3);
+
+// union{A,B}.f2(number) : union{void,number} -> all well XPECT noerrors -->
+a.f2(3);
+
+// return type union{void,number} XPECT errors --> "void is not a subtype of number." at "a.f2(3)"
+var b2 : number = a.f2(3);
+
+// union{A,B}.f3(number) : number -> all well XPECT noerrors -->
+a.f3(3);
+
+// return type number XPECT noerrors -->
+var b3 : number = a.f3(3);
+
+// union{A,B}.f4(number) : union{number,string} -> all well XPECT noerrors -->
+a.f4(3);
+
+// return type union{number,string} XPECT errors --> "union{number,string} is not a subtype of number." at "a.f4(3)"
+var b4 : number = a.f4(3);

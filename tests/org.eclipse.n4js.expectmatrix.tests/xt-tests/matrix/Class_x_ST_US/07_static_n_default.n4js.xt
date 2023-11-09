@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+//////////////////////////////
+// Static & default members //
+//////////////////////////////
+
+class E1 {
+	public i : number;
+	public static j : number;
+
+	public constructor (@Spec spec : ~i~this) {}
+}
+
+class E2 {
+	public i : number;
+	public j : number = 12;
+
+	public constructor (@Spec spec : ~i~this) {}
+}
+
+// static members are not required XPECT noerrors -->
+var e1a : ~E1 = {i: 3};
+
+// full assignment noerrors but XPECT warnings --> "j is not defined in ~E1; it will not be accessible from e1b." at "j"
+var e1b : ~E1 = {i: 3, j: 4};
+
+// initialized members are required as well XPECT errors --> "~Object with { i: number } is not a structural subtype of ~E2: missing field j." at "{i: 3}"
+var e2a : ~E2 = {i: 3};
+
+// but not required when instantiating with @Spec ctor XPECT noerrors --> ""
+new E2({i: 3})
+
+// but not required in @Spec ctor when field is static XPECT noerrors --> ""
+new E1({i: 3})
+
+// full assignment XPECT noerrors -->
+var e2b : ~E2 = {i: 3, j: 4};

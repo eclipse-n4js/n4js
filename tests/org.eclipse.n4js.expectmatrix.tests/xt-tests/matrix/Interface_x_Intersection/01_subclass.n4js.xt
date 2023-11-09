@@ -1,0 +1,30 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+/////////////////////////
+// Subclass relation I //
+/////////////////////////
+
+interface A {}
+interface B extends A {}
+interface C extends A {}
+interface D extends B {}
+
+class AB implements D {}
+class BC implements D {}
+
+// because D <: A and B XPECT noerrors -->
+var ab : intersection{A,B} = new AB();
+
+// because D !<: C XPECT errors --> "BC is not a subtype of intersection{B,C}." at "new BC()"
+var bc : intersection{B,C} = new BC();

@@ -1,0 +1,34 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+/////////////////////////
+// Subclass relation I //
+/////////////////////////
+
+class A {}
+class B extends A {}
+class C extends A {}
+class D extends B {}
+class E extends D {}
+
+// because C <: C XPECT noerrors -->
+var bc1 : union{B,C} = new C();
+
+// because D <: B XPECT noerrors -->
+var bc2 : union{B,C} = new D();
+
+// because E <: D XPECT noerrors -->
+var bc3 : union{B,C} = new E();
+
+// because A !<: C or B XPECT errors --> "A is not a subtype of union{B,C}." at "new A()"
+var bc4 : union{B,C} = new A();

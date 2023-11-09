@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+//////////////////////////////////
+// union{} as argument of @This //
+// Example 66				    //
+//////////////////////////////////
+
+class A {
+	log() : string { return "A was logged"; }
+}
+class B {
+	log() : string { return "B was logged"; }
+}
+class C {
+	log() : string { return "C was logged"; }
+}
+
+@This(union{A,B})
+function logger() { console.log("~" + this.log() + "~"); }
+
+var a : A = new A();
+var b : B = new B();
+var c : C = new C();
+
+logger.call(a);
+logger.call(b);
+logger.call(c);
+
+/* XPECT output ---
+~A was logged~
+~B was logged~
+~C was logged~
+--- */

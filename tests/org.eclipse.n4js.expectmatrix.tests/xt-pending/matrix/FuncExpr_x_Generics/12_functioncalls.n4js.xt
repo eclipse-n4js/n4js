@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.PendingSpecXtTest END_SETUP  */
+
+// XPECT warnings --> "Type variable T not used in parameters or return type." at "T"
+function <T> FA01()  { return null; }
+function <T> FA02() : T  { return null; }
+function <T> FA03(p1 : T) : T  { return null; }
+function <T,S> FA04(p1 : T, p2 : S=undefined ) : T  { return null; }
+
+function <T,S> FA06(p1 : T, ...p2 : S) : T  { return null; }
+
+
+
+
+// + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
+// calls:
+
+// XPECT errors --> "any is not a subtype of string." at "FA01()"
+var cfa01 : string = FA01();
+
+// OK XPECT noerrors -->
+var cfa02 : string = FA02();
+
+// OK XPECT noerrors -->
+var cfa02a : number = FA02();
+
+// OK XPECT noerrors -->
+var cfa03 : string = FA03("bee");
+
+// OK XPECT noerrors -->
+var cfa04 : string = FA04("bee",4);
+
+// IDE-1727 wrong return XPECT FIXME errors --> "number is not a subtype of string" at "FA04(4,"bee")"
+var cfa04a : string = FA04(4,"bee");
+
+// OK XPECT noerrors -->
+var cfa04b : string = FA04("bee");
+
+// IDE-1727 XPECT FIXME errors --> "string is not a subtype of number" at "FA04("bee")"
+var cfa04c : number = FA04("bee"); // error strange message: "union{number,string} is not a subtype of number." should be "string is not a subtype of number" !
+
+// XPECT errors --> "Incorrect number of arguments: expected 2, got 0." at "FA06()"
+var cfa06a : string = FA06();
+
+
+// OK XPECT noerrors -->
+var cfa06b : string = FA06("bee");
+
+// OK XPECT noerrors -->
+var cfa06c : string = FA06("bee","you");
+
+// OK XPECT noerrors -->
+var cfa06d : string = FA06("bee","you","and");
+
+// wrong type in variadic XPECT errors --> "4 is not a subtype of string." at "4"
+var cfa06e : string = <string,string>FA06("bee","you","and",4);
+
+// X--PECT errors -->
+// "T is not a subtype of number." at "FA06("bee","you","and")"
+// "string is not a subtype of S." at ""and""
+// "string is not a subtype of S." at ""you""
+// "string is not a subtype of T." at ""bee""
+// note: above are current error messages
+// IDE-1727 XPECT FIXME errors ---
+// "string is not a subtype of number." at "FA06("bee","you","and")"
+// ---
+var cfa06f : number = FA06("bee","you","and");
+
+// + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +

@@ -1,0 +1,33 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Date.now()
+// Source: self-constructed
+// Please update this example no later than 31.12.2089
+
+var d = Date.now();
+var future = new Date(2090,1,1);
+var past = new Date(1990,1,1);
+var diff1 = future.valueOf() - d.valueOf();
+var diff2 = d.valueOf() - past.valueOf();
+
+// Making sure now is earlier than the future
+console.log(diff1>0);
+
+// Making sure now is later than the past
+console.log(diff2>0);
+
+/* XPECT output ---
+true
+true
+--- */

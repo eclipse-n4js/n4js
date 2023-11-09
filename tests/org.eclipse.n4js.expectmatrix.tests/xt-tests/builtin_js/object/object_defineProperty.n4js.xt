@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+
+// Object.defineProperty()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
+
+var o : Object = {}; // Creates a new object
+
+// Example of an object property added with defineProperty with a data property descriptor
+Object.defineProperty(o, "a", {value : 37,
+                               writable : true,
+                               enumerable : true,
+                               configurable : true});
+// 'a' property exists in the o object and its value is 37
+
+console.log(JSON.stringify(o));
+
+// Example of an object property added with defineProperty with an accessor property descriptor
+var bValue = 38;
+Object.defineProperty(o, "b", {get : function(){ return bValue; },
+                               set : function(newValue : any){ bValue = newValue as number; },
+                               enumerable : true,
+                               configurable : true});
+console.log("38 = " + o["b"]); // 38
+// 'b' property exists in the o object and its value is 38
+// The value of o.b is now always identical to bValue, unless o.b is redefined
+
+// You cannot try to mix both :
+function fail () {
+	try {
+		Object.defineProperty(o, "conflict", { value: 0x9f91102, get: function() { return 0xdeadbeef; } });
+	}
+	catch (e) { console.log((e as Object).toString()); }
+}
+
+fail();
+// throws a TypeError: value appears only in data descriptors, get appears only in accessor descriptors
+
+/* XPECT output ---
+{"a":37}
+38 = 38
+TypeError: Invalid property descriptor. Cannot both specify accessors and a value or writable attribute, #<Object>
+--- */

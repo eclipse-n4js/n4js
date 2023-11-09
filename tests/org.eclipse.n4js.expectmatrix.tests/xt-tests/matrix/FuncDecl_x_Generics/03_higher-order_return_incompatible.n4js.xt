@@ -1,0 +1,57 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+///////////////////////////////
+// Higher-order functions    //
+// Incompatible return types //
+///////////////////////////////
+
+class B<T,S> {
+	public x : T;
+	public y : S;
+}
+
+function <T,S> f1 (a : B<T,S>) : T { return a.x; }
+function f1a (a : B<number,number>) : number { return a.x; }
+function <T,S> f2 (a : B<T,S>) : string { return ""; }
+function <T,S> f3 (a : B<T,S>) {}
+
+
+function <T,S> h (f : {function(B<T,S>):T}) {}
+
+// argument is perfect match XPECT noerrors -->
+h(f1);
+
+// argument is perfect match (type arguments explicitly specified) XPECT noerrors -->
+<number,number>h(f1);
+
+// argument with non-variable types XPECT noerrors -->
+h(f1a);
+
+// argument with non-variable types (type arguments explicitly specified) XPECT noerrors -->
+<number,number>h(f1a);
+
+// argument with partially non-variable types (only return type) XPECT noerrors -->
+h(f2);
+
+// argument with partially non-variable types (only return type) (type arguments explicitly specified) XPECT noerrors -->
+<string,string>h(f2);
+
+// argument with wrong return type (type arguments explicitly specified) XPECT errors --> "{function<T,S>(B<T,S>):string} is not a subtype of {function(B<number,number>):number}." at "f2"
+<number,number>h(f2);
+
+// argument missing return type XPECT errors --> "{function<T,S>(B<T,S>):void} is not a subtype of {function(B<T,S>):T}." at "f3"
+h(f3);
+
+// argument missing return type (type arguments explicitly specified) XPECT errors --> "{function<T,S>(B<T,S>):void} is not a subtype of {function(B<number,number>):number}." at "f3"
+<number,number>h(f3);

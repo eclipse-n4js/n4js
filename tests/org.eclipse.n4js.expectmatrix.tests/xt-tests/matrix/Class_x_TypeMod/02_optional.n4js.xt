@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+/////////////////////////
+// Optional parameters //
+/////////////////////////
+
+class A {
+	public x : int;
+	protected y : int;
+	private z : int;
+	w : string;
+
+	// in ctor: optional spec XPECT noerrors -->
+	public constructor (@Spec spec : ~i~this=undefined, y : int=undefined, z : int=undefined, w : string=undefined) {
+		if (y) {
+			// setting variables in ctor XPECT noerrors -->
+			this.y = y;
+		}
+	}
+
+	// in method XPECT noerrors -->
+	public f (b : boolean=undefined, z : int=undefined, w : string=undefined) : union{string,boolean} {
+		if (b !== undefined) {
+			return b;
+		}
+		else return "nope";
+
+	}
+};
+
+// no parameters XPECT noerrors -->
+var a0 : A = new A();
+
+// some parameters XPECT noerrors -->
+var a3 : A = new A({x: 3}, 5);
+
+// too many parameters XPECT errors --> "Incorrect number of arguments: expected 4, got 6." at "new A({x: 1},2,3,"4","5","6")"
+var a6 : A = new A({x: 1},2,3,"4","5","6");
+
+// wrong type of some parameters XPECT errors --> "4 is not a subtype of string." at "4"
+var a4 : A = new A({x: 1},2,3,4);
+
+// no arguments XPECT noerrors -->
+a0.f();
+
+// not enough arguments XPECT noerrors -->
+a0.f(true);
+
+// argument in wrong place XPECT errors --> "5 is not a subtype of boolean." at "5"
+a0.f(5);
+
+// good arguments XPECT noerrors -->
+a0.f(true, 5, "F");

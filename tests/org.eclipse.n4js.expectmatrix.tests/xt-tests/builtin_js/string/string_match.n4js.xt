@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// String.prototype.match()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match
+
+var str1 = "For more information, see Chapter 3.4.5.1";
+var re = /(chapter \d+(\.\d)*)/i;
+var found = str1.match(re);
+
+console.log(found);
+
+// Using global and ignore case flags with match
+var str2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+var regexp = /[A-E]/gi;
+var matches_array = str2.match(regexp);
+
+console.log(matches_array);
+
+/* XPECT output ---
+[
+  'Chapter 3.4.5.1',
+  'Chapter 3.4.5.1',
+  '.1',
+  index: 26,
+  input: 'For more information, see Chapter 3.4.5.1',
+  groups: undefined
+]
+[
+  'A', 'B', 'C', 'D',
+  'E', 'a', 'b', 'c',
+  'd', 'e'
+]
+--- */

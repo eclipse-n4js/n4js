@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+//////////////////////
+// Access modifiers //
+//////////////////////
+
+class A {
+	public x : number;
+	protected y : number;
+	private z : number;
+	w : number;
+
+	public constructor (@Spec spec : ~i~this) {}
+}
+
+// XPECT warnings ---
+// "w is not defined in ~i~this[A]; it will not have any effect in the spec constructor." at "w"
+// "y is not defined in ~i~this[A]; it will not have any effect in the spec constructor." at "y"
+// "z is not defined in ~i~this[A]; it will not have any effect in the spec constructor." at "z"
+// ---
+var a : A = new A({x: 1, y: 2, z: 3, w: 4});
+
+console.log(a);
+
+/* only public fields are set XPECT output ---
+A { x: 1, y: undefined, z: undefined, w: undefined }
+--- */

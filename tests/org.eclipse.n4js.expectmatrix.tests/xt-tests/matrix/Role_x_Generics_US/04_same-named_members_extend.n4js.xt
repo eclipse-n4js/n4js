@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+////////////////////////////////
+// Same-named members: extend //
+////////////////////////////////
+
+interface A<T> {
+	public a : T;
+	public f (t : T) : T { return t; };
+}
+
+interface B<T,S> {
+	public a : S;
+	public b : S;
+	public f (t : T) : S { return this.a; };
+}
+
+class C<R> {
+	public a : R;
+	public f (t : R) : R { return this.a; };
+}
+
+// extending and consuming (same signature 1) XPECT noerrors --> "Members taken from parent class"
+class AC extends C<number> implements A<number> {}
+
+
+// extending and consuming (same signature 2) XPECT noerrors --> "f() has the same signature because both variables in B are set to number"
+class BC extends C<number> implements B<number,number> {}
+
+/* extending and consuming (different signature 2) XPECT errors ---
+"Signature of inherited method C.f does not conform to implemented method B.f: {function(number):number} is not a subtype of {function(number):string}." at "B<number,string>"
+"Type of inherited field C.a must equal type of implemented field B.a." at "B<number,string>"
+--- */
+class BC2 extends C<number> implements B<number,string> {}

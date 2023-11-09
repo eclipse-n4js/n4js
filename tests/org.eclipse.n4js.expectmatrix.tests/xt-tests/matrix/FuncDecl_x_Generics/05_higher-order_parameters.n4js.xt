@@ -1,0 +1,55 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+////////////////////////////
+// Higher-order functions //
+// Number of parameters   //
+////////////////////////////
+
+class B<T,S> {
+	public x : T;
+	public y : S;
+}
+
+/* XPECT warnings ---
+	"Type variable T not used in parameters or return type." at "T"
+	"Type variable S not used in parameters or return type." at "S"
+--- */
+function <T,S> g0 () {}
+function <T,S> g1 (t : T, s : S) {}
+function g1a (t : number, s : string) {}
+function <T,S> g2 (t1 : T, s1 : S, s2 : S) {}
+
+function <T,S> h (f : {function(t : T, s : S)}) {}
+
+// argument with no parameters XPECT noerrors -->
+h(g0);
+
+// argument with no parameters (parameters explicitly specified) XPECT noerrors -->
+<number,string>h(g0);
+
+// argument with the expected parameters XPECT noerrors -->
+h(g1);
+
+// IDEBUG-166 argument with the expected parameters (parameters explicitly specified) XPECT noerrors -->
+// {function<T,S>(T,S):void} is not a subtype of {function(number,string)}.  <-- Example 62, 10 "Subtyping with function types"
+<number,string>h(g1);
+
+// argument with the expected parameters (parameters explicitly specified for both functions) XPECT noerrors -->
+<number,string>h(g1a);
+
+// argument with more than expected parameters XPECT errors --> "{function<T,S>(T,S,S):void} is not a subtype of {function(any,any)}." at "g2"
+h(g2);
+
+// argument with more than expected parameters (parameters explicitly specified) XPECT errors --> "{function<T,S>(T,S,S):void} is not a subtype of {function(number,string)}." at "g2"
+<number,string>h(g2);

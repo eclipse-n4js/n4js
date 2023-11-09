@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// RegExp.prototype.exec()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec
+
+// Finding successive matches
+var myRe = /ab*/g;
+var str = "abbcdefabh";
+var o;
+
+while ((o = myRe.exec(str)) !== null)
+{
+  var msg = "Found " + o + ".  ";
+  msg += "Next match starts at " + myRe.lastIndex;
+  console.log(msg);
+}
+
+// Using exec() with RegExp literals
+var matches = /(hello \S+)/.exec('This is a hello world!');
+console.log(matches);
+
+/* XPECT output ---
+Found abb.  Next match starts at 3
+Found ab.  Next match starts at 9
+[
+  'hello world!',
+  'hello world!',
+  index: 10,
+  input: 'This is a hello world!',
+  groups: undefined
+]
+--- */

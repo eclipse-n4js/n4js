@@ -1,0 +1,85 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// String.prototype.split()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split
+
+var tempestString = "Oh brave new world that has such people in it.";
+var monthString = "Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec";
+
+console.log(tempestString.split(" "));
+console.log(tempestString.split(" ", 4));
+
+// Complex example
+function splitString(stringToSplit : string, separator : string) {
+  var arrayOfStrings = stringToSplit.split(separator);
+
+  console.log('The original string is: "' + stringToSplit + '"');
+  console.log('The separator is: "' + separator + '"');
+  console.log("The array has " + arrayOfStrings.length + " elements: ");
+
+  for (var i=0; i < arrayOfStrings.length; i++)
+    console.log(arrayOfStrings[i] + " / ");
+}
+
+var space = " ";
+var comma = ",";
+
+splitString(tempestString, space);
+splitString(monthString, comma);
+
+// Returning a limited number of splits
+
+var myString = "Hello World. How are you doing?";
+var splits = myString.split(" ", 3);
+console.log(splits);
+
+/* XPECT output ---
+[
+  'Oh',   'brave',
+  'new',  'world',
+  'that', 'has',
+  'such', 'people',
+  'in',   'it.'
+]
+[ 'Oh', 'brave', 'new', 'world' ]
+The original string is: "Oh brave new world that has such people in it."
+The separator is: " "
+The array has 10 elements: 
+Oh / 
+brave / 
+new / 
+world / 
+that / 
+has / 
+such / 
+people / 
+in / 
+it. / 
+The original string is: "Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec"
+The separator is: ","
+The array has 12 elements: 
+Jan / 
+Feb / 
+Mar / 
+Apr / 
+May / 
+Jun / 
+Jul / 
+Aug / 
+Sep / 
+Oct / 
+Nov / 
+Dec / 
+[ 'Hello', 'World.', 'How' ]
+--- */

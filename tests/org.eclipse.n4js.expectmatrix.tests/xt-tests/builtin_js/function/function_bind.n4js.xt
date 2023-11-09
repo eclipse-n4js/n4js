@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Function.prototype.bind()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind
+
+var wrapper = {
+	x: 9,
+	y: 7,
+	getY: function() { return this.y; },
+
+	module: {
+ 		x: 81,
+ 		getX: function() { return this.x; }
+	}
+};
+
+var extern = { y: 19 }
+
+console.log(wrapper.module.getX()); // 81
+
+// create a new function with 'this' bound to wrapper
+var boundGetX = wrapper.module.getX.bind(wrapper);
+console.log(boundGetX()); // 9
+
+// With non-embedded binding goal
+console.log(wrapper.getY()); // 7
+
+// create a new function with 'this' bound to extern
+var boundGetY = wrapper.getY.bind(extern);
+console.log(boundGetY()); // 19
+
+/* XPECT output ---
+81
+9
+7
+19
+--- */

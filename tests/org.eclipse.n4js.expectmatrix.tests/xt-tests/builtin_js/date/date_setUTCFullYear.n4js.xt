@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Date.prototype.setUTCFullYear()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setFullYear
+
+var theBigDay = new Date(Date.UTC(2003,11,2));
+console.log(theBigDay.toUTCString());
+
+// XPECT noerrors -->
+theBigDay.setUTCFullYear(1997);
+console.log(theBigDay.toUTCString());
+
+// XPECT noerrors -->
+theBigDay.setUTCFullYear(2003,3);
+console.log(theBigDay.toUTCString());
+
+// XPECT noerrors -->
+theBigDay.setUTCFullYear(2005,5,17);
+console.log(theBigDay.toUTCString());
+
+/* XPECT output ---
+Tue, 02 Dec 2003 00:00:00 GMT
+Tue, 02 Dec 1997 00:00:00 GMT
+Wed, 02 Apr 2003 00:00:00 GMT
+Fri, 17 Jun 2005 00:00:00 GMT
+--- */

@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Number.MIN_VALUE
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MIN_VALUE
+
+function f (num1 : number, num2 : number) {
+	if (num1 / num2 >= Number.MIN_VALUE) {
+    	console.log(num1/num2);
+	} else {
+    	console.log("Number too small");
+   	}
+}
+
+f(9,3);
+f(5e-324, 5);
+
+
+/* XPECT output ---
+3
+Number too small
+--- */

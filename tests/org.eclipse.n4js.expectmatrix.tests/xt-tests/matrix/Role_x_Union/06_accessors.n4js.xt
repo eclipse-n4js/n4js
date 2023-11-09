@@ -1,0 +1,55 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+///////////////
+// Accessors //
+///////////////
+
+interface A {
+	get n () : number { return this.n; }
+	set n (n : number) { this.n = n; }
+
+	get s () : string { return this.s; }
+	set s (s : string) { this.s = s; }
+
+	get b () : boolean { return this.b; }
+	set b (b : boolean) { this.b = b; }
+}
+
+interface B {
+	get n () : number { return this.n; }
+	set n (n : number) { this.n = n; }
+
+	get s () : number { return this.s; }
+	set s (s : number) { this.s = s; }
+
+	get t () : boolean { return this.t; }
+	set t (t : boolean) { this.t = t; }
+}
+
+var a : union{A,B};
+
+// {A,B}.n is a number XPECT noerrors -->
+var num1 : number = a.n;
+
+// {A,B}.s is not a number but a union{string,number} XPECT errors --> "union{string,number} is not a subtype of number." at "a.s"
+var num2 : number = a.s;
+
+// {A,B}.s is not a string but a union{string,number} XPECT errors --> "union{string,number} is not a subtype of string." at "a.s"
+var str : string = a.s;
+
+// A.b but no B.b XPECT errors --> "Member b not present in all types of union; missing from: B." at "b"
+var boo1 : boolean = a.b;
+
+// B.t but no A.t XPECT errors --> "Member t not present in all types of union; missing from: A." at "t"
+var boo2 : boolean = a.t;

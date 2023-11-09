@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+//////////////////////////////////
+// Intersection as return value //
+//////////////////////////////////
+
+// Auxiliary classes
+class NS {
+	n : number;
+	s : string;
+}
+
+interface NT {
+	n : number;
+	t : string;
+}
+
+class N extends NS implements NT {}
+
+function f (a : intersection{NS,NT}) : intersection{NS,NT} {
+	// N <: intersection{NT,NS} XPECT noerrors -->
+	return new N();
+}
+
+// right assignment XPECT noerrors -->
+var n1 : intersection{NS,NT} = f(new N());
+
+// wrong assignment XPECT errors --> "intersection{NS,NT} is not a subtype of boolean." at "f(new N())"
+var n2 : boolean = f(new N());

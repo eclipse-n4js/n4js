@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// String.prototype.charCodeAt()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt
+
+// Fixing charCodeAt to handle non-Basic-Multilingual-Plane characters if their presence earlier in the string is unknown
+function fixedCharCodeAt (str : string, idx : number) {
+    idx = idx || 0;
+    var code = str.charCodeAt(idx);
+    var hi : number, low : number;
+
+    // High surrogate (could change last hex to 0xDB7F to treat high
+    // private surrogates as single characters)
+    if (0xD800 <= code && code <= 0xDBFF) {
+        hi = code;
+        low = str.charCodeAt(idx+1);
+        if (isNaN(low)) {
+            throw 'High surrogate not followed by low surrogate in fixedCharCodeAt()';
+        }
+        return ((hi - 0xD800) * 0x400) + (low - 0xDC00) + 0x10000;
+    }
+    if (0xDC00 <= code && code <= 0xDFFF) { // Low surrogate
+        // We return false to allow loops to skip this iteration since should have
+        // already handled high surrogate above in the previous iteration
+        return false;
+    }
+    return code;
+}
+
+console.log(fixedCharCodeAt ('\uD800\uDC00', 0)); // 65536
+console.log(fixedCharCodeAt ('\uD800\uDC00', 1)); // false
+
+
+/* XPECT output ---
+65536
+false
+--- */

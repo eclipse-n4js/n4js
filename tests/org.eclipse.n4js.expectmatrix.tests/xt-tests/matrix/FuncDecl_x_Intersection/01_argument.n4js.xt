@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+//////////////////////////////
+// Intersection as argument //
+//////////////////////////////
+
+// Auxiliary classes
+class NS {
+	n : number;
+	s : string;
+}
+
+interface NT {
+	n : number;
+	t : string;
+}
+
+class N extends NS implements NT {}
+
+// intersection as argument XPECT noerrors -->
+function f (a : intersection{NS,NT}) : string {
+	return "a";
+}
+
+// NS as parameter XPECT errors --> "NS is not a subtype of intersection{NS,NT}." at "new NS()"
+f(new NS());
+
+// null as parameter XPECT noerrors -->
+f(null);
+
+// N as parameter XPECT noerrors -->
+f(new N());

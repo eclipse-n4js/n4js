@@ -1,0 +1,102 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+/////////////////////
+// As return value //
+/////////////////////
+
+interface I<T> {
+	public x : ~T;
+	public foo ();
+};
+
+class A { public i : int; }
+
+
+var i: I<A>;
+// XPECT type of 'x' --> ~A
+var x = i.x;
+
+
+class C1 {
+	@Final f () : void {};
+
+	// return value must be nominal type XPECT errors --> "Structural type ~Object with { x: int; foo: {function():void} } is not a subtype of non-structural type I<int>." at "{x: 3, foo: this.f}"
+	public f1 () : I<int> { return {x: 3, foo: this.f}; };
+
+	// return value must be ~I, missing foo field XPECT errors --> "~Object with { x: ~int } is not a structural subtype of ~I<int>: missing method foo." at "{x: 3}"
+	public f2a () : ~I<int> { return {x: 3}; };
+
+	// return value must be ~I, all well XPECT noerrors -->
+	public f2b () : ~I<int> { return {x: 3, foo: this.f}; };
+
+	// return value must be ~~I, all well noerrors but XPECT warnings --> "foo is not defined in ~~I<int>; it will not be accessible from references of type I." at "foo"
+	public f3 () : ~~I<int> { return {x: 3, foo: this.f}; };
+}
+
+class C2 {
+	@Final f () : void {};
+
+	// return value must be nominal type XPECT errors --> "Structural type ~Object with { x: ~Object with { i: int }; foo: {function():void} } is not a subtype of non-structural type I<A>." at "{x: {i: 3}, foo: this.f}"
+	public f1 () : I<A> { return {x: {i: 3}, foo: this.f}; };
+
+	// return value must be ~I, missing foo field XPECT errors --> "~Object with { x: ~Object with { i: int } } is not a structural subtype of ~I<A>: missing method foo." at "{x: {i: 3}}"
+	public f2a () : ~I<A> { return {x: {i: 3}}; };
+
+	// GHOLD-250 ATTENTION return value must be ~I, all well XPECT noerrors -->
+	// ~Object with { ~Object with { int i; } x; {function():void} foo; } is not a subtype of ~I<A>.
+	public f2b () : ~I<A> { return {x: {i: 3}, foo: this.f}; };
+
+	// GHOLD-250 ATTENTION return value must be ~~I, all well, noerrors but XPECT warnings --> "foo is not defined in ~~I<A>; it will not be accessible from references of type I." at "foo"
+	// ~Object with { ~Object with { int i; } x; {function():void} foo; } is not a subtype of ~~I<A>.
+	public f3 () : ~~I<A> { return {x: {i: 3}, foo: this.f}; };
+
+	// GHOLD-250 ATTENTION return value must be ~~I, all well XPECT noerrors -->
+	// ~Object with { ~Object with { int i; } x; } is not a subtype of ~~I<A>.
+	public f4 () : ~~I<A> { return {x: {i: 3}}; };
+}
+
+class C3<T> {
+	@Final f () : void {};
+
+	// value of parameterized type given as argument XPECT noerrors -->
+	public f3 (t : T) : ~I<T> { return {x: t, foo: this.f}; };
+}
+
+var c1 : C1 = new C1();
+var c2 : C2 = new C2();
+var c3 : C3<string> = new C3<string>();
+
+var i1 : ~I<int>;
+var i2 : ~~I<int>;
+
+// ~I<int> is returned XPECT noerrors -->
+i1 = c1.f2b();
+
+// ~~I<int> is returned XPECT noerrors -->
+i2 = c1.f3();
+
+var ia1 : ~I<A>;
+var ia2 : ~~I<A>;
+
+
+// ~I<A> is returned XPECT noerrors -->
+ia1 = c2.f2b();
+
+// ~I<A> is returned XPECT noerrors -->
+ia2 = c2.f3();
+
+var is : ~I<string>;
+
+// ~I<string> is returned XPECT noerrors -->
+is = c3.f3("D");

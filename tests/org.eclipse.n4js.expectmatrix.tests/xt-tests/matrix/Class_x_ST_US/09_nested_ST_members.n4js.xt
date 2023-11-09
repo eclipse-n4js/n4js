@@ -1,0 +1,100 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+////////////////////////////////
+// Nested: structural members //
+////////////////////////////////
+
+class C {
+	public n : number;
+	public foo () : void {};
+
+	public constructor (@Spec spec : ~i~this) {}
+}
+
+class G {
+	public f(t : ~C) : ~C {
+		t.n = 5;
+		t.foo();
+        // XPECT warnings --> "A reference to method foo is created detached from a (correct) this-instance." at "foo"
+		return {n: 5, foo: t.foo};
+	}
+	public ff(t : ~~C) : ~~C {
+		t.n = 6;
+		return {n: 6};
+	}
+}
+
+// XPECT warnings --> "foo is not defined in ~i~this[C]; it will not have any effect in the spec constructor." at "foo"
+var c_nom : C = new C({n: 3, foo: function (){} });
+var c_str : ~C = {n: 3, foo: function (){} };
+var c_fld : ~~C = {n: 3};
+
+var g = new G();
+
+// type returned incompatible XPECT errors --> "Structural type ~C is not a subtype of non-structural type C." at "g.f(c_nom)"
+var f1a : C = g.f(c_nom);
+// XPECT noerrors -->
+var f1aOK : ~C = g.f(c_nom);
+
+// type returned incompatible XPECT errors -->"Structural type ~C is not a subtype of non-structural type C." at "g.f(c_str)"
+var f1b : C = g.f(c_str);
+// XPECT noerrors -->
+var f1bOK : ~C = g.f(c_str);
+
+/* type returned and argument incompatible XPECT errors ---
+"~~C is not a structural subtype of ~C: missing method foo." at "c_fld"
+"Structural type ~C is not a subtype of non-structural type C." at "g.f(c_fld)"
+--- */
+var f1c : C = g.f(c_fld);
+
+// type returned incompatible XPECT errors -->"Structural type ~~C is not a subtype of non-structural type C." at "g.ff(c_nom)"
+var f2a : C = g.ff(c_nom);
+// XPECT noerrors -->
+var f2aOK : ~~C = g.ff(c_nom);
+
+// type returned incompatible XPECT errors -->"Structural type ~~C is not a subtype of non-structural type C." at "g.ff(c_str)"
+var f2b : C = g.ff(c_str);
+// XPECT noerrors -->
+var f2bOK : ~~C = g.ff(c_str);
+
+// type returned incompatible XPECT errors -->"Structural type ~~C is not a subtype of non-structural type C." at "g.ff(c_fld)"
+var f2c : C = g.ff(c_fld);
+// XPECT noerrors -->
+var f2cOK : ~~C = g.ff(c_fld);
+
+// OBJECT LITERALS
+
+// type returned incompatible XPECT errors -->"Structural type ~C is not a subtype of non-structural type C." at "g.f({n: 3, foo: function (){} })"
+var f3a : C = g.f({n: 3, foo: function (){} });
+// XPECT noerrors -->
+var f3aOK : ~C = g.f({n: 3, foo: function (){} });
+
+
+/* type returned and argument incompatible XPECT errors ---
+"Structural type ~C is not a subtype of non-structural type C." at "g.f({n: 3})"
+"~Object with { n: number } is not a structural subtype of ~C: missing method foo." at "{n: 3}"
+--- */
+var f3b : C = g.f({n: 3});
+
+// type returned incompatible XPECT errors -->"Structural type ~~C is not a subtype of non-structural type C." at "g.ff({n: 3, foo: function (){} })"
+// XPECT warnings --> "foo is not defined in ~~C; it will not be accessible from the receiving parameter." at "foo"
+var f4a : C = g.ff({n: 3, foo: function (){} });
+// noerrors but XPECT warnings --> "foo is not defined in ~~C; it will not be accessible from the receiving parameter." at "foo"
+var f4aOK : ~~C = g.ff({n: 3, foo: function (){} });
+
+// type returned incompatible XPECT errors -->"Structural type ~~C is not a subtype of non-structural type C." at "g.ff({n: 3, foo: function (){} })"
+// XPECT warnings --> "foo is not defined in ~~C; it will not be accessible from the receiving parameter." at "foo"
+var f4b : C = g.ff({n: 3, foo: function (){} });
+// noerrors but XPECT warnings --> "foo is not defined in ~~C; it will not be accessible from the receiving parameter." at "foo"
+var f4bOK : ~~C = g.ff({n: 3, foo: function (){} });

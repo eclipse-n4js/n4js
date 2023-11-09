@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+// Declaring a string based enum
+
+@StringBased enum SBEnum1 {
+	// only strings are allowed as literals XPECT errors --> "Values of type number may only be used for literals of @NumberBased enums." at "1"
+	a: 1,
+	// XPECT noerrors -->
+	b: 'v'
+}
+
+@StringBased enum SBEnum2 {
+	// unique literal names XPECT errors --> "Multiple literals with name a." at "a"
+	a: "a",
+	a: "b"
+}
+
+
+// Declaring a number based enum
+
+@NumberBased enum NBEnum1 {
+	// XPECT noerrors -->
+	a: 1,
+	// only numbers are allowed as literals XPECT errors --> "Values of literals in @NumberBased enums must be of type number." at "'v'"
+	b: 'v'
+}
+
+@NumberBased enum NBEnum2 {
+	// unique literal names XPECT errors --> "Multiple literals with name a." at "a"
+	a: 1,
+	a: 2
+}
