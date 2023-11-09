@@ -114,7 +114,7 @@ public class XtFileDataParser {
 
 		XtWorkspace workspace = new XtWorkspace();
 		workspace.addProject(project);
-		workspace.moduleNameOfXtFile = fileName;
+		workspace.moduleNameOfXtFile = DEFAULT_PROJECT_NAME + "/" + DEFAULT_SOURCE_FOLDER + "/" + fileName;
 
 		return workspace;
 	}
