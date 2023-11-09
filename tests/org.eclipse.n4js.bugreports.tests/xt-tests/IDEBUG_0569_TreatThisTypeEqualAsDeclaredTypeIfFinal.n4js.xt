@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+abstract class A  {
+    abstract f1() : this;
+    abstract f2() : this;
+}
+
+class B extends A {
+    // XPECT errors --> "Signature of method B.f1 does not conform to overridden method A.f1: {function():B} is not a subtype of {function():this[B]}." at "f1"
+    @Override f1() : B {
+       return new B();
+    }
+    @Override f2() : this {
+        // XPECT errors --> "B is not a subtype of this[B]." at "new B()"
+       return new B();
+    }
+}
+
+@Final class C extends A {
+    // XPECT noerrors -->
+    @Override f1() : C {
+       return new C();
+    }
+    @Override f2() : this {
+        // XPECT noerrors --> "C can be this, because C is declared as final."
+       return new C();
+    }
+}

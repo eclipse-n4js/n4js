@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+/* XPECT output ---
+Hello
+42
+Hello
+1
+Hello
+42
+--- */
+
+class C {
+	public s : string;
+	n : number;
+
+	constructor(spec : ~~this with {n?: number;}) {
+		this.s = spec.s;
+		if (spec.n) {
+			this.n = spec.n;
+		} else {
+			this.n = 1;
+		}
+
+	}
+}
+
+var ca = new C({s:"Hello", n:42});
+console.log(ca.s)
+console.log(ca.n)
+
+var cb = new C({s:"Hello"});
+console.log(cb.s)
+console.log(cb.n)
+
+// XPECT warnings --> "superfluous is not defined in ~~this[C]; it will not be accessible from the receiving parameter." at "superfluous"
+var cc = new C({s:"Hello", superfluous: "nobody needs that", n: 42});
+console.log(cc.s)
+console.log(cc.n)

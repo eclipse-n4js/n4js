@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+
+//function prototype methods missing
+
+var func : {function()} = function(){};
+var obj = {};
+// XPECT noerrors --> "autboxing" at "call"
+func.call(obj);
+// XPECT noerrors -->
+// No error expected: "autboxing" at "apply"
+func.apply(obj, []);
+// XPECT noerrors --> "autboxing" at "bind"
+func.bind({});
+// XPECT noerrors --> "autboxing" at "toString"
+func.toString();
+// XPECT noerrors --> "autboxing" at "length"
+func.length;
+// XPECT noerrors --> "autboxing" at "hasOwnProperty"
+func.hasOwnProperty("length");

@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+interface A {}
+
+function <T> create(p : type{T}): T { return null; }
+
+
+// XPECT noerrors --> No error expected: "type{A} is not a subtype of type{T}." at "A"
+var c1 = <A>create(A);
+
+// XPECT noerrors --> No error expected: "type{A} is not a subtype of type{T}." at "A"
+var c2 = create(A);
+
+
+// XPECT noerrors --> No error expected: "type{A} is not a subtype of type{T}." at "A"
+var c3 : A = create(A);
+
+// XPECT noerrors --> No error expected: "T is not a subtype of A." at "c2"
+var s2 : A = c2;
+
+
+
+
+class B {}
+
+function <Y> create2(p : constructor{Y}) : Y { return null; }
+
+
+// XPECT noerrors --> "constructor{B} is not a subtype of constructor{Y}." at "B"
+var b : B = create2(B);

@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+/* XPECT output ---
+e.message === some message: true
+e.notMsg === custom message: true
+e.n === 36: true
+e.method() === 36: true
+e instanceof Error: true
+e instanceof CustomError_008: true
+e instanceof SubCustomError_008: true
+e instanceof SubSubCustomError_008: true
+e has stack trace: true
+e.stack starts with 'SubSubCustomError_008: some message': true
+--- */
+
+class CustomError_008 extends Error {
+	notMsg : string;
+	constructor(notMsg : string, someMsg : string) {
+		super(someMsg);
+		this.notMsg = notMsg;
+	}
+}
+
+class SubCustomError_008 extends CustomError_008 {
+	n : number;
+	constructor(anotherNotMsg : string, someMsg : string, n : number) {
+		super(anotherNotMsg, someMsg);
+		this.n = n;
+	}
+	method() : number {
+		return this.n;
+	}
+}
+
+class SubSubCustomError_008 extends SubCustomError_008 {
+}
+
+var e = new SubSubCustomError_008('custom message', 'some message', 36);
+console.log('e.message === some message:', e.message === 'some message');
+console.log('e.notMsg === custom message:', e.notMsg === 'custom message');
+console.log('e.n === 36:', e.n === 36);
+console.log('e.method() === 36:', e.method() === 36);
+console.log('e instanceof Error:', e instanceof Error);
+console.log('e instanceof CustomError_008:', e instanceof CustomError_008);
+console.log('e instanceof SubCustomError_008:', e instanceof SubCustomError_008);
+console.log('e instanceof SubSubCustomError_008:', e instanceof SubSubCustomError_008);
+// XPECT warnings --> "Unnecessary cast from SubSubCustomError_008 to Object" at "e as Object"
+var stack = (e as Object)['stack'];
+console.log('e has stack trace:', undefined !== stack);
+console.log('e.stack starts with \'SubSubCustomError_008: some message\':', 0 === (stack as String).indexOf('SubSubCustomError_008: some message'));

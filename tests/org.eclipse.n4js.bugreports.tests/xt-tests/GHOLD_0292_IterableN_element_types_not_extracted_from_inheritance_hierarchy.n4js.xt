@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+
+// ################################################################################################
+// minified:
+
+
+interface I<T1,T2> extends Iterable2<T1,T2> {}
+interface J<T1,T2> extends I<T1,T2> {}
+
+let ij: intersection{I<any,A>, J<any,A>};
+// XPECT warnings -->"Variable a is used before it is declared" at "a"
+[,a] = ij;
+
+
+
+// ################################################################################################
+// original example:
+
+
+class A {}
+let a: A;
+
+interface ICollection<out T> extends Iterable<T>{}
+interface IContentCollection<T> extends ICollection<T> {}
+
+interface Entry<EntryKey, EntryValue> extends Iterable2<EntryKey, EntryValue> {}
+interface ContentEntry<Key, Value> extends Entry<Key, Value> {}
+
+interface IMap<Key, Value> extends ICollection<Entry<Key, Value>> {}
+interface IContentMap<Key, Value> extends IMap<Key, Value>, IContentCollection<ContentEntry<Key, Value>> {} // changing ContentEntry to Entry makes error go away
+
+
+class ContentDataMapEditProxyHandler {
+
+	public f(cdm: IContentMap<any, A>) {
+		for (let [key, item] of cdm) {
+			key = null;
+			// XPECT noerrors --> "EntryValue is not a subtype of A." at "item"
+			let a: A = item;
+		}
+	}
+}
+
+
+let cdm: IContentMap<any,A>;
+// XPECT noerrors --> "EntryValue is not a subtype of A." at "a"
+[,a] = cdm[Symbol.iterator]().next().value;
+
+
+let ce: Entry<any,A> & ContentEntry<any,A>;
+// XPECT noerrors --> "EntryValue is not a subtype of A." at "a"
+[,a] = ce;

@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+//Overriding toString and valueOf (to allow autoconversions) receives error about a super class method. Also there is a documentation
+//bug because it does not specify that these methods are public.
+
+class AdaptibleThing {
+    thingCode : number;
+    thingCodeStr : string;
+    name : string;
+    constructor(name : String, thingCode : Number) {
+        // XPECT noerrors --> Number's valueOf should return a number
+        this.thingCode = thingCode.valueOf();
+        // XPECT noerrors --> Numbers toString(radix) should give a string in base radix
+        this.thingCodeStr = thingCode.toString(2);
+        // XPECT noerrors --> String's valueOf should return a string
+        this.name = name.valueOf();
+    }
+    @Override
+    // XPECT noerrors -->
+    public toString() : string {
+        return this.name;
+    }
+    @Override
+    // XPECT noerrors -->
+    public valueOf() : number {
+        return this.thingCode;
+    }
+}

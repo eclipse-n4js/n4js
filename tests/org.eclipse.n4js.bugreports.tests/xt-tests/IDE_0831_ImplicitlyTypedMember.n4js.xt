@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+class Example {
+
+	// XPECT type of 's' --> string
+    public s = "stuff";
+
+    public n : number = 2;
+
+    public xplicit2implicit () {
+		//XPECT errors --> "number is not a subtype of string." at "this.n"
+        this.s = this.n; // no error
+    }
+    public implicit2xplicit () {
+//			XPECT errors --> "string is not a subtype of number." at "this.s"
+        this.n = this.s; // "'any is not a subtype of 'number'"
+    }
+
+//JM: these two tests currently error correctly in the IDE. The test framework though is not recognizing the assignment error.
+
+    public xplicit2implicitLocal () {
+        var s = "stuff";
+        var n : number = 5;
+		//XPECT errors --> "number is not a subtype of string." at "n"
+        s = n;
+    }
+    public implicit2xplicitLocal () {
+        var s = "stuff";
+        var n : number = 5;
+		//XPECT errors --> "string is not a subtype of number." at "s"
+        n = s;
+    }
+
+
+}
