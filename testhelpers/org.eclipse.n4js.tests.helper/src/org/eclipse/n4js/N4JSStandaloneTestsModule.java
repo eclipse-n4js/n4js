@@ -12,7 +12,6 @@ package org.eclipse.n4js;
 
 import org.eclipse.n4js.N4JSInjectorProvider.BaseTestModule;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.xpect.setup.XpectGuiceModule;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.testing.util.ParseHelper;
@@ -25,7 +24,6 @@ import org.eclipse.xtext.validation.IDiagnosticConverter;
  * language in use.
  *
  */
-@XpectGuiceModule
 public class N4JSStandaloneTestsModule extends BaseTestModule {
 
 	/** Constructor enables JS support */
