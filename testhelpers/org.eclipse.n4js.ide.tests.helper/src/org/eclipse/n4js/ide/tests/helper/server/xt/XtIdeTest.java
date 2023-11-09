@@ -289,6 +289,10 @@ public class XtIdeTest extends AbstractIdeTest {
 			typeWithAliasResolution(testMethodData);
 			break;
 
+		case "specADoc":
+			specADoc(testMethodData);
+			break;
+
 		// flow graph test methods
 		case "allBranches":
 			allBranches(testMethodData);
@@ -337,7 +341,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Validates that there are no errors at the given location.
 	 *
 	 * <pre>
-	 * // Xpect noerrors --&gt;
+	 * // XPECT noerrors --&gt;
 	 * </pre>
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
@@ -349,7 +353,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Validates that there are no warnings at the given location.
 	 *
 	 * <pre>
-	 * // Xpect nowarnings --&gt;
+	 * // XPECT nowarnings --&gt;
 	 * </pre>
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
@@ -362,7 +366,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * space.
 	 *
 	 * <pre>
-	 * // Xpect errors --&gt; "&ltMESSAGE&gt" at "&ltLOCATION&gt"
+	 * // XPECT errors --&gt; "&ltMESSAGE&gt" at "&ltLOCATION&gt"
 	 * </pre>
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
@@ -375,7 +379,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * separated by space.
 	 *
 	 * <pre>
-	 * // Xpect warnings --&gt; "&ltMESSAGE&gt" at "&ltLOCATION&gt"
+	 * // XPECT warnings --&gt; "&ltMESSAGE&gt" at "&ltLOCATION&gt"
 	 * </pre>
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
@@ -387,7 +391,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Checks the given input against the result of the auto code formatter running on this file
 	 *
 	 * <pre>
-	 * // Xpect ast --&gt; &ltSERIALIZED AST&gt
+	 * // XPECT ast --&gt; &ltSERIALIZED AST&gt
 	 * </pre>
 	 */
 	@Xpect
@@ -403,7 +407,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * accessibility such as {@code public} or {@code private}.
 	 *
 	 * <pre>
-	 * // Xpect accessModifier at '&ltLOCATION&gt' --&gt; &ltACCESS MODIFIER&gt
+	 * // XPECT accessModifier at '&ltLOCATION&gt' --&gt; &ltACCESS MODIFIER&gt
 	 * </pre>
 	 *
 	 * The location is optional.
@@ -419,8 +423,8 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Calls LSP endpoint 'completion'.
 	 *
 	 * <pre>
-	 * // Xpect completion at '&ltLOCATION&gt' [apply '&ltPROPOSAL&gt'] --&gt; &ltCOMPLETIONS&gt
-	 * // Xpect completion at '&ltLOCATION&gt' [contains [not] '&ltPROPOSAL&gt'] --&gt; &ltCOMPLETIONS&gt
+	 * // XPECT completion at '&ltLOCATION&gt' [apply '&ltPROPOSAL&gt'] --&gt; &ltCOMPLETIONS&gt
+	 * // XPECT completion at '&ltLOCATION&gt' [contains [not] '&ltPROPOSAL&gt'] --&gt; &ltCOMPLETIONS&gt
 	 * </pre>
 	 *
 	 * {@code apply}, {@code contains}, and {@code not} are optional.<br/>
@@ -485,7 +489,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Calls LSP endpoint 'definition'.
 	 *
 	 * <pre>
-	 * // Xpect definition --&gt; &ltFILE AND RANGE&gt
+	 * // XPECT definition --&gt; &ltFILE AND RANGE&gt
 	 * </pre>
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
@@ -506,7 +510,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Test the element keyword of an element. Examples of element keywords are getter, setter, field etc.
 	 *
 	 * <pre>
-	 * // Xpect elementKeyword at '&ltLOCATION&gt' --&gt; &ltKEYWORD&gt
+	 * // XPECT elementKeyword at '&ltLOCATION&gt' --&gt; &ltKEYWORD&gt
 	 * </pre>
 	 *
 	 * The location is optional.
@@ -522,7 +526,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Test all exported objects of a resource description
 	 *
 	 * <pre>
-	 * // Xpect exportedObjects --&gt; &ltEXPORTED OBJECTS&gt
+	 * // XPECT exportedObjects --&gt; &ltEXPORTED OBJECTS&gt
 	 * </pre>
 	 *
 	 * EXPORTED OBJECTS is a comma separated list.
@@ -539,7 +543,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * the line number.
 	 *
 	 * <pre>
-	 * // Xpect findReferences at '&ltLOCATION&gt' --&gt; &ltCOMMA SEPARATED REFERENCES&gt
+	 * // XPECT findReferences at '&ltLOCATION&gt' --&gt; &ltCOMMA SEPARATED REFERENCES&gt
 	 * </pre>
 	 *
 	 * The location is optional.
@@ -556,7 +560,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Checks the given input against the result of the auto code formatter running on this file
 	 *
 	 * <pre>
-	 * // Xpect formattedLines --&gt; &ltFORMATTED LINES&gt
+	 * // XPECT formattedLines --&gt; &ltFORMATTED LINES&gt
 	 * </pre>
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
@@ -570,7 +574,7 @@ public class XtIdeTest extends AbstractIdeTest {
 
 	/**
 	 * <pre>
-	 * // Xpect linkedName at '&ltLOCATION&gt' --&gt; &ltTYPE NAME&gt
+	 * // XPECT linkedName at '&ltLOCATION&gt' --&gt; &ltTYPE NAME&gt
 	 * </pre>
 	 */
 	@Xpect
@@ -582,7 +586,7 @@ public class XtIdeTest extends AbstractIdeTest {
 
 	/**
 	 * <pre>
-	 * // Xpect linkedFragment at '&ltLOCATION&gt' --&gt; &ltFRAGMENT NAME&gt
+	 * // XPECT linkedFragment at '&ltLOCATION&gt' --&gt; &ltFRAGMENT NAME&gt
 	 * </pre>
 	 */
 	@Xpect
@@ -600,7 +604,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * separator.
 	 *
 	 * <pre>
-	 * // Xpect linkedPathname at '&ltLOCATION&gt' --&gt; &ltPATH NAME&gt
+	 * // XPECT linkedPathname at '&ltLOCATION&gt' --&gt; &ltPATH NAME&gt
 	 * </pre>
 	 */
 	@Xpect
@@ -614,7 +618,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Performs a rename refactoring at a given location. Usage:
 	 *
 	 * <pre>
-	 * // Xpect renameRefactoring at '&ltOLD_NAME&gt' to '&ltNEW_NAME&gt' resource '&ltRESOURCE_NAME&gt' --&gt;
+	 * // XPECT renameRefactoring at '&ltOLD_NAME&gt' to '&ltNEW_NAME&gt' resource '&ltRESOURCE_NAME&gt' --&gt;
 	 * // &ltNEWCODE_OR_PROBLEMS&gt
 	 * </pre>
 	 *
@@ -691,7 +695,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Compiles the current xt file and compares the generated file to the expected output
 	 *
 	 * <pre>
-	 * // Xpect compileResult --&gt; &ltCOMPILE RESULT&gt
+	 * // XPECT compileResult --&gt; &ltCOMPILE RESULT&gt
 	 * </pre>
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
@@ -705,7 +709,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Compiles and executes the current xt file and compares the output to the expected output
 	 *
 	 * <pre>
-	 * // Xpect output --&gt; &ltOUTPUT&gt
+	 * // XPECT output --&gt; &ltOUTPUT&gt
 	 * </pre>
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
@@ -810,7 +814,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * simple qualified name, that is container (type) followed by elements name, without URIs of modules etc. Usage:
 	 *
 	 * <pre>
-	 * // Xpect binding at '&ltLOCATION&gt' --&gt; &ltQUALIFIED NAME&gt
+	 * // XPECT binding at '&ltLOCATION&gt' --&gt; &ltQUALIFIED NAME&gt
 	 * </pre>
 	 *
 	 * The location is optional.
@@ -826,7 +830,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Checks the scope at a given location. Usage:
 	 *
 	 * <pre>
-	 * // Xpect scope at '&ltLOCATION&gt' --&gt; &ltSCOPES&gt
+	 * // XPECT scope at '&ltLOCATION&gt' --&gt; &ltSCOPES&gt
 	 * </pre>
 	 *
 	 * The location is optional.
@@ -844,7 +848,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Checks the elements and their resources/positions of the scope at a given location. Usage:
 	 *
 	 * <pre>
-	 * // Xpect scopeWithPosition at '&ltLOCATION&gt' --&gt; &ltSCOPES WITH RESOURCE AND POSITION&gt
+	 * // XPECT scopeWithPosition at '&ltLOCATION&gt' --&gt; &ltSCOPES WITH RESOURCE AND POSITION&gt
 	 * </pre>
 	 *
 	 * The location is optional.
@@ -862,7 +866,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Checks the elements and their resources of the scope at a given location. Usage:
 	 *
 	 * <pre>
-	 * // Xpect scopeWithResource at '&ltLOCATION&gt' --&gt; &ltSCOPES WITH RESOURCE&gt
+	 * // XPECT scopeWithResource at '&ltLOCATION&gt' --&gt; &ltSCOPES WITH RESOURCE&gt
 	 * </pre>
 	 *
 	 * The location is optional.
@@ -880,7 +884,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Checks that an element/expression has a certain expected type (i.e. judgment expectedTypeIn). Usage:
 	 *
 	 * <pre>
-	 * // Xpect expectedType at '&ltLOCATION&gt' --&gt; &ltTYPE&gt
+	 * // XPECT expectedType at '&ltLOCATION&gt' --&gt; &ltTYPE&gt
 	 * </pre>
 	 *
 	 * The location is optional.
@@ -896,7 +900,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Checks that an element/expression has a certain type. Usage:
 	 *
 	 * <pre>
-	 * // Xpect type of '&ltLOCATION&gt' --&gt; &ltTYPE&gt
+	 * // XPECT type of '&ltLOCATION&gt' --&gt; &ltTYPE&gt
 	 * </pre>
 	 *
 	 * The location is optional.
@@ -918,7 +922,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * }
 	 * var c: C;
 	 *
-	 * // Xpect typeArgs of 'm' --> number, string
+	 * // XPECT typeArgs of 'm' --> number, string
 	 * c.m(42,"hello");
 	 * </pre>
 	 *
@@ -936,7 +940,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Same as {œcode type}, but includes resolution of type aliases.Usage:
 	 *
 	 * <pre>
-	 * // Xpect typeWithAliasResolution of '&ltLOCATION&gt' --&gt; &ltTYPE&gt
+	 * // XPECT typeWithAliasResolution of '&ltLOCATION&gt' --&gt; &ltTYPE&gt
 	 * </pre>
 	 *
 	 * The location is optional.
@@ -954,7 +958,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * specified, the first code element of the containing function.
 	 *
 	 * <pre>
-	 * // Xpect allBranches from '&ltLOCATION&gt' direction '&lt{@link TraverseDirection#values()}&gt' --&gt;
+	 * // XPECT allBranches from '&ltLOCATION&gt' direction '&lt{@link TraverseDirection#values()}&gt' --&gt;
 	 * // &ltBRANCHES&gt
 	 * </pre>
 	 *
@@ -976,7 +980,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * This xpect method can evaluate all edges of the containing function.
 	 *
 	 * <pre>
-	 * // Xpect allEdges from '&ltLOCATION&gt' --&gt; &ltEDGES&gt
+	 * // XPECT allEdges from '&ltLOCATION&gt' --&gt; &ltEDGES&gt
 	 * </pre>
 	 *
 	 * EDGES is a comma separated list.
@@ -992,7 +996,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * This xpect method can evaluate all branches that are merged at the given node name.
 	 *
 	 * <pre>
-	 * // Xpect allMergeBranches --&gt; &ltMERGE BRANCHES&gt
+	 * // XPECT allMergeBranches --&gt; &ltMERGE BRANCHES&gt
 	 * </pre>
 	 *
 	 * Note: Each 'allMergeBranch' test needs to have its own xt file.
@@ -1011,7 +1015,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * the first code element of the containing function.
 	 *
 	 * <pre>
-	 * // Xpect allPaths from '&ltLOCATION&gt' direction '&lt{@link TraverseDirection#values()}&gt' --&gt; &ltPATHS&gt
+	 * // XPECT allPaths from '&ltLOCATION&gt' direction '&lt{@link TraverseDirection#values()}&gt' --&gt; &ltPATHS&gt
 	 * </pre>
 	 *
 	 * The direction is optional.
@@ -1032,7 +1036,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * This xpect method can evaluate the control flow order of ast elements.
 	 *
 	 * <pre>
-	 * // Xpect astOrder of '&ltLOCATION&gt' --&gt; &ltAST ORDER&gt
+	 * // XPECT astOrder of '&ltLOCATION&gt' --&gt; &ltAST ORDER&gt
 	 * </pre>
 	 *
 	 * AST ORDER is a comma separated list of ast elements.
@@ -1048,7 +1052,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}.
 	 *
 	 * <pre>
-	 * // Xpect cfContainer of '&ltLOCATION&gt' --&gt; &ltCONTROL FLOW CONTAINER&gt
+	 * // XPECT cfContainer of '&ltLOCATION&gt' --&gt; &ltCONTROL FLOW CONTAINER&gt
 	 * </pre>
 	 *
 	 * CONTROL FLOW CONTAINER is the name of an ast element.
@@ -1064,7 +1068,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * This xpect method can evaluate all common predecessors of two {@link ControlFlowElement}s.
 	 *
 	 * <pre>
-	 * // Xpect cfContainer of '&ltLOCATION A&gt' and '&ltLOCATION B&gt' --&gt; &ltCOMMON PREDECESSORS&gt
+	 * // XPECT cfContainer of '&ltLOCATION A&gt' and '&ltLOCATION B&gt' --&gt; &ltCOMMON PREDECESSORS&gt
 	 * </pre>
 	 *
 	 * COMMON PREDECESSORS is a comma separated list.
@@ -1082,7 +1086,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * This xpect method can evaluate the guards that do (not) hold on an expression.
 	 *
 	 * <pre>
-	 * // Xpect instanceofguard of '&ltLOCATION&gt' --&gt; &ltGUARDS&gt
+	 * // XPECT instanceofguard of '&ltLOCATION&gt' --&gt; &ltGUARDS&gt
 	 * </pre>
 	 *
 	 * GUARDS is a comma separated list.
@@ -1098,7 +1102,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * This xpect method can evaluate if the specified path exists or not.
 	 *
 	 * <pre>
-	 * // Xpect path from '&ltLOCATION A&gt' to|notTo '&ltLOCATION Z&gt' via '&ltLOCATION M&gt' notVia '&ltLOCATION
+	 * // XPECT path from '&ltLOCATION A&gt' to|notTo '&ltLOCATION Z&gt' via '&ltLOCATION M&gt' notVia '&ltLOCATION
 	 * // N&gt' --&gt;
 	 * </pre>
 	 *
@@ -1125,7 +1129,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * specifying the edge type.
 	 *
 	 * <pre>
-	 * // Xpect preds type '{@link ControlFlowType#values()}' at '&ltLOCATION&gt' --&gt; &ltPREDECESSORS&gt
+	 * // XPECT preds type '{@link ControlFlowType#values()}' at '&ltLOCATION&gt' --&gt; &ltPREDECESSORS&gt
 	 * </pre>
 	 *
 	 * The type is optional. If given, the result is filtered accordingly. The type parameter does not work on self
@@ -1148,7 +1152,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * specifying the edge type.
 	 *
 	 * <pre>
-	 * // Xpect succs type '{@link ControlFlowType#values()}' at '&ltLOCATION&gt' --&gt; &ltSUCCESSORS&gt
+	 * // XPECT succs type '{@link ControlFlowType#values()}' at '&ltLOCATION&gt' --&gt; &ltSUCCESSORS&gt
 	 * </pre>
 	 *
 	 * The type is optional. If given, the result is filtered accordingly. The type parameter does not work on self
@@ -1163,6 +1167,23 @@ public class XtIdeTest extends AbstractIdeTest {
 		IEObjectCoveringRegion ocrAt = match.getEObjectWithOffset("at");
 		List<String> succTexts = xtFlowgraphs.getSuccs(type, ocrAt);
 		assertEqualIterables(data.expectation, succTexts);
+	}
+
+	/**
+	 * This xpect method can evaluate the generated specification documents.
+	 *
+	 * <pre>
+	 * // XPECT specADoc --&gt; &ltDOCUMENTATION&gt
+	 * </pre>
+	 *
+	 * DOCUMENTATION generated from specs.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void specADoc(XtMethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "specADoc", null);
+		String specADoc = xtMethods.getSpecADoc(ocr);
+		String expect = Strings.trimIndentation(data.expectationRaw);
+		assertEquals(expect, specADoc);
 	}
 
 	private void assertEqualIterables(String expectation, Iterable<String> i2s) {

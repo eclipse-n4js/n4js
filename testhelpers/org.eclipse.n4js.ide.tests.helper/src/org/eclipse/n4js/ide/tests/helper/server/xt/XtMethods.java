@@ -32,6 +32,10 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.formatting2.N4JSFormatterPreferenceKeys;
+import org.eclipse.n4js.jsdoc2spec.adoc.ADocFactory;
+import org.eclipse.n4js.jsdoc2spec.adoc.RepoRelativePathHolder;
+import org.eclipse.n4js.jsdoc2spec.adoc.SpecIdentifiableElementSection;
+import org.eclipse.n4js.n4JS.AbstractVariable;
 import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.Expression;
@@ -40,10 +44,12 @@ import org.eclipse.n4js.n4JS.GenericDeclaration;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
+import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
+import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
@@ -117,6 +123,12 @@ public class XtMethods {
 
 	@Inject
 	private Provider<FormatterRequest> formatterRequestProvider;
+
+	@Inject
+	private ADocFactory adocFactory;
+
+	@Inject
+	private RepoRelativePathHolder repoPathHolder;
 
 	/** Implementation for {@link XtIdeTest#accessModifier(XtMethodData)} */
 	static public String getAccessModifierString(EObject context) {
@@ -563,6 +575,42 @@ public class XtMethods {
 		// int endIndex = textRegion.getEndOffset() + (fmt.length() - doc.getLength()) - 1;
 		// String selection = fmt.substring(textRegion.getOffset(), endIndex);
 		return null;
+	}
+
+	/** Implementation for {@link XtIdeTest#specADoc(XtMethodData)} */
+	public String getSpecADoc(IEObjectCoveringRegion ocr) {
+		IdentifiableElement element = getIdentifiableElement(ocr);
+		SpecIdentifiableElementSection src = new SpecIdentifiableElementSection(element, repoPathHolder);
+		String actual = adocFactory.createSpecRegionString(src, Collections.emptyMap()).toString();
+		return actual.trim();
+	}
+
+	private IdentifiableElement getIdentifiableElement(IEObjectCoveringRegion arg1) {
+		EObject eobj = arg1.getEObject();
+		if (eobj instanceof ExportDeclaration) {
+			eobj = ((ExportDeclaration) eobj).getExportedElement();
+		}
+		if (eobj instanceof VariableStatement) {
+			EList<VariableDeclaration> decls = ((VariableStatement) eobj).getVarDecl();
+			if (decls.size() != 1) {
+				throw new IllegalStateException("JSDoc for var statements required exactly one declaration.");
+			}
+			eobj = decls.get(0);
+		}
+		// For variables using the old type notation and spec comment after export modifier
+		if (eobj instanceof TypeRef && eobj.eContainer() instanceof VariableDeclaration) {
+			eobj = eobj.eContainer();
+		}
+		if (eobj instanceof TypeDefiningElement) {
+			return ((TypeDefiningElement) eobj).getDefinedType();
+		}
+		if (eobj instanceof AbstractVariable) {
+			return ((AbstractVariable<?>) eobj).getDefinedVariable();
+		}
+		if (eobj instanceof N4TypeVariable) {
+			return ((N4TypeVariable) eobj).getDefinedTypeVariable();
+		}
+		throw new IllegalStateException("No type defining element found at location.");
 	}
 
 }

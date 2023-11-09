@@ -248,6 +248,7 @@ public class XtFileDataParser {
 			methodNameCounters.put(name, counter + 1);
 
 			if (!isLiteral) {
+				// removes only '//' or '*' at the beginning of each line (including spaces)
 				mdExpectation = mdExpectationRaw.replaceAll("[ \\t]*\\n[ \\t]*(?:\\/\\/|\\*)[ \\t]*", "\n");
 			}
 			mdExpectationRaw = mdExpectationRaw.trim();
