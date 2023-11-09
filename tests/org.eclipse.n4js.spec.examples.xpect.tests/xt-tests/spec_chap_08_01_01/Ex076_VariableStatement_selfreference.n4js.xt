@@ -1,0 +1,47 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.examples.xpect.tests.SpecXtTest END_SETUP */
+
+/* XPECT output ---
+-42
+-42
+--- */
+
+// not ok (simple case)
+// XPECT warnings ---
+// "Reference to variable n within the initializer expression of the declaration of n." at "n"
+// "Variable n is used before it is declared" at "n"
+// ---
+var n = n + 1;
+
+// ok (class expression  not in version 0.1)
+// var cls1 = class { static sfield1 = "hello"; field2 = cls1.sfield1; };
+
+// not ok, immediately instantiated (class expression  not in version 0.1)
+// var cls2 = new class { field1 = "hello"; field2 = cls2.field1; };
+
+// ok
+var fun1 = function() : number { var x = fun1; return -42; };
+
+// not ok, immediately invoked
+// XPECT warnings --> "Reference to variable fun2 within the initializer expression of the declaration of fun2." at "fun2"
+var fun2 = function() : number { var x = fun2;  return -42; }();
+
+
+
+// §-§-§-§-§ additional check not in example 75: §-§-§-§--
+//console.log(cls1.sfield1)
+//console.log( new cls1() )
+//console.log(cls2)
+//console.log(cls2.field2)
+console.log(fun1())
+console.log(fun2)

@@ -20,7 +20,6 @@ include::{find}config.adoc[]
 
 
 
-
 [[gsec:spec_X.X.bar]]
 [role=memberdoc]
 === ++Method bar++
@@ -33,7 +32,6 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-p
 ==== Semantics
 
 . *++test++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample9_StaticPolyfill:tests/XTest:XTest#test++[Test]#)
-
 
 [[gsec:spec_X.X.foo]]
 [role=memberdoc]
@@ -51,8 +49,6 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-p
 --
 Add tests specifying semantics for ``++foo(): void++``
 --
-
-
 
 [[gsec:spec_X.X.my]]
 [role=memberdoc]
@@ -72,5 +68,3 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-p
 --
 Add tests specifying semantics for ``++my(): void++``
 --
-
-

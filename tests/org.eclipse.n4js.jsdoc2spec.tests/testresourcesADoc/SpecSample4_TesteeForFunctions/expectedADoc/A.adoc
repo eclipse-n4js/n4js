@@ -32,8 +32,6 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-p
 
 Spec for Var bar2var
 
-
-
 [[gsec:spec_A.barvar]]
 [role=memberdoc]
 === ++Variable barvar++
@@ -52,7 +50,6 @@ Spec for Var barvar
 . *++Bar basics++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample4_TesteeForFunctions:test/ATests:ATest#testBarBasics++[Test]#)
 
 . *++CAPITALS++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample4_TesteeForFunctions:test/ATests:ATest#testCAPITALS++[Test]#)
-
 == Functions
 
 
@@ -72,4 +69,3 @@ Spec for Function foofunc
 ==== Semantics
 
 . *++Func basics++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample4_TesteeForFunctions:test/ATests:ATest#testFuncBasics++[Test]#)
-

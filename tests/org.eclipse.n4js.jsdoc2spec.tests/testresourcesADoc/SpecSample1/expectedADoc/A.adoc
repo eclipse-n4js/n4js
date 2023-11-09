@@ -21,8 +21,6 @@ include::{find}config.adoc[]
 
 spec for class A from source code
 
-
-
 [[gsec:spec_A.A.field]]
 [role=memberdoc]
 === ++Field field++
@@ -35,8 +33,6 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-p
 ==== Description
 
 This is some documentation for a final field.
-
-
 
 [[gsec:spec_A.A.getter.finalGetter]]
 [role=memberdoc]
@@ -59,8 +55,6 @@ This is some documentation for a final getter.
 Add tests specifying semantics for ``++get finalGetter(): string++``
 --
 
-
-
 [[gsec:spec_A.A.setter.finalSetter]]
 [role=memberdoc]
 === ++Setter finalSetter++
@@ -82,8 +76,6 @@ This is some documentation for a final setter.
 Add tests specifying semantics for ``++set finalSetter(n: any)++``
 --
 
-
-
 [[gsec:spec_A.A.bar]]
 [role=memberdoc]
 === ++Method bar++
@@ -100,7 +92,6 @@ spec for method A.bar from source code
 ==== Semantics
 
 . *++Bar basics++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample1:test/ATests:ATest#testBarBasics++[Test]#)
-
 
 [[gsec:spec_A.A.baz]]
 [role=memberdoc]
@@ -123,8 +114,6 @@ spec for method A.baz from source code
 Add tests specifying semantics for ``++baz(): string++``
 --
 
-
-
 [[gsec:spec_A.A.method]]
 [role=memberdoc]
 === ++Method method++
@@ -145,10 +134,7 @@ This is some documentation for a final method.
 --
 Add tests specifying semantics for ``++method(): void++``
 --
-
-
 == Class B
-
 
 
 
@@ -168,8 +154,6 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-p
 --
 Add tests specifying semantics for ``++foo(s: string): void++``
 --
-
-
 == Class D
 
 
@@ -202,4 +186,3 @@ Inherited from
 Baz is supposed to do nothing.
 
 ====
-

@@ -13,13 +13,13 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.test-workspace.yarn-test-project.pa
 	SpecSample4_TesteeForFunctions#src
 		NO_PACKAGE
 			A.n4jsd
-				bar2var::26::21::35
-				barvar::21::36::55
-				foofunc::15::58::75
+				bar2var::26::21::33
+				barvar::21::34::52
+				foofunc::15::55::71
 	SpecSample4_TesteeForFunctions#test
 		NO_PACKAGE
 			ATests.n4js
-				ATest::12::21::22
-				ATest#testBarBasics::23::23::41
-				ATest#testCAPITALS::29::42::60
-				ATest#testFuncBasics::17::61::79
+				ATest::12::21::21
+				ATest#testBarBasics::23::22::38
+				ATest#testCAPITALS::29::39::55
+				ATest#testFuncBasics::17::56::72

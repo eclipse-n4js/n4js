@@ -20,7 +20,6 @@ include::{find}config.adoc[]
 
 
 
-
 [[gsec:spec_A.A.foo]]
 [role=memberdoc]
 === ++Method foo++
@@ -40,4 +39,3 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-p
 Foo Test Description
 
 ====
-

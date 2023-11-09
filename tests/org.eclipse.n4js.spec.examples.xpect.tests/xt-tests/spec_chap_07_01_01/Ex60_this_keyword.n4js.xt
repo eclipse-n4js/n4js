@@ -1,0 +1,47 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.examples.xpect.tests.SpecXtTest END_SETUP */
+
+ /* XPECT output ---
+John
+Hello John
+John
+undefined
+--- */
+
+
+
+class A {
+	name = "John";
+	greeting  = "Hello " + this.name; // works, in N4JS classes, greeting is "Hello John"
+
+	f() {
+		return this.name; // this usually is instance object, similar to object literals.
+	}
+
+	g() {
+		var h = function() {
+			return undefined;
+			//return this.name; // as in object literals: no receiver, no this.
+		}
+		return h();
+	}
+
+}
+
+
+//  additional check not in example 75:
+
+console.log(new A().name);
+console.log(new A().greeting);
+console.log(new A().f());
+console.log(new A().g());

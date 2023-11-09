@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.examples.xpect.tests.SpecXtTest END_SETUP */
+
+ /* XPECT  output ---
+B { s: 'x', t: undefined, n: 4 }
+--- */
+
+/* XPECT ! compileResult ---
+--- */
+// §-§-§-§-§ additional ^^^^^^^^ not in example: §-§-§-§--
+
+class A {
+	public s : string;
+	public constructor(@Spec spec : ~i~this) {
+		// initialization of s is automatically generated
+	}
+}
+class B extends A {
+	public t : string;
+	private n : number;
+	public constructor(spec : ~~this with {n: number;}) {
+		super(spec);	// inherited field s and public field t are set in super constructor
+		this.n = spec.n // n is explicitly declared in anonymous interface
+	}
+}
+
+// §-§-§-§-§ additional check not in example: §-§-§-§--
+
+console.log( new B({n:4,s:"x", t:"y"}) );

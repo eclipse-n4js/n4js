@@ -13,15 +13,15 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.test-workspace.yarn-test-project.pa
 	SpecSample3_RedundantLines#src
 		NO_PACKAGE
 			A.n4jsd
-				A::15::21::22
-				A#foo::17::23::43
+				A::15::21::21
+				A#foo::17::22::41
 	SpecSample3_RedundantLines#test
 		NO_PACKAGE
 			ATests.n4js
-				BaseTests::13::21::22
-				BaseTests#initFixture::21::23::33
-				BaseTests#testFoo::19::34::56
-				TestsFixture1::27::59::60
-				TestsFixture1#initFixture::28::61::79
-				TestsFixture2::33::82::83
-				TestsFixture2#initFixture::34::84::102
+				BaseTests::13::21::21
+				BaseTests#initFixture::21::22::29
+				BaseTests#testFoo::19::30::50
+				TestsFixture1::27::53::53
+				TestsFixture1#initFixture::28::54::70
+				TestsFixture2::33::73::73
+				TestsFixture2#initFixture::34::74::90

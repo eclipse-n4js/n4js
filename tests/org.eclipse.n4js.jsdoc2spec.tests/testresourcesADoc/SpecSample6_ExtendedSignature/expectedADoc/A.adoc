@@ -35,10 +35,7 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-p
 --
 Add tests specifying semantics for ``++func++``
 --
-
-
 == Class A
-
 
 
 
@@ -59,8 +56,6 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-p
 Add tests specifying semantics for ``++constructor(s: ~i~this): this[A]?++``
 --
 
-
-
 [[gsec:spec_A.A.bar]]
 [role=memberdoc]
 === ++Method bar++
@@ -77,8 +72,6 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-p
 --
 Add tests specifying semantics for ``++async bar(): Promise<string,?>++``
 --
-
-
 
 [[gsec:spec_A.A.baz]]
 [role=memberdoc]
@@ -97,8 +90,6 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-p
 Add tests specifying semantics for ``++baz(): string++``
 --
 
-
-
 [[gsec:spec_A.A.foo]]
 [role=memberdoc]
 === ++Method foo++
@@ -116,8 +107,6 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-p
 Add tests specifying semantics for ``++foo(x: string, n: number=…, ...p: string): void++``
 --
 
-
-
 [[gsec:spec_A.A.static.xgreet]]
 [role=memberdoc]
 === ++Static method xgreet++
@@ -134,5 +123,3 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-p
 --
 Add tests specifying semantics for ``++xgreet(some: union{string,number}): void++``
 --
-
-

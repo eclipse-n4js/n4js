@@ -1,0 +1,35 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.examples.xpect.tests.SpecXtTest END_SETUP */
+
+ /* XPECT output ---
+p?s f
+{ f: [Function: f], b: [Function: b], o: { nested: 'Hello' } }
+Hello
+--- */
+
+var p = {
+	f: function() {
+		console.log("p?s f");
+	},
+	b: function() {
+		this.f();
+	},
+	o: {
+		nested: "Hello"
+	}
+};
+p.b();
+p.o.nested;
+// §-§-§-§-§ additional check not in example: §-§-§-§--
+console.log(p);
+console.log(p.o.nested);

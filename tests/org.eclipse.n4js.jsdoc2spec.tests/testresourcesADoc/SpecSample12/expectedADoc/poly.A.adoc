@@ -20,7 +20,6 @@ include::{find}config.adoc[]
 
 
 
-
 [[gsec:spec_A.A.baseFromAware]]
 [role=memberdoc]
 === ++Method baseFromAware++
@@ -37,5 +36,3 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-p
 --
 Add tests specifying semantics for ``++baseFromAware(x: number): void++``
 --
-
-

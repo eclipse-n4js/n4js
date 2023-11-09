@@ -13,10 +13,10 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.test-workspace.yarn-test-project.pa
 	SpecSample10_TodoTags#src
 		NO_PACKAGE
 			A.n4jsd
-				A::15::21::28
-				A#bar::21::29::52
+				A::15::21::25
+				A#bar::21::26::48
 	SpecSample10_TodoTags#test
 		NO_PACKAGE
 			ATests.n4js
-				ATest::15::21::22
-				ATest#testBarBasics::20::23::41
+				ATest::15::21::21
+				ATest#testBarBasics::20::22::38

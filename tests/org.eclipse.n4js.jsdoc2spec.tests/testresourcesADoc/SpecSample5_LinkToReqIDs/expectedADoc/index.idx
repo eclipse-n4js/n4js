@@ -13,12 +13,12 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.test-workspace.yarn-test-project.pa
 	SpecSample5_LinkToReqIDs#src
 		NO_PACKAGE
 			A.n4jsd
-				A::12::21::22
-				A#foo::13::23::43
+				A::12::21::21
+				A#foo::13::22::41
 	SpecSample5_LinkToReqIDs#test
 		NO_PACKAGE
 			ReqTest.n4js
-				ReqTest::12::21::22
-				ReqTest#_02_basics___1_Case::18::23::38
-				ReqTest#ext___Case::25::39::54
-				ReqTest#testFoo::33::55::70
+				ReqTest::12::21::21
+				ReqTest#_02_basics___1_Case::18::22::35
+				ReqTest#ext___Case::25::36::49
+				ReqTest#testFoo::33::50::63
