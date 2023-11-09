@@ -9,6 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+// intentionally the wrong runner here:
 /* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.XtTestSetupTest_WrongRunner
    END_SETUP
  */
