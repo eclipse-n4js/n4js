@@ -17,6 +17,7 @@ import org.eclipse.n4js.xtext.ide.server.XDocument;
  */
 public interface ResourceWithDocument {
 
+	/** Returns a document */
 	public XDocument getDocument();
 
 }

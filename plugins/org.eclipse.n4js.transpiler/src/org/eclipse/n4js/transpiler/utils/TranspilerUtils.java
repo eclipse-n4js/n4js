@@ -234,6 +234,7 @@ public class TranspilerUtils {
 		}
 	}
 
+	/** Returns only those interfaces that are nominal an not built-in. */
 	public static Iterable<SymbolTableEntryOriginal> filterNominalInterfaces(
 			List<SymbolTableEntryOriginal> interfaces) {
 

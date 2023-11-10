@@ -282,17 +282,6 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	}
 
 	/**
-	 * Called on demand. Do not call in constructor, as this has a bad effect on the index
-	 * <p>
-	 * Cannot be set up in constructor due to injection.
-	 */
-	private void initImplicitSuperTypeLists() {
-		objectPrototypesAllImplicitSuperTypeRefs = toTypeReferences(getObjectType());
-		n4classifiersAllImplicitSuperTypeRefs = toTypeReferences(getN4ObjectType(), getObjectType());
-		functionTypesAllImplicitSuperTypeRefs = toTypeReferences(getFunctionType(), getObjectType());
-	}
-
-	/**
 	 * Returns the built-in type "any".
 	 */
 	public final AnyType getAnyType() {
