@@ -1,0 +1,73 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+var dumbnumbs = [1,2,3,4,5];
+
+/*
+ * Async lambdas tested here:
+ * (1) single-expression or explicit-return
+ * (2) type-hint for return-type or not
+ *
+ * Finally, an async lambda assigned to var and from there passed to map is also tested.
+ */
+
+// single-expression form, no type hint
+// XPECT type of 'v01' --> Array<Promise<any,?>>
+var v01 = dumbnumbs.map(
+	// XPECT noerrors --> "IDE-1494"
+	async (num : number) => num + 1
+)
+
+// explicit return, no type hint
+// XPECT type of 'v02' --> Array<Promise<any,?>>
+var v02 = dumbnumbs.map(
+	// XPECT noerrors --> "IDE-1494"
+	async (num : number) => { return num + 2 }
+)
+
+
+// single-expression form, with type hint (non-poly)
+// XPECT type of 'v11' --> Array<Promise<number,?>>
+var v11 = dumbnumbs.map(
+	// XPECT noerrors --> "IDE-1494"
+	async (num : number): number => num + 3
+)
+
+// explicit return, with type hint (non-poly)
+// XPECT type of 'v12' --> Array<Promise<number,?>>
+var v12 = dumbnumbs.map(
+	// XPECT noerrors --> "IDE-1494"
+	async (num : number): number => { return num + 4 }
+)
+
+
+// single-expression form, with type hint (but still poly, because now type of fpar missing)
+// XPECT type of 'v21' --> Array<Promise<number,?>>
+var v21 = dumbnumbs.map(
+	// XPECT noerrors --> "IDE-1494"
+	async (num): number => num + 3
+)
+
+// explicit return, with type hint (but still poly, because now type of fpar missing)
+// XPECT type of 'v22' --> Array<Promise<number,?>>
+var v22 = dumbnumbs.map(
+	// XPECT noerrors --> "IDE-1494"
+	async (num): number => { return num + 4 }
+)
+
+
+// async lambda assigned to variable
+var luckify2 = async (num : number) => num + 7
+// XPECT type of 'v31' --> Array<Promise<any,?>>
+// XPECT noerrors -->
+var v31 = dumbnumbs.map(luckify2);

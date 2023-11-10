@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+@StringBased enum E { a, b }
+
+// XPECT noerrors --> "Array<? extends this> is not a subtype of Array<? extends E>."
+var l : Array<? extends E> = E.literals;
+
+// XPECT noerrors --> "? extends this is not a subtype of E."
+var e : E = E.literals[0];
+
+
+class C {
+    static m() : Array<? extends this> {return null;}
+}
+var c : C;
+
+// correct XPECT errors --> "Array<? extends this[C]> is not a subtype of string." at "C.m()"
+var test : string = C.m();
+
+
+
+enum E2 { a, b }
+
+// XPECT noerrors --> "Array<? extends this> is not a subtype of Array<? extends E2>."
+var l2 : Array<? extends E2> = E2.literals;
+
+// XPECT noerrors --> "? extends this is not a subtype of E2."
+var e2 : E2 = E2.literals[0];

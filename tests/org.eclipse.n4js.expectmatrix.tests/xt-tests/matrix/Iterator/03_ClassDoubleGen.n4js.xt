@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+// Class with a generic iterator
+
+class A<T> implements Iterable<T> {
+	storage : Array<T>;
+
+	public constructor (st : Array<T>) {
+		this.storage = st;
+	}
+
+	@Override
+	public [Symbol.iterator]() : Iterator<T> { return new B<T>(this.storage); }
+}
+
+class B<T> implements Iterator<T> {
+	storage : Array<T>;
+	index : number;
+
+	public constructor (st : Array<T>) {
+		this.storage = st;
+		this.index = 0;
+	}
+
+	// LangSpec says in 4.7.10 "Iterator Interface":
+	// "The Interface IteratorEntry was introduced mainly to work around IDEBUG-273;
+	//  after solveing this bug, this interface could be removed..."
+	@Override
+	public next () : IteratorEntry<T> {
+		if (this.storage[this.index] === undefined) {
+			return {done: true};
+		}
+		this.index++;
+		return { done: false, value: this.storage[this.index-1] };
+	}
+}
+
+var a : A<number> = new A<number>(new Array<number>(4,3,2,1));
+var iA = a[Symbol.iterator]();
+
+console.log(iA.next());
+console.log(iA.next());
+console.log(iA.next());
+console.log(iA.next());
+console.log(iA.next());
+
+/* XPECT output ---
+{ done: false, value: 4 }
+{ done: false, value: 3 }
+{ done: false, value: 2 }
+{ done: false, value: 1 }
+{ done: true }
+--- */

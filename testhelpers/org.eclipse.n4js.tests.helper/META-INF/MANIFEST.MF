@@ -10,7 +10,6 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.core.runtime,
  org.eclipse.xtext.testing,
  org.eclipse.emf.codegen.ecore,
- org.eclipse.xpect.xtext.lib,
  org.eclipse.n4js.ts.model,
  org.eclipse.n4js.transpiler.es,
  org.eclipse.n4js.model,
@@ -22,7 +21,8 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.json,
  org.eclipse.n4js.json.model,
  org.eclipse.n4js.xtext.ide,
- org.eclipse.n4js.xtext
+ org.eclipse.n4js.xtext,
+ org.junit
 Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.analysis,
  org.eclipse.n4js.csv,
@@ -31,6 +31,5 @@ Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.tests.codegen,
  org.eclipse.n4js.tests.helper.documentprovider,
  org.eclipse.n4js.tests.issues,
- org.eclipse.n4js.tests.parser,
- org.eclipse.n4js.xpect.validation.suppression
+ org.eclipse.n4js.tests.parser
 Automatic-Module-Name: org.eclipse.n4js.tests.helper

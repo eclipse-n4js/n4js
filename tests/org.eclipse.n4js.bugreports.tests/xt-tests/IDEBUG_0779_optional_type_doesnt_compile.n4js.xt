@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+
+// NOTE: this entire file has been disabled; we do no longer show special error messages for the below cases (they will
+// simply raise parser errors)
+
+/*
+
+class A {
+	// X---PECT errors --> "Field field has type modifiers without giving a type." at "?"
+	field : ?;
+
+	// X---PECT errors --> "Method method has type modifiers for return type without explicitly giving a return type." at "?"
+	method() : ? {}
+
+	// X---PECT errors --> "Field sfield has type modifiers without giving a type." at "?"
+	static sfield : ?;
+
+	// X---PECT errors --> "Method smethod has type modifiers for return type without explicitly giving a return type." at "?"
+	static smethod() : ? {}
+
+}
+
+interface IA {
+
+	// X---PECT errors --> "Field field has type modifiers without giving a type." at "?"
+	field : ?;
+
+	// X---PECT errors --> "Method method has type modifiers for return type without explicitly giving a return type." at "?"
+	method() : ? {}
+
+	// X---PECT errors --> "Field sfield has type modifiers without giving a type." at "?"
+	static sfield : ?;
+
+	// X---PECT errors --> "Method smethod has type modifiers for return type without explicitly giving a return type." at "?"
+	static smethod() : ? {}
+}
+
+
+// X---PECT errors --> "Function f has type modifiers for return type without explicitly giving a return type." at "?"
+function f() : ?  {}
+
+*/

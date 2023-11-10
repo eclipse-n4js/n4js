@@ -1,0 +1,22 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXTTest END_SETUP  */
+/* XPECT output ---
+Foo
+Foo
+--- */
+class Foo {}
+
+console.log(N4Class.of(new Foo()).name) // works
+console.log(N4Class.of(Foo).name) // works
+
+// for more examples see /org.eclipse.n4js.spec.tests/xpect-tests/ChB_N4Objects/Meta_N4Type_of.n4js.xt

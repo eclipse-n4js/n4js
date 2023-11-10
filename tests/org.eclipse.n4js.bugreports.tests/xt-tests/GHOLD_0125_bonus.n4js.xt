@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+
+// some more issues fixed during GHOLD-125 though not directly related to the original issue reported in GHOLD-125:
+
+
+// XPECT noerrors -->
+const [c1, c2] = [10, 20];
+
+
+function foo(p) {
+	// XPECT errors --> "Variable p duplicates parameter p." at "p"
+	let p;
+}
+
+function bar(p) {
+	// XPECT errors --> "Variable p duplicates parameter p." at "p"
+	let [p] = [];
+}
+
+
+let sw = undefined;
+switch (true) {
+	case true:
+		// XPECT noerrors -->
+		let sw = 'world';
+		console.log(sw);
+}

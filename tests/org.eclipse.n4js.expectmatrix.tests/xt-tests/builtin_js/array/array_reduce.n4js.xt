@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Array.prototype.reduce()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
+
+
+// IDEBUG-125 XPECT noerrors --> "IDEBUG-125: optional parameter"
+var total = [0, 1, 2, 3].<number>reduce(function(a : number, b : number) {
+    return a + b;
+});
+
+console.log(total);
+
+var arr = [[0, 1], [2, 3], [4, 5]];
+
+var flattened = arr.reduce(function(a : Array<number>, b : Array<number>) {
+    // IDEBUG-128 XPECT noerrors --> "IDEBUG-128: type inference"
+    return a.concat(b);
+}, []);
+
+var flattened2 : Array<number> = [[0, 1], [2, 3], [4, 5]].reduce(function(a : Array<number>, b) {
+    // IDEBUG-128 XPECT noerrors --> "IDEBUG-128: type inference"
+    return a.concat(b);
+}, []);
+
+console.log(flattened);
+console.log(flattened2);
+
+
+/* XPECT output ---
+6
+[ 0, 1, 2, 3, 4, 5 ]
+[ 0, 1, 2, 3, 4, 5 ]
+--- */

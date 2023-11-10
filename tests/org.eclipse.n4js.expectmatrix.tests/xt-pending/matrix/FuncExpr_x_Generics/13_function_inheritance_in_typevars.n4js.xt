@@ -1,0 +1,133 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.PendingSpecXtTest END_SETUP  */
+
+
+// This file focuses on functions !
+
+class CA <T> {
+}
+
+interface IA <T> {
+}
+
+interface RA  <T> {
+}
+
+enum EA  {
+	 item1, item2
+}
+
+// XPECT warnings --> "Type variable T not used in parameters or return type." at "T"
+function <T> FA01()  { return null; }
+function <T> FA02() : T  { return null; }
+function <T> FA03(p1 : T) : T  { return null; }
+function <T,S> FA04(p1 : T, p2 : S=undefined) : T  { return null; }
+function <T,S> FA06(p1 : T, ...p2 : S) : T  { return null; }
+function <T,S extends T> FA07(p1 : T, p2 : S) : T  { return null; }
+
+// OK, no generics XPECT noerrors
+function FA21() : {function()} { return FA01; }
+
+// OK, match in concrete type and generics
+// XPECT noerrors -->
+function FA22() : {function(string):string} { return FA03; }
+
+// mismatch in generic use [number,string] != [T,T]  XPECT errors --> "{function<T>(T):T} is not a subtype of {function(number):string}." at "FA03"
+function FA22a() : {function(number):string} { return FA03; }
+
+// OK, match in generics on both sites XPECT noerrors -->
+function <T> FA23() : {function(T):T} { return FA03; }
+
+
+
+// + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
+// inheritance in type parameters:
+class CB1 <T> extends CA<T> implements IA<T> {}  // note: was "... implements IA<?>" but this is disallowed (affects only a single test case, see *** below)
+class CB2 <T> extends CA<T> implements IA<T> {}
+class CB3 <T,S> extends CA<T> implements IA<S> {}
+
+
+
+// function has no ret-type XPECT errors --> "any is not a subtype of CB1<string>." at "FA01()"
+var cbfa01 : CB1<string> = FA01();
+
+// OK type inferred XPECT noerrors
+var cbfa02 : CB1<string> = FA02();
+
+// OK, new without parameters. XPECT noerrors
+var cbfa03a : CB1<string> = FA03(new CB1<string> );
+
+// OK, new with empty parameterlist XPECT noerrors
+var cbfa03b : CB1<string> = FA03(new CB1<string>() );
+
+class A {}
+
+// OK, string extends string XPECT noerrors
+var cbfa03c : CB1<? extends A> = FA03(new CB1<A>() );
+
+// OK, string super string XPECT noerrors
+var cbfa03d : CB1<? super string> = FA03(new CB1<string>() );
+
+// OK XPECT noerrors
+var cbfa06a : CB1<string> = FA06(new CB1<string>() , 1,2,3,4,5 );
+
+// variadic sequence as union-type {string,number} XPECT  noerrors -->
+var cbfa06b : CB1<string> = FA06(new CB1<string>() , 1,2,3,"bb",5 );
+
+// wrong variadic sequence XPECT errors --> ""bb" is not a subtype of number." at ""bb""
+var cbfa06c : CB1<string> = <CB1<string>,number>FA06(new CB1<string>() , 1,2,3,"bb",5 );
+
+
+// + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
+
+// OK XPECT noerrors
+var cbfa07a : CB1<string> = FA07(new CB1<string>() , new CB1<string>() );
+
+// *** deactivated, because "... implements IA<?>" is now allowed
+//// class implementing wildcard variant of interface cannot be bound to concrete variant X---PECT errors --> "CB1<string> is not a subtype of IA<string>."  at "new CB1<string>()"
+//var ia00 : IA<string> = new CB1<string>();
+
+// OK XPECT noerrors
+var ia01 : IA<string> = new CB2<string>();
+
+// OK XPECT noerrors
+var ia02 : IA<number> = new CB2<number>();
+
+// IDE-1727 interface cannot be subtype of class XPECT FIXME errors --> "IA<string> is not a subtype of CB1<string>."
+var cbfa07b : CB1<string> = FA07(new CB1<string>() , ia01 );
+
+// IDE-1727 interface cannot be subtype of class XPECT FIXME errors --> "IA<number> is not a subtype of CB1<string>."
+var cbfa07c : CB1<string> = FA07(new CB1<string>() , ia02 );
+
+// IDE-1727 mismatch in generic variable: number variant of CB1 is not a subtype of string variant. XPECT FIXME errors --> "number is not a subtype of string"
+var cbfa07d : CB1<string> = FA07(new CB1<string>() , new CB1<number>() );
+
+
+// OK XPECT noerrors
+var cbfa07e : IA<string> = FA07( ia01, new CB2<string>() );
+
+
+// OK XPECT noerrors
+var cbfa07eXXXX = FA07(new CB2<string>() , ia01 );
+
+// IDE-1727 2nd arg in F07 is not subtype of 1st arg. XPECT FIXME errors --> "IA<number> is not a subtype of CB2<string>."
+var cbfa07f : CB2<string> = FA07(new CB2<string>() , ia02 );
+
+// IDE-1727 number != string XPECT FIXME errors --> "number is not a subtype of string"
+var cbfa07g : CB2<string> = FA07(new CB2<string>() , new CB2<number>() );
+
+var cb03 : CB3<number,string> = new CB3<number,string>();
+
+// IDE-1727 returns interface-type, not assignable to implementing class-type. XPECT FIXME errors --> "IA<string> is not a subtype of CB3<string,number>"
+// BUT GOT: "union{CB3<string,number>,IA<string>} is not a subtype of CB3<string,number>." at "FA07( ia01 , new CB3<string,number>() )"
+var cbfa07k : CB3<string,number> = FA07( ia01 , new CB3<string,number>() );

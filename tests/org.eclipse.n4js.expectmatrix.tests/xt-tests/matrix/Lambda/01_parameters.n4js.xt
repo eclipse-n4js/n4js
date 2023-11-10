@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+////////////////
+// Parameters //
+//  IDE-1037  //
+////////////////
+
+// zero parameters, one-liner block XPECT noerrors -->
+() => { return true };
+
+// zero parameters, simple syntax XPECT noerrors -->
+() => true;
+
+// zero parameters, multiline block XPECT noerrors -->
+() => {
+	var x;
+	if (true) { x = 10 } else x = 18;
+	return x
+};
+
+// one parameter, one-liner block XPECT noerrors -->
+(x : number) => { return x+x };
+
+// one parameter, simple syntax XPECT noerrors -->
+x => x+x;
+
+// one parameter, multiline block XPECT noerrors -->
+(y : number) => {
+	var x : number;
+	if (true) { x = 10 } else x = 18;
+	return x*y
+};
+
+// multiple parameters XPECT noerrors -->
+(x : number, y : number, z : number) => { return x*y*z };

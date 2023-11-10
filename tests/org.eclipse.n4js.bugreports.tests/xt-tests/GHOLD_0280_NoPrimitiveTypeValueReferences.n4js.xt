@@ -1,0 +1,217 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP */
+
+function f(p : any) {}
+class GenericClass<T> {}
+
+{
+	// Use primitive type in variable declaration XPECT noerrors
+	let a : boolean;
+	// Cannot assign variable to value of primitive type XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'boolean'." at "boolean"
+	let b = boolean;
+	// Cannot use primitive type inside of expression XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'boolean'." at "boolean"
+	let c = (boolean);
+	// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'boolean'." at "boolean"
+	let d = new boolean();
+	// Cannot use primitive type as function argument XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'boolean'." at "boolean"
+	f(boolean);
+	// Use primitive type as type argument should be fine XPECT noerrors
+	new GenericClass<boolean>();
+}
+{
+	// XPECT noerrors
+	let boolean = true;
+	// If name isn't primitive type, referencing should be allowed XPECT noerrors
+	let a = boolean;
+}
+
+{
+	// Use primitive type in variable declaration XPECT noerrors
+	let a : string;
+	// Cannot assign variable to value of primitive type XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'string'." at "string"
+	let b = string;
+	// Cannot use primitive type inside of expression XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'string'." at "string"
+	let c = (string);
+	// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'string'." at "string"
+	let d = new string();
+	// Cannot use primitive type as function argument XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'string'." at "string"
+	f(string);
+	// Use primitive type as type argument should be fine XPECT noerrors
+	new GenericClass<string>();
+}
+{
+	// XPECT noerrors
+	let string = "";
+	// If name isn't primitive type, referencing should be allowed XPECT noerrors
+	let a = string
+}
+
+{
+	// Use primitive type in variable declaration XPECT noerrors
+	let a : number;
+	// Cannot assign variable to value of primitive type XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'number'." at "number"
+	let b = number;
+	// Cannot use primitive type inside of expression XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'number'." at "number"
+	let c = (number);
+	// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'number'." at "number"
+	let d = new number();
+	// Cannot use primitive type as function argument XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'number'." at "number"
+	f(number);
+	// Use primitive type as type argument should be fine XPECT noerrors
+	new GenericClass<number>();
+}
+{
+	// XPECT noerrors
+	let number = 3.0;
+	// If name isn't primitive type, referencing should be allowed XPECT noerrors
+	let a = number
+}
+
+{
+	// Use primitive type in variable declaration XPECT noerrors
+	let a : int;
+	// Cannot assign variable to value of primitive type XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'int'." at "int"
+	let b = int;
+	// Cannot use primitive type inside of expression XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'int'." at "int"
+	let c = (int);
+	// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'int'." at "int"
+	let d = new int();
+	// Cannot use primitive type as function argument XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'int'." at "int"
+	f(int);
+	// Use primitive type as type argument should be fine XPECT noerrors
+	new GenericClass<int>();
+}
+{
+	// XPECT noerrors
+	let int = 3.0;
+	// If name isn't primitive type, referencing should be allowed XPECT noerrors
+	let a = int
+}
+
+{
+	// Use primitive type in variable declaration XPECT noerrors
+	let a : symbol;
+	// Cannot assign variable to value of primitive type XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'symbol'." at "symbol"
+	let b = symbol;
+	// Cannot use primitive type inside of expression XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'symbol'." at "symbol"
+	let c = (symbol);
+	// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'symbol'." at "symbol"
+	let d = new symbol();
+	// Cannot use primitive type as function argument XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'symbol'." at "symbol"
+	f(symbol);
+	// Use primitive type as type argument should be fine XPECT noerrors
+	new GenericClass<symbol>();
+}
+{
+	// XPECT noerrors
+	let symbol = 3.0;
+	// If name isn't primitive type, referencing should be allowed XPECT noerrors
+	let a = symbol
+}
+
+{
+	// Use primitive type in variable declaration XPECT noerrors
+	let a : any;
+	// Cannot assign variable to value of primitive type XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'any'." at "any"
+	let b = any;
+	// Cannot use primitive type inside of expression XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'any'." at "any"
+	let c = (any);
+	// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'any'." at "any"
+	let d = new any();
+	// Cannot use primitive type as function argument XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'any'." at "any"
+	f(any);
+	// Use primitive type as type argument should be fine XPECT noerrors
+	new GenericClass<any>();
+}
+{
+	// XPECT warnings --> "Variable any is not of type any but of type number." at "any"
+	let any = 3.0;
+	// If name isn't primitive type, referencing should be allowed XPECT noerrors
+	let a = any
+}
+
+{
+	// Use primitive type in variable declaration XPECT noerrors
+	let a : pathSelector<?>;
+	// Cannot assign variable to value of primitive type XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'pathSelector'." at "pathSelector"
+	let b = pathSelector;
+	// Cannot use primitive type inside of expression XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'pathSelector'." at "pathSelector"
+	let c = (pathSelector);
+	// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'pathSelector'." at "pathSelector"
+	let d = new pathSelector();
+	// Cannot use primitive type as function argument XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'pathSelector'." at "pathSelector"
+	f(pathSelector);
+	// Use primitive type as type argument should be fine XPECT noerrors
+	new GenericClass<pathSelector<?>>();
+}
+{
+	// XPECT noerrors
+	let pathSelector = 3;
+	// If name isn't primitive type, referencing should be allowed XPECT noerrors
+	let a = pathSelector
+}
+
+{
+	// Use primitive type in variable declaration XPECT noerrors
+	let a : i18nKey;
+	// Cannot assign variable to value of primitive type XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'i18nKey'." at "i18nKey"
+	let b = i18nKey;
+	// Cannot use primitive type inside of expression XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'i18nKey'." at "i18nKey"
+	let c = (i18nKey);
+	// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'i18nKey'." at "i18nKey"
+	let d = new i18nKey();
+	// Cannot use primitive type as function argument XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'i18nKey'." at "i18nKey"
+	f(i18nKey);
+	// Use primitive type as type argument should be fine XPECT noerrors
+	new GenericClass<i18nKey>();
+}
+{
+	// XPECT noerrors
+	let i18nKey = 3.0;
+	// If name isn't primitive type, referencing should be allowed XPECT noerrors
+	let a = i18nKey
+}
+
+class SomeClass {}
+
+{
+	// Use primitive type in variable declaration XPECT noerrors
+	let a : typeName<SomeClass>;
+	// Cannot assign variable to value of primitive type XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'typeName'." at "typeName"
+	let b = typeName;
+	// Cannot use primitive type inside of expression XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'typeName'." at "typeName"
+	let c = (typeName);
+	// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'typeName'." at "typeName"
+	let d = new typeName();
+	// Cannot use primitive type as function argument XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'typeName'." at "typeName"
+	f(typeName);
+	// Use primitive type as type argument should be fine XPECT noerrors
+	new GenericClass<typeName<SomeClass>>();
+}
+{
+	// XPECT noerrors
+	let typeName = 3.0;
+	// If name isn't primitive type, referencing should be allowed XPECT noerrors
+	let a = typeName
+}
+
+{
+	// Use undefined as type should be fine XPECT noerrors
+	let a : undefined
+	// Use undefined as value should be fine XPECT noerrors
+	let b = undefined;
+	// Use null inside of expression should be fine XPECT noerrors
+	let c = (null);
+	// Use null as function argument should be fine XPECT noerrors
+	f(null);
+}

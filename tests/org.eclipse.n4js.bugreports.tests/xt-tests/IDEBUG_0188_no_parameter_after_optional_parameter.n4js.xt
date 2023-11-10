@@ -1,0 +1,21 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest
+   END_SETUP
+   */
+
+
+/* XPECT warnings ---
+"This parameter is changed to the default parameter 'b=undefined' since it follows a default parameter." at "b : number"
+"This parameter is changed to the default parameter 'c=undefined' since it follows a default parameter." at "c : number"
+---*/
+function f (a : number=undefined, b : number, c : number) {}

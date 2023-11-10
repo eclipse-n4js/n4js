@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+///////////////////////////////////////////////////////////
+// Implementing generic interfaces (no parameterization) //
+///////////////////////////////////////////////////////////
+
+interface A<T> {
+	a : T;
+	f (t : T) : T;
+}
+
+interface B<T,S> {
+	f (t : T) : S;
+}
+
+
+class AA<T> implements A<T> {
+	@Override
+	// field overridden (variable) XPECT noerrors -->
+	a : T;
+
+	@Override
+	// method overridden (variable) XPECT noerrors -->
+	f (t : T) : T { return t; }
+}
+
+class AB<T> implements A<T> {
+	@Override
+	// field overridden wrongly XPECT errors --> "Type of field AB.a must equal type of implemented field A.a." at "a"
+	a : number;
+
+	@Override
+	// method overridden wrongly XPECT errors --> "Signature of method AB.f does not conform to implemented method A.f: {function(number):number} is not a subtype of {function(T):T}." at "f"
+	f (n : number) : number { return n; }
+}
+
+class BA<T,S> implements B<T,S>{
+	s : S;
+
+	@Override
+	// method overridden (variables) XPECT noerrors -->
+	f (t : T) : S { return this.s; };
+}

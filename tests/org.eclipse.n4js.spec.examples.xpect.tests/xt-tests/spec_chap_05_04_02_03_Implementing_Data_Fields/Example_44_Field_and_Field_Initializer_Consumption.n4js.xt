@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.examples.xpect.tests.SpecXtTest END_SETUP */
+
+ /* XPECT  output ---
+s: C , t: D ,u: I1 ,v: I2
+--- */
+
+interface I0 {
+	v : string = "I0";
+}
+
+interface I1 {
+	s : string = "I1";
+	t : string = "I1";
+	u : string = "I1";
+}
+
+interface I2 extends I1, I0 {
+	@Override
+	t : string = "I2";
+	@Override
+	v : string = "I2";
+}
+
+class C {
+	s : string = "C";
+}
+
+class D extends C implements I1, I2 {
+	@Override
+	t : string = "D";
+}
+
+var d = new D();
+
+console.log(
+	"s:", d.s, ", t:", d.t, ",u:", d.u,	",v:", d.v
+)

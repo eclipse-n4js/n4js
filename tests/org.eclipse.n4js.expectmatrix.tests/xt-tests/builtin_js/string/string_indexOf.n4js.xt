@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// String.prototype.indexOf()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/indexOf
+
+var anyString = "Brave new world";
+
+console.log("The index of the first w from the beginning is " + anyString.indexOf("w"));
+console.log("The index of 'new' from the beginning is " + anyString.indexOf("new"));
+
+// Case-sensitivity
+var myString    = "brie, pepper jack, cheddar";
+var myCapString = "Brie, Pepper Jack, Cheddar";
+
+console.log('myString.indexOf("cheddar") is ' + myString.indexOf("cheddar"));
+console.log('myCapString.indexOf("cheddar") is ' + myCapString.indexOf("cheddar"));
+
+// Counting occurrences
+function countX (str : string) {
+	var count = 0;
+	var pos = str.indexOf("x");
+
+	while ( pos != -1 ) {
+   		count++;
+   		pos = str.indexOf( "x", pos + 1 );
+	}
+	return count;
+}
+
+console.log(countX("hello x i am x of 123 x"));
+
+/* XPECT output ---
+The index of the first w from the beginning is 8
+The index of 'new' from the beginning is 6
+myString.indexOf("cheddar") is 19
+myCapString.indexOf("cheddar") is -1
+3
+--- */

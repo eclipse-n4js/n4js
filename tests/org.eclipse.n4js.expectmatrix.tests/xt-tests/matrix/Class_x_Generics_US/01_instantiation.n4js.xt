@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+///////////////////
+// Instantiation //
+///////////////////
+
+class A<T> {
+	a : T;
+	f1 () : T { return this.a; };
+	f2 (t : T) : T { return t; };
+}
+
+class B<T,S> {}
+
+// raw types are forbidden XPECT errors --> "Incorrect number of type arguments for class A: expected 1, got 0." at "A"
+var a : A;
+
+// missing arguments XPECT errors --> "Incorrect number of type arguments for class A: expected 1, got 0." at "A"
+var a1 = new A();
+
+// primitive parameter XPECT noerrors -->
+var a2 = new A<string>();
+
+// parameterized object as parameter XPECT noerrors -->
+var a3 = new A<A<string>>();
+
+// triple nesting of parameterized objects XPECT noerrors -->
+var a4 = new A<B<A<B<string, number>>, string>>();
+
+a2.a = "g";
+var s : number;
+// returns string XPECT errors --> "string is not a subtype of number." at "a2.f1()"
+s = a2.f1();
+
+// a is A<string>, so is a2, assignment works XPECT noerrors -->
+a3.a = a2;
+
+var a5 = new A<number>();
+// wrong assignment XPECT errors --> "A<number> is not a subtype of A<string>." at "a5"
+a3.a = a5;
+
+var n : number;
+// returns A<number> XPECT errors --> "A<string> is not a subtype of number." at "a3.f2(new A<string>())"
+n = a3.f2(new A<string>());
+
+var a6 : B<A<B<string, number>>, string>;
+var a7 = new A<B<A<B<string, number>>, string>>();
+
+// correct assignment XPECT noerrors -->
+a6 = a7.f1();

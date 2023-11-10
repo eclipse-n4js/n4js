@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Error.constructor
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
+
+try {
+  throw new Error("Whoops!");
+} catch (e) {
+	console.log((e as Object).toString());
+}
+
+// Message is optional
+var e1 = new Error();
+console.log(e1.toString());
+
+// Other error types
+var ee = new EvalError("Eval error is bad");
+console.log(ee.toString());
+var re = new RangeError("RAGE!!!");
+console.log(re.toString());
+var refe = new ReferenceError("Wrong reference");
+console.log(refe.toString());
+var se = new SyntaxError("Syntax apples grow on syntax trees");
+console.log(se.toString());
+var te = new TypeError("wrong type");
+console.log(te.toString());
+var ue = new URIError("Something broken in URI");
+console.log(ue.toString());
+
+/* XPECT output ---
+Error: Whoops!
+Error
+EvalError: Eval error is bad
+RangeError: RAGE!!!
+ReferenceError: Wrong reference
+SyntaxError: Syntax apples grow on syntax trees
+TypeError: wrong type
+URIError: Something broken in URI
+--- */

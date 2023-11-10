@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Date.prototype.setDate()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setDate
+
+// Warning: Do not expect any time zone or locale here, as this may differ
+// on different build machines executing the test! This may reduce the number of possible tests,
+// but the test will be robust.
+
+var theBigDay = new Date(1995, 11, 17, 3, 24);
+console.log(theBigDay.toDateString());
+
+// XPECT noerrors -->
+theBigDay.setDate(24);
+console.log(theBigDay.toDateString());
+
+// XPECT noerrors -->
+theBigDay.setDate(32);
+console.log(theBigDay.toDateString());
+
+/* XPECT output ---
+Sun Dec 17 1995
+Sun Dec 24 1995
+Mon Jan 01 1996
+--- */

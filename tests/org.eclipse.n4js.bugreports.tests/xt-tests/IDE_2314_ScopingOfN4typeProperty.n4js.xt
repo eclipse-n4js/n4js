@@ -1,0 +1,23 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXTTest END_SETUP  */
+
+
+// scoping issue fixed alongside IDE-2314 ...
+
+
+function foo(testClass: constructor{? extends N4Object}) {
+	let ann: N4Annotation;
+
+	// XPECT noerrors --> "any is not a subtype of N4Annotation." at "testClass.n4type.allAnnotations("Ignore")[0]"
+	ann = testClass.n4type.allAnnotations("Ignore")[0];
+}

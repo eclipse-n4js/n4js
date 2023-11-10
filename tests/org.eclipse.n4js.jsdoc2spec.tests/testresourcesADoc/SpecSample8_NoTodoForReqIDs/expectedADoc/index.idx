@@ -13,11 +13,11 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.test-workspace.yarn-test-project.pa
 	SpecSample8_NoTodoForReqIDs#src
 		NO_PACKAGE
 			A.n4jsd
-				A::12::21::22
-				A#foo::16::23::37
+				A::12::21::21
+				A#foo::16::22::34
 	SpecSample8_NoTodoForReqIDs#test
 		NO_PACKAGE
 			ReqTest.n4js
-				ReqTest::12::21::22
-				ReqTest#basics___Case::18::23::38
-				ReqTest#ext___Case::39::39::71
+				ReqTest::12::21::21
+				ReqTest#basics___Case::18::22::35
+				ReqTest#ext___Case::39::36::65

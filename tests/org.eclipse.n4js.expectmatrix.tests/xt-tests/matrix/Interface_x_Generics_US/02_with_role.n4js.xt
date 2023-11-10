@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+///////////////////////////////////////////////////////
+// Implementing generic interfaces by means of interfaces //
+///////////////////////////////////////////////////////
+
+interface A<T> {
+	a : T;
+	f (t : T) : T;
+}
+
+interface B<T,S> {
+	f (t : T) : S;
+}
+
+interface R2<T> {
+	a : T;
+	f (n : T) : T { return n; };
+}
+
+interface R extends R2<number> {}
+
+interface R3<T,S> {
+	s : S;
+	f (t : T) : S { return this.s; };
+}
+
+// XPECT errors --> "Redefine ambiguously consumed members: field R2.a and field A.a." at "AC"
+class AC implements R, A<number> { }
+
+// XPECT errors -->"Redefine ambiguously consumed members: field R2.a and field A.a." at "AD"
+class AD<T> implements R2<T>, A<T> { }
+
+// implementing interface by means of generic interface with 2 variables XPECT noerrors -->
+class BA<S> implements R3<number,S>, B<number,S> {}

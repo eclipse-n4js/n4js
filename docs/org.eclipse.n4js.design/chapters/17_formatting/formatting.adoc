@@ -123,7 +123,7 @@ There is no UI for preferences values yet.
 [.language-n4js]
 ==  Unit Testing with Xpect
 
-With Xpect Method `formattedLines` implemented in class `org.eclipse.n4js.xpect.FormatterXpectMethod` in bundle `org.eclipse.n4js.tests.helper` the formatting can be tested. The test method requires the number of lines which should be formatted. The desired test is given as a standard multiline expectation.
+With Xpect Method `formattedLines` implemented in class `org.eclipse.n4js.ide.tests.helper.server.xt.XtMethods` in bundle `org.eclipse.n4js.ide.tests.helper` the formatting can be tested. The test method requires the number of lines which should be formatted. The desired test is given as a standard multiline expectation.
 
 [source]
 ----

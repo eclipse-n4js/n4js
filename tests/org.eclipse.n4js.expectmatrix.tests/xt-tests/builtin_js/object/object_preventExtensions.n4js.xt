@@ -1,0 +1,26 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Object.preventExtensions()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isExtensible
+
+var empty : Object = {};
+console.log(Object.isExtensible(empty) === true);
+// IDEBUG-124 XPECT noerrors --> "IDEBUG-124: preventExtensions"
+Object.preventExtensions(empty);
+console.log(Object.isExtensible(empty) === false);
+
+/* XPECT output ---
+true
+true
+--- */

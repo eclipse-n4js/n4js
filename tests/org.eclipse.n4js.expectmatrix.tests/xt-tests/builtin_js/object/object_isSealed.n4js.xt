@@ -1,0 +1,66 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Object.isSealed()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isSealed
+
+// Objects aren't sealed by default.
+var empty = {};
+console.log("0 not sealed = " + (Object.isSealed(empty) === false));
+
+// If you make an empty object non-extensible, it is vacuously sealed.
+// IDEBUG-124 XPECT noerrors --> "IDEBUG-124: preventExtensions"
+Object.preventExtensions(empty);
+console.log("1 sealed = " + (Object.isSealed(empty) === true));
+
+// The same is not true of a non-empty object, unless its properties are all non-configurable.
+var hasProp = { foo: "bar" };
+// IDEBUG-124 XPECT noerrors --> "IDEBUG-124: preventExtensions"
+Object.preventExtensions(hasProp);
+console.log("2 not sealed = " + (Object.isSealed(hasProp) === false));
+
+// But make them all non-configurable and the object becomes sealed.
+Object.defineProperty(hasProp, "foo", { configurable: false });
+
+console.log("3 sealed = " + (Object.isSealed(hasProp) === true));
+
+// The easiest way to seal an object, of course, is Object.seal.
+var sealed = {};
+Object.seal(sealed);
+console.log("4 sealed = " + (Object.isSealed(sealed) === true));
+
+// A sealed object is, by definition, non-extensible.
+console.log("5 non-extensible = " + (Object.isExtensible(sealed) === false));
+
+// A sealed object might be frozen, but it doesn't have to be.
+console.log("6 frozen = " + (Object.isFrozen(sealed) === true)); // all properties also non-writable
+
+var s2 = { p: 3 };
+Object.seal(s2);
+console.log("7 not frozen = " + (Object.isFrozen(s2) === false)); // "p" is still writable
+
+var s3 = { get p() { return 0; } };
+Object.seal(s3);
+console.log("8 frozen = " + (Object.isFrozen(s3) === true)); // only configurability matters for accessor properties
+
+/* XPECT output ---
+0 not sealed = true
+1 sealed = true
+2 not sealed = true
+3 sealed = true
+4 sealed = true
+5 non-extensible = true
+6 frozen = true
+7 not frozen = true
+8 frozen = true
+--- */

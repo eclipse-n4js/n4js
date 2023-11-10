@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Array.prototype.some()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
+
+function isBigEnough(element : number) : boolean {
+  return (element >= 10);
+}
+var passed = [2, 5, 8, 1, 4].some(isBigEnough);
+console.log("false = " + passed);
+passed = [12, 5, 8, 1, 4].some(isBigEnough);
+console.log("true = " + passed);
+
+// Breaking a loop
+const THRESHOLD = 12;
+var v = [5, 2, 16, 4, 3, 18, 20];
+var res;
+
+res = v.some(function(element) {
+    console.log("element:", element);
+    if (element >= THRESHOLD) {
+        return true;
+    }
+
+    return false;
+});
+console.log("res:", res);
+
+
+/* XPECT output ---
+false = false
+true = true
+element: 5
+element: 2
+element: 16
+res: true
+--- */

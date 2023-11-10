@@ -1,0 +1,30 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+class A {
+	get name() { return null }		// return type will be inferred
+	set name(p : string) {}
+}
+
+class B {
+	get name() : string {return null }
+	set name(p) {}		// type of p should be inferred, but not working
+}
+
+
+// getter has no declared type, getter is independent from setter XPECT errors --> "any is not a subtype of number." at "new A().name"
+var x : number = new A().name
+
+var num : number = 42;
+// XPECT noerrors --> "setter has no declared type. so it is any." at "new A().name"
+new B().name = num;

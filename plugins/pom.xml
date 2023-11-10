@@ -60,8 +60,6 @@ Contributors:
 		<module>org.eclipse.n4js.smith</module>
 		<!-- Flow Graphs -->
 		<module>org.eclipse.n4js.flowgraphs</module>
-		<!-- xpect -->
-		<module>org.eclipse.n4js.xpect</module>
 		<!-- xtext -->
 		<module>org.eclipse.n4js.xtext</module>
 		<module>org.eclipse.n4js.xtext.ide</module>

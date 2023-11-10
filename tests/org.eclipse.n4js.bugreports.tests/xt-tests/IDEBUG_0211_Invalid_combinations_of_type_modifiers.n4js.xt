@@ -1,0 +1,53 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest
+   END_SETUP
+   */
+
+class A {}
+
+
+// XPECT errors --->"Variadic parameters must not have a default initializer." at "...int="
+var f2 : {function(...int=)}; // missing type name for type modifier!
+
+
+// XPECT errors --> "Variadic parameters must not have a default initializer." at "...A="
+var f3 : {function(...A=)}; // invalid combination of type modifiers: ? and ...
+
+
+// union ok. XPECT noerrors --> "Missing type name for type modifier ?." at "union{number,string}"
+var f4a = function(param : union{number,string}=undefined) {}
+
+
+// XPECT errors --> "Variadic parameters must not have a default initializer." at "... param : A=undefined"
+var f6 = function(... param : A=undefined) {} // invalid combination of type modifiers: ? and ...
+
+
+class C {
+	// XPECT errors --> "Variadic parameters must not have a default initializer." at "... param : A=undefined"
+	m12(... param : A=undefined) {} // invalid combination of type modifiers: ? and ...
+}
+
+
+// XPECT errors --->"Variadic parameters must not have a default initializer." at "...param: int="
+var st4 : ~Object with { m(...param: int=) }; // invalid combination of type modifiers: ? and ...
+
+
+// XPECT errors --> "Variadic parameter is not allowed in setter declarations." at "...number"
+var st5 : ~Object with { set g ( ...number)};
+
+
+/* XPECT errors ---
+"Default parameter is not allowed in setter declarations." at "... int="
+"Variadic parameter is not allowed in setter declarations." at "... int="
+---*/
+var st6 : ~Object with { set g ( ... int= )};

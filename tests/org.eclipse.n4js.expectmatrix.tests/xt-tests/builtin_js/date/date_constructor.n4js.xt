@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Date.constructor
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+
+// We only test known date time string format (ECMA11a, 15.9.1.15),
+// since other formats are implementation specific.
+
+// Warning: Do not expect any time zone or locale here, as this may differ
+// on different build machines executing the test! This may reduce the number of possible tests,
+// but the test will be robust.
+
+// IDEBUG-127 XPECT noerrors --> "IDEBUG-127: date constructor"
+console.log(new Date("1995-12-17T03:24:00.000Z").toUTCString());
+console.log(new Date(String("1995-12-17T03:24:00.000Z")).toUTCString());
+
+var withGivenTime = new Date(1995,11,17,0,0,0,0).toUTCString();
+var withDefault =   new Date(1995,11,17).toUTCString();
+console.log(withGivenTime==withDefault);
+
+/* XPECT output ---
+Sun, 17 Dec 1995 03:24:00 GMT
+Sun, 17 Dec 1995 03:24:00 GMT
+true
+--- */

@@ -1,0 +1,102 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+interface SuperInterface {
+	methodSuperI_abstract();
+	methodSuperI_non_abstract() {}
+}
+
+interface I1 extends SuperInterface {
+	methodI1_abstract()
+	methodI1_non_abstract() {}
+}
+interface I2 {
+
+	methodI2_abstract()
+	methodI2_non_abstract() {}
+
+	static m1() {}
+}
+
+class SuperClass {
+	inheritedMethod() {
+
+	}
+}
+
+export public abstract class A extends SuperClass implements I1, I2 {
+
+	@Override
+	inheritedMethod() {
+		//// Super calls from unrelated method
+
+		// Super call regular super method XPECT noerrors
+		super.inheritedMethod();
+
+		// Super call abstract consumable method XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'methodI1_abstract'." at "methodI1_abstract"
+		super.methodI1_abstract();
+
+		// Super call non-abstract consumable method XPECT errors --> "Cannot refer to default method of an implemented interface with super." at "methodI1_non_abstract"
+		super.methodI1_non_abstract();
+
+		// Super call abstract consumable method XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'methodI2_abstract'." at "methodI2_abstract"
+		super.methodI2_abstract();
+
+		// Super call non-abstract consumable method XPECT errors --> "Cannot refer to default method of an implemented interface with super." at "methodI2_non_abstract"
+		super.methodI2_non_abstract();
+
+		// Super call non-abstract consumable super-super method XPECT errors --> "Cannot refer to default method of an implemented interface with super." at "methodSuperI_non_abstract"
+		super.methodSuperI_non_abstract();
+
+		// No super linking for static interface method XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'm1'." at "m1"
+		super.m1()
+	}
+
+	@Override
+	methodI1_non_abstract() {
+		//// Super calls from overriding method
+
+		// Super call regular super method XPECT noerrors
+		super.inheritedMethod();
+
+		// Super call abstract consumable method XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'methodI1_abstract'." at "methodI1_abstract"
+		super.methodI1_abstract();
+
+		// Super call non-abstract consumable method XPECT errors --> "Cannot refer to default method of an implemented interface with super." at "methodI1_non_abstract"
+		super.methodI1_non_abstract();
+	}
+
+	static staticMethod() {
+		// No super linking from static method to static interface method XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'm1'." at "m1"
+		super.m1();
+	}
+}
+
+interface I3 {
+	public m() {}
+}
+
+interface J extends I3 {
+    @Override
+    public m() {}
+}
+
+class C implements I3 {
+}
+
+class D extends C implements J {
+    public magicify() {
+        // XPECT noerrors -->
+        super.m();
+    }
+}

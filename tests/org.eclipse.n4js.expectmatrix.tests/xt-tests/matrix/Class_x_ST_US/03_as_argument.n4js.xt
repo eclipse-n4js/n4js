@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+/////////////////////////
+// More as an argument //
+/////////////////////////
+
+class C1 {
+	public i : number;
+
+	public f () : void {}
+}
+
+class C1a {
+	public i : number;
+	private j : number;
+
+	public f () : void {}
+}
+
+class C1b {
+	public i : number;
+	public j : number;
+
+	public f () : void {}
+}
+
+class C2 {
+	public i : number;
+
+	public f (n : number) : number { return this.i; }
+}
+
+function c1 (c : ~C1) {}
+function c1a (c : ~C1a) {}
+function c1b (c : ~C1b) {}
+function c2 (c : ~~C1) {}
+function c2a (c : ~~C1a) {}
+function c2b (c : ~~C1b) {}
+
+// C1a <: ~C1 XPECT noerrors -->
+c1(new C1a());
+
+// C1b <: ~C1 XPECT noerrors -->
+c1(new C1b());
+
+// C2 <: ~C1 == false XPECT errors --> "C2 is not a structural subtype of ~C1: f failed: {function(number):number} is not a subtype of {function():void}." at "new C2()"
+c1(new C2());
+
+// C1 <: ~C1a == false XPECT noerrors -->
+c1a(new C1());
+
+// C1 <: ~C1b == false XPECT errors -->"C1 is not a structural subtype of ~C1b: missing setter or field j." at "new C1()"
+c1b(new C1());
+
+// C1a <: ~~C1 XPECT noerrors -->
+c2(new C1a());
+
+// C1b <: ~~C1 == false XPECT noerrors -->
+c2(new C1b());
+
+// C2 <: ~~C1 XPECT noerrors -->
+c2(new C2());
+
+// C1 <: ~~C1a == false XPECT noerrors -->
+c2a(new C1());
+
+// C1 <: ~~C1b == false XPECT errors -->"C1 is not a structural subtype of ~~C1b: missing setter or field j." at "new C1()"
+c2b(new C1());

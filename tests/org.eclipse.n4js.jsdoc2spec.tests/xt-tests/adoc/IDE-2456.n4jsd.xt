@@ -1,0 +1,169 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.jsdoc2spec.SpecXtTest END_SETUP  */
+
+/* XPECT specADoc ---
+
+   [[gsec:spec_IDE-2456.async1]]
+   [role=memberdoc]
+   === ++Function async1++
+
+   ==== Signature
+   
+   srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace:test-project:src/IDE-2456:async1++[``++async function async1(): void++``]
+
+
+   ==== Description
+
+   Spec of Variable.
+
+
+   ==== Semantics
+   
+   [TODO, title="test function ++async1++"]
+   --
+   Add tests specifying semantics for ``++async1++``
+   --
+
+   ---
+ */
+/**
+ * @spec Spec of Variable.
+ */
+external async function async1() : void
+
+
+
+/* XPECT specADoc ---
+
+   [[gsec:spec_IDE-2456.async2]]
+   [role=memberdoc]
+   === ++Function async2++
+
+   ==== Signature
+   
+   srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace:test-project:src/IDE-2456:async2++[``++async function async2(): Promise<string,?>++``]
+
+
+   ==== Description
+
+   Spec of Variable.
+
+
+   ==== Semantics
+   
+   [TODO, title="test function ++async2++"]
+   --
+   Add tests specifying semantics for ``++async2++``
+   --
+
+   ---
+ */
+/**
+ * @spec Spec of Variable.
+ */
+external async function async2() : Promise<string, ?>
+
+
+
+
+/* XPECT specADoc ---
+
+   [[gsec:spec_IDE-2456.gen1]]
+   [role=memberdoc]
+   === ++Function gen1++
+
+   ==== Signature
+   
+   srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace:test-project:src/IDE-2456:gen1++[``++function * gen1(): void++``]
+
+
+   ==== Description
+
+   Spec of Variable.
+
+
+   ==== Semantics
+   
+   [TODO, title="test function ++gen1++"]
+   --
+   Add tests specifying semantics for ``++gen1++``
+   --
+
+   ---
+ */
+/**
+ * @spec Spec of Variable.
+ */
+external function * gen1() : void
+
+
+/* XPECT specADoc ---
+
+   [[gsec:spec_IDE-2456.gen2]]
+   [role=memberdoc]
+   === ++Function gen2++
+
+   ==== Signature
+   
+   srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace:test-project:src/IDE-2456:gen2++[``++function * gen2(): String++``]
+
+
+   ==== Description
+
+   Spec of Variable.
+
+
+   ==== Semantics
+   
+   [TODO, title="test function ++gen2++"]
+   --
+   Add tests specifying semantics for ``++gen2++``
+   --
+
+   ---
+ */
+/**
+ * @spec Spec of Variable.
+ */
+external function * gen2() : String
+
+
+/* XPECT specADoc ---
+
+   [[gsec:spec_IDE-2456.gen3]]
+   [role=memberdoc]
+   === ++Function gen3++
+
+   ==== Signature
+   
+   srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace:test-project:src/IDE-2456:gen3++[``++function * gen3(): Generator<String,Number,undefined>++``]
+
+
+   ==== Description
+
+   Spec of Variable.
+
+
+   ==== Semantics
+   
+   [TODO, title="test function ++gen3++"]
+   --
+   Add tests specifying semantics for ``++gen3++``
+   --
+
+   ---
+ */
+/**
+ * @spec Spec of Variable.
+ */
+external function * gen3() : Generator<String,Number,undefined>

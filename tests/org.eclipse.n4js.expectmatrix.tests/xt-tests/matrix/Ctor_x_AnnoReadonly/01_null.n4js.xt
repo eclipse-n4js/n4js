@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+/////////////////////////
+// Null in spec object //
+/////////////////////////
+
+class A {
+	public a : int;
+	public bc : B<C>;
+	public ubc : union{B<int>, C};
+
+	// IDE-139 not working yet XPECT noerrors -->
+	public constructor (@Spec spec : ~i~this) {}
+}
+
+class B<T> {
+	public b : int;
+	public c : T;
+
+	public constructor (@Spec spec : ~i~this) {}
+}
+
+class C {
+	public c : int;
+	public constructor (@Spec spec : ~i~this) {}
+}
+
+// IDE-139 initializing field with null XPECT noerrors -->
+var b1 = new B<C>({b: 5, c: null});
+
+var n1 : C = null;
+// initializing field with null when assigned to variable of expected class XPECT noerrors -->
+var b2a = new B<C>({b: 5, c: n1});
+
+// unnecessary cast is necessary (cf. next example) XPECT warnings --> "Unnecessary cast from null to C" at "null as C"
+var n2 = null as C;
+// initializing field with null when cast as expected class XPECT noerrors -->
+var b2b = new B<C>({b: 5, c: n2});
+
+var n3 = null;
+// initializing field with null when saved to a variable XPECT errors --> "~Object with { b: int; c: any } is not a structural subtype of ~i~B<C>: c failed: any is not equal to C." at "{b: 5, c: n3}"
+var b2c = new B<C>({b: 5, c: n3});
+
+// initializing field with null declaring it as C XPECT noerrors -->
+var b2d = new B<C>({b: 5, C c: null});

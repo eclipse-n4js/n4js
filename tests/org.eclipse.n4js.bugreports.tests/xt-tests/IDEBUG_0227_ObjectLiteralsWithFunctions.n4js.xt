@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+// XPECT noerrors -->
+var m : {function<U>(U):U};
+m = function<V>(n : V) : V {return n;}; // ok
+
+// XPECT noerrors -->
+var ol2 = {
+	{function<U>(U):U} m: function<V>(n : V) : V {return n;} // ok
+}
+
+// NOT working:
+var ol = { 	{function<U>(U):U} m: null }
+// XPECT noerrors -->
+ol.m = function<V>(n : V) : V {return n;}; // error: "{function<V>(V):V} is not a subtype of {function<U>(U):U}."
+
+
+
+// simpler example to reproduce the same problem:
+
+class C {
+	field : {function<U>(U):U};
+}
+
+var c : C;
+// XPECT noerrors -->
+c.field = function<V>(n : V) : V {return n;};
+
+
+
+// worked before and should work after bug fix:
+
+var v1 : {function<U>(U):U};  // types builder won't copy the FunctionTypeExpression from the AST
+var v2 = v1;  // type inferences through xsemantics involved here, so ok as well
+
+v1 = function<V>(n : V) : V {return n;}; // ok
+v2 = function<V>(n : V) : V {return n;}; // ok

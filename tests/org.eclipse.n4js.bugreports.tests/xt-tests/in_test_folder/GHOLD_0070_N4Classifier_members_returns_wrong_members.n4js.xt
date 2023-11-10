@@ -1,0 +1,102 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest
+   
+	Project {
+		Folder "test" {
+			ThisFile {}
+		}
+		File "package.json" {}
+	}
+   
+   END_SETUP
+ */
+
+
+// note: this file covers GHOLD-70 and GHOLD-71 together
+
+
+function show(label: string, members: Array<? extends N4Member>) {
+	console.log(label, members.map((m)=>m.name).join(', '));
+}
+
+
+interface I {
+    fi;
+    static fiStatic;
+    @Test mi() {}
+    @Test static miStatic() {}
+}
+abstract class C {
+    fc = 42;
+    static fcStatic;
+    @Test mc() {}
+    @Test static mcStatic() {}
+}
+
+
+console.log('====')
+show("only non-static:", I.n4type.members(false,false));
+show("only non-static:", I.n4type.members(false,false,false));
+show("also static    :", I.n4type.members(false,false,true));
+
+console.log('====')
+show("only non-static:", C.n4type.members(false,false));
+show("only non-static:", C.n4type.members(false,false,false));
+show("also static    :", C.n4type.members(false,false,true));
+
+
+abstract class Cls extends C implements I {}
+
+console.log('====')
+show("without consumed/inherited:", Cls.n4type.members());
+show("without consumed/inherited:", Cls.n4type.members(false,false));
+show("with consumed             :", Cls.n4type.members(true,false));
+show("with inherited            :", Cls.n4type.members(false,true));
+show("with consumed & inherited :", Cls.n4type.members(true,true));
+
+console.log('====')
+show("with consumed & inherited, only non-static:", Cls.n4type.members(true,true,false));
+show("with consumed & inherited, also static    :", Cls.n4type.members(true,true,true)); // note: static members of interfaces are never consumed, fiStatic and miStatic not included here!
+
+
+console.log('====')
+show("only fields :", Cls.n4type.dataFields(true,true,true));
+show("only methods:", Cls.n4type.methods(true,true,true));
+show("only members with annotation @Test:", Cls.n4type.membersWithAnnotation("Test", true,true,true));
+show("only methods with annotation @Test:", Cls.n4type.methodsWithAnnotation("Test",true,true,true));
+
+
+/* XPECT output ---
+====
+only non-static: fi, mi
+only non-static: fi, mi
+also static    : fi, mi, miStatic, fiStatic
+====
+only non-static: fc, mc
+only non-static: fc, mc
+also static    : fc, mc, mcStatic, fcStatic
+====
+without consumed/inherited: 
+without consumed/inherited: 
+with consumed             : mi, fi
+with inherited            : fc, mc
+with consumed & inherited : mi, fi, fc, mc
+====
+with consumed & inherited, only non-static: mi, fi, fc, mc
+with consumed & inherited, also static    : mi, fi, fc, mc, mcStatic, fcStatic
+====
+only fields : fi, fc, fcStatic
+only methods: mi, mc, mcStatic
+only members with annotation @Test: mi, mc, mcStatic
+only methods with annotation @Test: mi, mc, mcStatic
+--- */

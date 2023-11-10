@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Date.prototype.setUTCMinutes()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setMinutes
+
+// Warning: Do not expect any time zone or locale here, as this may differ
+// on different build machines executing the test! This may reduce the number of possible tests,
+// but the test will be robust. (use string ctor: "1995-12-17T00:00:00.000Z" and .toUTCString())
+
+var theBigDay = new Date("2003-11-02T00:00:00.000Z");
+theBigDay.setUTCMinutes(45);
+console.log(theBigDay.toUTCString());
+
+// IDEBUG-126 XPECT noerrors --> "IDEBUG-126: missing parameters"
+theBigDay.setUTCMinutes(50,18);
+console.log(theBigDay.toUTCString());
+
+// IDEBUG-126 XPECT noerrors --> "IDEBUG-126: missing parameters"
+theBigDay.setUTCMinutes(32,16,37);
+console.log(theBigDay.toUTCString());
+console.log(theBigDay.getUTCMilliseconds());
+
+/* XPECT output ---
+Sun, 02 Nov 2003 00:45:00 GMT
+Sun, 02 Nov 2003 00:50:18 GMT
+Sun, 02 Nov 2003 00:32:16 GMT
+37
+--- */

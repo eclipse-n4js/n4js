@@ -13,12 +13,10 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.tests.helper,
  org.eclipse.n4js.json.model,
  org.eclipse.xpect,
- org.eclipse.xpect.xtext.lib,
  com.google.guava,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.xtend.lib,
  org.eclipse.xtend.lib.macro
-Export-Package: org.eclipse.n4js.json,
- org.eclipse.n4js.json.validation.suppression
+Export-Package: org.eclipse.n4js.json
 Automatic-Module-Name: org.eclipse.n4js.json.tests.helper
 

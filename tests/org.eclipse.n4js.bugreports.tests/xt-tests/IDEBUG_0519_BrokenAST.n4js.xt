@@ -1,0 +1,59 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+// IDEBUG-519: originally the parser was not able to parse and threw an Exception.
+//    Cases of {type, constructor} used as typenames in return-type of Function-Type-Expressions are deferred
+//  to IDEBUG-594.
+
+
+//// -- example 5
+/* XPECT errors ---
+"missing '{' at '?'" at "?"
+"missing '}' at ')'" at ")"
+---
+*/
+function f5( x : union { intersection { type ?  } } ){}
+
+
+//// -- example 4
+/* XPECT errors ---
+"missing '{' at '?'" at "?"
+"missing '}' at ')'" at ")"
+---
+*/
+function f4( x : union { constructor ? } ) {}
+
+//// -- example 3
+/* XPECT errors ---
+"missing '{' at '?'" at "?"
+"missing '}' at ')'" at ")"
+---
+*/
+function f3( x : intersection { type ? } ) {}
+
+
+//// -- example 2
+/* XPECT errors ---
+"missing '{' at '?'" at "?"
+"missing '}' at ')'" at ")"
+---
+*/
+function f2( x : union{type ?} ) {}
+
+
+//// The following original example is not included, since it is introducing a broken AST on top of the problem.
+//// -- example 1 - original
+//class A {
+//    constructor(union{type? a) {
+//    }
+//}

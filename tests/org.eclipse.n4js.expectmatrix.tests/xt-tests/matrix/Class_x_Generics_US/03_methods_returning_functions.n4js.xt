@@ -1,0 +1,73 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+/////////////////////////////////
+// Methods returning functions //
+/////////////////////////////////
+
+class B {}
+class C extends B {}
+
+
+
+class A<T,S> {
+	a : T;
+
+	f1 () : {function() : T} {
+		var self = this;
+		var t = function () : T {return self.a;};
+		return t;
+	}
+
+	f2 () : {function(s: S) : S} {
+		var t = function (s: S) : S {return s;}
+		return t;
+	}
+
+	// XPECT warnings --> "Final type boolean should not be used as upper bound of type parameter R. Final types cannot be extended." at "boolean"
+	<R extends boolean> f3a (r : R) : R { return r;}
+
+	<R extends B> f3 (r : R) : {function():R} {
+		var t = function () : R {return r;}
+		return t;
+	}
+
+	<R extends B> f4 () : {function(R) : R} {
+		var t = function (r : R) : R {return r;}
+		return t;
+	}
+}
+
+var a1 : A<string, number> = new A<string, number>();
+
+// XPECT warnings --> "A reference to method f1 is created detached from a (correct) this-instance." at "f1"
+// XPECT errors --> "{function():{function():string}} is not a subtype of number." at "a1.f1"
+var af : number = a1.f1;
+
+// calling the returned function XPECT errors --> "string is not a subtype of number." at "a1.f1()()"
+var af2 : number = a1.f1()();
+
+// calling the returned function with an argument XPECT errors --> "number is not a subtype of string." at "a1.f2()(3)"
+var afs : string = a1.f2()(3);
+
+// returning a generic function XPECT warnings --> "A reference to method f3 is created detached from a (correct) this-instance." at "f3"
+// XPECT errors --> "{function<R extends B>(R):{function():R}} is not a subtype of number." at "a1.f3"
+var afr : number = a1.f3;
+
+// the type parameter XPECT type of 'afr1' --> C
+var afr1 = a1.f3(new C())();
+
+// f4() returns a function(R):R. By analogy with afr1 (see above), f4()(new C()) would be expected to return a C
+// and the type of afr2 should be inferred.
+// IDEBUG-164 the type parameter XPECT type of 'afr2' --> B
+var afr2 = a1.f4()(new C());

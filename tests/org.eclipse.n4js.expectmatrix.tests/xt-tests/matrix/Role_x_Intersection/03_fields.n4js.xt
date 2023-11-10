@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+////////////
+// Fields //
+////////////
+
+interface A {
+	n : number;
+	s : string;
+	b : boolean;
+}
+
+interface B {
+	n : number;
+	s : number;
+	t : boolean;
+}
+
+var a : intersection{A,B};
+
+// IDE-385 intersection{A,B}.n is a number XPECT noerrors -->
+var num1 : number = a.n;
+
+// IDE-385 intersection{A,B}.s is a number XPECT noerrors -->
+var num2 : number = a.s;
+
+// IDE-385 intersection{A,B}.s is a string XPECT noerrors -->
+var str : string = a.s;
+
+// IDE-385 A.b and in B.b XPECT noerrors -->
+var boo1 : boolean = a.b;
+
+// IDE-385 B.t and in A.t XPECT noerrors -->
+var boo2 : boolean = a.t;

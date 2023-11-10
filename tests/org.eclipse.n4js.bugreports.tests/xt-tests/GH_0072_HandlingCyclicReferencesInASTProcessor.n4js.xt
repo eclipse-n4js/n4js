@@ -1,0 +1,57 @@
+/*
+ * Copyright (c) 2018 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+
+class X {}
+
+
+// case #1: just a variable and function
+
+let x = f();
+function f(): X {
+	if(x) {
+		// XPECT noerrors --> "any is not a subtype of X." at "x"
+		return x;
+	}
+	return new X();
+}
+
+
+// case #2: similar to #1, but with fields and methods (simplified version of original example from bug report)
+
+class C {
+	d = new D();
+	mc() {
+		// XPECT noerrors --> "any is not a subtype of D." at "this.d"
+		let tmp: D = this.d;
+	}
+}
+class D {
+	md() {
+		new C().mc();
+	}
+}
+
+
+// case #3: not really related to original problem of GH-72, but make sure the fix does not break the following code
+
+// XPECT noerrors -->
+let foo2: (boolean)=>string = function foo2(t) { return t ? foo2(false) : ""; };
+
+
+// case #4: same as with #3
+
+function foo1(t: boolean): string {
+	// XPECT noerrors -->
+	return t ? foo1(false) : "";
+}

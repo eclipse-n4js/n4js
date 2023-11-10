@@ -232,6 +232,7 @@ class ReactHelper {
 	 * @param context the EObject serving the context to look for React classifiers.
 	 * @param reactClassifierName the name of React classifier.
 	 */
+	// TODO: continue work on use of TypeScript type definitions of React
 	def private <T extends TClassifier> T lookUpReactClassifier(EObject context, String reactClassifierName, Class<T> clazz) {
 		val resource = context.eResource;
 		val tModule = getJsxBackendModule(resource);

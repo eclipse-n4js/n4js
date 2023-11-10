@@ -1,0 +1,33 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Array.constructor
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+var a1 = ["a", "b", "c", "d", "e"];
+// IDE-952 XPECT noerrors --> "IDE-952: array constructor"
+var a2 = new Array<string>("a", "b", "c", "d", "e");
+var a3 = new Array<string>(5);
+
+// IDEBUG-152 XPECT noerrors --> "IDEBUG-152: array literals parameterization"
+var param = ["a", "b", "c", "d", "e"];
+
+console.log(a1);
+console.log(a2);
+console.log(a3);
+
+/* XPECT output ---
+[ 'a', 'b', 'c', 'd', 'e' ]
+[ 'a', 'b', 'c', 'd', 'e' ]
+[ <5 empty items> ]
+--- */

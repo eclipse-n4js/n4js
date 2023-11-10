@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+/* XPECT output ---
+RED
+RED
+IDEBUG_0014_EnumAPI/Color
+US
+840
+IDEBUG_0014_EnumAPI/Country
+--- */
+
+// assume this file to be contained in a package "IDEBUG_14" -- do be adapted to actual package
+// also see /org.eclipse.n4js.transpiler.es5.tests/testdata/enums/AT_611_Enum__EnumAPI.n4js.xt
+enum Color {
+	RED, GREEN, BLUE
+}
+
+enum Country {
+    DE : "276",
+    US : "840",
+    TR : "792"
+}
+
+var red : Color = Color.RED;
+var us : Country = Country.US;
+
+console.log(red.name); // --> RED
+console.log(red.value); // --> RED
+// XPECT noerrors -->
+console.log(N4Type.of(red).fqn); // --> IDEBUG_14.Color
+
+console.log(us.name); // --> US
+console.log(us.value); // --> 840
+// XPECT noerrors -->
+console.log(N4Type.of(us).fqn); // --> IDEBUG_14.Country

@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+
+let value: string;
+
+const c1 = value;
+// XPECT errors --> "Const variable c1 is read-only." at "c1"
+c1 = value;
+
+
+const [c2a, c2b] = [value, value];
+// XPECT errors --> "Const variable c2a is read-only." at "c2a"
+c2a = value;
+// XPECT errors --> "Const variable c2b is read-only." at "c2b"
+c2b = value;
+
+
+const {c3a, c3b} = {c3a: value, c3b: value};
+// XPECT errors --> "Const variable c3a is read-only." at "c3a"
+c3a = value;
+// XPECT errors --> "Const variable c3b is read-only." at "c3b"
+c3b = value;
+
+
+const [,[,[c4]]] = [,[,[value]]];
+// XPECT errors --> "Const variable c4 is read-only." at "c4"
+c4 = value;

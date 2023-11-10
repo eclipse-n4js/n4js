@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP */
+
+function f(p:any) {}
+
+// Function level type variable
+function <FUNCTYPE> f1() {
+	// Use type variable as type in variable declaration XPECT noerrors
+	let a : FUNCTYPE = null;
+	// Assign	 variable to type variable XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'FUNCTYPE'." at "FUNCTYPE"
+	let bFunc = FUNCTYPE;
+	// Use type variable as type argument XPECT noerrors
+	<FUNCTYPE>f1();
+	// Use type variable inside an expression XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'FUNCTYPE'." at "FUNCTYPE"
+	let c = (FUNCTYPE);
+	// Use type variable as function argument XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'FUNCTYPE'." at "FUNCTYPE"
+	f(FUNCTYPE);
+}
+// Class level type variable
+class A<TYPE> {
+	m() {
+		// Use type variable as type in variable declaration XPECT noerrors
+		let a : TYPE = null
+		// Assign variable to type variable XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'TYPE'." at "TYPE"
+		let bClass = TYPE;
+		// Use type variable as type argument XPECT noerrors
+		let innerA = new A<TYPE>();
+		// Use type variable as function argument XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'TYPE'." at "TYPE"
+		f(TYPE);
+		// Use type variable inside an expression XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'TYPE'." at "TYPE"
+		let c = (TYPE);
+	}
+}

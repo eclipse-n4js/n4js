@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// JSON.parse
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse
+
+var multiply = function (k, v) {
+    if(k === "") return v;     // if topmost value, return it,
+    return Number(v) * 2;      // else return v * 2.
+}
+
+console.log(JSON.parse('{"p": 5}', multiply));
+
+JSON.parse('{"1": 1, "2": 2,"3": {"4": 4, "5": {"6": 6}}}', function (k, v) {
+    console.log("'" + k + "'"); // log the current property name, the last is "".
+    return v;                  	// return the unchanged property value.
+});
+
+/* XPECT output ---
+{ p: 10 }
+'1'
+'2'
+'4'
+'6'
+'5'
+'3'
+''
+--- */

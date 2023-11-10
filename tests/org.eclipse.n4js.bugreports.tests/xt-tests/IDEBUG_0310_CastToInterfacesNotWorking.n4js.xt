@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+interface I<T extends Object> {}
+class Impl<T extends Object> implements I<T> {}
+
+
+class Container<S extends Impl<?>> {
+
+	member : S;
+
+	f() {
+		// XPECT nowarnings -->
+		this.member as Impl<Object>;
+		// XPECT warnings --> "Unnecessary cast from S to Impl<? extends Object>" at "this.member as Impl<?>"
+		this.member as Impl<?>;
+		// XPECT warnings -->"Unnecessary cast from S to Impl<? extends Object>" at "this.member as Impl<? extends Object>"
+		this.member as Impl<? extends Object>;
+		// XPECT nowarnings -->
+		this.member as Impl<? extends N4Object>;
+
+		// XPECT nowarnings -->
+		this.member as I<Object>;
+		// XPECT warnings --> "Unnecessary cast from S to I<? extends Object>" at "this.member as I<?>"
+		this.member as I<?>;
+		// XPECT warnings --> "Unnecessary cast from S to I<? extends Object>" at "this.member as I<? extends Object>"
+		this.member as I<? extends Object>;
+		// XPECT nowarnings -->
+		this.member as I<? extends N4Object>;
+	}
+}

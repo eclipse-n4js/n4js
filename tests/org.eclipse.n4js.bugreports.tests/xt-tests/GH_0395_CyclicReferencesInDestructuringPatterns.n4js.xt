@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+
+// NOTE: the main point of all following test cases is that we do not want to see an error and no exception must be
+// thrown (the warnings are unrelated and expectations for the warnings were only added make test succeed).
+
+
+var [v01,v02,v03] =
+	// XPECT warnings --> "Variable v02 is used before it is declared" at "v02"
+	[0,v02,2];
+
+var {v11,v12,v13} =
+	// XPECT warnings --> "Variable v12 is used before it is declared" at "v12"
+	{v11:0,v12:v12,v13:2};
+
+
+var [,{v21,v22,v23},] =
+	// XPECT warnings --> "Variable v22 is used before it is declared" at "v22"
+	[,{v21:0,v22:v22,v23:2},];
+
+var {v3:[v31,v32,v33]} =
+	// XPECT warnings --> "Variable v32 is used before it is declared" at "v32"
+	{v3:[0,v32,2]};
+
+
+for(var [v41,v42,v43] =
+	// XPECT warnings --> "Variable v42 is used before it is declared" at "v42"
+	[0,v42,2];false;) {}
+
+for(var {v51,v52,v53} =
+	// XPECT warnings --> "Variable v52 is used before it is declared" at "v52"
+	{v51:0,v52:v52,v53:2};false;) {}
+
+
+// XPECT noerrors -->
+for(var [v6] in [[v6]]) {}
+
+// XPECT noerrors -->
+for(var [v7] of [[v7]]) {}

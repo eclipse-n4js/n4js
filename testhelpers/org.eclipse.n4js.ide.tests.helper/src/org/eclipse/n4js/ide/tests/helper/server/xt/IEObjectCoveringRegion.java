@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.xpect.xtext.lib.util.XtextOffsetAdapter.IEObjectOwner;
 import org.eclipse.xtext.resource.XtextResource;
 
 /**
@@ -26,7 +25,10 @@ import org.eclipse.xtext.resource.XtextResource;
  * will return different objects (CastExpression vs. IdentifierRef). If no region is defined, this test will return the
  * next element after the test line.
  */
-public interface IEObjectCoveringRegion extends IEObjectOwner {
+public interface IEObjectCoveringRegion {
+
+	EObject getEObject();
+
 	// no new fields
 	/** @return the offset of the region */
 	int getOffset();

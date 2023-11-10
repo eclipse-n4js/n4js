@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+//////////////////////////////////////
+// @This with function declarations //
+//////////////////////////////////////
+
+class A1 {
+	name : string;
+	price : number = 8;
+
+	constructor (name : string) { this.name = name; }
+}
+class A2 {
+	name : string;
+
+	constructor (name : string) { this.name = name; }
+}
+class B {
+	stuff : string;
+
+	constructor (stuff : string) { this.stuff = stuff; }
+}
+
+// IDE-1010, IDE-2313
+@This(~Object with { name: string; price: number; })
+function rename(name : string) { this.name = name; }
+
+@This(~Object with {price: number; })
+function diff(n : number) { this.price += n; }
+
+var a1 : A1 = new A1("george");
+var a2 : A2 = new A2("george");
+var b : B = new B("george");
+
+diff.call(a1,4);
+diff.call(a2,4);
+
+// A1 has everything XPECT noerrors -->
+rename.call(a1,"ringo");
+
+// A2 doesn't have price, still ok XPECT noerrors -->
+rename.call(a2,"ringo");
+
+// B doesn't have name, still ok XPECT noerrors -->
+rename.call(b,"ringo");

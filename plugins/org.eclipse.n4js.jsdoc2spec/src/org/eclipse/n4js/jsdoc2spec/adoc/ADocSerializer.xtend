@@ -45,6 +45,7 @@ import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.typesystem.utils.AllSuperTypesCollector
 import org.eclipse.n4js.utils.DeclMergingHelper
+import org.eclipse.n4js.utils.Strings
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.ValidatorMessageHelper
 
@@ -63,18 +64,18 @@ class ADocSerializer {
 	@Inject	DeclMergingHelper declMergingHelper;
 
 
-	def CharSequence process(SpecRequirementSection spec, Map<String, SpecSection> specsByKey) {
+	def String process(SpecRequirementSection spec, Map<String, SpecSection> specsByKey) {
 		val strb = new StringBuilder();
 		strb.appendSpecElementPost(spec, specsByKey);
-		return strb;
+		return Strings.stripAllTrailing(strb.toString());
 	}
 
-	def CharSequence process(SpecIdentifiableElementSection spec, Map<String, SpecSection> specsByKey) {
+	def String process(SpecIdentifiableElementSection spec, Map<String, SpecSection> specsByKey) {
 		val strb = new StringBuilder();
 		strb.appendSpecElementPre(spec);
 		strb.appendSpec(spec);
 		strb.appendSpecElementPost(spec, specsByKey);
-		return strb;
+		return Strings.stripAllTrailing(strb.toString());
 	}
 
 	private def StringBuilder appendSpecElementPost(StringBuilder strb, SpecRequirementSection spec, Map<String, SpecSection> map) {

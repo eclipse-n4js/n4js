@@ -1,0 +1,30 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Array.prototype.join()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join
+
+var a = ["Wind","Rain","Fire"];
+var myVar1 = a.join();      // assigns "Wind,Rain,Fire" to myVar1
+var myVar2 = a.join(", ");  // assigns "Wind, Rain, Fire" to myVar2
+var myVar3 = a.join(" + "); // assigns "Wind + Rain + Fire" to myVar3
+
+console.log(myVar1);
+console.log(myVar2);
+console.log(myVar3);
+
+/* XPECT output ---
+Wind,Rain,Fire
+Wind, Rain, Fire
+Wind + Rain + Fire
+--- */

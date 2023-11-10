@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.examples.xpect.tests.SpecXtTest END_SETUP */
+
+ /* XPECT output ---
+global a
+this.name isnt visible in strict mode
+f(): this.name isnt visible in strict mode
+{
+  name: 'John',
+  greeting: 'Hello ol1.greeting: this.name isnt visible in strict mode'
+}
+{ name: 'John', f: [Function: f] }
+ol2.f.g: this.name isnt visible in strict mode
+--- */
+
+var name = "global a"; // assume the top level is similar to the global object
+// not visible as wrapped in module
+// this.name; // <-- "global a"
+function f() {
+	return "f(): this.name isnt visible in strict mode"; // <-- depends on call, usually "global a"
+}
+var ol1 = {
+	name: "John",
+	greeting: "Hello " + "ol1.greeting: this.name isnt visible in strict mode", // "Hello global a" -- we do not greet John!
+}
+var ol2 = {
+	name: "John",
+	f: function() {
+		this.name; // usually "John", as we assume f is called like ol2.f()
+		var g = function() {
+		   return "ol2.f.g: this.name isnt visible in strict mode"; // "global a"
+		}
+		return g(); // no receiver, this in nested function g will be global scope
+	}
+}
+
+// §-§-§-§-§ additional check not in example 75: §-§-§-§--
+
+console.log(name);
+console.log("this.name isnt visible in strict mode");
+console.log(f());
+console.log(ol1);
+console.log(ol2);
+console.log(ol2.f());

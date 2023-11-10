@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+// String based enum vs. N4Enum with function expressions
+
+@StringBased enum SBEnum {
+	a: "a",
+	b: "b"
+}
+
+enum NSBEnum { A, B }
+
+// Want N4Enum, got SBEnum //
+/////////////////////////////
+
+// IDEBUG-294 N4StringBasedEnum !<: N4Enum XPECT errors --> "SBEnum is not a subtype of N4Enum." at "s"
+var f = function (s : SBEnum) : N4Enum { return s; }
+
+
+
+// Want N4StringBasedEnum, got SBEnum //
+////////////////////////////////////////
+
+var g = function (s : N4StringBasedEnum) : N4StringBasedEnum { return s; }
+
+// SBEnum is a N4StringBasedEnum XPECT noerrors -->
+g(SBEnum.b);
+
+// N4StringBasedEnum is a string, too XPECT noerrors -->
+var g1 : string = g(SBEnum.b);
+
+// non-string based enum is wrong XPECT errors -->  "NSBEnum.B is not a subtype of N4StringBasedEnum." at "NSBEnum.B"
+g(NSBEnum.B);

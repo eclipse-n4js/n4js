@@ -1,0 +1,62 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+///////////////////////////////
+// Nested: structural fields //
+///////////////////////////////
+
+class E {
+	public n : number;
+}
+
+class F {
+	public n : number;
+	public foo () : void {};
+}
+
+class G {
+	public f : ~F;
+}
+
+class H {
+	public e : ~E;
+}
+
+var e1 : ~E = {n: 3};
+var f1 : ~F = {n: 3, foo: function (){} };
+function bar () {};
+
+// E only has a field.
+// full object literal XPECT noerrors -->
+var h1 : ~H = {e: {n:4}};
+
+// partial object literal XPECT noerrors -->
+var h2 : ~H = {e: e1};
+
+// F has a field and a method.
+// Both F and G are declared structural, there should be no problem. (cf. H)
+// full object literal (with function expression) XPECT noerrors -->
+var g1 : ~G = {f: {n:4, foo: function () : void {}}};
+
+// full object literal (with function) XPECT noerrors -->
+var g2 : ~G = {f: {n:4, foo: bar}};
+
+// partial object literal XPECT noerrors -->
+var g3 : ~G = {f: f1};
+
+// full object literal with incomplete properties (n missing) XPECT errors --> "~Object with { f: ~Object with { foo: {function():void} } } is not a structural subtype of ~G: f failed: ~Object with { foo: {function():void} } is not equal to ~F." at "{f: {foo: function () : void {}}}"
+var g4 : ~G = {f: {foo: function () : void {}}};
+
+var fMissingN = {foo: function () : void {}};
+// partial object literal with incomplete properties (n missing) XPECT errors --> "~Object with { f: ~Object with { foo: {function():void} } } is not a structural subtype of ~G: f failed: ~Object with { foo: {function():void} } is not equal to ~F." at "{f: fMissingN}"
+var g5 : ~G = {f: fMissingN};

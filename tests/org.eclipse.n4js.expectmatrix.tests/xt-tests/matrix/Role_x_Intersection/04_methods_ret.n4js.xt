@@ -1,0 +1,77 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+////////////////////////////
+// Methods: return values //
+////////////////////////////
+
+// Auxiliary classes
+class NS {
+	n : number;
+	s : string;
+}
+
+interface NT {
+	n : number;
+	t : string;
+}
+
+class N extends NS implements NT {}
+
+// Test classes
+interface A {
+	f1 (n : NS) : void {}
+	f2 (n : NS) : void {}
+	f3 (n : NS) : NS { return n; }
+	f4 (n : NS) : NS { return n; }
+}
+
+interface B {
+	f1 (n : NS) : void {}					// same ret: void
+	f2 (n : NS) : NS { return n; }			// diff ret: void
+	f3 (n : NS) : NS { return n; }			// same ret: non-void
+	f4 (n : NS) : NT { return new N(); }	// diff ret: non-void
+}
+
+var a : intersection{A,B};
+
+// IDE-385 intersection{A,B}.f1(NS) : void -> all well XPECT noerrors -->
+a.f1(new NS());
+
+// IDE-385 return type void XPECT errors --> "void is not a subtype of NS." at "a.f1(new NS())"
+var b1 : NS = a.f1(new NS());
+
+// IDE-385 intersection{A,B}.f2(NS) : intersection{void,NS} -> all well XPECT noerrors -->
+a.f2(new NS());
+
+// NOTE	intersection{X,A} <: A (cf. p.80, point 3)
+// IDE-385 return type intersection{void,NS} converted to NS XPECT noerrors -->
+var b2 : NS = a.f2(new NS());
+
+// IDE-385 intersection{A,B}.f3(NS) : NS -> all well XPECT noerrors -->
+a.f3(new NS());
+
+// IDE-385 return type NS XPECT noerrors -->
+var b3 : NS = a.f3(new NS());
+
+// IDE-385 intersection{A,B}.f4(NS) : intersection{NS,NT} -> all well XPECT noerrors -->
+a.f4(new NS());
+
+// IDE-385 return type intersection{NS,NT} XPECT errors --> "intersection{NS,NT} is not a subtype of number." at "a.f4(new NS())"
+var b4 : number = a.f4(new NS());
+
+// IDE-385 return type union{number,string} XPECT noerrors -->
+var b5 : intersection{NS,NT} = a.f4(new NS());
+
+// IDE-385 return type union{number,string} XPECT noerrors -->
+var b6 : NT = a.f4(new NS());

@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// String.prototype.search()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/search
+
+function testinput(re: RegExp, str : string){
+  var midstring;
+  if (str.search(re) != -1){
+    midstring = " contains ";
+  } else {
+    midstring = " does not contain ";
+  }
+  console.log (str + midstring + re);
+}
+
+var str1 = "For more information, see Chapter 3.4.5.1";
+var str2 = "For more information, see another book";
+var re = /(chapter \d+(\.\d)*)/i;
+
+testinput(re, str1);
+testinput(re, str2);
+
+/* XPECT output ---
+For more information, see Chapter 3.4.5.1 contains /(chapter \d+(\.\d)*)/i
+For more information, see another book does not contain /(chapter \d+(\.\d)*)/i
+--- */

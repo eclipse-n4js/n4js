@@ -1,0 +1,51 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+//////////////////////////
+// Union in spec object //
+//////////////////////////
+
+class A {
+	public a : number;
+	public bc : B<C>;
+	public ubc : union{B<number>, C};
+
+	public constructor (@Spec spec : ~i~this) {}
+}
+
+class B<T> {
+	public b : number;
+	public c : T;
+
+	public constructor (@Spec spec : ~i~this) {}
+}
+
+class C {
+	public c : number;
+	public constructor (@Spec spec : ~i~this) {}
+}
+
+// initializing a union typed field (1) XPECT noerrors -->
+var a1 = new A({a: 4, bc: new B<C>({b: 3, c: new C({c: 3})}), ubc: new C({c: 5})});
+
+// initializing a union typed field (2) XPECT noerrors -->
+var a2 = new A({a: 4, bc: new B<C>({b: 3, c: new C({c: 3})}), ubc: new B<number>({b: 4, c: 4})});
+
+
+var m1 : union{B<number>, C} = new C({c: 5});
+// initializing a union typed field from typed variable (1) XPECT noerrors -->
+var a3 = new A({a: 4, bc: new B<C>({b: 3, c: new C({c: 3})}), ubc: m1});
+
+var m2 : union{B<number>, C} = new B<number>({b: 4, c: 4});
+// initializing a union typed field from typed variable (2) XPECT noerrors -->
+var a4 = new A({a: 4, bc: new B<C>({b: 3, c: new C({c: 3})}), ubc: m2});

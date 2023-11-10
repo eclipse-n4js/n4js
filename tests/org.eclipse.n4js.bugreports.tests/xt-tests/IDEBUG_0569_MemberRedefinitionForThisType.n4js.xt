@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+class A {
+    foo() : this {
+        return null;
+    }
+
+    bar(f : {function(this)}) { }
+}
+
+class B1 extends A {
+    @Override
+    // XPECT noerrors --> ""
+    foo() : this {
+        return null;
+    }
+
+    @Override
+    // XPECT noerrors --> ""
+    bar(f : {function(this)}) { }
+}
+
+class B2 extends A {
+    @Override
+    // XPECT errors --> "Signature of method B2.foo does not conform to overridden method A.foo: {function():B2} is not a subtype of {function():this[B2]}." at "foo"
+    foo() : B2 {
+        return null;
+    }
+
+    @Override
+    // XPECT errors --> "Signature of method B2.bar does not conform to overridden method A.bar: {function({function(B2)}):void} is not a subtype of {function({function(this[B2])}):void}." at "bar"
+    bar(f : {function(B2)}) { }
+}
+
+@Final class B3 extends A {
+    @Override
+    // XPECT noerrors --> ""
+    foo() : B3 {
+        return null;
+    }
+
+    @Override
+    // XPECT noerrors --> ""
+    bar(f : {function(B3)}) { }
+}
+
+@Final class B4 extends A {
+    @Override
+    // XPECT noerrors --> ""
+    foo() : this {
+        return null;
+    }
+
+    @Override
+    // XPECT noerrors --> ""
+    bar(f : {function(this)}) { }
+}

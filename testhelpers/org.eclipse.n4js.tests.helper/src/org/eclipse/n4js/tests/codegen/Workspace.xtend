@@ -16,12 +16,10 @@ import java.nio.file.Path
 import java.util.List
 import java.util.Objects
 import org.eclipse.n4js.utils.io.FileDeleter
-import org.eclipse.xpect.setup.XpectSetupComponent
 
 /**
  * Generates code for a workspace.
  */
-@XpectSetupComponent
 class Workspace {
 	final List<Project> projects = newArrayList();
 

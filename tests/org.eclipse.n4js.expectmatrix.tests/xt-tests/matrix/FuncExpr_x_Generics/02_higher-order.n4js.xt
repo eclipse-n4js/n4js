@@ -1,0 +1,72 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP  */
+
+////////////////////////////
+// Higher-order functions //
+////////////////////////////
+
+class B<T,S> {
+	public x : T;
+	public y : S;
+}
+
+var f1 = function <T,S> (a : B<T,S>) : T { return a.x; }
+
+// higher-order function declaration XPECT noerrors -->
+var f2 = function <T,S> (f : {function(B<T,S>):T}, t : T, s : S) {
+	var b : B<T,S> = new B<T,S>();
+	return f(b);
+}
+
+// IDEBUG-166 higher-order function use XPECT noerrors -->
+// {function<T,S>(B<T,S>):T} is not a subtype of {function(B<number,string>):number}.
+f2(f1, 2, "S");
+
+// IDEBUG-166 higher-order function use (with parameters explicitly specified) XPECT noerrors -->
+// {function<T,S>(B<T,S>):T} is not a subtype of {function(B<number,string>):number}.
+<number,string>f2(f1, 2, "S");
+
+
+
+// higher-order function declaration (returns a function) XPECT noerrors -->
+var f3 = function <T,S> (f : {function(B<T,S>):T}, t : T, s : S) {
+	var b : B<T,S> = new B<T,S>();
+	return function () { return f(b); };
+}
+
+// IDEBUG-166 higher-order function use (returns a function) XPECT noerrors -->
+// {function<T,S>(B<T,S>):T} is not a subtype of {function(B<number,string>):number}.
+f3(f1, 2, "s");
+
+// IDEBUG-166 higher-order function use (returns a function) (with parameters explicitly specified) XPECT noerrors -->
+// {function<T,S>(B<T,S>):T} is not a subtype of {function(B<number,string>):number}.
+<number,string>f3(f1, 2, "s");
+
+
+// higher-order function declaration (returns a generic function) XPECT noerrors -->
+var f4 = function <T,S> (f : {function(B<T,S>):T}, t : T, s : S) {
+	var b : B<T,S> = new B<T,S>();
+	var ff = function (d : T) {
+		b.x = d;
+		return f(b);
+	};
+	return ff;
+}
+
+// IDEBUG-166 higher-order function use (returns a function) XPECT noerrors -->
+// {function<T,S>(B<T,S>):T} is not a subtype of {function(B<number,string>):number}.
+f4(f1, 2, "s");
+
+// IDEBUG-166 higher-order function use (returns a function) (with parameters explicitly specified) XPECT noerrors -->
+// {function<T,S>(B<T,S>):T} is not a subtype of {function(B<number,string>):number}.
+<number,string>f4(f1, 2, "s");

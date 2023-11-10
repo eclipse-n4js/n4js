@@ -1,0 +1,60 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Array.prototype.map()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
+
+var numbers = [1, 4, 9];
+// XPECT warnings --> "A reference to method sqrt is created detached from a (correct) this-instance." at "sqrt"
+var roots = numbers.<number,Object>map(Math.sqrt);
+// roots is now [1, 2, 3], numbers is still [1, 4, 9]
+console.log(numbers);
+console.log(roots);
+
+var doubles = numbers.<number,Object>map(function(num){
+  return num * 2;
+});
+// doubles is now [2, 8, 18]. numbers is still [1, 4, 9].
+console.log(numbers);
+console.log(doubles);
+
+var charCoding3 = function(x : string, i : number, o : Object) : number {
+    return x.charCodeAt(0);
+};
+var charCoding2= function(x : string, i : number) : number {
+    return x.charCodeAt(0);
+};
+var charCoding1= function(x : string) : number {
+    return x.charCodeAt(0);
+};
+
+// XPECT noerrors --> "{function(string,number,Object):number}<:{function(T value, number index, ThisT traversedObject) : U}"
+["h", "e", "l", "l"].<number,Object>map(charCoding3);
+// XPECT noerrors --> "{function(string,number):number}<:{function(T value, number index, ThisT traversedObject) : U}"
+["h", "e", "l", "l"].<number,Object>map(charCoding2);
+// XPECT noerrors --> "{function(string):number}<:{function(T value, number index, ThisT traversedObject) : U}"
+["h", "e", "l", "l"].<number,Object>map(charCoding1);
+
+// IDEBUG-151 XPECT noerrors --> "IDEBUG-151: not a subtype"
+var a = ["H", "e", "l", "l"].<number,Object>map(charCoding3);
+// a now equals [72, 101, 108, 108]
+
+console.log(a);
+
+/* XPECT output ---
+[ 1, 4, 9 ]
+[ 1, 2, 3 ]
+[ 1, 4, 9 ]
+[ 2, 8, 18 ]
+[ 72, 101, 108, 108 ]
+--- */

@@ -1,0 +1,28 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+
+class A {
+    baz() {}
+}
+class G2<T extends A> {
+    foo2() : T {return null;}
+}
+class G<T extends G2<?>> {
+    foo() : T {return null;}
+}
+var g : G<?>;
+// XPECT noerrors -->
+g.foo().foo2().baz();
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'bad'." at "bad"
+g.foo().foo2().bad();

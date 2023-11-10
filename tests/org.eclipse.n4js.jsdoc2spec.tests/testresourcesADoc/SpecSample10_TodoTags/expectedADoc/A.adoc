@@ -24,8 +24,6 @@ include::{find}config.adoc[]
 Hello
 --
 
-
-
 [[gsec:spec_A.A.bar]]
 [role=memberdoc]
 === ++Method bar++
@@ -34,6 +32,7 @@ Hello
 --
 Do something here
 --
+
 
 ==== Signature
 
@@ -47,4 +46,3 @@ spec for method A.bar from source code
 ==== Semantics
 
 . *++Bar basics++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample10_TodoTags:test/ATests:ATest#testBarBasics++[Test]#)
-

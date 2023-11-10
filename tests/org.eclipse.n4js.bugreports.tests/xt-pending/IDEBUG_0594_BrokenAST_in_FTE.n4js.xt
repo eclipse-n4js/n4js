@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.PendingSpecXtTest END_SETUP  */
+
+
+
+
+// IDEBUG-594 .
+//    Cases of {type, constructor} used as typenames in return-type of Function-Type-Expressions
+//    follow up fo IDEBUG-519: originally the parser was not able to parse and threw an Exception.
+
+
+//
+// !!! ATTENION !!!
+//
+// since the AST is broken 'FIXME' cannot be used here. You need to uncomment the tests below.
+//
+// !!! ATTENION !!!
+//
+
+////// -- example 8 - not using a keyword: (old normal behaviour)
+///* XPECT ! errors ---
+//"Couldn't resolve reference to Type 'constructorX'." at "constructorX"
+//"extraneous input '?' expecting '}'" at "?"
+//--- */
+//function f8( { function () : constructorX ? } x ) {}
+//
+//
+////// -- example 7
+//// XPECT ! errors --> "mismatched input '?' expecting '{'" at "?"
+//function f7( { function () : constructor ? } x ) {}
+//
+////// -- example 6
+//// XPECT ! errors --> "mismatched input '?' expecting '{'" at "?"
+//function f6( { function () : type ? } x ) {}

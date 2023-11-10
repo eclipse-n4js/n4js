@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+
+class X {}
+let x = new X();
+
+
+// worked before:
+
+// XPECT warnings -->"Variable a is used before it is declared" at "a"
+// XPECT type of 't1' --> X
+let t1 = a;
+
+var a = x;
+
+
+
+// did not work before:
+
+// XPECT warnings -->"Variable c is used before it is declared" at "c"
+// XPECT type of 't3' --> X
+let t3 = c;
+
+for(var c of [x]) {}
+
+
+// worked before:
+
+// XPECT warnings -->"Variable b is used before it is declared" at "b"
+// XPECT type of 't2' --> X
+let t2 = b;
+
+for(var b = x;;) {}

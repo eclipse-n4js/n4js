@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.SpecXtTest END_SETUP  */
+
+/* XPECT output ---
+e.message === some message: true
+e instanceof Error: true
+e instanceof CustomError_003: true
+e instanceof SubCustomError_003: true
+e has stack trace: true
+e.stack starts with 'SubCustomError_003: some message': true
+--- */
+
+class CustomError_003 extends Error {
+}
+
+class SubCustomError_003 extends CustomError_003 {
+}
+
+var e = new SubCustomError_003('some message');
+console.log('e.message === some message:', e.message === 'some message');
+console.log('e instanceof Error:', e instanceof Error);
+console.log('e instanceof CustomError_003:', e instanceof CustomError_003);
+console.log('e instanceof SubCustomError_003:', e instanceof SubCustomError_003);
+// XPECT warnings --> "Unnecessary cast from SubCustomError_003 to Object" at "e as Object"
+var stack = (e as Object)['stack'];
+console.log('e has stack trace:', undefined !== stack);
+console.log('e.stack starts with \'SubCustomError_003: some message\':', 0 === (stack as String).indexOf('SubCustomError_003: some message'));

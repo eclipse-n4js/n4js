@@ -1,0 +1,47 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Array.prototype.forEach()
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
+
+// Printing the contents of an array
+function logArrayElements(element, index) {
+    console.log("a[" + index + "] = " + element);
+}
+
+// Note ellision, there is no member at 2 so it isn't visited
+[2, 5, , 9].forEach(logArrayElements);
+
+// Object copy
+function copy(o : Object) {
+  var c = Object.create(Object.getPrototypeOf(o));
+  var propNames = Object.getOwnPropertyNames(o);
+
+  propNames.forEach(function(name) {
+    var desc = Object.getOwnPropertyDescriptor(o, name);
+    Object.defineProperty(c, name, desc);
+  });
+
+  return c;
+}
+
+var o1 = {a:1, b:2};
+var o2 = copy(o1); // o2 looks like o1 now
+console.log(o2);
+
+/* XPECT output ---
+a[0] = 2
+a[1] = 5
+a[3] = 9
+{ a: 1, b: 2 }
+--- */

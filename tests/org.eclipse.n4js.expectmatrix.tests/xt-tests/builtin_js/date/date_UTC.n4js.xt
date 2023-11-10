@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.SpecXtTest END_SETUP */
+
+// Date.UTC()
+
+// Warning: Do not expect any time zone or locale here, as this may differ
+// on different build machines executing the test! This may reduce the number of possible tests,
+// but the test will be robust.
+
+
+var localDate = new Date("1996-11-15T10:30:50.000Z");
+var utcDate = new Date(Date.UTC(96, 10, 15, 10, 30, 50));
+console.log(localDate.toUTCString())
+console.log(utcDate.toUTCString())
+console.log(utcDate.toUTCString()==localDate.toUTCString());
+
+/* XPECT output ---
+Fri, 15 Nov 1996 10:30:50 GMT
+Fri, 15 Nov 1996 10:30:50 GMT
+true
+--- */

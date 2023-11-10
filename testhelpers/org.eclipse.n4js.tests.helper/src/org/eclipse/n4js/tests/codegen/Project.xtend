@@ -22,12 +22,10 @@ import java.util.Set
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.utils.io.FileDeleter
-import org.eclipse.xpect.setup.XpectSetupComponent
 
 /**
  * Generates the code for a project.
  */
-@XpectSetupComponent
 public class Project {
 	final String projectName;
 	final String vendorId;
