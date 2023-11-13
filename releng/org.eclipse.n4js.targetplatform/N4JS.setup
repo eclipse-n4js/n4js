@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <setup:Project
     xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
-    xmlns:jdt="http://www.eclipse.org/oomph/setup/jdt/1.0"
-    xmlns:launching="http://www.eclipse.org/oomph/setup/launching/1.0"
-    xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
-    xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
-    xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
-    xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
-    xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/launching/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Launching.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
+    xmlns:xmi="https://www.omg.org/XMI"
+    xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+    xmlns:git="https://www.eclipse.org/oomph/setup/git/1.0"
+    xmlns:jdt="https://www.eclipse.org/oomph/setup/jdt/1.0"
+    xmlns:launching="https://www.eclipse.org/oomph/setup/launching/1.0"
+    xmlns:predicates="https://www.eclipse.org/oomph/predicates/1.0"
+    xmlns:setup="https://www.eclipse.org/oomph/setup/1.0"
+    xmlns:setup.p2="https://www.eclipse.org/oomph/setup/p2/1.0"
+    xmlns:setup.targlets="https://www.eclipse.org/oomph/setup/targlets/1.0"
+    xmlns:setup.workingsets="https://www.eclipse.org/oomph/setup/workingsets/1.0"
+    xsi:schemaLocation="https://www.eclipse.org/oomph/setup/git/1.0 https://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore https://www.eclipse.org/oomph/setup/jdt/1.0 https://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore https://www.eclipse.org/oomph/setup/launching/1.0 https://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Launching.ecore https://www.eclipse.org/oomph/predicates/1.0 https://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore https://www.eclipse.org/oomph/setup/targlets/1.0 https://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore https://www.eclipse.org/oomph/setup/workingsets/1.0 https://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
     name="n4js"
     label="N4JS">
   <annotation
-      source="http://www.eclipse.org/oomph/setup/BrandingInfo">
+      source="https://www.eclipse.org/oomph/setup/BrandingInfo">
     <detail
         key="imageURI">
       <value>https://raw.githubusercontent.com/eclipse/n4js/master/plugins/org.eclipse.n4js.ide/icons/n4_logo_32.png</value>
@@ -127,8 +127,8 @@
   </setupTask>
   <setupTask
       xsi:type="jdt:JRETask"
-      version="JavaSE-17"
-      location="${jre.location-17}">
+      version="JavaSE-21"
+      location="${jre.location-21}">
     <description>Define the JRE needed to compile and run the Java projects of ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -142,7 +142,7 @@
   <setupTask
       xsi:type="setup:EclipseIniTask"
       option="-Dosgi.requiredJavaVersion"
-      value="=17"
+      value="=21"
       vm="true">
     <description></description>
   </setupTask>
@@ -162,11 +162,11 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="n4js.target.platform"
-      defaultValue="N4JS_2023_03"
+      defaultValue="N4JS_2023_09"
       storageURI="scope://Workspace">    <!-- label! -->
     <choice
-        value="N4JS_2023_03"
-        label="N4JS_2023_03"/>    <!-- label! -->
+        value="N4JS_2023_09"
+        label="N4JS_2023_09"/>    <!-- label! -->
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -187,7 +187,7 @@
         name="org.eclipse.emf.ecore.xcore.sdk.feature.group"
         versionRange="[1.23.0,1.23.1)"/>
     <repository
-        url="http://download.eclipse.org/modeling/emf/emf/builds/release/2.32"/>
+        url="https://download.eclipse.org/modeling/emf/emf/builds/release/2.35.0"/>
     <description>Install EMF for ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -195,12 +195,12 @@
       label="Xtext/Xtend">
     <requirement
         name="org.eclipse.xtend.sdk.feature.group"
-        versionRange="[2.29.0,2.29.1)"/>
+        versionRange="[2.32.0,2.32.1)"/>
     <requirement
         name="org.eclipse.xtext.sdk.feature.group"
-        versionRange="[2.29.0,2.29.1)"/>
+        versionRange="[2.32.0,2.32.1)"/>
     <repository
-        url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.29.0"/>
+        url="https://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.32.0"/>
     <description>Install Xtext and Xtend for ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -210,7 +210,7 @@
         name="de.itemis.xtext.antlr.sdk.feature.group"
         versionRange="[2.1.1,2.1.2)"/>
     <repository
-        url="http://download.itemis.com/updates/releases/2.1.1"/>
+        url="https://download.itemis.com/updates/releases/2.1.1"/>
     <description>Install ANTLR3 for Xtext</description>
   </setupTask>
   <setupTask
@@ -218,9 +218,9 @@
       label="MWE">
     <requirement
         name="org.eclipse.emf.mwe2.language.sdk.feature.group"
-        versionRange="[2.14.0,2.14.1)"/>
+        versionRange="[2.15.0,2.15.1)"/>
     <repository
-        url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.14.0"/>
+        url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.15.0"/>
     <description>Install MWE2 for ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -239,7 +239,7 @@
         name="de.itemis.statefullexer.feature.group"
         versionRange="[1.0.0,1.0.1)"/>
     <repository
-        url="http://meysholdt.github.io/xtext_stateful_lexer/updatesite"/>
+        url="https://meysholdt.github.io/xtext_stateful_lexer/updatesite"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -254,7 +254,7 @@
       id="git.clone.n4js"
       remoteURI="eclipse/n4js">
     <annotation
-        source="http://www.eclipse.org/oomph/setup/InducedChoices">
+        source="https://www.eclipse.org/oomph/setup/InducedChoices">
       <detail
           key="inherit">
         <value>github.remoteURIs</value>
@@ -330,40 +330,37 @@
         </predicate>
       </sourceLocator>
       <repositoryList
-          name="N4JS_2023_03">    <!-- label! -->
+          name="N4JS_2023_09">    <!-- label! -->
         <repository
-            url="http://download.eclipse.org/releases/2023-03/202303151000"/>
+            url="https://download.eclipse.org/releases/2023-09/202309131000"/>
         <repository
-            url="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.48.v20220622"/>
+            url="https://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.48.v20220622"/>
         <repository
-            url="http://download.eclipse.org/modeling/emf/emf/builds/release/2.32"/>
+            url="https://download.eclipse.org/modeling/emf/emf/builds/release/2.35.0"/>
         <repository
-            url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.14.0"/>
+            url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.15.0"/>
         <repository
-            url="http://download.eclipse.org/modeling/m2t/xpand/updates/releases/R201605260315"/>
-<!-- TODO: Switch back again to a release version of Xtext
+            url="https://download.eclipse.org/modeling/m2t/xpand/updates/releases/R201605260315"/>
         <repository
-            url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.25.0"/> -->
-        <repository
-            url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.29.0"/>
+            url="https://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.32.0"/>
         <repository
             url="https://download.eclipse.org/tools/orbit/downloads/drops/R20210223232630/repository"/>
-        <repository
+  <--      <repository
             url="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/22/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
-        <repository
-            url="http://download.eclipse.org/cbi/updates/license/1.0.1.v20140414-1359"/>
+   -->     <repository
+            url="https://download.eclipse.org/cbi/updates/license/1.0.1.v20140414-1359"/>
         <repository
             url="https://download.eclipse.org/webtools/downloads/drops/R3.15.0/R-3.15.0-20190830034720/repository"/>
         <repository
-            url="http://download.eclipse.org/tm/updates/4.5.0/repository"/>
+            url="https://download.eclipse.org/tm/updates/4.5.0/repository"/>
         <repository
-            url="http://download.eclipse.org/tools/gef/updates/legacy/releases/4.0.0_gef-master_1952"/>
+            url="https://download.eclipse.org/tools/gef/updates/legacy/releases/4.0.0_gef-master_1952"/>
         <repository
-            url="http://download.eclipse.org/mpc/releases/1.9.3"/>
+            url="https://download.eclipse.org/mpc/releases/1.9.3"/>
         <repository
-            url="http://download.eclipse.org/usssdk/drops/release/1.2.2"/>
+            url="https://download.eclipse.org/usssdk/drops/release/1.2.2"/>
         <repository
-            url="http://download.eclipse.org/lsp4j/updates/releases/0.19.0"/>
+            url="https://download.eclipse.org/lsp4j/updates/releases/0.21.1"/>
       </repositoryList>
     </targlet>
   </setupTask>
@@ -443,8 +440,8 @@
     </workingSet>
     <description>The dynamic working sets for ${scope.project.label}</description>
   </setupTask>
-  <stream name="master"
-      label="master (2023_03)"/>    <!-- label! -->
+  <stream name="GH-2571"
+      label="master (2023_09)"/>    <!-- label! -->
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
