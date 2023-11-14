@@ -15,7 +15,6 @@ Require-Bundle: org.eclipse.xtext.xbase,
  org.eclipse.xtext.testing,
  org.eclipse.xtext.xtext.generator,
  org.eclipse.core.resources
-Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.eclipse.n4js.semver
 Export-Package: org.eclipse.n4js.semver.validation,
  org.eclipse.n4js.semver.parser.antlr,

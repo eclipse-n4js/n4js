@@ -14,7 +14,6 @@ Require-Bundle: org.eclipse.xtext.xbase,
  org.eclipse.n4js.releng.utils,
  org.eclipse.xtext.xtext.generator,
  org.eclipse.core.runtime
-Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.eclipse.n4js.json
 Export-Package: org.eclipse.n4js.json,
  org.eclipse.n4js.json.extension,

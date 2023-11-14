@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.eclipse.n4js.packagejson.xpect.tests
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: org.eclipse.n4js
 Automatic-Module-Name: org.eclipse.n4js.packagejson.xpect.tests
-Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.junit,
  org.eclipse.n4js.json.tests.helper,
  org.eclipse.n4js.tests.helper,

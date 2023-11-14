@@ -15,6 +15,5 @@ Export-Package: org.eclipse.n4js.n4JS,
  org.eclipse.n4js,
  org.eclipse.n4js.n4JS.impl,
  org.eclipse.n4js.n4JS.util
-Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: %providerName
 Automatic-Module-Name: org.eclipse.n4js.model
