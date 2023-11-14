@@ -41,7 +41,7 @@ class Workspace {
 	def Iterable<Project> getAllProjects() {
 		return this.projects.flatMap[p|
 			if (p instanceof YarnWorkspaceProject)
-				#[p] + p.memberProjects + p.nodeModuleProjects
+				#[p] + p.getMemberProjects + p.nodeModuleProjects
 			else
 				#[p]
 		];

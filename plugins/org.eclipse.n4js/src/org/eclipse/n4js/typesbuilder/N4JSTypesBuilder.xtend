@@ -260,9 +260,9 @@ public class N4JSTypesBuilder {
 			for (tr : script.eAllContents.filter(TypeRef).toList.reverseView) {
 				switch tr {
 					StructuralTypeRef: {
-						tr.createStructuralType()
-						if (tr.structuralType !== null) {
-							addTypesToTargets += tr.structuralType;
+						tr.createStructuralType();
+						if ((tr as StructuralTypeRef).structuralType !== null) {
+							addTypesToTargets += (tr as StructuralTypeRef).structuralType;
 						}
 					}
 					FunctionTypeExpression: {

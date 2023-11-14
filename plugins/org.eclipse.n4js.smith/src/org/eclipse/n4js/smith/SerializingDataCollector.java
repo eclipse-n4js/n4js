@@ -13,8 +13,7 @@ package org.eclipse.n4js.smith;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
-
-import com.google.common.base.Supplier;
+import java.util.function.Supplier;
 
 /**
  * A collector decorator that will ensure that measurements are not created concurrently.

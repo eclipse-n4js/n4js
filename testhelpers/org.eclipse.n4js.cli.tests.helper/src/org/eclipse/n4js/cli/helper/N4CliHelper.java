@@ -10,9 +10,9 @@
  */
 package org.eclipse.n4js.cli.helper;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
@@ -236,7 +236,7 @@ public class N4CliHelper {
 	 *            file to scan
 	 */
 	public static void assertNotContainsString(String toFind, File log) {
-		assertThat("unexpected string '" + toFind + "' found in log", readLogfile(log).indexOf(toFind) < 0);
+		assertTrue("unexpected string '" + toFind + "' found in log", readLogfile(log).indexOf(toFind) < 0);
 	}
 
 	/**
