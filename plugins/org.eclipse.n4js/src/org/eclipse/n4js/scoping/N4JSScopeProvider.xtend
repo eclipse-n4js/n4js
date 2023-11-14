@@ -253,16 +253,18 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			}
 		} else if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
 			if (context instanceof ParameterizedTypeRef) {
-				val namespaceLikeType = context.astNamespaceLikeRefs?.last?.declaredType;
-				switch (namespaceLikeType) {
-					ModuleNamespaceVirtualType:
-						return createScopeForNamespaceAccess(namespaceLikeType, context, true, false)
-					TClass:
-						return createScopeForMergedNamespaces(context, namespaceLikeType, IScope.NULLSCOPE)
-					TEnum:
-						return new DynamicPseudoScope()
-					TNamespace:
-						return scope_AllTopLevelElementsFromAbstractNamespace(namespaceLikeType, context, true, false)
+				if (context.astNamespaceLikeRefs !== null && !context.astNamespaceLikeRefs.isEmpty) {
+					val namespaceLikeType = context.astNamespaceLikeRefs.last.declaredType;
+					switch (namespaceLikeType) {
+						ModuleNamespaceVirtualType:
+							return createScopeForNamespaceAccess(namespaceLikeType, context, true, false)
+						TClass:
+							return createScopeForMergedNamespaces(context, namespaceLikeType, IScope.NULLSCOPE)
+						TEnum:
+							return new DynamicPseudoScope()
+						TNamespace:
+							return scope_AllTopLevelElementsFromAbstractNamespace(namespaceLikeType, context, true, false)
+					}
 				}
 			}
 			return getTypeScope(context, false, false);

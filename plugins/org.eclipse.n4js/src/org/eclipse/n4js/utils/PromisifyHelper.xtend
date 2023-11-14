@@ -51,7 +51,11 @@ class PromisifyHelper {
 	 * Checks if the given function or method may be annotated with <code>@Promisifiable</code>.
 	 */
 	def public CheckResult checkPromisifiablePreconditions(FunctionDefinition funDef) {
-		val lastFpar = (funDef.definedType as TFunction)?.fpars?.last;
+		val tFun = funDef.definedType as TFunction;
+		if (tFun === null || tFun.fpars.isEmpty) {
+			return CheckResult.MISSING_CALLBACK;
+		}
+		val lastFpar = tFun.fpars.last;
 		val lastFparTypeRef = lastFpar?.typeRef;
 		if(!(lastFparTypeRef instanceof FunctionTypeExprOrRef)) {
 			// error: last fpar of promisifiable function/method must be a function (i.e. the callback)

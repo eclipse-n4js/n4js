@@ -378,7 +378,7 @@ public class UtilN4 {
 	}
 
 	private static final Map<Throwable, Boolean> reportedExceptions = Collections.synchronizedMap(
-			new WeakHashMap<Throwable, Boolean>());
+			new WeakHashMap<>());
 
 	/**
 	 * Same as {@link #reportError(Logger, String, Throwable)}, but will log the incident only if the given exception

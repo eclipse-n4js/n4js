@@ -12,7 +12,6 @@ package org.eclipse.n4js.validation.validators
 
 import java.util.List
 import java.util.Map
-import javax.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.EmptyStatement
 import org.eclipse.n4js.n4JS.ExportDeclaration
@@ -42,6 +41,7 @@ import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.*
 import static extension org.eclipse.n4js.tooling.organizeImports.ImportSpecifiersUtil.*
 import org.eclipse.emf.common.notify.Notifier
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
+import com.google.inject.Inject
 
 /** Validations for the import statements. */
 @Log

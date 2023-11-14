@@ -35,7 +35,7 @@ public class LineTagTest {
 		String in = "/** foo.\n * @stubLineTagTitle\n */";
 		AbstractLineTagDefinition tag = new StubLineTagWithRegionDefinition("stubLineTagTitle");
 		DocletParser docletParser = new DocletParser(new TagDictionary<>(Arrays.asList(tag)),
-				new TagDictionary<AbstractInlineTagDefinition>());
+				new TagDictionary<>());
 		Doclet doclet = docletParser.parse(in);
 
 		LineTag lineTag = doclet.getLineTags().get(0);
@@ -48,7 +48,7 @@ public class LineTagTest {
 		String in = "/** foo.\n * @stubLineTagTitle {@region value}\n */";
 		AbstractLineTagDefinition tag = new StubLineTagWithRegionDefinition("stubLineTagTitle");
 		DocletParser docletParser = new DocletParser(new TagDictionary<>(Arrays.asList(tag)),
-				new TagDictionary<AbstractInlineTagDefinition>());
+				new TagDictionary<>());
 		Doclet doclet = docletParser.parse(in);
 
 		LineTag lineTag = doclet.getLineTags().get(0);
@@ -65,7 +65,7 @@ public class LineTagTest {
 				+ "\n */";
 		AbstractLineTagDefinition tag = new StubLineTagWithRegionDefinition("stubLineTagTitle");
 		DocletParser docletParser = new DocletParser(new TagDictionary<>(Arrays.asList(tag)),
-				new TagDictionary<AbstractInlineTagDefinition>());
+				new TagDictionary<>());
 		Doclet doclet = docletParser.parse(in);
 
 		LineTag lineTag = doclet.getLineTags().get(0);
@@ -83,7 +83,7 @@ public class LineTagTest {
 				+ "\n */";
 		AbstractLineTagDefinition tag = new StubLineTagWithRegionDefinition("stubLineTagTitle");
 		DocletParser docletParser = new DocletParser(new TagDictionary<>(Arrays.asList(tag)),
-				new TagDictionary<AbstractInlineTagDefinition>());
+				new TagDictionary<>());
 		Doclet doclet = docletParser.parse(in);
 
 		LineTag lineTag = doclet.getLineTags().get(0);
@@ -99,7 +99,7 @@ public class LineTagTest {
 		String in = "/** foo.\n * @stubLineTagTitle {@region value} tag description.\n */";
 		AbstractLineTagDefinition tag = new StubLineTagWithRegionDefinition("stubLineTagTitle");
 		DocletParser docletParser = new DocletParser(new TagDictionary<>(Arrays.asList(tag)),
-				new TagDictionary<AbstractInlineTagDefinition>());
+				new TagDictionary<>());
 		Doclet doclet = docletParser.parse(in);
 
 		LineTag lineTag = doclet.getLineTags().get(0);

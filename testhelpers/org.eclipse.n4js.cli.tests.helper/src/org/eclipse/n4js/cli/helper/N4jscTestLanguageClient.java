@@ -100,7 +100,7 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 		Path folder = URIUtils.toPath(generated.trimSegments(1));
 		URI relGenerated = lspBuilder.makeWorkspaceRelative(generated);
 		File relFile = URIUtils.toFile(relGenerated);
-		transpiledFiles.computeIfAbsent(folder, f -> Collections.synchronizedSet(new HashSet<File>())).add(relFile);
+		transpiledFiles.computeIfAbsent(folder, f -> Collections.synchronizedSet(new HashSet<>())).add(relFile);
 	}
 
 	@Override

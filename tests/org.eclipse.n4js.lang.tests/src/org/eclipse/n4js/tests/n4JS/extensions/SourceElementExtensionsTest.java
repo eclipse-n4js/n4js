@@ -19,8 +19,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Objects;
 
-import javax.inject.Inject;
-
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.FunctionExpression;
@@ -38,6 +36,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.google.common.collect.Iterables;
+import com.google.inject.Inject;
 
 @InjectWith(N4JSInjectorProviderWithIssueSuppression.class)
 @RunWith(XtextRunner.class)

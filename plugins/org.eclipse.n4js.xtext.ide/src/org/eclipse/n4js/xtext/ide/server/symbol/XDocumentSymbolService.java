@@ -16,9 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.Location;
-import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.WorkspaceSymbol;
-import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.findReferences.ReferenceAcceptor;
@@ -43,7 +41,7 @@ import com.google.inject.Singleton;
  * Minor adjustments compared to the default {@link DocumentSymbolService}.
  */
 @Singleton
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "restriction" })
 public class XDocumentSymbolService extends DocumentSymbolService {
 
 	@Inject
@@ -63,7 +61,7 @@ public class XDocumentSymbolService extends DocumentSymbolService {
 
 	// Overridden to wrap the call to #createSymbol inside resourceAccess.readOnly to re-use ResourceTaskContext
 	@Override
-	public List<? extends SymbolInformation> getSymbols(IResourceDescription resourceDescription, String query,
+	public List<? extends WorkspaceSymbol> getSymbols(IResourceDescription resourceDescription, String query,
 			IResourceAccess resourceAccess, CancelIndicator cancelIndicator) {
 
 		List<IEObjectDescription> matchingObjects = CollectionLiterals.newLinkedList();
@@ -78,9 +76,9 @@ public class XDocumentSymbolService extends DocumentSymbolService {
 			return CollectionLiterals.newLinkedList();
 		}
 
-		AtomicReference<List<SymbolInformation>> refSymbols = new AtomicReference<>(CollectionLiterals.newLinkedList());
+		AtomicReference<List<WorkspaceSymbol>> refSymbols = new AtomicReference<>(CollectionLiterals.newLinkedList());
 		resourceAccess.readOnly(resourceDescription.getURI(), (resourceSet) -> {
-			List<SymbolInformation> symbols = refSymbols.get();
+			List<WorkspaceSymbol> symbols = refSymbols.get();
 			for (IEObjectDescription description : matchingObjects) {
 				operationCanceledManager.checkCanceled(cancelIndicator);
 				createSymbol(description, resourceAccess, symbol -> symbols.add(symbol));
@@ -123,18 +121,10 @@ public class XDocumentSymbolService extends DocumentSymbolService {
 			IResourceAccess resourceAccess, CancelIndicator cancelIndicator) {
 
 		List<WorkspaceSymbol> wSymbols = new ArrayList<>();
-		for (SymbolInformation symbol : getSymbols(resourceDescription, query, resourceAccess, cancelIndicator)) {
-			wSymbols.add(convert(symbol));
+		for (WorkspaceSymbol symbol : getSymbols(resourceDescription, query, resourceAccess, cancelIndicator)) {
+			wSymbols.add(symbol);
 		}
 		return wSymbols;
-	}
-
-	private WorkspaceSymbol convert(SymbolInformation symbol) {
-		return new WorkspaceSymbol(
-				symbol.getName(),
-				symbol.getKind(),
-				Either.forLeft(symbol.getLocation()),
-				symbol.getContainerName());
 	}
 
 	/**

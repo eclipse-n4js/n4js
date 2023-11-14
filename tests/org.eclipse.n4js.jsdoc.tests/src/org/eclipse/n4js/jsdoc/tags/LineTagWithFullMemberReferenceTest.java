@@ -36,7 +36,7 @@ public class LineTagWithFullMemberReferenceTest {
 				+ "\n */";
 		AbstractLineTagDefinition tagDef = new LineTagWithFullMemberReference("testee");
 		DocletParser docletParser = new DocletParser(new TagDictionary<>(Arrays.asList(tagDef)),
-				new TagDictionary<AbstractInlineTagDefinition>());
+				new TagDictionary<>());
 		Doclet doclet = docletParser.parse(in);
 
 		LineTag lineTag = doclet.getLineTags().get(0);
@@ -58,7 +58,7 @@ public class LineTagWithFullMemberReferenceTest {
 				+ "\n */";
 		AbstractLineTagDefinition tagDef = new LineTagWithFullMemberReference("testee");
 		DocletParser docletParser = new DocletParser(new TagDictionary<>(Arrays.asList(tagDef)),
-				new TagDictionary<AbstractInlineTagDefinition>());
+				new TagDictionary<>());
 		Doclet doclet = docletParser.parse(in);
 
 		LineTag lineTag = doclet.getLineTags().get(0);

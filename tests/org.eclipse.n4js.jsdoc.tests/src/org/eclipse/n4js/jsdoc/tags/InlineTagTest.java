@@ -38,7 +38,7 @@ public class InlineTagTest {
 	public void testSimpleLineTag() {
 		String in = "/** Some Description {@inline me} some other text. \n */";
 		AbstractInlineTagDefinition tag = new StubInlineTagDefinition("inline");
-		DocletParser docletParser = new DocletParser(new TagDictionary<AbstractLineTagDefinition>(),
+		DocletParser docletParser = new DocletParser(new TagDictionary<>(),
 				new TagDictionary<>(Arrays.asList(tag)));
 
 		Doclet doclet = docletParser.parse(in);

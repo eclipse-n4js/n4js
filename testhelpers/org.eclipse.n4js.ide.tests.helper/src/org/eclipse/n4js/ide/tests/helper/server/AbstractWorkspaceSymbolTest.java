@@ -28,10 +28,8 @@ import org.eclipse.n4js.utils.Strings;
 /**
  * Abstract test class for definition protocol tests.
  */
-@SuppressWarnings("deprecation")
 abstract public class AbstractWorkspaceSymbolTest extends AbstractStructuredIdeTest<WorkspaceSymbolConfig> {
 
-	
 	public static class WorkspaceSymbolConfig {
 		WorkspaceSymbolParams params;
 		String expectation;

@@ -136,7 +136,7 @@ public class Html2ADocConverter {
 	 */
 	public CharSequence transformHTML(CharSequence html) {
 		StringBuilder strb = new StringBuilder();
-		transformHTML(html, 0, strb, new LinkedList<String>(), "");
+		transformHTML(html, 0, strb, new LinkedList<>(), "");
 		return strb;
 	}
 

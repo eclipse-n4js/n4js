@@ -287,7 +287,13 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		}
 		XtextResource res = rtc.getResource();
 		XDocument doc = rtc.getDocument();
-		return documentSymbolService.getSymbols(doc, res, params, cancelIndicator);
+		List<DocumentSymbol> docSymbols = documentSymbolService.getSymbols(doc, res, params, cancelIndicator);
+
+		List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
+		for (DocumentSymbol docSymbol : docSymbols) {
+			result.add(Either.forRight(docSymbol));
+		}
+		return result;
 	}
 
 	@Override

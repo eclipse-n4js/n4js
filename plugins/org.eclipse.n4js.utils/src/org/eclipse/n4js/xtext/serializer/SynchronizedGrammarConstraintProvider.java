@@ -23,9 +23,9 @@ class SynchronizedGrammarConstraintProvider extends GrammarConstraintProvider {
 
 	public SynchronizedGrammarConstraintProvider() {
 		try {
-			new ReflectExtensions().set(this, "cache",
-					new ValueWrappingMap<Grammar, SerializationContextMap<IConstraint>>(
-							SynchronizedSerializationContextMap::from));
+			ValueWrappingMap<Grammar, SerializationContextMap<IConstraint>> vwm = new ValueWrappingMap<>(
+					SynchronizedSerializationContextMap::from);
+			new ReflectExtensions().set(this, "cache", vwm);
 		} catch (SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}

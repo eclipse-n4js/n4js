@@ -102,7 +102,7 @@ public enum GeneratorOption {
 
 	/** Tells if the given <code>optionToTest</code> is among the given active options or their included options. */
 	public static final boolean isActiveIn(GeneratorOption optionToTest, GeneratorOption... activeOptions) {
-		return isActiveIn(new RecursionGuard<GeneratorOption>(), optionToTest, activeOptions);
+		return isActiveIn(new RecursionGuard<>(), optionToTest, activeOptions);
 	}
 
 	private static final boolean isActiveIn(RecursionGuard<GeneratorOption> guard, GeneratorOption optionToTest,

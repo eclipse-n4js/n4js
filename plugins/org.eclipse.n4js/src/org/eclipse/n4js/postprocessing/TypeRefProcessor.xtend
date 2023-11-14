@@ -166,14 +166,16 @@ package class TypeRefProcessor extends AbstractProcessor {
 		}
 
 		override protected caseParameterizedTypeRef_processDeclaredType(ParameterizedTypeRef typeRef) {
-			val astQualifier = typeRef.astNamespaceLikeRefs?.last?.declaredType;
-			if (astQualifier instanceof TEnum) {
-				val enumLiteralName = typeRef.declaredTypeAsText;
-				val enumLiteral = astQualifier.literals.findFirst[name == enumLiteralName];
-				if (enumLiteral !== null) {
-					val litTypeRef = TypeRefsFactory.eINSTANCE.createEnumLiteralTypeRef();
-					litTypeRef.value = enumLiteral;
-					return litTypeRef;
+			if (typeRef.astNamespaceLikeRefs !== null && !typeRef.astNamespaceLikeRefs.isEmpty) {
+				val astQualifier = typeRef.astNamespaceLikeRefs.last.declaredType;
+				if (astQualifier instanceof TEnum) {
+					val enumLiteralName = typeRef.declaredTypeAsText;
+					val enumLiteral = astQualifier.literals.findFirst[name == enumLiteralName];
+					if (enumLiteral !== null) {
+						val litTypeRef = TypeRefsFactory.eINSTANCE.createEnumLiteralTypeRef();
+						litTypeRef.value = enumLiteral;
+						return litTypeRef;
+					}
 				}
 			}
 			return typeRef;

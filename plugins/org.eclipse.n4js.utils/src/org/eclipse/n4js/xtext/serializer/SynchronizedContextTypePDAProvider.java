@@ -26,9 +26,9 @@ class SynchronizedContextTypePDAProvider extends ContextTypePDAProvider {
 
 	public SynchronizedContextTypePDAProvider() {
 		try {
-			new ReflectExtensions().set(this, "cache",
-					new ValueWrappingMap<Grammar, SerializationContextMap<Pda<ISerState, RuleCall>>>(
-							SynchronizedSerializationContextMap::from));
+			ValueWrappingMap<Grammar, SerializationContextMap<Pda<ISerState, RuleCall>>> vwm = new ValueWrappingMap<>(
+					SynchronizedSerializationContextMap::from);
+			new ReflectExtensions().set(this, "cache", vwm);
 		} catch (SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}

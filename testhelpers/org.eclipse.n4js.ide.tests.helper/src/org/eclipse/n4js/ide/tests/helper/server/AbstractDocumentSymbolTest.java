@@ -29,10 +29,8 @@ import org.eclipse.n4js.utils.Strings;
 /**
  * Abstract test class for definition protocol tests.
  */
-@SuppressWarnings("deprecation")
 abstract public class AbstractDocumentSymbolTest extends AbstractStructuredIdeTest<DocumentSymbolConfig> {
 
-	
 	public static class DocumentSymbolConfig {
 		String expectation;
 

@@ -36,7 +36,7 @@ import com.google.inject.Inject;
 /**
  * N4JS-specific customizations of {@link WorkspaceFrontend}.
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "restriction" })
 public class N4JSWorkspaceFrontend extends WorkspaceFrontend {
 
 	@Inject
@@ -77,9 +77,9 @@ public class N4JSWorkspaceFrontend extends WorkspaceFrontend {
 		IResourceAccess resourceAccess = nonLoadingResourceAccess;
 		XChunkedResourceDescriptions liveScopeIndex = resourceTaskManager.createLiveScopeIndex();
 		try {
-			Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>> symbols = workspaceSymbolService
+			List<? extends WorkspaceSymbol> symbols = workspaceSymbolService
 					.getSymbols(params.getQuery(), resourceAccess, liveScopeIndex, cancelIndicator);
-			return symbols;
+			return Either.forRight(symbols);
 		} catch (Throwable th) {
 			// It seems that if this request fails (even if due to a cancellation), then some LSP clients (e.g. VS Code)
 			// will never try a 'workspace/symbols' request again, effectively turning off operation "open workspace
