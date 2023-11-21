@@ -22,6 +22,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.operator_plus;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -183,18 +184,16 @@ public class ImplementedMemberTransformation extends Transformation {
 
 	private N4MemberDeclaration addMember(N4ClassDeclaration classDecl, TMember member, RuleEnvironment G_tClass) {
 		if (member instanceof TField) {
-			addMember(classDecl, (TField) member, G_tClass);
+			return addMember(classDecl, (TField) member, G_tClass);
+		} else if (member instanceof TGetter) {
+			return addMember(classDecl, (TGetter) member, G_tClass);
+		} else if (member instanceof TSetter) {
+			return addMember(classDecl, (TSetter) member, G_tClass);
+		} else if (member instanceof TMethod) {
+			return addMember(classDecl, (TMethod) member, G_tClass);
 		}
-		if (member instanceof TGetter) {
-			addMember(classDecl, (TGetter) member, G_tClass);
-		}
-		if (member instanceof TSetter) {
-			addMember(classDecl, (TSetter) member, G_tClass);
-		}
-		if (member instanceof TMethod) {
-			addMember(classDecl, (TMethod) member, G_tClass);
-		}
-		return null;
+		throw new IllegalArgumentException("Unhandled parameter types: " +
+				Arrays.<Object> asList(classDecl, member, G_tClass).toString());
 	}
 
 	private N4MemberDeclaration addMember(N4ClassDeclaration classDecl, TField fieldToAdd, RuleEnvironment G_tClass) {
