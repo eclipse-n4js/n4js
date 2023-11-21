@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.AnnotationDefinition;
@@ -166,7 +167,8 @@ public class OverriddenAccessorsTransformation extends Transformation {
 			if (steo.getOriginalTarget() instanceof TClass) {
 				TClass type = (TClass) steo.getOriginalTarget();
 				MemberList<TMember> inheritedMembers = getState().memberCollector.inheritedMembers(type);
-				Iterable<TMember> overriddenMembers = filter(inheritedMembers, m -> m.getName() == member.getName());
+				Iterable<TMember> overriddenMembers = filter(inheritedMembers,
+						m -> Objects.equals(m.getName(), member.getName()));
 
 				return Lists.newArrayList(overriddenMembers);
 			}
