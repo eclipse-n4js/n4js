@@ -75,20 +75,20 @@ public class InferredTypesTransformation extends Transformation {
 
 			// obtain those typed elements, that may have an inferred type
 			// (e.g. variables and fields, but not getters, setters)
-			Iterable<? extends TypedElement> typedElems = Collections.emptyList();
+			Iterable<? extends TypedElement> typedElems = null;
 			if (rootElem instanceof VariableStatement) {
 				// note: returns also variable declarations that are arbitrarily nested in a destructure pattern
 				typedElems = ((VariableStatement) rootElem).getVarDecl();
-			}
-			if (rootElem instanceof FunctionDeclaration) {
-				typedElems = ((FunctionDeclaration) rootElem).getFpars();
-			}
-			if (rootElem instanceof N4ClassifierDeclaration) {
+
+			} else if (rootElem instanceof N4ClassifierDeclaration) {
 				N4ClassifierDeclaration cd = (N4ClassifierDeclaration) rootElem;
 				typedElems = Iterables.concat(
 						cd.getOwnedFields(),
 						IterableExtensions.flatMap(cd.getOwnedMethods(), m -> m.getFpars()),
 						cd.getOwnedCtor() == null ? Collections.emptyList() : cd.getOwnedCtor().getFpars());
+
+			} else if (rootElem instanceof FunctionDeclaration) {
+				typedElems = ((FunctionDeclaration) rootElem).getFpars();
 			}
 
 			if (typedElems != null) {
