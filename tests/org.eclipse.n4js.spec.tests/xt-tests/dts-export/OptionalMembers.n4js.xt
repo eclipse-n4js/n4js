@@ -60,6 +60,5 @@ export default class C {
 	//  *\/
 	// set optionalSetterWithJSDoc?(value: number); // optional setter omitted
 }
-
 export const K: {optionalField?: number; get optionalGetter(): number; set optionalSetter(val: number)};
 --- */
