@@ -35,6 +35,12 @@ export default class C {
 	set optionalSetterWithJSDoc?(value : number) { }
 }
 
+export const K: ~Object with {
+	optionalField?: number,
+	// in TypeScript methods can be optional too
+	get optionalGetter?():number,
+	set optionalSetter?(val: number)
+} = null;
 
 /* XPECT generated_dts ---
 export default class C {
@@ -54,4 +60,6 @@ export default class C {
 	//  *\/
 	// set optionalSetterWithJSDoc?(value: number); // optional setter omitted
 }
+
+export const K: {optionalField?: number; get optionalGetter(): number; set optionalSetter(val: number)};
 --- */
