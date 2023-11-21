@@ -470,6 +470,9 @@ public class TypeReferenceTransformation extends Transformation {
 
 	private void convertTMember(TField field) {
 		writeQuotedIfNonIdentifier(field.getName());
+		if (field.isOptional()) {
+			write("?");
+		}
 		convertDeclaredTypeRef(field);
 	}
 
