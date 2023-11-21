@@ -54,26 +54,38 @@ public class TrimTransformationDts extends Transformation {
 
 	@Override
 	public void transform() {
+		List<ScriptElement> remove1 = new ArrayList<>();
 		for (ScriptElement se : getState().im.getScriptElements()) {
 			if (isPureStatement(se)) {
-				remove(se);
+				remove1.add(se);
 			}
 		}
+		for (ScriptElement se : remove1) {
+			remove(se);
+		}
 
+		List<ControlFlowElement> remove2 = new ArrayList<>();
 		for (ControlFlowElement se : collectNodes(getState().im, false, Expression.class, Block.class)) {
 			if (!isValueOfEnum(se)) {
-				remove(se);
+				remove2.add(se);
 			}
+		}
+		for (ControlFlowElement se : remove2) {
+			remove(se);
 		}
 
 		// remove all non-public members from interfaces
+		List<N4MemberDeclaration> remove3 = new ArrayList<>();
 		for (N4InterfaceDeclaration intfDecl : collectNodes(getState().im, false, N4InterfaceDeclaration.class)) {
 			intfDecl.getOwnedMembers();
 			for (N4MemberDeclaration member : intfDecl.getOwnedMembers()) {
 				if (!member.isStatic() && !isPublicMember(member)) {
-					remove(member);
+					remove3.add(member);
 				}
 			}
+		}
+		for (N4MemberDeclaration se : remove3) {
+			remove(se);
 		}
 
 		// remove all destructuring patterns (and turn them into plain variable declarations)
