@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
-import org.eclipse.xtext.xbase.lib.ArrayLiterals;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -54,7 +53,8 @@ public class Iterables2 {
 			return keySet.add(key);
 		};
 		int len = inputs.length;
-		Iterable<? extends T>[] inputsWrapped = ArrayLiterals.newArrayOfSize(len);
+		@SuppressWarnings("unchecked")
+		Iterable<? extends T>[] inputsWrapped = new Iterable[len];
 		for (int i = 0; i < len; i++) {
 			inputsWrapped[i] = Iterables.filter(inputs[i], recordingFilter);
 		}
