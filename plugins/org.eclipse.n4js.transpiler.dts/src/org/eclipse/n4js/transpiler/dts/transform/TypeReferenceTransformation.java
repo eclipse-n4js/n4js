@@ -456,18 +456,16 @@ public class TypeReferenceTransformation extends Transformation {
 	private void convertTMember(TMember member) {
 		if (member instanceof TField) {
 			convertTMember((TField) member);
-		}
-		if (member instanceof TGetter) {
+		} else if (member instanceof TGetter) {
 			convertTMember((TGetter) member);
-		}
-		if (member instanceof TSetter) {
+		} else if (member instanceof TSetter) {
 			convertTMember((TSetter) member);
-		}
-		if (member instanceof TMethod) {
+		} else if (member instanceof TMethod) {
 			convertTMember((TMethod) member);
+		} else {
+			throw new IllegalStateException(
+					"unknown subclass of " + TMember.class.getSimpleName() + ": " + member.getClass().getSimpleName());
 		}
-		throw new IllegalStateException(
-				"unknown subclass of " + TMember.class.getSimpleName() + ": " + member.getClass().getSimpleName());
 	}
 
 	private void convertTMember(TField field) {
