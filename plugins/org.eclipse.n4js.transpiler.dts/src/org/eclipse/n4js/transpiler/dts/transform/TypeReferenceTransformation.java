@@ -33,7 +33,9 @@ import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
+import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
@@ -70,8 +72,8 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TSetter;
+import org.eclipse.n4js.ts.types.TStructField;
 import org.eclipse.n4js.ts.types.TStructMember;
-import org.eclipse.n4js.ts.types.TTypedElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
@@ -174,7 +176,7 @@ public class TypeReferenceTransformation extends Transformation {
 			convertTypeArguments((ParameterizedTypeRef) typeRef);
 		} else {
 			// standard case
-			convertTypeRef(typeRef);
+			convertTypeRef(typeRefNode, typeRef);
 		}
 
 		if (isReturnType) {
@@ -188,15 +190,11 @@ public class TypeReferenceTransformation extends Transformation {
 		}
 	}
 
-	private void convertDeclaredTypeRef(TTypedElement elem) {
-		TypeRef declaredTypeRef = elem.getTypeRef();
-		if (declaredTypeRef != null) {
-			write(": ");
-			convertTypeRef(declaredTypeRef);
-		}
+	private void convertTypeRef(TypeRef typeRefRaw) {
+		convertTypeRef(null, typeRefRaw);
 	}
 
-	private void convertTypeRef(TypeRef typeRefRaw) {
+	private void convertTypeRef(TypeReferenceNode_IM<?> typeRefNode, TypeRef typeRefRaw) {
 		if (typeRefRaw == null) {
 			return;
 		}
@@ -217,7 +215,7 @@ public class TypeReferenceTransformation extends Transformation {
 		} else if (typeRef instanceof FunctionTypeExprOrRef) {
 			convertFunctionTypeExprOrRef((FunctionTypeExprOrRef) typeRef);
 		} else if (typeRef instanceof ParameterizedTypeRef) {
-			convertParameterizedTypeRef((ParameterizedTypeRef) typeRef);
+			convertParameterizedTypeRef(typeRefNode, (ParameterizedTypeRef) typeRef);
 		} else if (typeRef instanceof ThisTypeRef) {
 			convertThisTypeRef((ThisTypeRef) typeRef);
 		} else if (typeRef instanceof ExistentialTypeRef) {
@@ -278,7 +276,7 @@ public class TypeReferenceTransformation extends Transformation {
 		}
 	}
 
-	private void convertParameterizedTypeRef(ParameterizedTypeRef typeRef) {
+	private void convertParameterizedTypeRef(TypeReferenceNode_IM<?> typeRefNode, ParameterizedTypeRef typeRef) {
 		if (typeRef instanceof FunctionTypeRef) {
 			convertFunctionTypeExprOrRef((FunctionTypeRef) typeRef);
 			return;
@@ -302,7 +300,7 @@ public class TypeReferenceTransformation extends Transformation {
 		if (showDeclaredType) {
 			String referenceStr = (declType == null) ? null : getReferenceToType(declType, getState());
 			if (referenceStr != null) {
-				String prependType = getStructuralTypeReplacements(typeRef);
+				String prependType = getStructuralTypeReplacements(typeRefNode, typeRef);
 				write(prependType);
 
 				write(referenceStr);
@@ -321,7 +319,7 @@ public class TypeReferenceTransformation extends Transformation {
 				write(" & ");
 			}
 			write("{");
-			write(members, m -> convertTMember(m), "; "); // ',' would also be allowed as separator
+			write(members, m -> convertTMember(typeRefNode, m), "; "); // ',' would also be allowed as separator
 			write("}");
 		}
 
@@ -331,7 +329,7 @@ public class TypeReferenceTransformation extends Transformation {
 	}
 
 	private void convertThisTypeRef(ThisTypeRef typeRef) {
-		String prependType = getStructuralTypeReplacements(typeRef);
+		String prependType = getStructuralTypeReplacements(null, typeRef);
 		write(prependType);
 
 		write("this");
@@ -361,7 +359,11 @@ public class TypeReferenceTransformation extends Transformation {
 		}
 	}
 
-	private String getStructuralTypeReplacements(TypeRef typeRef) {
+	private String getStructuralTypeReplacements(TypeReferenceNode_IM<?> typeRefNode, TypeRef typeRef) {
+		if (isCaseOfTypeScriptCircularityIssue(typeRefNode, typeRef)) {
+			return "Readonly<";
+		}
+
 		switch (typeRef.getTypingStrategy()) {
 		case STRUCTURAL_FIELDS:
 			return "StructuralFields<";
@@ -374,6 +376,40 @@ public class TypeReferenceTransformation extends Transformation {
 		default:
 			return "";
 		}
+	}
+
+	/**
+	 * Mitigates TypeScript issue occurring on circular type references. Details see here:
+	 * ReadonlyStructuralTypes_TS_circularity.n4js.xt
+	 */
+	private boolean isCaseOfTypeScriptCircularityIssue(TypeReferenceNode_IM<?> typeRefNode, TypeRef typeRef) {
+		if (typeRef instanceof ParameterizedTypeRefStructural
+				&& typeRef.eContainer() instanceof ParameterizedTypeRefStructural
+				&& typeRef.eContainer().eContainer() instanceof TStructField) {
+
+			// case for type aliases
+			ParameterizedTypeRefStructural containingType = (ParameterizedTypeRefStructural) typeRef.eContainer();
+			EList<TStructMember> structuralMembers = containingType.getStructuralMembers();
+
+			if (structuralMembers.contains(typeRef.eContainer().eContainer())) {
+				return true;
+			}
+		}
+
+		if (typeRefNode != null
+				&& typeRefNode.eContainer() instanceof N4FieldDeclaration
+				&& typeRefNode.eContainer().eContainer() instanceof N4TypeDeclaration) {
+
+			// case for interfaces and classes
+			Type referencedType = getState().info.getOriginalProcessedTypeRef(typeRefNode).getDeclaredType();
+			N4TypeDeclaration containingTDecl = (N4TypeDeclaration) typeRefNode.eContainer().eContainer();
+			Type containingType = getState().info.getOriginalDefinedType(containingTDecl);
+
+			if (referencedType == containingType) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void convertTypeArguments(ParameterizedTypeRef typeRef) {
@@ -453,9 +489,9 @@ public class TypeReferenceTransformation extends Transformation {
 		}
 	}
 
-	private void convertTMember(TMember member) {
+	private void convertTMember(TypeReferenceNode_IM<?> typeRefNode, TMember member) {
 		if (member instanceof TField) {
-			convertTMember((TField) member);
+			convertTMember(typeRefNode, (TField) member);
 		} else if (member instanceof TGetter) {
 			convertTMember((TGetter) member);
 		} else if (member instanceof TSetter) {
@@ -468,12 +504,16 @@ public class TypeReferenceTransformation extends Transformation {
 		}
 	}
 
-	private void convertTMember(TField field) {
+	private void convertTMember(TypeReferenceNode_IM<?> typeRefNode, TField field) {
 		writeQuotedIfNonIdentifier(field.getName());
 		if (field.isOptional()) {
 			write("?");
 		}
-		convertDeclaredTypeRef(field);
+		TypeRef declaredTypeRef = field.getTypeRef();
+		if (declaredTypeRef != null) {
+			write(": ");
+			convertTypeRef(typeRefNode, declaredTypeRef);
+		}
 	}
 
 	private void convertTMember(TGetter getter) {
