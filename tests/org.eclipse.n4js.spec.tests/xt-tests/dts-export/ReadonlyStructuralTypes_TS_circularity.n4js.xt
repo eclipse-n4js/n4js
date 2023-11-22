@@ -26,19 +26,45 @@
  * As a fallback in those situations, we use the utility type Readonly<T> instead to avoid errors by the TypeScript compiler. 
  */
 
-export public interface CircularProblem {
-    field_f: ~~CircularProblem;
-    field_r: ~r~CircularProblem;
-    field_w: ~w~CircularProblem;
-    field_i: ~i~CircularProblem;
+export public interface CircularProblem1 {
+    field_f: ~~CircularProblem1;
+    field_r: ~r~CircularProblem1;
+    field_w: ~w~CircularProblem1;
+    field_i: ~i~CircularProblem1;
+	method(arg: ~~CircularProblem1): ~r~CircularProblem1; // methods are fine
+}
+
+export public class CircularProblem2 {
+    field_f: ~~CircularProblem2;
+    field_r: ~r~CircularProblem2;
+    field_w: ~w~CircularProblem2;
+    field_i: ~i~CircularProblem2;
+	method(arg: ~~CircularProblem2): ~r~CircularProblem2 { return null; } // methods are fine
+}
+
+export public type CircularProblem3 = ~Object with {
+	field_f:  ~~CircularProblem3;
+	field_r: ~r~CircularProblem3;
+	field_w: ~w~CircularProblem3;
+	field_i: ~i~CircularProblem3;
+	method(arg: ~~CircularProblem3): ~r~CircularProblem3; // methods are fine
 }
 
 
 /* XPECT generated_dts ---
-export interface CircularProblem {
-	field_f: Readonly<CircularProblem>;
-	field_r: Readonly<CircularProblem>;
-	field_w: Readonly<CircularProblem>;
-	field_i: Readonly<CircularProblem>;
+export interface CircularProblem1 {
+	field_f: Readonly<CircularProblem1>;
+	field_r: Readonly<CircularProblem1>;
+	field_w: Readonly<CircularProblem1>;
+	field_i: Readonly<CircularProblem1>;
+	method(arg: StructuralFields<CircularProblem1>): StructuralReadOnly<CircularProblem1>;
 }
+export class CircularProblem2 {
+	field_f: Readonly<CircularProblem2>;
+	field_r: Readonly<CircularProblem2>;
+	field_w: Readonly<CircularProblem2>;
+	field_i: Readonly<CircularProblem2>;
+	method(arg: StructuralFields<CircularProblem2>): StructuralReadOnly<CircularProblem2>;
+}
+export type CircularProblem3 = {field_f: Readonly<CircularProblem3>; field_r: Readonly<CircularProblem3>; field_w: Readonly<CircularProblem3>; field_i: Readonly<CircularProblem3>; method(arg: StructuralFields<CircularProblem3>): StructuralReadOnly<CircularProblem3>};
 --- */
