@@ -70,6 +70,7 @@ import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TGetter;
+import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
@@ -439,7 +440,10 @@ public class TypeReferenceTransformation extends Transformation {
 			Type containingType = getState().info.getOriginalDefinedType(containingTDecl);
 
 			if (referencedType == containingType && !method.isConstructor()) {
-				return true;
+				if (containingType instanceof TInterface) {
+					return !method.isConstructSignature();
+				}
+				return !method.isConstructor();
 			}
 		}
 		return false;
