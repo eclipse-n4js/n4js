@@ -36,6 +36,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
@@ -428,15 +429,16 @@ public class TypeReferenceTransformation extends Transformation {
 
 		if (typeRefNode != null
 				&& typeRefNode.eContainer() instanceof FormalParameter
-				&& typeRefNode.eContainer().eContainer() != null
+				&& typeRefNode.eContainer().eContainer() instanceof N4MethodDeclaration
 				&& typeRefNode.eContainer().eContainer().eContainer() instanceof N4TypeDeclaration) {
 
 			// case for formal parameters
 			Type referencedType = typeRef.getDeclaredType();
+			N4MethodDeclaration method = (N4MethodDeclaration) typeRefNode.eContainer().eContainer();
 			N4TypeDeclaration containingTDecl = (N4TypeDeclaration) typeRefNode.eContainer().eContainer().eContainer();
 			Type containingType = getState().info.getOriginalDefinedType(containingTDecl);
 
-			if (referencedType == containingType) {
+			if (referencedType == containingType && !method.isConstructor()) {
 				return true;
 			}
 		}
