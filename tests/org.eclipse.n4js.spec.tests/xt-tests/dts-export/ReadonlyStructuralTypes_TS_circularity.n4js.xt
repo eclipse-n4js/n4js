@@ -27,6 +27,8 @@
  */
 
 export public interface CircularProblem1 {
+	@CovariantConstructor
+	constructor(spec: ~i~CircularProblem1);
     field_f: ~~CircularProblem1;
     field_r: ~r~CircularProblem1[];
     field_w: Array<~w~CircularProblem1>;
@@ -35,6 +37,7 @@ export public interface CircularProblem1 {
 }
 
 export public class CircularProblem2 {
+	constructor(spec: ~i~CircularProblem2) {}
     field_f: ~~CircularProblem2;
     field_r: ~r~CircularProblem2[];
     field_w: Array<~w~CircularProblem2>;
@@ -53,6 +56,7 @@ export public type CircularProblem3 = ~Object with {
 
 /* XPECT generated_dts ---
 export interface CircularProblem1 {
+	new(spec: StructuralInititializers<CircularProblem1>);
 	field_f: Readonly<CircularProblem1>;
 	field_r: Array<Readonly<CircularProblem1>>;
 	field_w: Array<Readonly<CircularProblem1>>;
@@ -60,6 +64,7 @@ export interface CircularProblem1 {
 	method(arg: Readonly<CircularProblem1>): StructuralReadOnly<CircularProblem1>;
 }
 export class CircularProblem2 {
+	constructor(spec: StructuralInititializers<CircularProblem2>);
 	field_f: Readonly<CircularProblem2>;
 	field_r: Array<Readonly<CircularProblem2>>;
 	field_w: Array<Readonly<CircularProblem2>>;
