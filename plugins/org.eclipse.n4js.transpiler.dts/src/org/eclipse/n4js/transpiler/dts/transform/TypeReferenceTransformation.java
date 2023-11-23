@@ -365,7 +365,15 @@ public class TypeReferenceTransformation extends Transformation {
 
 	private String getStructuralTypeReplacements(TypeReferenceNode_IM<?> typeRefNode, TypeRef typeRef) {
 		if (isCaseOfTypeScriptCircularityIssue(typeRefNode, typeRef)) {
-			return "Readonly<";
+			switch (typeRef.getTypingStrategy()) {
+			case STRUCTURAL_READ_ONLY_FIELDS:
+			case STRUCTURAL_FIELD_INITIALIZER:
+				return "Readonly<";
+			case STRUCTURAL_FIELDS:
+			case STRUCTURAL_WRITE_ONLY_FIELDS:
+			default:
+				return "";
+			}
 		}
 
 		switch (typeRef.getTypingStrategy()) {

@@ -32,16 +32,16 @@ export public interface ~CircularProblem1 {
 	field_r: ~r~CircularProblem1[];
 	field_w: Array<~w~CircularProblem1>;
 	field_i: ~Object with {prop: ~i~CircularProblem1};
-	method(arg: ~~CircularProblem1): ~r~CircularProblem1; // method returns are fine
+	method(arg: ~r~CircularProblem1): ~r~CircularProblem1; // method returns are fine
 }
 
 
 /* XPECT generated_dts ---
 export interface CircularProblem1 {
 	new(spec: StructuralInititializers<CircularProblem1>): StructuralReadOnly<CircularProblem1>;
-	field_f: Readonly<CircularProblem1>;
+	field_f: CircularProblem1;
 	field_r: Array<Readonly<CircularProblem1>>;
-	field_w: Array<Readonly<CircularProblem1>>;
+	field_w: Array<CircularProblem1>;
 	field_i: {prop: Readonly<CircularProblem1>};
 	method(arg: Readonly<CircularProblem1>): StructuralReadOnly<CircularProblem1>;
 }
