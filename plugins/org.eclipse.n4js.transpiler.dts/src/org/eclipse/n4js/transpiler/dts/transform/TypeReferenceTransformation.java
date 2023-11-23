@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
@@ -74,6 +75,7 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TStructField;
 import org.eclipse.n4js.ts.types.TStructMember;
+import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
@@ -173,7 +175,7 @@ public class TypeReferenceTransformation extends Transformation {
 			// special case: ArrayN in extends clause
 			String referenceStr = getReferenceToType(declType, getState());
 			write(referenceStr);
-			convertTypeArguments((ParameterizedTypeRef) typeRef);
+			convertTypeArguments(typeRefNode, (ParameterizedTypeRef) typeRef);
 		} else {
 			// standard case
 			convertTypeRef(typeRefNode, typeRef);
@@ -284,7 +286,7 @@ public class TypeReferenceTransformation extends Transformation {
 		Type declType = typeRef.getDeclaredType();
 
 		if (isArrayN(getState().G, declType)) {
-			convertTypeArguments(typeRef, "[", "]");
+			convertTypeArguments(typeRefNode, typeRef, "[", "]");
 			return;
 		}
 
@@ -304,7 +306,7 @@ public class TypeReferenceTransformation extends Transformation {
 				write(prependType);
 
 				write(referenceStr);
-				convertTypeArguments(typeRef);
+				convertTypeArguments(typeRefNode, typeRef);
 
 				write(Strings.isNullOrEmpty(prependType) ? "" : ">");
 
@@ -384,15 +386,29 @@ public class TypeReferenceTransformation extends Transformation {
 	 */
 	private boolean isCaseOfTypeScriptCircularityIssue(TypeReferenceNode_IM<?> typeRefNode, TypeRef typeRef) {
 		if (typeRef instanceof ParameterizedTypeRefStructural
-				&& typeRef.eContainer() instanceof ParameterizedTypeRefStructural
-				&& typeRef.eContainer().eContainer() instanceof TStructField) {
+				&& typeRef.eContainer() instanceof ParameterizedTypeRefStructural) {
 
-			// case for type aliases
-			ParameterizedTypeRefStructural containingType = (ParameterizedTypeRefStructural) typeRef.eContainer();
-			EList<TStructMember> structuralMembers = containingType.getStructuralMembers();
+			EObject trTmp = typeRef;
+			while (trTmp instanceof TypeRef) {
+				trTmp = trTmp.eContainer();
+			}
+			if (trTmp instanceof TStructField) {
+				// case for fields type aliases
+				ParameterizedTypeRefStructural propTypeRef = (ParameterizedTypeRefStructural) typeRef.eContainer();
+				TStructuralType propType = propTypeRef.getStructuralType();
 
-			if (structuralMembers.contains(typeRef.eContainer().eContainer())) {
-				return true;
+				if (propType == trTmp.eContainer()) {
+					return true;
+				}
+			}
+			if (trTmp instanceof TFormalParameter && trTmp.eContainer() != null) {
+				// case for formal parameters in type aliases
+				ParameterizedTypeRefStructural paramTypeRef = (ParameterizedTypeRefStructural) typeRef.eContainer();
+				TStructuralType paramType = paramTypeRef.getStructuralType();
+
+				if (paramType == trTmp.eContainer().eContainer()) {
+					return true;
+				}
 			}
 		}
 
@@ -401,8 +417,23 @@ public class TypeReferenceTransformation extends Transformation {
 				&& typeRefNode.eContainer().eContainer() instanceof N4TypeDeclaration) {
 
 			// case for interfaces and classes
-			Type referencedType = getState().info.getOriginalProcessedTypeRef(typeRefNode).getDeclaredType();
+			Type referencedType = typeRef.getDeclaredType();
 			N4TypeDeclaration containingTDecl = (N4TypeDeclaration) typeRefNode.eContainer().eContainer();
+			Type containingType = getState().info.getOriginalDefinedType(containingTDecl);
+
+			if (referencedType == containingType) {
+				return true;
+			}
+		}
+
+		if (typeRefNode != null
+				&& typeRefNode.eContainer() instanceof FormalParameter
+				&& typeRefNode.eContainer().eContainer() != null
+				&& typeRefNode.eContainer().eContainer().eContainer() instanceof N4TypeDeclaration) {
+
+			// case for formal parameters
+			Type referencedType = typeRef.getDeclaredType();
+			N4TypeDeclaration containingTDecl = (N4TypeDeclaration) typeRefNode.eContainer().eContainer().eContainer();
 			Type containingType = getState().info.getOriginalDefinedType(containingTDecl);
 
 			if (referencedType == containingType) {
@@ -412,11 +443,12 @@ public class TypeReferenceTransformation extends Transformation {
 		return false;
 	}
 
-	private void convertTypeArguments(ParameterizedTypeRef typeRef) {
-		convertTypeArguments(typeRef, "<", ">");
+	private void convertTypeArguments(TypeReferenceNode_IM<?> typeRefNode, ParameterizedTypeRef typeRef) {
+		convertTypeArguments(typeRefNode, typeRef, "<", ">");
 	}
 
-	private void convertTypeArguments(ParameterizedTypeRef typeRef, String prefix, String suffix) {
+	private void convertTypeArguments(TypeReferenceNode_IM<?> typeRefNode, ParameterizedTypeRef typeRef, String prefix,
+			String suffix) {
 		List<TypeArgument> typeArgs = typeRef.getDeclaredTypeArgs();
 		if (typeArgs.isEmpty()) {
 			return;
@@ -430,15 +462,15 @@ public class TypeReferenceTransformation extends Transformation {
 		}
 
 		write(prefix);
-		write(typeArgs, ta -> convertTypeArgument(ta), ", ");
+		write(typeArgs, ta -> convertTypeArgument(typeRefNode, ta), ", ");
 		write(suffix);
 	}
 
-	private void convertTypeArgument(TypeArgument typeArg) {
+	private void convertTypeArgument(TypeReferenceNode_IM<?> typeRefNode, TypeArgument typeArg) {
 		if (typeArg instanceof Wildcard) {
 			TypeRef upperBound = ((Wildcard) typeArg).getDeclaredOrImplicitUpperBound();
 			if (upperBound != null) {
-				convertTypeArgument(upperBound);
+				convertTypeArgument(typeRefNode, upperBound);
 			} else {
 				write("any"); // TypeScript does not support lower bounds
 			}
@@ -457,7 +489,7 @@ public class TypeReferenceTransformation extends Transformation {
 			// return;
 		}
 
-		convertTypeRef(typeRef);
+		convertTypeRef(typeRefNode, typeRef);
 	}
 
 	private void convertTFormalParameters(Iterable<? extends TFormalParameter> fpars) {
