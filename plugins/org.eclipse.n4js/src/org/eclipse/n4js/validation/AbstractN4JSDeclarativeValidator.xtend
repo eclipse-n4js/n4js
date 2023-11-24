@@ -637,4 +637,11 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 		return isFieldAccessorPair(m1, m2)
 	}
 
+	def public void addIssue(EObject source, IssueCodes issueCode, String... msgValues) {
+		super.addIssue(issueCode.getMessage(msgValues), source, issueCode.name());
+	}
+
+	def public void addIssue(EObject source, EStructuralFeature feature, IssueCodes issueCode, String... msgValues) {
+		super.addIssue(issueCode.getMessage(msgValues), source, feature, issueCode.name());
+	}
 }
