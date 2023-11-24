@@ -42,9 +42,9 @@ public class SemverIssueSeverities extends IssueSeverities {
 	@Override
 	public Severity getSeverity(String code) {
 		if (!configurableIssueCodes.containsKey(code)) {
-			Severity severity = SemverIssueCodes.getDefaultSeverity(code);
-			if (severity != null) {
-				return severity;
+			SemverIssueCodes issue = SemverIssueCodes.valueOf(code);
+			if (issue != null) {
+				return issue.severity;
 			}
 		}
 		return super.getSeverity(code);
