@@ -8,42 +8,47 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.utils.collections
+package org.eclipse.n4js.utils.collections;
 
-import java.util.ArrayList
-import java.util.Collection
-import java.util.Comparator
-import java.util.HashMap
-import java.util.HashSet
-import java.util.LinkedHashMap
-import java.util.LinkedHashSet
-import java.util.LinkedList
-import java.util.List
-import java.util.Objects
-import java.util.Set
-import java.util.TreeMap
-import java.util.TreeSet
-import java.util.stream.Stream
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.stream.Stream;
+
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
  * Utility functions for collections
  */
-class Collections2 {
+public class Collections2 {
 	/**
 	 * Private constructor to prevent instantiation.
 	 */
-	private new() {
+	private Collections2() {
 	}
 
 	/**
 	 * Creates a new linked list containing the given elements. This just delegates to
 	 * {@link CollectionLiterals#newLinkedList}.
 	 *
-	 * @param initial the initial elements of the list
+	 * @param initial
+	 *            the initial elements of the list
 	 *
 	 * @return the newly created linked list
 	 */
-	def static <T> LinkedList<T> newLinkedList(T... initial) {
+	@SafeVarargs
+	public static <T> LinkedList<T> newLinkedList(T... initial) {
 		return CollectionLiterals.newLinkedList(initial);
 	}
 
@@ -51,11 +56,13 @@ class Collections2 {
 	 * Creates a new array-backed list containing the given elements. This just delegates to
 	 * {@link CollectionLiterals#newArrayList}.
 	 *
-	 * @param initial the initial elements of the list
+	 * @param initial
+	 *            the initial elements of the list
 	 *
 	 * @return the newly created array-backed list
 	 */
-	def static <T> ArrayList<T> newArrayList(T... initial) {
+	@SafeVarargs
+	public static <T> ArrayList<T> newArrayList(T... initial) {
 		return CollectionLiterals.newArrayList(initial);
 	}
 
@@ -63,11 +70,13 @@ class Collections2 {
 	 * Creates a new hash set containing the given elements. This just delegates to
 	 * {@link CollectionLiterals#newHashSet}.
 	 *
-	 * @param initial the initial elements of the set
+	 * @param initial
+	 *            the initial elements of the set
 	 *
 	 * @return the newly created hash set
 	 */
-	def static <T> HashSet<T> newHashSet(T... initial) {
+	@SafeVarargs
+	public static <T> HashSet<T> newHashSet(T... initial) {
 		return CollectionLiterals.newHashSet(initial);
 	}
 
@@ -75,11 +84,13 @@ class Collections2 {
 	 * Creates a new linked hash set containing the given elements. This just delegates to
 	 * {@link CollectionLiterals#newLinkedHashSet}.
 	 *
-	 * @param initial the initial elements of the set
+	 * @param initial
+	 *            the initial elements of the set
 	 *
 	 * @return the newly created linked hash set
 	 */
-	def static <T> LinkedHashSet<T> newLinkedHashSet(T... initial) {
+	@SafeVarargs
+	public static <T> LinkedHashSet<T> newLinkedHashSet(T... initial) {
 		return CollectionLiterals.newLinkedHashSet(initial);
 	}
 
@@ -87,12 +98,15 @@ class Collections2 {
 	 * Creates a new tree set containing the given elements. This just delegates to
 	 * {@link CollectionLiterals#newTreeSet}.
 	 *
-	 * @param comparator the comparator to use
-	 * @param initial the initial elements of the set
+	 * @param comparator
+	 *            the comparator to use
+	 * @param initial
+	 *            the initial elements of the set
 	 *
 	 * @return the newly created tree set
 	 */
-	def static <T> TreeSet<T> newTreeSet(Comparator<? super T> comparator, T... initial) {
+	@SafeVarargs
+	public static <T> TreeSet<T> newTreeSet(Comparator<? super T> comparator, T... initial) {
 		return CollectionLiterals.newTreeSet(comparator, initial);
 	}
 
@@ -100,23 +114,27 @@ class Collections2 {
 	 * Creates a new hash set containing the given elements. This just delegates to
 	 * {@link CollectionLiterals#newHashMap}.
 	 *
-	 * @param initial the initial elements of the map
+	 * @param initial
+	 *            the initial elements of the map
 	 *
 	 * @return the newly created hash map
 	 */
-	def static <K,V> HashMap<K,V> newHashMap(Pair<? extends K, ? extends V>... initial) {
+	@SafeVarargs
+	public static <K, V> HashMap<K, V> newHashMap(Pair<? extends K, ? extends V>... initial) {
 		return CollectionLiterals.newHashMap(initial);
 	}
 
 	/**
 	 * Creates a new linked hash set containing the given elements. This just delegates to
-	 * {@link CollectionLiterals#newLinkedHashMasp}.
+	 * {@link CollectionLiterals#newLinkedHashMap}.
 	 *
-	 * @param initial the initial elements of the map
+	 * @param initial
+	 *            the initial elements of the map
 	 *
 	 * @return the newly created linked hash map
 	 */
-	def static <K,V> LinkedHashMap<K,V> newLinkedHashMap(Pair<? extends K, ? extends V>... initial) {
+	@SafeVarargs
+	public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(Pair<? extends K, ? extends V>... initial) {
 		return CollectionLiterals.newLinkedHashMap(initial);
 	}
 
@@ -124,11 +142,14 @@ class Collections2 {
 	 * Creates a new linked hash set containing the given elements. This just delegates to
 	 * {@link CollectionLiterals#newTreeMap}.
 	 *
-	 * @param initial the initial elements of the map
+	 * @param initial
+	 *            the initial elements of the map
 	 *
 	 * @return the newly created linked hash map
 	 */
-	def static <K,V> TreeMap<K,V> newTreeMap(Comparator<? super K> comparator, Pair<? extends K, ? extends V>... initial) {
+	@SafeVarargs
+	public static <K, V> TreeMap<K, V> newTreeMap(Comparator<? super K> comparator,
+			Pair<? extends K, ? extends V>... initial) {
 		return CollectionLiterals.newTreeMap(comparator, initial);
 	}
 
@@ -141,25 +162,21 @@ class Collections2 {
 	 *            the second list, must not be <code>null</code>
 	 * @return the unique concatenation of the given lists
 	 */
-	def static <T> List<T> concatUnique(List<T> listA, List<T> listB) {
+	public static <T> List<T> concatUnique(List<T> listA, List<T> listB) {
 		Objects.requireNonNull(listA);
 		Objects.requireNonNull(listB);
 
-		val Set<T> result = newLinkedHashSet(listA);
+		Set<T> result = new LinkedHashSet<>(listA);
 		result.addAll(listB);
-		return newLinkedList(result);
+		return new LinkedList<>(result);
 	}
-	
-	/** 
+
+	/**
 	 * Returns a stream of all pairs that can be formed with the elements of the given collection.
-	 * 
+	 *
 	 * Example: <code> [1,2,3] -> (1,1), (1,2), (1,3), (2,1), (2,2), (2,3), (3,1), (3,2), (3,3) </code>
 	 */
-	def static <T> Stream<Pair<T, T>> pairs(Collection<T> collection) {
-		return collection.stream.flatMap[ e1 | 
-			collection.stream.map[ e2 | 
-				return e1 -> e2;
-			]
-		]
+	public static <T> Stream<Pair<T, T>> pairs(Collection<T> collection) {
+		return collection.stream().flatMap(e1 -> collection.stream().map(e2 -> Pair.of(e1, e2)));
 	}
 }

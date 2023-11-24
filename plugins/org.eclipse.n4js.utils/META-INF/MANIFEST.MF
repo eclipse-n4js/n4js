@@ -21,7 +21,6 @@ Require-Bundle: org.eclipse.n4js.releng.utils;resolution:=optional,
  com.google.guava
 Export-Package: org.eclipse.n4js.fileextensions,
  org.eclipse.n4js.utils,
- org.eclipse.n4js.utils.beans,
  org.eclipse.n4js.utils.collections,
  org.eclipse.n4js.utils.di.scopes,
  org.eclipse.n4js.utils.emf,

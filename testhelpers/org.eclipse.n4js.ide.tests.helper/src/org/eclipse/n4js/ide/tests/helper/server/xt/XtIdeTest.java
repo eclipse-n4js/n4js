@@ -80,6 +80,7 @@ import com.google.inject.Inject;
  */
 public class XtIdeTest extends AbstractIdeTest {
 
+	static final String TSC_VERSION = "5.3.2";
 	static final File TSC_PROVIDER = new File("test-tscProvider");
 
 	static final File TSC2 = new File(TSC_PROVIDER, N4JSGlobals.NODE_MODULES + "/.bin/tsc");
@@ -782,8 +783,9 @@ public class XtIdeTest extends AbstractIdeTest {
 		}
 		TSC_PROVIDER.mkdirs();
 
-		// npm install --prefix . typescript@4.3.2
-		ProcessResult result = cliTools.npmRun(TSC_PROVIDER.toPath(), "install", "--prefix", ".", "typescript@4.3.2");
+		// npm install --prefix . typescript@<TSC_VERSION>
+		ProcessResult result = cliTools.npmRun(TSC_PROVIDER.toPath(), "install", "--prefix", ".",
+				"typescript@" + TSC_VERSION);
 
 		assertEquals(0, result.getExitCode());
 	}

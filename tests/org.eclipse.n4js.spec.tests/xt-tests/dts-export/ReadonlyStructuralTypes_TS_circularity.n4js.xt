@@ -1,0 +1,82 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+
+/*
+ * Background is GH-2576:
+ * TypeScript cannot handle recursive types when used with type meta language (a.k.a. utitlity types).
+ * We use the utility types (e.g. StructuralReadOnly<T>) to mimic N4JS structural type strategies (e.g. ~r~) when generating d.ts files.
+ * Those utility types we use are defined in n4jsglobals.d.ts.
+ * They rely on the TypeScript meta language feature: [K in keyof T]: T[K] extends Function ? K : never.
+ * However, this feature is not compatible with recursive types, i.e. types that have members of the same type.
+ * As a fallback in those situations, we use the utility type Readonly<T> instead to avoid errors by the TypeScript compiler. 
+ */
+
+export public interface CircularProblem1 {
+	field_f: ~~CircularProblem1;
+	field_r: ~r~CircularProblem1;
+	field_w: ~w~CircularProblem1;
+    array_r1: ~r~CircularProblem1[];
+    array_r2: Array<~r~CircularProblem1>;
+    field_i: ~Object with {prop: ~i~CircularProblem1};
+	method(arg: ~r~CircularProblem1): ~r~CircularProblem1; // method returns are fine
+}
+
+export public class CircularProblem2 {
+	constructor(spec: ~i~CircularProblem2) {}
+    field_f: ~~CircularProblem2;
+    field_r: ~r~CircularProblem2;
+    field_w: ~w~CircularProblem2;
+    array_r1: ~r~CircularProblem2[];
+    array_r2: Array<~r~CircularProblem2>;
+    field_i: ~Object with {prop: ~i~CircularProblem2};
+	method(arg: ~r~CircularProblem2): ~r~CircularProblem2 { return null; } // method returns are fine
+}
+
+export public type CircularProblem3 = ~Object with {
+	field_f:  ~~CircularProblem3;
+    field_r: ~r~CircularProblem3;
+    field_w: ~w~CircularProblem3;
+	array_r1: ~r~CircularProblem3[];
+	array_r2: Array<~r~CircularProblem3>;
+	field_i: ~Object with {prop: ~i~CircularProblem3};
+	method(arg: ~r~CircularProblem3): ~r~CircularProblem3; // method returns are fine
+}
+
+
+/* XPECT generated_dts ---
+export interface CircularProblem1 {
+	field_f: CircularProblem1;
+	field_r: Readonly<CircularProblem1>;
+	field_w: CircularProblem1;
+	array_r1: Array<Readonly<CircularProblem1>>;
+	array_r2: Array<Readonly<CircularProblem1>>;
+	field_i: {prop: Readonly<CircularProblem1>};
+	method(arg: Readonly<CircularProblem1>): StructuralReadOnly<CircularProblem1>;
+}
+export class CircularProblem2 {
+	constructor(spec: StructuralInititializers<CircularProblem2>);
+	field_f: CircularProblem2;
+	field_r: Readonly<CircularProblem2>;
+	field_w: CircularProblem2;
+	array_r1: Array<Readonly<CircularProblem2>>;
+	array_r2: Array<Readonly<CircularProblem2>>;
+	field_i: {prop: Readonly<CircularProblem2>};
+	method(arg: Readonly<CircularProblem2>): StructuralReadOnly<CircularProblem2>;
+}
+export type CircularProblem3 = {field_f: CircularProblem3; field_r: Readonly<CircularProblem3>; field_w: CircularProblem3; array_r1: Array<Readonly<CircularProblem3>>; array_r2: Array<Readonly<CircularProblem3>>; field_i: {prop: StructuralInititializers<CircularProblem3>}; method(arg: Readonly<CircularProblem3>): StructuralReadOnly<CircularProblem3>};
+--- */
