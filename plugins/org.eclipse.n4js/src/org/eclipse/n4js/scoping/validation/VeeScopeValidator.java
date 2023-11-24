@@ -74,8 +74,8 @@ public class VeeScopeValidator implements IScopeValidator {
 		}
 		QualifiedName name = originalDescr.getName();
 		return new ScopeElementIssue(originalDescr,
-				IssueCodes.AST_ELEMENT_MISUSED_AS_VALUE_OR_TYPE,
-				IssueCodes.getMessageForAST_ELEMENT_MISUSED_AS_VALUE_OR_TYPE(name.toString(), "value"));
+				IssueCodes.AST_ELEMENT_MISUSED_AS_VALUE_OR_TYPE.name(),
+				IssueCodes.AST_ELEMENT_MISUSED_AS_VALUE_OR_TYPE.getMessage(name.toString(), "value"));
 	}
 
 	@Override

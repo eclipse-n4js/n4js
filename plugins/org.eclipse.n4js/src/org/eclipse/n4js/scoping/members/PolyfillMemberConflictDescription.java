@@ -12,12 +12,11 @@ package org.eclipse.n4js.scoping.members;
 
 import java.util.Collection;
 
+import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.common.base.Joiner;
-
-import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
-import org.eclipse.n4js.validation.IssueCodes;
 
 /**
  * Creates a description for error code {@link IssueCodes#CLF_POLYFILL_MULTIPOLYFILLS_MEMBER_CONFLICT}.
@@ -45,13 +44,13 @@ public class PolyfillMemberConflictDescription extends AbstractDescriptionWithEr
 	@Override
 	public String getMessage() {
 
-		return IssueCodes.getMessageForCLF_POLYFILL_MULTIPOLYFILLS_MEMBER_CONFLICT(
+		return IssueCodes.CLF_POLYFILL_MULTIPOLYFILLS_MEMBER_CONFLICT.getMessage(
 				Joiner.on(", ").join(conflictingModuleNames), memberName);
 	}
 
 	@Override
 	public String getIssueCode() {
-		return IssueCodes.CLF_POLYFILL_MULTIPOLYFILLS_MEMBER_CONFLICT;
+		return IssueCodes.CLF_POLYFILL_MULTIPOLYFILLS_MEMBER_CONFLICT.name();
 	}
 
 }

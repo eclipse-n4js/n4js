@@ -59,8 +59,8 @@ public class N4JSScopingInstanceOfPrimitivTypeDiagnosis extends ScopingDiagnosis
 		// if we can find a primitive type for the qualified name
 		if (singleElement.getEClass().getClassifierID() == TypesPackage.Literals.PRIMITIVE_TYPE.getClassifierID()) {
 			// create special error message
-			return createMessage(IssueCodes.TYS_INSTANCEOF_NOT_SUPPORTED_FOR_PRIMITIVE_TYPES,
-					IssueCodes.getMessageForTYS_INSTANCEOF_NOT_SUPPORTED_FOR_PRIMITIVE_TYPES());
+			return createMessage(IssueCodes.TYS_INSTANCEOF_NOT_SUPPORTED_FOR_PRIMITIVE_TYPES.name(),
+					IssueCodes.TYS_INSTANCEOF_NOT_SUPPORTED_FOR_PRIMITIVE_TYPES.getMessage());
 		} else {
 			// the found element is not a primitive type, diagnosis not applicable
 			return null;

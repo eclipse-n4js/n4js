@@ -34,12 +34,12 @@ public class HollowTypeOrValueDescription extends AbstractDescriptionWithError {
 	@Override
 	public String getMessage() {
 		String name = getName().getLastSegment();
-		return IssueCodes.getMessageForAST_ELEMENT_MISUSED_AS_VALUE_OR_TYPE(name, expectation);
+		return IssueCodes.AST_ELEMENT_MISUSED_AS_VALUE_OR_TYPE.getMessage(name, expectation);
 	}
 
 	@Override
 	public String getIssueCode() {
-		return IssueCodes.AST_ELEMENT_MISUSED_AS_VALUE_OR_TYPE;
+		return IssueCodes.AST_ELEMENT_MISUSED_AS_VALUE_OR_TYPE.name();
 	}
 
 }

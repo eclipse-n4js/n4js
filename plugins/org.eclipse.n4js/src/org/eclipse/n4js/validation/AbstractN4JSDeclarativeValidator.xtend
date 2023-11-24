@@ -219,18 +219,18 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 				"not more than " + typeParameterCount
 			};
 			if (source instanceof ParameterizedTypeRef && (source as ParameterizedTypeRef).isArrayNTypeExpression) {
-				val message = IssueCodes.
-					getMessageForEXP_WRONG_NUMBER_OF_TYPEARGS_FOR_ITERABLE_N_SYNTAX(BuiltInTypeScope.ITERABLE_N__MAX_LEN);
-				addIssue(message, source, feature, IssueCodes.EXP_WRONG_NUMBER_OF_TYPEARGS_FOR_ITERABLE_N_SYNTAX);
+				val message = IssueCodes.EXP_WRONG_NUMBER_OF_TYPEARGS_FOR_ITERABLE_N_SYNTAX.
+					getMessage(BuiltInTypeScope.ITERABLE_N__MAX_LEN);
+				addIssue(message, source, feature, IssueCodes.EXP_WRONG_NUMBER_OF_TYPEARGS_FOR_ITERABLE_N_SYNTAX.name());
 			} else if (parameterizedElement !== null && parameterizedElement.name !== null) {
-				val message = IssueCodes.
-					getMessageForEXP_WRONG_NUMBER_OF_TYPEARGS_FOR_ELEMENT(parameterizedElement.keyword,
+				val message = IssueCodes.EXP_WRONG_NUMBER_OF_TYPEARGS_FOR_ELEMENT.
+					getMessage(parameterizedElement.keyword,
 						parameterizedElement.name, expectationStr, typeArgumentCount);
-				addIssue(message, source, feature, IssueCodes.EXP_WRONG_NUMBER_OF_TYPEARGS_FOR_ELEMENT);
+				addIssue(message, source, feature, IssueCodes.EXP_WRONG_NUMBER_OF_TYPEARGS_FOR_ELEMENT.name());
 			} else {
-				val message = IssueCodes.
-					getMessageForEXP_WRONG_NUMBER_OF_TYPEARGS(expectationStr, typeArgumentCount);
-				addIssue(message, source, feature, IssueCodes.EXP_WRONG_NUMBER_OF_TYPEARGS);
+				val message = IssueCodes.EXP_WRONG_NUMBER_OF_TYPEARGS.
+					getMessage(expectationStr, typeArgumentCount);
+				addIssue(message, source, feature, IssueCodes.EXP_WRONG_NUMBER_OF_TYPEARGS.name());
 			}
 			return;
 		}
@@ -298,15 +298,15 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 				&& useSiteVariance !== defSiteVariance) {
 				// we've got an inconsistency!
 				if (typeArgumentInAST.usingInOutNotation) {
-					val message = IssueCodes.getMessageForEXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG_IN_OUT(
+					val message = IssueCodes.EXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG_IN_OUT.getMessage(
 						useSiteVariance.getDescriptiveStringNoun(true),
 						defSiteVariance.getDescriptiveStringNoun(true));
-					addIssue(message, typeArgumentInAST, IssueCodes.EXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG_IN_OUT);
+					addIssue(message, typeArgumentInAST, IssueCodes.EXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG_IN_OUT.name());
 				} else {
-					val message = IssueCodes.getMessageForEXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG(
+					val message = IssueCodes.EXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG.getMessage(
 						if (useSiteVariance === Variance.CO) "upper" else "lower",
 						defSiteVariance.getDescriptiveString(true));
-					addIssue(message, typeArgumentInAST, IssueCodes.EXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG);
+					addIssue(message, typeArgumentInAST, IssueCodes.EXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG.name());
 				}
 			}
 		}
@@ -399,8 +399,8 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	}
 
 	private def void createUnusedTypeParameterIssue(EObject typeVarInAST) {
-		val msg = IssueCodes.getMessageForFUN_UNUSED_GENERIC_TYPE_PARAM(N4JSASTUtils.getNameOfTypeVarInAST(typeVarInAST));
-		addIssue(msg, typeVarInAST, N4JSASTUtils.getNameFeatureOfTypeVarInAST(typeVarInAST), IssueCodes.FUN_UNUSED_GENERIC_TYPE_PARAM);
+		val msg = IssueCodes.FUN_UNUSED_GENERIC_TYPE_PARAM.getMessage(N4JSASTUtils.getNameOfTypeVarInAST(typeVarInAST));
+		addIssue(msg, typeVarInAST, N4JSASTUtils.getNameFeatureOfTypeVarInAST(typeVarInAST), IssueCodes.FUN_UNUSED_GENERIC_TYPE_PARAM.name());
 	}
 
 	/**

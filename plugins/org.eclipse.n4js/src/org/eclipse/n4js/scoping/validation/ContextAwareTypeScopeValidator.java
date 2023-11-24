@@ -85,13 +85,13 @@ public class ContextAwareTypeScopeValidator implements IScopeValidator {
 		}
 		if (!isValidLocationForVoid && eClass == TypesPackage.Literals.VOID_TYPE) {
 			return new ScopeElementIssue(originalDescr,
-					IssueCodes.TYS_VOID_AT_WRONG_LOCATION,
-					IssueCodes.getMessageForTYS_VOID_AT_WRONG_LOCATION());
+					IssueCodes.TYS_VOID_AT_WRONG_LOCATION.name(),
+					IssueCodes.TYS_VOID_AT_WRONG_LOCATION.getMessage());
 		}
 		if (!isValidLocationForFunctionType && TypesPackage.Literals.TFUNCTION.isSuperTypeOf(eClass)) {
 			return new ScopeElementIssue(originalDescr,
-					IssueCodes.TYS_FUNCTION_DISALLOWED_AS_TYPE,
-					IssueCodes.getMessageForTYS_FUNCTION_DISALLOWED_AS_TYPE());
+					IssueCodes.TYS_FUNCTION_DISALLOWED_AS_TYPE.name(),
+					IssueCodes.TYS_FUNCTION_DISALLOWED_AS_TYPE.getMessage());
 		}
 		return null; // should never happen, because #isAccepted() has returned true
 	}

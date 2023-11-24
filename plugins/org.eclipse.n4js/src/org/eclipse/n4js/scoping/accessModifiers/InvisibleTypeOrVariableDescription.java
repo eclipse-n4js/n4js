@@ -11,14 +11,13 @@
 package org.eclipse.n4js.scoping.accessModifiers;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.resource.IEObjectDescription;
-
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.IssueUserDataKeys.VIS_ILLEGAL_TYPE_ACCESS;
 import org.eclipse.n4js.validation.IssueUserDataKeys.VIS_ILLEGAL_VARIABLE_ACCESS;
+import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
  * This description wraps an invisible type or variable.
@@ -63,22 +62,22 @@ public class InvisibleTypeOrVariableDescription extends AbstractDescriptionWithE
 		EObject objectOrProxy = getEObjectOrProxy();
 		String name = getName().getLastSegment();
 		if (objectOrProxy instanceof TFunction) {
-			return IssueCodes.getMessageForVIS_ILLEGAL_FUN_ACCESS(name);
+			return IssueCodes.VIS_ILLEGAL_FUN_ACCESS.getMessage(name);
 		} else if (objectOrProxy instanceof Type) {
-			return IssueCodes.getMessageForVIS_ILLEGAL_TYPE_ACCESS(name);
+			return IssueCodes.VIS_ILLEGAL_TYPE_ACCESS.getMessage(name);
 		}
-		return IssueCodes.getMessageForVIS_ILLEGAL_VARIABLE_ACCESS(name);
+		return IssueCodes.VIS_ILLEGAL_VARIABLE_ACCESS.getMessage(name);
 	}
 
 	@Override
 	public String getIssueCode() {
 		EObject objectOrProxy = getEObjectOrProxy();
 		if (objectOrProxy instanceof TFunction) {
-			return IssueCodes.VIS_ILLEGAL_FUN_ACCESS;
+			return IssueCodes.VIS_ILLEGAL_FUN_ACCESS.name();
 		} else if (objectOrProxy instanceof Type) {
-			return IssueCodes.VIS_ILLEGAL_TYPE_ACCESS;
+			return IssueCodes.VIS_ILLEGAL_TYPE_ACCESS.name();
 		}
-		return IssueCodes.VIS_ILLEGAL_VARIABLE_ACCESS;
+		return IssueCodes.VIS_ILLEGAL_VARIABLE_ACCESS.name();
 	}
 
 	/*

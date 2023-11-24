@@ -1548,7 +1548,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		for (INode error : getParseResult().getSyntaxErrors()) {
 			processSyntaxDiagnostic(error, diagnostic -> {
 				String code = diagnostic.getCode();
-				Severity severity = IssueCodes.getDefaultSeverity(code);
+				Severity severity = IssueCodes.getSeverityForName(code);
 				if (AbstractN4JSStringValueConverter.WARN_ISSUE_CODE.equals(code)
 						|| RegExLiteralConverter.ISSUE_CODE.equals(code)
 						|| LegacyOctalIntValueConverter.ISSUE_CODE.equals(code)

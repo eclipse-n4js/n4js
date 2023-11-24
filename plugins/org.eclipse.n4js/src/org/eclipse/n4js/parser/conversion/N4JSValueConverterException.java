@@ -10,14 +10,13 @@
  */
 package org.eclipse.n4js.parser.conversion;
 
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.nodemodel.INode;
 
-import org.eclipse.n4js.validation.IssueCodes;
-
 /**
- * Extende value converter exception to hold issue code and message later to use by Xtext diagnostic producer.
+ * Extends value converter exception to hold issue code and message later to use by Xtext diagnostic producer.
  */
 public class N4JSValueConverterException extends ValueConverterException {
 	private final String issueCode;
@@ -37,7 +36,7 @@ public class N4JSValueConverterException extends ValueConverterException {
 			final Exception cause) {
 		super(message, node, cause);
 		this.issueCode = issueCode;
-		this.severity = IssueCodes.getDefaultSeverity(issueCode);
+		this.severity = IssueCodes.getSeverityForName(issueCode);
 	}
 
 	/**
