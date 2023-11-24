@@ -13,7 +13,7 @@
 {
 	"a": 1,
 	"b": 2,
-	// Duplicate key is detected by validation XPECT warnings --> "Property a duplicates property a (line 14)." at ""a""
+	// Duplicate key is detected by validation XPECT warnings --> "Duplicate property a (line 14)." at ""a""
 	"a": "str",
 	"nested": {
 		// Differently nested key is not detected as duplicate XPECT noerrors
