@@ -63,7 +63,7 @@ public abstract class N4JSLanguageConstants {
 	public static final Set<String> DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS = unmodifiableSet(newHashSet(
 			IssueCodes.CFG_LOCAL_VAR_UNUSED,
 			IssueCodes.DFG_NULL_DEREFERENCE,
-			JSONIssueCodes.JSON_COMMENT_UNSUPPORTED
+			JSONIssueCodes.JSON_COMMENT_UNSUPPORTED.name()
 	));
 
 	//@formatter:on

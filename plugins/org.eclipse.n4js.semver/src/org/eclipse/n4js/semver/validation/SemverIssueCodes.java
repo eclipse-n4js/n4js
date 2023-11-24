@@ -20,9 +20,11 @@ import org.eclipse.xtext.diagnostics.Severity;
 @SuppressWarnings("javadoc")
 public enum SemverIssueCodes {
 
+	/** No parameters */
 	SEMVER_TOO_MANY_NUMBERS(ERROR,
 			"Too many version parts. Semantic versions consist only of major, minor and patch."),
 
+	/** No parameters */
 	SEMVER_TOO_MANY_COMPARATORS(ERROR,
 			"Only zero or one comparator allowed.")
 
