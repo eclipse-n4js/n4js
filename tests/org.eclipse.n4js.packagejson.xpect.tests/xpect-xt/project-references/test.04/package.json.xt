@@ -51,7 +51,7 @@
 		"Duplicate project reference test.data.test.project.two." at ""test.data.test.project.two": "*""
 		--- */
 		/* XPECT warnings ---
-		"Property test.data.test.project.two duplicates property test.data.test.project.two (line 49)." at ""test.data.test.project.two""
+		"Duplicate property test.data.test.project.two (line 49)." at ""test.data.test.project.two""
 		--- */
 		"test.data.test.project.two": "*",
 		"test.data.system.project.one": "*",

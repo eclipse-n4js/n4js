@@ -113,7 +113,7 @@
 					"module": "**/*"
 				}
 			],
-			// XPECT warnings --> "Property noValidate duplicates property noValidate (line 90)." at ""noValidate""
+			// XPECT warnings --> "Duplicate property noValidate (line 90)." at ""noValidate""
 			"noValidate": [
 				"p/A"
 			]
