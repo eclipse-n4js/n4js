@@ -12,7 +12,7 @@ import org.eclipse.xtext.diagnostics.Severity;
 public enum JSONIssueCodes {
 
 	/** 0: Property Name, 1: Line of original definition */
-	JSON_DUPLICATE_KEY(WARNING, "Duplicate property %s (line %d)."),
+	JSON_DUPLICATE_KEY(WARNING, "Duplicate property %s (line %s)."),
 
 	/** No parameters */
 	JSON_COMMENT_UNSUPPORTED(WARNING, "Comments are not a valid JSON construct."),
@@ -45,6 +45,11 @@ public enum JSONIssueCodes {
 	public String getMessage(Object... values) {
 		if (values == null) {
 			return msgTemplate;
+		}
+		for (int i = 0; i < values.length; i++) {
+			if (!(values[i] instanceof String)) {
+				values[i] = values[i].toString();
+			}
 		}
 		return msgTemplate.formatted(values);
 	}

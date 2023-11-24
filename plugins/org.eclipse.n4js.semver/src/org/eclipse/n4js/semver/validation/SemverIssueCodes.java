@@ -42,6 +42,11 @@ public enum SemverIssueCodes {
 		if (values == null) {
 			return msgTemplate;
 		}
+		for (int i = 0; i < values.length; i++) {
+			if (!(values[i] instanceof String)) {
+				values[i] = values[i].toString();
+			}
+		}
 		return msgTemplate.formatted(values);
 	}
 
