@@ -44,4 +44,12 @@ public enum SemverIssueCodes {
 		}
 		return msgTemplate.formatted(values);
 	}
+
+	static public Severity getSeverityForName(String issueName) {
+		try {
+			return valueOf(issueName).severity;
+		} catch (Exception e) {
+			return null;
+		}
+	}
 }

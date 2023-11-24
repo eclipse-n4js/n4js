@@ -42,9 +42,9 @@ public class JSONIssueSeverities extends IssueSeverities {
 	@Override
 	public Severity getSeverity(String code) {
 		if (!configurableIssueCodes.containsKey(code)) {
-			JSONIssueCodes issue = JSONIssueCodes.valueOf(code);
-			if (issue != null) {
-				return issue.severity;
+			Severity severity = JSONIssueCodes.getSeverityForName(code);
+			if (severity != null) {
+				return severity;
 			}
 		}
 		return super.getSeverity(code);

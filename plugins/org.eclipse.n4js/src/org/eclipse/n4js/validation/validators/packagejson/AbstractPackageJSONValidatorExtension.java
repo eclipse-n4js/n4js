@@ -359,9 +359,9 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 	 * considered and then the issue severities of the bundle that provides an extension.
 	 */
 	private Severity getJSONSeverity(String issueCode) {
-		JSONIssueCodes issue = JSONIssueCodes.valueOf(issueCode);
-		if (issue != null) {
-			return issue.severity;
+		Severity severity = JSONIssueCodes.getSeverityForName(issueCode);
+		if (severity != null) {
+			return severity;
 		}
 		return getIssueSeverities(getContext(), getCurrentObject()).getSeverity(issueCode);
 	}
