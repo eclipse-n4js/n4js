@@ -89,7 +89,7 @@ public class XtFileRunner extends Runner {
 		}
 
 		try {
-			notifier.fireTestRunStarted(getDescription());
+			notifier.fireTestSuiteStarted(getDescription());
 
 			parent.invokeBeforeMethods(ideTest);
 
@@ -126,7 +126,7 @@ public class XtFileRunner extends Runner {
 			try {
 				parent.invokeAfterMethods(ideTest);
 
-				notifier.fireTestRunFinished(new Result());
+				notifier.fireTestSuiteFinished(getDescription());
 			} catch (Throwable t) {
 				notifier.fireTestFailure(new Failure(getDescription(), t));
 			}

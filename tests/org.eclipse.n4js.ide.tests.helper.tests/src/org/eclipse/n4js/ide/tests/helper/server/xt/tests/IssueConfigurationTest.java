@@ -24,7 +24,7 @@ import org.junit.Test;
  */
 public class IssueConfigurationTest extends AbstractXtParentRunnerTest {
 
-	
+
 	@Test
 	public void test() throws Exception {
 
@@ -37,7 +37,8 @@ public class IssueConfigurationTest extends AbstractXtParentRunnerTest {
 		assertFalse(suppressed.contains(IssueCodes.CLF_NAME_DOES_NOT_START_LOWERCASE));
 
 		run("probands/IssueConfiguration", suppressed);
-		assertEventNames("testRunStarted\n"
+		assertEventNames("testSuiteStarted\n"
+				+ "testSuiteStarted\n"
 				+ "testStarted\n"
 				+ "testFinished\n"
 				+ "testStarted\n"
@@ -46,7 +47,8 @@ public class IssueConfigurationTest extends AbstractXtParentRunnerTest {
 				+ "testFinished\n"
 				+ "testStarted\n"
 				+ "testFinished\n"
-				+ "testRunFinished");
+				+ "testSuiteFinished\n"
+				+ "testSuiteFinished");
 		assertResults("Passed: nowarnings~0:  〔probands/IssueConfiguration/IssueConfiguration.n4js.xt〕\n"
 				+ "Passed: warnings~0:  〔probands/IssueConfiguration/IssueConfiguration.n4js.xt〕\n"
 				+ "Passed: warnings~1:  〔probands/IssueConfiguration/IssueConfiguration.n4js.xt〕\n"

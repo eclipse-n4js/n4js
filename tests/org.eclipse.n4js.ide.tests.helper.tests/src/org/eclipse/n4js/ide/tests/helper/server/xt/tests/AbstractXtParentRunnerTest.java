@@ -58,13 +58,13 @@ public abstract class AbstractXtParentRunnerTest {
 		}
 
 		@Override
-		public void testRunStarted(Description description) throws Exception {
-			events.put("testRunStarted", description);
+		public void testSuiteStarted(Description description) throws Exception {
+			events.put("testSuiteStarted", description);
 		}
 
 		@Override
-		public void testRunFinished(Result result) throws Exception {
-			events.put("testRunFinished", result);
+		public void testSuiteFinished(Description description) throws Exception {
+			events.put("testSuiteFinished", description);
 		}
 
 		@Override

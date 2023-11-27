@@ -20,14 +20,16 @@ import org.junit.Test;
  */
 public class SuppressedIssuesTest extends AbstractXtParentRunnerTest {
 
-	
+
 	@Test
 	public void test() throws Exception {
 		run("probands/SuppressedIssues", N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS);
-		assertEventNames("testRunStarted\n"
+		assertEventNames("testSuiteStarted\n"
+				+ "testSuiteStarted\n"
 				+ "testStarted\n"
 				+ "testFinished\n"
-				+ "testRunFinished");
+				+ "testSuiteFinished\n"
+				+ "testSuiteFinished");
 		assertResults("Passed: nowarnings~0:  〔probands/SuppressedIssues/SuppressedIssues.n4js.xt〕");
 	}
 

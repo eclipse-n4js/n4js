@@ -19,16 +19,18 @@ import org.junit.Test;
  */
 public class ElementKeywordTest extends AbstractXtParentRunnerTest {
 
-	
+
 	@Test
 	public void test() throws Exception {
 		run("probands/ElementKeyword");
-		assertEventNames("testRunStarted\n"
+		assertEventNames("testSuiteStarted\n"
+				+ "testSuiteStarted\n"
 				+ "testStarted\n"
 				+ "testFinished\n"
 				+ "testStarted\n"
 				+ "testFailure\n"
-				+ "testRunFinished");
+				+ "testSuiteFinished\n"
+				+ "testSuiteFinished");
 		assertResults(
 				"Passed: elementKeyword~0: test-1 〔probands/ElementKeyword/ElementKeyword.n4js.xt〕\n"
 						+ "Failed: elementKeyword~1: test-2 〔probands/ElementKeyword/ElementKeyword.n4js.xt〕. expected:<[wrong expectation]> but was:<[method]>");

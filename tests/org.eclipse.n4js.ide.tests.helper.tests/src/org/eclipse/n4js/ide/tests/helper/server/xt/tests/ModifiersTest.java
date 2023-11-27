@@ -19,20 +19,22 @@ import org.junit.Test;
  */
 public class ModifiersTest extends AbstractXtParentRunnerTest {
 
-	
+
 	@Test
 	public void test() throws Exception {
 		run("probands/Modifiers");
-		assertEventNames("testRunStarted\n"
+		assertEventNames("testSuiteStarted\n"
+				+ "testSuiteStarted\n"
 				+ "testStarted\n"
 				+ "testFailure\n"
 				+ "testStarted\n"
 				+ "testFinished\n"
-				+ "testRunFinished\n"
-				+ "testRunStarted\n"
+				+ "testSuiteFinished\n"
+				+ "testSuiteStarted\n"
 				+ "testIgnored\n"
 				+ "testIgnored\n"
-				+ "testRunFinished");
+				+ "testSuiteFinished\n"
+				+ "testSuiteFinished");
 		assertResults(
 				"Failed: definition~0: FIXME test-1 〔probands/Modifiers/FIXME.n4js.xt〕. Test fixed!\n"
 						+ "Passed: definition~1: FIXME test-2 〔probands/Modifiers/FIXME.n4js.xt〕\n"
