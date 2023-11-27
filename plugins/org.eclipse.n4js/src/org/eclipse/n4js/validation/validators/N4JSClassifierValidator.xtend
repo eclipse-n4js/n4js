@@ -36,6 +36,7 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
+import org.eclipse.n4js.validation.IssueItem
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -76,7 +77,7 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 		for(typeRefInAST : superTypeRefs) {
 			for(typeArgInAST : typeRefInAST.declaredTypeArgs) {
 				if(typeArgInAST instanceof Wildcard) {
-					addIssue(getMessageForCLF_IMPLEMENT_EXTEND_WITH_WILDCARD, typeArgInAST, CLF_IMPLEMENT_EXTEND_WITH_WILDCARD);
+					addIssue(typeArgInAST, CLF_IMPLEMENT_EXTEND_WITH_WILDCARD.toIssueItem());
 				}
 			}
 		}
@@ -127,8 +128,7 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 		val duplicates = names.computeStringOccurance.filter[value > 1]
 
 		for (dupe : duplicates) {
-			val message = getMessageForCLF_MULTIPLE_ROLE_CONSUME(QualifiedNameUtils.toHumanReadableString(dupe.key))
-			addIssue(message, source.astElement, eref, CLF_MULTIPLE_ROLE_CONSUME)
+			addIssue(source.astElement, eref, CLF_MULTIPLE_ROLE_CONSUME.toIssueItem(QualifiedNameUtils.toHumanReadableString(dupe.key)))
 		}
 	}
 
@@ -193,31 +193,27 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 			if (! isFieldAccessorPair(firstDup, otherDup)) {
 				if (firstDup.constructor) {
 					if (createErrorForFirst) {
-						val message = getMessageForCLF_DUP_CTOR(
+						val IssueItem issueItem = CLF_DUP_CTOR.toIssueItem(
 							NodeModelUtils::getNode(firstDup.astElement).startLine,
 							NodeModelUtils::getNode(otherDup.astElement).startLine
 						);
-						addIssue(message, firstDup.astElement, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
-							CLF_DUP_CTOR)
+						addIssue(firstDup.astElement, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, issueItem)
 						createErrorForFirst = false;
 					}
-					val message = getMessageForCLF_DUP_CTOR(
+					val IssueItem issueItem = CLF_DUP_CTOR.toIssueItem(
 						NodeModelUtils::getNode(otherDup.astElement).startLine,
 						NodeModelUtils::getNode(firstDup.astElement).startLine);
-					addIssue(message, otherDup.astElement, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
-						CLF_DUP_CTOR)
+					addIssue(otherDup.astElement, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, issueItem);
 				} else {
 					if (createErrorForFirst) {
-						val message = getMessageForCLF_DUP_MEMBER(firstDup.descriptionWithLine(),
+						val IssueItem issueItem = CLF_DUP_MEMBER.toIssueItem(firstDup.descriptionWithLine(),
 							otherDup.descriptionWithLine());
-						addIssue(message, firstDup.astElement, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
-							CLF_DUP_MEMBER)
+						addIssue(firstDup.astElement, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, issueItem);
 						createErrorForFirst = false;
 					}
-					val message = getMessageForCLF_DUP_MEMBER(otherDup.descriptionWithLine(),
+					val IssueItem issueItem = CLF_DUP_MEMBER.toIssueItem(otherDup.descriptionWithLine(),
 						firstDup.descriptionWithLine());
-					addIssue(message, otherDup.astElement, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
-						CLF_DUP_MEMBER)
+					addIssue(otherDup.astElement, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, issueItem);
 				}
 			}
 		}
@@ -228,13 +224,12 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 		if((n4TypeVar.declaredCovariant || n4TypeVar.declaredContravariant) &&
 			!(n4TypeVar.eContainer instanceof N4ClassifierDeclaration
 				&& n4TypeVar.eContainmentFeature===N4JSPackage.eINSTANCE.genericDeclaration_TypeVars)) {
-			val message = messageForCLF_DEF_SITE_VARIANCE_ONLY_IN_CLASSIFIER;
 			val feature = if(n4TypeVar.declaredCovariant) {
 				N4JSPackage.eINSTANCE.n4TypeVariable_DeclaredCovariant
 			} else {
 				N4JSPackage.eINSTANCE.n4TypeVariable_DeclaredContravariant
 			};
-			addIssue(message, n4TypeVar, feature, CLF_DEF_SITE_VARIANCE_ONLY_IN_CLASSIFIER);
+			addIssue(n4TypeVar, feature, CLF_DEF_SITE_VARIANCE_ONLY_IN_CLASSIFIER.toIssueItem());
 		}
 	}
 
@@ -251,9 +246,10 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 			if(variance!==Variance.INV) {
 				val varianceOfPos = N4JSLanguageUtils.getVarianceOfPosition(typeRefInAST);
 				if(varianceOfPos!==null && variance!==varianceOfPos) {
-					val msg = getMessageForCLF_TYPE_VARIABLE_AT_INVALID_POSITION(variance.getDescriptiveString(true),
+					val IssueItem issueItem = CLF_TYPE_VARIABLE_AT_INVALID_POSITION.toIssueItem(
+						variance.getDescriptiveString(true),
 						varianceOfPos.getDescriptiveString(false));
-					addIssue(msg, typeRefInAST, CLF_TYPE_VARIABLE_AT_INVALID_POSITION);
+					addIssue(typeRefInAST, issueItem);
 				}
 			}
 		}

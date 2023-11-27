@@ -13,6 +13,8 @@ package org.eclipse.n4js.validation;
 import static org.eclipse.xtext.diagnostics.Severity.ERROR;
 import static org.eclipse.xtext.diagnostics.Severity.WARNING;
 
+import java.util.List;
+
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.xtext.diagnostics.Severity;
 
@@ -2093,6 +2095,14 @@ public enum IssueCodes {
 			}
 		}
 		return msgTemplate.formatted(values);
+	}
+
+	public IssueItem toIssueItem(Object... values) {
+		return new IssueItem(this, severity, getMessage(values));
+	}
+
+	public IssueItem toIssueItemWithData(List<String> data, Object... values) {
+		return new IssueItem(this, severity, getMessage(values), data.toArray(new String[0]));
 	}
 
 	static public Severity getSeverityForName(String issueName) {

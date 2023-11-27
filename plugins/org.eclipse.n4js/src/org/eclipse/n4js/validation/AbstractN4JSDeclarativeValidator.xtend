@@ -644,4 +644,20 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	def public void addIssue(EObject source, EStructuralFeature feature, IssueCodes issueCode, String... msgValues) {
 		super.addIssue(issueCode.getMessage(msgValues), source, feature, issueCode.name());
 	}
+	
+	def public void addIssue(EObject source, int offset,  int length, IssueItem issueItem) {
+		super.addIssue(issueItem.message, source, offset, length, issueItem.ID, issueItem.data);
+	}
+	
+	def public void addIssue(EObject source, EStructuralFeature feature, int index, IssueItem issueItem) {
+		super.addIssue(issueItem.message, source, feature, index, issueItem.ID, issueItem.data);
+	}
+	
+	def public void addIssue(EObject source, EStructuralFeature feature, IssueItem issueItem) {
+		super.addIssue(issueItem.message, source, feature, issueItem.ID, issueItem.data);
+	}
+	
+	def public void addIssue(EObject source, IssueItem issueItem) {
+		super.addIssue(issueItem.message, source, null, issueItem.ID, issueItem.data);
+	}
 }

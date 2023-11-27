@@ -11,6 +11,7 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
+import java.util.List
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
@@ -49,7 +50,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
-import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.n4js.validation.IssueItem
 import org.eclipse.n4js.validation.IssueUserDataKeys
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.xtext.validation.Check
@@ -95,13 +96,11 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 		if (classDecl?.definedType instanceof TClass) {
 			var clazz = classDecl.definedType as TClass;
 			if (!clazz.abstract && !clazz.directlyExported && clazz.hasTestMethods) {
-				addIssue(getMessageForCLF_TEST_CLASS_NOT_EXPORTED, classDecl,
-					N4_TYPE_DECLARATION__NAME, CLF_TEST_CLASS_NOT_EXPORTED
-				);
+				addIssue(classDecl, N4_TYPE_DECLARATION__NAME, CLF_TEST_CLASS_NOT_EXPORTED.toIssueItem());
 			}
 		}
 		if (classDecl.typingStrategy === TypingStrategy.STRUCTURAL) {
-			addIssue(getMessageForCLF_MUST_BE_NOMINAL, classDecl, N4JSPackage.eINSTANCE.n4ClassifierDeclaration_TypingStrategy, CLF_MUST_BE_NOMINAL);
+			addIssue(classDecl, N4JSPackage.eINSTANCE.n4ClassifierDeclaration_TypingStrategy, CLF_MUST_BE_NOMINAL.toIssueItem());
 		}
 	}
 
@@ -206,10 +205,10 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 				val containingClassifier = field.containingType;
 				if (containingClassifier instanceof TInterface) {
 					if (N4JSLanguageUtils.builtInOrProvidedByRuntime(containingClassifier)) {
-						val message = getMessageForCLF_SPEC_BUILT_IN_OR_PROVIDED_BY_RUNTIME_OR_EXTENAL_WITHOUT_N4JS_ANNOTATION(field.name, containingClassifier.name);
+						val IssueItem issueItem = CLF_SPEC_BUILT_IN_OR_PROVIDED_BY_RUNTIME_OR_EXTENAL_WITHOUT_N4JS_ANNOTATION.toIssueItem(field.name, containingClassifier.name);
 						val feature = if ((property.astElement as PropertyNameValuePair).property === null) PROPERTY_NAME_OWNER__DECLARED_NAME
 										else N4JSPackage.eINSTANCE.propertyNameValuePair_Property;
-						addIssue(message, property.astElement, feature, CLF_SPEC_BUILT_IN_OR_PROVIDED_BY_RUNTIME_OR_EXTENAL_WITHOUT_N4JS_ANNOTATION);
+						addIssue(property.astElement, feature, issueItem);
 					}
 				}
 			}
@@ -248,8 +247,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 
 	def private internalCheckAbstractFinal(TClass tClass) {
 		if (tClass.abstract && tClass.final) {
-			val message = getMessageForCLF_ABSTRACT_FINAL("class");
-			addIssue(message, tClass.astElement, N4_TYPE_DECLARATION__NAME, CLF_ABSTRACT_FINAL);
+			addIssue(tClass.astElement, N4_TYPE_DECLARATION__NAME, CLF_ABSTRACT_FINAL.toIssueItem("class"));
 		}
 	}
 
@@ -260,17 +258,17 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 
 			if (superType instanceof PrimitiveType) {
 				if (!N4Scheme.isFromResourceWithN4Scheme(n4Class)) { // primitive types may be extended in built-in types
-					val message = getMessageForCLF_EXTENDS_PRIMITIVE_GENERIC_TYPE(superType.name);
-					addIssue(message, n4Class.superClassRef, null, CLF_EXTENDS_PRIMITIVE_GENERIC_TYPE);
+					val IssueItem issueItem = CLF_EXTENDS_PRIMITIVE_GENERIC_TYPE.toIssueItem(superType.name);
+					addIssue(n4Class.superClassRef, null, issueItem);
 				}
 			} else if (!(superType instanceof TClass)) {
 				if (superType instanceof TInterface) {
-					val message = getMessageForSYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP(n4Class.description, "extend",
+					val IssueItem issueItem = SYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP.toIssueItem(n4Class.description, "extend",
 						superType.description, "implements");
-					addIssue(message, n4Class.superClassRef, null, SYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP);
+					addIssue(n4Class.superClassRef, null, issueItem);
 				} else {
-					val message = getMessageForCLF_WRONG_META_TYPE(n4Class.description, "extend", superType.description);
-					addIssue(message, n4Class.superClassRef, null, CLF_WRONG_META_TYPE);
+					val IssueItem issueItem = CLF_WRONG_META_TYPE.toIssueItem(n4Class.description, "extend", superType.description);
+					addIssue(n4Class.superClassRef, null, issueItem);
 					return false;
 				}
 			} else if(superType instanceof TClass) {
@@ -278,18 +276,22 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 
 				// super class must not be final (except in case of polyfills)
 				if (superType.final && !(N4JSLanguageUtils.isNonStaticPolyfill(n4Class) || N4JSLanguageUtils.isStaticPolyfill(n4Class))) {
-					val message = getMessageForCLF_EXTEND_FINAL(superType.name);
 
 					val superTypeAstElement = superType.eGet(TypesPackage.eINSTANCE.syntaxRelatedTElement_AstElement,
 						false) as EObject;
 					val superClassUri = if (superTypeAstElement!==null) EcoreUtil.getURI(superTypeAstElement).toString;
 
 					if (superClassUri !== null) {
-						addIssue(message, n4Class.superClassRef, null, CLF_EXTEND_FINAL,
-							IssueUserDataKeys.CLF_EXTEND_FINAL.SUPER_TYPE_DECLARATION_URI, superClassUri);
+						val IssueItem issueItem = CLF_EXTEND_FINAL.toIssueItemWithData(
+							List.of(IssueUserDataKeys.CLF_EXTEND_FINAL.SUPER_TYPE_DECLARATION_URI, superClassUri),
+							superType.name
+						);
+						addIssue(n4Class.superClassRef, null, issueItem);
 					} else {
-						addIssue(message, n4Class.superClassRef, null, CLF_EXTEND_FINAL,
-							IssueUserDataKeys.CLF_EXTEND_FINAL.SUPER_TYPE_DECLARATION_URI);
+						val IssueItem issueItem = CLF_EXTEND_FINAL.toIssueItemWithData(
+							List.of(IssueUserDataKeys.CLF_EXTEND_FINAL.SUPER_TYPE_DECLARATION_URI),
+							superType.name);
+						addIssue(n4Class.superClassRef, null, issueItem);
 					}
 					return false;
 				}
@@ -301,15 +303,15 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 
 				// if super class is observable, then this class must be observable as well
 				if (superType.observable && !(n4Class.definedType as TClass).observable) {
-					val message = getMessageForCLF_OBSERVABLE_MISSING(n4Class.name, superType.name);
-					addIssue(message, n4Class, N4_TYPE_DECLARATION__NAME, CLF_OBSERVABLE_MISSING);
+					val IssueItem issueItem = CLF_OBSERVABLE_MISSING.toIssueItem(n4Class.name, superType.name);
+					addIssue(n4Class, N4_TYPE_DECLARATION__NAME, issueItem);
 					return false;
 				}
 			}
 		} else if (superTypeRef !== null && superTypeRef.isAliasResolved) {
 			// not all aliases are illegal after "extends", but if we get to this point we have an illegal case:
-			val message = getMessageForCLF_WRONG_META_TYPE(n4Class.description, "extend", superTypeRef.typeRefAsStringWithAliasResolution);
-			addIssue(message, n4Class.superClassRef, null, CLF_WRONG_META_TYPE);
+			val IssueItem issueItem = CLF_WRONG_META_TYPE.toIssueItem(n4Class.description, "extend", superTypeRef.typeRefAsStringWithAliasResolution);
+			addIssue(n4Class.superClassRef, null, issueItem);
 			return false;
 		}
 		return true;
@@ -319,10 +321,10 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 		val receiverTypeRef = TypeUtils.createTypeRef(n4Class.definedType);
 		val superCtor = containerTypesHelper.fromContext(n4Class).findConstructor(superType);
 		if(superCtor!==null && !memberVisibilityChecker.isVisible(n4Class, receiverTypeRef, superCtor).visibility) {
-			val message = getMessageForCLF_EXTEND_NON_ACCESSIBLE_CTOR(
+			val IssueItem issueItem = CLF_EXTEND_NON_ACCESSIBLE_CTOR.toIssueItem(
 				n4jsElementKeywordProvider.keyword(superType),
 				superType.name);
-			addIssue(message, n4Class, N4_CLASS_DEFINITION__SUPER_CLASS_REF, CLF_EXTEND_NON_ACCESSIBLE_CTOR);
+			addIssue(n4Class, N4_CLASS_DEFINITION__SUPER_CLASS_REF, issueItem);
 			return false;
 		}
 		return true;
@@ -337,27 +339,26 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 				// consumed type must be an interface
 				if (!(consumedType instanceof TInterface)) {
 					if (consumedType instanceof TClass && n4Class.superClassRef === null) {
-						val message = getMessageForSYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP(n4Class.description, "implement",
+						val IssueItem issueItem = SYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP.toIssueItem(n4Class.description, "implement",
 							consumedType.description, "extends");
-						addIssue(message, it, null, SYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP);
+						addIssue(it, null, issueItem);
 					} else {
-						val message = getMessageForCLF_WRONG_META_TYPE(n4Class.description, "implement",
+						val IssueItem issueItem = CLF_WRONG_META_TYPE.toIssueItem(n4Class.description, "implement",
 							consumedType.description);
-						addIssue(message, it, null, CLF_WRONG_META_TYPE);
+						addIssue(it, null, issueItem);
 					}
 				} else {
 					val tIfc = consumedType as TInterface;
 					val cth = containerTypesHelper.fromContext(n4Class);
 					val hasCallConstructSig = cth.findCallSignature(tIfc) !== null || cth.findConstructSignature(tIfc) !== null;
 					if (hasCallConstructSig) {
-						val message = getMessageForCLF_CALL_CONSTRUCT_SIG_CANNOT_IMPLEMENT();
-						addIssue(message, it, null, CLF_CALL_CONSTRUCT_SIG_CANNOT_IMPLEMENT);
+						addIssue(it, null, CLF_CALL_CONSTRUCT_SIG_CANNOT_IMPLEMENT.toIssueItem());
 					}
 				}
 			} else if (consumedTypeRef !== null && consumedTypeRef.isAliasResolved) {
 				// not all aliases are illegal after "implements", but if we get to this point we have an illegal case:
-				val message = getMessageForCLF_WRONG_META_TYPE(n4Class.description, "implement", consumedTypeRef.typeRefAsStringWithAliasResolution);
-				addIssue(message, it, null, CLF_WRONG_META_TYPE);
+				val IssueItem issueItem = CLF_WRONG_META_TYPE.toIssueItem(n4Class.description, "implement", consumedTypeRef.typeRefAsStringWithAliasResolution);
+				addIssue(it, null, issueItem);
 			}
 		]
 	}
@@ -374,8 +375,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 					val correctType = currFPar.declaredTypeRef instanceof ThisTypeRef
 						&& STRUCTURAL_FIELD_INITIALIZER === currFPar.declaredTypeRef.typingStrategy;
 					if (!correctType) {
-						val message = messageForCLF_SPEC_WRONG_TYPE;
-						addIssue(message, annSpec, null, CLF_SPEC_WRONG_TYPE);
+						addIssue(annSpec, null, CLF_SPEC_WRONG_TYPE.toIssueItem());
 					} else { // prevent consequential errors
 						holdsAdditionalSpecFieldMatchesOwnedFields(
 							n4ClassDeclaration,
@@ -388,8 +388,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 			}
 			if (specAnnotations.size >= 2) {
 				for (currAnnSpec : specAnnotations) {
-					val message = messageForCLF_SPEC_MULTIPLE;
-					addIssue(message, currAnnSpec, null, CLF_SPEC_MULTIPLE);
+					addIssue(currAnnSpec, null, CLF_SPEC_MULTIPLE.toIssueItem());
 				}
 			}
 		}
@@ -415,16 +414,12 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 				val smemberType = ts.tau(smember, TypeUtils.createTypeRef(tclass));
 				val subtypeRes = ts.subtype(G, smemberType, fieldType);
 				if (subtypeRes.failure) {
-					val message = getMessageForCLF_SPEC_WRONG_ADD_MEMBERTYPE(smember.name, description(tfield),
+					val IssueItem issueItem = CLF_SPEC_WRONG_ADD_MEMBERTYPE.toIssueItem(smember.name, description(tfield),
 						trimTypesystemMessage(subtypeRes));
 					val errMember = (ctor.fpars.get(parIndex).declaredTypeRefInAST as StructuralTypeRef).structuralMembers.
 						get(memberIndex);
 					val sourceObject = (if (errMember.astElement !== null) errMember.astElement else errMember);
-					addIssue(
-						message,
-						sourceObject,
-						CLF_SPEC_WRONG_ADD_MEMBERTYPE
-					);
+					addIssue(sourceObject, issueItem);
 				}
 
 			}
@@ -437,10 +432,9 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 	def private boolean holdsNoCyclicInheritance(N4ClassDeclaration n4ClassDeclaration) {
 		val cls = n4ClassDeclaration.definedType as TClassifier;
 		val cycle = findCyclicInheritance(cls);
-		if(cycle!==null) {
-			val message = IssueCodes.getMessageForCLF_INHERITANCE_CYCLE(cycle.map[name].join(", "));
-			addIssue(message, n4ClassDeclaration, N4JSPackage.Literals.N4_CLASS_DEFINITION__SUPER_CLASS_REF,
-				IssueCodes.CLF_INHERITANCE_CYCLE);
+		if (cycle!==null) {
+			val IssueItem issueItem = CLF_INHERITANCE_CYCLE.toIssueItem(cycle.map[name].join(", "));
+			addIssue(n4ClassDeclaration, N4JSPackage.Literals.N4_CLASS_DEFINITION__SUPER_CLASS_REF, issueItem);
 			return false;
 		}
 		return true;

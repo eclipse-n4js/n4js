@@ -24,8 +24,11 @@ import org.eclipse.n4js.n4JS.ModifierUtils
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.n4JS.NamespaceExportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -53,6 +56,7 @@ import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
+import org.eclipse.n4js.validation.IssueItem
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.nodemodel.ILeafNode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -62,9 +66,6 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.n4JS.N4MemberDeclaration
-import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
-import org.eclipse.n4js.n4JS.N4Modifier
 
 /**
  */
@@ -131,13 +132,13 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 			// NOTE: we are using issue code UNSUPPORTED here, because the only reason for disallowing a visibility higher than
 			// private on non-exported types is that it is required/useful only with separate export declarations and such export
 			// declarations are UNSUPPORTED in N4JS(D) at the moment.
-			val message = getMessageForUNSUPPORTED("non-exported " + tElem.keyword + " with a visibility higher than private");
+			val issueItem = UNSUPPORTED.toIssueItem("non-exported " + tElem.keyword + " with a visibility higher than private");
 			val node = findModifierNode(astNode, tElem.typeAccessModifier);
 			if (node !== null) {
-				addIssue(message, astNode, node.getOffset(), node.getLength(), UNSUPPORTED);
+				addIssue(astNode, node.getOffset(), node.getLength(), issueItem);
 			} else {
 				val eObjectToNameFeature = findNameFeature(astNode);
-				addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, UNSUPPORTED)
+				addIssue(eObjectToNameFeature.key, eObjectToNameFeature.value, issueItem)
 			}
 		}
 	}
@@ -168,8 +169,8 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 				if (exportedElement instanceof AccessibleTypeElement) {
 					val tam = exportedElement.typeAccessModifier;
 					if (!(tam.ordinal > TypeAccessModifier.PRIVATE.ordinal)) {
-						val msg = getMessageForEXP_PRIVATE_ELEMENT(exportedElement.keyword, exportedElement.name);
-						addIssue(msg, idRef, EXP_PRIVATE_ELEMENT);
+						val IssueItem issueItem = EXP_PRIVATE_ELEMENT.toIssueItem(exportedElement.keyword, exportedElement.name);
+						addIssue(idRef, issueItem);
 					}
 				}
 			}
@@ -199,10 +200,10 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 					null
 			}
 			if (typeAccessModifier !== null && typeAccessModifier.ordinal <= TypeAccessModifier.PROJECT.ordinal) {
-				val message = getMessageForCLF_LOW_ACCESSOR_WITH_INTERNAL(exportableElement.keyword,
+				val IssueItem issueItem = CLF_LOW_ACCESSOR_WITH_INTERNAL.toIssueItem(exportableElement.keyword,
 					typeAccessModifier.keyword)
 				val eObjectToNameFeature = exportableElement.findNameFeature
-				addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_LOW_ACCESSOR_WITH_INTERNAL)
+				addIssue(eObjectToNameFeature.key, eObjectToNameFeature.value, issueItem)
 			}
 		}
 	}
@@ -222,16 +223,14 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 				if(parent instanceof TFormalParameter) {
 					return; // avoid duplicate error messages
 				} else if(parent instanceof N4FieldDeclaration || parent instanceof TField) {
-					val message = messageForCLF_FIELD_OPTIONAL_OLD_SYNTAX;
 					val node = NodeModelUtils.findActualNodeFor(typeRefInAST)
 					if (node !== null) {
-						addIssue(message, typeRefInAST, node.offset, node.length, CLF_FIELD_OPTIONAL_OLD_SYNTAX)
+						addIssue(typeRefInAST, node.offset, node.length, CLF_FIELD_OPTIONAL_OLD_SYNTAX.toIssueItem())
 					}
 				} else {
-					val message = messageForEXP_OPTIONAL_INVALID_PLACE;
 					val node = NodeModelUtils.findActualNodeFor(typeRefInAST)
 					if (node !== null) {
-						addIssue(message, typeRefInAST, node.offset, node.length, EXP_OPTIONAL_INVALID_PLACE)
+						addIssue(typeRefInAST, node.offset, node.length, EXP_OPTIONAL_INVALID_PLACE.toIssueItem())
 					}
 				}
 			}
@@ -254,22 +253,18 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 			&& !n4member.declaredModifiers.contains(N4Modifier.PRIVATE) // see: CLF_MINIMAL_ACCESSIBILITY_IN_INTERFACES
 			&& !(n4member.eContainer as N4InterfaceDeclaration).declaredModifiers.contains(N4Modifier.PUBLIC)
 		) {
-			val msg = getMessageForSTRCT_ITF_MEMBER_MUST_BE_PUBLIC;
-			addIssue(msg, n4member, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName, STRCT_ITF_MEMBER_MUST_BE_PUBLIC);
+			addIssue(n4member, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName, STRCT_ITF_MEMBER_MUST_BE_PUBLIC.toIssueItem());
 		}
 	}
 
 	@Check
 	def checkFieldConstFinalValidCombinations(N4FieldDeclaration n4field) {
 		if (n4field.const && n4field.declaredStatic) {
-			val msg = getMessageForCLF_FIELD_CONST_STATIC;
-			addIssue(msg, n4field, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName, CLF_FIELD_CONST_STATIC);
+			addIssue(n4field, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName, CLF_FIELD_CONST_STATIC.toIssueItem());
 		} else if (n4field.const && n4field.final) {
-			val msg = getMessageForCLF_FIELD_CONST_FINAL;
-			addIssue(msg, n4field, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName, CLF_FIELD_CONST_FINAL);
+			addIssue(n4field, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName, CLF_FIELD_CONST_FINAL.toIssueItem());
 		} else if (n4field.final && n4field.declaredStatic) {
-			val msg = getMessageForCLF_FIELD_FINAL_STATIC;
-			addIssue(msg, n4field, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName, CLF_FIELD_FINAL_STATIC);
+			addIssue(n4field, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName, CLF_FIELD_FINAL_STATIC.toIssueItem());
 		}
 	}
 
@@ -280,8 +275,7 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		if (n4field.const && n4field.expression === null) {
-			val msg = getMessageForCLF_FIELD_CONST_MISSING_INIT(n4field.name);
-			addIssue(msg, n4field, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName, CLF_FIELD_CONST_MISSING_INIT);
+			addIssue(n4field, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName, CLF_FIELD_CONST_MISSING_INIT.toIssueItem());
 		}
 	}
 
@@ -315,14 +309,12 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 		val boolean replacedByPolyfill = n4classifier.ownedCtor !== n4classifier.polyfilledOrOwnCtor;
 		if (replacedByPolyfill) {
 			finalFieldsWithoutInit.forEach [
-				val msg = getMessageForCLF_FIELD_FINAL_MISSING_INIT_IN_STATIC_POLYFILL(it.name);
-				addIssue(msg, it, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName,
-					CLF_FIELD_FINAL_MISSING_INIT_IN_STATIC_POLYFILL)
+				addIssue(it, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName,
+					CLF_FIELD_FINAL_MISSING_INIT_IN_STATIC_POLYFILL.toIssueItem(it.name))
 			]
 		} else {
 			finalFieldsWithoutInit.forEach [
-				val msg = getMessageForCLF_FIELD_FINAL_MISSING_INIT(it.name);
-				addIssue(msg, it, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName, CLF_FIELD_FINAL_MISSING_INIT)
+				addIssue(it, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName, CLF_FIELD_FINAL_MISSING_INIT.toIssueItem(it.name))
 			]
 		}
 	}
