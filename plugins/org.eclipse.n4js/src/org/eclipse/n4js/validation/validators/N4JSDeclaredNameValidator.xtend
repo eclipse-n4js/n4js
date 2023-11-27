@@ -81,6 +81,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.validation.IssueCodes.*
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
+import org.eclipse.n4js.validation.IssueItem
 
 /**
  */
@@ -139,11 +140,10 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 							return;
 						}
 
-						addIssue(
-							StringExtensions.toFirstUpper(
-								getMessageForAST_NAME_DUPLICATE_ERR(messageHelper.description(dupeEO, name),
-									messageHelper.descriptionWithLine(baseEO, name))), dupeEO, findNameEAttribute(dupeEO),
-							AST_NAME_DUPLICATE_ERR);
+						val IssueItem issueItem = AST_NAME_DUPLICATE_ERR.toIssueItem(
+							StringExtensions.toFirstUpper(messageHelper.description(dupeEO, name)),
+							messageHelper.descriptionWithLine(baseEO, name));
+						addIssue(dupeEO, findNameEAttribute(dupeEO), issueItem);
 					}
 				]);
 		]
@@ -167,12 +167,10 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 					if (BASE_JS_TYPES.contains(name)) {
 						val project = workspaceAccess.findProjectContaining(exportableElement);
 						if (project === null || project.type !== ProjectType.RUNTIME_ENVIRONMENT) {
-							addIssue(getMessageForAST_GLOBAL_JS_NAME_CONFLICT(name), exportableElement,
-								AST_GLOBAL_JS_NAME_CONFLICT);
+							addIssue(exportableElement, AST_GLOBAL_JS_NAME_CONFLICT.toIssueItem(name));
 						}
 					} else if (BASE_GLOBAL_NAMES.contains(name)) {
-						addIssue(getMessageForAST_GLOBAL_NAME_CONFLICT(name), exportableElement,
-							AST_GLOBAL_NAME_CONFLICT);
+						addIssue(exportableElement, AST_GLOBAL_NAME_CONFLICT.toIssueItem(name));
 					}
 				}
 			}
@@ -247,12 +245,10 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 				val globalObjectMember = globalEntry.value.head;
 				val localObjects = localNames.get(name);
 				for (innerScopeObject : localObjects) {
-					addIssue(
-						StringExtensions.toFirstUpper(
-							getMessageForAST_GLOBAL_NAME_SHADOW_ERR(
-								messageHelper.description(innerScopeObject, name),
-								messageHelper.description(globalObjectMember, name))), innerScopeObject,
-						findNameEAttribute(innerScopeObject), AST_GLOBAL_NAME_SHADOW_ERR);
+					val IssueItem issueItem = AST_GLOBAL_NAME_SHADOW_ERR.toIssueItem(
+								StringExtensions.toFirstUpper(messageHelper.description(innerScopeObject, name)),
+								messageHelper.description(globalObjectMember, name));
+					addIssue(innerScopeObject, findNameEAttribute(innerScopeObject), issueItem);
 				}
 			}
 		}
@@ -305,31 +301,26 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 								if (baseEO.equals(vee)) {
 
 									if (dupeEO instanceof FormalParameter) {
-										addIssue(
-											StringExtensions.toFirstUpper(
-												getMessageForAST_NAME_SHADOW_ERR(
-													messageHelper.description(dupeEO, name),
-													messageHelper.description(baseEO, name))), dupeEO,
-											findNameEAttribute(dupeEO), AST_NAME_SHADOW_ERR);
+										val IssueItem issueItem = AST_NAME_SHADOW_ERR.toIssueItem(
+													StringExtensions.toFirstUpper(messageHelper.description(dupeEO, name)),
+													messageHelper.description(baseEO, name));
+										addIssue(dupeEO, findNameEAttribute(dupeEO), issueItem);
 									} else {
-										addIssue(
-											StringExtensions.toFirstUpper(
-												getMessageForAST_NAME_SHADOW_ERR(
-													messageHelper.description(dupeEO, name),
-													messageHelper.descriptionWithLine(baseEO, name))), dupeEO,
-											findNameEAttribute(dupeEO), AST_NAME_SHADOW_ERR);
+										val IssueItem issueItem = AST_NAME_SHADOW_ERR.toIssueItem(
+													StringExtensions.toFirstUpper(messageHelper.description(dupeEO, name)),
+													messageHelper.descriptionWithLine(baseEO, name));
+										addIssue(dupeEO, findNameEAttribute(dupeEO), issueItem);
 									}
 									return;
 								}
 
 								// otherwise mark duplicates
 								if (dupeEO instanceof FormalParameter) {
-									addIssue(
-										StringExtensions.toFirstUpper(
-											getMessageForAST_NAME_DUPLICATE_ERR(
-												messageHelper.description(dupeEO, name),
-												messageHelper.description(baseEO, name))), dupeEO,
-										findNameEAttribute(dupeEO), AST_NAME_DUPLICATE_ERR);
+									val IssueItem issueItem = AST_NAME_DUPLICATE_ERR.toIssueItem(
+										StringExtensions.toFirstUpper(messageHelper.description(dupeEO, name)),
+										messageHelper.description(baseEO, name)
+									);
+									addIssue(dupeEO, findNameEAttribute(dupeEO), issueItem);
 								} else if ((dupeEO instanceof NamedImportSpecifier &&
 									baseEO instanceof NamedImportSpecifier) ||
 									(dupeEO instanceof NamespaceImportSpecifier &&
@@ -353,12 +344,10 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 										N4JSLanguageUtils.isNonStaticPolyfill(dupeEO as N4ClassifierDeclaration)
 										// TODO IDE-1735 does this check need to be activated for static polyfills?
 									)) {
-										addIssue(
-											StringExtensions.toFirstUpper(
-												getMessageForAST_NAME_DUPLICATE_ERR(
-													messageHelper.description(dupeEO, name),
-													messageHelper.descriptionWithLine(baseEO, name))), dupeEO,
-											findNameEAttribute(dupeEO), AST_NAME_DUPLICATE_ERR);
+										val IssueItem issueItem = AST_NAME_DUPLICATE_ERR.toIssueItem(
+													StringExtensions.toFirstUpper(messageHelper.description(dupeEO, name)),
+													messageHelper.descriptionWithLine(baseEO, name));
+										addIssue(dupeEO, findNameEAttribute(dupeEO), issueItem);
 									}
 								}
 							}
@@ -421,12 +410,10 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 		declaredLetConst.filter[fparNames.contains(declaredName)].forEach[dupeEO|
 			val name = dupeEO.declaredName;
 			val baseEO = fpars.filter[it.name==name].head;
-			addIssue(
-				StringExtensions.toFirstUpper(
-					getMessageForAST_NAME_DUPLICATE_ERR(
-						messageHelper.description(dupeEO, name),
-						messageHelper.description(baseEO, name))), dupeEO,
-				findNameEAttribute(dupeEO), AST_NAME_SHADOW_ERR);
+			val IssueItem issueItem = AST_NAME_SHADOW_ERR.toIssueItem(
+						StringExtensions.toFirstUpper(messageHelper.description(dupeEO, name)),
+						messageHelper.description(baseEO, name));
+			addIssue(dupeEO, findNameEAttribute(dupeEO), issueItem);
 		];
 	}
 
@@ -487,12 +474,10 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 									&& innerScopeObject.eContainer === outerScopeObject) {
 
 									// formal parameters hides containing function name
-									addIssue(
-										StringExtensions.toFirstUpper(
-											getMessageForAST_NAME_SHADOW_ERR(
-												messageHelper.description(innerScopeObject, name),
-												messageHelper.description(outerScopeObject, name))), innerScopeObject,
-										findNameEAttribute(innerScopeObject), AST_NAME_SHADOW_ERR);
+									val IssueItem issueItem = AST_NAME_SHADOW_ERR.toIssueItem(
+												StringExtensions.toFirstUpper(messageHelper.description(innerScopeObject, name)),
+												messageHelper.description(outerScopeObject, name));
+									addIssue(innerScopeObject, findNameEAttribute(innerScopeObject), issueItem);
 									return;
 								}
 
@@ -503,12 +488,10 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 								}
 
 								// but not containing function
-								addIssue(
-									StringExtensions.toFirstUpper(
-										getMessageForAST_NAME_SHADOW_ERR(
-											messageHelper.description(innerScopeObject, name),
-											messageHelper.descriptionWithLine(outerScopeObject, name))),
-									innerScopeObject, findNameEAttribute(innerScopeObject), AST_NAME_SHADOW_ERR);
+								val IssueItem issueItem = AST_NAME_SHADOW_ERR.toIssueItem(
+											StringExtensions.toFirstUpper(messageHelper.description(innerScopeObject, name)),
+											messageHelper.descriptionWithLine(outerScopeObject, name));
+								addIssue(innerScopeObject, findNameEAttribute(innerScopeObject), issueItem);
 								return;
 							}
 
@@ -520,23 +503,19 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 									//adding a warning, consider removing if it gets annoying
 									//in our platform code
 									if(jsVariantHelper.isN4JSMode(innerScopeObject)){
-										addIssue(
-											StringExtensions.toFirstUpper(
-												getMessageForAST_NAME_SHADOW_WARN(
-													messageHelper.description(innerScopeObject, name),
-													messageHelper.descriptionWithLine(outerScopeObject, name))),
-											innerScopeObject, findNameEAttribute(innerScopeObject), AST_NAME_SHADOW_WARN);
+										val IssueItem issueItem = AST_NAME_SHADOW_WARN.toIssueItem(
+													StringExtensions.toFirstUpper(messageHelper.description(innerScopeObject, name)),
+													messageHelper.descriptionWithLine(outerScopeObject, name));
+										addIssue(innerScopeObject, findNameEAttribute(innerScopeObject), issueItem);
 										return;
 									}
 									//if js mode
 									return;
 								}
-								addIssue(
-									StringExtensions.toFirstUpper(
-										getMessageForAST_NAME_SHADOW_ERR(
-											messageHelper.description(innerScopeObject, name),
-											messageHelper.descriptionWithLine(outerScopeObject, name))),
-									innerScopeObject, findNameEAttribute(innerScopeObject), AST_NAME_SHADOW_ERR);
+								val IssueItem issueItem = AST_NAME_SHADOW_ERR.toIssueItem(
+											StringExtensions.toFirstUpper(messageHelper.description(innerScopeObject, name)),
+											messageHelper.descriptionWithLine(outerScopeObject, name));
+								addIssue(innerScopeObject, findNameEAttribute(innerScopeObject), issueItem);
 								return;
 							}
 							return;

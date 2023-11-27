@@ -37,6 +37,7 @@ import org.eclipse.n4js.n4JS.EqualityExpression
 import org.eclipse.n4js.n4JS.EqualityOperator
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionStatement
+import org.eclipse.n4js.n4JS.ExpressionWithTarget
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
@@ -126,6 +127,7 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
 import org.eclipse.n4js.utils.PromisifyHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.n4js.validation.IssueItem
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.ValidatorMessageHelper
@@ -139,7 +141,6 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.n4JS.ExpressionWithTarget
 
 /**
  */
@@ -178,8 +179,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkAwaitExpression(AwaitExpression awaitExpression) {
 		if (!N4JSLanguageUtils.isValidLocationForAwait(awaitExpression)) {
-			val message = IssueCodes.getMessageForEXP_MISPLACED_AWAIT("await", "async");
-			addIssue(message, awaitExpression, IssueCodes.EXP_MISPLACED_AWAIT);
+			val IssueItem issueItem = EXP_MISPLACED_AWAIT.toIssueItem("await", "async");
+			addIssue(awaitExpression, issueItem);
 		}
 
 		if( awaitExpression.getExpression() === null ){
@@ -215,12 +216,10 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val boolean isUndef = typeRef.declaredType == G.undefinedType;
 		val boolean isNull = typeRef.declaredType == G.nullType;
 		if (!stUnions) {
-			val message = IssueCodes.getMessageForEXP_AWAIT_NON_ASYNC();
-			addIssue(message, awaitExpression, IssueCodes.EXP_AWAIT_NON_ASYNC);
+			addIssue(awaitExpression, EXP_AWAIT_NON_ASYNC.toIssueItem());
 		}
 		if (isUndef || isNull) {
-			val message = IssueCodes.getMessageForEXP_AWAIT_NON_ASYNC_SPECIAL(typeRef.declaredType.name);
-			addIssue(message, awaitExpression, IssueCodes.EXP_AWAIT_NON_ASYNC_SPECIAL);
+			addIssue(awaitExpression, EXP_AWAIT_NON_ASYNC_SPECIAL.toIssueItem(typeRef.declaredType.name));
 		}
 	}
 
@@ -259,10 +258,9 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			val G = propAccessExpr.newRuleEnvironment;
 			val targetTypeRef = ts.type(G, propAccessExpr.target);
 			if(!ts.subtypeSucceeded(G, targetTypeRef, declThisTypeRef)) {
-				val msg = IssueCodes.getMessageForEXP_ACCESS_INVALID_TYPE_OF_TARGET(prop.description,
+				val IssueItem issueItem = EXP_ACCESS_INVALID_TYPE_OF_TARGET.toIssueItem(prop.description,
 					targetTypeRef.typeRefAsString, declThisTypeRef.typeRefAsString);
-				addIssue(msg, propAccessExpr, N4JSPackage.eINSTANCE.parameterizedPropertyAccessExpression_Property,
-					IssueCodes.TYS_NO_SUBTYPE);
+				addIssue(propAccessExpr, N4JSPackage.eINSTANCE.parameterizedPropertyAccessExpression_Property, issueItem);
 			}
 		}
 	}
@@ -332,10 +330,10 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			return
 		}
 		// no more whitelist checks
-		val message = IssueCodes.getMessageForEXP_METHOD_REF_UNATTACHED_FROM_RECEIVER(method.name);
+		val message = EXP_METHOD_REF_UNATTACHED_FROM_RECEIVER.getMessage(method.name);
 		val source = propAccessExpression
 		val feature = N4JSPackage.eINSTANCE.parameterizedPropertyAccessExpression_Property
-		warning(message, source, feature, IssueCodes.EXP_METHOD_REF_UNATTACHED_FROM_RECEIVER);
+		warning(message, source, feature, EXP_METHOD_REF_UNATTACHED_FROM_RECEIVER.name());
 	}
 
 	private def boolean isMethodEffectivelyFinal(TMethod method) {
@@ -364,10 +362,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				val targetIdRef = if (target instanceof IdentifierRef) target else null;
 				val isExceptionCase = target instanceof ThisLiteral; // avoid duplicate error messages
 				if (targetIdRef?.id !== prop.eContainer && !isExceptionCase) {
-					val message = IssueCodes.getMessageForCLF_INVALID_ACCESS_OF_STATIC_MEMBER_OF_INTERFACE;
-					addIssue(message, propAccessExpr,
-						N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET,
-						IssueCodes.CLF_INVALID_ACCESS_OF_STATIC_MEMBER_OF_INTERFACE);
+					addIssue(propAccessExpr, N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET,
+						CLF_INVALID_ACCESS_OF_STATIC_MEMBER_OF_INTERFACE.toIssueItem());
 				}
 			}
 		}
@@ -395,19 +391,18 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (!isCallable && !(callExpression.target instanceof SuperLiteral)) {
 			if (callablesCount > 1) {
 				val callableTypeRefsAsStr = callables.map[callableTypeRef.typeRefAsString].join(", ");
-				val message = IssueCodes.getMessageForEXP_CALL_CONFLICT_IN_INTERSECTION(callableTypeRefsAsStr);
-				addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_CONFLICT_IN_INTERSECTION);
+				val IssueItem issueItem = EXP_CALL_CONFLICT_IN_INTERSECTION.toIssueItem(callableTypeRefsAsStr);
+				addIssue(callExpression.target, issueItem);
 			} else if (tsh.isClassConstructorFunction(G, typeRef) || isClassifierTypeRefToAbstractClass(G, typeRef)) {
-				val message = IssueCodes.getMessageForEXP_CALL_CLASS_CTOR;
-				addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_CLASS_CTOR);
+				addIssue(callExpression.target, EXP_CALL_CLASS_CTOR.toIssueItem());
 			} else {
 				val staticType = if (typeRef instanceof TypeTypeRef) tsh.getStaticType(G, typeRef);
 				if (staticType instanceof TInterface && tsh.getCallSignature(callExpression.eResource, TypeUtils.createTypeRef(staticType)) !== null) {
-					val message = IssueCodes.getMessageForEXP_CALL_CONSTRUCT_SIG_OF_INTERFACE_DIRECTLY_USED("invoke", staticType.name, "call");
-					addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_CONSTRUCT_SIG_OF_INTERFACE_DIRECTLY_USED);
+					val IssueItem issueItem = EXP_CALL_CONSTRUCT_SIG_OF_INTERFACE_DIRECTLY_USED.toIssueItem("invoke", staticType.name, "call");
+					addIssue(callExpression.target, issueItem);
 				} else {
-					val message = IssueCodes.getMessageForEXP_CALL_NOT_A_FUNCTION(typeRef.typeRefAsString);
-					addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_NOT_A_FUNCTION);
+					val IssueItem issueItem = EXP_CALL_NOT_A_FUNCTION.toIssueItem(typeRef.typeRefAsString);
+					addIssue(callExpression.target, issueItem);
 				}
 			}
 			return;
@@ -473,8 +468,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			}
 		val shouldWarn = !isPromiseExplict;
 		if (shouldWarn) {
-			val message = IssueCodes.getMessageForEXP_MISSNG_AWAIT_FOR_ASYNC_TARGET();
-			addIssue(message, callExpression.target, IssueCodes.EXP_MISSNG_AWAIT_FOR_ASYNC_TARGET);
+			addIssue(callExpression.target, IssueCodes.EXP_MISSNG_AWAIT_FOR_ASYNC_TARGET.toIssueItem());
 		}
 	}
 
@@ -565,9 +559,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			val newables = tsh.getNewableTypeRefs(G, typeRef, newExpression, false);
 			if (newables.size > 1) {
 				val newableTypeRefsAsStr = newables.map[newableTypeRef.typeRefAsString].join(", ");
-				val message = IssueCodes.getMessageForEXP_NEW_CONFLICT_IN_INTERSECTION(newableTypeRefsAsStr);
-				addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee,
-					IssueCodes.EXP_NEW_CONFLICT_IN_INTERSECTION);
+				addIssue(newExpression, N4JSPackage.eINSTANCE.newExpression_Callee,
+					EXP_NEW_CONFLICT_IN_INTERSECTION.toIssueItem(newableTypeRefsAsStr));
 				return;
 			} else if (newables.size === 1) {
 				// special success case; but perform some further checks
@@ -603,54 +596,45 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			|| (staticType instanceof TClassifier && N4JSLanguageUtils.hasCovariantConstructor(staticType as TClassifier, declMergingHelper));
 		if (staticType === G.symbolObjectType) {
 			// error case #1: new Symbol()
-			val message = IssueCodes.messageForBIT_SYMBOL_NOT_A_CTOR;
-			addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee,
-				IssueCodes.BIT_SYMBOL_NOT_A_CTOR);
+			addIssue(newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, BIT_SYMBOL_NOT_A_CTOR.toIssueItem());
 			return;
 		} else if (!isCtor && staticType instanceof TInterface && isDirectRef) {
 			// error case #2: trying to instantiate an interface
 			val tInterface = staticType as TInterface;
 			if (tInterface.constructSignature !== null) {
 				// special case: trying to directly instantiate an interface with a construct signature
-				val message = IssueCodes.getMessageForEXP_CALL_CONSTRUCT_SIG_OF_INTERFACE_DIRECTLY_USED("instantiate", staticType.name, "construct");
-				addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee,
-					IssueCodes.EXP_CALL_CONSTRUCT_SIG_OF_INTERFACE_DIRECTLY_USED);
+				val IssueItem issueItem = EXP_CALL_CONSTRUCT_SIG_OF_INTERFACE_DIRECTLY_USED.toIssueItem("instantiate", staticType.name, "construct");
+				addIssue(newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, issueItem);
 				return;
 			}
-			val message = IssueCodes.getMessageForEXP_NEW_CANNOT_INSTANTIATE(staticType.keyword, staticType.name);
-			addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee,
-				IssueCodes.EXP_NEW_CANNOT_INSTANTIATE);
+			val IssueItem issueItem = EXP_NEW_CANNOT_INSTANTIATE.toIssueItem(staticType.keyword, staticType.name);
+			addIssue(newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, issueItem);
 			return;
 		} else if (!isCtor && staticType instanceof TClass && (staticType as TClass).abstract && isDirectRef) {
 			// error case #3: trying to instantiate an abstract class
-			val message = IssueCodes.getMessageForEXP_NEW_CANNOT_INSTANTIATE("abstract class", staticType.name);
-			addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee,
-				IssueCodes.EXP_NEW_CANNOT_INSTANTIATE);
+			val IssueItem issueItem = EXP_NEW_CANNOT_INSTANTIATE.toIssueItem("abstract class", staticType.name);
+			addIssue(newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, issueItem);
 			return;
 		} else if (isCtor && !isConcreteOrCovariant && staticType instanceof TClassifier) {
 			// error case #4: trying to instantiate "constructor{? extends C}", with C not having @CovariantConstructor
-			val message = IssueCodes.getMessageForEXP_NEW_WILDCARD_NO_COVARIANT_CTOR(typeArg.typeRefAsString, staticType.typeAsString);
-			addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee,
-				IssueCodes.EXP_NEW_WILDCARD_NO_COVARIANT_CTOR);
+			val IssueItem issueItem = EXP_NEW_WILDCARD_NO_COVARIANT_CTOR.toIssueItem(typeArg.typeRefAsString, staticType.typeAsString);
+			addIssue(newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, issueItem);
 			return;
 		} else if (staticType instanceof TEnum) {
 			// error case #5: trying to instantiate an enum
-			val message = IssueCodes.getMessageForEXP_NEW_CANNOT_INSTANTIATE("enum", staticType.name);
-			addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee,
-				IssueCodes.EXP_NEW_CANNOT_INSTANTIATE);
+			val IssueItem issueItem = EXP_NEW_CANNOT_INSTANTIATE.toIssueItem("enum", staticType.name);
+			addIssue(newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, issueItem);
 			return;
 		} else if (staticType instanceof TypeVariable ) {
 			// error case #6: trying to instantiate a type variable
-			val message = IssueCodes.getMessageForEXP_NEW_CANNOT_INSTANTIATE("type variable", staticType.name);
-			addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee,
-				IssueCodes.EXP_NEW_CANNOT_INSTANTIATE);
+			val IssueItem issueItem = EXP_NEW_CANNOT_INSTANTIATE.toIssueItem("type variable", staticType.name);
+			addIssue(newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, issueItem);
 			return;
 		} else if (staticType === null || !isCtor || !isConcreteOrCovariant) {
 			// remaining cases
 			val name = typeRef.typeRefAsString;
-			val message = IssueCodes.getMessageForEXP_NEW_WILDCARD_OR_TYPEVAR(name);
-			addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee,
-				IssueCodes.EXP_NEW_WILDCARD_OR_TYPEVAR);
+			val IssueItem issueItem = EXP_NEW_WILDCARD_OR_TYPEVAR.toIssueItem(name);
+			addIssue(newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, issueItem);
 			return;
 		}
 
@@ -677,8 +661,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val container = constructSig?.eContainer;
 		if (container instanceof TInterface) { // avoid checking accessibility of construct signatures in StructuralTypeRefs/TStructuralTypes (they're always public)
 			if (!memberVisibilityChecker.isVisible(newExpression, calleeTypeRef, constructSig).visibility) {
-				val message = IssueCodes.getMessageForVIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR("construct signature", container.name);
-				addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, IssueCodes.VIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR);
+				val IssueItem issueItem = VIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR.toIssueItem("construct signature", container.name);
+				addIssue(newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, issueItem);
 				return false;
 			}
 		}
@@ -703,8 +687,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 
 	/** Helper to issue the error case of having a new-expression on a non-constructor element */
 	private def issueNotACtor(TypeRef typeRef, NewExpression newExpression) {
-		val message = IssueCodes.getMessageForEXP_NEW_NOT_A_CTOR(typeRef.typeRefAsString);
-		addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, IssueCodes.EXP_NEW_NOT_A_CTOR)
+		val IssueItem issueItem = EXP_NEW_NOT_A_CTOR.toIssueItem(typeRef.typeRefAsString);
+		addIssue(newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, issueItem);
 	}
 
 	/**
@@ -720,10 +704,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				val staticType = tsh.getStaticType(G, typeRef);
 				if (staticType instanceof TN4Classifier) {
 					if (staticType instanceof TInterface && N4Scheme.isFromResourceWithN4Scheme(staticType)) {
-						val message = IssueCodes.
-							getMessageForTYS_INSTANCEOF_NOT_SUPPORTED_FOR_BUILT_IN_INTERFACES(staticType.name);
-						addIssue(message, relationalExpression, N4JSPackage.eINSTANCE.relationalExpression_Rhs,
-							IssueCodes.TYS_INSTANCEOF_NOT_SUPPORTED_FOR_BUILT_IN_INTERFACES);
+						val IssueItem issueItem = TYS_INSTANCEOF_NOT_SUPPORTED_FOR_BUILT_IN_INTERFACES.toIssueItem(staticType.name);
+						addIssue(relationalExpression, N4JSPackage.eINSTANCE.relationalExpression_Rhs, issueItem);
 					}
 				}
 			}
@@ -735,9 +717,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 					val rhsTypeRef = ts.tau((innerExpression instanceof UnaryExpression) ? innerExpression.expression : innerExpression);
 					
 					if (!RuleEnvironmentExtensions.isNumeric(G, rhsTypeRef)) {
-						val message = IssueCodes.getMessageForTYS_INSTANCEOF_NOT_SUPPORTED_FOR_USE_SITE_STRUCTURAL();
-						addIssue(message, relationalExpression, N4JSPackage.eINSTANCE.relationalExpression_Rhs,
-							IssueCodes.TYS_INSTANCEOF_NOT_SUPPORTED_FOR_USE_SITE_STRUCTURAL);	
+						addIssue(relationalExpression, N4JSPackage.eINSTANCE.relationalExpression_Rhs,
+							TYS_INSTANCEOF_NOT_SUPPORTED_FOR_USE_SITE_STRUCTURAL.toIssueItem());	
 					}
 				}
 			}
@@ -780,11 +761,9 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 					val setterExists = containerTypesHelper.fromContext(expression).members(declaredType).filter(
 						TSetter).exists[name.equals(property.name)]
 					if (!setterExists) {
-						val msg = IssueCodes.getMessageForTYS_PROPERTY_HAS_NO_SETTER(property.name)
-						addIssue(msg, expression,
-							N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY,
-							IssueCodes.TYS_PROPERTY_HAS_NO_SETTER);
-							return false;
+						addIssue(expression, N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY,
+							IssueCodes.TYS_PROPERTY_HAS_NO_SETTER.toIssueItem(property.name));
+						return false;
 					}
 				}
 			}
@@ -804,8 +783,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 					val module = EcoreUtil2.getContainerOfType(expression, Script).module;
 					if (id.containingModule != module) {
 						// imported variable, class, etc.
-						addIssue(IssueCodes.getMessageForIMP_IMPORTED_ELEMENT_READ_ONLY(expression.idAsText),
-							expression, IssueCodes.IMP_IMPORTED_ELEMENT_READ_ONLY);
+						addIssue(expression, IMP_IMPORTED_ELEMENT_READ_ONLY.toIssueItem(expression.idAsText));
 						return false;
 					}
 				}
@@ -831,8 +809,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 							val importedElmentText = NodeModelUtils.getTokenText(
 								NodeModelUtils.findActualNodeFor(expression));
 
-							addIssue(IssueCodes.getMessageForIMP_IMPORTED_ELEMENT_READ_ONLY(importedElmentText),
-								expression, IssueCodes.IMP_IMPORTED_ELEMENT_READ_ONLY);
+							addIssue(expression, IMP_IMPORTED_ELEMENT_READ_ONLY.toIssueItem(importedElmentText));
 							return false;
 						}
 					}
@@ -890,11 +867,9 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		Expression expr) {
 		val cmp = compareNumberOfArgsWithNumberOfFPars(fpars, args);
 		if (cmp < 0) { // too few
-			addIssue(IssueCodes.getMessageForEXP_NUM_OF_ARGS_TOO_FEW(fpars.size, args.size), expr,
-				IssueCodes.EXP_NUM_OF_ARGS_TOO_FEW);
+			addIssue(expr, EXP_NUM_OF_ARGS_TOO_FEW.toIssueItem(fpars.size, args.size));
 		} else if (cmp > 0) { // too many
-			addIssue(IssueCodes.getMessageForEXP_NUM_OF_ARGS_TOO_MANY(fpars.size, args.size), expr,
-				IssueCodes.EXP_NUM_OF_ARGS_TOO_MANY);
+			addIssue(expr, EXP_NUM_OF_ARGS_TOO_MANY.toIssueItem(fpars.size, args.size));
 		}
 	}
 
@@ -1000,21 +975,15 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 
 
 	def issueMathResultIsConstant(String operand, String constResult, Expression location) {
-		addIssue(IssueCodes.getMessageForEXP_MATH_OPERATION_RESULT_IS_CONSTANT(operand, constResult),
-			location,
-			IssueCodes.EXP_MATH_OPERATION_RESULT_IS_CONSTANT);
+		addIssue(location, EXP_MATH_OPERATION_RESULT_IS_CONSTANT.toIssueItem(operand, constResult));
 	}
 
 	def issueMathOperandIsConstant(String operandType, String constValue, Expression location) {
-		addIssue(IssueCodes.getMessageForEXP_MATH_OPERAND_IS_CONSTANT(operandType, constValue),
-			location,
-			IssueCodes.EXP_MATH_OPERAND_IS_CONSTANT);
+		addIssue(location, EXP_MATH_OPERAND_IS_CONSTANT.toIssueItem(operandType, constValue));
 	}
 
 	def issueMathOperandTypeNotPermitted(String operandType, Expression location) {
-		addIssue(IssueCodes.getMessageForEXP_MATH_TYPE_NOT_PERMITTED(operandType),
-			location,
-			IssueCodes.EXP_MATH_TYPE_NOT_PERMITTED);
+		addIssue(location, EXP_MATH_TYPE_NOT_PERMITTED.toIssueItem(operandType));
 	}
 
 
@@ -1079,10 +1048,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 
 			if (! (leftSubOfRight || rightSubOfLeft)) {
 				// no subtype-relationship found, issue warning:
-				addIssue(
-					IssueCodes.
-						getMessageForEXP_WARN_CONSTANT_EQUALITY_TEST(tlhs.warningNameOf, trhs.warningNameOf,
-							ee.op === EqualityOperator::NSAME), ee, IssueCodes.EXP_WARN_CONSTANT_EQUALITY_TEST);
+				addIssue(ee, EXP_WARN_CONSTANT_EQUALITY_TEST.toIssueItem(tlhs.warningNameOf, trhs.warningNameOf, ee.op === EqualityOperator::NSAME));
 			}
 		}
 
@@ -1196,11 +1162,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (forbidden !== null) {
 			val theType = ts.tau(e)?.declaredType
 			if (theType === forbidden) {
-				addIssue(
-					IssueCodes.getMessageForEXP_FORBIDDEN_TYPE_IN_BINARY_LOGICAL_EXPRESSION(typeName),
-					e,
-					IssueCodes.EXP_FORBIDDEN_TYPE_IN_BINARY_LOGICAL_EXPRESSION
-				);
+				addIssue(e, EXP_FORBIDDEN_TYPE_IN_BINARY_LOGICAL_EXPRESSION.toIssueItem(typeName));
 			}
 		}
 	}
@@ -1249,11 +1211,11 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			msg1 = "false";
 			msg2 = "right-hand";
 		}
-		addIssue(IssueCodes.getMessageForEXP_WARN_DISPENSABLE_CONDITIONAL_EXPRESSION(
+		val IssueItem issueItem = EXP_WARN_DISPENSABLE_CONDITIONAL_EXPRESSION.toIssueItem(
 			NodeModelUtils.findActualNodeFor(expressionToCheck).text.trim,
 			msg1,
-			msg2
-		), expressionToCheck, IssueCodes.EXP_WARN_DISPENSABLE_CONDITIONAL_EXPRESSION);
+			msg2);
+		addIssue(expressionToCheck, issueItem);
 
 	}
 
@@ -1312,8 +1274,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (BooleanExtensions::xor(S.isDynamic, T.isDynamic)) return;
 
 		if (ts.subtypeSucceeded(G, S, T)) { // Constraint 81.2 (Cast Validation At Compile-Time): 1
-			addIssue(IssueCodes.getMessageForEXP_CAST_UNNECESSARY(S.typeRefAsString, T.typeRefAsString),
-				castExpression, IssueCodes.EXP_CAST_UNNECESSARY);
+			val IssueItem issueItem = EXP_CAST_UNNECESSARY.toIssueItem(S.typeRefAsString, T.typeRefAsString);
+			addIssue(castExpression, issueItem);
 		} else {
 			val specialChecks = (T.declaredType instanceof ContainerType<?>)
 				|| (T.declaredType instanceof PrimitiveType)
@@ -1329,7 +1291,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				internalCheckCastExpression(G, S, T, castExpression, true, false);
 			} else {
 				// Constraint 78 (Cast Validation At Compile-Time): 2
-				addIssue(IssueCodes.getMessageForEXP_CAST_INVALID_TARGET(), castExpression, IssueCodes.EXP_CAST_INVALID_TARGET);
+				addIssue(castExpression, EXP_CAST_INVALID_TARGET.toIssueItem());
 			}
 		}
 	}
@@ -1365,8 +1327,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				internalCheckCastExpression(G, S, it, castExpression, false, actualSourceTypeIsCPOE)
 			]) {
 				if (addIssues) {
-					addIssue(IssueCodes.getMessageForEXP_CAST_FAILED(S.typeRefAsString, T.typeRefAsString),
-						castExpression, IssueCodes.EXP_CAST_FAILED);
+					addIssue(castExpression, EXP_CAST_FAILED.toIssueItem(S.typeRefAsString, T.typeRefAsString));
 				}
 				return false;
 			}
@@ -1375,8 +1336,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				internalCheckCastExpression(G, S, it, castExpression, false, actualSourceTypeIsCPOE)
 			]) {
 				if (addIssues) {
-					addIssue(IssueCodes.getMessageForEXP_CAST_FAILED(S.typeRefAsString, T.typeRefAsString),
-						castExpression, IssueCodes.EXP_CAST_FAILED);
+					addIssue(castExpression, EXP_CAST_FAILED.toIssueItem(S.typeRefAsString, T.typeRefAsString));
 				}
 				return false;
 			}
@@ -1389,8 +1349,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			] && ! S.typeRefs.exists[ts.subtypeSucceeded(G, it, T)] // one type in composed is a subtype of target
 			) {
 				if (addIssues) {
-					addIssue(IssueCodes.getMessageForEXP_CAST_FAILED(S.typeRefAsString, T.typeRefAsString),
-						castExpression, IssueCodes.EXP_CAST_FAILED);
+					addIssue(castExpression, EXP_CAST_FAILED.toIssueItem(S.typeRefAsString, T.typeRefAsString));
 				}
 				return false;
 			}
@@ -1440,8 +1399,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			}
 			if (!castOK) {
 				if (addIssues) {
-					addIssue(IssueCodes.getMessageForEXP_CAST_FAILED(S.typeRefAsString, T.typeRefAsString),
-						castExpression, IssueCodes.EXP_CAST_FAILED);
+					addIssue(castExpression, EXP_CAST_FAILED.toIssueItem(S.typeRefAsString, T.typeRefAsString));
 				}
 				return false;
 			}
@@ -1452,8 +1410,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				actualSourceTypeIsCPOE
 			)) {
 				if (addIssues) {
-					addIssue(IssueCodes.getMessageForEXP_CAST_FAILED(S.typeRefAsString, T.typeRefAsString),
-						castExpression, IssueCodes.EXP_CAST_FAILED);
+					addIssue(castExpression, EXP_CAST_FAILED.toIssueItem(S.typeRefAsString, T.typeRefAsString));
 				}
 				return false;
 			}
@@ -1563,7 +1520,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			// allowed: index into exact-type Object instance (not subtype thereof)
 		} else if (accessedStaticType instanceof TEnum) { // Constraints 69.2
 			// disallowed: index access into an enum
-			addIssue(messageForEXP_INDEXED_ACCESS_ENUM, indexedAccess, EXP_INDEXED_ACCESS_ENUM);
+			addIssue(indexedAccess, EXP_INDEXED_ACCESS_ENUM.toIssueItem());
 		} else if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) { // Constraints 69.3
 			// allowed: index into array-like with a numeric index
 		} else if (accessedBuiltInSymbol !== null) {
@@ -1595,8 +1552,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue);
 		if (N4JSLanguageUtils.SYMBOL_ITERATOR_MANGLED == memberName) {
 			// Implementation restriction: member name clashes with compiler-internal, synthetic, mangled name.
-			addIssue(getMessageForEXP_INDEXED_ACCESS_IMPL_RESTRICTION(), indexedAccess,
-				EXP_INDEXED_ACCESS_IMPL_RESTRICTION);
+			addIssue(indexedAccess, EXP_INDEXED_ACCESS_IMPL_RESTRICTION.toIssueItem());
 			return
 		}
 		if (receiverTypeRef.dynamic) {
@@ -1614,10 +1570,9 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val isNonExistentMember = member===null || member.eIsProxy;
 		if (isNonExistentMember) {
 			if (indexIsNumeric) {
-				addIssue(messageForEXP_INDEXED_ACCESS_FORBIDDEN, indexedAccess, EXP_INDEXED_ACCESS_FORBIDDEN);
+				addIssue(indexedAccess, EXP_INDEXED_ACCESS_FORBIDDEN.toIssueItem());
 			} else {
-				addIssue(getMessageForEXP_INDEXED_ACCESS_COMPUTED_NOTFOUND(memberName), indexedAccess,
-					EXP_INDEXED_ACCESS_COMPUTED_NOTFOUND);
+				addIssue(indexedAccess, EXP_INDEXED_ACCESS_COMPUTED_NOTFOUND.toIssueItem(memberName));
 			}
 			return;
 		}
@@ -1633,8 +1588,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val symbolIterator = G.symbolObjectType.findOwnedMember("iterator", false, true);
 		val symbolAsyncIterator = G.symbolObjectType.findOwnedMember("asyncIterator", false, true);
 		if (accessedBuiltInSymbol !== symbolIterator && accessedBuiltInSymbol !== symbolAsyncIterator) {
-			val msg = getMessageForEXP_INDEXED_ACCESS_SYMBOL_INVALID("Symbol.iterator and Symbol.asyncIterator");
-			addIssue(msg, indexedAccess, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX, EXP_INDEXED_ACCESS_SYMBOL_INVALID);
+			val IssueItem issueItem = EXP_INDEXED_ACCESS_SYMBOL_INVALID.toIssueItem("Symbol.iterator and Symbol.asyncIterator");
+			addIssue(indexedAccess, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX, issueItem);
 			return false;
 		}
 		// check valid receiver type (currently only for instance of [Async]Iterable and immediate(!) instances of Object and dynamic types)
@@ -1648,16 +1603,16 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			receiverTypeRef.typingStrategy === TypingStrategy.NOMINAL;
 		val isDynamic = receiverTypeRef.dynamic;
 		if (!(isIterable || isObjectImmediate || isDynamic)) {
-			val msg = getMessageForEXP_INDEXED_ACCESS_SYMBOL_WRONG_TYPE(accessedBuiltInSymbol.name, correspondingIterableTypeRef.declaredType.name);
-			addIssue(msg, indexedAccess, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX, EXP_INDEXED_ACCESS_SYMBOL_WRONG_TYPE);
+			val IssueItem issueItem = EXP_INDEXED_ACCESS_SYMBOL_WRONG_TYPE.toIssueItem(accessedBuiltInSymbol.name, correspondingIterableTypeRef.declaredType.name);
+			addIssue(indexedAccess, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX, issueItem);
 			return false;
 		}
 		// check valid access (currently read-only, except for immediate(!) instances of Object and dynamic types)
 		if (!(isObjectImmediate || isDynamic)) {
 			val boolean writeAccess = ExpressionExtensions.isLeftHandSide(indexedAccess);
 			if (writeAccess) {
-				val msg = getMessageForEXP_INDEXED_ACCESS_SYMBOL_READONLY(accessedBuiltInSymbol.name, correspondingIterableTypeRef.declaredType.name);
-				addIssue(msg, indexedAccess, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX, EXP_INDEXED_ACCESS_SYMBOL_READONLY);
+				val IssueItem issueItem = EXP_INDEXED_ACCESS_SYMBOL_READONLY.toIssueItem(accessedBuiltInSymbol.name, correspondingIterableTypeRef.declaredType.name);
+				addIssue(indexedAccess, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX, issueItem);
 				return false;
 			}
 		}
@@ -1687,22 +1642,18 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val id = lhs.id;
 		switch (id) {
 			VariableDeclaration case id.const: {
-				addIssue(getMessageForEXP_ASSIGN_CONST_VARIABLE(id.name), lhs,
-					EXP_ASSIGN_CONST_VARIABLE);
+				addIssue(lhs, EXP_ASSIGN_CONST_VARIABLE.toIssueItem(id.name));
 				return false;
 			}
 			TVariable case id.const: {
-				addIssue(getMessageForEXP_ASSIGN_CONST_VARIABLE(id.name), lhs,
-					EXP_ASSIGN_CONST_VARIABLE);
+				addIssue(lhs, EXP_ASSIGN_CONST_VARIABLE.toIssueItem(id.name));
 				return false;
 			}
 			TField case !id.writeable: {
 				// note: this case can happen only when referring to globals in GlobalObject (see file global.n4jsd);
 				// in all other cases of referencing a field, 'lhs' will be a PropertyAccessExpression (those cases
 				// will be handled in class AbstractMemberScope as part of scoping)
-				addIssue(
-					getMessageForVIS_WRONG_READ_WRITE_ACCESS("built-in constant", id.name, "read-only"),
-					lhs, VIS_WRONG_READ_WRITE_ACCESS);
+				addIssue(lhs, VIS_WRONG_READ_WRITE_ACCESS.toIssueItem("built-in constant", id.name, "read-only"));
 				return false;
 			}
 		}
@@ -1712,7 +1663,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkPromisify(PromisifyExpression promiExpr) {
 		if (!promisifyHelper.isPromisifiableExpression(promiExpr.expression)) {
-			addIssue(getMessageForEXP_PROMISIFY_INVALID_USE, promiExpr, EXP_PROMISIFY_INVALID_USE);
+			addIssue(promiExpr, EXP_PROMISIFY_INVALID_USE.toIssueItem());
 		}
 	}
 
@@ -1732,8 +1683,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if(context instanceof N4MemberDeclaration) {
 			val tMember = context.definedTypeElement;
 			if(tMember?.containingType instanceof TInterface && tMember.static) {
-				val msg = getMessageForCLF_NO_THIS_IN_STATIC_MEMBER_OF_INTERFACE
-				addIssue(msg, thisLiteral, CLF_NO_THIS_IN_STATIC_MEMBER_OF_INTERFACE);
+				addIssue(thisLiteral, CLF_NO_THIS_IN_STATIC_MEMBER_OF_INTERFACE.toIssueItem());
 				return;
 			}
 		}
@@ -1741,15 +1691,13 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			val tField = context.definedTypeElement;
 			// 2) not in initializers of data fields in interfaces
 			if(tField?.containingType instanceof TInterface) {
-				val msg = getMessageForCLF_NO_THIS_IN_FIELD_OF_INTERFACE
-				addIssue(msg, thisLiteral, CLF_NO_THIS_IN_FIELD_OF_INTERFACE);
+				addIssue(thisLiteral, CLF_NO_THIS_IN_FIELD_OF_INTERFACE.toIssueItem());
 				return;
 			}
 			// 3) not in initializers of static(!) data fields in classes
 			if(tField?.containingType instanceof TClass) {
 				if(tField.static) {
-					val msg = getMessageForCLF_NO_THIS_IN_STATIC_FIELD
-					addIssue(msg, thisLiteral, CLF_NO_THIS_IN_STATIC_FIELD);
+					addIssue(thisLiteral, CLF_NO_THIS_IN_STATIC_FIELD.toIssueItem());
 					return;
 				}
 			}
@@ -1759,7 +1707,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def void checkTaggedTemplateString(TaggedTemplateString ttString) {
 		if (isInOptionalChaining(ttString)) {
-			addIssue(getMessageForVCO_TEMPLATE_IN_OPT_CHAIN, ttString.template, VCO_TEMPLATE_IN_OPT_CHAIN);
+			addIssue(ttString.template, VCO_TEMPLATE_IN_OPT_CHAIN.toIssueItem());
 		}
 	}
 
@@ -1787,8 +1735,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				if(isExpressionOfComputedPropertyNameInObjectLiteral(expr)) {
 					// special case: in object literals, anything goes
 					// (but show a warning)
-					addIssue(IssueCodes.getMessageForEXP_COMPUTED_PROP_NAME_DISCOURAGED, expr,
-						IssueCodes.EXP_COMPUTED_PROP_NAME_DISCOURAGED);
+					addIssue(expr, IssueCodes.EXP_COMPUTED_PROP_NAME_DISCOURAGED.toIssueItem());
 					return;
 				}
 				createIssuesForEvalErrors(evalResult.errors);
@@ -1833,8 +1780,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val astNode = error.astNode;
 		val feature = error.feature;
 		if(message!==null && astNode!==null) { // feature may be null, that is ok!
-			val msgFull = getMessageForEXP_COMPILE_TIME_MANDATORY(message);
-			addIssue(msgFull, astNode, feature, IssueCodes.EXP_COMPILE_TIME_MANDATORY);
+			addIssue(astNode, feature, EXP_COMPILE_TIME_MANDATORY.toIssueItem());
 		}
 	}
 }

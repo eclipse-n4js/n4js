@@ -59,6 +59,7 @@ import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.DeclMergingHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
+import org.eclipse.n4js.validation.IssueItem
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.scoping.IScopeProvider
 import org.eclipse.xtext.validation.Check
@@ -142,12 +143,10 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 
 		val tClazz = staticType as TClass;
 		if (requiresInjection(tClazz, declMergingHelper)) {
-			addIssue(getMessageForDI_MUST_BE_INJECTED(tClazz.typeAsString),
-				newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, DI_MUST_BE_INJECTED);
+			addIssue(newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, DI_MUST_BE_INJECTED.toIssueItem(tClazz.typeAsString));
 		}
 		if (isMarkedInjected(tClazz, declMergingHelper)) {
-			addIssue(getMessageForDI_API_INJECTED(),
-				newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, DI_API_INJECTED);
+			addIssue(newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, DI_API_INJECTED.toIssueItem());
 		}
 	}
 
@@ -208,9 +207,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 				if (!injectedParentInjectors.empty) {
 					val currentName = currentType.name;
 					val superName = injectedParentInjectors.get(0)?.containingType?.name;
-					addIssue(getMessageForDI_CTOR_BREAKS_INJECTION_CHAIN(superName, currentName),
-						ctor, PROPERTY_NAME_OWNER__DECLARED_NAME, DI_CTOR_BREAKS_INJECTION_CHAIN
-					)
+					addIssue(ctor, PROPERTY_NAME_OWNER__DECLARED_NAME, DI_CTOR_BREAKS_INJECTION_CHAIN.toIssueItem(superName, currentName));
 					return false;
 				}
 			}
@@ -260,7 +257,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		val isInjectedCtor = INJECT.hasAnnotation(ctor)
 		if (!isInjectedCtor) {
 			// read-access "this.f" where f is injected is valid only in a constructor that is itself marked (at)Inject
-			addIssue(getMessageForDI_FIELD_IS_NOT_INJECTED_YET(accessedField.name), propAccess, DI_FIELD_IS_NOT_INJECTED_YET);
+			addIssue(propAccess, DI_FIELD_IS_NOT_INJECTED_YET.toIssueItem(accessedField.name));
 			isValid = false;
 		} else {
 			// some param must exist whose type conforms to that of the injected field being read.
@@ -270,7 +267,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 				|| ts.subtypeSucceeded(G, it, accessedField?.typeRef)
 			];
 			if (!someParamSubtypesFieldType) {
-				addIssue(getMessageForDI_FIELD_IS_NOT_INJECTED_YET(accessedField.name), propAccess, DI_FIELD_IS_NOT_INJECTED_YET);
+				addIssue(propAccess, DI_FIELD_IS_NOT_INJECTED_YET.toIssueItem(accessedField.name));
 				isValid = false;
 			}
 		}
@@ -336,7 +333,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 			return // invalid AST
 		}
 		if(injtorClassDecl.superClassRef !== null){
-			addIssue(getMessageForDI_ANN_INJECTOR_EXTENDS(), ann, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_INJECTOR_EXTENDS);
+			addIssue(ann, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_INJECTOR_EXTENDS.toIssueItem());
 		}
 		// collect binding across all binders used by the injector of interest
 		val usedBindersAnns = USE_BINDER.getAllAnnotations(injtorClassDecl)
@@ -356,7 +353,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		val injtorCtor = injtorClassDecl.ownedCtor
 		if ((null !== injtorCtor) && !(injtorCtor.fpars.isEmpty)) {
 			if (!INJECT.hasAnnotation(injtorCtor)) {
-				addIssue(getMessageForDI_ANN_INJECTOR_CTOR_MUST_BE_INJECT(), injtorCtor, DI_ANN_INJECTOR_CTOR_MUST_BE_INJECT);
+				addIssue(injtorCtor, DI_ANN_INJECTOR_CTOR_MUST_BE_INJECT.toIssueItem());
 			}
 		}
 	}
@@ -409,8 +406,8 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 				// comparing structurally leads to flagging as duplicates, say, two different classes lacking members
 				val dupBinding = getDuplicate(extra, seen, G)
 				if (null !== dupBinding) {
-					addIssue(getMessageForDI_ANN_DUPLICATE_BINDING(), useBinderAnn, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_DUPLICATE_BINDING);
-					addIssue(getMessageForDI_ANN_DUPLICATE_BINDING(), dupBinding, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_DUPLICATE_BINDING);
+					addIssue(useBinderAnn, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_DUPLICATE_BINDING.toIssueItem());
+					addIssue(dupBinding, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_DUPLICATE_BINDING.toIssueItem());
 				} else {
 					seen.put(extra, useBinderAnn)
 				}
@@ -435,15 +432,15 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		// TODO this assumes an ExportDeclaration may be annotated @Binder. Fix javadoc if so. Fix error message if not.
 		val binderClassDecl = getAnnotatedClass(binderAnn);
 		if(null === binderClassDecl || binderClassDecl.isAbstract){
-			addIssue(getMessageForDI_ANN_BINDER_NOT_APPLICABLE(), binderAnn, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_BINDER_NOT_APPLICABLE);
+			addIssue(binderAnn, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_BINDER_NOT_APPLICABLE.toIssueItem());
 			return
 		}
 		if(binderClassDecl.superClassRef !== null){
-			addIssue(getMessageForDI_ANN_BINDER_EXTENDS(), binderAnn, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_BINDER_EXTENDS);
+			addIssue(binderAnn, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_BINDER_EXTENDS.toIssueItem());
 		}
 		val binderTClazz = binderClassDecl.definedTypeAsClass;
 		if (GENERATE_INJECTOR.hasAnnotation(binderTClazz)) {
-			addIssue(getMessageForDI_ANN_BINDER_AND_INJECTOR_DONT_GO_TOGETHER(), binderAnn, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_BINDER_AND_INJECTOR_DONT_GO_TOGETHER);
+			addIssue(binderAnn, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_BINDER_AND_INJECTOR_DONT_GO_TOGETHER.toIssueItem());
 		}
 		internalCheckNoDupBindings(BIND.getAllAnnotations(binderClassDecl), newRuleEnvironment(binderClassDecl))
 	}
@@ -461,8 +458,8 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 				// comparing structurally leads to flagging as duplicates, say, two different classes lacking members
 				val dupBinding = getDuplicate(extra, seen, G)
 				if (null !== dupBinding) {
-					addIssue(getMessageForDI_ANN_DUPLICATE_BINDING(), binding, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_DUPLICATE_BINDING);
-					addIssue(getMessageForDI_ANN_DUPLICATE_BINDING(), dupBinding, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_DUPLICATE_BINDING);
+					addIssue(binding, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_DUPLICATE_BINDING.toIssueItem());
+					addIssue(dupBinding, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_DUPLICATE_BINDING.toIssueItem());
 				} else {
 					seen.put(extra, binding)
 				}
@@ -535,11 +532,11 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 				} else {
 					val indexOf = visitedTypes.indexOf(type.name);
 					if (indexOf > -1) {
+						val IssueItem issueItem = DI_ANN_USE_INJECTOR_CYCLE.toIssueItem('''«visitedTypes.join(' > ')» > «type.name»''');
 						addIssue(
-							getMessageForDI_ANN_USE_INJECTOR_CYCLE('''«visitedTypes.join(' > ')» > «type.name»'''),
 							it,
 							N4JSPackage.eINSTANCE.annotation_Name,
-							DI_ANN_USE_INJECTOR_CYCLE
+							issueItem
 						);
 						return false
 					}
@@ -618,7 +615,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		//check the container (classifier decl) of the annotated element (ie, field or constructor)
 		val annElemCont = annElem.eContainer;
 		if(annElemCont instanceof N4InterfaceDeclaration){
-			addIssue(getMessageForDI_ANN_INTERFACE_INJECTION_NOT_SUPPORTED(), ann, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_INTERFACE_INJECTION_NOT_SUPPORTED);
+			addIssue(ann, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_INTERFACE_INJECTION_NOT_SUPPORTED.toIssueItem());
 			//no return, do other checks
 		}
 
@@ -636,10 +633,9 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 							valid = !AnnotationDefinition.GENERATE_INJECTOR.hasAnnotation(clazz)
 							if (!valid) {
 								addIssue(
-									getMessageForDI_ANN_INJECTOR_CANNOT_BE_INJECTED_INTO_INJECTOR(),
 									ann,
 									N4JSPackage.eINSTANCE.annotation_Name,
-									DI_ANN_INJECTOR_CANNOT_BE_INJECTED_INTO_INJECTOR
+									DI_ANN_INJECTOR_CANNOT_BE_INJECTED_INTO_INJECTOR.toIssueItem()
 								);
 							}
 							val type = clazz?.superClassRef?.declaredType;
@@ -662,9 +658,8 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 					defMember.fpars.forEach[ann.holdsIsInjectableType(it)]
 				} else {
 					// method injection not supported yet
-					addIssue(getMessageForDI_ANN_INJECT_METHOD_NOT_SUPPORTED_YET(),
-							 ann, N4JSPackage.eINSTANCE.annotation_Name,
-							 DI_ANN_INJECT_METHOD_NOT_SUPPORTED_YET)
+					addIssue(ann, N4JSPackage.eINSTANCE.annotation_Name,
+							 DI_ANN_INJECT_METHOD_NOT_SUPPORTED_YET.toIssueItem())
 				}
 			}
 		};
@@ -680,8 +675,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		val classDecl = getAnnotatedClass(ann);
 		val tClass = classDecl?.definedType;
 		if(tClass!==null && !requiredDef.hasAnnotation(tClass)) {
-			addIssue(getMessageForDI_ANN_ONLY_ON_CLASS_ANNOTATED_WITH(ann.name,requiredDef.name),
-				ann, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_ONLY_ON_CLASS_ANNOTATED_WITH);
+			addIssue(ann, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_ONLY_ON_CLASS_ANNOTATED_WITH.toIssueItem());
 			return false;
 		}
 		return true;
@@ -697,8 +691,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		val methodDecl = getAnnotatedMethod(ann);
 		val tClass = methodDecl?.definedType?.eContainer;
 		if(tClass instanceof TClass && !requiredDef.hasAnnotation(tClass as TClass)) {
-			addIssue(getMessageForDI_ANN_ONLY_ON_METHOD_IN_CLASS_ANNOTATED_WITH(ann.name,requiredDef.name),
-				ann, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_ONLY_ON_METHOD_IN_CLASS_ANNOTATED_WITH);
+			addIssue(ann, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_ONLY_ON_METHOD_IN_CLASS_ANNOTATED_WITH.toIssueItem());
 			return false;
 		}
 		return true;
@@ -720,10 +713,9 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 			val nonInjectableParams = tMethod.fpars.filter[fpar| !(fpar.typeRef.isInjectableType)]
 			nonInjectableParams.forEach[fpar|
 				addIssue(
-					getMessageForDI_NOT_INJECTABLE(fpar.typeRef.typeRefAsString, ''' at «fpar.name»'''),
 					fpar.astElement,
 					N4JSPackage.eINSTANCE.abstractVariable_Name,
-					DI_NOT_INJECTABLE
+					DI_NOT_INJECTABLE.toIssueItem(fpar.typeRef.typeRefAsString, ''' at «fpar.name»''')
 				);
 			];
 
@@ -734,8 +726,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 			val retTR = tMethod.returnTypeRef
 			val isVoidOrOptional = TypeUtils.isVoid(retTR) || tMethod.isReturnValueOptional;
 			if(isVoidOrOptional) {
-				addIssue(messageForDI_ANN_PROVIDES_METHOD_MUST_RETURN_VALUE,
-					methodDecl, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, DI_ANN_PROVIDES_METHOD_MUST_RETURN_VALUE);
+				addIssue(methodDecl, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, DI_ANN_PROVIDES_METHOD_MUST_RETURN_VALUE.toIssueItem());
 				return false;
 			}
 			return ann.holdsIsInjectableType(tMethod.returnTypeRef)
@@ -754,8 +745,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		}
 		val argTypeRef = if(arg instanceof TypeRefAnnotationArgument) arg.typeRef else null;
 		if(!isTypeRefToTClassAnnotatedWith(argTypeRef, requiredDef)) {
-			addIssue(getMessageForDI_ANN_ARG_MUST_BE_ANNOTATED_WITH(ann.name,requiredDef.name),
-				arg, DI_ANN_ARG_MUST_BE_ANNOTATED_WITH);
+			addIssue(arg, DI_ANN_ARG_MUST_BE_ANNOTATED_WITH.toIssueItem(ann.name,requiredDef.name));
 			return false;
 		}
 		return true;
@@ -780,7 +770,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		val arg0TypeRef = ann.getArgAsTypeRef(0);
 		val arg1TypeRef = ann.getArgAsTypeRef(1);
 		if(arg0TypeRef!==null && arg1TypeRef!==null && !ts.subtypeSucceeded(G, arg1TypeRef,arg0TypeRef)) {
-			addIssue(getMessageForDI_ANN_BIND_SECOND_MUST_BE_SUBTYPE_FIRST(ann.name), ann.args.get(1), DI_ANN_BIND_SECOND_MUST_BE_SUBTYPE_FIRST)
+			addIssue(ann.args.get(1), DI_ANN_BIND_SECOND_MUST_BE_SUBTYPE_FIRST.toIssueItem(ann.name))
 			return false;
 		}
 		return true;
@@ -795,9 +785,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 			return true;
 		}
 		if (isVariadicOrOptional) {
-			addIssue(getMessageForDI_VARARGS_NOT_INJECTABLE(), astElement,
-				N4JSPackage.eINSTANCE.abstractVariable_Name, DI_VARARGS_NOT_INJECTABLE
-			);
+			addIssue(astElement, N4JSPackage.eINSTANCE.abstractVariable_Name, DI_VARARGS_NOT_INJECTABLE.toIssueItem());
 			return false;
 		}
 		return ann.holdsIsInjectableType(typeRef, name);
@@ -821,7 +809,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 			return false
 		}
 		if (!isConcrete(targetTypeRef)) {
-			addIssue(getMessageForDI_ANN_BIND_ABSTRACT_TARGET(), bindAnn, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_BIND_ABSTRACT_TARGET);
+			addIssue(bindAnn, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_BIND_ABSTRACT_TARGET.toIssueItem());
 			return false
 		}
 		return true
@@ -861,7 +849,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		}
 		if (!typeRef.isInjectableType) {
 			val description = if (null === name) '''''' else ''' at «name»''';
-			addIssue(getMessageForDI_NOT_INJECTABLE(typeRef.typeRefAsString, description), ann, DI_NOT_INJECTABLE);
+			addIssue(ann, DI_NOT_INJECTABLE.toIssueItem(typeRef.typeRefAsString, description));
 			return false;
 		}
 		return true;
@@ -1019,7 +1007,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 	private def internalCheckAnnotationInjected(Annotation ann) {
 		val classDecl = getAnnotatedClass(ann);
 		if(!isInjectedApplicable(classDecl)){
-			addIssue(getMessageForDI_ANN_INJECTED_NOT_APPLICABLE(), ann, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_INJECTED_NOT_APPLICABLE);
+			addIssue(ann, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_INJECTED_NOT_APPLICABLE.toIssueItem());
 			return
 		}
 		// val tClass = classDecl?.definedTypeAsClass;

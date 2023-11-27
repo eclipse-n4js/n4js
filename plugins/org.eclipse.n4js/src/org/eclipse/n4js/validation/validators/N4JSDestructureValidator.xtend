@@ -40,6 +40,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.DestructureHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.n4js.validation.IssueItem
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -80,8 +81,7 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 			ObjectBindingPattern: pattern.properties.empty
 		};
 		if(isEmpty) {
-			val message = IssueCodes.messageForDESTRUCT_EMPTY_PATTERN;
-			addIssue(message, pattern, IssueCodes.DESTRUCT_EMPTY_PATTERN);
+			addIssue(pattern, IssueCodes.DESTRUCT_EMPTY_PATTERN.toIssueItem());
 		}
 	}
 
@@ -94,8 +94,7 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 			ObjectLiteral: lhs.propertyAssignments.filter(PropertyNameValuePair).empty
 			}
 			if(empty) {
-				val message = IssueCodes.messageForDESTRUCT_EMPTY_PATTERN;
-				addIssue(message, lhs, IssueCodes.DESTRUCT_EMPTY_PATTERN);
+				addIssue(lhs, IssueCodes.DESTRUCT_EMPTY_PATTERN.toIssueItem());
 			}
 		}
 	}
@@ -174,15 +173,13 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 					}
 				}
 			
-				val msg = getMessageForDESTRUCT_PROP_WITH_ERROR(node.propName, errMsg.toString.trim.trimSuffix('.'));
 				val astNodeOfPropName = node.getEObjectAndFeatureForPropName();
-				addIssue(msg, astNodeOfPropName.key, astNodeOfPropName.value, DESTRUCT_PROP_WITH_ERROR);
+				addIssue(astNodeOfPropName.key, astNodeOfPropName.value, DESTRUCT_PROP_WITH_ERROR.toIssueItem(node.propName, errMsg.toString.trim.trimSuffix('.')));
 				return false;
 			}
 			else if(propTypeRef===null) {
-				val msg = getMessageForDESTRUCT_PROP_MISSING(node.propName, valueTypePerNode.get(parentNode)?.typeRefAsString);
 				val astNodeOfPropName = node.getEObjectAndFeatureForPropName();
-				addIssue(msg, astNodeOfPropName.key, astNodeOfPropName.value, DESTRUCT_PROP_MISSING);
+				addIssue(astNodeOfPropName.key, astNodeOfPropName.value, DESTRUCT_PROP_MISSING.toIssueItem(node.propName, valueTypePerNode.get(parentNode)?.typeRefAsString));
 				return false;
 			}
 		}
@@ -236,11 +233,11 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 						"of property '"+node.propName+"'"
 					};
 					var tsMsg = result.failureMessage.trimPrefix('failed: ').trimSuffix('.');
-					val msg = getMessageForDESTRUCT_TYPE_ERROR_VAR(varName, elemDesc, tsMsg);
+					val IssueItem issueItem = DESTRUCT_TYPE_ERROR_VAR.toIssueItem(varName, elemDesc, tsMsg);
 					if(node.varDecl!==null) {
-						addIssue(msg, node.varDecl, N4JSPackage.eINSTANCE.abstractVariable_Name, DESTRUCT_TYPE_ERROR_VAR)
+						addIssue(node.varDecl, N4JSPackage.eINSTANCE.abstractVariable_Name, issueItem)
 					} else {
-						addIssue(msg, node.varRef, DESTRUCT_TYPE_ERROR_VAR);
+						addIssue(node.varRef, issueItem);
 					}
 					return false;
 				}
@@ -274,25 +271,25 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 					"a value of type '"+valueTypeRef.typeRefAsString+"'"
 				};
 				var tsMsg = result.failureMessage.trimPrefix('failed: ').trimSuffix('.');
-				val msg = getMessageForDESTRUCT_TYPE_ERROR_PATTERN(patternKind, elemDesc, tsMsg);
+				val IssueItem issueItem = DESTRUCT_TYPE_ERROR_PATTERN.toIssueItem(patternKind, elemDesc, tsMsg);
 				val astElem = node.astElement;
 				switch(astElem) {
 					PropertyNameValuePair:
-						addIssue(msg, astElem, N4JSPackage.eINSTANCE.propertyNameValuePair_Expression, DESTRUCT_TYPE_ERROR_PATTERN)
+						addIssue(astElem, N4JSPackage.eINSTANCE.propertyNameValuePair_Expression, issueItem)
 					BindingProperty:
-						addIssue(msg, astElem, N4JSPackage.eINSTANCE.bindingProperty_Value, DESTRUCT_TYPE_ERROR_PATTERN)
+						addIssue(astElem, N4JSPackage.eINSTANCE.bindingProperty_Value, issueItem)
 					VariableBinding:
-						addIssue(msg, astElem, N4JSPackage.eINSTANCE.variableBinding_Pattern, DESTRUCT_TYPE_ERROR_PATTERN)
+						addIssue(astElem, N4JSPackage.eINSTANCE.variableBinding_Pattern, issueItem)
 					AssignmentExpression:
-						addIssue(msg, astElem, N4JSPackage.eINSTANCE.assignmentExpression_Lhs, DESTRUCT_TYPE_ERROR_PATTERN)
+						addIssue(astElem, N4JSPackage.eINSTANCE.assignmentExpression_Lhs, issueItem)
 					ForStatement case !astElem.varDeclsOrBindings.empty:
-						addIssue(msg, astElem, N4JSPackage.eINSTANCE.variableDeclarationContainer_VarDeclsOrBindings, DESTRUCT_TYPE_ERROR_PATTERN)
+						addIssue(astElem, N4JSPackage.eINSTANCE.variableDeclarationContainer_VarDeclsOrBindings, issueItem)
 					ForStatement case astElem.initExpr !== null:
-						addIssue(msg, astElem, N4JSPackage.eINSTANCE.forStatement_InitExpr, DESTRUCT_TYPE_ERROR_PATTERN)
+						addIssue(astElem, N4JSPackage.eINSTANCE.forStatement_InitExpr, issueItem)
 					ForStatement case astElem.expression !== null:
-						addIssue(msg, astElem, N4JSPackage.eINSTANCE.iterationStatement_Expression, DESTRUCT_TYPE_ERROR_PATTERN)
+						addIssue(astElem, N4JSPackage.eINSTANCE.iterationStatement_Expression, issueItem)
 					default:
-						addIssue(msg, astElem, DESTRUCT_TYPE_ERROR_PATTERN)
+						addIssue(astElem, issueItem)
 				}
 				return false;
 			}
