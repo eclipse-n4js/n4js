@@ -26,7 +26,7 @@ import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
-import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.n4js.validation.IssueItem
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
@@ -75,15 +75,13 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator implements
 	// publish this method.
 	public override void addIssue(String message, EObject source, EStructuralFeature feature, String issueCode,
 			String... issueData) {
-				super.addIssue(message,source,feature,issueCode,issueData)
+		super.addIssue(message,source,feature,issueCode,issueData)
 	}
 
 
 	def private internalCheckNotFinal(N4InterfaceDeclaration n4InterfaceDeclaration) {
 		if (AnnotationDefinition.FINAL.hasAnnotation(n4InterfaceDeclaration)) {
-			val msg = IssueCodes.getMessageForITF_NO_FINAL
-			addIssue(msg, n4InterfaceDeclaration, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME,
-				IssueCodes.ITF_NO_FINAL)
+			addIssue(n4InterfaceDeclaration, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, ITF_NO_FINAL.toIssueItem());
 		}
 	}
 
@@ -93,8 +91,7 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator implements
 			for (member : n4Interface.ownedMembers) {
 				if (member instanceof N4FieldDeclaration) {
 					if (member.expression !== null) {
-						addIssue(IssueCodes.getMessageForITF_NO_FIELD_INITIALIZER(member.name, n4Interface.name),
-							member.expression, IssueCodes.ITF_NO_FIELD_INITIALIZER)
+						addIssue(member.expression, ITF_NO_FIELD_INITIALIZER.toIssueItem(member.name, n4Interface.name));
 					}
 				}
 				if (member instanceof N4MethodDeclaration) {
@@ -102,21 +99,18 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator implements
 						if (member.isCallSignature || member.isConstructSignature) {
 							// specialized validation: N4JSMemberValidator#holdsCallConstructSignatureConstraints()
 						} else {
-							addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Methods", "structural "),
-								member.body, IssueCodes.ITF_NO_PROPERTY_BODY)
+							addIssue(member.body, ITF_NO_PROPERTY_BODY.toIssueItem("Methods", "structural "));
 						}
 					}
 				}
 				if (member instanceof N4GetterDeclaration) {
 					if (member.body !== null) {
-						addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Getters", "structural "),
-							member.body, IssueCodes.ITF_NO_PROPERTY_BODY)
+						addIssue(member.body, ITF_NO_PROPERTY_BODY.toIssueItem("Getters", "structural "));
 					}
 				}
 				if (member instanceof N4SetterDeclaration) {
 					if (member.body !== null) {
-						addIssue(IssueCodes.getMessageForITF_NO_PROPERTY_BODY("Setters", "structural "),
-							member.body, IssueCodes.ITF_NO_PROPERTY_BODY)
+						addIssue(member.body, ITF_NO_PROPERTY_BODY.toIssueItem("Setters", "structural "));
 					}
 				}
 			}
@@ -135,27 +129,25 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator implements
 					if (n4Interface.typingStrategy === TypingStrategy.STRUCTURAL
 						&& extendedType.typingStrategy !== TypingStrategy.STRUCTURAL
 					) {
-						addIssue(IssueCodes.getMessageForSTRCT_ITF_CANNOT_EXTEND_INTERFACE(), superIfc, null, IssueCodes.STRCT_ITF_CANNOT_EXTEND_INTERFACE)
+						addIssue(superIfc, null, STRCT_ITF_CANNOT_EXTEND_INTERFACE.toIssueItem());
 					}
 				} else {
 					if (extendedType instanceof PrimitiveType) {
 						if (!N4Scheme.isFromResourceWithN4Scheme(n4Interface)) { // primitive types may be extended in built-in types
-							val message = getMessageForCLF_EXTENDS_PRIMITIVE_GENERIC_TYPE(extendedType.name);
-							addIssue(message, superIfc, null, CLF_EXTENDS_PRIMITIVE_GENERIC_TYPE)
+							addIssue(superIfc, null, CLF_EXTENDS_PRIMITIVE_GENERIC_TYPE.toIssueItem(extendedType.name));
 						}
 					} else if (RuleEnvironmentExtensions.isAnyDynamic(RuleEnvironmentExtensions.newRuleEnvironment(extendedType), extendedTypeRef)) {
 						// allow any+ as a supertype (motivated from type alias being any+ used in d.ts files
 						
 					} else {
-						val message = IssueCodes.getMessageForCLF_WRONG_META_TYPE(n4Interface.description, "extend",
-							extendedType.description);
-						addIssue(message, superIfc, null, IssueCodes.CLF_WRONG_META_TYPE)
+						val IssueItem issueItem = CLF_WRONG_META_TYPE.toIssueItem(n4Interface.description, "extend", extendedType.description);
+						addIssue(superIfc, null, issueItem);
 					}
 				}
 			} else if (extendedTypeRef !== null && extendedTypeRef.isAliasResolved) {
 				// not all aliases are illegal after "extends", but if we get to this point we have an illegal case:
-				val message = getMessageForCLF_WRONG_META_TYPE(n4Interface.description, "extend", extendedTypeRef.typeRefAsStringWithAliasResolution);
-				addIssue(message, superIfc, null, CLF_WRONG_META_TYPE);
+				val IssueItem issueItem = CLF_WRONG_META_TYPE.toIssueItem(n4Interface.description, "extend", extendedTypeRef.typeRefAsStringWithAliasResolution);
+				addIssue(superIfc, null, issueItem);
 			}
 		}
 	}
@@ -165,8 +157,8 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator implements
 		val cycle = findCyclicInheritance(ifc);
 		if(cycle!==null) {
 			val miscreant = n4InterfaceDeclaration.superInterfaceRefs.findFirst[typeRef?.declaredType===cycle.get(1)];
-			val message = IssueCodes.getMessageForCLF_INHERITANCE_CYCLE(cycle.map[name].join(", "));
-			addIssue(message, miscreant, IssueCodes.CLF_INHERITANCE_CYCLE);
+			val IssueItem issueItem = CLF_INHERITANCE_CYCLE.toIssueItem(cycle.map[name].join(", "));
+			addIssue(miscreant, issueItem);
 			return false;
 		}
 		return true;

@@ -2053,27 +2053,27 @@ public enum IssueCodes {
 	PKGJ_REWRITE_MODULE_SPECIFIERS__INVALID_VALUE(ERROR,
 			"String expected (i.e. the module specifier to use in the output code)."),
 
-	/** no parameters */
+	/** 0: dependency cycle (optional) */
 	LTD_ILLEGAL_LOADTIME_REFERENCE(ERROR,
-			"Load-time references to the same or other modules are not allowed within a runtime dependency cycle (except in extends/implements clauses)."),
+			"Load-time references to the same or other modules are not allowed within a runtime dependency cycle (except in extends/implements clauses).%s"),
 
 	/**
 	 * 0: name of load-time dependency target module, 1: comma-separated list of other load-time dependency source
-	 * modules (including the prefix 'modules ' or 'module ')
+	 * modules (including the prefix 'modules ' or 'module '), 2: dependency cycle (optional)
 	 */
 	LTD_LOADTIME_DEPENDENCY_CONFLICT(ERROR,
 			"A load-time dependency target module %s must only be imported once within the same runtime dependency cycle, but %s is also imported by %s."),
 
-	/** no parameters */
+	/** 0: dependency cycle (optional) */
 	LTD_LOADTIME_DEPENDENCY_CYCLE(ERROR,
-			"Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed."),
+			"Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.%s"),
 
 	/**
 	 * 0: name of load-time dependency target module, 1: modules that could heal this reference (including the prefix
-	 * 'one of the modules ' or 'module ')
+	 * 'one of the modules ' or 'module '), 2: dependency cycle (optional)
 	 */
 	LTD_REFERENCE_TO_LOADTIME_DEPENDENCY_TARGET(ERROR,
-			"When importing modules from a runtime cycle, those that are the target of a load-time dependency (marked with * below) may only be imported after first importing one of the others. Thus, import of module %s must be preceded by an import of %s."),
+			"When importing modules from a runtime cycle, those that are the target of a load-time dependency (marked with * below) may only be imported after first importing one of the others. Thus, import of module %s must be preceded by an import of %s.%s"),
 
 	;
 

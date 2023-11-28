@@ -16,9 +16,9 @@ import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 
+import static org.eclipse.n4js.validation.IssueCodes.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 /**
@@ -30,9 +30,8 @@ public class StaticPolyfillValidatorExtension {
    /** §143 (Restriction on static-polyfilling): §143.1 only classes in staticPolyfillModule allowed. */
 	public static def internalCheckNotInStaticPolyfillModule(N4InterfaceDeclaration n4InterfaceDeclaration, N4JSInterfaceValidator host) {
 		if (n4InterfaceDeclaration.isContainedInStaticPolyfillModule) {
-			val msg = IssueCodes.messageForPOLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES;
-			host.addIssue(msg, n4InterfaceDeclaration, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME,
-				IssueCodes.POLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES);
+			host.addIssue(n4InterfaceDeclaration, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME,
+				POLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES.toIssueItem());
 		}
 	}
 
@@ -40,9 +39,8 @@ public class StaticPolyfillValidatorExtension {
    /** §143 (Restriction on static-polyfilling): §143.1 only classes in staticPolyfillModule allowed. */
 	public static def internalCheckNotInStaticPolyfillModule(N4EnumDeclaration n4EnumDecl, N4JSEnumValidator host) {
 		if (n4EnumDecl.isContainedInStaticPolyfillModule) {
-			val msg = IssueCodes.messageForPOLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES;
-			host.addIssue(msg, n4EnumDecl, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME,
-				IssueCodes.POLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES);
+			host.addIssue(n4EnumDecl, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME,
+				POLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES.toIssueItem());
 		}
 	}
 
@@ -54,9 +52,8 @@ public class StaticPolyfillValidatorExtension {
 		if( cont instanceof Script)
 		{
 			if ( functionDeclaration.isContainedInStaticPolyfillModule ) {
-				val msg = IssueCodes.messageForPOLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES;
-				host.addIssue(msg, functionDeclaration, N4JSPackage.Literals.FUNCTION_DECLARATION__NAME,
-					IssueCodes.POLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES);
+				host.addIssue(functionDeclaration, N4JSPackage.Literals.FUNCTION_DECLARATION__NAME,
+					POLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES.toIssueItem());
 			}
 		}
 	}
@@ -65,10 +62,8 @@ public class StaticPolyfillValidatorExtension {
 	public static def internalCheckPolyFilledClassWithAdditionalInterface(N4ClassDeclaration classDeclaration, N4JSClassValidator host) {
 		if( classDeclaration.isStaticPolyfill ) {
 			if( ! classDeclaration.implementedInterfaceRefs.isEmpty ) {
-				val msg = IssueCodes.messageForPOLY_IMPLEMENTING_INTERFACE_NOT_ALLOWED;
-				host.addIssue(msg, classDeclaration, N4JSPackage.Literals.N4_CLASS_DEFINITION__IMPLEMENTED_INTERFACE_REFS,
-					IssueCodes.POLY_IMPLEMENTING_INTERFACE_NOT_ALLOWED);
-
+				host.addIssue(classDeclaration, N4JSPackage.Literals.N4_CLASS_DEFINITION__IMPLEMENTED_INTERFACE_REFS,
+					POLY_IMPLEMENTING_INTERFACE_NOT_ALLOWED.toIssueItem());
 			}
 		}
 	}

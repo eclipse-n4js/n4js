@@ -47,6 +47,7 @@ import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
+import org.eclipse.n4js.validation.IssueItem
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.util.Tuples
@@ -89,8 +90,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkAnnotationsInN4JSDFile(Annotation annotation) {
 		if (AnnotationDefinition.N4JS.isAnnotation(annotation)) {
-			val message = getMessageForANN__N4JS_NO_EFFECT();
-			addIssue(message, annotation, ANN__N4JS_NO_EFFECT);
+			addIssue(annotation, ANN__N4JS_NO_EFFECT.toIssueItem());
 		}
 	}
 
@@ -105,8 +105,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		if (clazz.external && jsVariantHelper.isExternalMode(clazz)) {
 			val projectType = workspaceAccess.findProjectContaining(clazz)?.type;
 			if (projectType === ProjectType.DEFINITION && !AnnotationDefinition.ECMASCRIPT.hasAnnotation(clazz)) {
-				val message = getMessageForCLF_IN_DEFINITION_PRJ_NON_N4JS()
-				addIssue(message, clazz, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, CLF_IN_DEFINITION_PRJ_NON_N4JS)
+				addIssue(clazz, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, CLF_IN_DEFINITION_PRJ_NON_N4JS.toIssueItem())
 				return;
 			}
 		}
@@ -124,8 +123,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 			val isStructural = TypeUtils.isStructural(interfaceDecl.typingStrategy);
 			val projectType = workspaceAccess.findProjectContaining(interfaceDecl)?.type;
 			if (!isStructural && projectType === ProjectType.DEFINITION) {
-				val message = getMessageForITF_IN_DEFINITION_PRJ_NON_N4JS()
-				addIssue(message, interfaceDecl, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, ITF_IN_DEFINITION_PRJ_NON_N4JS)
+				addIssue(interfaceDecl, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, ITF_IN_DEFINITION_PRJ_NON_N4JS.toIssueItem())
 				return;
 			}
 		}
@@ -143,8 +141,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 
 	private def boolean holdsExternalOnlyInDefinitionFile(N4TypeDeclaration typeDecl, String typesName) {
 		if (typeDecl.external && !jsVariantHelper.isExternalMode(typeDecl)) {
-			val message = getMessageForCLF_EXT_EXTERNAL_N4JSD(typesName)
-			addIssue(message, typeDecl, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, CLF_EXT_EXTERNAL_N4JSD)
+			addIssue(typeDecl, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, CLF_EXT_EXTERNAL_N4JSD.toIssueItem(typesName))
 			return false;
 		}
 		return true;
@@ -173,25 +170,22 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 
 			if (annodef.hasAnnotation(memberDecl)) {
 				if (!jsVariantHelper.isExternalMode(memberDecl)) {
-					val msg = getMessageForCLF_EXT_PROVIDES_IMPL_ONLY_IN_DEFFILES(annodef.name, typeName);
-					addIssue(msg, memberDecl, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
-						CLF_EXT_PROVIDES_IMPL_ONLY_IN_DEFFILES);
+					val IssueItem issueItem = CLF_EXT_PROVIDES_IMPL_ONLY_IN_DEFFILES.toIssueItem(annodef.name, typeName);
+					addIssue(memberDecl, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, issueItem);
 					return;
 				}
 
 				val N4ClassifierDefinition owner = memberDecl.owner;
 
 				if (!(metaType.isInstance(owner))) {
-					val msg = getMessageForCLF_EXT_PROVIDES_IMPL_ONLY_IN_INTERFACE_MEMBERS(annodef.name, typeName);
-					addIssue(msg, memberDecl, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
-						CLF_EXT_PROVIDES_IMPL_ONLY_IN_INTERFACE_MEMBERS);
+					val IssueItem issueItem = CLF_EXT_PROVIDES_IMPL_ONLY_IN_INTERFACE_MEMBERS.toIssueItem(annodef.name, typeName);
+					addIssue(memberDecl, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, issueItem);
 					return;
 				}
 
 				if (N4JSLanguageUtils.isShapeOrEcmaScript(owner)) {
-					val msg = getMessageForCLF_EXT_PROVIDES_IMPL_ONLY_IN_N4JS_INTERFACES(annodef.name);
-					addIssue(msg, memberDecl, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
-						CLF_EXT_PROVIDES_IMPL_ONLY_IN_N4JS_INTERFACES);
+					val IssueItem issueItem = CLF_EXT_PROVIDES_IMPL_ONLY_IN_N4JS_INTERFACES.toIssueItem(annodef.name);
+					addIssue(memberDecl, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, issueItem);
 					return;
 
 				}
@@ -205,8 +199,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkExternalFunctionsDefinedInN4JSDFile(FunctionDeclaration funDecl) {
 		if (funDecl.external && !jsVariantHelper.isExternalMode(funDecl)) {
-			val message = getMessageForCLF_EXT_EXTERNAL_N4JSD("Functions")
-			addIssue(message, funDecl, N4JSPackage.Literals.FUNCTION_DECLARATION__NAME, CLF_EXT_EXTERNAL_N4JSD)
+			addIssue(funDecl, N4JSPackage.Literals.FUNCTION_DECLARATION__NAME, CLF_EXT_EXTERNAL_N4JSD.toIssueItem("Functions"));
 		}
 	}
 
@@ -221,8 +214,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 
 		if (variableStatement.external &&
 			!jsVariantHelper.isExternalMode(variableStatement)) {
-			val message = getMessageForCLF_EXT_EXTERNAL_N4JSD("Variables")
-			addIssue(message, variableStatement, CLF_EXT_EXTERNAL_N4JSD)
+			addIssue(variableStatement, CLF_EXT_EXTERNAL_N4JSD.toIssueItem("Variables"));
 		}
 
 		variableStatement.varDecl.forEach [ evd |
@@ -232,8 +224,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 					} else {
 						"variable"
 					}
-				val message = getMessageForCLF_EXT_VAR_NO_VAL(mod)
-				addIssue(message, evd, CLF_EXT_VAR_NO_VAL)
+				addIssue(evd, CLF_EXT_VAR_NO_VAL.toIssueItem(mod))
 			}
 		]
 	}
@@ -298,8 +289,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		val enumKind = N4JSLanguageUtils.getEnumKind(exported);
 		if (enumKind === EnumKind.Normal) { // note: literal in a number-/string-based enum may have value even in .n4jsd files!
 			for (literal : exported.literals.filter[it.valueExpression !== null]) {
-				val message = getMessageForCLF_EXT_LITERAL_NO_VALUE
-				addIssue(message, literal, N4JSPackage.Literals.N4_ENUM_LITERAL__VALUE_EXPRESSION, CLF_EXT_LITERAL_NO_VALUE)
+				addIssue(literal, N4JSPackage.Literals.N4_ENUM_LITERAL__VALUE_EXPRESSION, CLF_EXT_LITERAL_NO_VALUE.toIssueItem())
 			}
 		}
 	}
@@ -307,9 +297,8 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	def private handleFunctionDeclaration(ExportDeclaration eo, FunctionDeclaration exported) {
 		// relaxed by IDEBUG-561:		exported.validateFunctionIsPublicApi(eo)
 		if (exported.body !== null) {
-			val message = getMessageForCLF_EXT_FUN_NO_BODY
 			val eObjectToNameFeature = exported.findNameFeature
-			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_FUN_NO_BODY)
+			addIssue(eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_FUN_NO_BODY.toIssueItem())
 		}
 	}
 
@@ -340,19 +329,16 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 			return true;
 		}
 
-		val message = messageForCLF_EXT_PROVIDED_BY_RUNTIME_IN_RUNTIME_TYPE
 		val eObjectToNameFeature = element.findNameFeature
-		addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value,
-			CLF_EXT_PROVIDED_BY_RUNTIME_IN_RUNTIME_TYPE)
+		addIssue(eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_PROVIDED_BY_RUNTIME_IN_RUNTIME_TYPE.toIssueItem())
 		return false;
 	}
 
 	def private validateNoObservableAtClassifier(ExportDeclaration ed, N4ClassifierDeclaration declaration,
 		String classesOrRolesOrInterface) {
 		if (AnnotationDefinition.OBSERVABLE.hasAnnotation(ed)) {
-			val message = getMessageForCLF_EXT_NO_OBSERV_ANNO(classesOrRolesOrInterface)
 			val eObjectToNameFeature = declaration.findNameFeature
-			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_NO_OBSERV_ANNO)
+			addIssue(eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_NO_OBSERV_ANNO.toIssueItem(classesOrRolesOrInterface))
 		}
 	}
 
@@ -365,24 +351,24 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 
 	private def validateNoObservableAtMember(N4ClassifierDeclaration declaration, String classesOrRolesOrInterface) {
 		for (member : declaration.ownedMembers.filter[AnnotationDefinition.OBSERVABLE.hasAnnotation(it)]) {
-			val message = getMessageForCLF_EXT_METHOD_NO_ANNO(member.keyword.toFirstUpper + "s",
+			val IssueItem issueItem = CLF_EXT_METHOD_NO_ANNO.toIssueItem(member.keyword.toFirstUpper + "s",
 				classesOrRolesOrInterface, "Observable")
-			addIssue(message, member, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_EXT_METHOD_NO_ANNO)
+			addIssue(member, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, issueItem)
 		}
 	}
 
 	private def validateNoNfonAtMember(N4ClassifierDeclaration declaration, String classesOrRolesOrInterface) {
 		for (member : declaration.ownedMembers.filter[AnnotationDefinition.NFON.hasAnnotation(it)]) {
-			val message = getMessageForCLF_EXT_METHOD_NO_ANNO(member.keyword.toFirstUpper + "s",
+			val IssueItem issueItem = CLF_EXT_METHOD_NO_ANNO.toIssueItem(member.keyword.toFirstUpper + "s",
 				classesOrRolesOrInterface, "Nfon")
-			addIssue(message, member, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_EXT_METHOD_NO_ANNO)
+			addIssue(member, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, issueItem)
 		}
 	}
 
 	private def validateNoFieldExpression(N4ClassifierDeclaration declaration, String classesOrRolesOrInterface) {
 		for (member : declaration.ownedFields.filter[expression !== null]) {
-			val message = getMessageForCLF_EXT_NO_FIELD_EXPR(classesOrRolesOrInterface)
-			addIssue(message, member, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_EXT_NO_FIELD_EXPR)
+			val IssueItem issueItem = CLF_EXT_NO_FIELD_EXPR.toIssueItem(classesOrRolesOrInterface)
+			addIssue(member, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, issueItem)
 		}
 	}
 
@@ -390,26 +376,23 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		for (member : declaration.ownedMembers.filter[!(it instanceof N4FieldDeclaration)].filter [
 			body !== null
 		]) {
-			val message = getMessageForCLF_EXT_NO_METHOD_BODY(member.keyword.toFirstUpper + "s",
+			val IssueItem issueItem = CLF_EXT_NO_METHOD_BODY.toIssueItem(member.keyword.toFirstUpper + "s",
 				classesOrRolesOrInterface)
-			addIssue(message, member, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_EXT_NO_METHOD_BODY)
+			addIssue(member, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, issueItem)
 		}
 	}
 
 	def private validateEcmaScriptClassDoesntExtendN4Object(N4ClassDeclaration exported, TClass superType) {
 		if (superType !== null && (!superType.isExternal || !AnnotationDefinition.ECMASCRIPT.hasAnnotation(superType))) {
-			val message = messageForCLF_EXT_NOT_ANNOTATED_EXTEND_N4OBJECT
 			val eObjectToNameFeature = exported.findNameFeature
-			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value,
-				CLF_EXT_NOT_ANNOTATED_EXTEND_N4OBJECT)
+			addIssue(eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_NOT_ANNOTATED_EXTEND_N4OBJECT.toIssueItem())
 		}
 	}
 
 	def private validateClassifierIsExternal(N4ClassifierDefinition exported, String classifiers) {
 		if (!exported.external) {
-			val message = getMessageForCLF_EXT_EXTERNAL(classifiers)
 			val eObjectToNameFeature = exported.findNameFeature
-			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_EXTERNAL)
+			addIssue(eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_EXTERNAL.toIssueItem(classifiers))
 		}
 	}
 
@@ -423,20 +406,18 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 
 	private def validateConsumptionOfNonExternalInterface(N4ClassDeclaration exported, TInterface tinterface, String classifiers) {
 		if (!tinterface.external && tinterface.typingStrategy !== TypingStrategy.STRUCTURAL) {
-			val message = getMessageForCLF_EXT_CONSUME_NON_EXT(classifiers)
 			val eObjectToNameFeature = exported.findNameFeature
-			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_CONSUME_NON_EXT)
+			addIssue(eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_CONSUME_NON_EXT.toIssueItem(classifiers))
 		}
 	}
 
 	def private handleUnallowedElement(EObject eo) {
-		val message = messageForCLF_EXT_UNALLOWED_N4JSD
 		val eObjectToNameFeature = eo.findNameFeature
 		if (eObjectToNameFeature === null) {
 			val offsetAndLength = eo.findOffsetAndLength
-			addIssue(message, eo, offsetAndLength.key, offsetAndLength.value, CLF_EXT_UNALLOWED_N4JSD)
+			addIssue(eo, offsetAndLength.key, offsetAndLength.value, CLF_EXT_UNALLOWED_N4JSD.toIssueItem())
 		} else {
-			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_UNALLOWED_N4JSD)
+			addIssue(eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_UNALLOWED_N4JSD.toIssueItem())
 		}
 	}
 
