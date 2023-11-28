@@ -13,12 +13,16 @@ package org.eclipse.n4js.validation;
 import org.eclipse.xtext.diagnostics.Severity;
 
 /**
- *
+ * Data container for concrete issues.
  */
 public class IssueItem {
+	/** Reference to the general {@link IssueCodes} */
 	public final IssueCodes code;
+	/** Severity */
 	public final Severity severity;
+	/** Complete message */
 	public final String message;
+	/** Auxiliary data */
 	public final String[] data;
 
 	/** Constructor */
@@ -34,6 +38,7 @@ public class IssueItem {
 		this.data = data;
 	}
 
+	/** Returns the issue code name */
 	public String getID() {
 		return code.name();
 	}

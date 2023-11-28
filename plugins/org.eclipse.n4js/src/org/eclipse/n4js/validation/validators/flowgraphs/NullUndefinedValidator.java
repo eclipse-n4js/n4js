@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.validation.validators.flowgraphs;
 
+import static org.eclipse.n4js.validation.IssueCodes.DFG_NULL_DEREFERENCE;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +28,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.utils.FindReferenceHelper;
-import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.n4js.validation.IssueItem;
 import org.eclipse.n4js.validation.validators.N4JSFlowgraphValidator;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
@@ -73,8 +75,8 @@ public class NullUndefinedValidator implements FlowValidator {
 			String isOrMaybe = getAssertionString(ndr, isLeakingToClosure);
 			String nullOrUndefined = getNullOrUndefinedString(ndr);
 			String reason = getReason(ndr);
-			String msg = IssueCodes.getMessageForDFG_NULL_DEREFERENCE(varName, isOrMaybe, nullOrUndefined, reason);
-			fVali.addIssue(msg, ndr.cfe, IssueCodes.DFG_NULL_DEREFERENCE); // deactivated during tests
+			IssueItem issueItem = DFG_NULL_DEREFERENCE.toIssueItem(varName, isOrMaybe, nullOrUndefined, reason);
+			fVali.addIssue(ndr.cfe, issueItem); // deactivated during tests
 		}
 	}
 

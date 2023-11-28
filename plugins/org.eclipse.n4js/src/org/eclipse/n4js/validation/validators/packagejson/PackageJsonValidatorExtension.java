@@ -33,6 +33,35 @@ import static org.eclipse.n4js.packagejson.PackageJsonProperties.TESTED_PROJECTS
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_NAME;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION;
+import static org.eclipse.n4js.validation.IssueCodes.OUTPUT_AND_SOURCES_FOLDER_NESTING;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_APIIMPL_MISSING_IMPL_PROJECTS;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_APIIMPL_REFLEXIVE;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_DEFINES_PROPERTY;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_DUPLICATE_MODULE_FILTER_SPECIFIER;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_DUPLICATE_SOURCE_CONTAINER;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_EMPTY_SOURCE_PATH;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_EXPECTED_DIRECTORY_PATH;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_INVALID_ABSOLUTE_PATH;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_INVALID_MODULE_FILTER_SPECIFIER;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_INVALID_MODULE_FILTER_TYPE;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_INVALID_PATH;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_INVALID_PROJECT_NAME;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_INVALID_PROJECT_TYPE;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_INVALID_SCOPE_NAME;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_INVALID_SOURCE_CONTAINER_TYPE;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_INVALID_VERSION_NUMBER;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_NESTED_SOURCE_CONTAINER;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_NON_EXISTING_MAIN_MODULE;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_NON_EXISTING_SOURCE_PATH;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_PACKAGE_NAME_MISMATCH;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_PROJECT_TYPE_MANDATORY_OUTPUT_AND_SOURCES;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_PROPERTY_UNKNOWN;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_REWRITE_MODULE_SPECIFIERS__EMPTY_SPECIFIER;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_REWRITE_MODULE_SPECIFIERS__INVALID_VALUE;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_SCOPE_NAME_MISMATCH;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_SEMVER_ERROR;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_SEMVER_WARNING;
+import static org.eclipse.n4js.validation.IssueCodes.PKGJ_SRC_IN_FILTER_IS_NO_DECLARED_SOURCE;
 
 import java.io.File;
 import java.nio.file.InvalidPathException;
@@ -52,6 +81,7 @@ import java.util.stream.Stream;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONArray;
@@ -81,6 +111,7 @@ import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils.ProjectNameInfo;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.n4js.validation.IssueItem;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.locations.FileURI;
@@ -150,14 +181,12 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 
 		// make sure the name conforms to the IDENTIFIER_PATTERN
 		if (!ProjectDescriptionUtils.isValidPlainPackageName(projectNameWithoutScope)) {
-			addIssue(IssueCodes.getMessageForPKGJ_INVALID_PROJECT_NAME(projectNameWithoutScope),
-					projectNameValue, IssueCodes.PKGJ_INVALID_PROJECT_NAME);
+			addIssue(projectNameValue, PKGJ_INVALID_PROJECT_NAME.toIssueItem(projectNameWithoutScope));
 		}
 		if (scopeName != null) {
 			String scopeNameWithoutPrefix = scopeName.substring(1);
 			if (!ProjectDescriptionUtils.isValidScopeName(scopeNameWithoutPrefix)) {
-				String msg = IssueCodes.getMessageForPKGJ_INVALID_SCOPE_NAME(scopeNameWithoutPrefix);
-				addIssue(msg, projectNameValue, IssueCodes.PKGJ_INVALID_SCOPE_NAME);
+				addIssue(projectNameValue, PKGJ_INVALID_SCOPE_NAME.toIssueItem(scopeNameWithoutPrefix));
 			}
 		}
 
@@ -167,16 +196,14 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 
 		// make sure the project name equals the name of the project folder
 		if (!projectNameWithoutScope.equals(nameInfo.projectFolderName)) {
-			String msg = IssueCodes.getMessageForPKGJ_PACKAGE_NAME_MISMATCH(
-					projectNameWithoutScope, nameInfo.projectFolderName);
-			addIssue(msg, projectNameLiteral, IssueCodes.PKGJ_PACKAGE_NAME_MISMATCH);
+			addIssue(projectNameLiteral,
+					PKGJ_PACKAGE_NAME_MISMATCH.toIssueItem(projectNameWithoutScope, nameInfo.projectFolderName));
 		}
 
 		// make sure the scope name (if any) equals the name of the parent folder
 		// (i.e. the folder containing the project folder)
 		if (scopeName != null && !scopeName.equals(nameInfo.parentFolderName)) {
-			String msg = IssueCodes.getMessageForPKGJ_SCOPE_NAME_MISMATCH(scopeName, nameInfo.parentFolderName);
-			addIssue(msg, projectNameLiteral, IssueCodes.PKGJ_SCOPE_NAME_MISMATCH);
+			addIssue(projectNameLiteral, PKGJ_SCOPE_NAME_MISMATCH.toIssueItem(scopeName, nameInfo.parentFolderName));
 		}
 	}
 
@@ -198,8 +225,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 			if (npmVersion != null) {
 				reason = "Given string is parsed as " + getVersionRequirementType(npmVersion);
 			}
-			String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
-			addIssue(msg, versionValue, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);
+			addIssue(versionValue, PKGJ_INVALID_VERSION_NUMBER.toIssueItem(versionString, reason));
 			return;
 		}
 
@@ -209,8 +235,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 			if (!simpleVersion.getComparators().isEmpty()) {
 				String comparator = SemverSerializer.serialize(simpleVersion.getComparators().get(0));
 				String reason = "Version numbers must not have comparators: '" + comparator + "'";
-				String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
-				addIssue(msg, versionValue, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);
+				addIssue(versionValue, PKGJ_INVALID_VERSION_NUMBER.toIssueItem(versionString, reason));
 				return;
 			}
 		}
@@ -226,7 +251,6 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 				INode firstErrorNode = errorIterator.next();
 
 				String reason = firstErrorNode.getSyntaxErrorMessage().getMessage();
-				String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
 
 				ICompositeNode actualNode = NodeModelUtils.findActualNodeFor(versionValue);
 				int actOffset = actualNode.getOffset();
@@ -234,23 +258,20 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 				int offset = actOffset + firstErrorNode.getOffset() + 1; // +1 due to " char
 				int lengthTmp = actLength - firstErrorNode.getOffset() - 2; // -2 due to "" chars
 				int length = Math.max(1, lengthTmp);
-				addIssue(msg, versionValue, offset, length, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);
+				addIssue(versionValue, offset, length, PKGJ_INVALID_VERSION_NUMBER.toIssueItem(versionString, reason));
 			}
 			return parseResult;
 		}
 
 		List<Issue> issues = semverHelper.validate(parseResult);
 		for (Issue issue : issues) {
-			String msg = "";
-			String issueCode = IssueCodes.PKGJ_INVALID_VERSION_NUMBER;
+			IssueItem issueItem = PKGJ_INVALID_VERSION_NUMBER.toIssueItem();
 			switch (issue.getSeverity()) {
 			case WARNING:
-				msg = IssueCodes.getMessageForPKGJ_SEMVER_WARNING(issue.getMessage());
-				issueCode = IssueCodes.PKGJ_SEMVER_WARNING;
+				issueItem = PKGJ_SEMVER_WARNING.toIssueItem(issue.getMessage());
 				break;
 			case ERROR:
-				msg = IssueCodes.getMessageForPKGJ_SEMVER_ERROR(issue.getMessage());
-				issueCode = IssueCodes.PKGJ_SEMVER_ERROR;
+				issueItem = PKGJ_SEMVER_ERROR.toIssueItem(issue.getMessage());
 				break;
 			default:
 				break;
@@ -259,7 +280,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 			ICompositeNode actualNode = NodeModelUtils.findActualNodeFor(versionValue);
 			int offset = actualNode.getOffset() + issue.getOffset() + 1;
 			int length = issue.getLength();
-			addIssue(msg, versionValue, offset, length, issueCode);
+			addIssue(versionValue, offset, length, issueItem);
 		}
 
 		return parseResult;
@@ -348,9 +369,8 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 		for (NameValuePair nameValuePair : n4jsSectionJO.getNameValuePairs()) {
 			String nvpName = nameValuePair.getName();
 			if (!allN4JSPropertyNames.contains(nvpName)) {
-				String msg = IssueCodes.getMessageForPKGJ_PROPERTY_UNKNOWN(nvpName);
-				addIssue(msg, nameValuePair, JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
-						IssueCodes.PKGJ_PROPERTY_UNKNOWN);
+				addIssue(nameValuePair, JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
+						PKGJ_PROPERTY_UNKNOWN.toIssueItem(nvpName));
 			}
 		}
 	}
@@ -371,8 +391,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 
 		// check type can be parsed successfully
 		if (type == null) {
-			addIssue(IssueCodes.getMessageForPKGJ_INVALID_PROJECT_TYPE(projectTypeString),
-					projectTypeValue, IssueCodes.PKGJ_INVALID_PROJECT_TYPE);
+			addIssue(projectTypeValue, PKGJ_INVALID_PROJECT_TYPE.toIssueItem(projectTypeString));
 			return;
 		}
 
@@ -384,8 +403,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 		if (isDefType != hasDefPck) {
 			EObject issueObj = propDefinesPck == null ? projectTypeValue : propDefinesPck.eContainer();
 			String not = propDefinesPck == null ? "" : "not ";
-			String msg = IssueCodes.getMessageForPKGJ_DEFINES_PROPERTY(type.toString(), not, "definesPackage");
-			addIssue(msg, issueObj, IssueCodes.PKGJ_DEFINES_PROPERTY);
+			addIssue(issueObj, PKGJ_DEFINES_PROPERTY.toIssueItem(type.toString(), not, "definesPackage"));
 		}
 
 		if (isRequiresOutputAndSourceFolder(type)) {
@@ -393,8 +411,8 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 			final boolean hasSources = getSingleDocumentValue(SOURCES) != null;
 			final boolean hasOutput = getSingleDocumentValue(OUTPUT) != null;
 			if (!hasSources || !hasOutput) {
-				String msg = IssueCodes.getMessageForPKGJ_PROJECT_TYPE_MANDATORY_OUTPUT_AND_SOURCES(projectTypeString);
-				addIssue(msg, projectTypeValue, IssueCodes.PKGJ_PROJECT_TYPE_MANDATORY_OUTPUT_AND_SOURCES);
+				addIssue(projectTypeValue,
+						PKGJ_PROJECT_TYPE_MANDATORY_OUTPUT_AND_SOURCES.toIssueItem(projectTypeString));
 			}
 		}
 	}
@@ -487,8 +505,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 
 			for (JSONStringLiteral duplicate : duplicateGroup) {
 				final String inClause = createInSourceContainerTypeClause(duplicate, duplicateGroup);
-				addIssue(IssueCodes.getMessageForPKGJ_DUPLICATE_SOURCE_CONTAINER(normalizedPath, inClause),
-						duplicate, IssueCodes.PKGJ_DUPLICATE_SOURCE_CONTAINER);
+				addIssue(duplicate, PKGJ_DUPLICATE_SOURCE_CONTAINER.toIssueItem(normalizedPath, inClause));
 			}
 		}
 
@@ -535,8 +552,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 					.sorted((s1, s2) -> s1.length() - s2.length()) // sort by ascending length
 					.collect(Collectors.joining(", "));
 
-			addIssue(IssueCodes.getMessageForPKGJ_NESTED_SOURCE_CONTAINER(containersDescription), path.astElement,
-					IssueCodes.PKGJ_NESTED_SOURCE_CONTAINER);
+			addIssue(path.astElement, PKGJ_NESTED_SOURCE_CONTAINER.toIssueItem(containersDescription));
 		}
 	}
 
@@ -544,8 +560,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 	private boolean internalCheckSourceContainerLiteral(JSONStringLiteral containerLiteral) {
 		// check path for empty strings
 		if (containerLiteral.getValue().isEmpty()) {
-			addIssue(IssueCodes.getMessageForPKGJ_EMPTY_SOURCE_PATH(), containerLiteral,
-					IssueCodes.PKGJ_EMPTY_SOURCE_PATH);
+			addIssue(containerLiteral, PKGJ_EMPTY_SOURCE_PATH.toIssueItem());
 			return false;
 		}
 
@@ -567,8 +582,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 
 		if (mainModuleSpecifier.isEmpty() || !isExistingModule(mainModuleLiteral)) {
 			final String specifierToShow = mainModuleSpecifier.isEmpty() ? "<empty string>" : mainModuleSpecifier;
-			addIssue(IssueCodes.getMessageForPKGJ_NON_EXISTING_MAIN_MODULE(specifierToShow),
-					mainModuleLiteral, IssueCodes.PKGJ_NON_EXISTING_MAIN_MODULE);
+			addIssue(mainModuleLiteral, PKGJ_NON_EXISTING_MAIN_MODULE.toIssueItem(specifierToShow));
 		}
 	}
 
@@ -592,9 +606,8 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 		// at this point we may assume that the implementationId was set
 		if ((implementedProjectsValue == null || implementedProjectsValue.getElements().isEmpty())) {
 			// missing implemented projects
-			addIssue(IssueCodes.getMessageForPKGJ_APIIMPL_MISSING_IMPL_PROJECTS(),
-					implementationId.eContainer(), JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
-					IssueCodes.PKGJ_APIIMPL_MISSING_IMPL_PROJECTS);
+			addIssue(implementationId.eContainer(), JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
+					PKGJ_APIIMPL_MISSING_IMPL_PROJECTS.toIssueItem());
 		}
 	}
 
@@ -631,8 +644,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 		for (JSONStringLiteral implementedProjectLiteral : implementedProjectLiterals) {
 			if (implementedProjectLiteral.getValue().equals(declaredProjectNameValue.getValue())) {
 				// reflexive implementation
-				addIssue(IssueCodes.getMessageForPKGJ_APIIMPL_REFLEXIVE(), implementedProjectLiteral,
-						IssueCodes.PKGJ_APIIMPL_REFLEXIVE);
+				addIssue(implementedProjectLiteral, PKGJ_APIIMPL_REFLEXIVE.toIssueItem());
 			}
 		}
 	}
@@ -664,15 +676,12 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 				continue; // syntax error
 			}
 			if (n.isEmpty()) {
-				addIssue(IssueCodes.getMessageForPKGJ_REWRITE_MODULE_SPECIFIERS__EMPTY_SPECIFIER("Source"), nvp,
-						JSONPackage.eINSTANCE.getNameValuePair_Name(),
-						IssueCodes.PKGJ_REWRITE_MODULE_SPECIFIERS__EMPTY_SPECIFIER);
+				addIssue(nvp, JSONPackage.eINSTANCE.getNameValuePair_Name(),
+						PKGJ_REWRITE_MODULE_SPECIFIERS__EMPTY_SPECIFIER.toIssueItem("Source"));
 			} else if (!(v instanceof JSONStringLiteral)) {
-				addIssue(IssueCodes.getMessageForPKGJ_REWRITE_MODULE_SPECIFIERS__INVALID_VALUE(), v,
-						IssueCodes.PKGJ_REWRITE_MODULE_SPECIFIERS__INVALID_VALUE);
+				addIssue(v, PKGJ_REWRITE_MODULE_SPECIFIERS__INVALID_VALUE.toIssueItem());
 			} else if (((JSONStringLiteral) v).getValue().isEmpty()) {
-				addIssue(IssueCodes.getMessageForPKGJ_REWRITE_MODULE_SPECIFIERS__EMPTY_SPECIFIER("Output code"), v,
-						IssueCodes.PKGJ_REWRITE_MODULE_SPECIFIERS__EMPTY_SPECIFIER);
+				addIssue(v, PKGJ_REWRITE_MODULE_SPECIFIERS__EMPTY_SPECIFIER.toIssueItem("Output code"));
 			}
 		}
 	}
@@ -735,8 +744,8 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 		// forbid output folder for 'definition' projects
 		final ProjectType projectType = getProjectType();
 		if (projectType == ProjectType.DEFINITION && astOutputValue.isPresent()) {
-			String message = IssueCodes.getMessageForPKGJ_DEFINES_PROPERTY(projectType.name(), "not ", "output");
-			addIssue(message, astOutputValue.get().eContainer(), IssueCodes.PKGJ_DEFINES_PROPERTY);
+			addIssue(astOutputValue.get().eContainer(),
+					PKGJ_DEFINES_PROPERTY.toIssueItem(projectType.name(), "not ", "output"));
 		}
 		// do not perform check for projects which do not require an output folder
 		if (!isRequiresOutputAndSourceFolder(projectType)) {
@@ -761,10 +770,8 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 					final String containingFolder = ("A " + srcFrgmtName + " folder");
 					final String nestedFolder = astOutputValue.isPresent() ? "the output folder"
 							: "the default output folder \"" + OUTPUT.defaultValue + "\"";
-					final String message = IssueCodes
-							.getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
-
-					addIssue(message, sourceContainerSpecifier, IssueCodes.OUTPUT_AND_SOURCES_FOLDER_NESTING);
+					addIssue(sourceContainerSpecifier,
+							OUTPUT_AND_SOURCES_FOLDER_NESTING.toIssueItem(containingFolder, nestedFolder));
 				}
 
 				// if "output" AST element is available (outputPath is not a default value)
@@ -773,10 +780,8 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 					if (isContainedOrEqual(absoluteOutputLocation, absoluteSourceLocation)) {
 						final String containingFolder = "The output folder";
 						final String nestedFolder = ("a " + srcFrgmtName + " folder");
-						final String message = IssueCodes
-								.getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
-
-						addIssue(message, astOutputValue.get(), IssueCodes.OUTPUT_AND_SOURCES_FOLDER_NESTING);
+						addIssue(astOutputValue.get(),
+								OUTPUT_AND_SOURCES_FOLDER_NESTING.toIssueItem(containingFolder, nestedFolder));
 					}
 				}
 			}
@@ -827,10 +832,8 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 
 		// make sure the module filter type could be parsed successfully
 		if (filterType == null) {
-			final String message = IssueCodes.getMessageForPKGJ_INVALID_MODULE_FILTER_TYPE(
-					moduleFilterPair.getName(), "noValidate");
-			addIssue(message, moduleFilterPair, JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
-					IssueCodes.PKGJ_INVALID_MODULE_FILTER_TYPE);
+			addIssue(moduleFilterPair, JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
+					PKGJ_INVALID_MODULE_FILTER_TYPE.toIssueItem(moduleFilterPair.getName(), "noValidate"));
 		}
 
 		// check type of RHS
@@ -877,8 +880,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 				.forEach(duplicate -> duplicateFilterSpecifiers.add(duplicate.astRepresentation));
 
 		for (JSONValue duplicateFilterSpecifier : duplicateFilterSpecifiers) {
-			addIssue(IssueCodes.getMessageForPKGJ_DUPLICATE_MODULE_FILTER_SPECIFIER(),
-					duplicateFilterSpecifier, IssueCodes.PKGJ_DUPLICATE_MODULE_FILTER_SPECIFIER);
+			addIssue(duplicateFilterSpecifier, PKGJ_DUPLICATE_MODULE_FILTER_SPECIFIER.toIssueItem());
 		}
 	}
 
@@ -890,9 +892,8 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 			// make sure moduleFilterSpecifier.sourceContainerPath has been declared as source container
 			if (specifier.sourceContainerPath != null &&
 					!sourceContainerPaths.contains(specifier.sourceContainerPath)) {
-				addIssue(
-						IssueCodes.getMessageForPKGJ_SRC_IN_FILTER_IS_NO_DECLARED_SOURCE(specifier.sourceContainerPath),
-						specifier.astRepresentation, IssueCodes.PKGJ_SRC_IN_FILTER_IS_NO_DECLARED_SOURCE);
+				addIssue(specifier.astRepresentation,
+						PKGJ_SRC_IN_FILTER_IS_NO_DECLARED_SOURCE.toIssueItem(specifier.sourceContainerPath));
 			}
 		}
 	}
@@ -966,8 +967,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 		}
 
 		// otherwise 'value' does not represent a valid module filter specifier
-		addIssue(IssueCodes.getMessageForPKGJ_INVALID_MODULE_FILTER_SPECIFIER(), value,
-				IssueCodes.PKGJ_INVALID_MODULE_FILTER_SPECIFIER);
+		addIssue(value, PKGJ_INVALID_MODULE_FILTER_SPECIFIER.toIssueItem());
 
 		return null;
 	}
@@ -1009,20 +1009,17 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 			final Path path = Paths.get(pathLiteral.getValue());
 			// check for path being relative
 			if (path.isAbsolute()) {
-				addIssue(IssueCodes.getMessageForPKGJ_INVALID_ABSOLUTE_PATH(pathLiteral.getValue()),
-						pathLiteral, IssueCodes.PKGJ_INVALID_ABSOLUTE_PATH);
+				addIssue(pathLiteral, PKGJ_INVALID_ABSOLUTE_PATH.toIssueItem(pathLiteral.getValue()));
 				return false;
 			}
 			// check for the use of the '*' character (e.g. invalid wildcards)
 			if (pathLiteral.getValue().contains("*")) {
-				addIssue(IssueCodes.getMessageForPKGJ_INVALID_PATH(pathLiteral.getValue()),
-						pathLiteral, IssueCodes.PKGJ_INVALID_PATH);
+				addIssue(pathLiteral, PKGJ_INVALID_PATH.toIssueItem(pathLiteral.getValue()));
 				return false;
 			}
 			return true;
 		} catch (InvalidPathException e) {
-			addIssue(IssueCodes.getMessageForPKGJ_INVALID_PATH(pathLiteral.getValue()),
-					pathLiteral, IssueCodes.PKGJ_INVALID_PATH);
+			addIssue(pathLiteral, PKGJ_INVALID_PATH.toIssueItem(pathLiteral.getValue()));
 			return false;
 		}
 	}
@@ -1063,14 +1060,12 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 		final File file = new File(baseResourcePath.toString(), relativePath);
 
 		if (!file.exists()) {
-			addIssue(IssueCodes.getMessageForPKGJ_NON_EXISTING_SOURCE_PATH(relativePath),
-					pathLiteral, IssueCodes.PKGJ_NON_EXISTING_SOURCE_PATH);
+			addIssue(pathLiteral, PKGJ_NON_EXISTING_SOURCE_PATH.toIssueItem(relativePath));
 			return false;
 		}
 
 		if (!file.isDirectory()) {
-			addIssue(IssueCodes.getMessageForPKGJ_EXPECTED_DIRECTORY_PATH(relativePath),
-					pathLiteral, IssueCodes.PKGJ_EXPECTED_DIRECTORY_PATH);
+			addIssue(pathLiteral, PKGJ_EXPECTED_DIRECTORY_PATH.toIssueItem(relativePath));
 			return false;
 		}
 
@@ -1200,9 +1195,8 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 
 			// check that sourceContainerType represents a valid source container type
 			if (containerType == null) {
-				addIssue(IssueCodes.getMessageForPKGJ_INVALID_SOURCE_CONTAINER_TYPE(sourceContainerType),
-						pair, JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
-						IssueCodes.PKGJ_INVALID_SOURCE_CONTAINER_TYPE);
+				addIssue(pair, JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
+						PKGJ_INVALID_SOURCE_CONTAINER_TYPE.toIssueItem(sourceContainerType));
 				continue;
 			}
 
@@ -1244,5 +1238,17 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 		final NameValuePair containerTypeAssignment = (NameValuePair) containerSpecifierLiteral.eContainer()
 				.eContainer();
 		return PackageJsonUtils.parseSourceContainerType(containerTypeAssignment.getName());
+	}
+
+	private void addIssue(EObject source, int offset, int length, IssueItem issueItem) {
+		super.addIssue(issueItem.message, source, offset, length, issueItem.getID(), issueItem.data);
+	}
+
+	private void addIssue(EObject source, EStructuralFeature feature, IssueItem issueItem) {
+		super.addIssue(issueItem.message, source, feature, issueItem.getID(), issueItem.data);
+	}
+
+	private void addIssue(EObject source, IssueItem issueItem) {
+		super.addIssue(issueItem.message, source, null, issueItem.getID(), issueItem.data);
 	}
 }
