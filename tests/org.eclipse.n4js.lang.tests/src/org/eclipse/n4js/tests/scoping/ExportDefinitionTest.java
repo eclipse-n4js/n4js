@@ -95,7 +95,7 @@ public class ExportDefinitionTest extends AbstractN4JSTest {
 		assertEquals("Cls", elems.get(1).getName().toString());
 		assertSame(cls, elems.get(1).getEObjectOrProxy());
 		assertTrue(elems.get(1) instanceof IEObjectDescriptionWithError);
-		assertEquals(IMP_NOT_EXPORTED, ((IEObjectDescriptionWithError) elems.get(1)).getIssueCode());
+		assertEquals(IMP_NOT_EXPORTED.name(), ((IEObjectDescriptionWithError) elems.get(1)).getIssueCode());
 	}
 
 	@Test
@@ -288,6 +288,6 @@ public class ExportDefinitionTest extends AbstractN4JSTest {
 		assertEquals("v", elems.get(1).getName().toString());
 		assertSame(v, elems.get(1).getEObjectOrProxy());
 		assertTrue(elems.get(1) instanceof IEObjectDescriptionWithError);
-		assertEquals(IMP_NOT_EXPORTED, ((IEObjectDescriptionWithError) elems.get(1)).getIssueCode());
+		assertEquals(IMP_NOT_EXPORTED.name(), ((IEObjectDescriptionWithError) elems.get(1)).getIssueCode());
 	}
 }

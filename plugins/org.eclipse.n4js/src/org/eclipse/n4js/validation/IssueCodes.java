@@ -16,7 +16,10 @@ import static org.eclipse.xtext.diagnostics.Severity.WARNING;
 import java.util.List;
 
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.utils.Strings;
 import org.eclipse.xtext.diagnostics.Severity;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Enum contains all issues
@@ -831,16 +834,16 @@ public enum IssueCodes {
 
 	/** no parameters */
 	FUN_PARAM_INITIALIZER_ONLY_UNDEFINED_ALLOWED(ERROR,
-			"Only ''undefined'' allowed for initializers of default parameters in function types."),
+			"Only 'undefined' allowed for initializers of default parameters in function types."),
 
 	/** 0: formal parameter */
 	/** 1: identifier */
 	FUN_PARAM_INITIALIZER_ILLEGAL_REFERENCE_TO_BODY_VARIABLE(ERROR,
-			"Initializer of parameter ''%s'' cannot reference the identifier ''%s'' declared in the body."),
+			"Initializer of parameter '%s' cannot reference the identifier '%s' declared in the body."),
 
 	/** 0: formal parameter */
 	FUN_PARAM_INITIALIZER_ILLEGAL_AWAIT_CALL(ERROR,
-			"Illegal await-expression in initializer of formal parameter ''%s''."),
+			"Illegal await-expression in initializer of formal parameter '%s'."),
 
 	/**
 	 * 0: name of actually used generator type, 1: expected generator kind (synchronous or asynchronous), 2: name of
@@ -906,8 +909,7 @@ public enum IssueCodes {
 			"The 'this' type isn't allowed on this place. (Please refer to Spec for valid use cases.)"),
 
 	/** 0: variable name */
-	AST_VAR_DECL_RECURSIVE(WARNING,
-			"Reference to variable %s within the initializer expression of the declaration of %s."),
+	AST_VAR_DECL_RECURSIVE(WARNING, "Reference to variable %s within its initializer expression."),
 
 	/** no parameters required */
 	AST_VAR_DECL_IN_FOR_INVALID_INIT(ERROR,
@@ -981,7 +983,7 @@ public enum IssueCodes {
 	/** 0: local variable name */
 	/** 1: 'is' or 'may be' */
 	/** 2: 'null' or 'undefined' */
-	/** 3: reason (optional) */
+	/** 3: reason */
 	DFG_NULL_DEREFERENCE(WARNING, "Variable %s %s %s%s"),
 
 	/** 0: shadowing object, 1: shadowed object */
@@ -1066,10 +1068,10 @@ public enum IssueCodes {
 	VCO_IDENT_ESCAPE_SEQ(ERROR, "Illegal escape sequence in identifier %s at position %s."),
 
 	/** 0: result, 1: identifier, 2: position */
-	VCO_IDENT_ILLEGAL_CHAR_WITH_RESULT(ERROR, "Illegal character in identifier ''%s'' (%s) at position %s."),
+	VCO_IDENT_ILLEGAL_CHAR_WITH_RESULT(ERROR, "Illegal character in identifier '%s' (%s) at position %s."),
 
 	/** 0: identifier, 1: position */
-	VCO_IDENT_ILLEGAL_CHAR(ERROR, "Illegal character in identifier ''%s'' at position %s."),
+	VCO_IDENT_ILLEGAL_CHAR(ERROR, "Illegal character in identifier '%s' at position %s."),
 
 	/** no parameters required */
 	VCO_JSXIDENT_WHITESPACE_COMMENT(ERROR,
@@ -1288,14 +1290,14 @@ public enum IssueCodes {
 
 	/** 0: Suspicious expression, 1: boolean value, 2:left-hand/right-hand */
 	EXP_WARN_DISPENSABLE_CONDITIONAL_EXPRESSION(WARNING,
-			"Dispensable use of conditional expression. The expression ''%s'' always evaluates to %s, so only the %s side will ever be evaluated."),
+			"Dispensable use of conditional expression. The expression '%s' always evaluates to %s, so only the %s side will ever be evaluated."),
 
 	/** no parameter required */
 	EXP_AWAIT_NON_ASYNC(WARNING,
 			"await should only be used on expressions of type Promise<?,?> since otherwise it has no effect."),
 
 	/** 0: recognized expression */
-	EXP_AWAIT_NON_ASYNC_SPECIAL(WARNING, "await should not be used on ''%s'' since it has no effect here."),
+	EXP_AWAIT_NON_ASYNC_SPECIAL(WARNING, "await should not be used on '%s' since it has no effect here."),
 
 	/** no parameter required */
 	FUN_RETURNTYPE_VOID_FOR_SETTER_VIOLATED(ERROR, "Set accessors must not return anything."),
@@ -1335,7 +1337,7 @@ public enum IssueCodes {
 
 	/** 0: name of parameter */
 	FUN_PARAM_IMPLICIT_DEFAULT_PARAM(WARNING,
-			"This parameter is changed to the default parameter ''%s=undefined'' since it follows a default parameter."),
+			"This parameter is changed to the default parameter '%s=undefined' since it follows a default parameter."),
 
 	/** no parameter required */
 	FUN_PARAM_VARIADIC_WITH_INITIALIZER(ERROR, "Variadic parameters must not have a default initializer."),
@@ -1631,7 +1633,7 @@ public enum IssueCodes {
 	PROJECT_REFERENCES_ITSELF(ERROR, "Project cannot reference itself."),
 
 	/** 0: the type of the deprecated project 1: alternatives */
-	DEPRECATED_PROJECT_TYPE(WARNING, "Project type ''%s'' is deprecated and will be removed soon. %s"),
+	DEPRECATED_PROJECT_TYPE(WARNING, "Project type '%s' is deprecated and will be removed soon. %s"),
 
 	/** no parameters are required. */
 	MISMATCHING_TESTED_PROJECT_TYPES(WARNING, "Tested projects should have the same project type."),
@@ -1641,7 +1643,7 @@ public enum IssueCodes {
 	 * project
 	 */
 	MISMATCHING_IMPLEMENTATION_ID(WARNING,
-			"Implementation ID mismatch. Current project belongs to ''%s'' implementation while %s project belongs to ''%s'' implementation."),
+			"Implementation ID mismatch. Current project belongs to '%s' implementation while %s project belongs to '%s' implementation."),
 
 	/** 0: test library name */
 	SRCTEST_NO_TESTLIB_DEP(ERROR, "Project with source folder of type test should depend on %s."),
@@ -1651,16 +1653,16 @@ public enum IssueCodes {
 	 * an external one.
 	 */
 	EXTERNAL_PROJECT_REFERENCES_WORKSPACE_PROJECT(WARNING,
-			"Transitive external project dependency of project ''%s'' requires a workspace project ''%s''. Current project setup could result in runtime oddities. It is highly recommended to import project ''%s'' into workspace as well."),
+			"Transitive external project dependency of project '%s' requires a workspace project '%s'. Current project setup could result in runtime oddities. It is highly recommended to import project '%s' into workspace as well."),
 
 	/** 0: project type of containing project */
-	INVALID_FILE_TYPE_FOR_PROJECT_TYPE(ERROR, "An n4js file may not be contained in a project of type ''%s''."),
+	INVALID_FILE_TYPE_FOR_PROJECT_TYPE(ERROR, "An n4js file may not be contained in a project of type '%s'."),
 
 	/** 0: resource name */
 	NO_PROJECT_FOUND(WARNING, "No project found for resource %s."),
 
 	/** 0: part of the specifier that contains a dot, 1: the module specifier */
-	MOD_NAME_MUST_NOT_CONTAIN_DOTS(ERROR, "%s of this module contain(s) the disallowed character ''.'' : ''%s''."),
+	MOD_NAME_MUST_NOT_CONTAIN_DOTS(ERROR, "%s of this module contain(s) the disallowed character '.' : '%s'."),
 
 	/** 0: dependency name, 1: required version, 2: present version */
 	NO_MATCHING_VERSION(WARNING, "Project %s is required in version %s, but only version %s is present."),
@@ -2056,24 +2058,24 @@ public enum IssueCodes {
 	PKGJ_REWRITE_MODULE_SPECIFIERS__INVALID_VALUE(ERROR,
 			"String expected (i.e. the module specifier to use in the output code)."),
 
-	/** 0: dependency cycle (optional) */
+	/** 0: dependency cycle */
 	LTD_ILLEGAL_LOADTIME_REFERENCE(ERROR,
 			"Load-time references to the same or other modules are not allowed within a runtime dependency cycle (except in extends/implements clauses).%s"),
 
 	/**
 	 * 0: name of load-time dependency target module, 1: comma-separated list of other load-time dependency source
-	 * modules (including the prefix 'modules ' or 'module '), 2: dependency cycle (optional)
+	 * modules (including the prefix 'modules ' or 'module '), 2: dependency cycle
 	 */
 	LTD_LOADTIME_DEPENDENCY_CONFLICT(ERROR,
 			"A load-time dependency target module %s must only be imported once within the same runtime dependency cycle, but %s is also imported by %s."),
 
-	/** 0: dependency cycle (optional) */
+	/** 0: dependency cycle */
 	LTD_LOADTIME_DEPENDENCY_CYCLE(ERROR,
 			"Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.%s"),
 
 	/**
 	 * 0: name of load-time dependency target module, 1: modules that could heal this reference (including the prefix
-	 * 'one of the modules ' or 'module '), 2: dependency cycle (optional)
+	 * 'one of the modules ' or 'module '), 2: dependency cycle
 	 */
 	LTD_REFERENCE_TO_LOADTIME_DEPENDENCY_TARGET(ERROR,
 			"When importing modules from a runtime cycle, those that are the target of a load-time dependency (marked with * below) may only be imported after first importing one of the others. Thus, import of module %s must be preceded by an import of %s.%s"),
@@ -2082,13 +2084,16 @@ public enum IssueCodes {
 
 	public final Severity severity;
 	private final String msgTemplate;
+	private final int argCount;
 
 	IssueCodes(Severity severity, String msgTemplate) {
 		this.severity = severity;
 		this.msgTemplate = msgTemplate;
+		this.argCount = Strings.count(msgTemplate, "%s");
 	}
 
 	public String getMessage(Object... values) {
+		Preconditions.checkArgument(argCount == 0 || (values != null && values.length == argCount));
 		if (values == null) {
 			return msgTemplate;
 		}
