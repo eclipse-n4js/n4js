@@ -10,6 +10,14 @@
  */
 package org.eclipse.n4js.tests.scoping;
 
+import static org.eclipse.n4js.validation.IssueCodes.IMP_AMBIGUOUS;
+import static org.eclipse.n4js.validation.IssueCodes.IMP_LOCAL_NAME_CONFLICT;
+import static org.eclipse.n4js.validation.IssueCodes.IMP_NOT_EXPORTED;
+import static org.eclipse.n4js.validation.IssueCodes.IMP_UNUSED_IMPORT;
+import static org.eclipse.n4js.validation.IssueCodes.VIS_ILLEGAL_FUN_ACCESS;
+import static org.eclipse.n4js.validation.IssueCodes.VIS_ILLEGAL_MEMBER_ACCESS;
+import static org.eclipse.n4js.validation.IssueCodes.VIS_ILLEGAL_TYPE_ACCESS;
+import static org.eclipse.n4js.validation.IssueCodes.VIS_ILLEGAL_VARIABLE_ACCESS;
 import static org.eclipse.xtext.xbase.lib.IteratorExtensions.filter;
 import static org.eclipse.xtext.xbase.lib.IteratorExtensions.head;
 
@@ -20,7 +28,6 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
@@ -70,10 +77,10 @@ public class AT_084_Test {
 					var d = new Dup();
 				""", URI.createURI("C.n4js"), rs), "A", "B");
 
-		valTestHelper.assertError(script, N4JSPackage.Literals.IDENTIFIER_REF, IssueCodes.IMP_AMBIGUOUS,
+		valTestHelper.assertError(script, N4JSPackage.Literals.IDENTIFIER_REF, IMP_AMBIGUOUS.name(),
 				"The type Dup is ambiguously imported from A and B");
 		valTestHelper.assertError(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER,
-				IssueCodes.IMP_LOCAL_NAME_CONFLICT, "Name Dup is already used as name for named import Dup from A.");
+				IMP_LOCAL_NAME_CONFLICT.name(), "Name Dup is already used as name for named import Dup from A.");
 	}
 
 	/**
@@ -95,10 +102,10 @@ public class AT_084_Test {
 					var d = dup
 				""", URI.createURI("C.n4js"), rs);
 
-		valTestHelper.assertError(script, N4JSPackage.Literals.IDENTIFIER_REF, IssueCodes.IMP_AMBIGUOUS,
+		valTestHelper.assertError(script, N4JSPackage.Literals.IDENTIFIER_REF, IMP_AMBIGUOUS.name(),
 				"The variable dup is ambiguously imported from A and B");
 		valTestHelper.assertError(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER,
-				IssueCodes.IMP_LOCAL_NAME_CONFLICT, "Name dup is already used as name for named import Dup from A.");
+				IMP_LOCAL_NAME_CONFLICT.name(), "Name dup is already used as name for named import Dup from A.");
 	}
 
 	@Test
@@ -117,13 +124,13 @@ public class AT_084_Test {
 					var d = dup
 				""", URI.createURI("C.n4js"), rs);
 
-		valTestHelper.assertNoError(script, IssueCodes.IMP_AMBIGUOUS);
-		valTestHelper.assertNoIssue(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNUSED_IMPORT);
+		valTestHelper.assertNoError(script, IMP_AMBIGUOUS.name());
+		valTestHelper.assertNoIssue(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IMP_UNUSED_IMPORT.name());
 		// Since A.dup cannot be linked, import is unused, but also marked with linking error;
-		valTestHelper.assertError(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_NOT_EXPORTED,
+		valTestHelper.assertError(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IMP_NOT_EXPORTED.name(),
 				"Element dup is not exported.");
 		valTestHelper.assertError(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER,
-				IssueCodes.IMP_LOCAL_NAME_CONFLICT, "Name dup is already used as name for named import dup from A.");
+				IMP_LOCAL_NAME_CONFLICT.name(), "Name dup is already used as name for named import dup from A.");
 	}
 
 	@Test
@@ -141,13 +148,13 @@ public class AT_084_Test {
 					var d = dup
 				""", URI.createURI("C.n4js"), rs);
 
-		valTestHelper.assertNoError(script, IssueCodes.IMP_AMBIGUOUS);
-		valTestHelper.assertNoIssue(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNUSED_IMPORT);
+		valTestHelper.assertNoError(script, IMP_AMBIGUOUS.name());
+		valTestHelper.assertNoIssue(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IMP_UNUSED_IMPORT.name());
 		// Since A.dup cannot be linked, an error is shown
-		valTestHelper.assertError(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_NOT_EXPORTED,
+		valTestHelper.assertError(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IMP_NOT_EXPORTED.name(),
 				"Element dup is not exported.");
 		valTestHelper.assertError(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER,
-				IssueCodes.IMP_LOCAL_NAME_CONFLICT, "Name dup is already used as name for named import dup from A.");
+				IMP_LOCAL_NAME_CONFLICT.name(), "Name dup is already used as name for named import dup from A.");
 	}
 
 	@Test
@@ -164,11 +171,11 @@ public class AT_084_Test {
 					import {dup} from "B";
 					var d = dup
 				""", URI.createURI("C.n4js"), rs), "A", "B");
-		valTestHelper.assertNoError(script, IssueCodes.IMP_AMBIGUOUS);
+		valTestHelper.assertNoError(script, IMP_AMBIGUOUS.name());
 		valTestHelper.assertError(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER,
-				IssueCodes.VIS_ILLEGAL_VARIABLE_ACCESS, "The variable dup is not visible.");
+				VIS_ILLEGAL_VARIABLE_ACCESS.name(), "The variable dup is not visible.");
 		valTestHelper.assertError(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER,
-				IssueCodes.IMP_LOCAL_NAME_CONFLICT, "Name dup is already used as name for named import dup from A.");
+				IMP_LOCAL_NAME_CONFLICT.name(), "Name dup is already used as name for named import dup from A.");
 	}
 
 	@Test
@@ -186,12 +193,12 @@ public class AT_084_Test {
 					var d = dup
 				""", URI.createURI("C.n4js"), rs), "C", "B");
 
-		valTestHelper.assertNoError(script, IssueCodes.IMP_AMBIGUOUS);
+		valTestHelper.assertNoError(script, IMP_AMBIGUOUS.name());
 		valTestHelper.assertError(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER,
-				IssueCodes.IMP_LOCAL_NAME_CONFLICT, "Name dup is already used as name for named import dup from A.");
+				IMP_LOCAL_NAME_CONFLICT.name(), "Name dup is already used as name for named import dup from A.");
 		valTestHelper.assertError(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER,
-				IssueCodes.VIS_ILLEGAL_VARIABLE_ACCESS, "The variable dup is not visible.");
-		valTestHelper.assertError(script, N4JSPackage.Literals.IDENTIFIER_REF, IssueCodes.VIS_ILLEGAL_VARIABLE_ACCESS,
+				VIS_ILLEGAL_VARIABLE_ACCESS.name(), "The variable dup is not visible.");
+		valTestHelper.assertError(script, N4JSPackage.Literals.IDENTIFIER_REF, VIS_ILLEGAL_VARIABLE_ACCESS.name(),
 				"The variable dup is not visible.");
 	}
 
@@ -210,12 +217,12 @@ public class AT_084_Test {
 					var d = dup
 				""", URI.createURI("C.n4js"), rs), "C", "B");
 
-		valTestHelper.assertNoError(script, IssueCodes.IMP_AMBIGUOUS);
+		valTestHelper.assertNoError(script, IMP_AMBIGUOUS.name());
 		valTestHelper.assertError(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER,
-				IssueCodes.IMP_LOCAL_NAME_CONFLICT, "Name dup is already used as name for named import dup from A.");
+				IMP_LOCAL_NAME_CONFLICT.name(), "Name dup is already used as name for named import dup from A.");
 		valTestHelper.assertError(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER,
-				IssueCodes.VIS_ILLEGAL_VARIABLE_ACCESS, "The variable dup is not visible.");
-		valTestHelper.assertError(script, N4JSPackage.Literals.IDENTIFIER_REF, IssueCodes.VIS_ILLEGAL_VARIABLE_ACCESS,
+				VIS_ILLEGAL_VARIABLE_ACCESS.name(), "The variable dup is not visible.");
+		valTestHelper.assertError(script, N4JSPackage.Literals.IDENTIFIER_REF, VIS_ILLEGAL_VARIABLE_ACCESS.name(),
 				"The variable dup is not visible.");
 	}
 
@@ -243,7 +250,7 @@ public class AT_084_Test {
 					import {A} from "A";
 				""", URI.createURI("C.n4js"), rs), "C", "B");
 
-		valTestHelper.assertError(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_NOT_EXPORTED,
+		valTestHelper.assertError(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IMP_NOT_EXPORTED.name(),
 				"Element A is not exported.");
 	}
 
@@ -257,7 +264,7 @@ public class AT_084_Test {
 					import {A} from "A";
 				""", URI.createURI("C.n4js"), rs), "C", "B");
 
-		valTestHelper.assertWarning(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNUSED_IMPORT,
+		valTestHelper.assertWarning(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IMP_UNUSED_IMPORT.name(),
 				"The import of A is unused.");
 	}
 
@@ -272,7 +279,7 @@ public class AT_084_Test {
 					var a: N.A = null
 				""", URI.createURI("C.n4js"), rs), "C", "B");
 
-		valTestHelper.assertError(script, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF, IssueCodes.IMP_NOT_EXPORTED,
+		valTestHelper.assertError(script, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF, IMP_NOT_EXPORTED.name(),
 				"Element A is not exported.");
 	}
 
@@ -288,7 +295,7 @@ public class AT_084_Test {
 				""", URI.createURI("C.n4js"), rs), "C", "B");
 
 		valTestHelper.assertError(script, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF,
-				IssueCodes.VIS_ILLEGAL_TYPE_ACCESS, "The type A is not visible");
+				VIS_ILLEGAL_TYPE_ACCESS.name(), "The type A is not visible");
 	}
 
 	@Test
@@ -303,7 +310,7 @@ public class AT_084_Test {
 				""", URI.createURI("C.n4js"), rs), "C", "B");
 
 		valTestHelper.assertError(script, N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION,
-				IssueCodes.IMP_NOT_EXPORTED, "Element A is not exported.");
+				IMP_NOT_EXPORTED.name(), "Element A is not exported.");
 	}
 
 	@Test
@@ -317,9 +324,9 @@ public class AT_084_Test {
 					var a = A
 				""", URI.createURI("C.n4js"), rs), "C", "B");
 
-		valTestHelper.assertError(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_NOT_EXPORTED,
+		valTestHelper.assertError(script, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IMP_NOT_EXPORTED.name(),
 				"Element A is not exported.");
-		valTestHelper.assertError(script, N4JSPackage.Literals.IDENTIFIER_REF, IssueCodes.VIS_ILLEGAL_TYPE_ACCESS,
+		valTestHelper.assertError(script, N4JSPackage.Literals.IDENTIFIER_REF, VIS_ILLEGAL_TYPE_ACCESS.name(),
 				"The type A is not visible");
 	}
 
@@ -334,7 +341,7 @@ public class AT_084_Test {
 					var a: N.A = ""
 				""", URI.createURI("C.n4js"), rs), "C", "B");
 
-		valTestHelper.assertError(script, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF, IssueCodes.IMP_NOT_EXPORTED,
+		valTestHelper.assertError(script, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF, IMP_NOT_EXPORTED.name(),
 				"Element A is not exported.");
 	}
 
@@ -352,7 +359,7 @@ public class AT_084_Test {
 					var a: N.A = ""
 				""", URI.createURI("C.n4js?C|B"), rs), "C", "B");
 
-		valTestHelper.assertNoError(script, IssueCodes.VIS_ILLEGAL_TYPE_ACCESS);
+		valTestHelper.assertNoError(script, VIS_ILLEGAL_TYPE_ACCESS.name());
 		ParameterizedTypeRef typeRef = head(filter(script.eAllContents(), ParameterizedTypeRef.class));
 		Assert.assertEquals("A.n4js?C|B", typeRef.getDeclaredType().eResource().getURI().toString());
 	}
@@ -383,7 +390,7 @@ public class AT_084_Test {
 				""", URI.createURI("B.n4js"), rs), "B", "C");
 
 		valTestHelper.assertError(script, N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION,
-				IssueCodes.VIS_ILLEGAL_VARIABLE_ACCESS, "The variable s is not visible");
+				VIS_ILLEGAL_VARIABLE_ACCESS.name(), "The variable s is not visible");
 	}
 
 	@Test
@@ -440,7 +447,7 @@ public class AT_084_Test {
 				""", URI.createURI("B.n4js"), rs), "B", "C");
 
 		valTestHelper.assertError(script, N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION,
-				IssueCodes.VIS_ILLEGAL_FUN_ACCESS, "The function f is not visible");
+				VIS_ILLEGAL_FUN_ACCESS.name(), "The function f is not visible");
 	}
 
 	@Test
@@ -497,9 +504,9 @@ public class AT_084_Test {
 				""", URI.createURI("B.n4js"), rs), "B", "C");
 
 		valTestHelper.assertError(script, N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION,
-				IssueCodes.VIS_ILLEGAL_TYPE_ACCESS, "The type E is not visible");
+				VIS_ILLEGAL_TYPE_ACCESS.name(), "The type E is not visible");
 		valTestHelper.assertError(script, N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION,
-				IssueCodes.VIS_ILLEGAL_MEMBER_ACCESS, "The enum literal Literal is not visible");
+				VIS_ILLEGAL_MEMBER_ACCESS.name(), "The enum literal Literal is not visible");
 	}
 
 	@Test
@@ -550,7 +557,7 @@ public class AT_084_Test {
 				""", URI.createURI("B.n4js"), rs), "B", "C");
 
 		valTestHelper.assertError(script, N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION,
-				IssueCodes.VIS_ILLEGAL_MEMBER_ACCESS, "The method m is not visible");
+				VIS_ILLEGAL_MEMBER_ACCESS.name(), "The method m is not visible");
 	}
 
 	@Test
@@ -585,7 +592,7 @@ public class AT_084_Test {
 				""", URI.createURI("B.n4js"), rs), "A", "B");
 
 		valTestHelper.assertError(script, N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION,
-				IssueCodes.VIS_ILLEGAL_MEMBER_ACCESS, "The method m is not visible");
+				VIS_ILLEGAL_MEMBER_ACCESS.name(), "The method m is not visible");
 	}
 
 	@Test
@@ -624,6 +631,6 @@ public class AT_084_Test {
 				""", URI.createURI("B.n4js"), rs), "A", "C");
 
 		valTestHelper.assertError(script, N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION,
-				IssueCodes.VIS_ILLEGAL_MEMBER_ACCESS, "The method m is not visible");
+				VIS_ILLEGAL_MEMBER_ACCESS.name(), "The method m is not visible");
 	}
 }

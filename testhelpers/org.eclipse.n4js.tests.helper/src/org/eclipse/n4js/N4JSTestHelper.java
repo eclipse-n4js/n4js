@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.Assert;
@@ -59,7 +60,7 @@ public class N4JSTestHelper {
 	/**
 	 * Like {@link #parseAndValidateSuccessfully(CharSequence)}, but ignoring issues with the given issue codes.
 	 */
-	public Script parseAndValidateSuccessfullyIgnoring(CharSequence code, String... ignoredIssueCodes) {
+	public Script parseAndValidateSuccessfullyIgnoring(CharSequence code, IssueCodes... ignoredIssueCodes) {
 		try {
 			final Script script = parseHelper.parseN4js(code);
 			parseHelper.assertNoParseErrors(script, new HashSet<>(Arrays.asList(ignoredIssueCodes)));

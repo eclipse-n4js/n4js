@@ -47,16 +47,17 @@ public class JoinComputer_UnionTypesTest extends AbstractTypeSystemHelperTests {
 
 	@Test
 	public void testJoinSimpleWithUnions() {
-		assertJoin(new String[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "A", "A", "union{A,B}");
-		assertJoin(new String[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "A", "union{A,B}", "A");
-		assertJoin(new String[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "A", "A", "union{B,A}");
+		assertJoin(new IssueCodes[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "A", "A", "union{A,B}");
+		assertJoin(new IssueCodes[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "A", "union{A,B}", "A");
+		assertJoin(new IssueCodes[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "A", "A", "union{B,A}");
 	}
 
 	@Test
 	public void testJoinUnionWithUnions() {
-		assertJoin(new String[] { IssueCodes.UNI_REDUNDANT_SUBTYPE, IssueCodes.UNI_REDUNDANT_SUBTYPE }, "union{A,B,C}",
+		assertJoin(new IssueCodes[] { IssueCodes.UNI_REDUNDANT_SUBTYPE, IssueCodes.UNI_REDUNDANT_SUBTYPE },
+				"union{A,B,C}",
 				"union{A,B}", "union{B,C}");
-		assertJoin(new String[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "B", "C", "union{B,C}");
+		assertJoin(new IssueCodes[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "B", "C", "union{B,C}");
 	}
 
 	@Test
@@ -67,9 +68,9 @@ public class JoinComputer_UnionTypesTest extends AbstractTypeSystemHelperTests {
 		// lower A ^ union{A,B} = B
 		// union{A,B} ... B
 		// TODO: why not G<A>?
-		assertJoin(new String[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "G<? extends A>", "G<A>", "G<union{A,B}>");
+		assertJoin(new IssueCodes[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "G<? extends A>", "G<A>", "G<union{A,B}>");
 
-		assertJoin(new String[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "union{A,B,G<A>}", "G<A>", "union{A,B}");
+		assertJoin(new IssueCodes[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "union{A,B,G<A>}", "G<A>", "union{A,B}");
 	}
 
 }

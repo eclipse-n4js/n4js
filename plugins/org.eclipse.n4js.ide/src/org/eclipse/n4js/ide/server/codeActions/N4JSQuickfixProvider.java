@@ -63,7 +63,7 @@ public class N4JSQuickfixProvider {
 	/**
 	 * Resolves missing import statements by re-using content assist and {@link ImportsAwareReferenceProposalCreator}
 	 */
-	@Fix(value = org.eclipse.xtext.diagnostics.Diagnostic.LINKING_DIAGNOSTIC, multiFix = false)
+	@Fix(value = IssueCodes.INVALID_ISSUE_CODE, valueName = org.eclipse.xtext.diagnostics.Diagnostic.LINKING_DIAGNOSTIC, multiFix = false)
 	public void addImportForUnresolvedReference(QuickfixContext context, ICodeActionAcceptor acceptor) {
 		Script script = context.resource.getScriptResolved();
 		Document doc = context.options.getDocument();

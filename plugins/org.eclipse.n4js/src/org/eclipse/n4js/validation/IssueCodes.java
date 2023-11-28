@@ -24,6 +24,9 @@ import org.eclipse.xtext.diagnostics.Severity;
 @SuppressWarnings("javadoc")
 public enum IssueCodes {
 
+	/** Only for internal use. */
+	INVALID_ISSUE_CODE(WARNING, null),
+
 	/** The following message is intended for ES6 features that are implemented in N4JS but */
 	/** are not yet supported in current version of V8 or some other relevant runtime environment. */
 	/** 0: description of the feature that is not supported */

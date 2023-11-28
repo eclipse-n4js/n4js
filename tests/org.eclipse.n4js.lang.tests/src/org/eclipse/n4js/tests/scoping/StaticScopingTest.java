@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.tests.scoping;
 
+import static org.eclipse.n4js.validation.IssueCodes.CFG_LOCAL_VAR_UNUSED;
+import static org.eclipse.n4js.validation.IssueCodes.DFG_NULL_DEREFERENCE;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.filter;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.map;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.size;
@@ -21,6 +23,7 @@ import static org.eclipse.xtext.xbase.lib.IteratorExtensions.last;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -39,7 +42,6 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.Strings;
-import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScopeProvider;
 import org.eclipse.xtext.testing.InjectWith;
@@ -77,8 +79,8 @@ public class StaticScopingTest {
 	IScopeProvider scopeProvider;
 
 	public List<Issue> getIssues(Script script) {
-		return toList(filter(valTestHelper.validate(script), issue -> issue.getCode() != IssueCodes.CFG_LOCAL_VAR_UNUSED
-				&& issue.getCode() != IssueCodes.DFG_NULL_DEREFERENCE));
+		return toList(filter(valTestHelper.validate(script),
+				issue -> !Set.of(CFG_LOCAL_VAR_UNUSED.name(), DFG_NULL_DEREFERENCE.name()).contains(issue.getCode())));
 	}
 
 	@Test

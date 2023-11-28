@@ -24,6 +24,7 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.tests.scoping.ExportDefinitionInCyclicResourcesTest.N4JSInjectorProviderWithoutCycleDetection;
 import org.eclipse.n4js.ts.types.ExportDefinition;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.testing.InjectWith;
@@ -590,7 +591,7 @@ public class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 		N4JSResource res = (N4JSResource) script.eResource();
 		res.performPostProcessing();
 		parserHelper.assertNoParseErrors(script);
-		validationTestHelper.assertErrorsExcept(script, new String[] { UNSUPPORTED },
+		validationTestHelper.assertErrorsExcept(script, new IssueCodes[] { UNSUPPORTED },
 				expectedErrors.toArray(new String[0]));
 	}
 
