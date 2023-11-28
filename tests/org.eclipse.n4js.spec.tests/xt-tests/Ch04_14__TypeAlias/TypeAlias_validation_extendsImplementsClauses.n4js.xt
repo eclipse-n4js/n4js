@@ -28,7 +28,7 @@ class SubCls01 extends AliCls {}
 // XPECT noerrors -->
 class SubCls02 implements AliIfc {}
 
-// XPECT errors --> "The class SubCls11 cannot extend interface Ifc, use "implements"." at "AliIfc"
+// XPECT errors --> "The class SubCls11 cannot extend interface Ifc, use 'implements'." at "AliIfc"
 class SubCls11 extends AliIfc {}
 // XPECT errors --> "The class SubCls12 cannot extend enum SomeEnum." at "AliBad1"
 class SubCls12 extends AliBad1 {}
@@ -37,7 +37,7 @@ class SubCls13 extends AliBad2 {}
 // XPECT errors --> "The class SubCls14 cannot extend {function(string):number}." at "AliBad3"
 class SubCls14 extends AliBad3 {}
 
-// XPECT errors --> "The class SubCls21 cannot implement class Cls, use "extends"." at "AliCls"
+// XPECT errors --> "The class SubCls21 cannot implement class Cls, use 'extends'." at "AliCls"
 class SubCls21 implements AliCls {}
 // XPECT errors --> "The class SubCls22 cannot implement enum SomeEnum." at "AliBad1"
 class SubCls22 implements AliBad1 {}

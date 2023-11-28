@@ -1095,8 +1095,8 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 			addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, issueItem);
 		} else { // consumed method implicitly overrides:
 			IssueItem issueItem = CLF_IMPLEMENT_MEMBERTYPE_INCOMPATIBLE.toIssueItem(
-					validatorMessageHelper.descriptionDifferentFrom(overriding, overridden),
 					validatorMessageHelper.descriptionDifferentFrom(overridden, overriding),
+					validatorMessageHelper.descriptionDifferentFrom(overriding, overridden),
 					cfOtherImplementedMembers(mm, overridden));
 			addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, issueItem);
 		}

@@ -13,7 +13,7 @@
 
 
 // XPECT warnings ---
-// "Reference to variable v0 within the initializer expression of the declaration of v0." at "v0"
+// "Reference to variable v0 within its initializer expression." at "v0"
 // "Variable v0 is used before it is declared" at "v0"
 // ---
 // XPECT type of 'v0' --> any

@@ -20,16 +20,16 @@ var a : A;
 // XPECT noerrors --> "ok" at "A"
 class X1 extends A {}
 
-// XPECT errors --> "The class X2 cannot extend interface I, use "implements"." at "I"
+// XPECT errors --> "The class X2 cannot extend interface I, use 'implements'." at "I"
 class X2 extends I {}
 
-// XPECT errors --> "The class X4 cannot implement class A, use "extends"." at "A"
+// XPECT errors --> "The class X4 cannot implement class A, use 'extends'." at "A"
 class X4 implements A {}
 
 // XPECT noerrors --> "ok" at "I"
 class X5 implements I {}
 
-// XPECT errors --> "The class X7 cannot implement class A, use "extends"." at "A"
+// XPECT errors --> "The class X7 cannot implement class A, use 'extends'." at "A"
 class X7 implements A {}
 
 // XPECT noerrors --> "Keyword implements must be used with interfaces but I is a interface." at "I"

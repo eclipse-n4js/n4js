@@ -11,11 +11,11 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 
-// XPECT errors --> "The this type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
+// XPECT errors --> "The 'this' type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
 var a : this;
 
 class A {
-	// XPECT errors --> "The this type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
+	// XPECT errors --> "The 'this' type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
 	constructor(p : this) {}
 
 	f() : this {
@@ -26,10 +26,10 @@ class A {
 		return new A();
 	}
 
-	// XPECT errors --> "The this type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
+	// XPECT errors --> "The 'this' type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
 	g(p : this) : void {}
 
-	// XPECT errors --> "The this type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "~this"
+	// XPECT errors --> "The 'this' type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "~this"
 	h(p : ~this) : void {}
 
 
