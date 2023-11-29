@@ -275,7 +275,7 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		if (n4field.const && n4field.expression === null) {
-			addIssue(n4field, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName, CLF_FIELD_CONST_MISSING_INIT.toIssueItem());
+			addIssue(n4field, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName, CLF_FIELD_CONST_MISSING_INIT.toIssueItem(n4field.name));
 		}
 	}
 

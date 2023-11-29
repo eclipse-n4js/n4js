@@ -162,7 +162,7 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 			if(errMsg.length>0) {
 				val astElement = node.astElement;
 				val issueCode = mDescRef.get().issueCode;
-				if (Set.of(VIS_ILLEGAL_MEMBER_ACCESS, VIS_WRONG_READ_WRITE_ACCESS).contains(issueCode)) {
+				if (Set.of(VIS_ILLEGAL_MEMBER_ACCESS.name(), VIS_WRONG_READ_WRITE_ACCESS.name()).contains(issueCode)) {
 					if (astElement instanceof BindingProperty && !(astElement as BindingProperty).isSingleNameBinding) {
 						// handled elsewhere: var {fieldPublic: a, fieldPrivate: b} = cls;
 						return true;

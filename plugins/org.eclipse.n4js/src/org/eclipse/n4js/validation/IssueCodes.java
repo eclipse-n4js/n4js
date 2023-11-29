@@ -1052,7 +1052,7 @@ public enum IssueCodes {
 	VCO_OCTALINT_CONVERT_TOO_SHORT(ERROR, "Couldn't convert {0} to an int value."),
 
 	/** 0: the string value */
-	VCO_OCTALINT_LEADING_ZEROS(ERROR, "Don't use extra leading zeros {0}.'"),
+	VCO_OCTALINT_LEADING_ZEROS(ERROR, "Don't use extra leading zeros {0}."),
 
 	/** 0: the string value */
 	VCO_OCTALINT_CONVERT_STR(ERROR, "Couldn't convert {0} to an octal int value."),
@@ -1914,7 +1914,7 @@ public enum IssueCodes {
 	////// THIRD PARTY
 	/** no parameters required */
 	THIRD_PARTY_BABEL_LET_CONST_IN_FUN_EXPR(WARNING,
-			"This code is prone to Babel bug /**6302. If you use Babel in your build pipeline, you should rename this let/const or the containing function expression."),
+			"This code is prone to Babel bug #6302. If you use Babel in your build pipeline, you should rename this let/const or the containing function expression."),
 
 	////// N4JS package.json
 	/** no parameters */

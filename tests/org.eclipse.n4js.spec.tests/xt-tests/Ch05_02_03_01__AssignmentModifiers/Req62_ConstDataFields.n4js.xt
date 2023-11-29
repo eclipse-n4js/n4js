@@ -18,7 +18,7 @@ class A {
 	// XPECT errors --> "Const field s2 must be provided with an initializer." at "s2"
 	const s2;
 
-	// XPECT errors --> "All const fields are static. Remove unnecessary modifier static." at "s3"
+	// XPECT errors --> "All const fields are static. Remove unnecessary modifier 'static'." at "s3"
 	static const s3 = "Hello";
 
 	static m = "Hello";
@@ -48,7 +48,7 @@ interface I {
 	// XPECT errors --> "Const field s2 must be provided with an initializer." at "s2"
 	const s2;
 
-	// XPECT errors --> "All const fields are static. Remove unnecessary modifier static." at "s3"
+	// XPECT errors --> "All const fields are static. Remove unnecessary modifier 'static'." at "s3"
 	static const s3 = "Hello";
 
 	static m = "Hello";

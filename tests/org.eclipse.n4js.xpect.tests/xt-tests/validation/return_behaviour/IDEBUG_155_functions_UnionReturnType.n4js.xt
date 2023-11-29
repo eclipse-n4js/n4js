@@ -18,7 +18,7 @@ function fu1(): union{string,int} {}
 
 /* XPECT errors ---
    "Missing return or throw statement." at "fu2"
-   "Type void may only be used to declare the return type of functions and methods." at "void"
+   "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 --- */
 function fu2(): union{string,void} {}
 

@@ -25,11 +25,11 @@ async function * ag3a() {
 
 // yield* has return type undefined, by default (warning case)
 function * g3b() {
-	// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "yield * g3b()"
+	// XPECT warnings --> "The type of this expression is 'undefined', so it will never evaluate to a value other than 'undefined'." at "yield * g3b()"
 	let x : string = yield * g3b();
 }
 async function * ag3b() {
-	// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "yield * ag3b()"
+	// XPECT warnings --> "The type of this expression is 'undefined', so it will never evaluate to a value other than 'undefined'." at "yield * ag3b()"
 	let x : string = yield * ag3b();
 }
 

@@ -16,7 +16,7 @@ interface I_nonStatic {
 
 	f2 = 39;
 
-	// XPECT errors --> "In interfaces, the this literal may not be used in initializers of data fields." at "this"
+	// XPECT errors --> "In interfaces, the 'this' literal may not be used in initializers of data fields." at "this"
 	f = 3 + this.f2;
 
 	get g() {
@@ -46,22 +46,22 @@ interface I_static {
 
 	static f2 = 39;
 
-	// XPECT errors --> "In interfaces, the this literal may not be used in static methods or field accessors and in initializers of static data fields." at "this"
+	// XPECT errors --> "In interfaces, the 'this' literal may not be used in static methods or field accessors and in initializers of static data fields." at "this"
 	static f = 3 + this.f2;
 
 	static get g() {
-		// XPECT errors --> "In interfaces, the this literal may not be used in static methods or field accessors and in initializers of static data fields." at "this"
+		// XPECT errors --> "In interfaces, the 'this' literal may not be used in static methods or field accessors and in initializers of static data fields." at "this"
 		this;
 		return null;
 	}
 
 	static set s(value : any) {
-		// XPECT errors --> "In interfaces, the this literal may not be used in static methods or field accessors and in initializers of static data fields." at "this"
+		// XPECT errors --> "In interfaces, the 'this' literal may not be used in static methods or field accessors and in initializers of static data fields." at "this"
 		this;
 	}
 
 	static m() {
-		// XPECT errors --> "In interfaces, the this literal may not be used in static methods or field accessors and in initializers of static data fields." at "this"
+		// XPECT errors --> "In interfaces, the 'this' literal may not be used in static methods or field accessors and in initializers of static data fields." at "this"
 		this;
 	}
 
@@ -107,7 +107,7 @@ class C_static {
 
 	static f2 = 39;
 
-	// XPECT errors --> "The this literal may not be used in initializers of static data fields." at "this"
+	// XPECT errors --> "The 'this' literal may not be used in initializers of static data fields." at "this"
 	static f = 3 + this.f2;
 
 	static get g() {

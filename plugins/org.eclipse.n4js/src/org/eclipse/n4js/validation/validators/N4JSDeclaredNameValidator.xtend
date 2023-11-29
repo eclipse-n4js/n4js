@@ -410,7 +410,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 		declaredLetConst.filter[fparNames.contains(declaredName)].forEach[dupeEO|
 			val name = dupeEO.declaredName;
 			val baseEO = fpars.filter[it.name==name].head;
-			val IssueItem issueItem = AST_NAME_SHADOW_ERR.toIssueItem(
+			val IssueItem issueItem = AST_NAME_DUPLICATE_ERR.toIssueItem(
 						StringExtensions.toFirstUpper(messageHelper.description(dupeEO, name)),
 						messageHelper.description(baseEO, name));
 			addIssue(dupeEO, findNameEAttribute(dupeEO), issueItem);

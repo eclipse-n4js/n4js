@@ -675,7 +675,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		val classDecl = getAnnotatedClass(ann);
 		val tClass = classDecl?.definedType;
 		if(tClass!==null && !requiredDef.hasAnnotation(tClass)) {
-			addIssue(ann, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_ONLY_ON_CLASS_ANNOTATED_WITH.toIssueItem());
+			addIssue(ann, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_ONLY_ON_CLASS_ANNOTATED_WITH.toIssueItem(ann.name,requiredDef.name));
 			return false;
 		}
 		return true;
@@ -691,7 +691,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		val methodDecl = getAnnotatedMethod(ann);
 		val tClass = methodDecl?.definedType?.eContainer;
 		if(tClass instanceof TClass && !requiredDef.hasAnnotation(tClass as TClass)) {
-			addIssue(ann, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_ONLY_ON_METHOD_IN_CLASS_ANNOTATED_WITH.toIssueItem());
+			addIssue(ann, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_ONLY_ON_METHOD_IN_CLASS_ANNOTATED_WITH.toIssueItem(ann.name,requiredDef.name));
 			return false;
 		}
 		return true;

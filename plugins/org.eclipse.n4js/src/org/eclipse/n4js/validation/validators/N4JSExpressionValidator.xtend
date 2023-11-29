@@ -1780,7 +1780,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val astNode = error.astNode;
 		val feature = error.feature;
 		if(message!==null && astNode!==null) { // feature may be null, that is ok!
-			addIssue(astNode, feature, EXP_COMPILE_TIME_MANDATORY.toIssueItem());
+			addIssue(astNode, feature, EXP_COMPILE_TIME_MANDATORY.toIssueItem(message));
 		}
 	}
 }

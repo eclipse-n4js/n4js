@@ -119,7 +119,7 @@ anA === aB;
 anA === funcB();
 
 // OK, anA could be undefined
-// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "udef"
+// XPECT warnings --> "The type of this expression is 'undefined', so it will never evaluate to a value other than 'undefined'." at "udef"
 anA === udef;
 
 // OK, structural comparison: A is basically an empty Object.
