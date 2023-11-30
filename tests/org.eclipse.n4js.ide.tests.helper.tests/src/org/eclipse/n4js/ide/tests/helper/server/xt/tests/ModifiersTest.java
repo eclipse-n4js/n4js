@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt.tests;
 
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodData;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodData;
 import org.junit.Test;
 
 /**
@@ -19,22 +19,21 @@ import org.junit.Test;
  */
 public class ModifiersTest extends AbstractXtParentRunnerTest {
 
-
 	@Test
 	public void test() throws Exception {
 		run("probands/Modifiers");
-		assertEventNames("testSuiteStarted\n"
-				+ "testSuiteStarted\n"
+		assertEventNames("testSuiteStarted - org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"
+				+ "testSuiteStarted - FIXME.n4js.xt: probands/Modifiers\n"
 				+ "testStarted\n"
 				+ "testFailure\n"
 				+ "testStarted\n"
 				+ "testFinished\n"
-				+ "testSuiteFinished\n"
-				+ "testSuiteStarted\n"
+				+ "testSuiteFinished - FIXME.n4js.xt: probands/Modifiers\n"
+				+ "testSuiteStarted - IGNORE.n4js.xt: probands/Modifiers\n"
 				+ "testIgnored\n"
 				+ "testIgnored\n"
-				+ "testSuiteFinished\n"
-				+ "testSuiteFinished");
+				+ "testSuiteFinished - IGNORE.n4js.xt: probands/Modifiers\n"
+				+ "testSuiteFinished - org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup");
 		assertResults(
 				"Failed: definition~0: FIXME test-1 〔probands/Modifiers/FIXME.n4js.xt〕. Test fixed!\n"
 						+ "Passed: definition~1: FIXME test-2 〔probands/Modifiers/FIXME.n4js.xt〕\n"

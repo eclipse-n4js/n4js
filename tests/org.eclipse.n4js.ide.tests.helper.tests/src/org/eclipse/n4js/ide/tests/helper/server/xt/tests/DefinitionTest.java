@@ -19,18 +19,17 @@ import org.junit.Test;
  */
 public class DefinitionTest extends AbstractXtParentRunnerTest {
 
-
 	@Test
 	public void test() throws Exception {
 		run("probands/Definition");
-		assertEventNames("testSuiteStarted\n"
-				+ "testSuiteStarted\n"
+		assertEventNames("testSuiteStarted - org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"
+				+ "testSuiteStarted - Definition.n4js.xt: probands/Definition\n"
 				+ "testStarted\n"
 				+ "testFinished\n"
 				+ "testStarted\n"
 				+ "testFailure\n"
-				+ "testSuiteFinished\n"
-				+ "testSuiteFinished");
+				+ "testSuiteFinished - Definition.n4js.xt: probands/Definition\n"
+				+ "testSuiteFinished - org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup");
 		assertResults(
 				"Passed: definition~0: test-1 〔probands/Definition/Definition.n4js.xt〕\n"
 						+ "Failed: definition~1: test-2 〔probands/Definition/Definition.n4js.xt〕. expected:<[wrong expectation]> but was:<[(test-project/src/Definition.n4js, [21:4 - 21:6])]>");

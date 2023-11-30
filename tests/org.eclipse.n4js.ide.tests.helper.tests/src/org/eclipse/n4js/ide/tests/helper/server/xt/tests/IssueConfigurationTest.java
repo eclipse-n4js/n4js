@@ -24,7 +24,6 @@ import org.junit.Test;
  */
 public class IssueConfigurationTest extends AbstractXtParentRunnerTest {
 
-
 	@Test
 	public void test() throws Exception {
 
@@ -37,8 +36,8 @@ public class IssueConfigurationTest extends AbstractXtParentRunnerTest {
 		assertFalse(suppressed.contains(IssueCodes.CLF_NAME_DOES_NOT_START_LOWERCASE));
 
 		run("probands/IssueConfiguration", suppressed);
-		assertEventNames("testSuiteStarted\n"
-				+ "testSuiteStarted\n"
+		assertEventNames("testSuiteStarted - org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"
+				+ "testSuiteStarted - IssueConfiguration.n4js.xt: probands/IssueConfiguration\n"
 				+ "testStarted\n"
 				+ "testFinished\n"
 				+ "testStarted\n"
@@ -47,8 +46,8 @@ public class IssueConfigurationTest extends AbstractXtParentRunnerTest {
 				+ "testFinished\n"
 				+ "testStarted\n"
 				+ "testFinished\n"
-				+ "testSuiteFinished\n"
-				+ "testSuiteFinished");
+				+ "testSuiteFinished - IssueConfiguration.n4js.xt: probands/IssueConfiguration\n"
+				+ "testSuiteFinished - org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup");
 		assertResults("Passed: nowarnings~0:  〔probands/IssueConfiguration/IssueConfiguration.n4js.xt〕\n"
 				+ "Passed: warnings~0:  〔probands/IssueConfiguration/IssueConfiguration.n4js.xt〕\n"
 				+ "Passed: warnings~1:  〔probands/IssueConfiguration/IssueConfiguration.n4js.xt〕\n"
