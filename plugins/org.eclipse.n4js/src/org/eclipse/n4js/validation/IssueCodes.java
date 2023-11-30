@@ -382,7 +382,7 @@ public enum IssueCodes {
 	 * ({@link ValidatorMessageHelper/**descriptionDifferentFrom(TMember,TMember)} 3: additional members or error
 	 * information (may be empty)
 	 */
-	CLF_REDEFINED_TYPE_NOT_SAME_TYPE(ERROR, "Type of {0} must equal type of {1} {2}{3}"),
+	CLF_REDEFINED_TYPE_NOT_SAME_TYPE(ERROR, "Type of {0} must equal type of {1} {2}.{3}"),
 
 	/**
 	 * 0: overriding description ({@link ValidatorMessageHelper/**descriptionDifferentFrom(TMember,TMember)}, 1:
@@ -397,7 +397,7 @@ public enum IssueCodes {
 	 * overridden/implemented/consumed, 3: signature type error message, 4: additional members or error information (may
 	 * be empty)
 	 */
-	CLF_REDEFINED_MEMBER_TYPE_INVALID(ERROR, "Type of {0} does not conform to {2} {1}: {3}{4}"),
+	CLF_REDEFINED_MEMBER_TYPE_INVALID(ERROR, "Type of {0} does not conform to {2} {1}: {3}.{4}"),
 
 	/**
 	 * 0: consumed/inherited, 1: overriding description
@@ -422,7 +422,7 @@ public enum IssueCodes {
 	 * 2: overridden description ({@link ValidatorMessageHelper/**descriptionDifferentFrom(TMember,TMember)}, 3:
 	 * signature type error message, 4: additional members or error information (may be empty)
 	 */
-	CLF_REDEFINED_METHOD_TYPE_CONFLICT(ERROR, "{0} does not conform to {1} {2}: {3}{4}"),
+	CLF_REDEFINED_METHOD_TYPE_CONFLICT(ERROR, "{0} does not conform to {1} {2}: {3}.{4}"),
 
 	/**
 	 * 0: overriding description ({@link ValidatorMessageHelper/**descriptionDifferentFrom(TMember,TMember)}, 1:
@@ -1130,7 +1130,7 @@ public enum IssueCodes {
 	TYS_CANNOT_TYPE(ERROR, "cannot type {0}."),
 
 	/** 0: left expression, 1: right expression */
-	TYS_NO_SUBTYPE(ERROR, "{0} is not a subtype of {1}."),
+	TYS_NO_SUBTYPE(ERROR, "{0} is not a subtype of {1}"),
 
 	/** 0: expected type, 1: actual type */
 	TYS_NO_SUPERTYPE_WRITE_ACCESS(ERROR, "expecting write-access for type {0} but {1} is not a super type of {0}."),
