@@ -28,7 +28,7 @@
 	"name": "mandatory1",
 	"version": "0.0.1",
 	"n4js": {
-		// XPECT errors --> "Missing dependency to n4js-runtime (mandatory for all N4JS projects of type library, application, test)." at ""library""
+		// XPECT errors --> "Missing dependency to 'n4js-runtime' (mandatory for all N4JS projects of type library, application, test)." at ""library""
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",
 		"sources": {

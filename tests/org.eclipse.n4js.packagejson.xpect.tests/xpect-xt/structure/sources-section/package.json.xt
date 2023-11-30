@@ -36,7 +36,7 @@
 	"n4js": {
 		"projectType": "validation",
 		"sources": {
-			// XPECT errors --> "Invalid source container type "invalid-type"." at ""invalid-type""
+			// XPECT errors --> "Invalid source container type 'invalid-type'." at ""invalid-type""
 			"invalid-type": [],
 			// XPECT errors --> "Expected array instead of string as source container list." at ""invalid""
 			"source": "invalid",

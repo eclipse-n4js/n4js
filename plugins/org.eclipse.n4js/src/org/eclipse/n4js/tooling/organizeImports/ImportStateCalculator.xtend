@@ -238,6 +238,6 @@ class ImportStateCalculator {
 
 	private static def boolean isNamedImportOfNonExportedElement(ImportSpecifier importSpec, ASTMetaInfoCache astMetaInfoCache) {
 		return astMetaInfoCache.getLinkingIssueCodes(importSpec, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT)
-			.contains(IssueCodes.IMP_NOT_EXPORTED);
+			.contains(IssueCodes.IMP_NOT_EXPORTED.name());
 	}
 }

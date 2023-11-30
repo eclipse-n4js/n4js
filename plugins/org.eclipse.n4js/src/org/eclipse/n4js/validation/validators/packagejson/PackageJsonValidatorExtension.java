@@ -265,15 +265,14 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 
 		List<Issue> issues = semverHelper.validate(parseResult);
 		for (Issue issue : issues) {
-			IssueItem issueItem = PKGJ_INVALID_VERSION_NUMBER.toIssueItem();
+			IssueItem issueItem;
 			switch (issue.getSeverity()) {
 			case WARNING:
 				issueItem = PKGJ_SEMVER_WARNING.toIssueItem(issue.getMessage());
 				break;
+			default:
 			case ERROR:
 				issueItem = PKGJ_SEMVER_ERROR.toIssueItem(issue.getMessage());
-				break;
-			default:
 				break;
 			}
 

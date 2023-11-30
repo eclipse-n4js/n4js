@@ -20,16 +20,16 @@ var a = new A();
 // Use instanceof with class on rhs XPECT noerrors -->
 a instanceof A;
 
-// Use instanceof with int on rhs XPECT errors --> "instanceof cannot be used with primitive types." at "int"
+// Use instanceof with int on rhs XPECT errors --> "'instanceof' cannot be used with primitive types." at "int"
 a instanceof int;
 
-// Use instanceof with number on rhs XPECT errors --> "instanceof cannot be used with primitive types." at "number"
+// Use instanceof with number on rhs XPECT errors --> "'instanceof' cannot be used with primitive types." at "number"
 a instanceof number;
 
-// Use instanceof with string on rhs XPECT errors --> "instanceof cannot be used with primitive types." at "string"
+// Use instanceof with string on rhs XPECT errors --> "'instanceof' cannot be used with primitive types." at "string"
 a instanceof string;
 
-// Use instanceof with nested paranthesis structure on rhs XPECT errors --> "instanceof cannot be used with primitive types." at "string"
+// Use instanceof with nested paranthesis structure on rhs XPECT errors --> "'instanceof' cannot be used with primitive types." at "string"
 a instanceof (((string)));
 
 

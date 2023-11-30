@@ -214,7 +214,7 @@ public class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalB
 
 		assertIssues2(Pair.of(
 				"MainProject/package.json", List.of(
-						"(Warning, [1:9 - 1:25], As a convention the package name \"RenamedProject\" should match the name of the project folder \"MainProject\" on the file system.)")));
+						"(Warning, [1:9 - 1:25], As a convention the package name 'RenamedProject' should match the name of the project folder 'MainProject' on the file system.)")));
 	}
 
 	@Test
@@ -249,7 +249,7 @@ public class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalB
 
 		assertIssues2(
 				Pair.of("MainProject/package.json", List.of(
-						"(Warning, [1:9 - 1:25], As a convention the package name \"RenamedProject\" should match the name of the project folder \"MainProject\" on the file system.)")));
+						"(Warning, [1:9 - 1:25], As a convention the package name 'RenamedProject' should match the name of the project folder 'MainProject' on the file system.)")));
 	}
 
 	@Test
@@ -284,7 +284,7 @@ public class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalB
 
 		assertIssues2(Map.of(
 				"OtherProject/package.json", List.of(
-						"    (Warning, [1:9 - 1:25], As a convention the package name \"RenamedProject\" should match the name of the project folder \"OtherProject\" on the file system.)"),
+						"    (Warning, [1:9 - 1:25], As a convention the package name 'RenamedProject' should match the name of the project folder 'OtherProject' on the file system.)"),
 				"MainProject/package.json", List.of(
 						"    (Error, [16:3 - 16:21], Project does not exist with project ID: OtherProject.)"),
 				"Main.n4js", List.of(
@@ -302,7 +302,7 @@ public class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalB
 
 		assertIssues2(Map.of(
 				"OtherProject/package.json", List.of(
-						"(Warning, [1:9 - 1:25], As a convention the package name \"RenamedProject\" should match the name of the project folder \"OtherProject\" on the file system.)")));
+						"(Warning, [1:9 - 1:25], As a convention the package name 'RenamedProject' should match the name of the project folder 'OtherProject' on the file system.)")));
 	}
 
 	@Test

@@ -36,7 +36,7 @@
 			// XPECT noerrors
 			"external": []
 		},
-		// XPECT errors --> "A project of type "DEFINITION" must not define the property "output"." at ""output" : "src-gen""
+		// XPECT errors --> "A project of type 'DEFINITION' must not define the property 'output'." at ""output" : "src-gen""
 		"output" : "src-gen",
 		// XPECT noerrors
 		"definesPackage" : "MyLib"

@@ -27,9 +27,9 @@
 
 {
 	"name": "PackageVersionNumber",
-	// XPECT errors --> "Invalid version number "0.1a.2": no viable alternative at input 'a'." at "0.1a.2"
+	// XPECT errors --> "Invalid version number '0.1a.2': no viable alternative at input 'a'." at "0.1a.2"
 	"version": "0.1a.2",
-	// XPECT errors --> "Invalid version number ">0.0.1": Version numbers must not have comparators: '>'." at "">0.0.1""
+	// XPECT errors --> "Invalid version number '>0.0.1': Version numbers must not have comparators: '>'." at "">0.0.1""
 	"version": ">0.0.1",
 	// XPECT errors --> "Too many version parts. Semantic versions consist only of major, minor and patch." at "23"
 	"version": "0.0.1.23",
