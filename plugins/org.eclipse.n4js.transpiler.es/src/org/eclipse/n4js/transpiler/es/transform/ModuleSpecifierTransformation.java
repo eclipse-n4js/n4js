@@ -81,6 +81,11 @@ public class ModuleSpecifierTransformation extends Transformation {
 
 	}
 
+	/** Returns file extension of output module */
+	protected String getActualFileExtension(TModule targetModule) {
+		return n4jsLanguageHelper.getOutputFileExtension(getState().index, targetModule);
+	}
+
 	private void transformImportDecl(ImportDeclaration importDeclIM) {
 		String definedRewrite = definedModuleSpecifierRewrites.get(importDeclIM.getModuleSpecifierAsText());
 		if (definedRewrite != null) {
@@ -224,10 +229,6 @@ public class ModuleSpecifierTransformation extends Transformation {
 		}
 
 		return sb.toString();
-	}
-
-	private String getActualFileExtension(TModule targetModule) {
-		return n4jsLanguageHelper.getOutputFileExtension(getState().index, targetModule);
 	}
 
 	private N4JSPackageName getActualProjectName(N4JSProjectConfigSnapshot project) {
