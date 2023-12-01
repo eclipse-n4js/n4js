@@ -11,8 +11,8 @@
 package org.eclipse.n4js.ide.tests.helper.server.xt.tests;
 
 import org.eclipse.n4js.N4JSLanguageConstants;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodData;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodData;
 import org.junit.Test;
 
 /**
@@ -20,14 +20,15 @@ import org.junit.Test;
  */
 public class SuppressedIssuesTest extends AbstractXtParentRunnerTest {
 
-	
 	@Test
 	public void test() throws Exception {
 		run("probands/SuppressedIssues", N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS);
-		assertEventNames("testRunStarted\n"
+		assertEventNames("testSuiteStarted - org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"
+				+ "testSuiteStarted - SuppressedIssues.n4js.xt: probands/SuppressedIssues\n"
 				+ "testStarted\n"
 				+ "testFinished\n"
-				+ "testRunFinished");
+				+ "testSuiteFinished - SuppressedIssues.n4js.xt: probands/SuppressedIssues\n"
+				+ "testSuiteFinished - org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup");
 		assertResults("Passed: nowarnings~0:  〔probands/SuppressedIssues/SuppressedIssues.n4js.xt〕");
 	}
 
