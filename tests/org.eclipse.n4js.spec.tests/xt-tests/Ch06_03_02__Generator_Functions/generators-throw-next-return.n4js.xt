@@ -50,9 +50,9 @@ ag20o.next("1");
 
 
 // return type of next value is undefined
-// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "g20o.next().value"
+// XPECT warnings --> "The type of this expression is 'undefined', so it will never evaluate to a value other than 'undefined'." at "g20o.next().value"
 let g20on = g20o.next().value;
-// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "entry.value"
+// XPECT warnings --> "The type of this expression is 'undefined', so it will never evaluate to a value other than 'undefined'." at "entry.value"
 ag20o.next().then(entry => { let ag20on = entry.value; });
 
 
@@ -92,9 +92,9 @@ ag20o.return("1");
 
 
 // return type of return value is undefined
-// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "g20o.return().value"
+// XPECT warnings --> "The type of this expression is 'undefined', so it will never evaluate to a value other than 'undefined'." at "g20o.return().value"
 let g20or = g20o.return().value;
-// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "entry.value"
+// XPECT warnings --> "The type of this expression is 'undefined', so it will never evaluate to a value other than 'undefined'." at "entry.value"
 ag20o.return().then(entry => { let ag20or = entry.value; });
 
 

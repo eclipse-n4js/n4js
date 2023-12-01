@@ -30,10 +30,10 @@ public class IssueConfigurationTest extends AbstractXtParentRunnerTest {
 		// The test file IssuesConfiguration.n4js.xt is based on the assumption that certain issues are suppressed in
 		// all tests by default. Make sure this test fails if the default suppression no longer meets this expectation:
 		Set<String> suppressed = N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS;
-		assertTrue(suppressed.contains(IssueCodes.DFG_NULL_DEREFERENCE));
-		assertTrue(suppressed.contains(IssueCodes.CFG_LOCAL_VAR_UNUSED));
-		assertFalse(suppressed.contains(IssueCodes.CLF_NAME_DOES_NOT_START_UPPERCASE));
-		assertFalse(suppressed.contains(IssueCodes.CLF_NAME_DOES_NOT_START_LOWERCASE));
+		assertTrue(suppressed.contains(IssueCodes.DFG_NULL_DEREFERENCE.name()));
+		assertTrue(suppressed.contains(IssueCodes.CFG_LOCAL_VAR_UNUSED.name()));
+		assertFalse(suppressed.contains(IssueCodes.CLF_NAME_DOES_NOT_START_UPPERCASE.name()));
+		assertFalse(suppressed.contains(IssueCodes.CLF_NAME_DOES_NOT_START_LOWERCASE.name()));
 
 		run("probands/IssueConfiguration", suppressed);
 		assertEventNames("testSuiteStarted - org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"

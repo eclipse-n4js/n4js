@@ -19,11 +19,11 @@ fBad();
 
 
 class C {}
-// XPECT errors --> "Cannot directly invoke class constructor functions; use new instead." at "C"
+// XPECT errors --> "Cannot directly invoke class constructor functions; use 'new' instead." at "C"
 C();
 
 abstract class CA {}
-// XPECT errors --> "Cannot directly invoke class constructor functions; use new instead." at "CA"
+// XPECT errors --> "Cannot directly invoke class constructor functions; use 'new' instead." at "CA"
 CA();
 
 interface I {}

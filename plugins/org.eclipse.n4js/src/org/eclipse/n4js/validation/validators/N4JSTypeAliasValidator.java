@@ -10,6 +10,12 @@
  */
 package org.eclipse.n4js.validation.validators;
 
+import static org.eclipse.n4js.validation.IssueCodes.ALI_CYCLIC_TYPE_ALIAS;
+import static org.eclipse.n4js.validation.IssueCodes.ALI_INVALID_MODIFIER;
+import static org.eclipse.n4js.validation.IssueCodes.ALI_INVALID_TYPE_ALIAS_IN_TYPE_TYPE_REF;
+import static org.eclipse.n4js.validation.IssueCodes.TYS_PRIMITIVE_TYPE_DYNAMIC;
+import static org.eclipse.n4js.validation.IssueCodes.TYS_STRUCTURAL_PRIMITIVE;
+
 import java.util.Collections;
 import java.util.Stack;
 import java.util.stream.Collectors;
@@ -30,7 +36,6 @@ import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.RecursionGuard;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
-import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
@@ -76,9 +81,8 @@ public class N4JSTypeAliasValidator extends AbstractN4JSDeclarativeValidator {
 			return; // no cycle
 		}
 		String cycleStr = cycle.stream().map(TypeAlias::getName).collect(Collectors.joining(" -> "));
-		addIssue(IssueCodes.getMessageForALI_CYCLIC_TYPE_ALIAS(cycleStr),
-				n4TypeAliasDecl, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME,
-				IssueCodes.ALI_CYCLIC_TYPE_ALIAS);
+		addIssue(n4TypeAliasDecl, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME,
+				ALI_CYCLIC_TYPE_ALIAS.toIssueItem(cycleStr));
 	}
 
 	/**
@@ -143,25 +147,21 @@ public class N4JSTypeAliasValidator extends AbstractN4JSDeclarativeValidator {
 		final TypeRef typeRefResolved = tsh.resolveTypeAliasFlat(G, typeRefInAST);
 		if (typeRefInAST.isDynamic()) {
 			if (!(typeRefResolved instanceof ParameterizedTypeRef)) {
-				addIssue(IssueCodes.getMessageForALI_INVALID_MODIFIER("dynamically"),
-						typeRefInAST, IssueCodes.ALI_INVALID_MODIFIER);
+				addIssue(typeRefInAST, ALI_INVALID_MODIFIER.toIssueItem("dynamically"));
 			} else {
 				final Type declType = typeRefResolved.getDeclaredType();
 				if (!N4JSLanguageUtils.mayBeReferencedDynamically(declType)) {
-					addIssue(IssueCodes.getMessageForTYS_PRIMITIVE_TYPE_DYNAMIC(declType.getName()),
-							typeRefInAST, IssueCodes.TYS_PRIMITIVE_TYPE_DYNAMIC);
+					addIssue(typeRefInAST, TYS_PRIMITIVE_TYPE_DYNAMIC.toIssueItem(declType.getName()));
 				}
 			}
 		}
 		if (typeRefInAST.isUseSiteStructuralTyping()) {
 			if (!(typeRefResolved instanceof ParameterizedTypeRef)) {
-				addIssue(IssueCodes.getMessageForALI_INVALID_MODIFIER("structurally"),
-						typeRefInAST, IssueCodes.ALI_INVALID_MODIFIER);
+				addIssue(typeRefInAST, ALI_INVALID_MODIFIER.toIssueItem("structurally"));
 			} else {
 				final Type declType = typeRefResolved.getDeclaredType();
 				if (!N4JSLanguageUtils.mayBeReferencedStructurally(declType)) {
-					addIssue(IssueCodes.getMessageForTYS_STRUCTURAL_PRIMITIVE(),
-							typeRefInAST, IssueCodes.TYS_STRUCTURAL_PRIMITIVE);
+					addIssue(typeRefInAST, TYS_STRUCTURAL_PRIMITIVE.toIssueItem());
 				}
 			}
 		}
@@ -174,8 +174,7 @@ public class N4JSTypeAliasValidator extends AbstractN4JSDeclarativeValidator {
 			// (note: no need to cover cases ThisTypeRefNominal and WildcardOldNotation from rule TypeArgInTypeTypeRef
 			// in TypeExpressions.xtext, because this-types and wildcards cannot appear as actual type of an alias)
 			if (!isValidTypeArgInTypeTypeRef) {
-				addIssue(IssueCodes.getMessageForALI_INVALID_TYPE_ALIAS_IN_TYPE_TYPE_REF("{}"),
-						typeRefInAST, IssueCodes.ALI_INVALID_TYPE_ALIAS_IN_TYPE_TYPE_REF);
+				addIssue(typeRefInAST, ALI_INVALID_TYPE_ALIAS_IN_TYPE_TYPE_REF.toIssueItem("{}"));
 			}
 		}
 	}

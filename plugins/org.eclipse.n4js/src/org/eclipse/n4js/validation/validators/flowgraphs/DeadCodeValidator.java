@@ -21,6 +21,7 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.n4JS.ThrowStatement;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.n4js.validation.IssueItem;
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.n4js.validation.validators.N4JSFlowgraphValidator;
 
@@ -55,13 +56,11 @@ public class DeadCodeValidator implements FlowValidator {
 
 		for (DeadCodeRegion dcRegion : deadCodeRegions) {
 			String stmtDescription = getStatementDescription(dcRegion);
-			String errCode = IssueCodes.FUN_DEAD_CODE;
-			String msg = IssueCodes.getMessageForFUN_DEAD_CODE();
+			IssueItem issueItem = IssueCodes.FUN_DEAD_CODE.toIssueItem();
 			if (stmtDescription != null) {
-				msg = IssueCodes.getMessageForFUN_DEAD_CODE_WITH_PREDECESSOR(stmtDescription);
-				errCode = IssueCodes.FUN_DEAD_CODE_WITH_PREDECESSOR;
+				issueItem = IssueCodes.FUN_DEAD_CODE_WITH_PREDECESSOR.toIssueItem(stmtDescription);
 			}
-			fVali.addIssue(msg, dcRegion.getContainer(), dcRegion.getOffset(), dcRegion.getLength(), errCode);
+			fVali.addIssue(dcRegion.getContainer(), dcRegion.getOffset(), dcRegion.getLength(), issueItem);
 		}
 	}
 

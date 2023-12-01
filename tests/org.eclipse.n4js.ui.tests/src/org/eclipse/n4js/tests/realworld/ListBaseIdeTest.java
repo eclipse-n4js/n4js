@@ -32,7 +32,7 @@ public class ListBaseIdeTest extends ConvertedIdeTest {
 	public Set<String> getIgnoredIssueCodes() {
 		return FluentIterable.concat(
 				super.getIgnoredIssueCodes(),
-				Collections.singleton(IssueCodes.CLF_NAME_CONTAINS_DISCOURAGED_CHARACTER)).toSet();
+				Collections.singleton(IssueCodes.CLF_NAME_CONTAINS_DISCOURAGED_CHARACTER.name())).toSet();
 	}
 
 	@Test

@@ -28,6 +28,8 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.utils.Strings;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.JavaScriptVariant;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.testing.util.ParseHelper;
@@ -125,11 +127,11 @@ abstract public class AbstractScriptAssembler {
 		return setupScript(scriptSrc, variant, null, expectedIssueCount);
 	}
 
-	protected Script setupScript(CharSequence scriptSrc, JavaScriptVariant variant, String[] expectedMessages) {
+	protected Script setupScript(CharSequence scriptSrc, JavaScriptVariant variant, IssueCodes[] expectedMessages) {
 		return setupScript(scriptSrc, variant, expectedMessages, -1);
 	}
 
-	protected Script setupScript(CharSequence scriptSrc, JavaScriptVariant variant, String[] expectedMessages,
+	protected Script setupScript(CharSequence scriptSrc, JavaScriptVariant variant, IssueCodes[] expectedMessages,
 			int expectedIssueCount) {
 
 		try {
@@ -140,7 +142,8 @@ abstract public class AbstractScriptAssembler {
 				assertEquals(join(",", map(issues, Issue::toString)) + "\nin\n" + scriptSrc, expectedIssueCount,
 						issues.size());
 			} else {
-				assertEquals(String.join(",", expectedMessages), join(",", map(issues, Issue::getCode)));
+				assertEquals(Strings.join(",", ic -> ic.name(), expectedMessages),
+						join(",", map(issues, Issue::getCode)));
 			}
 
 			// newly created top level vars and

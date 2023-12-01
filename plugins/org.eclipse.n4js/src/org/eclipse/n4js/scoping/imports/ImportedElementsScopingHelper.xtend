@@ -235,7 +235,7 @@ class ImportedElementsScopingHelper {
 
 	private def void addNamedImports(NamedImportSpecifier specifier, TExportableElement element, QualifiedName importedName,
 		IEODesc2ISpec originatorMap, ImportedElementsMap validImports) {
-		val ieod = validImports.putOrError(element, importedName, IssueCodes.IMP_AMBIGUOUS);
+		val ieod = validImports.putOrError(element, importedName, IssueCodes.IMP_AMBIGUOUS.name);
 		originatorMap.putWithOrigin(ieod, specifier)
 	}
 
@@ -284,7 +284,7 @@ class ImportedElementsScopingHelper {
 			LOGGER.error("namespaceType not found\n" + sb.toString);
 			return;
 		}
-		val ieodx = validImports.putOrError(namespaceType, namespaceQName, IssueCodes.IMP_AMBIGUOUS)
+		val ieodx = validImports.putOrError(namespaceType, namespaceQName, IssueCodes.IMP_AMBIGUOUS.name)
 		originatorMap.putWithOrigin(ieodx, specifier)
 
 		if (includeValueOnlyElements) {

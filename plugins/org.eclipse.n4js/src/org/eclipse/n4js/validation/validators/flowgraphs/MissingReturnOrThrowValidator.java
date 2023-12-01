@@ -49,8 +49,7 @@ public class MissingReturnOrThrowValidator implements FlowValidator {
 		Collection<FunctionOrFieldAccessor> mrtFunctions = mrta.getMRTFunctions();
 		for (FunctionOrFieldAccessor fofa : mrtFunctions) {
 			EStructuralFeature highlightFeature = getMarkedElement(fofa);
-			String msg = IssueCodes.getMessageForFUN_MISSING_RETURN_OR_THROW_STATEMENT();
-			fVali.addIssue(msg, fofa, highlightFeature, IssueCodes.FUN_MISSING_RETURN_OR_THROW_STATEMENT);
+			fVali.addIssue(fofa, highlightFeature, IssueCodes.FUN_MISSING_RETURN_OR_THROW_STATEMENT.toIssueItem());
 		}
 
 	}

@@ -14,10 +14,14 @@ import static org.eclipse.n4js.N4JSLanguageConstants.EXPORT_KEYWORD;
 import static org.eclipse.n4js.N4JSLanguageConstants.EXTENDS_KEYWORD;
 import static org.eclipse.n4js.N4JSLanguageConstants.IMPLEMENTS_KEYWORD;
 import static org.eclipse.n4js.validation.IssueCodes.AST_CATCH_VAR_TYPED;
+import static org.eclipse.n4js.validation.IssueCodes.EXP_ONLY_TOP_LEVEL_ELEMENTS;
 import static org.eclipse.n4js.validation.IssueCodes.SYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForAST_CATCH_VAR_TYPED;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForSYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForSYN_KW_EXTENDS_IMPLEMENTS_WRONG_ORDER;
+import static org.eclipse.n4js.validation.IssueCodes.SYN_KW_EXTENDS_IMPLEMENTS_WRONG_ORDER;
+import static org.eclipse.n4js.validation.IssueCodes.SYN_MODIFIER_ACCESS_SEVERAL;
+import static org.eclipse.n4js.validation.IssueCodes.SYN_MODIFIER_BAD_ORDER;
+import static org.eclipse.n4js.validation.IssueCodes.SYN_MODIFIER_DUPLICATE;
+import static org.eclipse.n4js.validation.IssueCodes.SYN_MODIFIER_INVALID;
+import static org.eclipse.n4js.validation.IssueCodes.SYN_UNNECESSARY_ELEMENT;
 
 import java.util.HashSet;
 import java.util.List;
@@ -42,7 +46,7 @@ import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
-import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.n4js.validation.IssueItem;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.Alternatives;
 import org.eclipse.xtext.Keyword;
@@ -94,21 +98,18 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 			final boolean duplicate = !checked.add(mod);
 			if (!ModifierUtils.isValid(elem, mod)) {
 				final ILeafNode node = ModifierUtils.getNodeForModifier(elem, idx);
-				addIssue(IssueCodes.getMessageForSYN_MODIFIER_INVALID(mod.getName(), keywordProvider.keyword(elem)),
-						elem, node.getOffset(), node.getLength(),
-						IssueCodes.SYN_MODIFIER_INVALID);
+				addIssue(elem, node.getOffset(), node.getLength(),
+						SYN_MODIFIER_INVALID.toIssueItem(mod.getName(), keywordProvider.keyword(elem)));
 				hasIssue = true;
 			} else if (duplicate) {
 				final ILeafNode node = ModifierUtils.getNodeForModifier(elem, idx);
-				addIssue(IssueCodes.getMessageForSYN_MODIFIER_DUPLICATE(mod.getName()),
-						elem, node.getOffset(), node.getLength(),
-						IssueCodes.SYN_MODIFIER_DUPLICATE);
+				addIssue(elem, node.getOffset(), node.getLength(),
+						SYN_MODIFIER_DUPLICATE.toIssueItem(mod.getName()));
 				hasIssue = true;
 			} else if (ModifierUtils.isObsolete(elem, mod)) {
 				final ILeafNode node = ModifierUtils.getNodeForModifier(elem, idx);
-				addIssue(IssueCodes.getMessageForSYN_UNNECESSARY_ELEMENT("modifier", mod.getName()),
-						elem, node.getOffset(), node.getLength(),
-						IssueCodes.SYN_UNNECESSARY_ELEMENT);
+				addIssue(elem, node.getOffset(), node.getLength(),
+						SYN_UNNECESSARY_ELEMENT.toIssueItem("modifier", mod.getName()));
 				hasIssue = true;
 			}
 		}
@@ -127,9 +128,8 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 			final boolean isAccessModifier = ModifierUtils.isAccessModifier(mod);
 			if (hasAccessModifier && isAccessModifier) {
 				final ILeafNode node = ModifierUtils.getNodeForModifier(elem, idx);
-				addIssue(IssueCodes.getMessageForSYN_MODIFIER_ACCESS_SEVERAL(),
-						elem, node.getOffset(), node.getLength(),
-						IssueCodes.SYN_MODIFIER_ACCESS_SEVERAL);
+				addIssue(elem, node.getOffset(), node.getLength(),
+						SYN_MODIFIER_ACCESS_SEVERAL.toIssueItem());
 				hasIssue = true;
 			}
 			hasAccessModifier |= isAccessModifier;
@@ -157,10 +157,9 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 			final ILeafNode nodeFirst = ModifierUtils.getNodeForModifier(elem, 0);
 			final ILeafNode nodeLast = ModifierUtils.getNodeForModifier(elem,
 					elem.getDeclaredModifiers().size() - 1);
-			addIssue(IssueCodes.getMessageForSYN_MODIFIER_BAD_ORDER(modifiersStr),
-					elem, nodeFirst.getOffset(),
+			addIssue(elem, nodeFirst.getOffset(),
 					nodeLast.getOffset() - nodeFirst.getOffset() + nodeLast.getLength(),
-					IssueCodes.SYN_MODIFIER_BAD_ORDER);
+					SYN_MODIFIER_BAD_ORDER.toIssueItem(modifiersStr));
 			return false;
 		}
 		return true;
@@ -175,9 +174,8 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 			ICompositeNode node = NodeModelUtils.findActualNodeFor(element);
 			ILeafNode keywordNode = findLeafWithKeyword(element, "{", node, EXPORT_KEYWORD, false);
 			if (keywordNode != null) {
-				addIssue(IssueCodes.getMessageForEXP_ONLY_TOP_LEVEL_ELEMENTS(),
-						element, keywordNode.getTotalOffset(), keywordNode.getLength(),
-						IssueCodes.EXP_ONLY_TOP_LEVEL_ELEMENTS);
+				addIssue(element, keywordNode.getTotalOffset(), keywordNode.getLength(),
+						EXP_ONLY_TOP_LEVEL_ELEMENTS.toIssueItem());
 			}
 		}
 	}
@@ -207,12 +205,12 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 				List<? extends IdentifiableElement> interfaces = StreamSupport.stream(
 						tclass.getImplementedInterfaceRefs().spliterator(), false)
 						.map(ref -> (TInterface) (ref.getDeclaredType())).collect(Collectors.toList());
-				String message = getMessageForSYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP(
+				IssueItem issueItem = SYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP.toIssueItem(
 						validatorMessageHelper.description(tclass), "extend",
 						"interface" + (interfaces.size() > 1 ? "s " : " ") + validatorMessageHelper.names(interfaces),
 						IMPLEMENTS_KEYWORD);
-				addIssue(message, n4ClassDefinition, keywordNode.getTotalOffset(),
-						keywordNode.getLength(), SYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP);
+				addIssue(n4ClassDefinition, keywordNode.getTotalOffset(),
+						keywordNode.getLength(), issueItem);
 			}
 
 		}
@@ -255,12 +253,12 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 							return Stream.empty();
 						})
 						.collect(Collectors.toList());
-				String message = getMessageForSYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP(
+				IssueItem issueItem = SYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP.toIssueItem(
 						validatorMessageHelper.description(tinterface), "implement",
 						"interface" + (interfaces.size() > 1 ? "s " : " ") + validatorMessageHelper.names(interfaces),
 						EXTENDS_KEYWORD);
-				addIssue(message, n4InterfaceDecl, keywordNode.getTotalOffset(),
-						keywordNode.getLength(), SYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP);
+				addIssue(n4InterfaceDecl, keywordNode.getTotalOffset(),
+						keywordNode.getLength(), issueItem);
 			}
 
 		}
@@ -283,9 +281,8 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 		int extendsOffset = extendsNode.getOffset();
 		int implementsOffset = implementsNode.getOffset();
 		if (extendsOffset > implementsOffset) {
-			String message = getMessageForSYN_KW_EXTENDS_IMPLEMENTS_WRONG_ORDER();
-			addIssue(message, semanticElement, extendsOffset, EXTENDS_KEYWORD.length(),
-					IssueCodes.SYN_KW_EXTENDS_IMPLEMENTS_WRONG_ORDER);
+			addIssue(semanticElement, extendsOffset, EXTENDS_KEYWORD.length(),
+					SYN_KW_EXTENDS_IMPLEMENTS_WRONG_ORDER.toIssueItem());
 			return false;
 		}
 		return true;
@@ -366,9 +363,8 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	public void checkCatchVariable(CatchVariable catchVariable) {
 		if (catchVariable.getDeclaredTypeRefInAST() != null) {
-			addIssue(getMessageForAST_CATCH_VAR_TYPED(), catchVariable,
-					N4JSPackage.Literals.TYPED_ELEMENT__DECLARED_TYPE_REF_NODE,
-					AST_CATCH_VAR_TYPED);
+			addIssue(catchVariable, N4JSPackage.Literals.TYPED_ELEMENT__DECLARED_TYPE_REF_NODE,
+					AST_CATCH_VAR_TYPED.toIssueItem());
 		}
 	}
 

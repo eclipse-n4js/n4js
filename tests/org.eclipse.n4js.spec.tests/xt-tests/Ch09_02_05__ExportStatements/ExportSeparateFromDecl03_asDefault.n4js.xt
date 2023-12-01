@@ -30,6 +30,7 @@
 	// note: this test is testing internal infrastructure for a feature not available in N4JS[D] (only in .d.ts)
 	IssueConfiguration {
 		IssueCode "UNSUPPORTED" { enabled = false }
+		IssueCode "IMP_UNUSED_IMPORT" { enabled = false }
 	}
 
 	END_SETUP

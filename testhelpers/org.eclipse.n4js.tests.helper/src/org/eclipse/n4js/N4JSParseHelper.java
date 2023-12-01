@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.JavaScriptVariant;
 import org.eclipse.xtext.diagnostics.AbstractDiagnostic;
 import org.eclipse.xtext.resource.FileExtensionProvider;
@@ -139,7 +140,7 @@ public class N4JSParseHelper extends ParseHelper<Script> {
 	/**
 	 * Like {@link #assertNoParseErrors(Script)}, but ignoring all issues with the given issue codes.
 	 */
-	public void assertNoParseErrors(Script script, Set<String> ignoredIssueCodes) {
+	public void assertNoParseErrors(Script script, Set<IssueCodes> ignoredIssueCodes) {
 		List<Diagnostic> errors = script.eResource().getErrors();
 		if (ignoredIssueCodes != null) {
 			errors = FluentIterable.from(errors)
@@ -159,9 +160,14 @@ public class N4JSParseHelper extends ParseHelper<Script> {
 		this.fileExtension = ext;
 	}
 
-	private String getIssueCode(Diagnostic diagnostic) {
+	private IssueCodes getIssueCode(Diagnostic diagnostic) {
 		if (diagnostic instanceof AbstractDiagnostic) {
-			return ((AbstractDiagnostic) diagnostic).getCode();
+			String codeName = ((AbstractDiagnostic) diagnostic).getCode();
+			try {
+				return IssueCodes.valueOf(codeName);
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 		return null;
 	}

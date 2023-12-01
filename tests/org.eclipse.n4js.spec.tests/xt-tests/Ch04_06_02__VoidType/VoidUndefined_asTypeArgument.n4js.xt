@@ -14,61 +14,61 @@
 
 class C<T> {}
 class CA<T extends any> {}
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 class CAV<T extends any|void> {}
 
 // XPECT noerrors -->
 let t01: C<number>;
 // XPECT noerrors -->
 let t02: C<undefined>;
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 let t03: C<void>;
 
 // XPECT noerrors -->
 let t04: CA<number>;
 // XPECT noerrors -->
 let t05: CA<undefined>;
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 let t06: CA<void>;
 
 // XPECT noerrors -->
 let t07: CAV<number>;
 // XPECT noerrors -->
 let t08: CAV<undefined>;
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 let t09: CAV<void>;
 
 
 class I<T> {}
 class IA<T extends any> {}
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 class IAV<T extends any|void> {}
 
 // XPECT noerrors -->
 let t11: I<number>;
 // XPECT noerrors -->
 let t12: I<undefined>;
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 let t13: I<void>;
 
 // XPECT noerrors -->
 let t14: IA<number>;
 // XPECT noerrors -->
 let t15: IA<undefined>;
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 let t16: IA<void>;
 
 // XPECT noerrors -->
 let t17: IAV<number>;
 // XPECT noerrors -->
 let t18: IAV<undefined>;
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 let t19: IAV<void>;
 
 
 function <T> fn(p: T) {}
 function <T extends any> fnA(p: T) {}
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 function <T extends any|void> fnAV(p: T) {}
 
 // XPECT noerrors -->
@@ -77,7 +77,7 @@ function <T extends any|void> fnAV(p: T) {}
 <undefined>fn(undefined);
 // XPECT errors --> "null is not a subtype of undefined." at "null"
 <undefined>fn(null);
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 <void>fn(undefined);
 
 // XPECT noerrors -->
@@ -86,7 +86,7 @@ function <T extends any|void> fnAV(p: T) {}
 <undefined>fnA(undefined);
 // XPECT errors --> "null is not a subtype of undefined." at "null"
 <undefined>fnA(null);
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 <void>fnA(undefined);
 
 // XPECT noerrors -->
@@ -95,18 +95,18 @@ function <T extends any|void> fnAV(p: T) {}
 <undefined>fnAV(undefined);
 // XPECT errors --> "null is not a subtype of undefined." at "null"
 <undefined>fnAV(null);
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 <void>fnAV(undefined);
 
 
 class Cls {
 	<T> m(p: T) {}
 	<T extends any> mA(p: T) {}
-	// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+	// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 	<T extends any|void> mAV(p: T) {}
 	static <T> sm(p: T) {}
 	static <T extends any> smA(p: T) {}
-	// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+	// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 	static <T extends any|void> smAV(p: T) {}
 }
 let cls: Cls;
@@ -119,7 +119,7 @@ cls.<number>m(undefined);
 cls.<undefined>m(undefined);
 // XPECT errors --> "null is not a subtype of undefined." at "null"
 cls.<undefined>m(null);
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 cls.<void>m(undefined);
 
 // XPECT noerrors -->
@@ -128,7 +128,7 @@ cls.<number>mA(undefined);
 cls.<undefined>mA(undefined);
 // XPECT errors --> "null is not a subtype of undefined." at "null"
 cls.<undefined>mA(null);
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 cls.<void>mA(undefined);
 
 // XPECT noerrors -->
@@ -137,7 +137,7 @@ cls.<number>mAV(undefined);
 cls.<undefined>mAV(undefined);
 // XPECT errors --> "null is not a subtype of undefined." at "null"
 cls.<undefined>mAV(null);
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 cls.<void>mAV(undefined);
 
 // static:
@@ -148,7 +148,7 @@ Cls.<number>sm(undefined);
 Cls.<undefined>sm(undefined);
 // XPECT errors --> "null is not a subtype of undefined." at "null"
 Cls.<undefined>sm(null);
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 Cls.<void>sm(undefined);
 
 // XPECT noerrors -->
@@ -157,7 +157,7 @@ Cls.<number>smA(undefined);
 Cls.<undefined>smA(undefined);
 // XPECT errors --> "null is not a subtype of undefined." at "null"
 Cls.<undefined>smA(null);
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 Cls.<void>smA(undefined);
 
 // XPECT noerrors -->
@@ -166,5 +166,5 @@ Cls.<number>smAV(undefined);
 Cls.<undefined>smAV(undefined);
 // XPECT errors --> "null is not a subtype of undefined." at "null"
 Cls.<undefined>smAV(null);
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 Cls.<void>smAV(undefined);

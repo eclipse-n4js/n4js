@@ -36,7 +36,7 @@ public abstract class ScopingDiagnosis<T> {
 	 * See {@link IssueCodes} for valid issue codes.
 	 */
 	protected DiagnosticMessage createMessage(String issueCode, String message) {
-		return new DiagnosticMessage(message, IssueCodes.getDefaultSeverity(issueCode), issueCode);
+		return new DiagnosticMessage(message, IssueCodes.getSeverityForName(issueCode), issueCode);
 	}
 
 }

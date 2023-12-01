@@ -123,8 +123,8 @@ var asyncIter4 = myObjStruct[Symbol.asyncIterator];
 
 // wrong location (i.e. other than in a property access expression) is bad ...
 
-// XPECT errors --> "Invalid use of Symbol: may only be used to create symbols (i.e. Symbol()) or to access built-in symbols (e.g. Symbol.iterator)." at "Symbol"
+// XPECT errors --> "Invalid use of 'Symbol': may only be used to create symbols (i.e. Symbol()) or to access built-in symbols (e.g. Symbol.iterator)." at "Symbol"
 var v : Symbol;
 
-// XPECT errors --> "Invalid use of Symbol: may only be used to create symbols (i.e. Symbol()) or to access built-in symbols (e.g. Symbol.iterator)." at "Symbol"
+// XPECT errors --> "Invalid use of 'Symbol': may only be used to create symbols (i.e. Symbol()) or to access built-in symbols (e.g. Symbol.iterator)." at "Symbol"
 function foo(sym : Symbol) {}

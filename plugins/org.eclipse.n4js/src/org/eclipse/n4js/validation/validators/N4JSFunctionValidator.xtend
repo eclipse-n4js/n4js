@@ -47,6 +47,7 @@ import org.eclipse.n4js.utils.N4JSLanguageHelper
 import org.eclipse.n4js.utils.nodemodel.HiddenLeafAccess
 import org.eclipse.n4js.utils.nodemodel.HiddenLeafAccess.HiddenLeafs
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
+import org.eclipse.n4js.validation.IssueItem
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -104,11 +105,10 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	def checkFunctionExpressionInExpressionStatement(FunctionDeclaration functionDeclaration) {
 		val container = functionDeclaration.eContainer
 		if (container instanceof Block && jsVariantHelper.requireCheckFunctionExpressionInExpressionStatement(functionDeclaration)) {
-			val msg = getMessageForFUN_BLOCK
 			if (functionDeclaration.name !== null) {
-				addIssue(msg, functionDeclaration, N4JSPackage.Literals.FUNCTION_DECLARATION__NAME, FUN_BLOCK)
+				addIssue(functionDeclaration, N4JSPackage.Literals.FUNCTION_DECLARATION__NAME, FUN_BLOCK.toIssueItem());
 			} else {
-				addIssue(msg, container, functionDeclaration.eContainmentFeature, FUN_BLOCK)
+				addIssue(container, functionDeclaration.eContainmentFeature, FUN_BLOCK.toIssueItem())
 			}
 		}
 	}
@@ -164,8 +164,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 					if (isSetter) {
 
 						// Something else than void is returned -> Error
-						val String msg = messageForFUN_RETURNTYPE_VOID_FOR_SETTER_VIOLATED
-						addIssue(msg, rst, FUN_RETURNTYPE_VOID_FOR_SETTER_VIOLATED)
+						addIssue(rst, FUN_RETURNTYPE_VOID_FOR_SETTER_VIOLATED.toIssueItem())
 						return false;
 					} else {
 						// other cases are handled by type system (except setters).
@@ -197,7 +196,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	def checkFunctionName(FunctionDefinition definition) {
 		val name = definition.name.nullToEmpty;
 		val desc = validatorMessageHelper.description(definition);
-		var errorMessage = "";
+		var IssueItem issueItem;
 
 		// Disable function name validation against keywords if not N4JS file.
 		if (jsVariantHelper.requireCheckFunctionName(definition)) {
@@ -205,26 +204,27 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 			//IDEBUG-304 : allow keywords as member names
 			if(definition instanceof N4MethodDeclaration === false){
 				if (FUTURE_RESERVED_WORDS.contains(name)) {
-					errorMessage = getMessageForFUN_NAME_RESERVED(desc, "future reserved word")
+					issueItem = FUN_NAME_RESERVED.toIssueItem(toFirstUpper(desc), "future reserved word")
 				}
 
 				if (N4JSLanguageConstants.YIELD_KEYWORD != name && languageHelper.getECMAKeywords.contains(name)) {
-					errorMessage = getMessageForFUN_NAME_RESERVED(desc, "keyword")
+					issueItem = FUN_NAME_RESERVED.toIssueItem(toFirstUpper(desc), "keyword")
 				}
 			}
 		}
 
-		if (!errorMessage.nullOrEmpty) {
+		if (issueItem !== null) {
 			var feature = switch (definition) {
 				FunctionDeclaration: FUNCTION_DECLARATION__NAME
 				N4MethodDeclaration: PROPERTY_NAME_OWNER__DECLARED_NAME
 				FunctionExpression: FUNCTION_EXPRESSION__NAME
 				default: null
 			}
-			addIssue(toFirstUpper(errorMessage), definition, feature, FUN_NAME_RESERVED);
+			addIssue(definition, feature, issueItem);
+			return false;
 		}
 
-		return errorMessage.nullOrEmpty
+		return true;
 	}
 
 	/**
@@ -289,8 +289,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 
 		// check missing return-expression
 		if (returnTypeRef !== null && retStmt.expression === null) {
-			val String msg = getMessageForFUN_MISSING_RETURN_EXPRESSION(returnTypeRef.typeRefAsString);
-			addIssue(msg, retStmt, FUN_MISSING_RETURN_EXPRESSION);
+			addIssue(retStmt, FUN_MISSING_RETURN_EXPRESSION.toIssueItem(returnTypeRef.typeRefAsString));
 			return true;
 		}
 
@@ -322,10 +321,10 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 
 				val off = firstNode.offset;
 				val len = hLeafs.offset - firstNode.offset;
-				addIssue(messageForFUN_NAME_MISSING,functionDeclaration,off,len,FUN_NAME_MISSING);
+				addIssue(functionDeclaration,off,len,FUN_NAME_MISSING.toIssueItem());
 			} else {
 			  	// mark complete function.
-				addIssue(messageForFUN_NAME_MISSING,functionDeclaration,FUN_NAME_MISSING);
+				addIssue(functionDeclaration,FUN_NAME_MISSING.toIssueItem());
 			}
 
 		}
@@ -335,8 +334,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	def checkFunctionDeclarationBody(FunctionDeclaration functionDeclaration) {
 		if (functionDeclaration.body === null && functionDeclaration.definedType instanceof TFunction &&
 			!(functionDeclaration.definedType as TFunction).external) {
-			addIssue(getMessageForFUN_BODY, functionDeclaration, N4JSPackage.Literals.FUNCTION_DECLARATION__NAME,
-				FUN_BODY)
+			addIssue(functionDeclaration, N4JSPackage.Literals.FUNCTION_DECLARATION__NAME, FUN_BODY.toIssueItem())
 		}
 	}
 
@@ -356,28 +354,24 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 
 	private def <T extends EObject> internalCheckSetterParameters(T fpar, boolean isVariadic, boolean hasInitializerAssignment){
 		if (isVariadic) {
-			val String msg = messageForFUN_SETTER_CANT_BE_VARIADIC
-			addIssue(msg, fpar, FUN_SETTER_CANT_BE_VARIADIC)
+			addIssue(fpar, FUN_SETTER_CANT_BE_VARIADIC.toIssueItem())
 		}
 		if (hasInitializerAssignment) {
-			val String msg = messageForFUN_SETTER_CANT_BE_DEFAULT
-			addIssue(msg, fpar, FUN_SETTER_CANT_BE_DEFAULT)
+			addIssue(fpar, FUN_SETTER_CANT_BE_DEFAULT.toIssueItem())
 		}
 	}
 
 	@Check
 	def void checkOptionalModifier(FormalParameter fpar) {
 		if(fpar.declaredTypeRefInAST!==null && fpar.declaredTypeRefInAST.followedByQuestionMark) {
-			val String msg = getMessageForFUN_PARAM_OPTIONAL_WRONG_SYNTAX(fpar.name)
-			addIssue(msg, fpar, FUN_PARAM_OPTIONAL_WRONG_SYNTAX)
+			addIssue(fpar, FUN_PARAM_OPTIONAL_WRONG_SYNTAX.toIssueItem(fpar.name))
 		}
 	}
 
 	@Check
 	def void checkOptionalModifierT(TFormalParameter fpar) {
 		if(fpar.typeRef!==null && fpar.typeRef.followedByQuestionMark) {
-			val String msg = getMessageForFUN_PARAM_OPTIONAL_WRONG_SYNTAX(fpar.typeRef?.declaredType?.name)
-			addIssue(msg, fpar, FUN_PARAM_OPTIONAL_WRONG_SYNTAX)
+			addIssue(fpar, FUN_PARAM_OPTIONAL_WRONG_SYNTAX.toIssueItem(fpar.typeRef?.declaredType?.name))
 		}
 	}
 
@@ -407,7 +401,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		for (fp : fpars) {
 			// only 'undefined' as identifier allowed
 			if (fp.hasASTInitializer && !"undefined".equals(fp.astInitializer)) {
-				addIssue( messageForFUN_PARAM_INITIALIZER_ONLY_UNDEFINED_ALLOWED, fp, FUN_PARAM_INITIALIZER_ONLY_UNDEFINED_ALLOWED )
+				addIssue(fp, FUN_PARAM_INITIALIZER_ONLY_UNDEFINED_ALLOWED.toIssueItem())
 			}
 		}
 	}
@@ -434,8 +428,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 			val idRef = idRefs.next();
 			if (varDeclNamesInBody.contains(idRef.id.name)) {
 				val fpar = EcoreUtil2.getContainerOfType(idRef, FormalParameter);
-				val String msg = getMessageForFUN_PARAM_INITIALIZER_ILLEGAL_REFERENCE_TO_BODY_VARIABLE(fpar.name, idRef.id.name);
-				addIssue(msg, idRef, FUN_PARAM_INITIALIZER_ILLEGAL_REFERENCE_TO_BODY_VARIABLE)
+				addIssue(idRef, FUN_PARAM_INITIALIZER_ILLEGAL_REFERENCE_TO_BODY_VARIABLE.toIssueItem(fpar.name, idRef.id.name))
 			}
 		}
 	}
@@ -446,7 +439,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		for(fp:list) {
 			if(fp.definedVariable.hasInitializerAssignment) {
 				if(fp.variadic) {
-					addIssue(messageForFUN_PARAM_VARIADIC_WITH_INITIALIZER, fp, FUN_PARAM_VARIADIC_WITH_INITIALIZER)
+					addIssue(fp, FUN_PARAM_VARIADIC_WITH_INITIALIZER.toIssueItem())
 				}
 			}
 
@@ -458,7 +451,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		for(fp:list) {
 			if(fp.hasInitializerAssignment) {
 				if(fp.variadic) {
-					addIssue(messageForFUN_PARAM_VARIADIC_WITH_INITIALIZER, fp, FUN_PARAM_VARIADIC_WITH_INITIALIZER)
+					addIssue(fp, FUN_PARAM_VARIADIC_WITH_INITIALIZER.toIssueItem())
 				}
 			}
 		}
@@ -472,8 +465,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		if (funDef.isAsync && (null !== funDef.definedType)) {
 			val TypeRef tfunctionRetType = (funDef.definedType as TFunction).getReturnTypeRef();
 			if (TypeUtils.isVoid(tfunctionRetType)) {
-				val message = messageForTYS_NON_VOID_ASYNC
-				addIssue(message, funDef, TYS_NON_VOID_ASYNC)
+				addIssue(funDef, TYS_NON_VOID_ASYNC.toIssueItem())
 			}
 		}
 	}
@@ -485,8 +477,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	def checkNoThisAsyncMethod(FunctionDefinition funDef) {
 		if (funDef.isAsync) {
 			if (TypeUtils.isOrContainsThisType(funDef.declaredReturnTypeRef)) {
-				val message = messageForTYS_NON_THIS_ASYNC
-				addIssue(message, funDef, TYS_NON_THIS_ASYNC)
+				addIssue(funDef, TYS_NON_THIS_ASYNC.toIssueItem())
 			}
 		}
 	}
@@ -507,11 +498,11 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		val isGeneratorType = TypeUtils.isGenerator(returnTypeRefUB, G.builtInTypeScope);
 		val isAsyncGeneratorType = TypeUtils.isAsyncGenerator(returnTypeRefUB, G.builtInTypeScope);
 		if (async && isGeneratorType) {
-			addIssue(getMessageForFUN_GENERATOR_RETURN_TYPE_MISMATCH(G.generatorType.name, "synchronous", G.asyncGeneratorType.name),
-				returnTypeRefInAST, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, FUN_GENERATOR_RETURN_TYPE_MISMATCH);
+			val IssueItem issueItem = FUN_GENERATOR_RETURN_TYPE_MISMATCH.toIssueItem(G.generatorType.name, "synchronous", G.asyncGeneratorType.name);
+			addIssue(returnTypeRefInAST, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, issueItem);
 		} else if (!async && isAsyncGeneratorType) {
-			addIssue(getMessageForFUN_GENERATOR_RETURN_TYPE_MISMATCH(G.asyncGeneratorType.name, "asynchronous", G.generatorType.name),
-				returnTypeRefInAST, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, FUN_GENERATOR_RETURN_TYPE_MISMATCH);
+			val IssueItem issueItem = FUN_GENERATOR_RETURN_TYPE_MISMATCH.toIssueItem(G.asyncGeneratorType.name, "asynchronous", G.generatorType.name);
+			addIssue(returnTypeRefInAST, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, issueItem);
 		}
 	}
 

@@ -63,8 +63,7 @@ public class N4JSLambdaValidator extends AbstractN4JSDeclarativeValidator {
 		Iterator<EObject> thisUsages = LambdaUtils.thisLiterals(topLevelLambda.getBody());
 		while (thisUsages.hasNext()) {
 			EObject thisUsage = thisUsages.next();
-			String message = IssueCodes.getMessageForKEY_THIS_REJECTED_IN_TOP_LEVEL_LAMBDA();
-			addIssue(message, thisUsage, IssueCodes.KEY_THIS_REJECTED_IN_TOP_LEVEL_LAMBDA);
+			addIssue(thisUsage, IssueCodes.KEY_THIS_REJECTED_IN_TOP_LEVEL_LAMBDA);
 		}
 	}
 }

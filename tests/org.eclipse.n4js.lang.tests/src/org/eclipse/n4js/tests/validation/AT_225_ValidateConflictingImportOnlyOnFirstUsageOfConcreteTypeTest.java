@@ -117,7 +117,7 @@ public class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest 
 				var a: A
 				""", rs);
 		valTestHelper.assertError(script, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF,
-				IssueCodes.IMP_AMBIGUOUS_WILDCARD, "The type A is ambiguously imported from a.A and b.A");
+				IssueCodes.IMP_AMBIGUOUS_WILDCARD.name(), "The type A is ambiguously imported from a.A and b.A");
 	}
 
 	@Test
@@ -130,7 +130,7 @@ public class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest 
 				var a: A
 				""", rs);
 		valTestHelper.assertError(script, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF,
-				IssueCodes.IMP_AMBIGUOUS_WILDCARD, "The type A is ambiguously imported from b.A and a.A");
+				IssueCodes.IMP_AMBIGUOUS_WILDCARD.name(), "The type A is ambiguously imported from b.A and a.A");
 	}
 	// ================
 
@@ -141,7 +141,7 @@ public class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest 
 				import * as N from 'a/X';
 				""", rs);
 		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_DECLARATION,
-				IssueCodes.IMP_STMT_DUPLICATE_NAMESPACE,
+				IssueCodes.IMP_STMT_DUPLICATE_NAMESPACE.name(),
 				"Duplicate namespace import statement with name N and imported module a/X.");
 	}
 
@@ -151,7 +151,8 @@ public class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest 
 				import { X } from 'a/X';
 				import { X } from 'a/X';
 				""", rs);
-		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_DECLARATION, IssueCodes.IMP_STMT_DUPLICATE_NAMED,
+		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_DECLARATION,
+				IssueCodes.IMP_STMT_DUPLICATE_NAMED.name(),
 				"Duplicate named import statement with local name X and imported module a/X.");
 	}
 
@@ -162,7 +163,8 @@ public class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest 
 				import * as N2 from 'a/X';
 				var x: N1.X;
 				""", rs);
-		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER, IssueCodes.IMP_DUPLICATE_NAMESPACE,
+		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER,
+				IssueCodes.IMP_DUPLICATE_NAMESPACE.name(),
 				"Element N2.X of a/X is already imported in namespace N1.");
 	}
 
@@ -172,7 +174,7 @@ public class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest 
 				import { Z } from 'a/X';
 				import { Z as Z1 } from 'a/X';
 				""", rs);
-		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER, IssueCodes.IMP_DUPLICATE,
+		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER, IssueCodes.IMP_DUPLICATE.name(),
 				"Z from a/X is already imported as Z.");
 	}
 
@@ -182,7 +184,7 @@ public class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest 
 				import { Z as Z1 } from 'a/X';
 				import { Z } from 'a/X';
 				""", rs);
-		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER, IssueCodes.IMP_DUPLICATE,
+		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER, IssueCodes.IMP_DUPLICATE.name(),
 				"Z from a/X is already imported as Z1.");
 	}
 
@@ -192,7 +194,7 @@ public class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest 
 				import { Z as Z1 } from 'a/X';
 				import { Z as Z2 } from 'a/X';
 				""", rs);
-		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER, IssueCodes.IMP_DUPLICATE,
+		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER, IssueCodes.IMP_DUPLICATE.name(),
 				"Z from a/X is already imported as Z1.");
 	}
 
@@ -202,7 +204,7 @@ public class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest 
 				import * as NX from 'a/X';
 				import { Z } from 'a/X';
 				""", rs);
-		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER, IssueCodes.IMP_DUPLICATE,
+		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER, IssueCodes.IMP_DUPLICATE.name(),
 				"Z from a/X is already imported as NX.Z.");
 	}
 
@@ -212,7 +214,7 @@ public class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest 
 				import { Z } from 'a/X';
 				import * as NX from 'a/X';
 				""", rs);
-		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER, IssueCodes.IMP_DUPLICATE,
+		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER, IssueCodes.IMP_DUPLICATE.name(),
 				"Z from a/X is already imported as Z.");
 	}
 
@@ -222,7 +224,8 @@ public class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest 
 				import * as NX from 'a/X';
 				import * as NX from 'b/Y';
 				""", rs);
-		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER, IssueCodes.IMP_LOCAL_NAME_CONFLICT,
+		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER,
+				IssueCodes.IMP_LOCAL_NAME_CONFLICT.name(),
 				"Name NX is already used as namespace name for a/X.");
 	}
 
@@ -232,7 +235,8 @@ public class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest 
 				import { X } from 'a/X';
 				import { Y as X } from 'b/Y';
 				""", rs);
-		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER, IssueCodes.IMP_LOCAL_NAME_CONFLICT,
+		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER,
+				IssueCodes.IMP_LOCAL_NAME_CONFLICT.name(),
 				"Name X is already used as name for named import X from a/X.");
 	}
 
@@ -242,7 +246,8 @@ public class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest 
 				import { X as N } from 'a/X';
 				import * as N from 'b/Y';
 				""", rs);
-		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER, IssueCodes.IMP_LOCAL_NAME_CONFLICT,
+		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER,
+				IssueCodes.IMP_LOCAL_NAME_CONFLICT.name(),
 				"Name N is already used as alias name for named import X from a/X.");
 	}
 
@@ -252,7 +257,8 @@ public class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest 
 				import * as N from 'a/X';
 				import { Y as N } from 'b/Y';
 				""", rs);
-		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER, IssueCodes.IMP_LOCAL_NAME_CONFLICT,
+		valTestHelper.assertError(script, N4JSPackage.Literals.IMPORT_SPECIFIER,
+				IssueCodes.IMP_LOCAL_NAME_CONFLICT.name(),
 				"Name N is already used as namespace name for a/X.");
 	}
 
@@ -262,7 +268,8 @@ public class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest 
 				import { X } from 'a/X';
 				class X{};
 				""", rs);
-		valTestHelper.assertError(script, N4JSPackage.Literals.N4_CLASS_DECLARATION, IssueCodes.AST_NAME_DUPLICATE_ERR,
+		valTestHelper.assertError(script, N4JSPackage.Literals.N4_CLASS_DECLARATION,
+				IssueCodes.AST_NAME_DUPLICATE_ERR.name(),
 				"Class X duplicates named import X (line 1).");
 	}
 
@@ -272,7 +279,8 @@ public class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest 
 				import * as X from 'a/X';
 				class X{};
 				""", rs);
-		valTestHelper.assertError(script, N4JSPackage.Literals.N4_CLASS_DECLARATION, IssueCodes.AST_NAME_DUPLICATE_ERR,
+		valTestHelper.assertError(script, N4JSPackage.Literals.N4_CLASS_DECLARATION,
+				IssueCodes.AST_NAME_DUPLICATE_ERR.name(),
 				"Class X duplicates namespace import specifier X (line 1).");
 	}
 
@@ -299,7 +307,7 @@ public class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest 
 				var x: X;
 				""", rs);
 		valTestHelper.assertError(script, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF,
-				IssueCodes.IMP_PLAIN_ACCESS_OF_ALIASED_TYPE, "X has been imported as XXX.");
+				IssueCodes.IMP_PLAIN_ACCESS_OF_ALIASED_TYPE.name(), "X has been imported as XXX.");
 	}
 
 	@Test
@@ -309,7 +317,7 @@ public class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest 
 				var x: X;
 				""", rs);
 		valTestHelper.assertError(script, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF,
-				IssueCodes.IMP_PLAIN_ACCESS_OF_NAMESPACED_TYPE, "X has been imported as N.X.");
+				IssueCodes.IMP_PLAIN_ACCESS_OF_NAMESPACED_TYPE.name(), "X has been imported as N.X.");
 	}
 
 }

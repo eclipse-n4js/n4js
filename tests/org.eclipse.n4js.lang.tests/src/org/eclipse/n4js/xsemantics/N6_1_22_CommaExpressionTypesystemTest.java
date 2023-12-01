@@ -118,7 +118,8 @@ public class N6_1_22_CommaExpressionTypesystemTest extends AbstractTypesystemTes
 							var x = i + " * 10 = " + k; // console.log(i + " * 10 = " + k);
 						}
 						""");
-		valTestHelper.assertNoErrors(script, N4JSPackage.Literals.N4_MEMBER_DECLARATION, IssueCodes.CLF_DUP_MEMBER);
+		valTestHelper.assertNoErrors(script, N4JSPackage.Literals.N4_MEMBER_DECLARATION,
+				IssueCodes.CLF_DUP_MEMBER.name());
 	}
 
 	@Test
@@ -128,6 +129,7 @@ public class N6_1_22_CommaExpressionTypesystemTest extends AbstractTypesystemTes
 							var i;
 							i++
 						""");
-		valTestHelper.assertNoErrors(script, N4JSPackage.Literals.N4_MEMBER_DECLARATION, IssueCodes.CLF_DUP_MEMBER);
+		valTestHelper.assertNoErrors(script, N4JSPackage.Literals.N4_MEMBER_DECLARATION,
+				IssueCodes.CLF_DUP_MEMBER.name());
 	}
 }

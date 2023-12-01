@@ -29,7 +29,7 @@
 	"name": "mandatory2",
 	"version": "0.0.1",
 	"devDependencies": {
-		// XPECT errors --> "Dependency to n4js-runtime should be defined below key "dependencies", not "devDependencies"." at ""n4js-runtime": "*""
+		// XPECT errors --> "Dependency to 'n4js-runtime' should be defined below key 'dependencies', not 'devDependencies'." at ""n4js-runtime": "*""
 		"n4js-runtime": "*"
 	},
 	"n4js": {

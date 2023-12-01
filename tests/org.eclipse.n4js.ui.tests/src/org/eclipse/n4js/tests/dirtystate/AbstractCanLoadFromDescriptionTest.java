@@ -43,7 +43,7 @@ abstract public class AbstractCanLoadFromDescriptionTest extends ConvertedIdeTes
 	@Override
 	protected Set<String> getIgnoredIssueCodes() {
 		Set<String> ignoredIssueCodes = super.getIgnoredIssueCodes();
-		ignoredIssueCodes.add(IssueCodes.LTD_ILLEGAL_LOADTIME_REFERENCE);
+		ignoredIssueCodes.add(IssueCodes.LTD_ILLEGAL_LOADTIME_REFERENCE.name());
 		return ignoredIssueCodes;
 	}
 

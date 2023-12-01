@@ -29,7 +29,7 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
-import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.n4js.validation.IssueItem
 import org.eclipse.n4js.validation.N4JSResourceValidator
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.EcoreUtil2
@@ -43,6 +43,8 @@ import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
+
+import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
@@ -85,8 +87,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 			if (nodes.size > 0) {
 				val offset = nodes.get(0).offset;
 				if (offset !== 0) {
-					val message = IssueCodes.getMessageForSCR_HASHBANG_WRONG_LOCATION();
-					addIssue(message, script, N4JSPackage.eINSTANCE.script_Hashbang, IssueCodes.SCR_HASHBANG_WRONG_LOCATION);
+					addIssue(script, N4JSPackage.eINSTANCE.script_Hashbang, SCR_HASHBANG_WRONG_LOCATION.toIssueItem());
 				}
 			}
 		}
@@ -268,14 +269,12 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 					val filePathStr = sortedMutVisibleResourceURIs
 						.filter[implModule != it]
 						.map[segmentsList.drop(1).join('/')].join("; ");
-					val message = IssueCodes.getMessageForCLF_DUP_DEF_MODULE(module.qualifiedName, implModuleStr, filePathStr);
-					addIssue(message, script, IssueCodes.CLF_DUP_DEF_MODULE);
+					addIssue(script, CLF_DUP_DEF_MODULE.toIssueItem(module.qualifiedName, implModuleStr, filePathStr));
 				} else {
 					// collision of implementation modules
 					// list all locations - give the user the possibility to check by himself.
 					val filePathStr = sortedMutVisibleResourceURIs.map[segmentsList.drop(1).join('/')].join("; ");
-					val message = IssueCodes.getMessageForCLF_DUP_MODULE(module.qualifiedName, filePathStr);
-					addIssue(message, script, IssueCodes.CLF_DUP_MODULE);
+					addIssue(script, CLF_DUP_MODULE.toIssueItem(module.qualifiedName, filePathStr));
 				}
 			}
 		}
@@ -297,11 +296,11 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 	/**
 	 * Annotates the script with a an error marker on the first AST element or the first none-empty line.
 	 */
-	private def void addIssue(String message, Script script, String issueCode) {
+	private def void addIssue(Script script, IssueItem issueItem) {
 
 		val first = script.scriptElements.head;
 		if(first !== null){
-			addIssue(message, first, issueCode);
+			addIssue(first, issueItem);
 			return;
 		}
 		val resource = script.eResource as XtextResource;
@@ -315,7 +314,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 			start = matcher.start;
 			end = matcher.end;
 		}
-		addIssue(message, script, start, end - start, issueCode);
+		addIssue(script, start, end - start, issueItem);
 	}
 
 	private def static String replaceJSXByJS(String ext) {

@@ -30,13 +30,13 @@ import org.eclipse.n4js.n4JS.PropertySpread
 import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.validation.ASTStructureValidator
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
-import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import static org.eclipse.n4js.validation.IssueCodes.*
 
 /**
  * Validations to show an error for unsupported language features, mostly ECMAScript6 features.
@@ -167,16 +167,14 @@ class UnsupportedFeatureValidator extends AbstractN4JSDeclarativeValidator {
 	}
 	def private void unsupported(String msg, EObject source, EStructuralFeature feature) {
 		addIssue(
-			IssueCodes.getMessageForUNSUPPORTED(msg),
 			source, feature,
-			IssueCodes.UNSUPPORTED);
+			UNSUPPORTED.toIssueItem(msg));
 	}
 	def private void unsupported(String msg, EObject source, int offset, int length) {
 		addIssue(
-			IssueCodes.getMessageForUNSUPPORTED(msg),
 			source,
 			offset, length,
-			IssueCodes.UNSUPPORTED);
+			UNSUPPORTED.toIssueItem(msg));
 	}
 
 	/**

@@ -35,31 +35,6 @@ import static org.eclipse.n4js.validation.IssueCodes.CLF_REDEFINED_NON_ACCESSIBL
 import static org.eclipse.n4js.validation.IssueCodes.CLF_REDEFINED_TYPE_NOT_SAME_TYPE;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_UNMATCHED_ACCESSOR_OVERRIDE;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_UNMATCHED_ACCESSOR_OVERRIDE_JS;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_CONSUMED_FIELD_ACCESSOR_PAIR_INCOMPLETE;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_CONSUMED_INHERITED_MEMBER_UNSOLVABLE_CONFLICT;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_CONSUMED_MEMBER_SOLVABLE_CONFLICT;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_CONSUMED_MEMBER_UNSOLVABLE_CONFLICT;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_IMPLEMENT_MEMBERTYPE_INCOMPATIBLE;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_MISSING_IMPLEMENTATION;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_MISSING_IMPLEMENTATION_EXT;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_NON_ACCESSIBLE_ABSTRACT_MEMBERS;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDEN_CONCRETE_WITH_ABSTRACT;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_ANNOTATION;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_CONST;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_FIELD_REQUIRES_ACCESSOR_PAIR;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_FINAL;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_MEMBERTYPE_INCOMPATIBLE;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_NON_EXISTENT;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_NON_EXISTENT_INTERFACE;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_VISIBILITY;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_WITH_FINAL_OR_CONST_FIELD;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_PSEUDO_REDEFINED_SPEC_CTOR_INCOMPATIBLE;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_REDEFINED_MEMBER_TYPE_INVALID;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_REDEFINED_METHOD_TYPE_CONFLICT;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_REDEFINED_NON_ACCESSIBLE;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_REDEFINED_TYPE_NOT_SAME_TYPE;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_UNMATCHED_ACCESSOR_OVERRIDE;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_UNMATCHED_ACCESSOR_OVERRIDE_JS;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -117,6 +92,8 @@ import org.eclipse.n4js.utils.DeclMergingHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
+import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.n4js.validation.IssueItem;
 import org.eclipse.n4js.validation.IssueUserDataKeys;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.n4js.validation.utils.MemberCube;
@@ -279,13 +256,12 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 				inheritedConstructor, declMergingHelper);
 		final Result subtypeResult = isSubTypeResult(inheritedConstructor, rightThisContext, inheritedConstructor);
 		if (subtypeResult.isFailure()) {
-			final String msg = getMessageForCLF_PSEUDO_REDEFINED_SPEC_CTOR_INCOMPATIBLE(
+			final EObject astNode = tClassifier.getAstElement(); // ok, because tClassifier is coming from AST
+			addIssue(astNode, N4JSPackage.eINSTANCE.getN4TypeDeclaration_Name(),
+					CLF_PSEUDO_REDEFINED_SPEC_CTOR_INCOMPATIBLE,
 					validatorMessageHelper.description(inheritedConstructor),
 					validatorMessageHelper.description(tClassifier),
 					validatorMessageHelper.description(rightThisContext));
-			final EObject astNode = tClassifier.getAstElement(); // ok, because tClassifier is coming from AST
-			addIssue(msg, astNode, N4JSPackage.eINSTANCE.getN4TypeDeclaration_Name(),
-					CLF_PSEUDO_REDEFINED_SPEC_CTOR_INCOMPATIBLE);
 			return false;
 		}
 		return true;
@@ -367,18 +343,14 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 						if (member.isStatic() && mm.hasNonImplemented() && !mm.hasInherited() && !mm.hasImplemented()) {
 							// special case of false @Override annotation: "overriding" a static member of an interface
 							final TMember other = mm.nonImplemented().iterator().next(); // simply take the first one
-							String message = getMessageForCLF_OVERRIDE_NON_EXISTENT_INTERFACE(
+							addIssue(member.getAstElement(), N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
+									CLF_OVERRIDE_NON_EXISTENT_INTERFACE,
 									validatorMessageHelper.description(member),
 									validatorMessageHelper.description(other));
-							addIssue(message, member.getAstElement(),
-									N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
-									CLF_OVERRIDE_NON_EXISTENT_INTERFACE);
 						} else {
 							// standard case of false @Override annotation
-							String message = getMessageForCLF_OVERRIDE_NON_EXISTENT(keywordProvider.keyword(member),
-									member.getName());
-							addIssue(message, member.getAstElement(),
-									N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_OVERRIDE_NON_EXISTENT);
+							addIssue(member.getAstElement(), N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
+									CLF_OVERRIDE_NON_EXISTENT, keywordProvider.keyword(member), member.getName());
 						}
 					}
 				}
@@ -910,20 +882,20 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	private void messageMissingImplementations(List<TMember> abstractMembers) {
 		TClassifier classifier = getCurrentClassifier();
 		if (!jsVariantHelper.allowMissingImplementation(classifier)) {
-			String message = getMessageForCLF_MISSING_IMPLEMENTATION(classifier.getName(),
+			addIssue(CLF_MISSING_IMPLEMENTATION,
+					classifier.getName(),
 					validatorMessageHelper.descriptions(abstractMembers));
-			addIssue(message, CLF_MISSING_IMPLEMENTATION);
 		} else {
-			String message = getMessageForCLF_MISSING_IMPLEMENTATION_EXT(classifier.getName(),
+			addIssue(CLF_MISSING_IMPLEMENTATION_EXT,
+					classifier.getName(),
 					validatorMessageHelper.descriptions(abstractMembers));
-			addIssue(message, CLF_MISSING_IMPLEMENTATION_EXT);
 		}
 	}
 
-	private void addIssue(String message, String issueCode) {
+	private void addIssue(IssueCodes issueCode, String... msgValues) {
 		N4ClassifierDefinition classifier = getCurrentClassifierDefinition();
 		EStructuralFeature nameFeature = classifier.eClass().getEStructuralFeature("name");
-		addIssue(message, classifier, nameFeature, issueCode);
+		addIssue(classifier, nameFeature, issueCode, msgValues);
 	}
 
 	private void messageImpossibleExtendsImplements(N4ClassifierDefinition n4ClassifierDefinition,
@@ -934,11 +906,11 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 			final Type type = superTypeRefNode.getTypeRef().getDeclaredType();
 			final String mode = type instanceof TInterface
 					&& !(n4ClassifierDefinition instanceof N4InterfaceDeclaration) ? "implement" : "extend";
-			final String message = getMessageForCLF_NON_ACCESSIBLE_ABSTRACT_MEMBERS(mode,
+			addIssue(superTypeRefNode.eContainer(), superTypeRefNode.eContainingFeature(),
+					CLF_NON_ACCESSIBLE_ABSTRACT_MEMBERS,
+					mode,
 					validatorMessageHelper.description(type),
 					validatorMessageHelper.descriptions(entry.getValue()));
-			addIssue(message, superTypeRefNode.eContainer(), superTypeRefNode.eContainingFeature(),
-					CLF_NON_ACCESSIBLE_ABSTRACT_MEMBERS);
 		}
 	}
 
@@ -980,13 +952,11 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 				String redefinitionVerb = MemberRedefinitionUtils.getRedefinitionVerb(filteredOverriddenMembers,
 						getCurrentClassifier());
 
-				String message = getMessageForCLF_OVERRIDE_ANNOTATION(
+				addIssue(overriding.getAstElement(), N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
+						CLF_OVERRIDE_ANNOTATION,
 						validatorMessageHelper.descriptionDifferentFrom(overriding, overriddenMembers),
 						redefinitionVerb,
 						validatorMessageHelper.descriptions(filteredOverriddenMembers));
-
-				addIssue(message, overriding.getAstElement(), N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
-						CLF_OVERRIDE_ANNOTATION);
 			}
 		}
 	}
@@ -994,11 +964,11 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	private void messageFieldOverrideNeedsAccessorPair(TMember overriding, TMember overridden) {
 		if (overriding.getContainingType() == getCurrentClassifier()) {
 			String missingAccessor = overriding.isGetter() ? "setter" : "getter";
-			String message = getMessageForCLF_OVERRIDE_FIELD_REQUIRES_ACCESSOR_PAIR(
+			addIssue(overriding.getAstElement(), N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
+					CLF_OVERRIDE_FIELD_REQUIRES_ACCESSOR_PAIR,
 					validatorMessageHelper.descriptionDifferentFrom(overriding, overridden),
-					validatorMessageHelper.descriptionDifferentFrom(overridden, overriding), missingAccessor);
-			addIssue(message, overriding.getAstElement(), N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
-					CLF_OVERRIDE_FIELD_REQUIRES_ACCESSOR_PAIR);
+					validatorMessageHelper.descriptionDifferentFrom(overridden, overriding),
+					missingAccessor);
 		} else {
 			throw new IllegalStateException("must not happen as member is not consumed");
 		}
@@ -1007,8 +977,6 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	private void messageOverrideMemberTypeConflict(RedefinitionType redefinitionType, TMember overriding,
 			TMember overridden, Result result, MemberMatrix mm) {
 
-		String message;
-		String code;
 		String redefinitionTypeName = redefinitionType.name();
 		if (redefinitionType == RedefinitionType.implemented &&
 				Iterables.contains(mm.implemented(), overriding)) {
@@ -1022,28 +990,25 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 		}
 
 		String extraMessage = cfOtherImplementedMembers(mm, overriding, overridden);
-
+		IssueItem issueItem;
 		if (overriding.isField() && overridden.isField() && !((TField) overridden).isConst()) {
-			code = CLF_REDEFINED_TYPE_NOT_SAME_TYPE;
-			message = getMessageForCLF_REDEFINED_TYPE_NOT_SAME_TYPE(
+			issueItem = CLF_REDEFINED_TYPE_NOT_SAME_TYPE.toIssueItem(
 					overridingSource + validatorMessageHelper.descriptionDifferentFrom(overriding, overridden),
 					redefinitionTypeName,
 					validatorMessageHelper.descriptionDifferentFrom(overridden, overriding),
 					extraMessage);
 		} else if (overriding.isMethod() && overridden.isMethod()) {
-			code = CLF_REDEFINED_METHOD_TYPE_CONFLICT;
 			String descRaw = validatorMessageHelper.descriptionDifferentFrom(overriding, overridden);
 			String desc = (descRaw.toLowerCase().contains("signature") ? "" : "signature of ")
 					+ overridingSource + descRaw;
-			message = getMessageForCLF_REDEFINED_METHOD_TYPE_CONFLICT(
+			issueItem = CLF_REDEFINED_METHOD_TYPE_CONFLICT.toIssueItem(
 					UtilN4.toUpperCaseFirst(desc),
 					redefinitionTypeName,
 					validatorMessageHelper.descriptionDifferentFrom(overridden, overriding),
 					validatorMessageHelper.trimTypesystemMessage(result),
 					extraMessage);
 		} else {
-			code = CLF_REDEFINED_MEMBER_TYPE_INVALID;
-			message = getMessageForCLF_REDEFINED_MEMBER_TYPE_INVALID(
+			issueItem = CLF_REDEFINED_MEMBER_TYPE_INVALID.toIssueItem(
 					overridingSource + validatorMessageHelper.descriptionDifferentFrom(overriding, overridden),
 					validatorMessageHelper.descriptionDifferentFrom(overridden, overriding),
 					redefinitionTypeName,
@@ -1051,73 +1016,69 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 					extraMessage);
 		}
 
-		addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, message, code);
+		addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, issueItem);
 	}
 
 	private void messageOverrideAbstract(RedefinitionType redefinitionType, TMember overriding, TMember overridden) {
-		String message = getMessageForCLF_OVERRIDEN_CONCRETE_WITH_ABSTRACT(
+		IssueItem issueItem = CLF_OVERRIDEN_CONCRETE_WITH_ABSTRACT.toIssueItem(
 				validatorMessageHelper.descriptionDifferentFrom(overriding, overridden),
 				validatorMessageHelper.descriptionDifferentFrom(overridden, overriding));
-		addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, message,
-				CLF_OVERRIDEN_CONCRETE_WITH_ABSTRACT);
+		addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, issueItem);
 	}
 
 	private void messageOverrideAccessibilityReduced(RedefinitionType redefinitionType, TMember overriding,
 			TMember overridden) {
-		String message = getMessageForCLF_OVERRIDE_VISIBILITY(
+		IssueItem issueItem = CLF_OVERRIDE_VISIBILITY.toIssueItemWithData(
+				List.of(IssueUserDataKeys.CLF_OVERRIDE_VISIBILITY.OVERRIDDEN_MEMBER_ACCESS_MODIFIER,
+						overridden.getMemberAccessModifier().getName(),
+						IssueUserDataKeys.CLF_OVERRIDE_VISIBILITY.OVERRIDDEN_MEMBER_NAME,
+						overridden.getName(),
+						IssueUserDataKeys.CLF_OVERRIDE_VISIBILITY.SUPER_CLASS_NAME,
+						overridden.getContainingType().getName()),
 				validatorMessageHelper.descriptionDifferentFrom(overriding, overridden),
 				validatorMessageHelper.descriptionDifferentFrom(overridden, overriding));
-		addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, message,
-				CLF_OVERRIDE_VISIBILITY,
-				IssueUserDataKeys.CLF_OVERRIDE_VISIBILITY.OVERRIDDEN_MEMBER_ACCESS_MODIFIER,
-				overridden.getMemberAccessModifier().getName(),
-				IssueUserDataKeys.CLF_OVERRIDE_VISIBILITY.OVERRIDDEN_MEMBER_NAME, overridden.getName(),
-				IssueUserDataKeys.CLF_OVERRIDE_VISIBILITY.SUPER_CLASS_NAME, overridden.getContainingType().getName());
+		addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, issueItem);
 	}
 
 	private void messageOverrideNonAccessible(@SuppressWarnings("unused") RedefinitionType redefinitionType,
 			N4ClassifierDefinition contextDef, Type contextType, TMember overriding, TMember overridden) {
-		String message = getMessageForCLF_REDEFINED_NON_ACCESSIBLE(
+		IssueItem issueItem = CLF_REDEFINED_NON_ACCESSIBLE.toIssueItem(
 				validatorMessageHelper.descriptionDifferentFrom(overriding, overridden),
 				validatorMessageHelper.descriptionDifferentFrom(overridden, overriding));
 		if (overriding.getContainingType() == contextType) {
-			addIssue(message, overriding.getAstElement(), N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
-					CLF_REDEFINED_NON_ACCESSIBLE);
+			addIssue(overriding.getAstElement(), N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, issueItem);
 		} else if (contextDef instanceof N4TypeDeclaration) {
-			addIssue(message, contextDef, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME,
-					CLF_REDEFINED_NON_ACCESSIBLE);
+			addIssue(contextDef, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, issueItem);
 		} else {
-			addIssue(message, contextDef, CLF_REDEFINED_NON_ACCESSIBLE);
+			addIssue(contextDef, issueItem);
 		}
 	}
 
 	private void messageOverrideFinal(RedefinitionType redefinitionType, TMember overriding, TMember overridden) {
-		String message = getMessageForCLF_OVERRIDE_FINAL(
+		IssueItem issueItem = CLF_OVERRIDE_FINAL.toIssueItemWithData(
+				List.of(CLF_OVERRIDE_FINAL.name(),
+						IssueUserDataKeys.CLF_OVERRIDE_FINAL.OVERRIDDEN_MEMBER_URI,
+						EcoreUtil.getURI(overridden).toString()),
 				validatorMessageHelper.descriptionDifferentFrom(overriding, overridden),
 				validatorMessageHelper.descriptionDifferentFrom(overridden, overriding));
-		addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, message,
-				CLF_OVERRIDE_FINAL,
-				IssueUserDataKeys.CLF_OVERRIDE_FINAL.OVERRIDDEN_MEMBER_URI,
-				EcoreUtil.getURI(overridden).toString());
+		addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, issueItem);
 	}
 
 	private void messageOverrideWithFinalOrConstField(RedefinitionType redefinitionType, TMember overriding,
 			TMember overridden) {
 		String badModifier = overriding.isConst() ? "const" : "final";
 		String prefix = overridden instanceof TField ? "non-" + badModifier + " " : "";
-		String message = getMessageForCLF_OVERRIDE_WITH_FINAL_OR_CONST_FIELD(
+		IssueItem issueItem = CLF_OVERRIDE_WITH_FINAL_OR_CONST_FIELD.toIssueItem(
 				prefix + validatorMessageHelper.descriptionDifferentFrom(overridden, overriding),
 				badModifier);
-		addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, message,
-				CLF_OVERRIDE_WITH_FINAL_OR_CONST_FIELD);
+		addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, issueItem);
 	}
 
 	private void messageOverrideConst(RedefinitionType redefinitionType, TMember overriding, TField overridden) {
-		String message = getMessageForCLF_OVERRIDE_CONST(
+		IssueItem issueItem = CLF_OVERRIDE_CONST.toIssueItem(
 				validatorMessageHelper.descriptionDifferentFrom(overriding, overridden),
 				validatorMessageHelper.descriptionDifferentFrom(overridden, overriding));
-		addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, message,
-				CLF_OVERRIDE_CONST);
+		addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, issueItem);
 	}
 
 	/**
@@ -1126,19 +1087,18 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	 */
 	private void messageOverrideMetaTypeIncompatible(RedefinitionType redefinitionType, TMember overriding,
 			TMember overridden, MemberMatrix mm) {
+
 		if (redefinitionType == RedefinitionType.overridden) {
-			String message = getMessageForCLF_OVERRIDE_MEMBERTYPE_INCOMPATIBLE(
+			IssueItem issueItem = CLF_OVERRIDE_MEMBERTYPE_INCOMPATIBLE.toIssueItem(
 					validatorMessageHelper.descriptionDifferentFrom(overriding, overridden),
 					validatorMessageHelper.descriptionDifferentFrom(overridden, overriding));
-			addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, message,
-					CLF_OVERRIDE_MEMBERTYPE_INCOMPATIBLE);
+			addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, issueItem);
 		} else { // consumed method implicitly overrides:
-			String message = getMessageForCLF_IMPLEMENT_MEMBERTYPE_INCOMPATIBLE(
-					validatorMessageHelper.descriptionDifferentFrom(overriding, overridden),
+			IssueItem issueItem = CLF_IMPLEMENT_MEMBERTYPE_INCOMPATIBLE.toIssueItem(
 					validatorMessageHelper.descriptionDifferentFrom(overridden, overriding),
+					validatorMessageHelper.descriptionDifferentFrom(overriding, overridden),
 					cfOtherImplementedMembers(mm, overridden));
-			addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, message,
-					CLF_IMPLEMENT_MEMBERTYPE_INCOMPATIBLE);
+			addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, issueItem);
 		}
 	}
 
@@ -1154,31 +1114,25 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	}
 
 	private void messageIncompatibleMembersToImplement(Iterable<TMember> implementedMembers) {
-		String message = getMessageForCLF_CONSUMED_MEMBER_UNSOLVABLE_CONFLICT(
-				validatorMessageHelper.descriptions(implementedMembers));
-		addIssue(message, CLF_CONSUMED_MEMBER_UNSOLVABLE_CONFLICT);
+		addIssue(CLF_CONSUMED_MEMBER_UNSOLVABLE_CONFLICT, validatorMessageHelper.descriptions(implementedMembers));
 	}
 
 	private void messageIncompatibleInheritedMembersToImplement(TMember inheritedMember,
 			Iterable<TMember> implementedMembers) {
-		String message = getMessageForCLF_CONSUMED_INHERITED_MEMBER_UNSOLVABLE_CONFLICT(
+		addIssue(CLF_CONSUMED_INHERITED_MEMBER_UNSOLVABLE_CONFLICT,
 				validatorMessageHelper.description(inheritedMember),
 				validatorMessageHelper.descriptions(implementedMembers));
-		addIssue(message, CLF_CONSUMED_INHERITED_MEMBER_UNSOLVABLE_CONFLICT);
 	}
 
 	private void messageConflictingMixins(List<? extends TMember> conflictingMembers) {
-		String message = getMessageForCLF_CONSUMED_MEMBER_SOLVABLE_CONFLICT(
-				validatorMessageHelper.descriptions(conflictingMembers));
-		addIssue(message, CLF_CONSUMED_MEMBER_SOLVABLE_CONFLICT);
+		addIssue(CLF_CONSUMED_MEMBER_SOLVABLE_CONFLICT, validatorMessageHelper.descriptions(conflictingMembers));
 	}
 
 	private void messageMissingAccessor(String missingAccessor, List<? extends TMember> conflictingMembers) {
 		// CLF_IMPLEMENT_MIXIN_MISSING_ACCESSOR
-		String message = getMessageForCLF_CONSUMED_FIELD_ACCESSOR_PAIR_INCOMPLETE(
+		addIssue(CLF_CONSUMED_FIELD_ACCESSOR_PAIR_INCOMPLETE,
 				missingAccessor,
 				validatorMessageHelper.descriptions(conflictingMembers));
-		addIssue(message, CLF_CONSUMED_FIELD_ACCESSOR_PAIR_INCOMPLETE);
 	}
 
 	private void messageMissingOwnedAccessor(FieldAccessor accessor) {
@@ -1199,33 +1153,29 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 
 	private void messageMissingOwnedAccessorN4JS(String accessorDescription, String verb, String counterpartDescription,
 			FieldAccessor accessor) {
-		String message = getMessageForCLF_UNMATCHED_ACCESSOR_OVERRIDE(accessorDescription, verb,
+		IssueItem issueItem = CLF_UNMATCHED_ACCESSOR_OVERRIDE.toIssueItem(accessorDescription, verb,
 				counterpartDescription);
-		addIssue(message, accessor.getAstElement(),
-				N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_UNMATCHED_ACCESSOR_OVERRIDE);
+		addIssue(accessor.getAstElement(), N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, issueItem);
 	}
 
 	private void messageMissingOwnedAccessorJS(String accessorDescription, String verb, String counterpartDescription,
 			FieldAccessor accessor) {
-		String message = getMessageForCLF_UNMATCHED_ACCESSOR_OVERRIDE_JS(accessorDescription, verb,
+		IssueItem issueItem = CLF_UNMATCHED_ACCESSOR_OVERRIDE_JS.toIssueItem(accessorDescription, verb,
 				counterpartDescription);
-		addIssue(message, accessor.getAstElement(),
-				N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_UNMATCHED_ACCESSOR_OVERRIDE_JS);
+		addIssue(accessor.getAstElement(), N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, issueItem);
 	}
 
 	private void messageMissingOwnedAccessorCorrespondingConsumedAccessor(FieldAccessor accessor,
 			N4ClassifierDefinition definition) {
-		String message = getMessageForCLF_UNMATCHED_ACCESSOR_OVERRIDE(
+		IssueItem issueItem = CLF_UNMATCHED_ACCESSOR_OVERRIDE.toIssueItem(
 				org.eclipse.xtext.util.Strings.toFirstUpper(validatorMessageHelper.description(accessor)),
 				"consumed",
 				accessor instanceof TSetter ? "getter" : "setter");
-		addIssue(message, definition,
-				N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, CLF_UNMATCHED_ACCESSOR_OVERRIDE);
+		addIssue(definition, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, issueItem);
 	}
 
 	private void addIssueToMemberOrInterfaceReference(RedefinitionType redefinitionType, TMember overriding,
-			TMember implemented,
-			String message, String issueCode, String... issueData) {
+			TMember implemented, IssueItem issueItem) {
 
 		if (redefinitionType == RedefinitionType.overridden
 				&& overriding.getContainingType() != getCurrentClassifier()) {
@@ -1234,9 +1184,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 
 		TClassifier currentClassifier = getCurrentClassifier();
 		if (overriding.getContainingType() == currentClassifier) {
-			addIssue(message, overriding.getAstElement(), N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
-					issueCode,
-					issueData);
+			addIssue(overriding.getAstElement(), N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, issueItem);
 		} else {
 			MemberCollector memberCollector = containerTypesHelper.fromContext(getCurrentClassifierDefinition());
 			ContainerType<?> bequestingType = memberCollector.directSuperTypeBequestingMember(currentClassifier,
@@ -1250,7 +1198,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 			EStructuralFeature feature = refInAST.eContainingFeature();
 			List<?> list = (List<?>) getCurrentClassifierDefinition().eGet(feature);
 			int index = list.indexOf(refInAST);
-			addIssue(message, getCurrentClassifierDefinition(), feature, index, issueCode, issueData);
+			addIssue(getCurrentClassifierDefinition(), feature, index, issueItem);
 		}
 	}
 

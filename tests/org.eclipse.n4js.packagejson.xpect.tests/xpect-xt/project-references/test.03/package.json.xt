@@ -72,7 +72,7 @@
 		"providedRuntimeLibraries": [""],
 		"requiredRuntimeLibraries": [
 			/* XPECT errors ---
-			"The project reference test.data.system.project.one in required runtime libraries must also be declared as explicit project dependency in dependencies or devDependencies." at ""test.data.system.project.one""
+			"The project reference test.data.system.project.one in required runtime libraries must also be declared as explicit project dependency in 'dependencies' or 'devDependencies'." at ""test.data.system.project.one""
 			---
 			*/
 			/* XPECT warnings ---

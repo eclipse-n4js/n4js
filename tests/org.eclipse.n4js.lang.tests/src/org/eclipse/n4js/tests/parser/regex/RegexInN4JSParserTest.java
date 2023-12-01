@@ -58,7 +58,7 @@ public class RegexInN4JSParserTest extends AbstractRegexParserTest {
 		List<Diagnostic> warnings = script.eResource().getWarnings();
 		assertEquals(1, warnings.size());
 		XtextSyntaxDiagnostic error = (XtextSyntaxDiagnostic) warnings.get(0);
-		assertEquals(IssueCodes.getMessageForVCO_REGEX_NAMED_GROUP(), error.getMessage());
+		assertEquals(IssueCodes.VCO_REGEX_NAMED_GROUP.getMessage(), error.getMessage());
 		assertEquals(3, error.getLength());
 		assertEquals(1, error.getLine());
 		assertEquals(4, error.getOffset());
@@ -70,7 +70,7 @@ public class RegexInN4JSParserTest extends AbstractRegexParserTest {
 		List<Diagnostic> warnings = script.eResource().getWarnings();
 		assertEquals(2, warnings.size());
 		XtextSyntaxDiagnostic error = (XtextSyntaxDiagnostic) IterableExtensions.last(warnings);
-		assertEquals(IssueCodes.getMessageForVCO_REGEX_NAMED_GROUP(), error.getMessage());
+		assertEquals(IssueCodes.VCO_REGEX_NAMED_GROUP.getMessage(), error.getMessage());
 		assertEquals(2, error.getLength());
 		assertEquals(1, error.getLine());
 		assertEquals(11, error.getOffset());
@@ -94,7 +94,7 @@ public class RegexInN4JSParserTest extends AbstractRegexParserTest {
 		List<Diagnostic> warnings = script.eResource().getWarnings();
 		assertEquals(1, warnings.size());
 		XtextSyntaxDiagnostic error = (XtextSyntaxDiagnostic) warnings.get(0);
-		assertEquals(IssueCodes.getMessageForVCO_REGEX_NAMED_GROUP(), error.getMessage());
+		assertEquals(IssueCodes.VCO_REGEX_NAMED_GROUP.getMessage(), error.getMessage());
 		assertEquals(5, error.getLength());
 		assertEquals(2, error.getLine());
 		assertEquals(7, error.getOffset());
@@ -106,7 +106,7 @@ public class RegexInN4JSParserTest extends AbstractRegexParserTest {
 		List<Diagnostic> warnings = script.eResource().getWarnings();
 		assertEquals(1, warnings.size());
 		XtextSyntaxDiagnostic error = (XtextSyntaxDiagnostic) warnings.get(0);
-		assertEquals(IssueCodes.getMessageForVCO_REGEX_NAMED_GROUP(), error.getMessage());
+		assertEquals(IssueCodes.VCO_REGEX_NAMED_GROUP.getMessage(), error.getMessage());
 		assertEquals(4, error.getLength());
 		assertEquals(1, error.getLine());
 		assertEquals(12, error.getOffset());
@@ -118,7 +118,7 @@ public class RegexInN4JSParserTest extends AbstractRegexParserTest {
 		List<Diagnostic> warnings = script.eResource().getWarnings();
 		assertEquals(1, warnings.size());
 		XtextSyntaxDiagnostic error = (XtextSyntaxDiagnostic) warnings.get(0);
-		assertEquals(IssueCodes.getMessageForVCO_REGEX_NAMED_GROUP(), error.getMessage());
+		assertEquals(IssueCodes.VCO_REGEX_NAMED_GROUP.getMessage(), error.getMessage());
 		assertEquals(4, error.getLength());
 		assertEquals(1, error.getLine());
 		assertEquals(14, error.getOffset());
@@ -130,7 +130,7 @@ public class RegexInN4JSParserTest extends AbstractRegexParserTest {
 		List<Diagnostic> warnings = script.eResource().getWarnings();
 		assertEquals(1, warnings.size());
 		XtextSyntaxDiagnostic error = (XtextSyntaxDiagnostic) warnings.get(0);
-		assertEquals(IssueCodes.getMessageForVCO_REGEX_NAMED_GROUP(), error.getMessage());
+		assertEquals(IssueCodes.VCO_REGEX_NAMED_GROUP.getMessage(), error.getMessage());
 		assertEquals(4, error.getLength());
 		assertEquals(1, error.getLine());
 		assertEquals(14, error.getOffset());
@@ -142,7 +142,7 @@ public class RegexInN4JSParserTest extends AbstractRegexParserTest {
 		List<Diagnostic> warnings = script.eResource().getWarnings();
 		assertEquals(1, warnings.size());
 		XtextSyntaxDiagnostic error = (XtextSyntaxDiagnostic) warnings.get(0);
-		assertEquals(IssueCodes.getMessageForVCO_REGEX_NAMED_GROUP(), error.getMessage());
+		assertEquals(IssueCodes.VCO_REGEX_NAMED_GROUP.getMessage(), error.getMessage());
 		assertEquals(4, error.getLength());
 		assertEquals(1, error.getLine());
 		assertEquals(23, error.getOffset());
@@ -154,7 +154,7 @@ public class RegexInN4JSParserTest extends AbstractRegexParserTest {
 		List<Diagnostic> errors = script.eResource().getErrors();
 		assertEquals(1, errors.size());
 		XtextSyntaxDiagnostic error = (XtextSyntaxDiagnostic) errors.get(0);
-		assertEquals(IssueCodes.getMessageForVCO_REGEX_ILLEGAL_ESCAPE("/\\u1/"), error.getMessage());
+		assertEquals(IssueCodes.VCO_REGEX_ILLEGAL_ESCAPE.getMessage("/\\u1/"), error.getMessage());
 		assertEquals(1, error.getLength());
 		assertEquals(1, error.getLine());
 		assertEquals(4, error.getOffset());

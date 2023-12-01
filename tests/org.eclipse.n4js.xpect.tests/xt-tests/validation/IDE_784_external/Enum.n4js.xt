@@ -11,7 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
 
-// XPECT errors --> "Enumerations declared as external have to be placed in a file with file extension n4jsd." at "EnumWithExternal"
+// XPECT errors --> "Enumerations declared as external have to be placed in a file with file extension 'n4jsd'." at "EnumWithExternal"
 export external public enum EnumWithExternal {
   MayBug,
   Cockroach: "another bug"
@@ -24,14 +24,14 @@ export public enum EnumWithoutExternal {
 
 /* XPECT errors ---
 	"Unsupported feature: non-exported enum with a visibility higher than private." at "public"
-	"Enumerations declared as external have to be placed in a file with file extension n4jsd." at "EnumWithoutExport"
+	"Enumerations declared as external have to be placed in a file with file extension 'n4jsd'." at "EnumWithoutExport"
 --- */
 external public enum EnumWithoutExport {
   MayBug,
   Cockroach
 }
 
-// XPECT errors --> "Enumerations declared as external have to be placed in a file with file extension n4jsd." at "EnumWithoutPublic"
+// XPECT errors --> "Enumerations declared as external have to be placed in a file with file extension 'n4jsd'." at "EnumWithoutPublic"
 export external enum EnumWithoutPublic {
   MayBug,
   Cockroach

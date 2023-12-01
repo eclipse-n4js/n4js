@@ -63,10 +63,10 @@ public class N4JSStringValueConverter extends AbstractN4JSStringValueConverter {
 	 */
 	protected N4JSValueConverterWithValueException newN4JSValueConverterException(char c, INode node, String value) {
 		if (c == '"')
-			return new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_STRING_DOUBLE_QUOTE(),
-					IssueCodes.VCO_STRING_DOUBLE_QUOTE, node, value, null);
+			return new N4JSValueConverterWithValueException(IssueCodes.VCO_STRING_DOUBLE_QUOTE.getMessage(),
+					IssueCodes.VCO_STRING_DOUBLE_QUOTE.name(), node, value, null);
 		else
-			return new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_STRING_QUOTE(),
-					IssueCodes.VCO_STRING_QUOTE, node, value, null);
+			return new N4JSValueConverterWithValueException(IssueCodes.VCO_STRING_QUOTE.getMessage(),
+					IssueCodes.VCO_STRING_QUOTE.name(), node, value, null);
 	}
 }

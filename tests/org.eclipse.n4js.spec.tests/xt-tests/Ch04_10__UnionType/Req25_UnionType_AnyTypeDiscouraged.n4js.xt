@@ -51,5 +51,5 @@ var c2 : union{union{A, B}, any};
 var d1 : intersection{A, union{B, any}};
 
 
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 var e1 : union{any,void};

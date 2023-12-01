@@ -39,7 +39,7 @@ public class N4JSIssueSeverities extends IssueSeverities {
 	@Override
 	public Severity getSeverity(String code) {
 		if (!configurableIssueCodes.containsKey(code)) {
-			Severity severity = IssueCodes.getDefaultSeverity(code);
+			Severity severity = IssueCodes.getSeverityForName(code);
 			if (severity != null) {
 				return severity;
 			}

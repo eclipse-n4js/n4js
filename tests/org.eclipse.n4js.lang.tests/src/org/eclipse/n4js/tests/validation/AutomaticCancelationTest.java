@@ -110,7 +110,7 @@ public class AutomaticCancelationTest {
 					"The field a (line 3) duplicates field a (line 2)."
 			};
 			for (String expectedErrorMsg : expectedErrorMsgs) {
-				vth.assertError(s, N4JSPackage.Literals.N4_MEMBER_DECLARATION, IssueCodes.CLF_DUP_MEMBER,
+				vth.assertError(s, N4JSPackage.Literals.N4_MEMBER_DECLARATION, IssueCodes.CLF_DUP_MEMBER.name(),
 						expectedErrorMsg);
 			}
 

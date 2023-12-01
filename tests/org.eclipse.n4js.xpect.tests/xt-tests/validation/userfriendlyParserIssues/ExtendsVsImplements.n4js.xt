@@ -22,10 +22,10 @@ class A0 extends C implements I {}
 interface J0 extends I, I1 {}
 
 
-// XPECT errors --> "The class A1 cannot implement class C, use "extends"." at "C"
+// XPECT errors --> "The class A1 cannot implement class C, use 'extends'." at "C"
 class A1 implements C {}
 
-// XPECT errors --> "The class A2 cannot extend interface I, use "implements"." at "I"
+// XPECT errors --> "The class A2 cannot extend interface I, use 'implements'." at "I"
 class A2 extends I {}
 
 // XPECT errors --> "The interface A3 cannot extend class C." at "C"
@@ -40,6 +40,6 @@ class A5 implements I extends C {}
 // XPECT errors ---
 // "The class A6 cannot implement class C." at "C"
 // "Extended class must be declared before implemented interfaces." at "extends"
-// "The class A6 cannot extend interface I, use "implements"." at "I"
+// "The class A6 cannot extend interface I, use 'implements'." at "I"
 // ---
 class A6 implements C extends I {}

@@ -22,19 +22,19 @@ public class JSONDoubleValueConverter extends AbstractLexerBasedConverter<BigDec
 	protected void assertValidValue(BigDecimal value) {
 		super.assertValidValue(value);
 		if (value.signum() == -1)
-			throw new ValueConverterException(JSONIssueCodes.getMessageForJSON_INVALID_DOUBLE_VALUE(),
+			throw new ValueConverterException(JSONIssueCodes.JSON_INVALID_DOUBLE_VALUE.getMessage(),
 					null, null);
 	}
 
 	@Override
 	public BigDecimal toValue(String string, INode node) {
 		if (Strings.isEmpty(string))
-			throw new ValueConverterException(JSONIssueCodes.getMessageForJSON_INVALID_DOUBLE_VALUE(),
+			throw new ValueConverterException(JSONIssueCodes.JSON_INVALID_DOUBLE_VALUE.getMessage(),
 					node, null);
 		try {
 			return new BigDecimal(string);
 		} catch (NumberFormatException e) {
-			throw new ValueConverterException(JSONIssueCodes.getMessageForJSON_INVALID_DOUBLE_VALUE(),
+			throw new ValueConverterException(JSONIssueCodes.JSON_INVALID_DOUBLE_VALUE.getMessage(),
 					node, null);
 		}
 	}

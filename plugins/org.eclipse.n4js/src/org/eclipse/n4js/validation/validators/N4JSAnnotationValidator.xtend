@@ -28,6 +28,7 @@ import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.Script
@@ -45,7 +46,7 @@ import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.PromisifyHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
-import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.n4js.validation.IssueItem
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.EcoreUtil2
@@ -60,7 +61,6 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 
 /**
  * Annotation validation rules for N4JS.
@@ -102,7 +102,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 		if (!jsVariantHelper.allowAnnotation(annotableElement)) {
 			// Annotation not allowed in other then N4JS modes:
 			if (annotableElement.annotations.size > 0) {
-				addIssue(messageForANN__ONLY_IN_N4JS, annotableElement, annotableElement.annoFeature, ANN__ONLY_IN_N4JS)
+				addIssue(annotableElement, annotableElement.annoFeature, ANN__ONLY_IN_N4JS.toIssueItem())
 			}
 			return
 		}
@@ -115,7 +115,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 			if (a.name !== null) {
 				val def = AnnotationDefinition.find(a.name);
 				if (def === null) {
-					addIssue(getMessageForANN_NOT_DEFINED(a.name), a, ANNOTATION__NAME, ANN_NOT_DEFINED);
+					addIssue(a, ANNOTATION__NAME, ANN_NOT_DEFINED.toIssueItem(a.name));
 				} else {
 					if (def.repeatable) {
 						if (foundNames.add(a.name)) {
@@ -125,7 +125,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 						}
 					} else {
 						if (! foundNames.add(a.name)) {
-							addIssue(getMessageForANN_NON_REPEATABLE(a.name), a, ANNOTATION__NAME, ANN_NON_REPEATABLE);
+							addIssue(a, ANNOTATION__NAME, ANN_NON_REPEATABLE.toIssueItem(a.name));
 						} else {
 							internalCheckAnnotation(def, a);
 						}
@@ -205,7 +205,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 		if (definition.transitive && !definition.repeatable) {
 			if (definition.hasAnnotation(
 				EcoreUtil2.getContainerOfType(annotation.annotatedElement.eContainer, AnnotableElement))) {
-				addIssue(getMessageForANN_UNNECESSARY(annotation.name), annotation, ANNOTATION__NAME, ANN_UNNECESSARY);
+				addIssue(annotation, ANNOTATION__NAME, ANN_UNNECESSARY.toIssueItem(annotation.name));
 			}
 		}
 	}
@@ -220,8 +220,8 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 
 			// less actual arguments than specified in the definition
 			if (expectedSize - actualSize >= 2) {
-				addIssue(getMessageForANN_WRONG_NUMBER_OF_ARGUMENTS(definition.name, expectedSize - 1, actualSize),
-					annotation, ANNOTATION__NAME, ANN_WRONG_NUMBER_OF_ARGUMENTS);
+				val IssueItem issueItem = ANN_WRONG_NUMBER_OF_ARGUMENTS.toIssueItem(definition.name, expectedSize - 1, actualSize);
+				addIssue(annotation, ANNOTATION__NAME, issueItem);
 				return false;
 			}
 
@@ -236,8 +236,8 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 				val argType = if (i + 1 > definition.argtypes.length) definition.argtypes.last else definition.argtypes.
 						get(i);
 				if (!argType.isInstance(arg)) {
-					addIssue(getMessageForANN_WRONG_ARGUMENT_TYPE(definition.name, argType.name), annotation,
-						ANNOTATION__ARGS, i, ANN_WRONG_ARGUMENT_TYPE);
+					val IssueItem issueItem = ANN_WRONG_ARGUMENT_TYPE.toIssueItem(definition.name, argType.name);
+					addIssue(annotation, ANNOTATION__ARGS, i, issueItem);
 					valid = false;
 				}
 			}
@@ -245,8 +245,8 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 
 		} else {
 			if (actualSize > expectedSize || (!definition.argsOptional && actualSize !== expectedSize)) {
-				addIssue(getMessageForANN_WRONG_NUMBER_OF_ARGUMENTS(definition.name, expectedSize, actualSize),
-					annotation, ANNOTATION__NAME, ANN_WRONG_NUMBER_OF_ARGUMENTS);
+				val IssueItem issueItem = ANN_WRONG_NUMBER_OF_ARGUMENTS.toIssueItem(definition.name, expectedSize, actualSize);
+				addIssue(annotation, ANNOTATION__NAME, issueItem);
 				return false;
 			}
 		}
@@ -263,12 +263,10 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 			val arg = annotation.args.get(i).value();
 			val argType = definition.argtypes.get(i);
 			if (!argType.isInstance(arg)) {
-
-				addIssue(getMessageForANN_WRONG_ARGUMENT_TYPE(definition.name, argType.name), annotation,
-					ANNOTATION__ARGS, i, ANN_WRONG_ARGUMENT_TYPE);
+				val IssueItem issueItem = ANN_WRONG_ARGUMENT_TYPE.toIssueItem(definition.name, argType.name);
+				addIssue(annotation, ANNOTATION__ARGS, i, issueItem);
 				valid = false;
 			}
-
 		}
 
 		return valid;
@@ -283,9 +281,9 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 		val element = annotation.annotatedElement;
 		
 		if (!definition.javaScriptVariants.contains(jsVariantHelper.variantMode(element))) {
-			val message = IssueCodes.getMessageForANN_ONL_ALLOWED_IN_VARIANTS(definition.name, 
+			val IssueItem issueItem = ANN_ONL_ALLOWED_IN_VARIANTS.toIssueItem(definition.name, 
 				orList(definition.javaScriptVariants.map[v | jsVariantHelper.getVariantName(v)]));
-			addIssue(message, annotation, IssueCodes.ANN_ONL_ALLOWED_IN_VARIANTS);
+			addIssue(annotation, issueItem);
 			return false;
 		}
 		return true;
@@ -324,8 +322,8 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	private def addWrongLocationIssue(Annotation annotation) {
-		addIssue(getMessageForANN_DISALLOWED_AT_LOCATION(annotation.name), annotation, ANNOTATION__NAME,
-			ANN_DISALLOWED_AT_LOCATION);
+		val IssueItem issueItem = ANN_DISALLOWED_AT_LOCATION.toIssueItem(annotation.name);
+		addIssue(annotation, ANNOTATION__NAME, issueItem);
 	}
 
 	/**
@@ -360,8 +358,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 			}
 			// constraint #1: @This not allowed on static members of interfaces
 			if (tMember.static && containingType instanceof TInterface) {
-				val msg = getMessageForANN_THIS_DISALLOWED_ON_STATIC_MEMBER_OF_INTERFACE();
-				addIssue(msg, annotation, ANNOTATION__NAME, ANN_THIS_DISALLOWED_ON_STATIC_MEMBER_OF_INTERFACE);
+				addIssue(annotation, ANNOTATION__NAME, ANN_THIS_DISALLOWED_ON_STATIC_MEMBER_OF_INTERFACE.toIssueItem());
 				return;
 			}
 			// constraint #2: declared this type must be subtype of the containing type
@@ -376,9 +373,9 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 				};
 			val G = element.newRuleEnvironment;
 			if (!ts.subtypeSucceeded(G, declThisTypeRef, containingTypeRef)) {
-				val msg = getMessageForANN_THIS_NOT_SUBTYPE_OF_CONTAINING_TYPE(tMember.description,
+				val IssueItem issueItem = ANN_THIS_NOT_SUBTYPE_OF_CONTAINING_TYPE.toIssueItem(tMember.description,
 					containingType.description, containingTypeRef.typeRefAsString);
-				addIssue(msg, annotation, ANNOTATION__ARGS, ANN_THIS_NOT_SUBTYPE_OF_CONTAINING_TYPE);
+				addIssue(annotation, ANNOTATION__ARGS, issueItem);
 			}
 		}
 	}
@@ -392,16 +389,16 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 		if (!jsVariantHelper.isExternalMode(element)) {
-			addIssue(getMessageForANN_DISALLOWED_IN_NONDEFINTION_FILE(annotation.name), annotation, ANNOTATION__NAME,
-				ANN_DISALLOWED_IN_NONDEFINTION_FILE);
+			val IssueItem issueItem = ANN_DISALLOWED_IN_NONDEFINTION_FILE.toIssueItem(annotation.name);
+			addIssue(annotation, ANNOTATION__NAME, issueItem);
 			return;
 		}
 		if (element instanceof ExportDeclaration 
 			&& (element as ExportDeclaration).exportedElement instanceof N4InterfaceDeclaration
 			&& ((element as ExportDeclaration).exportedElement as N4InterfaceDeclaration).typingStrategy === TypingStrategy.STRUCTURAL
 			) {
-				addIssue(getMessageForANN_DISALLOWED_ON_SHAPES(annotation.name), annotation, ANNOTATION__NAME,
-					ANN_DISALLOWED_ON_SHAPES);
+				val IssueItem issueItem = ANN_DISALLOWED_ON_SHAPES.toIssueItem(annotation.name);
+				addIssue(annotation, ANNOTATION__NAME, issueItem);
 		}
 	}
 
@@ -414,16 +411,16 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 		if (!jsVariantHelper.isExternalMode(element)) {
-			addIssue(getMessageForANN_ONL_ALLOWED_AT_CLASSES_IN_N4JSD(annotation.name), annotation, ANNOTATION__NAME,
-				ANN_ONL_ALLOWED_AT_CLASSES_IN_N4JSD);
+			val IssueItem issueItem = ANN_ONL_ALLOWED_AT_CLASSES_IN_N4JSD.toIssueItem(annotation.name);
+			addIssue(annotation, ANNOTATION__NAME, issueItem);
 			return;
 		}
 		if (element instanceof ExportDeclaration 
 			&& !((element as ExportDeclaration).exportedElement instanceof N4ClassDeclaration)
 			) {
 				
-			addIssue(getMessageForANN_ONL_ALLOWED_AT_CLASSES_IN_N4JSD(annotation.name), annotation, ANNOTATION__NAME,
-				ANN_ONL_ALLOWED_AT_CLASSES_IN_N4JSD);
+			val IssueItem issueItem = ANN_ONL_ALLOWED_AT_CLASSES_IN_N4JSD.toIssueItem(annotation.name);
+			addIssue(annotation, ANNOTATION__NAME, issueItem);
 			return;
 		}
 	}
@@ -442,8 +439,8 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 		if (!srcContainer.isTest) {
-			val msg = getMessageForANN__TEST_ONLY_IN_TEST_SOURCES(annotation.name);
-			addIssue(msg, annotation, ANNOTATION__NAME, ANN__TEST_ONLY_IN_TEST_SOURCES);
+			val IssueItem issueItem = ANN__TEST_ONLY_IN_TEST_SOURCES.toIssueItem(annotation.name);
+			addIssue(annotation, ANNOTATION__NAME, issueItem);
 			return;
 		}
 	}
@@ -461,8 +458,8 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 				}
 			}
 		}
-		val msg = getMessageForANN_ONLY_ALLOWED_LOCATION_CONSTRUCTORS(annotation.name);
-		addIssue(msg, annotation, ANNOTATION__NAME, ANN_ONLY_ALLOWED_LOCATION_CONSTRUCTORS);
+		val IssueItem issueItem = ANN_ONLY_ALLOWED_LOCATION_CONSTRUCTORS.toIssueItem(annotation.name);
+		addIssue(annotation, ANNOTATION__NAME, issueItem);
 		return false;
 	}
 
@@ -475,8 +472,8 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 			return
 		}
 		if (!jsVariantHelper.isExternalMode(element)) {
-			addIssue(getMessageForANN_DISALLOWED_IN_NONDEFINTION_FILE(annotation.name), annotation, ANNOTATION__NAME,
-				ANN_DISALLOWED_IN_NONDEFINTION_FILE);
+			val IssueItem issueItem = ANN_DISALLOWED_IN_NONDEFINTION_FILE.toIssueItem(annotation.name);
+			addIssue(annotation, ANNOTATION__NAME, issueItem);
 			return
 		}
 		val resource = element.eResource;
@@ -484,15 +481,15 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 		val project = workspaceAccess.findProjectByNestedLocation(annotation, projURI);
 		if (project === null) {
 			if (!N4Scheme.isResourceWithN4Scheme(resource)) { // built-in type definition files are not contained in a project
-				val msg = getMessageForNO_PROJECT_FOUND(projURI);
+				val IssueItem issueItem = NO_PROJECT_FOUND.toIssueItem(projURI);
 				val script = EcoreUtil2.getContainerOfType(element, Script);
-				addIssue(msg, script, NO_PROJECT_FOUND);
+				addIssue(script, issueItem);
 			}
 		} else {
 			val projectType = project.type;
 			if (projectType !== ProjectType.RUNTIME_ENVIRONMENT && projectType !== ProjectType.RUNTIME_LIBRARY) {
-				addIssue(getMessageForANN_DISALLOWED_IN_NON_RUNTIME_COMPONENT(annotation.name), annotation,
-					ANNOTATION__NAME, ANN_DISALLOWED_IN_NON_RUNTIME_COMPONENT);
+				val IssueItem issueItem = ANN_DISALLOWED_IN_NON_RUNTIME_COMPONENT.toIssueItem(annotation.name);
+				addIssue(annotation, ANNOTATION__NAME, issueItem);
 				return
 			}
 		}
@@ -507,8 +504,8 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 			return
 		}
 		if (!jsVariantHelper.isExternalMode(element)) {
-			addIssue(getMessageForANN_DISALLOWED_IN_NONDEFINTION_FILE(annotation.name), annotation, ANNOTATION__NAME,
-				ANN_DISALLOWED_IN_NONDEFINTION_FILE);
+			val IssueItem issueItem = ANN_DISALLOWED_IN_NONDEFINTION_FILE.toIssueItem(annotation.name);
+			addIssue(annotation, ANNOTATION__NAME, issueItem);
 			return
 		}
 	}
@@ -529,8 +526,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 
 		// mutual exclusive with poly-fill aware.
 		if (script.isContainedInStaticPolyfillAware) {
-			addIssue(messageForANN_POLY_AWARE_AND_MODULE_MUTUAL_EXCLUSIVE, annotation, ANNOTATION__NAME,
-				ANN_POLY_AWARE_AND_MODULE_MUTUAL_EXCLUSIVE)
+			addIssue(annotation, ANNOTATION__NAME, ANN_POLY_AWARE_AND_MODULE_MUTUAL_EXCLUSIVE.toIssueItem())
 			return
 		}
 
@@ -574,8 +570,8 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 					it.URI.toString
 				}
 			])
-			addIssue(getMessageForPOLY_CLASH_IN_STATIC_POLYFILL_MODULE(msg_prefix + clashes), annotation,
-				ANNOTATION__NAME, POLY_CLASH_IN_STATIC_POLYFILL_MODULE)
+			val IssueItem issueItem = POLY_CLASH_IN_STATIC_POLYFILL_MODULE.toIssueItem(msg_prefix + clashes);
+			addIssue(annotation, ANNOTATION__NAME, issueItem)
 		}
 	}
 
@@ -592,8 +588,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 		// inside a static-polyfill module (IDE-1735)
 		if (! element.isContainedInStaticPolyfillModule) { // transitively inherited
 		// not in a polyfill-module
-			addIssue(messageForANN_POLY_STATIC_POLY_ONLY_IN_POLYFILL_MODULE, annotation, ANNOTATION__NAME,
-				ANN_POLY_STATIC_POLY_ONLY_IN_POLYFILL_MODULE)
+			addIssue(annotation, ANNOTATION__NAME, ANN_POLY_STATIC_POLY_ONLY_IN_POLYFILL_MODULE.toIssueItem);
 			return
 		}
 
@@ -630,18 +625,15 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 	def private boolean holdsPromisifiablePreconditions(FunctionDefinition funDef) {
 		return switch (promisifyHelper.checkPromisifiablePreconditions(funDef)) {
 			case MISSING_CALLBACK: {
-				addIssue(getMessageForANN_PROMISIFIABLE_MISSING_CALLBACK, PROMISIFIABLE.getAnnotation(funDef),
-					ANN_PROMISIFIABLE_MISSING_CALLBACK);
+				addIssue(PROMISIFIABLE.getAnnotation(funDef), ANN_PROMISIFIABLE_MISSING_CALLBACK.toIssueItem());
 				false
 			}
 			case BAD_CALLBACK__MORE_THAN_ONE_ERROR: {
-				addIssue(getMessageForANN_PROMISIFIABLE_BAD_CALLBACK_MORE_THAN_ONE_ERROR,
-					PROMISIFIABLE.getAnnotation(funDef), ANN_PROMISIFIABLE_BAD_CALLBACK_MORE_THAN_ONE_ERROR);
+				addIssue(PROMISIFIABLE.getAnnotation(funDef), ANN_PROMISIFIABLE_BAD_CALLBACK_MORE_THAN_ONE_ERROR.toIssueItem());
 				false
 			}
 			case BAD_CALLBACK__ERROR_NOT_FIRST_ARG: {
-				addIssue(getMessageForANN_PROMISIFIABLE_BAD_CALLBACK_ERROR_NOT_FIRST_ARG,
-					PROMISIFIABLE.getAnnotation(funDef), ANN_PROMISIFIABLE_BAD_CALLBACK_ERROR_NOT_FIRST_ARG);
+				addIssue(PROMISIFIABLE.getAnnotation(funDef), ANN_PROMISIFIABLE_BAD_CALLBACK_ERROR_NOT_FIRST_ARG.toIssueItem());
 				false
 			}
 			case OK: {

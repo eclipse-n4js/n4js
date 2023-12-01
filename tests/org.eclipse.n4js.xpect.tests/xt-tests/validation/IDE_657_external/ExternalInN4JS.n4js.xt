@@ -11,12 +11,12 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
 
-// XPECT errors --> "Classes declared as external have to be placed in a file with file extension n4jsd." at "Point"
+// XPECT errors --> "Classes declared as external have to be placed in a file with file extension 'n4jsd'." at "Point"
 export external class Point {
 
 }
 
-// XPECT errors --> "Interfaces declared as external have to be placed in a file with file extension n4jsd." at "Clonable"
+// XPECT errors --> "Interfaces declared as external have to be placed in a file with file extension 'n4jsd'." at "Clonable"
 export external interface Clonable {
 
 }

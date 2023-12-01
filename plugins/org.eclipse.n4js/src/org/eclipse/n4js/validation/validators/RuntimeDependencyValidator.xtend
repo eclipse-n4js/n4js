@@ -24,12 +24,12 @@ import org.eclipse.n4js.postprocessing.RuntimeDependencyProcessor
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
-import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import static org.eclipse.n4js.validation.IssueCodes.*
 
 /**
  * Validations related to runtime dependencies (in particular, illegal load-time dependency cycles).
@@ -68,9 +68,8 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 		val hasCycle = (targetModule === containingModule && !containingModule.cyclicModulesRuntime.empty)
 			|| (targetModule !== containingModule && containingModule.cyclicModulesRuntime.contains(targetModule));
 		if (hasCycle) {
-			val message = IssueCodes.getMessageForLTD_ILLEGAL_LOADTIME_REFERENCE()
-				+ '\n' + dependencyCycleToString(containingModule, false, INDENT);
-			addIssue(message, idRef, IssueCodes.LTD_ILLEGAL_LOADTIME_REFERENCE);
+			val cycleStr = '\n' + dependencyCycleToString(containingModule, false, INDENT);
+			addIssue(idRef, LTD_ILLEGAL_LOADTIME_REFERENCE.toIssueItem(cycleStr));
 		}
 	}
 
@@ -105,9 +104,8 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 	def private boolean holdsNotAnIllegalModuleRefWithinLoadtimeCycle(TModule containingModule, ModuleRef moduleRef) {
 		val targetModule = moduleRef.module;
 		if (containingModule.cyclicModulesLoadtimeForInheritance.contains(targetModule)) {
-			val message = IssueCodes.getMessageForLTD_LOADTIME_DEPENDENCY_CYCLE() + "\n"
-				+ dependencyCycleToString(targetModule, true, INDENT);
-			addIssue(message, moduleRef, N4JSPackage.eINSTANCE.moduleRef_Module, IssueCodes.LTD_LOADTIME_DEPENDENCY_CYCLE);
+			val cycleStr = "\n" + dependencyCycleToString(targetModule, true, INDENT);
+			addIssue(moduleRef, N4JSPackage.eINSTANCE.moduleRef_Module, LTD_LOADTIME_DEPENDENCY_CYCLE.toIssueItem(cycleStr));
 			return false;
 		}
 		return true;
@@ -143,18 +141,14 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 					// ERROR: referring to a multi-LTD-target from within the dependency cycle cluster (Req. GH-1678, Constraint 2)
 					// --> load-time dependency conflict
 					val otherLTDSources = otherLTDSourcesToString(containingModule, targetModule);
-					val message = IssueCodes.getMessageForLTD_LOADTIME_DEPENDENCY_CONFLICT(targetModule.simpleName, otherLTDSources) + "\n"
-						+ "Containing runtime dependency cycle cluster:\n"
-						+ dependencyCycleToString(targetModule, false, INDENT);
-					addIssue(message, moduleRef, N4JSPackage.eINSTANCE.moduleRef_Module, IssueCodes.LTD_LOADTIME_DEPENDENCY_CONFLICT);
+					val cycleStr = "\nContaining runtime dependency cycle cluster:\n" + dependencyCycleToString(targetModule, false, INDENT);
+					addIssue(moduleRef, N4JSPackage.eINSTANCE.moduleRef_Module, LTD_LOADTIME_DEPENDENCY_CONFLICT.toIssueItem(targetModule.simpleName, otherLTDSources, cycleStr));
 					return false;
 				} else {
 					// ERROR: referring to an LTD target from outside the dependency cycle cluster (Req. GH-1678, Constraint 3)
 					val healingModulesStr = healingModulesToString(targetModule);
-					val message = IssueCodes.getMessageForLTD_REFERENCE_TO_LOADTIME_DEPENDENCY_TARGET(targetModule.simpleName, healingModulesStr) + "\n"
-						+ "Containing runtime dependency cycle cluster:\n"
-						+ dependencyCycleToString(targetModule, false, INDENT);
-					addIssue(message, moduleRef, N4JSPackage.eINSTANCE.moduleRef_Module, IssueCodes.LTD_REFERENCE_TO_LOADTIME_DEPENDENCY_TARGET);
+					val cycleStr = "\nContaining runtime dependency cycle cluster:\n" + dependencyCycleToString(targetModule, false, INDENT);
+					addIssue(moduleRef, N4JSPackage.eINSTANCE.moduleRef_Module, LTD_REFERENCE_TO_LOADTIME_DEPENDENCY_TARGET.toIssueItem(targetModule.simpleName, healingModulesStr, cycleStr));
 					return true; // because we assume a healing import will be added by transpiler, this module reference can be treated as healing in calling method
 				}
 			}

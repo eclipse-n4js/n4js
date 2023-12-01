@@ -25,23 +25,23 @@ class A {
 		return this.test1();
 	}
 
-// XPECT errors --> "The this type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
+// XPECT errors --> "The 'this' type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
 	test3(myParameter : this) : void {
 
 	}
 
 	test4() : void {
-		// XPECT errors --> "The this type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
+		// XPECT errors --> "The 'this' type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
 		var x : this;
 	}
 }
 
-// XPECT errors --> "The this type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
+// XPECT errors --> "The 'this' type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
 function fun1() : this {
 	return null
 }
 
-// XPECT errors --> "The this type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
+// XPECT errors --> "The 'this' type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
 function fun2(param : this) {
 	return null
 }

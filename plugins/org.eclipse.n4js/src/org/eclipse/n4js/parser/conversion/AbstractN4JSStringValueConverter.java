@@ -79,11 +79,11 @@ public abstract class AbstractN4JSStringValueConverter extends STRINGValueConver
 				null);
 		if (validate) {
 			if (result.hasError()) {
-				throw new BadEscapementException(IssueCodes.getMessageForVCO_STRING_BAD_ESCAPE_ERROR(),
-						IssueCodes.VCO_STRING_BAD_ESCAPE_ERROR, node, result.getValue(), true);
+				throw new BadEscapementException(IssueCodes.VCO_STRING_BAD_ESCAPE_ERROR.getMessage(),
+						IssueCodes.VCO_STRING_BAD_ESCAPE_ERROR.name(), node, result.getValue(), true);
 			} else if (result.hasWarning()) {
-				throw new BadEscapementException(IssueCodes.getMessageForVCO_STRING_BAD_ESCAPE_WARN(),
-						IssueCodes.VCO_STRING_BAD_ESCAPE_WARN, node, result.getValue(), false);
+				throw new BadEscapementException(IssueCodes.VCO_STRING_BAD_ESCAPE_WARN.getMessage(),
+						IssueCodes.VCO_STRING_BAD_ESCAPE_WARN.name(), node, result.getValue(), false);
 			}
 		}
 		return result.getValue();
