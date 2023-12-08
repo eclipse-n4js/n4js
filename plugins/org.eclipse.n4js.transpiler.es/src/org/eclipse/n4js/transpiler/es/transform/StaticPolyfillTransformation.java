@@ -165,12 +165,12 @@ public class StaticPolyfillTransformation extends Transformation {
 		N4MemberDeclaration copy = copyAlienElement(memberToBeInserted);
 		// store elements that are referenced from within this member
 		// (e.g. from within the body, from initializer expressions of fields, from default expressions of fpars, etc.)
-		EcoreUtil2.eAllOfType(classFilled, ReferencingElement_IM.class);
-		for (ReferencingElement_IM refElem : EcoreUtil2.eAllOfType(classFilled, ReferencingElement_IM.class)) {
+		for (ReferencingElement_IM refElem : EcoreUtil2.eAllOfType(copy, ReferencingElement_IM.class)) {
 			if (refElem.getRewiredTarget() instanceof SymbolTableEntryOriginal) {
 				referencedElements.add((SymbolTableEntryOriginal) refElem.getRewiredTarget());
 			}
 		}
+
 		if (existing != null) {
 			replace(existing, copy);
 		} else {
@@ -184,7 +184,8 @@ public class StaticPolyfillTransformation extends Transformation {
 			IdentifiableElement originalTarget = ste.getOriginalTarget();
 			boolean isNested = originalTarget instanceof TMember || originalTarget instanceof TEnumLiteral;
 			if (!isNested
-					|| N4JSGlobals.DTS_FILE_EXTENSION == URIUtils.fileExtension(originalTarget.eResource().getURI())) {
+					|| N4JSGlobals.DTS_FILE_EXTENSION
+							.equals(URIUtils.fileExtension(originalTarget.eResource().getURI()))) {
 				boolean isLocal = originalTarget.eResource() == getState().resource;
 				if (!isLocal
 						&& ScriptDependencyResolver.shouldBeImported(fillingResource.getModule(), originalTarget)) {
