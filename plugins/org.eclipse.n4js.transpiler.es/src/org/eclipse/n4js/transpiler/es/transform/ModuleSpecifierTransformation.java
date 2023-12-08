@@ -139,8 +139,8 @@ public class ModuleSpecifierTransformation extends Transformation {
 			return targetModule.getModuleSpecifier(); // no file extension to add!
 		}
 
-		boolean importingFromModuleInSameProject = targetProject.getPathAsFileURI() == getState().project
-				.getPathAsFileURI();
+		boolean importingFromModuleInSameProject = Objects.equals(targetProject.getPathAsFileURI(), getState().project
+				.getPathAsFileURI());
 		if (importingFromModuleInSameProject) {
 			// SPECIAL CASE #2
 			// module specifiers are always absolute in N4JS, but Javascript requires relative module

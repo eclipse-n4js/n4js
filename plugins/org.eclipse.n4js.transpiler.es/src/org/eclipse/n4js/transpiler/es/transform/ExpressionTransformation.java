@@ -288,22 +288,20 @@ public class ExpressionTransformation extends Transformation {
 							String value = null;
 							if (property == n4NamedElement_name) {
 								value = id.getName();
-							}
-							if (property == n4Element_origin) {
+							} else if (property == n4Element_origin) {
 								value = resourceNameComputer.generateProjectDescriptor(id.eResource());
-							}
-							if (property == n4Type_fqn) {
+							} else if (property == n4Type_fqn) {
 								// avoid optimizing this case for built-in types
 								// (we cannot know for sure the value of the 'fqn' property set in the .js files)
 								if (!N4Scheme.isFromResourceWithN4Scheme(id)) {
 									value = resourceNameComputer.getFullyQualifiedTypeName((TClass) id);
 								}
+							} else {
+								throw new IllegalStateException(); // should not happen (see above)
 							}
 							if (value != null) {
 								replace(propAccessExpr, _StringLiteral(value));
 								return true;
-							} else {
-								throw new IllegalStateException(); // should not happen (see above)
 							}
 						}
 					}

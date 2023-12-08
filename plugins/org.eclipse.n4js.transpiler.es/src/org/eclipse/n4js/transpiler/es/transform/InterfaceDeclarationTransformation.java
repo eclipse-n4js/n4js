@@ -280,7 +280,7 @@ public class InterfaceDeclarationTransformation extends Transformation {
 		AnnotablePropertyAssignment result = null;
 		if (memberDecl instanceof GetterDeclaration) {
 			PropertyGetterDeclaration gd = N4JSFactory.eINSTANCE.createPropertyGetterDeclaration();
-			gd.setBody(((FunctionDefinition) memberDecl).getBody()); // reuse existing body
+			gd.setBody(((GetterDeclaration) memberDecl).getBody()); // reuse existing body
 			result = gd;
 		} else if (memberDecl instanceof SetterDeclaration) {
 			PropertySetterDeclaration sd = N4JSFactory.eINSTANCE.createPropertySetterDeclaration();
@@ -291,7 +291,7 @@ public class InterfaceDeclarationTransformation extends Transformation {
 			FunctionDefinition fd = (FunctionDefinition) memberDecl;
 			PropertyMethodDeclaration pmd = N4JSFactory.eINSTANCE.createPropertyMethodDeclaration();
 			pmd.getFpars().addAll(fd.getFpars()); // reuse existing fpar
-			pmd.setBody(((FunctionDefinition) memberDecl).getBody()); // reuse existing body
+			pmd.setBody(fd.getBody()); // reuse existing body
 			pmd.setGenerator(fd.isGenerator());
 			pmd.setDeclaredAsync(fd.isAsync());
 			result = pmd;
