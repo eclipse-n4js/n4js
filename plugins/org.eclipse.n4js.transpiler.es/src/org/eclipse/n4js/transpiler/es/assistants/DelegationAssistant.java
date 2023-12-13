@@ -62,6 +62,7 @@ import org.eclipse.n4js.ts.types.util.SuperInterfacesIterable;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.RecursionGuard;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
@@ -162,7 +163,7 @@ public class DelegationAssistant extends TransformationAssistant {
 	 * declaration.
 	 */
 	public void replaceDelegatingMembersByOrdinaryMembers(N4ClassifierDeclaration classifierDecl) {
-		for (N4MemberDeclaration currMember : classifierDecl.getOwnedMembersRaw()) {
+		for (N4MemberDeclaration currMember : Lists.newArrayList(classifierDecl.getOwnedMembersRaw())) {
 			if (currMember instanceof DelegatingMember) {
 				N4MemberDeclaration resolvedDelegatingMember = createOrdinaryMemberForDelegatingMember(
 						(DelegatingMember) currMember);
