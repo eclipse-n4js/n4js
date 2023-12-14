@@ -8,15 +8,15 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.regex
-
+package org.eclipse.n4js.regex;
 
 /**
  * Initialization support for running Xtext languages without Equinox extension registry.
  */
-class RegularExpressionStandaloneSetup extends RegularExpressionStandaloneSetupGenerated {
+public class RegularExpressionStandaloneSetup extends RegularExpressionStandaloneSetupGenerated {
 
-	def static void doSetup() {
-		new RegularExpressionStandaloneSetup().createInjectorAndDoEMFRegistration()
+	/***/
+	static public void doSetup() {
+		new RegularExpressionStandaloneSetup().createInjectorAndDoEMFRegistration();
 	}
 }

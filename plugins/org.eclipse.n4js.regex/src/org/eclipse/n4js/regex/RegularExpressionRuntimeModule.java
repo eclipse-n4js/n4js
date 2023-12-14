@@ -8,20 +8,20 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.regex
+package org.eclipse.n4js.regex;
 
-import org.eclipse.xtext.conversion.impl.INTValueConverter
+import org.eclipse.xtext.conversion.impl.INTValueConverter;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
-class RegularExpressionRuntimeModule extends AbstractRegularExpressionRuntimeModule {
+public class RegularExpressionRuntimeModule extends AbstractRegularExpressionRuntimeModule {
 
 	/**
 	 * INT is a data type rule thus the specialized binding
 	 */
-	def Class<? extends INTValueConverter> bindINTValueConverter() {
-		return RegExINTValueConverter;
+	public Class<? extends INTValueConverter> bindINTValueConverter() {
+		return RegExINTValueConverter.class;
 	}
 
 }

@@ -8,14 +8,13 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.regex.scoping
+package org.eclipse.n4js.regex.scoping;
 
 /**
  * This class contains custom scoping description.
  *
- * see : http://www.eclipse.org/Xtext/documentation.html#scoping
- * on how and when to use it
+ * see : http://www.eclipse.org/Xtext/documentation.html#scoping on how and when to use it
  */
-class RegularExpressionScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider {
-
+public class RegularExpressionScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider {
+	// empty
 }

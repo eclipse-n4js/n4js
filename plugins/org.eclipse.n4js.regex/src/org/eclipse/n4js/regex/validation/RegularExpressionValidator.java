@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.regex.validation
+package org.eclipse.n4js.regex.validation;
 //import org.eclipse.xtext.validation.Check
 
 /**
@@ -16,16 +16,16 @@ package org.eclipse.n4js.regex.validation
  *
  * see http://www.eclipse.org/Xtext/documentation.html#validation
  */
-class RegularExpressionValidator extends AbstractRegularExpressionValidator {
+public class RegularExpressionValidator extends AbstractRegularExpressionValidator {
 
-//  public static val INVALID_NAME = 'invalidName'
-//
-//	@Check
-//	def checkGreetingStartsWithCapital(Greeting greeting) {
-//		if (!Character.isUpperCase(greeting.name.charAt(0))) {
-//			warning('Name should start with a capital',
-//					MyDslPackage.Literals.GREETING__NAME,
-//					INVALID_NAME)
-//		}
-//	}
+	// public static val INVALID_NAME = 'invalidName'
+	//
+	// @Check
+	// def checkGreetingStartsWithCapital(Greeting greeting) {
+	// if (!Character.isUpperCase(greeting.name.charAt(0))) {
+	// warning('Name should start with a capital',
+	// MyDslPackage.Literals.GREETING__NAME,
+	// INVALID_NAME)
+	// }
+	// }
 }
