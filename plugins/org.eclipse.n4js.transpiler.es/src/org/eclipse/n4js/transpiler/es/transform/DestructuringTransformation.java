@@ -40,7 +40,6 @@ import static org.eclipse.xtext.xbase.lib.IterableExtensions.map;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.toList;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -318,11 +317,11 @@ public class DestructuringTransformation extends Transformation {
 	 */
 	private void traverse(List<VariableDeclaration> helperVars,
 			List<Pair<SymbolTableEntry, ? extends Expression>> simpleAssignments,
-			DestructNode[] nodes, Expression value, String fparName, String helperVarSuffix) {
+			List<DestructNode> nodes, Expression value, String fparName, String helperVarSuffix) {
 
-		int len = nodes.length;
-		boolean isPositionalPattern = IterableExtensions.exists(Arrays.asList(nodes), n -> n.isPositional());
-		boolean isRest = isPositionalPattern && len > 0 && nodes[len - 1].isRest();
+		int len = nodes.size();
+		boolean isPositionalPattern = IterableExtensions.exists(nodes, n -> n.isPositional());
+		boolean isRest = isPositionalPattern && len > 0 && nodes.get(len - 1).isRest();
 
 		// STEP 1: create code to prepare the value to be destructured and to assign it to a helper variable
 
@@ -373,7 +372,7 @@ public class DestructuringTransformation extends Transformation {
 
 		var nestedPatternsCounter = 0;
 		for (var i = 0; i < len; i++) {
-			DestructNode currNode = nodes[i];
+			DestructNode currNode = nodes.get(i);
 
 			// get the current element or property out of 'value' (i.e. the one that corresponds to 'currNode')
 			Expression currValueRaw;
@@ -416,7 +415,7 @@ public class DestructuringTransformation extends Transformation {
 					varSTE = findSymbolTableEntryForElement((VariableDeclaration) varSource, true);
 				}
 				simpleAssignments.add(Pair.of(varSTE, currValue));
-			} else if (currNode.getNestedNodes() != null && currNode.getNestedNodes().length != 0) {
+			} else if (currNode.getNestedNodes() != null && currNode.getNestedNodes().size() != 0) {
 				// nested destructuring
 				// (assigning the current value in 'currValue' to the nested destructuring pattern)
 				nestedPatternsCounter++;
