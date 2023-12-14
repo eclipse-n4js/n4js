@@ -8,11 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.regex.ide
-
+package org.eclipse.n4js.regex.ide;
 
 /**
  * Use this class to register ide components.
  */
-class RegularExpressionIdeModule extends AbstractRegularExpressionIdeModule {
+public class RegularExpressionIdeModule extends AbstractRegularExpressionIdeModule {
+	// empty
 }
