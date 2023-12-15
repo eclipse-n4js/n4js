@@ -8,11 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.common.unicode
-
+package org.eclipse.n4js.common.unicode;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
-class UnicodeRuntimeModule extends AbstractUnicodeRuntimeModule {
+public class UnicodeRuntimeModule extends AbstractUnicodeRuntimeModule {
+	// empty
 }

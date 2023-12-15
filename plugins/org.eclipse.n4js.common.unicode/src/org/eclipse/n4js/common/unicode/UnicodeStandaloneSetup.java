@@ -8,15 +8,15 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.common.unicode
-
+package org.eclipse.n4js.common.unicode;
 
 /**
  * Initialization support for running Xtext languages without Equinox extension registry.
  */
-class UnicodeStandaloneSetup extends UnicodeStandaloneSetupGenerated {
+public class UnicodeStandaloneSetup extends UnicodeStandaloneSetupGenerated {
 
-	def static void doSetup() {
-		new UnicodeStandaloneSetup().createInjectorAndDoEMFRegistration()
+	/***/
+	static public void doSetup() {
+		new UnicodeStandaloneSetup().createInjectorAndDoEMFRegistration();
 	}
 }
