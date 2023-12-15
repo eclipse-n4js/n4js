@@ -8,12 +8,12 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.tests.codegen
+package org.eclipse.n4js.tests.codegen;
 
 /**
  * Abstract base class for code generators that generate code for members of a {@link Classifier}.
  */
-abstract class Member<T extends Member<T>> extends Fragment<T> {
+abstract public class Member<T extends Member<T>> extends Fragment<T> {
 	/**
 	 * Possible visibilities for members.
 	 */
@@ -49,52 +49,69 @@ abstract class Member<T extends Member<T>> extends Fragment<T> {
 	 */
 	public static class VisibilityExtensions {
 		/**
-		 * Builds a member name from the given name and visibility by appending an appropriate string
-		 * to the given name.
+		 * Builds a member name from the given name and visibility by appending an appropriate string to the given name.
 		 *
-		 * @param visibility the visibility value
-		 * @param the member name prefix
+		 * @param visibility
+		 *            the visibility value
+		 * @param memberName
+		 *            member name prefix
 		 *
 		 * @return the newly created member name
 		 */
-		static def String makeName(Visibility visibility, String memberName) {
-			memberName + visibility.nameExtension
+		static String makeName(Visibility visibility, String memberName) {
+			return memberName + getNameExtension(visibility);
 		}
 
 		/**
 		 * Returns an appropriate member name extension depending on the given visibility.
 		 *
-		 * @param visibility the visibility value
+		 * @param visibility
+		 *            the visibility value
 		 *
 		 * @return the name extension
 		 */
-		static def String getNameExtension(Visibility visibility) {
-			switch visibility {
-				case PRIVATE: "_private"
-				case PROJECT: "_project"
-				case PROTECTED_INTERNAL: "_protected_internal"
-				case PROTECTED: "_protected"
-				case PUBLIC_INTERNAL: "_public_internal"
-				case PUBLIC: "_public"
+		static String getNameExtension(Visibility visibility) {
+			switch (visibility) {
+			case PRIVATE:
+				return "_private";
+			case PROJECT:
+				return "_project";
+			case PROTECTED_INTERNAL:
+				return "_protected_internal";
+			case PROTECTED:
+				return "_protected";
+			case PUBLIC_INTERNAL:
+				return "_public_internal";
+			case PUBLIC:
+				return "_public";
 			}
+			return "";
 		}
 
 		/**
 		 * Builds an appropriate code fragment for the given member visibility.
 		 *
-		 * @param visibility the visibility value
+		 * @param visibility
+		 *            the visibility value
 		 *
 		 * @return the code fragment
 		 */
-		static def String generate(Visibility visibility) {
-			switch visibility {
-				case PRIVATE: "private"
-				case PROJECT: "project"
-				case PROTECTED_INTERNAL: "@Internal protected"
-				case PROTECTED: "protected"
-				case PUBLIC_INTERNAL: "@Internal public"
-				case PUBLIC: "public"
+		static String generate(Visibility visibility) {
+			switch (visibility) {
+			case PRIVATE:
+				return "private";
+			case PROJECT:
+				return "project";
+			case PROTECTED_INTERNAL:
+				return "@Internal protected";
+			case PROTECTED:
+				return "protected";
+			case PUBLIC_INTERNAL:
+				return "@Internal public";
+			case PUBLIC:
+				return "public";
 			}
+			return "";
 		}
 	}
 
@@ -115,9 +132,8 @@ abstract class Member<T extends Member<T>> extends Fragment<T> {
 	/**
 	 * Possible values for whether or not a member overrides an inherited member.
 	 */
-	static enum Override {
-		YES,
-		NO
+	static enum HasOverride {
+		YES, NO
 	}
 
 	/**
@@ -125,106 +141,119 @@ abstract class Member<T extends Member<T>> extends Fragment<T> {
 	 */
 	public static class StaticExtensions {
 		/**
-		 * Builds a member name from the given name and static specifier by appending an appropriate string
-		 * to the given name.
+		 * Builds a member name from the given name and static specifier by appending an appropriate string to the given
+		 * name.
 		 *
-		 * @param static_ whether or not the member is static
-		 * @param the member name prefix
+		 * @param static_
+		 *            whether or not the member is static
+		 * @param classifierName
+		 *            name prefix
 		 *
 		 * @return the newly created member name
 		 */
-		static def String makeName(Static static_, String classifierName) {
-			classifierName + static_.nameExtension
+		static String makeName(Static static_, String classifierName) {
+			return classifierName + getNameExtension(static_);
 		}
 
 		/**
 		 * Returns an appropriate member name extension depending on the given static specification.
 		 *
-		 * @param static_ whether or not the member is static
+		 * @param static_
+		 *            whether or not the member is static
 		 *
 		 * @return the name extension
 		 */
-		static def String getNameExtension(Static static_) {
-			switch static_ {
-				case YES: "_static"
-				case NO: ""
+		static String getNameExtension(Static static_) {
+			switch (static_) {
+			case YES:
+				return "_static";
+			case NO:
+				return "";
 			}
+			return "";
 		}
 
 		/**
 		 * Returns an appropriate code fragment depending on the given static specification.
 		 *
-		 * @param static_ whether or not the member is static
+		 * @param static_
+		 *            whether or not the member is static
 		 *
 		 * @return the code fragment
 		 */
-		static def String generate(Static static_) {
-			switch static_ {
-				case YES: "static "
-				case NO: ""
+		static String generate(Static static_) {
+			switch (static_) {
+			case YES:
+				return "static ";
+			case NO:
+				return "";
 			}
+			return "";
 		}
 	}
 
 	protected Visibility visibility = Visibility.PUBLIC;
 	protected Static static_ = Static.NO;
 	protected String name;
-	protected Override override_ = Override.NO;
+	protected HasOverride override_ = HasOverride.NO;
 
 	/**
 	 * Creates a new member with the given parameters.
 	 *
-	 * @param name the name of the member
+	 * @param name
+	 *            the name of the member
 	 */
-	protected new(String name) {
-		this.name = name
+	protected Member(String name) {
+		this.name = name;
 	}
 
 	/**
 	 * Sets visibility to project visible.
 	 */
-	public def T makeProjectVisible() {
+	public T makeProjectVisible() {
 		return setVisibility(Visibility.PROJECT);
 	}
 
 	/**
 	 * Sets visibility to internal protected.
 	 */
-	public def T makeProtectedInternal() {
+	public T makeProtectedInternal() {
 		return setVisibility(Visibility.PROTECTED_INTERNAL);
 	}
 
 	/**
 	 * Sets visibility to protected.
 	 */
-	public def T makeProtected() {
+	public T makeProtected() {
 		return setVisibility(Visibility.PROTECTED);
 	}
 
 	/**
 	 * Sets visibility to internal public.
 	 */
-	public def T makePublicInternal() {
+	public T makePublicInternal() {
 		return setVisibility(Visibility.PUBLIC_INTERNAL);
 	}
 
 	/**
 	 * Sets visibility to public.
 	 */
-	public def T makePublic() {
+	public T makePublic() {
 		return setVisibility(Visibility.PUBLIC);
 	}
 
 	/**
 	 * Set the visibility.
 	 *
-	 * @param visibility the visibility to set
+	 * @param visibility
+	 *            the visibility to set
 	 *
 	 * @return this builder
 	 */
-	public def T setVisibility(Visibility visibility) {
+	@SuppressWarnings("unchecked")
+	public T setVisibility(Visibility visibility) {
 		this.visibility = visibility;
-		return this as T;
+		return (T) this;
 	}
 
 	/**
@@ -232,18 +261,20 @@ abstract class Member<T extends Member<T>> extends Fragment<T> {
 	 *
 	 * @return this builder
 	 */
-	public def T makeStatic() {
+	public T makeStatic() {
 		return setStatic(Static.YES);
 	}
 
 	/**
 	 * Specify whether the member is static.
 	 *
-	 * @param static_ whether or not the member is static
+	 * @param static_
+	 *            whether or not the member is static
 	 */
-	public def T setStatic(Static static_) {
+	@SuppressWarnings("unchecked")
+	public T setStatic(Static static_) {
 		this.static_ = static_;
-		return this as T;
+		return (T) this;
 	}
 
 	/**
@@ -251,25 +282,27 @@ abstract class Member<T extends Member<T>> extends Fragment<T> {
 	 *
 	 * @return <code>true</code> if this member is static and <code>false</code> otherwise
 	 */
-	public def boolean isStatic() {
-		static_ == Static.YES
+	public boolean isStatic() {
+		return static_ == Static.YES;
 	}
 
 	/**
 	 * Set the member to override.
 	 */
-	public def T makeOverride() {
-		return setOverride(Override.YES);
+	public T makeOverride() {
+		return setOverride(HasOverride.YES);
 	}
 
 	/**
 	 * Set the override status of the member.
 	 *
-	 * @param override_ the override status
+	 * @param override_
+	 *            the override status
 	 */
-	public def T setOverride(Override override_) {
-		this.override_ = override_
-		return this as T;
+	@SuppressWarnings("unchecked")
+	public T setOverride(HasOverride override_) {
+		this.override_ = override_;
+		return (T) this;
 	}
 
 	/**
@@ -277,30 +310,38 @@ abstract class Member<T extends Member<T>> extends Fragment<T> {
 	 *
 	 * @return <code>true</code> if this member overrides
 	 */
-	public def boolean isOverride() {
-		return override_== Override.YES;
+	public boolean isOverride() {
+		return override_ == HasOverride.YES;
 	}
 
-	override def generate() '''
-		«generateOverride()»«generateVisibility()»«generateStatic()»«generateMember()»
-	'''
+	@Override
+	public String generate() {
+		return generateOverride() + generateVisibility() + generateStatic() + generateMember();
+	}
 
-	private def generateOverride() '''«IF override»@Override «ENDIF»'''
+	private String generateOverride() {
+		if (isOverride()) {
+			return "@Override ";
+		}
+		return "";
+	}
 
 	/**
 	 * Generates a code fragment for the visibility of this member.
 	 *
 	 * @return the code fragment
 	 */
-	private def generateVisibility() '''«VisibilityExtensions.generate(visibility)» '''
+	private String generateVisibility() {
+		return VisibilityExtensions.generate(visibility) + " ";
+	}
 
 	/**
 	 * Generates a code fragment according to whether this member is static or not.
 	 *
 	 * @return the code fragment
 	 */
-	private def generateStatic() {
-		StaticExtensions.generate(static_)
+	private String generateStatic() {
+		return StaticExtensions.generate(static_);
 	}
 
 	/**
@@ -308,9 +349,10 @@ abstract class Member<T extends Member<T>> extends Fragment<T> {
 	 *
 	 * @return the generated code fragment
 	 */
-	protected abstract def CharSequence generateMember()
+	protected abstract CharSequence generateMember();
 
-	override public def String toString() {
+	@Override
+	public String toString() {
 		return generate().toString();
 	}
 }
