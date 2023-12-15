@@ -10,9 +10,11 @@
  */
 package org.eclipse.n4js.jsdoc2spec.adoc;
 
-import com.google.inject.Inject
-import org.eclipse.n4js.jsdoc.N4JSDocHelper
-import java.util.Map
+import java.util.Map;
+
+import org.eclipse.n4js.jsdoc.N4JSDocHelper;
+
+import com.google.inject.Inject;
 
 /**
  * Creates AsciiDoc spec fragments for spec region entries.
@@ -25,20 +27,21 @@ public class ADocFactory {
 	@Inject
 	ADocSerializer ADocSerializer;
 
-
 	/**
 	 * Creates the spec of the given entry for the AsciiDoc document.
 	 */
-	public def CharSequence createSpecRegionString(SpecRequirementSection spec, Map<String, SpecSection> specsByKey) {
-		return ADocSerializer.process(spec, specsByKey);
+	public CharSequence createSpecRegionString(SpecRequirementSection spec,
+			@SuppressWarnings("unused") Map<String, SpecSection> specsByKey) {
+		return ADocSerializer.process(spec);
 	}
 
 	/**
 	 * Creates the spec of the given entry for the AsciiDoc document.
 	 */
-	public def CharSequence createSpecRegionString(SpecIdentifiableElementSection spec, Map<String, SpecSection> specsByKey) {
-		if (spec.getDoclet === null) {
-			spec.doclet = n4jsDocHelper.getDoclet(spec.identifiableElement);
+	public CharSequence createSpecRegionString(SpecIdentifiableElementSection spec,
+			Map<String, SpecSection> specsByKey) {
+		if (spec.getDoclet() == null) {
+			spec.setDoclet(n4jsDocHelper.getDoclet(spec.getIdentifiableElement()));
 		}
 		return ADocSerializer.process(spec, specsByKey);
 	}
