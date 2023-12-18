@@ -219,7 +219,7 @@ public class InitialBuildTest extends AbstractIncrementalBuilderTest {
 						"(Error, [0:25 - 0:37], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 						"(Error, [1:10 - 1:19], Couldn't resolve reference to Type 'SomeClass'.)")),
 				Pair.of("ClientProject/" + PACKAGE_JSON, List.of(
-						"(Error, [16:3 - 16:24], Project does not exist with project ID: ProviderProject.)")) };
+						"(Error, [14:18 - 14:39], Project does not exist with project ID: ProviderProject.)")) };
 		assertIssues2(errorsWithProviderProjectMissing);
 
 		shutdownLspServer();

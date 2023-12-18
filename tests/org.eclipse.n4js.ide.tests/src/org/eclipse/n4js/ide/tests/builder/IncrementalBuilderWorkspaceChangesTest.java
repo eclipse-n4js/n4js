@@ -55,7 +55,7 @@ public class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalB
 					"(Error, [0:26 - 0:33], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 					"(Error, [1:5 - 1:15], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)"),
 			"MainProject/" + PACKAGE_JSON, List.of(
-					"(Error, [16:3 - 16:21], Project does not exist with project ID: OtherProject.)"));
+					"(Error, [14:18 - 14:36], Project does not exist with project ID: OtherProject.)"));
 
 	@Test
 	public void testCreateProject() throws IOException {
@@ -286,7 +286,7 @@ public class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalB
 				"OtherProject/package.json", List.of(
 						"    (Warning, [1:9 - 1:25], As a convention the package name 'RenamedProject' should match the name of the project folder 'OtherProject' on the file system.)"),
 				"MainProject/package.json", List.of(
-						"    (Error, [16:3 - 16:21], Project does not exist with project ID: OtherProject.)"),
+						"    (Error, [14:18 - 14:36], Project does not exist with project ID: OtherProject.)"),
 				"Main.n4js", List.of(
 						"    (Error, [0:26 - 0:33], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 						"    (Error, [1:5 - 1:15], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)")));
@@ -419,10 +419,10 @@ public class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalB
 			// unfortunately we have an additional error in the open, non-saved package.json file when a dependency to a
 			// plain-JS-project is added
 			// (due to the optimization in ProjectDiscoveryHelper of hiding all unnecessary PLAINJS projects)
-			int tpnLength = 29 + targetProjectName.length();
+			int tpnLength = 44 + targetProjectName.length();
 			Map<String, List<String>> errorsBeforeSaving = new HashMap<>(originalErrors);
 			errorsBeforeSaving.put(sourceProjectName + "/" + PACKAGE_JSON, List.of(
-					"(Error, [16:23 - 16:" + tpnLength + "], Project does not exist with project ID: "
+					"(Error, [14:38 - 14:" + tpnLength + "], Project does not exist with project ID: "
 							+ targetProjectName + ".)"));
 			assertIssues2(errorsBeforeSaving); // changes in package.json not saved yet, so still the original errors +
 												// 1 error in the unsaved package.json editor
