@@ -309,16 +309,16 @@ public class Project {
 		String generateDtsStr = generateDts ? "\"generator\": { \"d.ts\": true }".formatted(outputFolder) : "";
 		String sourcesStr = "";
 		if (!folders.isEmpty()) {
-			sourcesStr += "\"sources\": {\n\t\"source\": [";
+			sourcesStr += "\"sources\": {\n\t\t\t\"source\": [";
 			boolean isFirst = true;
 			for (Folder sourceFolder : filter(folders, f -> f.isSourceFolder)) {
 				if (!isFirst) {
 					sourcesStr += ", ";
 				}
-				sourcesStr += sourceFolder.name;
+				sourcesStr += "\"%s\"".formatted(sourceFolder.name);
 				isFirst = false;
 			}
-			sourcesStr += "]\n}";
+			sourcesStr += "]\n\t\t}";
 		}
 
 		String n4jsProps = "";
@@ -328,9 +328,9 @@ public class Project {
 
 			if (!Strings.isNullOrEmpty(prop)) {
 				if (!isFirst) {
-					n4jsProps += ",\n";
+					n4jsProps += ",\n\t\t";
 				}
-				n4jsProps += "\t" + prop;
+				n4jsProps += prop;
 				isFirst = false;
 			}
 		}

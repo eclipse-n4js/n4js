@@ -99,10 +99,10 @@ public class YarnWorkspaceProject extends Project {
 					"version": "%s",
 					"private": true,
 					"workspaces": [
-					    «Strings.join(", ", [wsName | '''"«wsName»/*"'''], memberProjects.keySet())»
+						%s
 				    ],
 					"dependencies": {
-							%s
+						%s
 					}
 				}
 				""".formatted(

@@ -77,7 +77,7 @@ public class DestructNode {
 		this.propName = propName;
 		this.varRef = varRef;
 		this.varDecl = varDecl;
-		this.nestedNodes = Collections.unmodifiableList(nestedNodes);
+		this.nestedNodes = nestedNodes == null ? null : Collections.unmodifiableList(nestedNodes);
 		this.defaultExpr = defaultExpr;
 		this.assignedElem = assignedElem;
 		this.rest = rest;
@@ -249,22 +249,22 @@ public class DestructNode {
 	 * Returns stream of this node and all its descendants, i.e. directly and indirectly nested nodes.
 	 */
 	public Stream<DestructNode> stream() {
-		if (nestedNodes == null || nestedNodes.size() == 0) {
+		if (nestedNodes == null || nestedNodes.isEmpty()) {
 			return Stream.of(this);
 		} else {
-			return Stream.concat(Stream.of(this), Stream.of(nestedNodes).flatMap(dn -> stream()));
+			return Stream.concat(Stream.of(this), Stream.of(nestedNodes).flatMap(dn -> dn.stream()));
 		}
 	}
 
 	public static DestructNode unify(EObject eobj) {
 		if (eobj instanceof VariableBinding) {
-			return unify(eobj);
+			return unify((VariableBinding) eobj);
 		}
 		if (eobj instanceof AssignmentExpression) {
-			return unify(eobj);
+			return unify((AssignmentExpression) eobj);
 		}
 		if (eobj instanceof ForStatement) {
-			return unify(eobj);
+			return unify((ForStatement) eobj);
 		}
 		return null;
 	}
