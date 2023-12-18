@@ -249,7 +249,7 @@ public class SingleProjectIdeTest extends ConvertedIdeTest {
 
 		assertIssues2(
 				Pair.of(DEFAULT_PROJECT_NAME + "/package.json", List.of(
-						"(Warning, [12:16 - 12:22], Source container path src3 does not exist.)")),
+						"(Warning, [13:16 - 13:22], Source container path src3 does not exist.)")),
 				Pair.of("C", List.of(
 						"(Error, [0:18 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 						"(Error, [1:16 - 1:17], Couldn't resolve reference to Type 'D'.)")));
