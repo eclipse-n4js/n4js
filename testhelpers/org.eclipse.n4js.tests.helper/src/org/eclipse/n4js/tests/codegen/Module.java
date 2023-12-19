@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.tests.codegen;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -149,6 +151,6 @@ public class Module extends OtherFile {
 	}
 
 	private boolean hasContents() {
-		return !content.isEmpty();
+		return !isNullOrEmpty(content);
 	}
 }

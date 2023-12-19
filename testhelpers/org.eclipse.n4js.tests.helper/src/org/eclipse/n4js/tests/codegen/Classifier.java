@@ -163,9 +163,9 @@ abstract public class Classifier<T extends Classifier<T>> extends Fragment<T> {
 	public String generate() {
 		String result = generateVisibility() + generateAbstract() + generateType() + name + generateTypeRelations();
 		if (hasMembers()) {
-			result += generateMembers();
+			result += " {\n\t" + generateMembers() + "\n}";
 		} else {
-			result += "{}";
+			result += " {}";
 		}
 		return result;
 	}
@@ -185,7 +185,7 @@ abstract public class Classifier<T extends Classifier<T>> extends Fragment<T> {
 	 * @return the generated member code fragment
 	 */
 	protected String generateMembers() {
-		return Strings.join("\n", m -> m.generate(), members);
+		return Strings.join("\n\t", m -> m.generate(), members);
 	}
 
 	/**

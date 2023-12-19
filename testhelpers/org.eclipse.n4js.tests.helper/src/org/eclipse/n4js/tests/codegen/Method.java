@@ -108,15 +108,15 @@ public class Method extends Member<Method> {
 			result += ";";
 		} else {
 			if (hasBody()) {
-				result += "{";
+				result += " { ";
 				if (!Strings.isNullOrEmpty(body)) {
 					result += body;
 				} else if (!Strings.isNullOrEmpty(returnType)) {
-					result += "return new " + returnType + "()";
+					result += "return new " + returnType + "();";
 				}
-				result += "}";
+				result += " }";
 			} else {
-				result += "{}";
+				result += " {}";
 			}
 		}
 

@@ -55,11 +55,13 @@ public class Field extends Member<Field> {
 	protected String generateMember() {
 		String result = "";
 		if (!Strings.isNullOrEmpty(fieldType)) {
-			result += fieldType;
+			result += fieldType + " ";
 		}
+		result += name;
 		if (!Strings.isNullOrEmpty(defaultValue)) {
-			result += " = " + defaultValue + ";\n";
+			result += " = " + defaultValue;
 		}
+		result += ";\n";
 		return result;
 	}
 }
