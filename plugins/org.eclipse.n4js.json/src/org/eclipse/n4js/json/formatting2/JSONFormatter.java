@@ -19,6 +19,7 @@ import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.xtext.formatting2.AbstractFormatter2;
 import org.eclipse.xtext.formatting2.IFormattableDocument;
 import org.eclipse.xtext.formatting2.regionaccess.ISemanticRegion;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
@@ -29,9 +30,32 @@ import org.eclipse.xtext.xbase.lib.Pair;
 public class JSONFormatter extends AbstractFormatter2 {
 
 	@Override
-	public void format(Object obj, IFormattableDocument document) {
-		// TODO Auto-generated method stub
-
+	public void format(Object al, IFormattableDocument document) {
+		if (al instanceof XtextResource) {
+			super._format((XtextResource) al, document);
+			return;
+		} else if (al instanceof JSONArray) {
+			format((JSONArray) al, document);
+			return;
+		} else if (al instanceof JSONObject) {
+			format((JSONObject) al, document);
+			return;
+		} else if (al instanceof JSONDocument) {
+			format((JSONDocument) al, document);
+			return;
+		} else if (al instanceof NameValuePair) {
+			format((NameValuePair) al, document);
+			return;
+		} else if (al instanceof EObject) {
+			super._format((EObject) al, document);
+			return;
+		} else if (al == null) {
+			super._format((Void) null, document);
+			return;
+		} else {
+			super._format(al, document);
+			return;
+		}
 	}
 
 	/**  */
