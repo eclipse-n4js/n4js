@@ -301,7 +301,7 @@ public class DestructuringTransformation extends Transformation {
 			List<Pair<SymbolTableEntry, ? extends Expression>> simpleAssignments,
 			DestructNode rootNode, Expression value, String fparName) {
 
-		VariableEnvironmentElement scope = N4JSASTUtils.getScope(rootNode.getAstElement(), false);
+		VariableEnvironmentElement scope = N4JSASTUtils.getScope(rootNode.astElement, false);
 		if (scope == null) {
 			scope = getState().im;
 		}
@@ -321,7 +321,7 @@ public class DestructuringTransformation extends Transformation {
 
 		int len = nodes.size();
 		boolean isPositionalPattern = IterableExtensions.exists(nodes, n -> n.isPositional());
-		boolean isRest = isPositionalPattern && len > 0 && nodes.get(len - 1).isRest();
+		boolean isRest = isPositionalPattern && len > 0 && nodes.get(len - 1).rest;
 
 		// STEP 1: create code to prepare the value to be destructured and to assign it to a helper variable
 
@@ -384,11 +384,11 @@ public class DestructuringTransformation extends Transformation {
 				currValueRaw = _IndexAccessExpr(currHelperVarSTE, _NumericLiteral(i));
 			} else {
 				// currHelperVar['propName']
-				currValueRaw = _IndexAccessExpr(currHelperVarSTE, _StringLiteral(currNode.getPropName()));
+				currValueRaw = _IndexAccessExpr(currHelperVarSTE, _StringLiteral(currNode.propName));
 			}
 
 			Expression currValue;
-			if (currNode.getDefaultExpr() != null) {
+			if (currNode.defaultExpr != null) {
 				// currValueRaw+" == undefined ? ("+transformAST.doTransform(currNode.defaultExpr)+") : "+currValueRaw
 				currValue = _ConditionalExpr(
 						_EqualityExpr(
@@ -396,17 +396,17 @@ public class DestructuringTransformation extends Transformation {
 								EqualityOperator.SAME,
 								undefinedRef()),
 						_Parenthesis(
-								currNode.getDefaultExpr()),
+								currNode.defaultExpr),
 						currValueRaw);
 			} else {
 				currValue = currValueRaw;
 			}
 
-			if (currNode.getVarRef() != null || currNode.getVarDecl() != null) {
+			if (currNode.varRef != null || currNode.varDecl != null) {
 				// actual destructuring
 				// (assigning an element or property from 'value', i.e. the 'currValue', to the variable with name
 				// currNode.varName)
-				TypableElement varSource = currNode.getVarRef() != null ? currNode.getVarRef() : currNode.getVarDecl();
+				TypableElement varSource = currNode.varRef != null ? currNode.varRef : currNode.varDecl;
 				SymbolTableEntry varSTE = null;
 
 				if (varSource instanceof IdentifierRef_IM) {

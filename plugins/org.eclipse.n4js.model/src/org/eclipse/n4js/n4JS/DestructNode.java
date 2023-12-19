@@ -14,6 +14,7 @@ import static org.eclipse.xtext.xbase.lib.IterableExtensions.exists;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.filter;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.head;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,6 +27,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.xtend.lib.annotations.Data;
 import org.eclipse.xtext.xbase.lib.Pair;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * Destructuring patterns can appear in very different forms within the AST and in different contexts. This helper class
@@ -60,59 +62,29 @@ import org.eclipse.xtext.xbase.lib.Pair;
 @Data
 @SuppressWarnings("javadoc")
 public class DestructNode {
-	EObject astElement;
-	String propName; // property name (iff in object destructuring pattern) or 'null' (iff in array destructuring
-						// pattern)
-	IdentifierRef varRef;
-	VariableDeclaration varDecl;
-	List<DestructNode> nestedNodes; // nested pattern that will be bound/assigned (or 'null' iff 'varName' is non-null)
-	Expression defaultExpr;
-	TypableElement assignedElem; // can be an Expression or an IdentifiableElement (in case of Getter/Setter/Method)
-	boolean rest;
+	final public EObject astElement;
+	// property name (iff in object destructuring pattern) or 'null' (iff in array destructuring pattern)
+	final public String propName;
+	final public IdentifierRef varRef;
+	final public VariableDeclaration varDecl;
+	// nested pattern that will be bound/assigned (or 'null' iff 'varName' is non-null)
+	final public DestructNode[] nestedNodes;
+	final public Expression defaultExpr;
+	// can be an Expression or an IdentifiableElement (in case of Getter/Setter/Method)
+	final public TypableElement assignedElem;
+	final public boolean rest;
 
 	public DestructNode(EObject astElement, String propName, IdentifierRef varRef, VariableDeclaration varDecl,
-			List<DestructNode> nestedNodes, Expression defaultExpr, TypableElement assignedElem, boolean rest) {
+			DestructNode[] nestedNodes, Expression defaultExpr, TypableElement assignedElem, boolean rest) {
 
 		this.astElement = astElement;
 		this.propName = propName;
 		this.varRef = varRef;
 		this.varDecl = varDecl;
-		this.nestedNodes = nestedNodes == null ? null : Collections.unmodifiableList(nestedNodes);
+		this.nestedNodes = nestedNodes;
 		this.defaultExpr = defaultExpr;
 		this.assignedElem = assignedElem;
 		this.rest = rest;
-	}
-
-	public EObject getAstElement() {
-		return astElement;
-	}
-
-	public String getPropName() {
-		return propName;
-	}
-
-	public IdentifierRef getVarRef() {
-		return varRef;
-	}
-
-	public VariableDeclaration getVarDecl() {
-		return varDecl;
-	}
-
-	public List<DestructNode> getNestedNodes() {
-		return nestedNodes;
-	}
-
-	public Expression getDefaultExpr() {
-		return defaultExpr;
-	}
-
-	public TypableElement getAssignedElem() {
-		return assignedElem;
-	}
-
-	public boolean isRest() {
-		return rest;
 	}
 
 	/**
@@ -249,7 +221,7 @@ public class DestructNode {
 	 * Returns stream of this node and all its descendants, i.e. directly and indirectly nested nodes.
 	 */
 	public Stream<DestructNode> stream() {
-		if (nestedNodes == null || nestedNodes.isEmpty()) {
+		if (nestedNodes == null) {
 			return Stream.of(this);
 		} else {
 			return Stream.concat(Stream.of(this), Stream.of(nestedNodes).flatMap(dn -> dn.stream()));
@@ -374,7 +346,7 @@ public class DestructNode {
 		return (expr instanceof ArrayLiteral) ? ((ArrayLiteral) expr).getElements().get(0).getExpression() : expr;
 	}
 
-	private static List<DestructNode> toEntries(EObject pattern, TypableElement rhs) {
+	private static DestructNode[] toEntries(EObject pattern, TypableElement rhs) {
 		Iterator<? extends EObject> patElemIter = null;
 		if (pattern instanceof ArrayLiteral) {
 			patElemIter = ((ArrayLiteral) pattern).getElements().iterator();
@@ -385,7 +357,7 @@ public class DestructNode {
 		} else if (pattern instanceof ObjectBindingPattern) {
 			patElemIter = ((ObjectBindingPattern) pattern).getProperties().iterator();
 		} else {
-			return Collections.emptyList();
+			return null;
 		}
 
 		Iterator<? extends TypableElement> rhsElemIter = null;
@@ -419,7 +391,7 @@ public class DestructNode {
 				nestedDNs.add(nestedNode);
 			}
 		}
-		return nestedDNs;
+		return nestedDNs.toArray(new DestructNode[0]);
 	}
 
 	private static DestructNode toEntry(ArrayElement elem, TypableElement rhs) {
@@ -644,4 +616,26 @@ public class DestructNode {
 		}
 		return dnode.getAllDeclaredIdRefs();
 	}
+
+	@Override
+	public String toString() {
+		ToStringBuilder b = new ToStringBuilder(this);
+		b.add("astElement", this.astElement);
+		b.add("propName", this.propName);
+		b.add("varRef", this.varRef);
+		b.add("varDecl", this.varDecl);
+		b.add("nestedNodes", this.nestedNodes);
+		b.add("defaultExpr", this.defaultExpr);
+		b.add("assignedElem", this.assignedElem);
+		b.add("rest", this.rest);
+		return b.toString();
+	}
+
+	public List<DestructNode> getNestedNodes() {
+		if (nestedNodes == null) {
+			return Collections.emptyList();
+		}
+		return Arrays.asList(this.nestedNodes);
+	}
+
 }

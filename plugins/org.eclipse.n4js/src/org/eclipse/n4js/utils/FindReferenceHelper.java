@@ -104,14 +104,14 @@ public class FindReferenceHelper {
 	public TMember getMemberInDestructuring(EObject instanceOrProxy) {
 		// If the EObject is a variable in a destructuring, we add that variable
 		DestructNode destructNode = DestructureUtils.getCorrespondingDestructNode(instanceOrProxy);
-		if (destructNode != null && destructNode.getAssignedElem() != null) {
-			TypableElement assignedElem = destructNode.getAssignedElem();
+		if (destructNode != null && destructNode.assignedElem != null) {
+			TypableElement assignedElem = destructNode.assignedElem;
 			TypeRef type = typeSystem.type(RuleEnvironmentExtensions.newRuleEnvironment(assignedElem),
 					assignedElem);
 			MemberCollector memberCollector = containerTypesHelper.fromContext(assignedElem);
 			Type declaredType = type.getDeclaredType();
 			if (declaredType instanceof ContainerType<?>) {
-				String name = destructNode.getPropName();
+				String name = destructNode.propName;
 				TMember member = memberCollector.findMember((ContainerType<?>) declaredType, name, true, false);
 				if (member == null) {
 					member = memberCollector.findMember((ContainerType<?>) declaredType, name, false, false);
