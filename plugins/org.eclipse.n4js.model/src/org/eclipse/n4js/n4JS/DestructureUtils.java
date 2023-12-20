@@ -275,7 +275,7 @@ public abstract class DestructureUtils {
 		return isParentPartOfSameDestructuringPattern(obj);
 	}
 
-	/** @return true iff the given {@link EObject} can be {@link DestructNode#getAstElement()} */
+	/** @return true iff the given {@link EObject} can be {@link DestructNode#astElement} */
 	public static boolean isRepresentingElement(EObject eobj) {
 		boolean isRepresentingElement = false;
 		isRepresentingElement |= eobj instanceof ArrayElement;

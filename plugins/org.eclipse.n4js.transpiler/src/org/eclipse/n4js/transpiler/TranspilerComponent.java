@@ -12,6 +12,7 @@ package org.eclipse.n4js.transpiler;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.ArrowFunction;
@@ -49,7 +50,6 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -130,7 +130,7 @@ public abstract class TranspilerComponent {
 
 	@SuppressWarnings("javadoc")
 	protected void addArgument(ParameterizedCallExpression callExpr, int index, Expression newArgument) {
-		TranspilerStateOperations.addArgument(state, callExpr, index, newArgument);
+		TranspilerStateOperations.addArgument(callExpr, index, newArgument);
 	}
 
 	@SuppressWarnings("javadoc")
@@ -207,19 +207,18 @@ public abstract class TranspilerComponent {
 
 	@SuppressWarnings("javadoc")
 	protected <T extends Expression> void wrapExistingExpression(T exprToWrap, Expression outerExpr_without_exprToWrap,
-			Procedure1<? super T> inserterFunction) {
-		TranspilerStateOperations.wrapExistingExpression(state, exprToWrap, outerExpr_without_exprToWrap,
-				inserterFunction);
+			Consumer<T> inserterFunction) {
+		TranspilerStateOperations.wrapExistingExpression(exprToWrap, outerExpr_without_exprToWrap, inserterFunction);
 	}
 
-	/** Delegates to {@link TranspilerStateOperations#insertBefore(TranspilerState, EObject, EObject...)}. */
+	/** Delegates to {@link TranspilerStateOperations#insertBefore( EObject, EObject...)}. */
 	protected void insertBefore(EObject elementInIntermediateModel, EObject... newElements) {
-		TranspilerStateOperations.insertBefore(state, elementInIntermediateModel, newElements);
+		TranspilerStateOperations.insertBefore(elementInIntermediateModel, newElements);
 	}
 
-	/** Delegates to {@link TranspilerStateOperations#insertAfter(TranspilerState, EObject, EObject...)}. */
+	/** Delegates to {@link TranspilerStateOperations#insertAfter( EObject, EObject...)}. */
 	protected void insertAfter(EObject elementInIntermediateModel, EObject... newElements) {
-		TranspilerStateOperations.insertAfter(state, elementInIntermediateModel, newElements);
+		TranspilerStateOperations.insertAfter(elementInIntermediateModel, newElements);
 	}
 
 	/** Delegates to {@link TranspilerStateOperations#copy(TranspilerState, EObject)}. */
@@ -307,7 +306,7 @@ public abstract class TranspilerComponent {
 
 	@SuppressWarnings("javadoc")
 	protected void rename(SymbolTableEntry entry, String newName) {
-		TranspilerStateOperations.rename(state, entry, newName);
+		TranspilerStateOperations.rename(entry, newName);
 	}
 
 	@SuppressWarnings("javadoc")

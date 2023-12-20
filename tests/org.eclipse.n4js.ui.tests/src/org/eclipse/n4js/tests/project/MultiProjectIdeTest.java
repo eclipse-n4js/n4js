@@ -138,7 +138,7 @@ public class MultiProjectIdeTest extends ConvertedIdeTest {
 						"(Error, [0:18 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 						"(Error, [1:16 - 1:17], Couldn't resolve reference to Type 'D'.)")),
 				Pair.of("multiProjectTest.first/package.json", List.of(
-						"(Error, [17:8 - 17:27], Project does not exist with project ID: thirdProject.)")));
+						"(Error, [18:8 - 18:27], Project does not exist with project ID: thirdProject.)")));
 
 		FileURI fileURI = toFileURI(getProjectLocation().toPath().resolve("thirdProject"));
 		fileURI.appendSegment("src").toFile().mkdirs();
@@ -199,7 +199,7 @@ public class MultiProjectIdeTest extends ConvertedIdeTest {
 		joinServerRequests();
 		assertIssues2(
 				Pair.of("multiProjectTest.first/package.json", List.of(
-						"(Error, [16:3 - 16:32], Project does not exist with project ID: multiProjectTest.second.)")),
+						"(Error, [14:18 - 14:47], Project does not exist with project ID: multiProjectTest.second.)")),
 				Pair.of("C", List.of(
 						"(Error, [0:18 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 						"(Error, [1:16 - 1:17], Couldn't resolve reference to Type 'D'.)")));
@@ -266,21 +266,21 @@ public class MultiProjectIdeTest extends ConvertedIdeTest {
 		joinServerRequests();
 		assertIssues2(
 				Pair.of(PROJECT1_NAME + "/package.json", List.of(
-						"(Warning, [7:58 - 7:83], Project multiProjectTest.second of type library cannot be declared among the required runtime libraries.)")));
+						"(Warning, [8:58 - 8:83], Project multiProjectTest.second of type library cannot be declared among the required runtime libraries.)")));
 
 		changeNonOpenedFile(toFileURI(getPackageJsonFile(PROJECT2_NAME)),
 				Pair.of("\"projectType\": \"library\"", "\"projectType\": \"runtimeLibrary\""));
 		joinServerRequests();
 		assertIssues2(
 				Pair.of(PROJECT2_NAME + "/package.json", List.of(
-						"(Warning, [16:3 - 16:21], Project n4js-runtime of type runtime environment cannot be declared among the dependencies or devDependencies.)")));
+						"(Warning, [14:18 - 14:36], Project n4js-runtime of type runtime environment cannot be declared among the dependencies or devDependencies.)")));
 
 		changeNonOpenedFile(toFileURI(getPackageJsonFile(PROJECT2_NAME)),
 				Pair.of("\"projectType\": \"runtimeLibrary\"", "\"projectType\": \"library\""));
 		joinServerRequests();
 		assertIssues2(
 				Pair.of(PROJECT1_NAME + "/package.json", List.of(
-						"(Warning, [7:58 - 7:83], Project multiProjectTest.second of type library cannot be declared among the required runtime libraries.)")));
+						"(Warning, [8:58 - 8:83], Project multiProjectTest.second of type library cannot be declared among the required runtime libraries.)")));
 	}
 
 	@Test
@@ -299,7 +299,7 @@ public class MultiProjectIdeTest extends ConvertedIdeTest {
 		joinServerRequests();
 		assertIssues2(
 				Pair.of(PROJECT1_NAME + "/package.json", List.of(
-						"(Warning, [9:30 - 9:35], Source container path ext does not exist.)")));
+						"(Warning, [10:29 - 10:34], Source container path ext does not exist.)")));
 
 		File extFolder = getProjectRoot(PROJECT1_NAME).toPath().resolve("ext").toFile();
 		Assert.assertTrue("External folder 'ext' should be missing", !extFolder.exists());
@@ -320,7 +320,7 @@ public class MultiProjectIdeTest extends ConvertedIdeTest {
 		cleanBuildAndWait();
 		assertIssues2(
 				Pair.of(PROJECT1_NAME + "/package.json", List.of(
-						"(Warning, [9:30 - 9:35], Source container path ext does not exist.)")));
+						"(Warning, [10:29 - 10:34], Source container path ext does not exist.)")));
 	}
 
 	private void addSecondProjectToDependencies() throws IOException {

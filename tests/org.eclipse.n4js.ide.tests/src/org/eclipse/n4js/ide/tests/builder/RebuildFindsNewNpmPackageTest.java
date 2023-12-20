@@ -75,7 +75,7 @@ public class RebuildFindsNewNpmPackageTest extends AbstractIdeTest {
 				getFileURIFromModuleName("Main"), List.of(
 						"(Error, [0:21 - 0:32], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)"),
 				packageJsonFileURI, List.of(
-						"(Error, [16:3 - 16:12], Project does not exist with project ID: lib.)"));
+						"(Error, [14:18 - 14:27], Project does not exist with project ID: lib.)"));
 		assertIssues(errorsWhenNpmPackageMissing);
 
 		// create the missing npm package (without notifications to the server)

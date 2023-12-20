@@ -492,7 +492,11 @@ public class TestWorkspaceManager {
 		}
 
 		destination.toFile().mkdirs();
-		workspace.create(destination);
+		try {
+			workspace.create(destination);
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}
 
 		createdProject = workspace.getProjects().get(0); // TODO
 		return createdProject;
