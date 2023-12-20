@@ -20,7 +20,7 @@ import org.eclipse.xtext.serializer.sequencer.ContextFinder;
 
 import com.google.inject.AbstractModule;
 
-@SuppressWarnings({ "javadoc", "restriction" })
+@SuppressWarnings("restriction")
 public class SerializerPatchModule extends AbstractModule {
 
 	@Override

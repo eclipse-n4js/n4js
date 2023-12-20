@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  * Test two cases of projects with the same project name within a yarn setup
  */
-@SuppressWarnings({ "javadoc", "unchecked" })
+@SuppressWarnings("unchecked")
 public class YarnProjectDuplicateNames extends AbstractIncrementalBuilderTest {
 
 	private static Map<String, Map<String, String>> testData1 = Map.of(
