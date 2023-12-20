@@ -27,7 +27,6 @@ import com.google.inject.Module;
 public class N4jscTestFactory extends N4jscFactory {
 
 	/** An {@link N4jscFactory} and related global state. */
-	@SuppressWarnings("javadoc")
 	public static final class State {
 		public final N4jscFactory n4jscFactory;
 		public final GlobalStateMemento globalState;

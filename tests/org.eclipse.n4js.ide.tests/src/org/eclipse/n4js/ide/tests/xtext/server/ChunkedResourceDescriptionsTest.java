@@ -34,7 +34,7 @@ import com.google.common.math.StatsAccumulator;
  * Performance test for resource description implementations.
  */
 @Ignore("TODO Implement a way to make this a real test with assertions on the timing")
-@SuppressWarnings({ "javadoc", "restriction" })
+@SuppressWarnings("restriction")
 public class ChunkedResourceDescriptionsTest {
 
 	@Test

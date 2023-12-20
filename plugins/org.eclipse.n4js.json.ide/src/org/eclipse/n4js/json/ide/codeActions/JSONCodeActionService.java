@@ -54,7 +54,7 @@ public class JSONCodeActionService implements ICodeActionService2 {
 		if (options.getCodeActionParams() != null && options.getCodeActionParams().getContext() != null) {
 			List<Diagnostic> diagnostics = options.getCodeActionParams().getContext().getDiagnostics();
 			for (Diagnostic diag : diagnostics) {
-				if (IssueCodes.NON_EXISTING_PROJECT.equals(diag.getCode().getLeft())) {
+				if (IssueCodes.NON_EXISTING_PROJECT.name().equals(diag.getCode().getLeft())) {
 					Command cmd = createInstallNpmCommand(options, diag);
 					if (cmd != null) {
 						result.add(Either.forLeft(cmd));
