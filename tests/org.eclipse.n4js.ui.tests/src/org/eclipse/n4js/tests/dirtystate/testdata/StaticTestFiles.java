@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.tests.dirtystate.testdata;
 
-@SuppressWarnings("unused")
 public class StaticTestFiles {
 
 	public static String moduleFolder() {

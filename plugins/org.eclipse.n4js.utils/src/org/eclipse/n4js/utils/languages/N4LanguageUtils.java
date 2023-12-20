@@ -39,7 +39,6 @@ import com.google.common.collect.Lists;
  */
 public class N4LanguageUtils {
 
-	@SuppressWarnings("javadoc")
 	public static final class ParseResult<T extends EObject> {
 		/** The AST. May be <code>null</code> in case of error. */
 		public final T ast;
