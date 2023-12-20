@@ -189,8 +189,7 @@ class N4JSInjectorCallsitesValidator extends AbstractN4JSDeclarativeValidator {
 			return
 		}
 		val missing = bindersForWhichInstancesAreNeeded.map[binder| binder.typeAsString].join(", ")
-		val msg = getMessageForDI_ANN_MISSING_PROVIDED_BINDERS(missing);
-		addIssue(msg, callExpression, DI_ANN_MISSING_PROVIDED_BINDERS);
+		addIssue(callExpression, DI_ANN_MISSING_PROVIDED_BINDERS.toIssueItem(missing));
 	}
 
 	/**
@@ -206,7 +205,7 @@ class N4JSInjectorCallsitesValidator extends AbstractN4JSDeclarativeValidator {
 				}
 			}
 		}
-		addIssue(getMessageForDI_ANN_INJECTOR_REQUIRED(), ctorOfDICArg, DI_ANN_INJECTOR_REQUIRED);
+		addIssue(ctorOfDICArg, DI_ANN_INJECTOR_REQUIRED.toIssueItem());
 		return null
 	}
 
@@ -239,7 +238,7 @@ class N4JSInjectorCallsitesValidator extends AbstractN4JSDeclarativeValidator {
 				return
 			}
 		}
-		addIssue(getMessageForDI_NOT_INJECTABLE(ctorArgTypeRef.typeRefAsString, ''), ctorArg, DI_NOT_INJECTABLE);
+		addIssue(ctorArg, DI_NOT_INJECTABLE.toIssueItem(ctorArgTypeRef.typeRefAsString, ''));
 	}
 
 	/**
@@ -278,7 +277,7 @@ class N4JSInjectorCallsitesValidator extends AbstractN4JSDeclarativeValidator {
 		if (isAllowedAsInjectorInstance(tr.declaredType)) {
 			return
 		}
-		addIssue(getMessageForDI_ANN_INJECTOR_MISSING(), expr, DI_ANN_INJECTOR_MISSING);
+		addIssue(expr, DI_ANN_INJECTOR_MISSING.toIssueItem());
 	}
 
 	/**
@@ -303,8 +302,7 @@ class N4JSInjectorCallsitesValidator extends AbstractN4JSDeclarativeValidator {
 			return
 		}
 		val missing = missingBinders.map[binder| binder.typeAsString].join(", ")
-		val msg = getMessageForDI_ANN_MISSING_NEEDED_BINDERS(missing);
-		addIssue(msg, callExpression, DI_ANN_MISSING_NEEDED_BINDERS);
+		addIssue(callExpression, DI_ANN_MISSING_NEEDED_BINDERS.toIssueItem(missing));
 	}
 
 	/**

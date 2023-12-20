@@ -15,10 +15,10 @@
 interface I {
 
 	f1 = 42;
-	// XPECT errors --> "In interfaces, the this literal may not be used in initializers of data fields." at "this"
+	// XPECT errors --> "In interfaces, the 'this' literal may not be used in initializers of data fields." at "this"
 	f2 = this.f1;
 
 	static f1 = 42;
-	// XPECT errors --> "In interfaces, the this literal may not be used in static methods or field accessors and in initializers of static data fields." at "this"
+	// XPECT errors --> "In interfaces, the 'this' literal may not be used in static methods or field accessors and in initializers of static data fields." at "this"
 	static f2 = this.f1;
 }

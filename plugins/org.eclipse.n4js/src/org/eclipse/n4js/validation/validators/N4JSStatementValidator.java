@@ -11,10 +11,9 @@
 package org.eclipse.n4js.validation.validators;
 
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.isContainedInStaticPolyfillModule;
+import static org.eclipse.n4js.validation.IssueCodes.EXP_MISPLACED_AWAIT;
 import static org.eclipse.n4js.validation.IssueCodes.POLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES;
 import static org.eclipse.n4js.validation.IssueCodes.TYS_FOR_IN_VAR_STRING;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForPOLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForTYS_FOR_IN_VAR_STRING;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
@@ -38,7 +37,6 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
-import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
@@ -108,8 +106,7 @@ public class N4JSStatementValidator extends AbstractN4JSDeclarativeValidator {
 				return;
 
 			// it is a static polyfill module
-			addIssue(getMessageForPOLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES(), statement,
-					POLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES);
+			addIssue(statement, POLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES.toIssueItem());
 
 		}
 	}
@@ -152,8 +149,7 @@ public class N4JSStatementValidator extends AbstractN4JSDeclarativeValidator {
 				Result res = typeSystem.subtype(G, RuleEnvironmentExtensions.stringTypeRef(G), loopVarType);
 
 				if (!res.isSuccess()) {
-					addIssue(getMessageForTYS_FOR_IN_VAR_STRING(loopVarType.getTypeRefAsString()), location,
-							TYS_FOR_IN_VAR_STRING);
+					addIssue(location, TYS_FOR_IN_VAR_STRING.toIssueItem(loopVarType.getTypeRefAsString()));
 
 				}
 			}
@@ -171,8 +167,8 @@ public class N4JSStatementValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		if (!N4JSLanguageUtils.isValidLocationForAwait(forStatement)) {
-			addIssue(IssueCodes.getMessageForEXP_MISPLACED_AWAIT("for-await-of", "async"), forStatement,
-					N4JSPackage.Literals.FOR_STATEMENT__AWAIT, IssueCodes.EXP_MISPLACED_AWAIT);
+			addIssue(forStatement, N4JSPackage.Literals.FOR_STATEMENT__AWAIT,
+					EXP_MISPLACED_AWAIT.toIssueItem("for-await-of", "async"));
 		}
 	}
 }

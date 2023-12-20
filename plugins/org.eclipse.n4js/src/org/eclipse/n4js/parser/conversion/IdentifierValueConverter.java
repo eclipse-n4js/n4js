@@ -63,21 +63,21 @@ public class IdentifierValueConverter extends IDValueConverter {
 				validityChecker);
 		if (result.hasError()) {
 			throw new N4JSValueConverterWithValueException(
-					IssueCodes.getMessageForVCO_IDENT_ESCAPE_SEQ(jsString, result.getErrorOffset()),
-					IssueCodes.VCO_IDENT_ESCAPE_SEQ,
+					IssueCodes.VCO_IDENT_ESCAPE_SEQ.getMessage(jsString, result.getErrorOffset()),
+					IssueCodes.VCO_IDENT_ESCAPE_SEQ.name(),
 					node, result.getValue(), null);
 		}
 		if (result.hasInvalidChar()) {
 			if (result.getValue().length() != 0)
 				throw new N4JSValueConverterWithValueException(
-						IssueCodes.getMessageForVCO_IDENT_ILLEGAL_CHAR_WITH_RESULT(result.getValue(), jsString,
+						IssueCodes.VCO_IDENT_ILLEGAL_CHAR_WITH_RESULT.getMessage(result.getValue(), jsString,
 								result.getInvalidCharOffset()),
-						IssueCodes.VCO_IDENT_ILLEGAL_CHAR_WITH_RESULT,
+						IssueCodes.VCO_IDENT_ILLEGAL_CHAR_WITH_RESULT.name(),
 						node, result.getValue(), null);
 			else
-				throw new N4JSValueConverterException(IssueCodes.getMessageForVCO_IDENT_ILLEGAL_CHAR(
+				throw new N4JSValueConverterException(IssueCodes.VCO_IDENT_ILLEGAL_CHAR.getMessage(
 						jsString, result.getInvalidCharOffset()),
-						IssueCodes.VCO_IDENT_ILLEGAL_CHAR,
+						IssueCodes.VCO_IDENT_ILLEGAL_CHAR.name(),
 						node, null);
 		}
 		return result.getValue();

@@ -97,7 +97,8 @@ public class BuiltInTypesDefinitionTest {
 								+ join("\n    ", allIssues),
 						allIssues.size() == 1 && allIssues.get(0).getSeverity() == Severity.WARNING);
 				validationTestHelper.assertWarning(resource, N4JSPackage.Literals.N4_FIELD_DECLARATION,
-						IssueCodes.CLF_NO_FINAL_INTERFACE_MEMBER, "In interfaces, only methods may be declared final.");
+						IssueCodes.CLF_NO_FINAL_INTERFACE_MEMBER.name(),
+						"In interfaces, only methods may be declared final.");
 			} else {
 				assertTrue(resourceName + " must not contain any validation issues, but got:\n    "
 						+ join("\n    ", allIssues), allIssues.isEmpty());

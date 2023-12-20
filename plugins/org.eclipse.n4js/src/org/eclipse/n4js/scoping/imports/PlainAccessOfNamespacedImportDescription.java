@@ -33,12 +33,12 @@ public class PlainAccessOfNamespacedImportDescription extends AbstractDescriptio
 
 	@Override
 	public String getMessage() {
-		return IssueCodes.getMessageForIMP_PLAIN_ACCESS_OF_NAMESPACED_TYPE(getName(), namespacedName);
+		return IssueCodes.IMP_PLAIN_ACCESS_OF_NAMESPACED_TYPE.getMessage(getName(), namespacedName);
 	}
 
 	@Override
 	public String getIssueCode() {
-		return IssueCodes.IMP_PLAIN_ACCESS_OF_NAMESPACED_TYPE;
+		return IssueCodes.IMP_PLAIN_ACCESS_OF_NAMESPACED_TYPE.name();
 	}
 
 	/**

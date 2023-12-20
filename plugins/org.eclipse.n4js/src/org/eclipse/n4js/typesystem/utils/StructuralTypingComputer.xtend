@@ -51,6 +51,7 @@ import static org.eclipse.n4js.utils.StructuralMembersPredicates.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import static org.eclipse.n4js.validation.IssueCodes.TYS_NO_SUBTYPE
 
 /**
  */
@@ -147,12 +148,12 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		val leftIsPrimitive = left.declaredType instanceof PrimitiveType
 		
 		// primitive type on the right and non-primitive on the left
-		if (rightIsPrimitive && !leftIsPrimitive) { 
-			return failure(leftRaw.typeRefAsString + " is not a subtype of " + right.typeRefAsString);
+		if (rightIsPrimitive && !leftIsPrimitive) {
+			return failure(TYS_NO_SUBTYPE.getMessage(leftRaw.typeRefAsString, right.typeRefAsString));
 		}
 		// primitive type on the left and non-primitive on the right
 		else if (leftIsPrimitive && !rightIsPrimitive) { 
-			return failure(leftRaw.typeRefAsString + " is not a subtype of " + right.typeRefAsString);
+			return failure(TYS_NO_SUBTYPE.getMessage(leftRaw.typeRefAsString, right.typeRefAsString));
 		} 
 		// primitive types on both sides
 		else if (leftIsPrimitive && rightIsPrimitive) {
@@ -160,7 +161,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 			return if (left.declaredType === right.declaredType) {
 				success();
 			} else {
-				failure(leftRaw.typeRefAsString + " is not a subtype of " + right.typeRefAsString);
+				failure(TYS_NO_SUBTYPE.getMessage(leftRaw.typeRefAsString, right.typeRefAsString));
 			}
 		} 
 		// neither left nor right is primitive

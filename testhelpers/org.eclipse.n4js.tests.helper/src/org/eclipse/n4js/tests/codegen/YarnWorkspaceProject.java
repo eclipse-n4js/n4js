@@ -18,14 +18,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.utils.Strings;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * Generates the code for a yarn workspace project.
@@ -38,15 +36,16 @@ public class YarnWorkspaceProject extends Project {
 	final Map<String, Map<String, Project>> memberProjects = new LinkedHashMap<>();
 
 	/**
-	 * Same as {@link #YarnWorkspaceProject(String, String, String, String)}, but with a default workspace folder name
-	 * of {@link #PACKAGES}.
+	 * Same as {@link Project#Project(String, String, String, ProjectType)}, but with a default project type of
+	 * {@link ProjectType#PLAINJS PLAINJS}.
 	 */
 	public YarnWorkspaceProject(String projectName, String vendorId, String vendorName) {
 		this(projectName, vendorId, vendorName, PACKAGES);
 	}
 
 	/**
-	 * Constructor.
+	 * Same as {@link Project#Project(String, String, String, ProjectType)}, but with a default project type of
+	 * {@link ProjectType#PLAINJS PLAINJS}.
 	 */
 	public YarnWorkspaceProject(String projectName, String vendorId, String vendorName, String workspacesFolderName) {
 		super(projectName, vendorId, vendorName, ProjectType.PLAINJS);
@@ -67,18 +66,19 @@ public class YarnWorkspaceProject extends Project {
 	}
 
 	public Collection<Project> getMemberProjects() {
-		List<Project> projects = new ArrayList<>();
-		for (Map<String, Project> name2prj : memberProjects.values())
+		Collection<Project> projects = new ArrayList<>();
+		for (Map<String, Project> name2prj : memberProjects.values()) {
 			projects.addAll(name2prj.values());
+		}
 		return projects;
 	}
 
-	public Project getMemberProject(String projectName) {
-		return getMemberProject(memberProjects.keySet().iterator().next(), projectName);
+	public Project getMemberProject(String _projectName) {
+		return getMemberProject(memberProjects.keySet().iterator().next(), _projectName);
 	}
 
-	public Project getMemberProject(String workspaceFolderName, String projectName) {
-		return this.memberProjects.get(workspaceFolderName).get(projectName);
+	public Project getMemberProject(String workspaceFolderName, String _projectName) {
+		return this.memberProjects.get(workspaceFolderName).get(_projectName);
 	}
 
 	/**
@@ -86,21 +86,12 @@ public class YarnWorkspaceProject extends Project {
 	 */
 	@Override
 	public String generate() {
-		String content = getProjectDescriptionContent();
-		com.google.common.base.Strings.isNullOrEmpty(content);
-
-		if (!com.google.common.base.Strings.isNullOrEmpty(content)) {
-			return content;
+		if (!com.google.common.base.Strings.isNullOrEmpty(projectDescriptionContent)) {
+			return projectDescriptionContent;
 		}
 
-		String workspaces = Strings.join(", ", wsName -> "\"" + wsName + "/*\"", memberProjects.keySet());
-		String deps = "";
-		if (!IterableExtensions.isNullOrEmpty(getProjectDependencies())) {
-			deps += "\n\t";
-			for (String dep : getProjectDependencies()) {
-				deps += "\"" + dep + "\": \"*\"\n\t";
-			}
-		}
+		String workspaces = Strings.join(", ", ws -> "\"%s/*\"".formatted(ws), memberProjects.keySet());
+		String deps = Strings.join(",\n\t\t", d -> "\"%s\": \"*\"".formatted(d), projectDependencies);
 
 		return """
 				{
@@ -108,18 +99,23 @@ public class YarnWorkspaceProject extends Project {
 					"version": "%s",
 					"private": true,
 					"workspaces": [
-					    %s
+						%s
 				    ],
-					"dependencies": {%s}
+					"dependencies": {
+						%s
+					}
 				}
-				""".formatted(getName(), getVersion(), workspaces, deps);
-
+				""".formatted(
+				getName(),
+				getVersion(),
+				workspaces,
+				deps);
 	}
 
 	/**
 	 * Creates this project in the given parent directory, which must exist.
 	 *
-	 * This method first creates a directory with the same name as the {@link #getName()} within the given parent
+	 * This method first creates a directory with the same name as the {@link #projectName} within the given parent
 	 * directory. If there already exists a file or directory with that name within the given parent directory, that
 	 * file or directory will be (recursively) deleted.
 	 *
@@ -131,7 +127,7 @@ public class YarnWorkspaceProject extends Project {
 	 * @return the project directory
 	 */
 	@Override
-	public File create(Path parentDirectoryPath) {
+	public File create(Path parentDirectoryPath) throws IOException {
 		super.create(parentDirectoryPath);
 
 		File parentDirectory = Objects.requireNonNull(parentDirectoryPath).toFile();
@@ -151,17 +147,13 @@ public class YarnWorkspaceProject extends Project {
 	}
 
 	private void createWorkspaceProjects(Map<String, Project> name2projects, File nodeModulesDirectory,
-			File parentDirectory) {
+			File parentDirectory) throws IOException {
 
 		for (Project project : name2projects.values()) {
 			File projectDir = project.create(parentDirectory.toPath());
 			Path symProjectDirectory = new File(nodeModulesDirectory, project.getName()).toPath();
 			symProjectDirectory.getParent().toFile().mkdir();
-			try {
-				Files.createSymbolicLink(symProjectDirectory, projectDir.toPath());
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
+			Files.createSymbolicLink(symProjectDirectory, projectDir.toPath());
 		}
 	}
 }

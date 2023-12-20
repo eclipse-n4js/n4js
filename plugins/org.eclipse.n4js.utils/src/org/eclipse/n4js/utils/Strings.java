@@ -288,4 +288,21 @@ abstract public class Strings {
 		}
 		return Strings.join("\n", (Object[]) lines);
 	}
+
+	public static int count(String str, String pattern) {
+		if (str == null || str.isEmpty()) {
+			return 0;
+		}
+
+		int count = 0;
+		int idx = 0;
+		idx = str.indexOf(pattern, idx);
+		while (idx > 0) {
+			idx++;
+			count++;
+			idx = str.indexOf(pattern, idx);
+		}
+
+		return count;
+	}
 }

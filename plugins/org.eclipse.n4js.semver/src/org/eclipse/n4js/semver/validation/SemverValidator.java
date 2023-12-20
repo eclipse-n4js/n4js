@@ -30,9 +30,9 @@ public class SemverValidator extends AbstractSemverValidator {
 	public void checkNoAdditionalParts(VersionNumber versionNumber) {
 		EList<VersionPart> extended = versionNumber.getExtended();
 		if (extended != null && !extended.isEmpty()) {
-			String msg = SemverIssueCodes.getMessageForSEMVER_TOO_MANY_NUMBERS();
+			String msg = SemverIssueCodes.SEMVER_TOO_MANY_NUMBERS.getMessage();
 			addIssue(msg, versionNumber, SemverPackage.Literals.VERSION_NUMBER__EXTENDED,
-					SemverIssueCodes.SEMVER_TOO_MANY_NUMBERS);
+					SemverIssueCodes.SEMVER_TOO_MANY_NUMBERS.name());
 		}
 	}
 
@@ -40,9 +40,9 @@ public class SemverValidator extends AbstractSemverValidator {
 	public void checkNoMultipleComparators(SimpleVersion simpleVersion) {
 		EList<VersionComparator> comparators = simpleVersion.getComparators();
 		if (comparators.size() > 1) {
-			String msg = SemverIssueCodes.getMessageForSEMVER_TOO_MANY_COMPARATORS();
+			String msg = SemverIssueCodes.SEMVER_TOO_MANY_COMPARATORS.getMessage();
 			addIssue(msg, simpleVersion, SemverPackage.Literals.SIMPLE_VERSION__COMPARATORS,
-					SemverIssueCodes.SEMVER_TOO_MANY_COMPARATORS);
+					SemverIssueCodes.SEMVER_TOO_MANY_COMPARATORS.name());
 		}
 	}
 

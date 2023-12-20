@@ -24,20 +24,20 @@ import org.junit.Test;
  */
 public class IssueConfigurationTest extends AbstractXtParentRunnerTest {
 
-	
 	@Test
 	public void test() throws Exception {
 
 		// The test file IssuesConfiguration.n4js.xt is based on the assumption that certain issues are suppressed in
 		// all tests by default. Make sure this test fails if the default suppression no longer meets this expectation:
 		Set<String> suppressed = N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS;
-		assertTrue(suppressed.contains(IssueCodes.DFG_NULL_DEREFERENCE));
-		assertTrue(suppressed.contains(IssueCodes.CFG_LOCAL_VAR_UNUSED));
-		assertFalse(suppressed.contains(IssueCodes.CLF_NAME_DOES_NOT_START_UPPERCASE));
-		assertFalse(suppressed.contains(IssueCodes.CLF_NAME_DOES_NOT_START_LOWERCASE));
+		assertTrue(suppressed.contains(IssueCodes.DFG_NULL_DEREFERENCE.name()));
+		assertTrue(suppressed.contains(IssueCodes.CFG_LOCAL_VAR_UNUSED.name()));
+		assertFalse(suppressed.contains(IssueCodes.CLF_NAME_DOES_NOT_START_UPPERCASE.name()));
+		assertFalse(suppressed.contains(IssueCodes.CLF_NAME_DOES_NOT_START_LOWERCASE.name()));
 
 		run("probands/IssueConfiguration", suppressed);
-		assertEventNames("testRunStarted\n"
+		assertEventNames("testSuiteStarted - org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"
+				+ "testSuiteStarted - IssueConfiguration.n4js.xt: probands/IssueConfiguration\n"
 				+ "testStarted\n"
 				+ "testFinished\n"
 				+ "testStarted\n"
@@ -46,7 +46,8 @@ public class IssueConfigurationTest extends AbstractXtParentRunnerTest {
 				+ "testFinished\n"
 				+ "testStarted\n"
 				+ "testFinished\n"
-				+ "testRunFinished");
+				+ "testSuiteFinished - IssueConfiguration.n4js.xt: probands/IssueConfiguration\n"
+				+ "testSuiteFinished - org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup");
 		assertResults("Passed: nowarnings~0:  〔probands/IssueConfiguration/IssueConfiguration.n4js.xt〕\n"
 				+ "Passed: warnings~0:  〔probands/IssueConfiguration/IssueConfiguration.n4js.xt〕\n"
 				+ "Passed: warnings~1:  〔probands/IssueConfiguration/IssueConfiguration.n4js.xt〕\n"

@@ -44,8 +44,7 @@ public class UsedBeforeDeclaredValidator implements FlowValidator {
 
 		for (IdentifierRef idRef : usedBeforeDeclared) {
 			String varName = idRef.getId().getName();
-			String msg = IssueCodes.getMessageForCFG_USED_BEFORE_DECLARED(varName);
-			fVali.addIssue(msg, idRef, IssueCodes.CFG_USED_BEFORE_DECLARED);
+			fVali.addIssue(idRef, IssueCodes.CFG_USED_BEFORE_DECLARED.toIssueItem(varName));
 		}
 	}
 

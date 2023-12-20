@@ -10,11 +10,10 @@
  */
 package org.eclipse.n4js.scoping.utils;
 
-import org.eclipse.xtext.resource.IEObjectDescription;
-
 import org.eclipse.n4js.scoping.members.MemberScope;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
  * If the {@link MemberScope} finds a static accessor in a wrong context, this descriptor is used to bound the reference
@@ -52,22 +51,22 @@ public class WrongStaticAccessDescription extends AbstractDescriptionWithError {
 	public String getMessage() {
 		if (getEClass() == TypesPackage.eINSTANCE.getTypeVariable()) {
 			// special case for TypeVariables (because the generic error message does not fit here):
-			return IssueCodes.getMessageForVIS_WRONG_TYPE_VARIABLE_ACCESSOR(getName());
+			return IssueCodes.VIS_WRONG_TYPE_VARIABLE_ACCESSOR.getMessage(getName());
 		}
 		// standard case:
 		String[] staticNonStatic = { "static", "non-static" };
 		String staticMemberStr = staticNonStatic[staticAccess ? 1 : 0];
 		String staticContextStr = staticNonStatic[staticAccess ? 0 : 1];
-		return IssueCodes.getMessageForVIS_WRONG_STATIC_ACCESSOR(staticMemberStr, getName(), staticContextStr);
+		return IssueCodes.VIS_WRONG_STATIC_ACCESSOR.getMessage(staticMemberStr, getName(), staticContextStr);
 	}
 
 	@Override
 	public String getIssueCode() {
 		if (getEClass() == TypesPackage.eINSTANCE.getTypeVariable()) {
 			// special case:
-			return IssueCodes.VIS_WRONG_TYPE_VARIABLE_ACCESSOR;
+			return IssueCodes.VIS_WRONG_TYPE_VARIABLE_ACCESSOR.name();
 		}
 		// standard case:
-		return IssueCodes.VIS_WRONG_STATIC_ACCESSOR;
+		return IssueCodes.VIS_WRONG_STATIC_ACCESSOR.name();
 	}
 }

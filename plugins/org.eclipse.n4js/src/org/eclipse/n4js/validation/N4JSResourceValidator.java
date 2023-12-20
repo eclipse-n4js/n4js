@@ -160,9 +160,9 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 			if (cache != null && cache.hasUnknownTypeRef()) {
 				boolean hasErrors = issues.stream().anyMatch(issue -> issue.getSeverity() == Severity.ERROR);
 				if (!hasErrors) {
-					final String msg = IssueCodes.getMessageForTYS_UNKNOWN_TYPE_REF();
+					final String msg = IssueCodes.TYS_UNKNOWN_TYPE_REF.getMessage();
 					for (TypableElement elem : cache.getAstNodesOfUnknownTypes()) {
-						Issue issue = createFileIssue(resource, elem, msg, IssueCodes.TYS_UNKNOWN_TYPE_REF);
+						Issue issue = createFileIssue(resource, elem, msg, IssueCodes.TYS_UNKNOWN_TYPE_REF.name());
 
 						issues.add(issue);
 					}
@@ -223,8 +223,8 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 
 	private static Issue createInvalidFileTypeError(Resource res, N4JSProjectConfigSnapshot project) {
 		final String projectTypeStr = PackageJsonUtils.getProjectTypeStringRepresentation(project.getType());
-		final String msg = IssueCodes.getMessageForINVALID_FILE_TYPE_FOR_PROJECT_TYPE(projectTypeStr);
-		return createFileIssue(res, msg, IssueCodes.INVALID_FILE_TYPE_FOR_PROJECT_TYPE);
+		final String msg = IssueCodes.INVALID_FILE_TYPE_FOR_PROJECT_TYPE.getMessage(projectTypeStr);
+		return createFileIssue(res, msg, IssueCodes.INVALID_FILE_TYPE_FOR_PROJECT_TYPE.name());
 	}
 
 	private static Issue createPostProcessingFailedError(Resource res, Throwable th) {
@@ -233,8 +233,8 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 		final String trace = "\n" + Stream.of(th.getStackTrace())
 				.map(ste -> ste.toString())
 				.collect(Collectors.joining("\n")); // cannot add indentation, because Xtext would reformat the message
-		final String msg = IssueCodes.getMessageForPOST_PROCESSING_FAILED(thKind, thName, th.getMessage() + trace);
-		return createFileIssue(res, msg, IssueCodes.POST_PROCESSING_FAILED);
+		final String msg = IssueCodes.POST_PROCESSING_FAILED.getMessage(thKind, thName, th.getMessage() + trace);
+		return createFileIssue(res, msg, IssueCodes.POST_PROCESSING_FAILED.name());
 	}
 
 	private static Issue createFileIssue(Resource res, String message, String issueCode) {
@@ -245,7 +245,7 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 		URI uri = res.getURI();
 		final IssueImpl issue = new IssueImpl();
 		issue.setCode(issueCode);
-		issue.setSeverity(IssueCodes.getDefaultSeverity(issueCode));
+		issue.setSeverity(IssueCodes.getSeverityForName(issueCode));
 		issue.setMessage(message);
 		issue.setUriToProblem(URIUtils.getBaseOfVirtualResourceURI(uri));
 		issue.setType(CheckType.FAST); // using CheckType.FAST is important to get proper marker update behavior in ...

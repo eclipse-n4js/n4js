@@ -20,7 +20,7 @@ class A {
 	--- */
 	public get name() : void {}
 
-	// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+	// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 	public set name(p : void) {}
 }
 
@@ -30,7 +30,7 @@ interface I {
 	// XPECT errors --> "Void is not a valid type for getters and setters." at "name"
 	public get name() : void
 
-	// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+	// XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 	public set name(p : void)
 }
 

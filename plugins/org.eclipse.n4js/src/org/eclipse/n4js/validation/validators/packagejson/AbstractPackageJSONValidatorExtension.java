@@ -319,8 +319,8 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 	protected void checkIsPresent(EObject issueTarget, Multimap<String, JSONValue> documentValues,
 			String propertyPath) {
 		if (!documentValues.containsKey(propertyPath)) {
-			addIssue(JSONIssueCodes.getMessageForJSON_MISSING_PROPERTY(propertyPath), issueTarget,
-					JSONIssueCodes.JSON_MISSING_PROPERTY);
+			addIssue(JSONIssueCodes.JSON_MISSING_PROPERTY.getMessage(propertyPath), issueTarget,
+					JSONIssueCodes.JSON_MISSING_PROPERTY.name());
 		}
 	}
 
@@ -359,9 +359,9 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 	 * considered and then the issue severities of the bundle that provides an extension.
 	 */
 	private Severity getJSONSeverity(String issueCode) {
-		final Severity jsonSeverity = JSONIssueCodes.getDefaultSeverity(issueCode);
-		if (null != jsonSeverity) {
-			return jsonSeverity;
+		Severity severity = JSONIssueCodes.getSeverityForName(issueCode);
+		if (severity != null) {
+			return severity;
 		}
 		return getIssueSeverities(getContext(), getCurrentObject()).getSeverity(issueCode);
 	}
@@ -394,9 +394,9 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 			return false;
 		}
 		if (!valueClass.isInstance(value)) {
-			addIssue(JSONIssueCodes.getMessageForJSON_EXPECTED_DIFFERENT_VALUE_TYPE(getJSONValueDescription(valueClass),
+			addIssue(JSONIssueCodes.JSON_EXPECTED_DIFFERENT_VALUE_TYPE.getMessage(getJSONValueDescription(valueClass),
 					getJSONValueDescription(value), locationClause), value,
-					JSONIssueCodes.JSON_EXPECTED_DIFFERENT_VALUE_TYPE);
+					JSONIssueCodes.JSON_EXPECTED_DIFFERENT_VALUE_TYPE.name());
 			return false;
 		}
 		return true;
@@ -410,8 +410,8 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 	 */
 	protected boolean checkIsNonEmptyString(JSONStringLiteral stringLiteral, PackageJsonProperties property) {
 		if (stringLiteral.getValue().isEmpty()) {
-			addIssue(JSONIssueCodes.getMessageForJSON_EMPTY_STRING(property.name), stringLiteral,
-					JSONIssueCodes.JSON_EMPTY_STRING);
+			addIssue(JSONIssueCodes.JSON_EMPTY_STRING.getMessage(property.name), stringLiteral,
+					JSONIssueCodes.JSON_EMPTY_STRING.name());
 			return false;
 		}
 		return true;

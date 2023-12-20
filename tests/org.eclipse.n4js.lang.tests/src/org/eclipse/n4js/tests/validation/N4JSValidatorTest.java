@@ -47,7 +47,8 @@ public class N4JSValidatorTest {
 					var v = v
 				""");
 		assertTrue(program.eResource().getErrors().isEmpty());
-		valTestHelper.assertWarning(program, N4JSPackage.Literals.IDENTIFIER_REF, IssueCodes.AST_VAR_DECL_RECURSIVE);
+		valTestHelper.assertWarning(program, N4JSPackage.Literals.IDENTIFIER_REF,
+				IssueCodes.AST_VAR_DECL_RECURSIVE.name());
 	}
 
 	@Test
@@ -66,8 +67,8 @@ public class N4JSValidatorTest {
 				"The field a (line 3) duplicates field a (line 2).");
 
 		for (String it : expectedErrorMsgs) {
-			valTestHelper.assertError(program, N4JSPackage.Literals.N4_MEMBER_DECLARATION, IssueCodes.CLF_DUP_MEMBER,
-					it);
+			valTestHelper.assertError(program, N4JSPackage.Literals.N4_MEMBER_DECLARATION,
+					IssueCodes.CLF_DUP_MEMBER.name(), it);
 		}
 	}
 
@@ -99,8 +100,8 @@ public class N4JSValidatorTest {
 				"The setter d (line 9) duplicates field d (line 5).");
 
 		for (String it : expectedErrorMsgs) {
-			valTestHelper.assertError(program, N4JSPackage.Literals.N4_MEMBER_DECLARATION, IssueCodes.CLF_DUP_MEMBER,
-					it);
+			valTestHelper.assertError(program, N4JSPackage.Literals.N4_MEMBER_DECLARATION,
+					IssueCodes.CLF_DUP_MEMBER.name(), it);
 		}
 	}
 
@@ -120,7 +121,8 @@ public class N4JSValidatorTest {
 
 		// bindings ok?
 		valTestHelper.assertNoErrors(program);
-		valTestHelper.assertNoWarnings(program, N4JSPackage.Literals.N4_MEMBER_DECLARATION, IssueCodes.CLF_DUP_MEMBER);
+		valTestHelper.assertNoWarnings(program, N4JSPackage.Literals.N4_MEMBER_DECLARATION,
+				IssueCodes.CLF_DUP_MEMBER.name());
 	}
 
 	@Test
@@ -145,6 +147,6 @@ public class N4JSValidatorTest {
 		// bindings ok?
 		valTestHelper.assertNoErrors(program);
 		valTestHelper.assertNoWarnings(program, N4JSPackage.Literals.N4_MEMBER_DECLARATION,
-				IssueCodes.CLF_OVERRIDE_ANNOTATION);
+				IssueCodes.CLF_OVERRIDE_ANNOTATION.name());
 	}
 }

@@ -39,7 +39,7 @@ var {fieldSimple:a11 : A} = value;
 var {fieldDifferentTypes:a12 : X} = value;
 // XPECT errors --> "Variable a13 cannot hold destructured value of property 'fieldGetter': A is not a subtype of X." at "a13"
 var {fieldGetter:a13 : X} = value;
-// XPECT errors --> "Property named "fieldOnlyInClsA" is not readable: Member fieldOnlyInClsA not present in all types of union; missing from: ClsB<A,B>." at "fieldOnlyInClsA"
+// XPECT errors --> "Property named 'fieldOnlyInClsA' is not readable: Member fieldOnlyInClsA not present in all types of union; missing from: ClsB<A,B>." at "fieldOnlyInClsA"
 var {fieldOnlyInClsA:a14 : X} = value;
-// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "fieldNotFound": union{ClsA,ClsB<A,B>}." at "fieldNotFound"
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named 'fieldNotFound': union{ClsA,ClsB<A,B>}." at "fieldNotFound"
 var {fieldNotFound: a15} = value;

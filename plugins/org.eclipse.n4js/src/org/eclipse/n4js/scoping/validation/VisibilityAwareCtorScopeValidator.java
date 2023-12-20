@@ -72,10 +72,11 @@ public class VisibilityAwareCtorScopeValidator implements IScopeValidator {
 		TClassifier ctorClassifier = (TClassifier) proxyOrInstance;
 
 		String containerName = ctorClassifier.getTypeAsString();
-		String message = IssueCodes.getMessageForVIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR("constructor",
+		String message = IssueCodes.VIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR.getMessage("constructor",
 				containerName);
 
-		return new ScopeElementIssue(objDescr, IssueCodes.VIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR, message);
+		return new ScopeElementIssue(objDescr, IssueCodes.VIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR.name(),
+				message);
 	}
 
 }

@@ -49,7 +49,6 @@ import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.DeclMergingHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
-import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -126,8 +125,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			val name = owner.name
 			if (name !== null) {
 				if (!owner.isValidName) {
-					val message = IssueCodes.getMessageForAST_RESERVED_IDENTIFIER(name);
-					addIssue(message, owner, PROPERTY_NAME_OWNER__DECLARED_NAME, IssueCodes.AST_RESERVED_IDENTIFIER);
+					addIssue(owner, PROPERTY_NAME_OWNER__DECLARED_NAME, AST_RESERVED_IDENTIFIER.toIssueItem(name));
 				}
 			}
 		}
@@ -237,8 +235,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 
 		for (sm : ptrsInAST.astStructuralMembers) {
-			val message = IssueCodes.getMessageForTYS_ADDITIONAL_STRUCTURAL_MEMBERS_ON_TYPE_VARS()
-			addIssue(message, sm, TYS_ADDITIONAL_STRUCTURAL_MEMBERS_ON_TYPE_VARS)
+			addIssue(sm, TYS_ADDITIONAL_STRUCTURAL_MEMBERS_ON_TYPE_VARS.toIssueItem())
 		}
 	}
 
@@ -262,20 +259,16 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 
 		// name may be null (invalid file), we do not need an NPE here
 		if (name !== null && name.startsWith('$')) {
-			val message = IssueCodes.getMessageForCLF_NAME_DOLLAR()
-			addIssue(message, member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_NAME_DOLLAR)
+			addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_NAME_DOLLAR.toIssueItem());
 		}
 	}
 
 	def private internalCheckAbstractAndFinal(TMember member) {
 		if (member.final) {
 			if (member.abstract) {
-				val message = IssueCodes.getMessageForCLF_ABSTRACT_FINAL(member.keyword)
-				addIssue(message, member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, IssueCodes.CLF_ABSTRACT_FINAL)
+				addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_ABSTRACT_FINAL.toIssueItem(member.keyword))
 			} else if (member.containingType instanceof TInterface && !(member instanceof TMethod)) {
-				val message = IssueCodes.getMessageForCLF_NO_FINAL_INTERFACE_MEMBER()
-				addIssue(message, member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME,
-					IssueCodes.CLF_NO_FINAL_INTERFACE_MEMBER)
+				addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_NO_FINAL_INTERFACE_MEMBER.toIssueItem());
 			}
 		}
 	}
@@ -287,9 +280,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		val parent = member.eContainer;
 		if (parent instanceof TInterface) {
 			if (parent.typingStrategy === TypingStrategy.STRUCTURAL) {
-				val message = IssueCodes.getMessageForSTRCT_ITF_CANNOT_CONTAIN_STATIC_MEMBERS();
-				addIssue(message, member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME,
-					IssueCodes.STRCT_ITF_CANNOT_CONTAIN_STATIC_MEMBERS);
+				addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, STRCT_ITF_CANNOT_CONTAIN_STATIC_MEMBERS.toIssueItem());
 				return false;
 			}
 		}
@@ -322,8 +313,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	private def holdsConstructorModifiers(TMethod constructor) {
 		if ((constructor.abstract && !(constructor.containingType instanceof TInterface)) // ctor in interface may be abstract (actually it *must* be abstract)
 		|| constructor.static || constructor.final || constructor.hasIllegalOverride) {
-			val message = getMessageForCLF_CTOR_ILLEGAL_MODIFIER
-			addIssue(message, constructor.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_CTOR_ILLEGAL_MODIFIER)
+			addIssue(constructor.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_CTOR_ILLEGAL_MODIFIER.toIssueItem())
 			return false;
 		}
 		return true;
@@ -340,8 +330,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	private def boolean holdsConstructorInInterfaceDoesNotHaveBody(TMethod constructor) {
 		if (constructor.containingType instanceof TInterface && !constructor.hasNoBody) {
-			addIssue(getMessageForITF_NO_PROPERTY_BODY("Constructors", ""), constructor.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME,
-				ITF_NO_PROPERTY_BODY);
+			addIssue(constructor.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, ITF_NO_PROPERTY_BODY.toIssueItem("Constructors", ""));
 			return false;
 		}
 		return true;
@@ -353,8 +342,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	private def boolean holdsConstructorInInterfaceRequiresCovarianceAnnotation(TMethod constructor) {
 		val container = constructor.containingType;
 		if (container instanceof TInterface && !N4JSLanguageUtils.hasCovariantConstructor(container as TInterface, declMergingHelper)) {
-			addIssue(getMessageForITF_CONSTRUCTOR_COVARIANCE, constructor.astElement,
-				PROPERTY_NAME_OWNER__DECLARED_NAME, ITF_CONSTRUCTOR_COVARIANCE);
+			addIssue(constructor.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, ITF_CONSTRUCTOR_COVARIANCE.toIssueItem());
 			return false;
 		}
 		return true;
@@ -366,8 +354,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	private def boolean holdsConstructorNoReturnType(TMethod constructor) {
 		val constructorDecl = constructor.astElement as N4MethodDeclaration;
 		if (constructorDecl.declaredReturnTypeRefInAST !== null) {
-			addIssue(getMessageForCLF_CTOR_RETURN_TYPE, constructorDecl,
-				FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE, CLF_CTOR_RETURN_TYPE);
+			addIssue(constructorDecl, FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE, CLF_CTOR_RETURN_TYPE.toIssueItem());
 			return false;
 		}
 		return true;
@@ -384,8 +371,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		val constructorDecl = method.astElement as N4MethodDeclaration;
 		val offsetLength = findTypeVariablesOffset(constructorDecl);
 
-		addIssue(IssueCodes.messageForCLF_CTOR_NO_TYPE_PARAMETERS, constructorDecl, offsetLength.key,
-			offsetLength.value, IssueCodes.CLF_CTOR_NO_TYPE_PARAMETERS);
+		addIssue(constructorDecl, offsetLength.key, offsetLength.value, CLF_CTOR_NO_TYPE_PARAMETERS.toIssueItem());
 
 		return false;
 	}
@@ -426,10 +412,9 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 						if (! existsSuperCall) {
 							val className = (ctor.eContainer as IdentifiableElement).name;
 							addIssue(
-								getMessageForKEY_SUP_REQUIRE_EXPLICIT_SUPERCTOR_CALL(className),
 								constructor.astElement,
 								PROPERTY_NAME_OWNER__DECLARED_NAME,
-								KEY_SUP_REQUIRE_EXPLICIT_SUPERCTOR_CALL
+								KEY_SUP_REQUIRE_EXPLICIT_SUPERCTOR_CALL.toIssueItem(className)
 							)
 							return false;
 						} // else: ok so far, more checks on super call are performed in N4JSExpressionValidator
@@ -449,26 +434,26 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		if (isCallSig || isConstructSig) {
 			// constraint: only in .n4jsd files
 			if (!jsVariantHelper.isExternalMode(astNode)) {
-				addIssue(getMessageForCLF_CALL_CONSTRUCT_SIG_ONLY_IN_N4JSD, astNode, CLF_CALL_CONSTRUCT_SIG_ONLY_IN_N4JSD);
+				addIssue(astNode, CLF_CALL_CONSTRUCT_SIG_ONLY_IN_N4JSD.toIssueItem());
 				return false;
 			}
 			// constraint: only in shapes and EcmaScript classes
 			val owner = if (methodInAST.isLeft) methodInAST.getLeft.owner; // owners of TStructMethods are never annotated with @N4JS
 			if (methodInAST.isLeft && !N4JSLanguageUtils.isShapeOrEcmaScript(owner)) {
-				addIssue(getMessageForCLF_CALL_CONSTRUCT_SIG_NOT_IN_N4JS, astNode, CLF_CALL_CONSTRUCT_SIG_NOT_IN_N4JS);
+				addIssue(astNode, CLF_CALL_CONSTRUCT_SIG_NOT_IN_N4JS.toIssueItem());
 				return false;
 			}
 			// constraint: must not have a body
 			val body = if (methodInAST.isLeft) methodInAST.getLeft.body; // TStructMethods never have a body
 			if (body !== null) {
-				addIssue(getMessageForCLF_CALL_CONSTRUCT_SIG_BODY, astNode, CLF_CALL_CONSTRUCT_SIG_BODY);
+				addIssue(astNode, CLF_CALL_CONSTRUCT_SIG_BODY.toIssueItem());
 				return false;
 			}
 			// constraint: not more than one call/construct signature per class
 			val haveDuplicate = (if (isCallSig) allCallSigs else allConstructSigs).size >= 2;
 			if (haveDuplicate) {
 				val kind = if (isCallSig) "call" else "construct";
-				addIssue(getMessageForCLF_CALL_CONSTRUCT_SIG_DUPLICATE(kind), astNode, CLF_CALL_CONSTRUCT_SIG_DUPLICATE);
+				addIssue(astNode, CLF_CALL_CONSTRUCT_SIG_DUPLICATE.toIssueItem(kind));
 				return false;
 			}
 			// constraint: private not allowed in interfaces
@@ -485,7 +470,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		if (isConstructSig) {
 			// constraint: only in classes
 			if (!(astNode.eContainer instanceof N4InterfaceDeclaration || astNode.eContainer instanceof StructuralTypeRef)) {
-				addIssue(messageForCLF_CONSTRUCT_SIG_ONLY_IN_INTERFACE, astNode, CLF_CONSTRUCT_SIG_ONLY_IN_INTERFACE);
+				addIssue(astNode, CLF_CONSTRUCT_SIG_ONLY_IN_INTERFACE.toIssueItem());
 				return false;
 			}
 			// constraint: must have non-void return type
@@ -496,7 +481,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			};
 			val returnTypeRef = definedFunction?.returnTypeRef;
 			if (returnTypeRef === null || TypeUtils.isVoid(returnTypeRef)) {
-				addIssue(messageForCLF_CONSTRUCT_SIG_VOID_RETURN_TYPE, astNode, CLF_CONSTRUCT_SIG_VOID_RETURN_TYPE);
+				addIssue(astNode, CLF_CONSTRUCT_SIG_VOID_RETURN_TYPE.toIssueItem());
 				return false;
 			}
 		}
@@ -513,11 +498,9 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		if (requireCheckForMissingBody && !memberIsAbstract &&
 			(member.astElement as N4MemberDeclaration).body === null) {
 			if (member.isConstructor) {
-				addIssue(messageForCLF_MISSING_CTOR_BODY, member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME,
-					IssueCodes.CLF_MISSING_CTOR_BODY)
+				addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_MISSING_CTOR_BODY.toIssueItem())
 			} else {
-				val message = IssueCodes.getMessageForCLF_MISSING_BODY(member.keyword, member.name)
-				addIssue(message, member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, IssueCodes.CLF_MISSING_BODY)
+				addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_MISSING_BODY.toIssueItem(member.keyword, member.name))
 			}
 			return false;
 		}
@@ -532,8 +515,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		if (container instanceof TN4Classifier) {
 			val isStructural = container.typingStrategy === TypingStrategy.STRUCTURAL;
 			if (member.abstract && member.static && !container.external && !isStructural) {
-				addIssue(getMessageForCLF_STATIC_ABSTRACT(member.keyword, member.name), member.astElement,
-					PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_STATIC_ABSTRACT)
+				addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_STATIC_ABSTRACT.toIssueItem(member.keyword, member.name))
 				return false;
 			}
 		}
@@ -542,8 +524,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 
 	def private boolean holdsAbstractMethodMustHaveNoBody(TMember member) {
 		if (member.abstract && (member.astElement as N4MemberDeclaration).body !== null) {
-			val message = IssueCodes.getMessageForCLF_ABSTRACT_BODY
-			addIssue(message, member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, IssueCodes.CLF_ABSTRACT_BODY)
+			addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_ABSTRACT_BODY.toIssueItem())
 			return false;
 		}
 		return true;
@@ -553,9 +534,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		if (member.abstract) {
 			val classifier = EcoreUtil2.getContainerOfType(member, TClassifier)
 			if (classifier !== null && !classifier.abstract) {
-				val message = IssueCodes.getMessageForCLF_ABSTRACT_MISSING(member.keyword, member.name, classifier.name)
-				addIssue(message, member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME,
-					IssueCodes.CLF_ABSTRACT_MISSING)
+				addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_ABSTRACT_MISSING.toIssueItem(member.keyword, member.name, classifier.name))
 				return false;
 			}
 		}
@@ -572,9 +551,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			val hasPrivateModifier = (memberAccessModifier === MemberAccessModifier.PRIVATE)
 			val hasProjectModifier = (memberAccessModifier === MemberAccessModifier.PROJECT)
 			if (hasPrivateModifier || hasProjectModifier) {
-				val message = IssueCodes.getMessageForCLF_INTERNAL_BAD_WITH_PRIVATE_OR_PROJECT();
-				addIssue(message, tmember.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME,
-					IssueCodes.CLF_INTERNAL_BAD_WITH_PRIVATE_OR_PROJECT);
+				addIssue(tmember.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_INTERNAL_BAD_WITH_PRIVATE_OR_PROJECT.toIssueItem());
 			}
 		}
 	}
@@ -586,9 +563,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		if (member.containingType instanceof TInterface) {
 			val memberAccessModifier = member.memberAccessModifier
 			if (memberAccessModifier === MemberAccessModifier.PRIVATE) {
-				val message = IssueCodes.getMessageForCLF_MINIMAL_ACCESSIBILITY_IN_INTERFACES();
-				addIssue(message, member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME,
-					IssueCodes.CLF_MINIMAL_ACCESSIBILITY_IN_INTERFACES);
+				addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_MINIMAL_ACCESSIBILITY_IN_INTERFACES.toIssueItem());
 				return false;
 			}
 		}
@@ -598,8 +573,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	def private internalCheckGetterType(N4GetterDeclaration n4GetterDeclaration) {
 		val getterType = n4GetterDeclaration.declaredTypeRef?.declaredType;
 		if (getterType !== null && getterType instanceof VoidType) {
-			val message = IssueCodes.messageForCLF_VOID_ACCESSOR;
-			addIssue(message, n4GetterDeclaration, PROPERTY_NAME_OWNER__DECLARED_NAME, IssueCodes.CLF_VOID_ACCESSOR);
+			addIssue(n4GetterDeclaration, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_VOID_ACCESSOR.toIssueItem());
 		}
 	}
 
@@ -626,11 +600,9 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 				val structuralFieldDuplicate = structuralMembersByNameAndStatic.get(it).head
 				val existingClassifierMember = membersByNameAndStatic.get(it).headExceptNonExistantGetters(structFieldInitMode)
 				if (existingClassifierMember?.memberAccessModifier == MemberAccessModifier.PUBLIC) {
-					val message = getMessageForCLF_DUP_MEMBER(structuralFieldDuplicate.descriptionWithLine,
-						existingClassifierMember.descriptionWithLine);
 					val index = thisTypeRefStructInAST.structuralMembers.indexOf(structuralFieldDuplicate)
-					addIssue(message, thisTypeRefStructInAST,
-						TypeRefsPackage.Literals.STRUCTURAL_TYPE_REF__AST_STRUCTURAL_MEMBERS, index, CLF_DUP_MEMBER)
+					addIssue(thisTypeRefStructInAST, TypeRefsPackage.Literals.STRUCTURAL_TYPE_REF__AST_STRUCTURAL_MEMBERS, index,
+						CLF_DUP_MEMBER.toIssueItem(structuralFieldDuplicate.descriptionWithLine, existingClassifierMember.descriptionWithLine));
 				}
 			}
 		]
@@ -662,9 +634,9 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	def checkFixmeUsedWithTestAnnotation(N4MethodDeclaration methodDecl) {
 		ANNOTATIONS_REQUIRE_TEST.forEach [ annotation |
 			if (annotation.hasAnnotation(methodDecl) && !TEST_METHOD.hasAnnotation(methodDecl)) {
-				addIssue(getMessageForANN_REQUIRES_TEST('''@«annotation.name»'''), methodDecl.annotations.findFirst [
+				addIssue(methodDecl.annotations.findFirst [
 					name == annotation.name
-				], N4JSPackage.eINSTANCE.annotation_Name, ANN_REQUIRES_TEST);
+				], N4JSPackage.eINSTANCE.annotation_Name, ANN_REQUIRES_TEST.toIssueItem('''@«annotation.name»'''));
 			}
 		];
 	}

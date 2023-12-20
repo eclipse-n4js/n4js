@@ -84,12 +84,12 @@ public class AmbiguousImportDescription extends AbstractDescriptionWithError {
 				typeListStr.append(((TNamespace) container).getName());
 			}
 		}
-		if (this.issueCode == IssueCodes.IMP_AMBIGUOUS_WILDCARD) {
-			return IssueCodes.getMessageForIMP_AMBIGUOUS_WILDCARD(typeIdent, getName(), typeListStr.toString());
-		} else if (this.issueCode == IssueCodes.IMP_AMBIGUOUS) {
-			return IssueCodes.getMessageForIMP_AMBIGUOUS(typeIdent, getName(), typeListStr.toString());
-		} else if (this.issueCode == IssueCodes.IMP_DUPLICATE_NAMESPACE) {
-			return IssueCodes.getMessageForIMP_DUPLICATE_NAMESPACE("stub", getName(), "stub");
+		if (this.issueCode == IssueCodes.IMP_AMBIGUOUS_WILDCARD.name()) {
+			return IssueCodes.IMP_AMBIGUOUS_WILDCARD.getMessage(typeIdent, getName(), typeListStr.toString());
+		} else if (this.issueCode == IssueCodes.IMP_AMBIGUOUS.name()) {
+			return IssueCodes.IMP_AMBIGUOUS.getMessage(typeIdent, getName(), typeListStr.toString());
+		} else if (this.issueCode == IssueCodes.IMP_DUPLICATE_NAMESPACE.name()) {
+			return IssueCodes.IMP_DUPLICATE_NAMESPACE.getMessage("stub", getName(), "stub");
 		}
 		return "Unknown ambiguous import issue: " + this.issueCode + " for " + context + ".";
 	}

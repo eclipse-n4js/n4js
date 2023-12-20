@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.tests.scoping;
 
+import static org.eclipse.n4js.validation.IssueCodes.VIS_ILLEGAL_MEMBER_ACCESS;
 import static org.junit.Assert.fail;
 
 import org.eclipse.emf.common.util.URI;
@@ -17,7 +18,6 @@ import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
@@ -69,7 +69,7 @@ public class AT_556_MemberAccessTest {
 				valTestHelper.assertNoErrors(script);
 			else
 				valTestHelper.assertError(script, N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION,
-						IssueCodes.VIS_ILLEGAL_MEMBER_ACCESS, "The method m is not visible");
+						VIS_ILLEGAL_MEMBER_ACCESS.name(), "The method m is not visible");
 		} catch (Exception e) {
 			fail();
 		}
@@ -112,7 +112,7 @@ public class AT_556_MemberAccessTest {
 				valTestHelper.assertNoErrors(script);
 			else
 				valTestHelper.assertError(script, N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION,
-						IssueCodes.VIS_ILLEGAL_MEMBER_ACCESS, "The method m is not visible");
+						VIS_ILLEGAL_MEMBER_ACCESS.name(), "The method m is not visible");
 
 		} catch (Exception e) {
 			fail();
@@ -136,7 +136,7 @@ public class AT_556_MemberAccessTest {
 				valTestHelper.assertNoErrors(script);
 			else
 				valTestHelper.assertError(script, N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION,
-						IssueCodes.VIS_ILLEGAL_MEMBER_ACCESS, "The method m is not visible");
+						VIS_ILLEGAL_MEMBER_ACCESS.name(), "The method m is not visible");
 
 		} catch (Exception e) {
 			fail();
@@ -192,7 +192,7 @@ public class AT_556_MemberAccessTest {
 				valTestHelper.assertNoErrors(scriptNoAPI);
 			else
 				valTestHelper.assertError(scriptNoAPI, N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION,
-						IssueCodes.VIS_ILLEGAL_MEMBER_ACCESS, "The method %s1 is not visible".formatted(member));
+						VIS_ILLEGAL_MEMBER_ACCESS.name(), "The method %s1 is not visible".formatted(member));
 
 		} catch (Exception e) {
 			fail();
@@ -507,6 +507,6 @@ public class AT_556_MemberAccessTest {
 				}
 				""", URI.createURI("B.n4js"), rs), "A", "C");
 		valTestHelper.assertError(script, N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION,
-				IssueCodes.VIS_ILLEGAL_MEMBER_ACCESS, "The method a is not visible");
+				VIS_ILLEGAL_MEMBER_ACCESS.name(), "The method a is not visible");
 	}
 }

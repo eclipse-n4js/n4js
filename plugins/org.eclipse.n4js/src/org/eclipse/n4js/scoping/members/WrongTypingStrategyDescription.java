@@ -38,14 +38,14 @@ public class WrongTypingStrategyDescription extends AbstractDescriptionWithError
 		// by the source code.
 		String typeName = receiverTypeName;
 		if (fields) {
-			return IssueCodes.getMessageForTYS_MEMBER_NOT_IN_STRUCTURAL_FIELDS_TYPE_USE_SITE(memberTypeName,
+			return IssueCodes.TYS_MEMBER_NOT_IN_STRUCTURAL_FIELDS_TYPE_USE_SITE.getMessage(memberTypeName,
 					memberName, typeName);
 		}
 		if (useSite) {
-			return IssueCodes.getMessageForTYS_MEMBER_NOT_IN_STRUCTURAL_TYPE_USE_SITE(memberTypeName, memberName,
+			return IssueCodes.TYS_MEMBER_NOT_IN_STRUCTURAL_TYPE_USE_SITE.getMessage(memberTypeName, memberName,
 					typeName);
 		} else {
-			return IssueCodes.getMessageForTYS_MEMBER_NOT_IN_STRUCTURAL_TYPE_DEF_SITE(memberTypeName, memberName,
+			return IssueCodes.TYS_MEMBER_NOT_IN_STRUCTURAL_TYPE_DEF_SITE.getMessage(memberTypeName, memberName,
 					typeName);
 		}
 	}
@@ -53,12 +53,12 @@ public class WrongTypingStrategyDescription extends AbstractDescriptionWithError
 	@Override
 	public String getIssueCode() {
 		if (fields) {
-			return IssueCodes.TYS_MEMBER_NOT_IN_STRUCTURAL_FIELDS_TYPE_USE_SITE;
+			return IssueCodes.TYS_MEMBER_NOT_IN_STRUCTURAL_FIELDS_TYPE_USE_SITE.name();
 		}
 		if (useSite) {
-			return IssueCodes.TYS_MEMBER_NOT_IN_STRUCTURAL_TYPE_USE_SITE;
+			return IssueCodes.TYS_MEMBER_NOT_IN_STRUCTURAL_TYPE_USE_SITE.name();
 		}
-		return IssueCodes.TYS_MEMBER_NOT_IN_STRUCTURAL_TYPE_DEF_SITE;
+		return IssueCodes.TYS_MEMBER_NOT_IN_STRUCTURAL_TYPE_DEF_SITE.name();
 	}
 
 }

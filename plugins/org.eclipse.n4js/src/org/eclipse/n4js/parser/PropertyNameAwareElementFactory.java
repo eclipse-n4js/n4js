@@ -89,7 +89,7 @@ public class PropertyNameAwareElementFactory extends DefaultEcoreElementFactory 
 		} catch (ValueConverterException e) {
 			throw e;
 		} catch (NullPointerException e) {
-			throw new N4JSValueConverterException(IssueCodes.getMessageForVCO_NPE(), IssueCodes.VCO_NPE, node, e);
+			throw new N4JSValueConverterException(IssueCodes.VCO_NPE.getMessage(), IssueCodes.VCO_NPE.name(), node, e);
 		} catch (Exception e) {
 			throw new ValueConverterException(null, node, e);
 		}
@@ -142,7 +142,8 @@ public class PropertyNameAwareElementFactory extends DefaultEcoreElementFactory 
 	private void checkNullForPrimitiveFeatures(EStructuralFeature structuralFeature, Object tokenValue, INode node) {
 		if (tokenValue == null && structuralFeature.getEType().getInstanceClass().isPrimitive()) {
 			throw new N4JSValueConverterException(
-					IssueCodes.getMessageForVCO_NULL_FEATURE(structuralFeature.getName()), IssueCodes.VCO_NULL_FEATURE,
+					IssueCodes.VCO_NULL_FEATURE.getMessage(structuralFeature.getName()),
+					IssueCodes.VCO_NULL_FEATURE.name(),
 					node, null);
 		}
 	}

@@ -38,25 +38,25 @@
 		"output": "src-gen",
 		"sources": {
 			"source": [
-				// XPECT warnings --> "Duplicate path "src1" has already been declared as source container in external." at ""src1""
+				// XPECT warnings --> "Duplicate path 'src1' has already been declared as source container in external." at ""src1""
 				"src1",
 				"src2",
 				// XPECT warnings --> "Source container path src-does-not-exist does not exist." at ""src-does-not-exist""
 				"src-does-not-exist",
-				// Use file as src XPECT errors --> "Path "src3" does not point to a directory." at ""src3""
+				// Use file as src XPECT errors --> "Path 'src3' does not point to a directory." at ""src3""
 				"src3",
 				// non-top-level XPECT noerrors
 				"folder/src1",
-				// XPECT errors --> ""in*valid - path" is not a valid path." at ""in*valid - path""
+				// XPECT errors --> "'in*valid - path' is not a valid path." at ""in*valid - path""
 				"in*valid - path"
 			],
 			"external": [
 				"src-ext",
-				// XPECT warnings --> "Duplicate path "src1" has already been declared as source container in source." at ""src1""
+				// XPECT warnings --> "Duplicate path 'src1' has already been declared as source container in source." at ""src1""
 				"src1",
 				// non-top-level source folder XPECT noerrors
 				"folder/src2",
-				// using absolute paths XPECT errors --> "Path "/Users/dummy/absolute/path" must not be absolute." at ""/Users/dummy/absolute/path""
+				// using absolute paths XPECT errors --> "Path '/Users/dummy/absolute/path' must not be absolute." at ""/Users/dummy/absolute/path""
 				"/Users/dummy/absolute/path"
 			]
 		}

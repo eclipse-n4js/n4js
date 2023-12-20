@@ -30,12 +30,12 @@
 // XPECT warnings --> "Class declarations in definition projects should be annotated with @EcmaScript." at "NominalClassN4"
 export external public class NominalClassN4 {}
 
-// XPECT warnings --> "Nominal interface declarations in definition projects should instead be structural (use ~)." at "NominalInterface1"
+// XPECT warnings --> "Nominal interface declarations in definition projects should instead be structural (use '~')." at "NominalInterface1"
 export external public interface NominalInterface1 {}
 
 // XPECT warnings --> "This annotation is deprecated and has no effect." at "N4JS"    
 @N4JS
-// XPECT warnings --> "Nominal interface declarations in definition projects should instead be structural (use ~)." at "NominalInterface2"
+// XPECT warnings --> "Nominal interface declarations in definition projects should instead be structural (use '~')." at "NominalInterface2"
 export external public interface NominalInterface2 {}
 
 

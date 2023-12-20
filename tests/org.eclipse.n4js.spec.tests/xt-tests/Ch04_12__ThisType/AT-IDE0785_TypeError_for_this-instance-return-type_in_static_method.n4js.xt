@@ -14,12 +14,12 @@
 class S_broken {
 	constructor(n : number) {}
 
-	// XPECT errors --> "The this type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
+	// XPECT errors --> "The 'this' type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
 	static l_0() : constructor{this} { return null; } // not possible.
 
 	/*  XPECT errors ---
 		""g" is not a subtype of constructor{this[S_broken]}." at ""g""
-		"The this type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
+		"The 'this' type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
 	--- */
 	static l_01() : constructor{this} { return "g"; } // not possible.
 }

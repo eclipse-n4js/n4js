@@ -15,11 +15,6 @@ import static org.eclipse.n4js.validation.IssueCodes.FUN_PARAM_INITIALIZER_ILLEG
 import static org.eclipse.n4js.validation.IssueCodes.FUN_PARAM_INITIALIZER_ILLEGAL_FORWARD_REFERENCE;
 import static org.eclipse.n4js.validation.IssueCodes.FUN_PARAM_VARIADIC_ONLY_LAST;
 import static org.eclipse.n4js.validation.IssueCodes.FUN_PARAM_VARIADIC_WITH_INITIALIZER;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForFUN_PARAM_IMPLICIT_DEFAULT_PARAM;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForFUN_PARAM_INITIALIZER_ILLEGAL_AWAIT_CALL;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForFUN_PARAM_INITIALIZER_ILLEGAL_FORWARD_REFERENCE;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForFUN_PARAM_VARIADIC_ONLY_LAST;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForFUN_PARAM_VARIADIC_WITH_INITIALIZER;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -95,8 +90,8 @@ public class FunctionValidationHelper {
 								TypesPackage.Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT, false);
 					}
 					if (fparsL.indexOf(id) >= fpPos) {
-						String msg = getMessageForFUN_PARAM_INITIALIZER_ILLEGAL_FORWARD_REFERENCE();
-						issueConsumer.accept(msg, FUN_PARAM_INITIALIZER_ILLEGAL_FORWARD_REFERENCE, ir);
+						String msg = FUN_PARAM_INITIALIZER_ILLEGAL_FORWARD_REFERENCE.getMessage();
+						issueConsumer.accept(msg, FUN_PARAM_INITIALIZER_ILLEGAL_FORWARD_REFERENCE.name(), ir);
 					}
 				}
 
@@ -110,8 +105,8 @@ public class FunctionValidationHelper {
 						paramName = ((FormalParameter) fPar).getName();
 					}
 					for (AwaitExpression await : awaits) {
-						String msg = getMessageForFUN_PARAM_INITIALIZER_ILLEGAL_AWAIT_CALL(paramName);
-						issueConsumer.accept(msg, FUN_PARAM_INITIALIZER_ILLEGAL_AWAIT_CALL, await);
+						String msg = FUN_PARAM_INITIALIZER_ILLEGAL_AWAIT_CALL.getMessage(paramName);
+						issueConsumer.accept(msg, FUN_PARAM_INITIALIZER_ILLEGAL_AWAIT_CALL.name(), await);
 					}
 				}
 			}
@@ -126,8 +121,8 @@ public class FunctionValidationHelper {
 		while (initAssgnVisited && iter.hasNext()) {
 			T fpar = iter.next();
 			if (!hasInitAssgn.test(fpar) && !variadic.test(fpar)) {
-				String msg = getMessageForFUN_PARAM_IMPLICIT_DEFAULT_PARAM(name.apply(fpar));
-				issueConsumer.accept(msg, FUN_PARAM_IMPLICIT_DEFAULT_PARAM, fpar);
+				String msg = FUN_PARAM_IMPLICIT_DEFAULT_PARAM.getMessage(name.apply(fpar));
+				issueConsumer.accept(msg, FUN_PARAM_IMPLICIT_DEFAULT_PARAM.name(), fpar);
 			}
 		}
 	}
@@ -149,14 +144,14 @@ public class FunctionValidationHelper {
 
 			// 1. Variadic is last
 			if (fpPos != fPars.size() - 1) { // is not last?
-				String msg = getMessageForFUN_PARAM_VARIADIC_ONLY_LAST();
-				issueConsumer.accept(msg, FUN_PARAM_VARIADIC_ONLY_LAST, fPar);
+				String msg = FUN_PARAM_VARIADIC_ONLY_LAST.getMessage();
+				issueConsumer.accept(msg, FUN_PARAM_VARIADIC_ONLY_LAST.name(), fPar);
 			}
 
 			// 2. Both variadic and initializerAssignment
 			if (hasInitAssgn.test(fPar)) {
-				String msg = getMessageForFUN_PARAM_VARIADIC_WITH_INITIALIZER();
-				issueConsumer.accept(msg, FUN_PARAM_VARIADIC_WITH_INITIALIZER, fPar);
+				String msg = FUN_PARAM_VARIADIC_WITH_INITIALIZER.getMessage();
+				issueConsumer.accept(msg, FUN_PARAM_VARIADIC_WITH_INITIALIZER.name(), fPar);
 			}
 		}
 	}

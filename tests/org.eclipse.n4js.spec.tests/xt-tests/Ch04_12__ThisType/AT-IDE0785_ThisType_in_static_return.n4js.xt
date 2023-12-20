@@ -12,7 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 class H {
 	// Makes sense for n4jsd only !
-	// XPECT noerrors --> "The this type isn't allowed on this place. You can only use it as return type of instance methods or structurally on use site in the constructor." at "this"
+	// XPECT noerrors --> "The 'this' type isn't allowed on this place. You can only use it as return type of instance methods or structurally on use site in the constructor." at "this"
 	static getIt(hint : string) : this {
 		return null;
 	}

@@ -13,7 +13,6 @@ package org.eclipse.n4js;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +27,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.tests.issues.IssueUtils;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.testing.validation.ValidationTestHelper;
 import org.eclipse.xtext.validation.Issue;
@@ -47,7 +47,7 @@ public class N4JSValidationTestHelper extends ValidationTestHelper {
 	 * @param ignoredIssueCodes
 	 *            Issue codes which should be ignored
 	 */
-	public void assertNoIssuesExcept(EObject model, String... ignoredIssueCodes) {
+	public void assertNoIssuesExcept(EObject model, IssueCodes... ignoredIssueCodes) {
 		Resource resource = model.eResource();
 		List<Issue> issues = validate(resource);
 		issues = removeIssuesWithCode(issues, false, ignoredIssueCodes);
@@ -64,7 +64,7 @@ public class N4JSValidationTestHelper extends ValidationTestHelper {
 	 * @param ignoredIssueCodes
 	 *            Issue codes which should be ignored
 	 */
-	public void assertNoErrorsExcept(EObject model, String... ignoredIssueCodes) {
+	public void assertNoErrorsExcept(EObject model, IssueCodes... ignoredIssueCodes) {
 		Resource resource = model.eResource();
 		List<Issue> issues = validate(resource);
 		issues = removeIssuesWithCode(issues, true, ignoredIssueCodes);
@@ -83,7 +83,7 @@ public class N4JSValidationTestHelper extends ValidationTestHelper {
 	 * @param expectedErrors
 	 *            The expected errors.
 	 */
-	public void assertErrorsExcept(EObject model, String[] ignoredIssueCodes, String... expectedErrors) {
+	public void assertErrorsExcept(EObject model, IssueCodes[] ignoredIssueCodes, String... expectedErrors) {
 		if (expectedErrors.length == 0) {
 			// use above method for better error messages:
 			assertNoErrorsExcept(model, ignoredIssueCodes);
@@ -102,8 +102,11 @@ public class N4JSValidationTestHelper extends ValidationTestHelper {
 		Assert.assertEquals("Actual errors differ from expected errors", expectedErrorsSorted, actualErrorsSorted);
 	}
 
-	private List<Issue> removeIssuesWithCode(List<Issue> issues, boolean removeWarningsAndInfos, String... codes) {
-		Set<String> excludedIssueCodes = new HashSet<>(Arrays.asList(codes));
+	private List<Issue> removeIssuesWithCode(List<Issue> issues, boolean removeWarningsAndInfos, IssueCodes... codes) {
+		Set<String> excludedIssueCodes = new HashSet<>();
+		for (IssueCodes issueCode : codes) {
+			excludedIssueCodes.add(issueCode.name());
+		}
 		return issues.stream()
 				.filter(issue -> (!removeWarningsAndInfos || issue.getSeverity() == Severity.ERROR)
 						&& !excludedIssueCodes.contains(issue.getCode()))

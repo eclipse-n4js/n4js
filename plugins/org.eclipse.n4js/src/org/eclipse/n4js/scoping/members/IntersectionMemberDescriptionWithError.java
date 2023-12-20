@@ -12,12 +12,11 @@ package org.eclipse.n4js.scoping.members;
 
 import java.util.List;
 
+import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
-
-import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
-import org.eclipse.n4js.validation.IssueCodes;
 
 /**
  * This description wraps a member of a union type that is not present in all contained types or is somehow incompatible
@@ -58,8 +57,8 @@ public class IntersectionMemberDescriptionWithError extends ComposedMemberDescri
 				strb.append(memberTypeName + " in " + foundScopes);
 			}
 			final String memberName = getName().getLastSegment();
-			message = IssueCodes.getMessageForINTER_MEMBER_TYPE_CONFLICT(memberName, strb);
-			code = IssueCodes.INTER_MEMBER_TYPE_CONFLICT;
+			message = IssueCodes.INTER_MEMBER_TYPE_CONFLICT.getMessage(memberName, strb);
+			code = IssueCodes.INTER_MEMBER_TYPE_CONFLICT.name();
 			return true;
 		}
 		return false;
@@ -67,8 +66,8 @@ public class IntersectionMemberDescriptionWithError extends ComposedMemberDescri
 
 	private boolean initDefault() {
 		final String memberName = getName().getLastSegment();
-		message = IssueCodes.getMessageForINTER_UNCOMMON(memberName);
-		code = IssueCodes.INTER_UNCOMMON;
+		message = IssueCodes.INTER_UNCOMMON.getMessage(memberName);
+		code = IssueCodes.INTER_UNCOMMON.name();
 		return true;
 	}
 }

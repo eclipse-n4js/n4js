@@ -33,7 +33,7 @@ class C {
 	// not allowed: nominal this
 	// XPECT errors ---
 	//	"Annotation @Spec may only be used with formal parameters of type ~i~this." at "Spec"
-	//	"The this type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
+	//	"The 'this' type isn't allowed on this place. (Please refer to Spec for valid use cases.)" at "this"
 	// ---
 	constructor(a : string, @Spec b : this, c : number) {}
 }

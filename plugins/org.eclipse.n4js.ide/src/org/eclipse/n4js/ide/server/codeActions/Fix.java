@@ -16,6 +16,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.eclipse.n4js.validation.IssueCodes;
+
 /**
  * Annotation for quick-fix methods.
  * <p>
@@ -33,7 +35,13 @@ public @interface Fix {
 	/**
 	 * The issue code that is about the be resolved. The annotated method will potentially produce a fix for this code.
 	 */
-	String value();
+	IssueCodes value();
+
+	/**
+	 * Only evaluated if {@link #value()} equals to {@link IssueCodes#INVALID_ISSUE_CODE}. Will be used instead of
+	 * {@link #value()}.
+	 */
+	String valueName() default "";
 
 	/** Returns true if the implemented fix is a multi fix. */
 	boolean multiFix() default true;

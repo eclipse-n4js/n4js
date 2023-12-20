@@ -32,12 +32,12 @@ public class NonExportedElementDescription extends AbstractDescriptionWithError 
 	@Override
 	public String getMessage() {
 		String name = getName().getLastSegment();
-		return IssueCodes.getMessageForIMP_NOT_EXPORTED(name);
+		return IssueCodes.IMP_NOT_EXPORTED.getMessage(name);
 	}
 
 	@Override
 	public String getIssueCode() {
-		return IssueCodes.IMP_NOT_EXPORTED;
+		return IssueCodes.IMP_NOT_EXPORTED.name();
 	}
 
 }

@@ -21,9 +21,10 @@ import org.eclipse.n4js.n4JS.ParenExpression
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
-import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
+
+import static org.eclipse.n4js.validation.IssueCodes.*
 
 /**
  * Validations for variable declarations and variables.
@@ -47,8 +48,7 @@ class N4JSVariableValidator extends AbstractN4JSDeclarativeValidator {
 			// TODO: GH-331, remove cases where also the 'UsedBeforeDeclared' issue is raised
 			val refs = varDecl.expression.collectIdentifierRefsTo(varDecl,newArrayList);
 			for(IdentifierRef currRef : refs) {
-				val message = IssueCodes.getMessageForAST_VAR_DECL_RECURSIVE(varDecl.name)
-				addIssue(message, currRef, null, IssueCodes.AST_VAR_DECL_RECURSIVE)
+				addIssue(currRef, null, AST_VAR_DECL_RECURSIVE.toIssueItem(varDecl.name));
 			}
 		}
 	}
@@ -61,8 +61,7 @@ class N4JSVariableValidator extends AbstractN4JSDeclarativeValidator {
 
 		val tVariable = varDecl.definedVariable;
 		if (tVariable !== null && ASTMetaInfoUtils.getLocalVariableReferences(tVariable).empty) {
-			val message = IssueCodes.getMessageForCFG_LOCAL_VAR_UNUSED(varDecl.name);
-			addIssue(message, varDecl, findNameFeature(varDecl).value, IssueCodes.CFG_LOCAL_VAR_UNUSED); // deactivated during tests
+			addIssue(varDecl, findNameFeature(varDecl).value, CFG_LOCAL_VAR_UNUSED.toIssueItem(varDecl.name)); // deactivated during tests
 		}
 	}
 

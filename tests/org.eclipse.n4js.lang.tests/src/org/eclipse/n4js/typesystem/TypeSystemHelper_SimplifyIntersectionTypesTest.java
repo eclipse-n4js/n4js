@@ -42,10 +42,10 @@ public class TypeSystemHelper_SimplifyIntersectionTypesTest extends AbstractType
 	 * {@link TypeRef#getTypeRefAsString()} is used.
 	 */
 	void assertSimplify(String expectedType, String typeExpressionsToBeSimplified) {
-		assertSimplify(expectedType, typeExpressionsToBeSimplified, new String[0]);
+		assertSimplify(expectedType, typeExpressionsToBeSimplified, new IssueCodes[0]);
 	}
 
-	void assertSimplify(String expectedType, String typeExpressionsToBeSimplified, String... expectedIssueMsg) {
+	void assertSimplify(String expectedType, String typeExpressionsToBeSimplified, IssueCodes... expectedIssueMsg) {
 		RuleEnvironment G = assembler.prepareScriptAndCreateRuleEnvironment(expectedIssueMsg,
 				typeExpressionsToBeSimplified);
 		TypeRef typeRef = assembler.getTypeRef(typeExpressionsToBeSimplified);

@@ -197,7 +197,7 @@ public abstract class ComposedMemberDescriptionWithError extends AbstractDescrip
 					if (submessage.endsWith(".")) {
 						submessage = submessage.substring(0, submessage.length() - 1);
 					}
-					completeSubMessage = IssueCodes.getMessageForCOMP_SUBMESSAGES(allScopeNames, submessage);
+					completeSubMessage = IssueCodes.COMP_SUBMESSAGES.getMessage(allScopeNames, submessage);
 				}
 				if (strb.length() > 0) {
 					strb.append(" ");
@@ -205,7 +205,7 @@ public abstract class ComposedMemberDescriptionWithError extends AbstractDescrip
 				strb.append(completeSubMessage);
 			}
 			message = strb.toString();
-			code = IssueCodes.COMP_SUBMESSAGES;
+			code = IssueCodes.COMP_SUBMESSAGES.name();
 
 			return true;
 		}

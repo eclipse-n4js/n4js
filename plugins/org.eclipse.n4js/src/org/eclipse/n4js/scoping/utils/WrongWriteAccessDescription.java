@@ -46,19 +46,18 @@ public class WrongWriteAccessDescription extends AbstractDescriptionWithError {
 	@Override
 	public String getMessage() {
 		if (isAssignmentToFinalFieldInCtor) {
-			return IssueCodes.getMessageForCLF_FIELD_FINAL_REINIT_IN_CTOR(
-					getName());
+			return IssueCodes.CLF_FIELD_FINAL_REINIT_IN_CTOR.getMessage(getName());
 		}
-		return IssueCodes.getMessageForVIS_WRONG_READ_WRITE_ACCESS(
+		return IssueCodes.VIS_WRONG_READ_WRITE_ACCESS.getMessage(
 				getKeyword(), getName(), accessForWriteOperation ? "read-only" : "write-only");
 	}
 
 	@Override
 	public String getIssueCode() {
 		if (isAssignmentToFinalFieldInCtor) {
-			return IssueCodes.CLF_FIELD_FINAL_REINIT_IN_CTOR;
+			return IssueCodes.CLF_FIELD_FINAL_REINIT_IN_CTOR.name();
 		}
-		return IssueCodes.VIS_WRONG_READ_WRITE_ACCESS;
+		return IssueCodes.VIS_WRONG_READ_WRITE_ACCESS.name();
 	}
 
 	private String getKeyword() {

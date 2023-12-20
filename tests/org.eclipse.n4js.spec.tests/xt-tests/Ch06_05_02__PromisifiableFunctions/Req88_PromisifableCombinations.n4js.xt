@@ -18,7 +18,7 @@ class C {
 	@Promisifiable
 	b(path : string, cb : {function(Error)}) : void {}
 	@Promisifiable
-	// this case is no longer allowed XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+	// this case is no longer allowed XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 	c(path : string, cb : {function(Error, void)}) : void {}
 	@Promisifiable
 	d(path : string, cb : {function(Error, string, int)}) : void {}
@@ -27,7 +27,7 @@ class C {
 	@Promisifiable
 	f(path : string, cb : {function()}) : void {}
 	@Promisifiable
-	// this case is no longer allowed XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+	// this case is no longer allowed XPECT errors --> "Type 'void' may only be used to declare the return type of functions and methods." at "void"
 	g(path : string, cb : {function(void)}) : void {}
 }
 

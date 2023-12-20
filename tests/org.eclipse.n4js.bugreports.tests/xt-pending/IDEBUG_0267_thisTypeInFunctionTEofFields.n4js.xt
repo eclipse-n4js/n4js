@@ -14,6 +14,6 @@
 
 class A<T> {}
 class Foo {
-    // XPECT FIXME noerrors --> "The this type isn't allowed on this place. You can only use it as return type of instance methods or structurally on use site in the constructor."
+    // XPECT FIXME noerrors --> "The 'this' type isn't allowed on this place. You can only use it as return type of instance methods or structurally on use site in the constructor."
     a: A<{function(this): void}>;
 }

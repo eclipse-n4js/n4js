@@ -207,7 +207,7 @@ public class AssignmentRelationFactory {
 	private void findInDestructNodes(Multimap<Symbol, Object> assgns, DestructNode dNode) {
 		for (Iterator<DestructNode> dnIter = dNode.stream().iterator(); dnIter.hasNext();) {
 			DestructNode dnChild = dnIter.next();
-			ControlFlowElement lhs = dnChild.getVarRef() != null ? dnChild.getVarRef() : dnChild.getVarDecl();
+			ControlFlowElement lhs = dnChild.varRef != null ? dnChild.varRef : dnChild.varDecl;
 			EObject rhs = DestructureUtilsForSymbols.getValueFromDestructuring(dnChild);
 			if (rhs == null) {
 				Symbol undefinedSymbol = symbolFactory.getUndefined();

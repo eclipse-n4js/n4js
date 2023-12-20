@@ -38,7 +38,7 @@
 		},
 		// XPECT noerrors
 		"output" : "src-gen",
-		// XPECT errors --> "A project of type "VALIDATION" must not define the property "definesPackage"." at ""definesPackage" : "MyLib""
+		// XPECT errors --> "A project of type 'VALIDATION' must not define the property 'definesPackage'." at ""definesPackage" : "MyLib""
 		"definesPackage" : "MyLib"
 	}
 }

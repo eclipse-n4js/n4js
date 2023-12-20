@@ -22,7 +22,7 @@
 */
 
 {
-	// XPECT warnings --> "As a convention the scope name "@myScope" should match the name of the project folder's parent folder "test-workspace" on the file system." at ""@myScope/MyProject""
+	// XPECT warnings --> "As a convention the scope name '@myScope' should match the name of the project folder's parent folder 'test-workspace' on the file system." at ""@myScope/MyProject""
 	"name": "@myScope/MyProject",
 	"n4js": {
 		"projectType": "validation"

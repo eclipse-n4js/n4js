@@ -52,7 +52,7 @@
 		// XPECT noerrors --> "error is reported on subsequent occurances"
 		"test.data.system.project.two": "*",
 		/* XPECT warnings ---
-		  "Property test.data.system.project.two duplicates property test.data.system.project.two (line 53)." at "\"test.data.system.project.two\""
+		  "Duplicate property test.data.system.project.two (line 53)." at "\"test.data.system.project.two\""
 		 ---
 		 */
 		/* XPECT errors ---

@@ -12,8 +12,6 @@ package org.eclipse.n4js.validation.validators;
 
 import static org.eclipse.n4js.validation.IssueCodes.ENM_DUPLICTAE_LITERALS;
 import static org.eclipse.n4js.validation.IssueCodes.ENM_LITERALS_HIDE_META;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForENM_DUPLICTAE_LITERALS;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForENM_LITERALS_HIDE_META;
 import static org.eclipse.n4js.validation.validators.StaticPolyfillValidatorExtension.internalCheckNotInStaticPolyfillModule;
 
 import java.math.BigDecimal;
@@ -21,7 +19,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
@@ -68,8 +65,8 @@ public class N4JSEnumValidator extends AbstractN4JSDeclarativeValidator {
 	public void checkEnumAnnotations(N4EnumDeclaration n4EnumDecl) {
 		if (AnnotationDefinition.NUMBER_BASED.hasAnnotation(n4EnumDecl)
 				&& AnnotationDefinition.STRING_BASED.hasAnnotation(n4EnumDecl)) {
-			addIssue(IssueCodes.getMessageForENM_BOTH_NUMBER_AND_STRING_BASED(), n4EnumDecl,
-					N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, IssueCodes.ENM_BOTH_NUMBER_AND_STRING_BASED);
+			addIssue(n4EnumDecl, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME,
+					IssueCodes.ENM_BOTH_NUMBER_AND_STRING_BASED);
 		}
 	}
 
@@ -96,18 +93,16 @@ public class N4JSEnumValidator extends AbstractN4JSDeclarativeValidator {
 
 							// check enum literals duplicates
 							if (literals.size() > 1) {
-								addIssue(getMessageForENM_DUPLICTAE_LITERALS(name), literals.get(0),
-										N4JSPackage.Literals.N4_ENUM_LITERAL__NAME,
-										ENM_DUPLICTAE_LITERALS);
+								addIssue(literals.get(0), N4JSPackage.Literals.N4_ENUM_LITERAL__NAME,
+										ENM_DUPLICTAE_LITERALS, name);
 
 								return;// one issue at the time!
 							}
 
 							// check enum literal name clash with meta property
 							if (builtInEnumMembersNames.contains(name)) {
-								addIssue(getMessageForENM_LITERALS_HIDE_META(name), literals.get(0),
-										N4JSPackage.Literals.N4_ENUM_LITERAL__NAME,
-										ENM_LITERALS_HIDE_META);
+								addIssue(literals.get(0), N4JSPackage.Literals.N4_ENUM_LITERAL__NAME,
+										ENM_LITERALS_HIDE_META, name);
 							}
 						});
 	}
@@ -149,14 +144,12 @@ public class N4JSEnumValidator extends AbstractN4JSDeclarativeValidator {
 			boolean isNumeric = actualValue instanceof BigDecimal;
 			if (enumKind == EnumKind.NumberBased) {
 				if (!isNumeric) {
-					addIssue(IssueCodes.getMessageForENM_ILLEGAL_STRING_VALUE(), literal,
-							N4JSPackage.Literals.N4_ENUM_LITERAL__VALUE_EXPRESSION,
+					addIssue(literal, N4JSPackage.Literals.N4_ENUM_LITERAL__VALUE_EXPRESSION,
 							IssueCodes.ENM_ILLEGAL_STRING_VALUE);
 				}
 			} else {
 				if (isNumeric) {
-					addIssue(IssueCodes.getMessageForENM_ILLEGAL_NUMERIC_VALUE(), literal,
-							N4JSPackage.Literals.N4_ENUM_LITERAL__VALUE_EXPRESSION,
+					addIssue(literal, N4JSPackage.Literals.N4_ENUM_LITERAL__VALUE_EXPRESSION,
 							IssueCodes.ENM_ILLEGAL_NUMERIC_VALUE);
 				}
 			}
@@ -210,14 +203,7 @@ public class N4JSEnumValidator extends AbstractN4JSDeclarativeValidator {
 			}
 		}
 		// invalid usage!
-		addIssue(IssueCodes.getMessageForENM_INVALID_USE_OF_NUM_OR_STR_BASED_ENUM(), identRef,
-				IssueCodes.ENM_INVALID_USE_OF_NUM_OR_STR_BASED_ENUM);
+		addIssue(identRef, IssueCodes.ENM_INVALID_USE_OF_NUM_OR_STR_BASED_ENUM);
 	}
 
-	// publish
-	@Override
-	public void addIssue(String message, EObject source, EStructuralFeature feature, String issueCode,
-			String... issueData) {
-		super.addIssue(message, source, feature, issueCode, issueData);
-	}
 }
