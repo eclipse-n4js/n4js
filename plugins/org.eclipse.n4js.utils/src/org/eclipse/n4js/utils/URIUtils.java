@@ -23,7 +23,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -250,12 +249,6 @@ public class URIUtils {
 			return 1;
 		}
 		return s1.compareTo(s2);
-	}
-
-	/** @return a complete URI for a given project */
-	public static URI toFileUri(IProject project) {
-		String pathStr = project.getLocation().toString();
-		return toFileUri(pathStr);
 	}
 
 	/** @return absolute file URI for the given path. */
