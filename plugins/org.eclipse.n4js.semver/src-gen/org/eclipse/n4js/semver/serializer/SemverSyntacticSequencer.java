@@ -55,6 +55,8 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 			return getSEMVER_TAGToken(semanticObject, ruleCall, node);
 		else if (ruleCall.getRule() == grammarAccess.getWILDCARDRule())
 			return getWILDCARDToken(semanticObject, ruleCall, node);
+		else if (ruleCall.getRule() == grammarAccess.getWORKSPACE_TAGRule())
+			return getWORKSPACE_TAGToken(semanticObject, ruleCall, node);
 		else if (ruleCall.getRule() == grammarAccess.getWSRule())
 			return getWSToken(semanticObject, ruleCall, node);
 		return "";
@@ -105,6 +107,17 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 	}
 	
 	/**
+	 * WORKSPACE_TAG:
+	 * 	LETTER_W LETTER_O LETTER_R LETTER_K LETTER_S LETTER_P LETTER_A LETTER_C LETTER_E ':'
+	 * ;
+	 */
+	protected String getWORKSPACE_TAGToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null)
+			return getTokenText(node);
+		return "w o r k s p a c e :";
+	}
+	
+	/**
 	 * terminal WS:
 	 * 	WHITESPACE_FRAGMENT+;
 	 */
@@ -137,18 +150,22 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 	}
 
 	/**
+	 * <pre>
 	 * Ambiguous syntax:
 	 *     WS?
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) (rule start)
 	 *     (rule start) (ambiguity) ranges+=VersionRange
+	 
+	 * </pre>
 	 */
 	protected void emit_NPMVersionRequirement_WSTerminalRuleCall_0_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
 	/**
+	 * <pre>
 	 * Ambiguous syntax:
 	 *     WS?
 	 *
@@ -156,15 +173,20 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     commitISH=ALPHA_NUMERIC_CHARS (ambiguity) (rule end)
 	 *     githubUrl=URL_NO_VX (ambiguity) (rule end)
 	 *     localPath=PATH (ambiguity) (rule end)
+	 *     otherVersion=WORKSPACE_VERSION (ambiguity) (rule end)
 	 *     tagName=TAG (ambiguity) (rule end)
 	 *     url=URL (ambiguity) (rule end)
+	 *     version=SimpleVersion (ambiguity) (rule end)
 	 *     versionSpecifier=URLVersionSpecifier (ambiguity) (rule end)
+	 
+	 * </pre>
 	 */
 	protected void emit_NPMVersionRequirement_WSTerminalRuleCall_1_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
 	/**
+	 * <pre>
 	 * Ambiguous syntax:
 	 *     WS?
 	 *
@@ -172,39 +194,50 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     comparators+=VersionComparator (ambiguity) comparators+=VersionComparator
 	 *     comparators+=VersionComparator (ambiguity) number=VersionNumber
 	 *     comparators+=VersionComparator (ambiguity) withLetterV?=LETTER_V
+	 
+	 * </pre>
 	 */
 	protected void emit_SimpleVersion_WSTerminalRuleCall_0_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
 	/**
+	 * <pre>
 	 * Ambiguous syntax:
 	 *     WS?
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     ranges+=VersionRange (ambiguity) '||' WS? ranges+=VersionRange
+	 
+	 * </pre>
 	 */
 	protected void emit_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
 	/**
+	 * <pre>
 	 * Ambiguous syntax:
 	 *     WS?
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     ranges+=VersionRange WS? '||' (ambiguity) ranges+=VersionRange
+	 
+	 * </pre>
 	 */
 	protected void emit_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_2_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
 	/**
+	 * <pre>
 	 * Ambiguous syntax:
 	 *     WS?
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     ranges+=VersionRange (ambiguity) (rule end)
+	 
+	 * </pre>
 	 */
 	protected void emit_VersionRangeSetRequirement_WSTerminalRuleCall_1_2_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);

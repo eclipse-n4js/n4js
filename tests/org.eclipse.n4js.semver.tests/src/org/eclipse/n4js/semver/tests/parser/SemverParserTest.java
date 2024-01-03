@@ -25,6 +25,7 @@ import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.TagVersionRequirement;
 import org.eclipse.n4js.semver.Semver.URLVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
+import org.eclipse.n4js.semver.Semver.WorkspaceVersionRequirement;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
@@ -185,6 +186,16 @@ public class SemverParserTest {
 		"latest"
 	);
 
+	List<String> workspaceData =List.of(
+		"workspace:*",
+		"workspace:~",
+		"workspace:^",
+		"workspace:^1.0.5",
+		"workspace:foo@*",
+		"workspace:2.0.0",
+		"workspace:../foo"
+	);
+
 	List<String> errorData =List.of(
 		"001tag",
 		"1s",
@@ -234,6 +245,12 @@ public class SemverParserTest {
 	@Test
 	public void testNPMTagParseAndToString() throws Exception {
 		internalTestParseAndToString(tagData, TagVersionRequirement.class, (s) -> s);
+	}
+
+	/** Checks other NPM supported versions. */
+	@Test
+	public void testNPMWorkspaceParseAndToString() throws Exception {
+		internalTestParseAndToString(workspaceData, WorkspaceVersionRequirement.class, (s) -> s);
 	}
 
 	/** Checks other NPM supported versions. */
