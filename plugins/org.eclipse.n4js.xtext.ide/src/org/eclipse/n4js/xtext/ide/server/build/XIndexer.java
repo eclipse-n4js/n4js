@@ -309,12 +309,13 @@ public class XIndexer {
 		IResourceDescription.Manager manager = serviceProvider.getResourceDescriptionManager();
 
 		Resource resource = loadResult.resource;
+		IResourceDescription oldDescription = oldIndex != null ? oldIndex.getResourceDescription(uri) : null;
 		if (resource == null) {
 			// loading of resource failed
 			if (loadResult.isFileNotFound()) {
 				// a source file was renamed/deleted and we did not get a 'didChangeWatchedFiles' notification
 				// OR the rename/delete happened while the build was in progress
-				IResourceDescription oldDesc = oldIndex != null ? oldIndex.getResourceDescription(uri) : null;
+				IResourceDescription oldDesc = oldDescription;
 				return oldDesc != null ? manager.createDelta(oldDesc, null) : null;
 			}
 			Throwables.throwIfUnchecked(loadResult.throwable);
@@ -328,8 +329,7 @@ public class XIndexer {
 
 		IResourceDescription newDescription = manager.getResourceDescription(resource);
 		IResourceDescription toBeAdded = new XIndexer.XResolvedResourceDescription(newDescription);
-		IResourceDescription.Delta delta = manager
-				.createDelta(oldIndex != null ? oldIndex.getResourceDescription(uri) : null, toBeAdded);
+		IResourceDescription.Delta delta = manager.createDelta(oldDescription, toBeAdded);
 		return delta;
 	}
 
