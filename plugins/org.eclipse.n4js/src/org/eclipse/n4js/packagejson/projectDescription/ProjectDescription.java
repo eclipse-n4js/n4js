@@ -66,6 +66,7 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final boolean esm;
 	private final boolean moduleProperty;
 	private final boolean n4jsNature;
+	private final boolean pnpmWorkspaceRoot;
 	private final boolean yarnWorkspaceRoot;
 	private final boolean isGeneratorEnabledSourceMaps;
 	private final boolean isGeneratorEnabledDts;
@@ -86,8 +87,8 @@ public class ProjectDescription extends ImmutableDataClass {
 			Iterable<ProjectReference> implementedProjects, String outputPath,
 			Iterable<SourceContainerDescription> sourceContainers, Iterable<ModuleFilter> moduleFilters,
 			Iterable<ProjectReference> testedProjects, String definesPackage, boolean nestedNodeModulesFolder,
-			boolean esm, boolean moduleProperty, boolean n4jsNature, boolean yarnWorkspaceRoot,
-			boolean isGeneratorEnabledSourceMaps, boolean isGeneratorEnabledDts,
+			boolean esm, boolean moduleProperty, boolean n4jsNature, boolean pnpmWorkspaceRoot,
+			boolean yarnWorkspaceRoot, boolean isGeneratorEnabledSourceMaps, boolean isGeneratorEnabledDts,
 			Map<String, String> generatorRewriteModuleSpecifiers, boolean isGeneratorEnabledRewriteCjsImports,
 			Iterable<String> workspaces, Iterable<String> tsFiles, Iterable<String> tsInclude,
 			Iterable<String> tsExclude) {
@@ -121,6 +122,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.esm = esm;
 		this.moduleProperty = moduleProperty;
 		this.n4jsNature = n4jsNature;
+		this.pnpmWorkspaceRoot = pnpmWorkspaceRoot;
 		this.yarnWorkspaceRoot = yarnWorkspaceRoot;
 		this.isGeneratorEnabledSourceMaps = isGeneratorEnabledSourceMaps;
 		this.isGeneratorEnabledDts = isGeneratorEnabledDts;
@@ -162,6 +164,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.esm = template.esm;
 		this.moduleProperty = template.moduleProperty;
 		this.n4jsNature = template.n4jsNature;
+		this.pnpmWorkspaceRoot = template.pnpmWorkspaceRoot;
 		this.yarnWorkspaceRoot = template.yarnWorkspaceRoot;
 		this.isGeneratorEnabledSourceMaps = template.isGeneratorEnabledSourceMaps;
 		this.isGeneratorEnabledDts = template.isGeneratorEnabledDts;
@@ -207,6 +210,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		builder.setESM(esm);
 		builder.setModuleProperty(moduleProperty);
 		builder.setN4JSNature(n4jsNature);
+		builder.setPnpmWorkspaceRoot(pnpmWorkspaceRoot);
 		builder.setYarnWorkspaceRoot(yarnWorkspaceRoot);
 		builder.setGeneratorEnabledSourceMaps(isGeneratorEnabledSourceMaps);
 		builder.setGeneratorEnabledDts(isGeneratorEnabledDts);
@@ -387,6 +391,16 @@ public class ProjectDescription extends ImmutableDataClass {
 		return yarnWorkspaceRoot;
 	}
 
+	/**
+	 * True iff the project represented by this project description is the root of a pnpm workspace. This flag will be
+	 * {@code true} iff the directory containing a package.json also contains the pnpm-workspace.yaml file with the
+	 * top-level property "packages", no matter the value (i.e. will be {@code true} even if the value is the empty
+	 * array).
+	 */
+	public boolean isPnpmWorkspaceRoot() {
+		return pnpmWorkspaceRoot;
+	}
+
 	/** Returns true iff source maps should be emitted. */
 	public boolean isGeneratorEnabledSourceMaps() {
 		return isGeneratorEnabledSourceMaps;
@@ -513,6 +527,7 @@ public class ProjectDescription extends ImmutableDataClass {
 				&& esm == other.esm
 				&& moduleProperty == other.moduleProperty
 				&& n4jsNature == other.n4jsNature
+				&& pnpmWorkspaceRoot == other.pnpmWorkspaceRoot
 				&& yarnWorkspaceRoot == other.yarnWorkspaceRoot
 				&& isGeneratorEnabledSourceMaps == other.isGeneratorEnabledSourceMaps
 				&& isGeneratorEnabledDts == other.isGeneratorEnabledDts
@@ -577,6 +592,9 @@ public class ProjectDescription extends ImmutableDataClass {
 		}
 		if (definesPackage != null) {
 			sb.append("    definesPackage: " + definesPackage + "\n");
+		}
+		if (pnpmWorkspaceRoot) {
+			sb.append("    pnpmWorkspaceRoot: true\n");
 		}
 		if (yarnWorkspaceRoot) {
 			sb.append("    yarnWorkspaceRoot: true\n");

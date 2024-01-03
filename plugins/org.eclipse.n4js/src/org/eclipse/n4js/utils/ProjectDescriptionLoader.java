@@ -23,11 +23,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EObject;
@@ -54,10 +56,10 @@ import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.LazyStringInputStream;
 import org.eclipse.xtext.util.Pair;
-import org.eclipse.xtext.util.RuntimeIOException;
 import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.util.Tuples;
 
+import com.google.common.collect.Multimap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -73,6 +75,7 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ProjectDescriptionLoader {
+	private final static Logger LOGGER = Logger.getLogger(ProjectDescriptionLoader.class);
 
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
@@ -111,6 +114,7 @@ public class ProjectDescriptionLoader {
 		if (pdbFromPackageJSON != null) {
 			setInformationFromFileSystem(location, pdbFromPackageJSON);
 			setInformationFromTSConfig(location, pdbFromPackageJSON);
+			setInformationFromPnpmWorkspace(location, pdbFromPackageJSON);
 			pdbFromPackageJSON.setLocation(location);
 			pdbFromPackageJSON.setRelatedRootLocation(relatedRootLocation);
 
@@ -228,7 +232,7 @@ public class ProjectDescriptionLoader {
 	}
 
 	/**
-	 * Store some information from {@code tsconfig.json} files iff existent in the project folders root.
+	 * Store some information from {@code tsconfig.json} file iff existent in the project folders root.
 	 */
 	private void setInformationFromTSConfig(FileURI location, ProjectDescriptionBuilder target) {
 		ProjectType type = target.getProjectType();
@@ -248,7 +252,7 @@ public class ProjectDescriptionLoader {
 			}
 		}
 		JSONDocument tsconfig = loadJSONAtLocation(path);
-		JSONValue content = tsconfig.getContent();
+		JSONValue content = tsconfig == null ? null : tsconfig.getContent();
 		if (!(content instanceof JSONObject)) {
 			return;
 		}
@@ -270,6 +274,27 @@ public class ProjectDescriptionLoader {
 			for (String tsExclude : JSONModelUtils.asStringsInArrayOrEmpty(excludeProperty.getValue())) {
 				target.addTsExclude(tsExclude);
 			}
+		}
+	}
+
+	/**
+	 * Store some information from {@code pnpm-workspaces.yaml} file iff existent in the project folders root.
+	 */
+	private void setInformationFromPnpmWorkspace(FileURI location, ProjectDescriptionBuilder target) {
+		Path path = location.appendSegment(N4JSGlobals.PNPM_WORKSPACE).toFileSystemPath();
+		if (!Files.isReadable(path)) {
+			path = location.appendSegment(N4JSGlobals.PNPM_WORKSPACE + "." + N4JSGlobals.XT_FILE_EXTENSION)
+					.toFileSystemPath();
+			if (!Files.isReadable(path)) {
+				return;
+			}
+		}
+
+		Multimap<String, String> pnpmWorkspacesYaml = YamlUtil.loadYamlAtLocation(path);
+		Collection<String> packagesEntries = pnpmWorkspacesYaml.get("packages");
+		if (!packagesEntries.isEmpty()) {
+			target.setPnpmWorkspaceRoot(true);
+			target.getWorkspaces().addAll(packagesEntries);
 		}
 	}
 
@@ -299,7 +324,8 @@ public class ProjectDescriptionLoader {
 				return packageJSON;
 			}
 		} catch (IOException e) {
-			throw new RuntimeIOException(e);
+			LOGGER.error("Could not load " + path.toString(), e);
+			return null;
 		}
 	}
 

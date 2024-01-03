@@ -57,6 +57,7 @@ public class ProjectDescriptionBuilder {
 	private boolean esm;
 	private boolean moduleProperty;
 	private boolean n4jsNature;
+	private boolean pnpmWorkspaceRoot;
 	private boolean yarnWorkspaceRoot;
 	private Boolean isGeneratorEnabledSourceMaps;
 	private Boolean isGeneratorEnabledDts;
@@ -84,7 +85,7 @@ public class ProjectDescriptionBuilder {
 				exports, extendedRuntimeEnvironment,
 				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
 				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage,
-				nestedNodeModulesFolder, esm, moduleProperty, n4jsNature, yarnWorkspaceRoot,
+				nestedNodeModulesFolder, esm, moduleProperty, n4jsNature, pnpmWorkspaceRoot, yarnWorkspaceRoot,
 				isGeneratorEnabledSourceMaps, isGeneratorEnabledDts, generatorRewriteModuleSpecifiers,
 				isGeneratorEnabledRewriteCjsImports, workspaces, tsFiles, tsInclude, tsExclude);
 	}
@@ -378,8 +379,17 @@ public class ProjectDescriptionBuilder {
 		return this;
 	}
 
+	public boolean isPnpmWorkspaceRoot() {
+		return pnpmWorkspaceRoot;
+	}
+
 	public boolean isYarnWorkspaceRoot() {
 		return yarnWorkspaceRoot;
+	}
+
+	public ProjectDescriptionBuilder setPnpmWorkspaceRoot(boolean pnpmWorkspaceRoot) {
+		this.pnpmWorkspaceRoot = pnpmWorkspaceRoot;
+		return this;
 	}
 
 	public ProjectDescriptionBuilder setYarnWorkspaceRoot(boolean yarnWorkspaceRoot) {

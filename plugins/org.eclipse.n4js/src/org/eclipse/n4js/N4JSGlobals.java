@@ -275,6 +275,11 @@ public final class N4JSGlobals {
 	public static final String TS_CONFIG = "tsconfig.json";
 
 	/**
+	 * The name of the pnpm-workspace.yaml file.
+	 */
+	public static final String PNPM_WORKSPACE = "pnpm-workspace.yaml";
+
+	/**
 	 * All project names of n4js libraries.
 	 */
 	public static final Set<N4JSPackageName> ALL_N4JS_LIBS = ImmutableSet.of(
