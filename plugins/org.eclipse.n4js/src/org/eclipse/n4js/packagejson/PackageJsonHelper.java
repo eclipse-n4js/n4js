@@ -583,9 +583,9 @@ public class PackageJsonHelper {
 	private void setSourceContainer(ProjectDescriptionBuilder target, String path, boolean replace) {
 		// if no source containers are defined (no matter what type),
 		// then add a default source container of type "source" with path "."
-		// EXCEPT target represents a yarn workspace root
+		// EXCEPT target represents a workspace root
 
-		if (!target.isYarnWorkspaceRoot()) {
+		if (!target.isWorkspaceRoot()) {
 			List<SourceContainerDescription> sourceContainers = target.getSourceContainers();
 			SourceContainerDescription sourceContainerOfTypeSource = null;
 			for (SourceContainerDescription sourceContainer : sourceContainers) {

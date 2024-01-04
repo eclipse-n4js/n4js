@@ -187,7 +187,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 
 	/** Tells whether this project is a yarn workspace project. */
 	public boolean isWorkspaceProject() {
-		return projectDescription.isYarnWorkspaceRoot()
+		return projectDescription.isWorkspaceRoot()
 				&& projectDescription.getWorkspaces() != null
 				&& !projectDescription.getWorkspaces().isEmpty();
 	}

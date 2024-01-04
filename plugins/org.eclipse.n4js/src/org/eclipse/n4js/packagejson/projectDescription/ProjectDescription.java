@@ -383,6 +383,13 @@ public class ProjectDescription extends ImmutableDataClass {
 	}
 
 	/**
+	 * True iff the project represented by this project description is the root of either a yarn or pnpm workspace.
+	 */
+	public boolean isWorkspaceRoot() {
+		return isYarnWorkspaceRoot() || isPnpmWorkspaceRoot();
+	}
+
+	/**
 	 * Tells whether the project represented by this project description is the root of a yarn workspace. This flag will
 	 * be {@code true} iff the package.json contains yarn's top-level property "workspaces", no matter the value (i.e.
 	 * will be {@code true} even if the value is the empty array).
@@ -485,6 +492,7 @@ public class ProjectDescription extends ImmutableDataClass {
 				esm,
 				moduleProperty,
 				n4jsNature,
+				pnpmWorkspaceRoot,
 				yarnWorkspaceRoot,
 				isGeneratorEnabledSourceMaps,
 				isGeneratorEnabledDts,

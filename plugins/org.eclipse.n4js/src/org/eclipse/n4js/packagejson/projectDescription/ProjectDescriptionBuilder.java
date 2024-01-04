@@ -379,6 +379,10 @@ public class ProjectDescriptionBuilder {
 		return this;
 	}
 
+	public boolean isWorkspaceRoot() {
+		return isYarnWorkspaceRoot() || isPnpmWorkspaceRoot();
+	}
+
 	public boolean isPnpmWorkspaceRoot() {
 		return pnpmWorkspaceRoot;
 	}
