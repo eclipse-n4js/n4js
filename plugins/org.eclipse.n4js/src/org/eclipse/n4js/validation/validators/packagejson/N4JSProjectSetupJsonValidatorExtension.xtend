@@ -762,6 +762,17 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		holdsValidModuleSpecifiers(filterSpecifierTraceables, project);
 	}
 	
+	/**
+	 * Checks if there is a pnpm-worspaces.yaml file that overrides the workspaces property.
+	 */
+	@CheckProperty(property = WORKSPACES_ARRAY) // also works for WORKSPACES_OBJECT
+	def checkWorspaceDefinitionArray(JSONValue workspacesValue) {
+		val description = getProjectDescription();
+		if (description.isPnpmWorkspaceRoot) {
+			addIssue(workspacesValue.eContainer, JSONPackage.Literals.NAME_VALUE_PAIR__NAME, PKGJ_PNPM_WORKSPACES_OVERRIDE.toIssueItem());
+		}
+	}
+	
 	
 	private def holdsValidModuleSpecifiers(Iterable<ASTTraceable<ModuleFilterSpecifier>> moduleFilterSpecifiers, N4JSProjectConfigSnapshot project) {
 		val validFilterSpecifier = new ArrayList<ASTTraceable<ModuleFilterSpecifier>>();
