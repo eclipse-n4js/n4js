@@ -293,8 +293,15 @@ public class ProjectDescriptionLoader {
 		Multimap<String, String> pnpmWorkspacesYaml = YamlUtil.loadYamlAtLocation(path);
 		Collection<String> packagesEntries = pnpmWorkspacesYaml.get("packages");
 		if (!packagesEntries.isEmpty()) {
-			target.setPnpmWorkspaceRoot(true);
-			target.getWorkspaces().addAll(packagesEntries);
+			// check for property discussed here: https://github.com/pnpm/pnpm/issues/2255#issuecomment-576866891
+			Collection<String> useYarnConfigEntries = pnpmWorkspacesYaml.get("useYarnConfig");
+			if (useYarnConfigEntries.isEmpty()
+					|| !"true".equals(useYarnConfigEntries.iterator().next().toString().toLowerCase())) {
+
+				target.setPnpmWorkspaceRoot(true);
+				target.getWorkspaces().clear();
+				target.getWorkspaces().addAll(packagesEntries);
+			}
 		}
 	}
 
