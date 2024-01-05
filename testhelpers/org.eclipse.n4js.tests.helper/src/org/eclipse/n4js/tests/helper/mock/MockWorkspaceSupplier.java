@@ -146,7 +146,7 @@ public class MockWorkspaceSupplier {
 			for (String path : sc.getPaths()) {
 				sourceFolders.add(new N4JSSourceFolderSnapshot(path,
 						projectPath.appendPath(path).withTrailingPathDelimiter().toURI(), sc.getType(),
-						path));
+						path, null));
 			}
 		}
 		return sourceFolders;
