@@ -73,11 +73,12 @@ public class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 										},
 										"n4js": {
 											"projectType": "library",
-											"mainModule": "src/folder/Other",
+											"mainModule": "folder/Other",
 											"vendorId": "org.eclipse.n4js",
+											"output": "src-gen",
 											"sources": {
 												"source": [
-													"."
+													"src"
 												]
 											}
 										}
@@ -85,7 +86,7 @@ public class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 								""".formatted(otherProjectName)),
 				"MainProject", Map.of(
 						"Main1", """
-									import {Other} from "src/folder/Other";
+									import {Other} from "folder/Other";
 									new Other().m();
 								""",
 						"Main2", """

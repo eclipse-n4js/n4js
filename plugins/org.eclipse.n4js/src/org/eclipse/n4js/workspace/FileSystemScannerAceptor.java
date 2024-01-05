@@ -15,7 +15,9 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
@@ -26,6 +28,13 @@ import org.eclipse.n4js.workspace.utils.FileSystemScanner.IFileSystemScannerAcce
  * File acceptor that skips nested workspace projects.
  */
 public class FileSystemScannerAceptor implements IFileSystemScannerAcceptor<URI> {
+	static final Set<String> ACCEPTED_EXTENSIONS = new LinkedHashSet<>() {
+		{
+			this.addAll(N4JSGlobals.ALL_N4_FILE_EXTENSIONS);
+			this.add(N4JSGlobals.JSON_FILE_EXTENSION);
+		}
+	};
+
 	private final List<PathMatcher> pathMatchers;
 	private List<URI> sources = new ArrayList<>();
 
@@ -46,7 +55,7 @@ public class FileSystemScannerAceptor implements IFileSystemScannerAcceptor<URI>
 
 	@Override
 	public void accept(URI uri) {
-		if (sources != null && N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(URIUtils.fileExtension(uri))) {
+		if (sources != null && ACCEPTED_EXTENSIONS.contains(URIUtils.fileExtension(uri))) {
 			sources.add(uri);
 		}
 	}
