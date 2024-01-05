@@ -77,6 +77,9 @@ public class XtextResourceLocator extends StandardResourceLocator {
 			demandLoadHelper(resource);
 
 			if (resource instanceof N4JSResource && ((N4JSResource) resource).isLoadedWithFailure()) {
+				if (resource.getResourceSet() != null) {
+					resource.getResourceSet().getResources().remove(resource);
+				}
 				return null;
 			}
 
