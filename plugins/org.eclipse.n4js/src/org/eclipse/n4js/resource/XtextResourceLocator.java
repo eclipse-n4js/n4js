@@ -1,10 +1,11 @@
-package org.eclipse.n4js.xtext.resourceset;
+package org.eclipse.n4js.resource;
 
 import java.lang.reflect.Field;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.xtext.resourceset.StandardResourceLocator;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
 /**
@@ -74,6 +75,10 @@ public class XtextResourceLocator extends StandardResourceLocator {
 			}
 
 			demandLoadHelper(resource);
+
+			if (resource instanceof N4JSResource && ((N4JSResource) resource).isLoadedWithFailure()) {
+				return null;
+			}
 
 			return resource;
 		}

@@ -397,8 +397,7 @@ public class PackageJsonHelper {
 	}
 
 	private void adjustProjectDescriptionAfterConversion(ProjectDescriptionBuilder target,
-			boolean applyDefaultValues,
-			String defaultProjectName, String valueOfTopLevelPropertyMain) {
+			boolean applyDefaultValues, String defaultProjectName, String valueOfTopLevelPropertyMain) {
 
 		if (target.getProjectType() == null || target.getProjectType() == ProjectType.PLAINJS) {
 			if (applyDefaultValues) {
