@@ -431,7 +431,6 @@ public class ProjectDiscoveryHelper {
 	private void collectProjectDependencies(Set<Path> allProjectDirs, Path projectDir,
 			Map<Path, ProjectDescription> pdCache, Set<Path> dependencies) {
 
-		NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectDir, pdCache);
 		LinkedHashSet<Path> workList = new LinkedHashSet<>();
 		workList.add(projectDir);
 		while (!workList.isEmpty()) {
@@ -439,6 +438,7 @@ public class ProjectDiscoveryHelper {
 			Path nextProject = iterator.next();
 			iterator.remove();
 
+			NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(nextProject, pdCache);
 			findDependencies(allProjectDirs, nextProject, nodeModulesFolder, pdCache, workList, dependencies);
 		}
 	}
