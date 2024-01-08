@@ -113,7 +113,7 @@ public class BuildOrderToDtsTest extends AbstractBuildOrderTest {
 	public void testPackagesDepsToPlainJS_A() {
 		test("yarn-test-project, " +
 				"yarn-test-project/node_modules/n4js-runtime, " +
-				"yarn-test-project/node_modules/PlainJS2, " + // PlainJS2 not ignored
+				"yarn-test-project/packages/PlainJS2, " + // PlainJS2 not ignored
 				"yarn-test-project/packages/PlainJS1, " +
 				"yarn-test-project/packages/MyProject",
 

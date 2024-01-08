@@ -61,7 +61,7 @@ public class ProjectSetTest {
 				.setVersion(SemverUtils.createVersionNumber(0, 0, 1))
 				.build();
 		N4JSSourceFolderSnapshot srcFolder = new N4JSSourceFolderSnapshot("src", path.appendSegment("src"),
-				SourceContainerType.SOURCE, "src");
+				SourceContainerType.SOURCE, "src", null);
 		return new N4JSProjectConfigSnapshot(pd, path, false, true, Collections.emptyList(),
 				Collections.singleton(srcFolder), Map.of());
 	}

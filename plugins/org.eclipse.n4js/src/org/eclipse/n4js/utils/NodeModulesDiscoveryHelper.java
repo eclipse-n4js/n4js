@@ -276,7 +276,7 @@ public class NodeModulesDiscoveryHelper {
 							.loadProjectDescriptionAtLocation(location, null);
 					return pd;
 				});
-		final List<String> workspaces = (prjDescr != null && prjDescr.isYarnWorkspaceRoot())
+		final List<String> workspaces = (prjDescr != null && prjDescr.isWorkspaceRoot())
 				? prjDescr.getWorkspaces()
 				: null;
 

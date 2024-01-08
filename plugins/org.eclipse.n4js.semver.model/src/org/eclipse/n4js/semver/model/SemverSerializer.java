@@ -22,6 +22,7 @@ import org.eclipse.n4js.semver.Semver.VersionPart;
 import org.eclipse.n4js.semver.Semver.VersionRange;
 import org.eclipse.n4js.semver.Semver.VersionRangeConstraint;
 import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
+import org.eclipse.n4js.semver.Semver.WorkspaceVersionRequirement;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.util.ReplaceRegion;
@@ -83,6 +84,18 @@ public class SemverSerializer implements ISerializer {
 			return "";
 
 		return tv.getTagName();
+	}
+
+	/** @return string representation of {@link TagVersionRequirement} */
+	static public String serialize(WorkspaceVersionRequirement wv) {
+		if (wv == null)
+			return "";
+
+		if (wv.getVersion() != null) {
+			return "workspace:" + serialize(wv.getVersion());
+		}
+
+		return "workspace:" + wv.getOtherVersion();
 	}
 
 	/** @return string representation of {@link GitHubVersionRequirement} */
@@ -260,6 +273,9 @@ public class SemverSerializer implements ISerializer {
 		}
 		if (obj instanceof TagVersionRequirement) {
 			return serialize((TagVersionRequirement) obj);
+		}
+		if (obj instanceof WorkspaceVersionRequirement) {
+			return serialize((WorkspaceVersionRequirement) obj);
 		}
 		if (obj instanceof GitHubVersionRequirement) {
 			return serialize((GitHubVersionRequirement) obj);

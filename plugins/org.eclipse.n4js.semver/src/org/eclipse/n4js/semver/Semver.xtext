@@ -28,8 +28,10 @@ NPMVersionRequirement:
 		(
 			=>LocalPathVersionRequirement
 			| ( =>URLVersionRequirement
-				| GitHubVersionRequirement
-				| TagVersionRequirement
+				| ( =>WorkspaceVersionRequirement
+					| GitHubVersionRequirement
+					| TagVersionRequirement // this can be any string
+				)
 			)
 		) WS?
 ;
@@ -55,16 +57,23 @@ URLSemver:
 	simpleVersion=SimpleVersion
 ;
 
+WorkspaceVersionRequirement:
+	(WORKSPACE_TAG)
+	(	=>version=SimpleVersion
+	|	otherVersion=WORKSPACE_VERSION	// fallback for various other version kinds
+	)
+;
+
+GitHubVersionRequirement:
+	githubUrl=URL_NO_VX ('#' commitISH=ALPHA_NUMERIC_CHARS)?
+;
+
 //URLCommitISH:
 //	commitISH=ALPHA_NUMERIC_CHARS
 //;
 
 TagVersionRequirement:
 	tagName=TAG
-;
-
-GitHubVersionRequirement:
-	githubUrl=URL_NO_VX ('#' commitISH=ALPHA_NUMERIC_CHARS)?
 ;
 
 VersionRangeSetRequirement:
@@ -120,9 +129,13 @@ SEMVER_TAG:
 	LETTER_S LETTER_E LETTER_M LETTER_V LETTER_E LETTER_R ':'
 ;
 
+WORKSPACE_TAG:
+	LETTER_W LETTER_O LETTER_R LETTER_K LETTER_S LETTER_P LETTER_A LETTER_C LETTER_E ':'
+;
+
 
 PATH:
-	('/' | '.' | '@' | '-' | '_' | DIGITS | LETTER)+
+	('/' | '.' | '@' | '_' | ALPHA_NUMERIC_CHAR)+
 ;
 
 URL_PROTOCOL:
@@ -130,28 +143,36 @@ URL_PROTOCOL:
 ;
 
 URL:
-	('-' | '_' | DIGITS | LETTER)*
+	('_' | ALPHA_NUMERIC_CHAR)*
 	('/' | '.' | ':' | '@')
-	('/' | '.' | ':' | '@' | '-' | '_' | DIGITS | LETTER)*
+	('/' | '.' | ':' | '@' | '_' | ALPHA_NUMERIC_CHAR)*
 ;
 
 URL_NO_VX:
-	('-' | '_' | LETTER_NO_VX)
-	('-' | '_' | DIGITS | LETTER)*
+	('_' | '-' | LETTER_NO_VX)
+	('_' | ALPHA_NUMERIC_CHAR)*
 	('/' | '.' | ':' | '@')
-	('/' | '.' | ':' | '@' | '-' | '_' | DIGITS | LETTER)*
+	('/' | '.' | ':' | '@' | '_' | ALPHA_NUMERIC_CHAR)*
 ;
 
 TAG:
-	(LETTER_NO_VX /*| LETTER_X*/) ('-' | DIGITS | LETTER)+
+	(LETTER_NO_VX /*| LETTER_X*/) ALPHA_NUMERIC_CHARS
 ;
 
-ALPHA_NUMERIC_CHARS:
-	('-' | DIGITS | LETTER)+
+WORKSPACE_VERSION:
+	( '/' | '.' | ':' | '@' | '_' | '=' | '~' | '^' | '<' | '>' | '<=' | '>=' | ASTERIX | ALPHA_NUMERIC_CHAR)+
 ;
 
 ALPHA_NUMERIC_CHARS_START_WITH_DIGITS:
-	DIGITS ('-' | DIGITS | LETTER)+
+	DIGITS ALPHA_NUMERIC_CHARS
+;
+
+ALPHA_NUMERIC_CHARS:
+	ALPHA_NUMERIC_CHAR+
+;
+
+ALPHA_NUMERIC_CHAR:
+	'-' | DIGITS | LETTER
 ;
 
 WILDCARD:
@@ -167,27 +188,33 @@ fragment LETTER:
 
 
 fragment LETTER_NO_VX:
-	LETTER_S
-	| LETTER_M
-	| LETTER_R
+	LETTER_A
+	| LETTER_C
+	| LETTER_E
 	| LETTER_F
 	| LETTER_I
+	| LETTER_K
 	| LETTER_L
-	| LETTER_E
+	| LETTER_M
+	| LETTER_O
+	| LETTER_P
+	| LETTER_R
+	| LETTER_S
+	| LETTER_W
 	| LETTER_OTHER
 ;
 
 
-terminal LETTER_S :
-	's' | 'S'
+terminal LETTER_A :
+	'a' | 'A'
 ;
 
-terminal LETTER_M :
-	'm' | 'M'
+terminal LETTER_C :
+	'c' | 'C'
 ;
 
-terminal LETTER_R :
-	'r' | 'R'
+terminal LETTER_E :
+	'e' | 'E'
 ;
 
 terminal LETTER_F :
@@ -198,16 +225,40 @@ terminal LETTER_I :
 	'i' | 'I'
 ;
 
+terminal LETTER_K :
+	'k' | 'K'
+;
+
 terminal LETTER_L :
 	'l' | 'L'
 ;
 
-terminal LETTER_E :
-	'e' | 'E'
+terminal LETTER_M :
+	'm' | 'M'
+;
+
+terminal LETTER_O :
+	'o' | 'O'
+;
+
+terminal LETTER_P :
+	'p' | 'P'
+;
+
+terminal LETTER_R :
+	'r' | 'R'
+;
+
+terminal LETTER_S :
+	's' | 'S'
 ;
 
 terminal LETTER_V :
 	'v' | 'V'
+;
+
+terminal LETTER_W :
+	'w' | 'W'
 ;
 
 terminal LETTER_X:
@@ -215,9 +266,9 @@ terminal LETTER_X:
 ;
 
 terminal LETTER_OTHER:
-	  'a' | 'A'
-	| 'b' | 'B'
-	| 'c' | 'C'
+	//  'a' | 'A' // part of 'workspace' tag
+	 'b' | 'B'
+	// | 'c' | 'C' // part of 'workspace' tag
 	| 'd' | 'D'
 	// | 'e' | 'E' // part of 'semver' and/or 'file' tag
 	// | 'f' | 'F' // part of 'file' tag
@@ -225,19 +276,19 @@ terminal LETTER_OTHER:
 	| 'h' | 'H'
 	// | 'i' | 'I' // part of 'file' tag
 	| 'j' | 'J'
-	| 'k' | 'K'
+	// | 'k' | 'K' // part of 'workspace' tag
 	// | 'l' | 'L' // part of 'file' tag
 	// | 'm' | 'M' // part of 'semver' tag
 	| 'n' | 'N'
-	| 'o' | 'O'
-	| 'p' | 'P'
+	// | 'o' | 'O' // part of 'workspace' tag
+	// | 'p' | 'P' // part of 'workspace' tag
 	| 'q' | 'Q'
 	// | 'r' | 'R' // part of 'semver' tag
 	// | 's' | 'S' // part of 'semver' tag
 	| 't' | 'T'
 	| 'u' | 'U'
 	// | 'v' | 'V' // can be a prefix of a version and/or part of 'semver' tag
-	| 'w' | 'W'
+	// | 'w' | 'W' // part of 'workspace' tag
 	// | 'x' | 'X' // can be a wildcard
 	| 'y' | 'Y'
 	| 'z' | 'Z'
@@ -253,8 +304,6 @@ terminal DIGITS returns ecore::EInt:
 
 
 
-
-
 terminal WS:
 	WHITESPACE_FRAGMENT+;
 
@@ -264,12 +313,13 @@ terminal EOL:
 
 
 
+
 enum VersionComparator:
 	Equals = '='
-|	Smaller = '<'
 |	Tilde = '~'
 |	Caret = '^'
-|	SmallerEquals = '<='
+|	Smaller = '<'
 |	Greater = '>'
+|	SmallerEquals = '<='
 |	GreaterEquals = '>='
 ;

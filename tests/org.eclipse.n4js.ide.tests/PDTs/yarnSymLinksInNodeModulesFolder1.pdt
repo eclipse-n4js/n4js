@@ -17,5 +17,5 @@ FOLDERS
 EXPECT
 - mainLocation/P1
 - mainLocation/P1/node_modules/P2
-- mainLocation/P1/node_modules/PX
 - mainLocation/P1/packages/P3
+- otherLocation/PX

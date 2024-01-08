@@ -118,6 +118,14 @@ public class SemverSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case SemverPackage.WORKSPACE_VERSION_REQUIREMENT: {
+				WorkspaceVersionRequirement workspaceVersionRequirement = (WorkspaceVersionRequirement)theEObject;
+				T result = caseWorkspaceVersionRequirement(workspaceVersionRequirement);
+				if (result == null) result = caseNPMVersionRequirement(workspaceVersionRequirement);
+				if (result == null) result = caseSemverToStringable(workspaceVersionRequirement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case SemverPackage.GIT_HUB_VERSION_REQUIREMENT: {
 				GitHubVersionRequirement gitHubVersionRequirement = (GitHubVersionRequirement)theEObject;
 				T result = caseGitHubVersionRequirement(gitHubVersionRequirement);
@@ -299,6 +307,21 @@ public class SemverSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseURLCommitISH(URLCommitISH object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Workspace Version Requirement</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Workspace Version Requirement</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseWorkspaceVersionRequirement(WorkspaceVersionRequirement object) {
 		return null;
 	}
 

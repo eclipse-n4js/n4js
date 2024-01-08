@@ -67,6 +67,8 @@ public final class N4JSGlobals {
 	 */
 	public static final String HASHBANG_PREFIX = "#!";
 
+	/** Files extension of JSON files (<b>not</b> including the separator dot). */
+	public static final String JSON_FILE_EXTENSION = UtilN4.JSON_FILE_EXTENSION;
 	/** Files extension of JS source files (<b>not</b> including the separator dot). */
 	public static final String JS_FILE_EXTENSION = UtilN4.JS_FILE_EXTENSION;
 	/** File extension of JS source files that contain ES6 modules (<b>not</b> including the separator dot). */
@@ -273,6 +275,11 @@ public final class N4JSGlobals {
 	 * The name of the tsconfig.json file.
 	 */
 	public static final String TS_CONFIG = "tsconfig.json";
+
+	/**
+	 * The name of the pnpm-workspace.yaml file.
+	 */
+	public static final String PNPM_WORKSPACE = "pnpm-workspace.yaml";
 
 	/**
 	 * All project names of n4js libraries.

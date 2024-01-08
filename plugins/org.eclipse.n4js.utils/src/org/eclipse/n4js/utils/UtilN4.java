@@ -43,6 +43,8 @@ import com.google.common.collect.Iterables;
  */
 public class UtilN4 {
 
+	/** Files extension of JSON files (<b>not</b> including the separator dot). */
+	public static final String JSON_FILE_EXTENSION = "json";
 	/** Files extension of JS source files (<b>not</b> including the separator dot). */
 	public static final String JS_FILE_EXTENSION = "js";
 	/** File extension of JS source files that contain ES6 modules (<b>not</b> including the separator dot). */

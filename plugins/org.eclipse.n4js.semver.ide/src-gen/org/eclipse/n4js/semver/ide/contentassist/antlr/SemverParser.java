@@ -41,7 +41,9 @@ public class SemverParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getNPMVersionRequirementAccess().getAlternatives(), "rule__NPMVersionRequirement__Alternatives");
 			builder.put(grammarAccess.getNPMVersionRequirementAccess().getAlternatives_1_0(), "rule__NPMVersionRequirement__Alternatives_1_0");
 			builder.put(grammarAccess.getNPMVersionRequirementAccess().getAlternatives_1_0_1(), "rule__NPMVersionRequirement__Alternatives_1_0_1");
+			builder.put(grammarAccess.getNPMVersionRequirementAccess().getAlternatives_1_0_1_1(), "rule__NPMVersionRequirement__Alternatives_1_0_1_1");
 			builder.put(grammarAccess.getURLVersionSpecifierAccess().getAlternatives(), "rule__URLVersionSpecifier__Alternatives");
+			builder.put(grammarAccess.getWorkspaceVersionRequirementAccess().getAlternatives_1(), "rule__WorkspaceVersionRequirement__Alternatives_1");
 			builder.put(grammarAccess.getVersionRangeAccess().getAlternatives(), "rule__VersionRange__Alternatives");
 			builder.put(grammarAccess.getVersionPartAccess().getAlternatives(), "rule__VersionPart__Alternatives");
 			builder.put(grammarAccess.getQualifierAccess().getAlternatives(), "rule__Qualifier__Alternatives");
@@ -54,9 +56,8 @@ public class SemverParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getURL_NO_VXAccess().getAlternatives_1(), "rule__URL_NO_VX__Alternatives_1");
 			builder.put(grammarAccess.getURL_NO_VXAccess().getAlternatives_2(), "rule__URL_NO_VX__Alternatives_2");
 			builder.put(grammarAccess.getURL_NO_VXAccess().getAlternatives_3(), "rule__URL_NO_VX__Alternatives_3");
-			builder.put(grammarAccess.getTAGAccess().getAlternatives_1(), "rule__TAG__Alternatives_1");
-			builder.put(grammarAccess.getALPHA_NUMERIC_CHARSAccess().getAlternatives(), "rule__ALPHA_NUMERIC_CHARS__Alternatives");
-			builder.put(grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getAlternatives_1(), "rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1");
+			builder.put(grammarAccess.getWORKSPACE_VERSIONAccess().getAlternatives(), "rule__WORKSPACE_VERSION__Alternatives");
+			builder.put(grammarAccess.getALPHA_NUMERIC_CHARAccess().getAlternatives(), "rule__ALPHA_NUMERIC_CHAR__Alternatives");
 			builder.put(grammarAccess.getWILDCARDAccess().getAlternatives(), "rule__WILDCARD__Alternatives");
 			builder.put(grammarAccess.getLETTERAccess().getAlternatives(), "rule__LETTER__Alternatives");
 			builder.put(grammarAccess.getLETTER_NO_VXAccess().getAlternatives(), "rule__LETTER_NO_VX__Alternatives");
@@ -71,6 +72,7 @@ public class SemverParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getURLVersionSpecifierAccess().getGroup_1(), "rule__URLVersionSpecifier__Group_1__0");
 			builder.put(grammarAccess.getURLVersionSpecifierAccess().getGroup_2(), "rule__URLVersionSpecifier__Group_2__0");
 			builder.put(grammarAccess.getURLSemverAccess().getGroup(), "rule__URLSemver__Group__0");
+			builder.put(grammarAccess.getWorkspaceVersionRequirementAccess().getGroup(), "rule__WorkspaceVersionRequirement__Group__0");
 			builder.put(grammarAccess.getGitHubVersionRequirementAccess().getGroup(), "rule__GitHubVersionRequirement__Group__0");
 			builder.put(grammarAccess.getGitHubVersionRequirementAccess().getGroup_1(), "rule__GitHubVersionRequirement__Group_1__0");
 			builder.put(grammarAccess.getVersionRangeSetRequirementAccess().getGroup(), "rule__VersionRangeSetRequirement__Group__0");
@@ -92,6 +94,7 @@ public class SemverParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getQualifierTagAccess().getGroup_1(), "rule__QualifierTag__Group_1__0");
 			builder.put(grammarAccess.getFILE_TAGAccess().getGroup(), "rule__FILE_TAG__Group__0");
 			builder.put(grammarAccess.getSEMVER_TAGAccess().getGroup(), "rule__SEMVER_TAG__Group__0");
+			builder.put(grammarAccess.getWORKSPACE_TAGAccess().getGroup(), "rule__WORKSPACE_TAG__Group__0");
 			builder.put(grammarAccess.getURL_PROTOCOLAccess().getGroup(), "rule__URL_PROTOCOL__Group__0");
 			builder.put(grammarAccess.getURLAccess().getGroup(), "rule__URL__Group__0");
 			builder.put(grammarAccess.getURL_NO_VXAccess().getGroup(), "rule__URL_NO_VX__Group__0");
@@ -105,9 +108,11 @@ public class SemverParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getURLVersionSpecifierAccess().getCommitISHAssignment_2_1(), "rule__URLVersionSpecifier__CommitISHAssignment_2_1");
 			builder.put(grammarAccess.getURLSemverAccess().getWithSemverTagAssignment_1(), "rule__URLSemver__WithSemverTagAssignment_1");
 			builder.put(grammarAccess.getURLSemverAccess().getSimpleVersionAssignment_2(), "rule__URLSemver__SimpleVersionAssignment_2");
-			builder.put(grammarAccess.getTagVersionRequirementAccess().getTagNameAssignment(), "rule__TagVersionRequirement__TagNameAssignment");
+			builder.put(grammarAccess.getWorkspaceVersionRequirementAccess().getVersionAssignment_1_0(), "rule__WorkspaceVersionRequirement__VersionAssignment_1_0");
+			builder.put(grammarAccess.getWorkspaceVersionRequirementAccess().getOtherVersionAssignment_1_1(), "rule__WorkspaceVersionRequirement__OtherVersionAssignment_1_1");
 			builder.put(grammarAccess.getGitHubVersionRequirementAccess().getGithubUrlAssignment_0(), "rule__GitHubVersionRequirement__GithubUrlAssignment_0");
 			builder.put(grammarAccess.getGitHubVersionRequirementAccess().getCommitISHAssignment_1_1(), "rule__GitHubVersionRequirement__CommitISHAssignment_1_1");
+			builder.put(grammarAccess.getTagVersionRequirementAccess().getTagNameAssignment(), "rule__TagVersionRequirement__TagNameAssignment");
 			builder.put(grammarAccess.getVersionRangeSetRequirementAccess().getRangesAssignment_1_0(), "rule__VersionRangeSetRequirement__RangesAssignment_1_0");
 			builder.put(grammarAccess.getVersionRangeSetRequirementAccess().getRangesAssignment_1_1_3(), "rule__VersionRangeSetRequirement__RangesAssignment_1_1_3");
 			builder.put(grammarAccess.getHyphenVersionRangeAccess().getFromAssignment_1(), "rule__HyphenVersionRange__FromAssignment_1");

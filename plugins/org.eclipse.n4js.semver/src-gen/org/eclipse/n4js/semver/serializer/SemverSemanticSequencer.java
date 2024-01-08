@@ -29,6 +29,7 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.semver.Semver.VersionPart;
 import org.eclipse.n4js.semver.Semver.VersionRangeConstraint;
 import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
+import org.eclipse.n4js.semver.Semver.WorkspaceVersionRequirement;
 import org.eclipse.n4js.semver.services.SemverGrammarAccess;
 import org.eclipse.xtext.Action;
 import org.eclipse.xtext.Parameter;
@@ -94,18 +95,23 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 			case SemverPackage.VERSION_RANGE_SET_REQUIREMENT:
 				sequence_VersionRangeSetRequirement(context, (VersionRangeSetRequirement) semanticObject); 
 				return; 
+			case SemverPackage.WORKSPACE_VERSION_REQUIREMENT:
+				sequence_WorkspaceVersionRequirement(context, (WorkspaceVersionRequirement) semanticObject); 
+				return; 
 			}
 		if (errorAcceptor != null)
 			errorAcceptor.accept(diagnosticProvider.createInvalidContextOrTypeDiagnostic(semanticObject, context));
 	}
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     NPMVersionRequirement returns GitHubVersionRequirement
 	 *     GitHubVersionRequirement returns GitHubVersionRequirement
 	 *
 	 * Constraint:
 	 *     (githubUrl=URL_NO_VX commitISH=ALPHA_NUMERIC_CHARS?)
+	 * </pre>
 	 */
 	protected void sequence_GitHubVersionRequirement(ISerializationContext context, GitHubVersionRequirement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -113,12 +119,14 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     VersionRange returns HyphenVersionRange
 	 *     HyphenVersionRange returns HyphenVersionRange
 	 *
 	 * Constraint:
 	 *     (from=VersionNumber to=VersionNumber)
+	 * </pre>
 	 */
 	protected void sequence_HyphenVersionRange(ISerializationContext context, HyphenVersionRange semanticObject) {
 		if (errorAcceptor != null) {
@@ -135,12 +143,14 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     NPMVersionRequirement returns LocalPathVersionRequirement
 	 *     LocalPathVersionRequirement returns LocalPathVersionRequirement
 	 *
 	 * Constraint:
 	 *     localPath=PATH
+	 * </pre>
 	 */
 	protected void sequence_LocalPathVersionRequirement(ISerializationContext context, LocalPathVersionRequirement semanticObject) {
 		if (errorAcceptor != null) {
@@ -154,11 +164,13 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     QualifierTag returns QualifierTag
 	 *
 	 * Constraint:
 	 *     (parts+=ALPHA_NUMERIC_CHARS parts+=ALPHA_NUMERIC_CHARS*)
+	 * </pre>
 	 */
 	protected void sequence_QualifierTag(ISerializationContext context, QualifierTag semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -166,11 +178,13 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     Qualifier returns Qualifier
 	 *
 	 * Constraint:
 	 *     ((preRelease=QualifierTag buildMetadata=QualifierTag?) | buildMetadata=QualifierTag)
+	 * </pre>
 	 */
 	protected void sequence_Qualifier(ISerializationContext context, Qualifier semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -178,11 +192,13 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     SimpleVersion returns SimpleVersion
 	 *
 	 * Constraint:
 	 *     (comparators+=VersionComparator* withLetterV?=LETTER_V? number=VersionNumber)
+	 * </pre>
 	 */
 	protected void sequence_SimpleVersion(ISerializationContext context, SimpleVersion semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -190,12 +206,14 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     NPMVersionRequirement returns TagVersionRequirement
 	 *     TagVersionRequirement returns TagVersionRequirement
 	 *
 	 * Constraint:
 	 *     tagName=TAG
+	 * </pre>
 	 */
 	protected void sequence_TagVersionRequirement(ISerializationContext context, TagVersionRequirement semanticObject) {
 		if (errorAcceptor != null) {
@@ -209,12 +227,14 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     URLVersionSpecifier returns URLSemver
 	 *     URLSemver returns URLSemver
 	 *
 	 * Constraint:
 	 *     (withSemverTag?=SEMVER_TAG? simpleVersion=SimpleVersion)
+	 * </pre>
 	 */
 	protected void sequence_URLSemver(ISerializationContext context, URLSemver semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -222,12 +242,14 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     NPMVersionRequirement returns URLVersionRequirement
 	 *     URLVersionRequirement returns URLVersionRequirement
 	 *
 	 * Constraint:
 	 *     (protocol=URL_PROTOCOL url=URL versionSpecifier=URLVersionSpecifier?)
+	 * </pre>
 	 */
 	protected void sequence_URLVersionRequirement(ISerializationContext context, URLVersionRequirement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -235,11 +257,13 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     URLVersionSpecifier returns URLCommitISH
 	 *
 	 * Constraint:
 	 *     (commitISH=ALPHA_NUMERIC_CHARS_START_WITH_DIGITS | commitISH=ALPHA_NUMERIC_CHARS)
+	 * </pre>
 	 */
 	protected void sequence_URLVersionSpecifier(ISerializationContext context, URLCommitISH semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -247,11 +271,13 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     VersionNumber returns VersionNumber
 	 *
 	 * Constraint:
 	 *     (major=VersionPart (minor=VersionPart (patch=VersionPart extended+=VersionPart*)?)? qualifier=Qualifier?)
+	 * </pre>
 	 */
 	protected void sequence_VersionNumber(ISerializationContext context, VersionNumber semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -259,11 +285,13 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     VersionPart returns VersionPart
 	 *
 	 * Constraint:
 	 *     (wildcard?=WILDCARD | numberRaw=DIGITS)
+	 * </pre>
 	 */
 	protected void sequence_VersionPart(ISerializationContext context, VersionPart semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -271,12 +299,14 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     VersionRange returns VersionRangeConstraint
 	 *     VersionRangeContraint returns VersionRangeConstraint
 	 *
 	 * Constraint:
 	 *     (versionConstraints+=SimpleVersion versionConstraints+=SimpleVersion*)
+	 * </pre>
 	 */
 	protected void sequence_VersionRangeContraint(ISerializationContext context, VersionRangeConstraint semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -284,14 +314,31 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     NPMVersionRequirement returns VersionRangeSetRequirement
 	 *     VersionRangeSetRequirement returns VersionRangeSetRequirement
 	 *
 	 * Constraint:
 	 *     (ranges+=VersionRange ranges+=VersionRange*)?
+	 * </pre>
 	 */
 	protected void sequence_VersionRangeSetRequirement(ISerializationContext context, VersionRangeSetRequirement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     NPMVersionRequirement returns WorkspaceVersionRequirement
+	 *     WorkspaceVersionRequirement returns WorkspaceVersionRequirement
+	 *
+	 * Constraint:
+	 *     (version=SimpleVersion | otherVersion=WORKSPACE_VERSION)
+	 * </pre>
+	 */
+	protected void sequence_WorkspaceVersionRequirement(ISerializationContext context, WorkspaceVersionRequirement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

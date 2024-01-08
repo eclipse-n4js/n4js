@@ -407,6 +407,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		return module != null && module.isReconciled();
 	}
 
+	/** Returns true iff an error occurred while this resource was loaded. */
+	public boolean isLoadedWithFailure() {
+		return this.isLoadedWithFailure;
+	}
+
 	@Override
 	public synchronized EList<EObject> getContents() {
 		if (!removingAdapters) {

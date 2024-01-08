@@ -516,6 +516,9 @@ public class ProjectDiscoveryHelper {
 		}
 		for (File currNMF : nodeModulesFolder.getNodeModulesFoldersInOrderOfPriority()) {
 			File depLocation = new File(currNMF, depName);
+			if (SemanticDependencySupplier.isSymbolicLink(depLocation.toPath())) {
+				depLocation = SemanticDependencySupplier.resolveSymbolicLink(depLocation.toPath()).toFile();
+			}
 			if (depLocation.isDirectory()) {
 				return depLocation.toPath();
 			}
