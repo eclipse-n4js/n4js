@@ -29,7 +29,7 @@
     "@types/node": "^16",
     "@types/debug": "4.1.12",
     "@types/npmlog": "7.0.0",
-    "follow-redirects": "1.15.3",
+    "follow-redirects": "1.15.4",
     "decompress": "4.2.1",
     "debug": "~4.3.4",
     "npmlog": "7.0.1",
