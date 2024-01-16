@@ -55,6 +55,7 @@ public class BinariesLocatorHelper {
 	private Path memoizedNodePath = null;
 	private Path memoizedNpmPath = null;
 	private Path memoizedYarnPath = null;
+	private Path memoizedPnpmPath = null;
 	private Path memoizedGitPath = null;
 
 	/** Returns the path to the Java binary. */
@@ -89,12 +90,12 @@ public class BinariesLocatorHelper {
 		return memoizedYarnPath;
 	}
 
-	/** Returns the path to the yarn binary. */
+	/** Returns the path to the pnpm binary. */
 	public Path getPnpmBinary() {
-		if (memoizedYarnPath == null) {
-			memoizedYarnPath = findPnpmPath().resolve(BinariesConstants.YARN_BINARY_NAME);
+		if (memoizedPnpmPath == null) {
+			memoizedPnpmPath = findPnpmPath().resolve(BinariesConstants.PNPM_BINARY_NAME);
 		}
-		return memoizedYarnPath;
+		return memoizedPnpmPath;
 	}
 
 	/** Returns the path to the yarn binary. */
