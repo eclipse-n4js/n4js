@@ -55,6 +55,7 @@ public class BinariesLocatorHelper {
 	private Path memoizedNodePath = null;
 	private Path memoizedNpmPath = null;
 	private Path memoizedYarnPath = null;
+	private Path memoizedPnpmPath = null;
 	private Path memoizedGitPath = null;
 
 	/** Returns the path to the Java binary. */
@@ -87,6 +88,14 @@ public class BinariesLocatorHelper {
 			memoizedYarnPath = findYarnPath().resolve(BinariesConstants.YARN_BINARY_NAME);
 		}
 		return memoizedYarnPath;
+	}
+
+	/** Returns the path to the pnpm binary. */
+	public Path getPnpmBinary() {
+		if (memoizedPnpmPath == null) {
+			memoizedPnpmPath = findPnpmPath().resolve(BinariesConstants.PNPM_BINARY_NAME);
+		}
+		return memoizedPnpmPath;
 	}
 
 	/** Returns the path to the yarn binary. */
@@ -227,6 +236,63 @@ public class BinariesLocatorHelper {
 		yarnPathCandidate = new File(BinariesConstants.BUILT_IN_DEFAULT_YARN_PATH).toPath();
 
 		return yarnPathCandidate;
+	}
+
+	/**
+	 * Like {@link #findNodePath()}, but for the pnpm binary.
+	 *
+	 * @return string with absolute path to the binary
+	 */
+	private Path findPnpmPath() {
+		Path pnpmPathCandidate = null;
+
+		// 1. lookup by DEFAULT_YARN_PATH_VM_ARG
+		pnpmPathCandidate = resolveFolderContaingBinary(
+				tryGetEnvOrSystemVariable(BinariesConstants.DEFAULT_PNPM_PATH_VM_ARG));
+		if (pnpmPathCandidate != null) {
+			info("User specified default pnpm path will be used: '" + pnpmPathCandidate
+					+ ".' based on the '" + BinariesConstants.DEFAULT_PNPM_PATH_VM_ARG + "' VM argument.");
+			return pnpmPathCandidate;
+		}
+		debug("Could not resolve pnpm path from '" + BinariesConstants.DEFAULT_PNPM_PATH_VM_ARG
+				+ "' VM argument.");
+
+		// 2. lookup by YARN_PATH_ENV
+		pnpmPathCandidate = resolveFolderContaingBinary(
+				tryGetEnvOrSystemVariable(BinariesConstants.PNPM_PATH_ENV));
+		if (pnpmPathCandidate != null) {
+			info("User specified default pnpm path will be used: '" + pnpmPathCandidate
+					+ ".' based on the '" + BinariesConstants.PNPM_PATH_ENV + "' environment argument.");
+			return pnpmPathCandidate;
+		}
+		debug("Could not resolve pnpm path from '" + BinariesConstants.PNPM_PATH_ENV);
+
+		// 3. lookup by PATH
+		pnpmPathCandidate = resolveFolderContaingBinary(
+				ExecutableLookupUtil.findInPath(BinariesConstants.PNPM_BINARY_NAME));
+		if (pnpmPathCandidate != null) {
+			info("Obtained pnpm path will be used: '" + pnpmPathCandidate
+					+ ".' based on the OS PATH.");
+			return pnpmPathCandidate;
+		}
+		debug("Could not resolve pnpm path from OS PATH variable.");
+
+		// 4. lookup by OS query
+		pnpmPathCandidate = resolveFolderContaingBinary(
+				lookForBinary(BinariesConstants.PNPM_BINARY_NAME));
+		if (pnpmPathCandidate != null) {
+			info("Obtained pnpm path will be used: '" + pnpmPathCandidate
+					+ ".' based on the OS dynamic lookup.");
+			return pnpmPathCandidate;
+
+		}
+		debug("Could not resolve pnpm path from OS dynamic lookup.");
+
+		// 5. use default, whether it is correct or not.
+		info("Could not resolve pnpm path. Falling back to default path: " + pnpmPathCandidate);
+		pnpmPathCandidate = new File(BinariesConstants.BUILT_IN_DEFAULT_PNPM_PATH).toPath();
+
+		return pnpmPathCandidate;
 	}
 
 	/**
