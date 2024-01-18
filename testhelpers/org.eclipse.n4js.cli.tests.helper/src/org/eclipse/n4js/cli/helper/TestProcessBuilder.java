@@ -57,6 +57,12 @@ public class TestProcessBuilder {
 		return createProcessBuilder(workingDirectory, cmd, environment);
 	}
 
+	/** @return a process: {@code pnpm install} */
+	public ProcessBuilder pnpmRun(Path workingDirectory, Map<String, String> environment, String[] options) {
+		final String[] cmd = createCommandPnpmRun(environment, options);
+		return createProcessBuilder(workingDirectory, cmd, environment);
+	}
+
 	/** @return a process: {@code git OPTIONS} */
 	public ProcessBuilder gitRun(Path workingDirectory, Map<String, String> environment, String[] options) {
 		final String[] cmd = createCommandGitRun(environment, options);
@@ -102,6 +108,16 @@ public class TestProcessBuilder {
 
 	private String[] createCommandYarnRun(Map<String, String> output_env, String[] options) {
 		List<String> cmd = getCommands(output_env, binariesLocatorHelper.getYarnBinary(), options);
+
+		// yarn will invoke node, so node must be on the path:
+		Path nodePath = binariesLocatorHelper.getNodeBinary().toAbsolutePath().getParent();
+		prependToPathString(output_env, nodePath);
+
+		return cmd.toArray(new String[0]);
+	}
+
+	private String[] createCommandPnpmRun(Map<String, String> output_env, String[] options) {
+		List<String> cmd = getCommands(output_env, binariesLocatorHelper.getPnpmBinary(), options);
 
 		// yarn will invoke node, so node must be on the path:
 		Path nodePath = binariesLocatorHelper.getNodeBinary().toAbsolutePath().getParent();

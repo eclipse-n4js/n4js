@@ -213,6 +213,13 @@ public class CliTools {
 		});
 	}
 
+	/** see {@link TestProcessExecuter#pnpmRun(Path, Map, String[])} */
+	public ProcessResult pnpmRun(Path workingDir, String... options) {
+		return withoutCorruptingGlobalState(() -> {
+			return getExProcessExecuter().pnpmRun(workingDir, environment, options);
+		});
+	}
+
 	/** see {@link TestProcessExecuter#gitRun(Path, Map, String[])} */
 	public ProcessResult gitRun(Path workingDir, String... options) {
 		return withoutCorruptingGlobalState(() -> {
