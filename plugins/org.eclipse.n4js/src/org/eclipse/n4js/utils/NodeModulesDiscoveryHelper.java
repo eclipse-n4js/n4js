@@ -85,9 +85,17 @@ public class NodeModulesDiscoveryHelper {
 			return this.workspaceNodeModulesFolder != null;
 		}
 
-		/** @return the related root of this project */
-		public Path getRelatedRoot() {
+		/** @return the local root of this project */
+		public Path getLocalRoot() {
 			if (isYarnWorkspaceRoot || isYarnWorkspaceMember || isYarnWorkspaceDependency) {
+				return workspaceNodeModulesFolder.getParentFile().toPath();
+			}
+			return localNodeModulesFolder.getParentFile().toPath();
+		}
+
+		/** @return the workspace root of this project */
+		public Path getWorkspaceRoot() {
+			if (workspaceNodeModulesFolder != null) {
 				return workspaceNodeModulesFolder.getParentFile().toPath();
 			}
 			return localNodeModulesFolder.getParentFile().toPath();

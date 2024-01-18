@@ -28,6 +28,9 @@ import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableList;
+
 /**
  * Test for build order
  */
@@ -123,9 +126,10 @@ abstract class AbstractBuildOrderTest extends AbstractIdeTest {
 			throw new RuntimeException("Never happens since toString never throws an exception. Bogus xtext warning",
 					exc);
 		}
-		assertEquals(cycles.size(), projectBuildOrderInfo.getProjectCycles().size());
+		ImmutableCollection<ImmutableList<String>> projectCycles = projectBuildOrderInfo.getProjectCycles();
+		assertEquals("Cycle: " + Strings.join(", ", projectCycles), cycles.size(), projectCycles.size());
 		Set<String> expectedCycles = cycles.stream().map(it -> Strings.join(", ", it)).collect(Collectors.toSet());
-		for (List<String> cycle : projectBuildOrderInfo.getProjectCycles()) {
+		for (List<String> cycle : projectCycles) {
 			String detectedCycle = Strings.join(", ", cycle);
 			assertTrue("Cycle " + detectedCycle + " not found in " + expectedCycles,
 					expectedCycles.contains(detectedCycle));

@@ -17,13 +17,13 @@ import org.junit.Test;
 /**
  * Test for build order
  */
-
 public class BuildOrderDependenciesTest extends AbstractBuildOrderTest {
 
 	@Test
 	public void testSingleDependency1() {
 		testProject(
 				"test-project/node_modules/n4js-runtime, " +
+						"test-project/node_modules/D2/node_modules/n4js-runtime, " +
 						"test-project/node_modules/D2, " +
 						"test-project/node_modules/D1, " +
 						"test-project",
@@ -45,8 +45,9 @@ public class BuildOrderDependenciesTest extends AbstractBuildOrderTest {
 	@Test
 	public void testSingleDependency2() {
 		testProject(
-				"test-project/node_modules/n4js-runtime, " +
+				"test-project/node_modules/@scope/D2/node_modules/n4js-runtime, " +
 						"test-project/node_modules/@scope/D2, " +
+						"test-project/node_modules/n4js-runtime, " +
 						"test-project/node_modules/D1, " +
 						"test-project",
 				Map.of(
