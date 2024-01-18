@@ -124,7 +124,7 @@ public class MockWorkspaceSupplier {
 		N4JSProjectConfigSnapshot projectConfig = createProjectConfig();
 		URI workspacePath = URIUtils.trimTrailingPathSeparator(projectConfig.getPath()).trimSegments(1);
 		ProjectSet projects = new ProjectSet(Collections.singleton(projectConfig));
-		BuildOrderInfo buildOrderInfo = new BuildOrderInfo(Collections.emptyList(), Collections.emptySet());
+		BuildOrderInfo buildOrderInfo = BuildOrderInfo.NULL;
 		return new N4JSWorkspaceConfigSnapshot(workspacePath, projects, buildOrderInfo);
 	}
 
