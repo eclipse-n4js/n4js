@@ -213,9 +213,10 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		String moduleSpecifier = original.getModuleSpecifierAsText() != null
 				? original.getModuleSpecifierAsText().replace("%3A", ":") // see ModuleSpecifierValueConverter
 				: original.getModule().getQualifiedName();
+		moduleSpecifier += "." + N4JSGlobals.DTS_FILE_EXTENSION;
 
 		processAnnotations(original.getAnnotations());
-		write("import ");
+		write("import type ");
 		// 1) import specifiers
 		List<ImportSpecifier> importSpecifiers = new ArrayList<>(original.getImportSpecifiers());
 		if (!importSpecifiers.isEmpty() && importSpecifiers.get(0) instanceof DefaultImportSpecifier) {

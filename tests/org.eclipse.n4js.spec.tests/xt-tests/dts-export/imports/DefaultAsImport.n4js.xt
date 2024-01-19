@@ -34,7 +34,7 @@ export public class Dummy extends MyClass {} // ensures that the import is not r
 
 
 /* XPECT generated_dts ---
-import {default as MyClass} from './Other'
+import type {default as MyClass} from './Other.d.ts'
 
 export class Dummy extends MyClass {}
 --- */
