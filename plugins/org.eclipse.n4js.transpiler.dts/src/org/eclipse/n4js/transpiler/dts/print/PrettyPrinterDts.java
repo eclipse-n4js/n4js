@@ -43,6 +43,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
+import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
@@ -89,6 +90,7 @@ import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils;
 import org.eclipse.xtext.EcoreUtil2;
 
@@ -213,7 +215,11 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		String moduleSpecifier = original.getModuleSpecifierAsText() != null
 				? original.getModuleSpecifierAsText().replace("%3A", ":") // see ModuleSpecifierValueConverter
 				: original.getModule().getQualifiedName();
-		moduleSpecifier += "." + N4JSGlobals.DTS_FILE_EXTENSION;
+
+		if (original.getModuleSpecifierForm() != ModuleSpecifierForm.PROJECT
+				&& Strings.isNullOrEmpty(URIUtils.fileExtension(URIUtils.toFileUri(moduleSpecifier)))) {
+			moduleSpecifier += "." + N4JSGlobals.DTS_FILE_EXTENSION;
+		}
 
 		processAnnotations(original.getAnnotations());
 		write("import type ");
