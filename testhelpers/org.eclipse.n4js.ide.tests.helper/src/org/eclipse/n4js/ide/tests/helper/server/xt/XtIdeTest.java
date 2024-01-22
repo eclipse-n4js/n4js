@@ -773,10 +773,12 @@ public class XtIdeTest extends AbstractIdeTest {
 
 			for (Project project : allProjectsWithGenerateDts) {
 				File workingDir = getProjectRoot(project.getName());
+				Path wdSrcDir = workingDir.toPath().resolve("src-gen");
+				wdSrcDir.toFile().mkdirs(); // might not exist e.g. if is a definition project
 
 				// copy n4jsglobals.d.ts to output dir to make d.ts globals available
 				Path n4jsGlobalsDTS = N4jsLibsAccess.getN4JSGlobalsDTS();
-				Files.copy(n4jsGlobalsDTS, workingDir.toPath().resolve("src-gen/n4jsglobals.d.ts"));
+				Files.copy(n4jsGlobalsDTS, wdSrcDir.resolve("n4jsglobals.d.ts"));
 
 				ProcessResult result;
 				try {
