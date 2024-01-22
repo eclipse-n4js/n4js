@@ -1,0 +1,70 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	Workspace {
+		Project "TestProject" {
+			Folder "src" {
+				ThisFile {}
+			}
+			DEPENDS_ON "ImportMe"
+		}
+		Project "ImportMe" {
+			Folder "src" {
+				File "index.n4js" { }
+			}
+			File "package.json" {}
+		}
+	}
+	
+	File "index.n4js" {
+		export public class CP {}
+	}
+	
+	File "package.json" {
+		{
+			"name": "ImportMe",
+			"version": "1.0.0",
+			"type": "module",
+			"types": "src-gen/index.d.ts",
+			"scripts": {},
+			"n4js": {
+				"vendorId": "VENDOR",
+				"vendorName": "VENDOR_NAME",
+				"projectType": "library",
+				"output": "src-gen",
+				"generator": { "d.ts": true },
+				"sources": {
+					"source": ["./src"]
+				}
+			},
+			"dependencies": {
+				"n4js-runtime": ""
+			}
+		}
+	}
+
+	GENERATE_DTS
+
+END_SETUP */
+
+
+import * as TS from "ImportMe";
+
+export public class CPX extends TS.CP {}
+
+
+/* XPECT generated_dts ---
+import type * as TS from 'ImportMe'
+
+export class CPX extends TS.CP {}
+--- */
