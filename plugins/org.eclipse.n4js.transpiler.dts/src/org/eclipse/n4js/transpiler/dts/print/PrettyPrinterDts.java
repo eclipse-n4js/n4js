@@ -218,11 +218,17 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 		if (original.getModuleSpecifierForm() != ModuleSpecifierForm.PROJECT
 				&& Strings.isNullOrEmpty(URIUtils.fileExtension(URIUtils.toFileUri(moduleSpecifier)))) {
-			moduleSpecifier += "." + N4JSGlobals.DTS_FILE_EXTENSION;
+
+			String extension = original.isBare() ? N4JSGlobals.JS_FILE_EXTENSION : N4JSGlobals.DTS_FILE_EXTENSION;
+			moduleSpecifier += "." + extension;
 		}
 
 		processAnnotations(original.getAnnotations());
-		write("import type ");
+		write("import ");
+		if (!original.isBare()) {
+			write("type ");
+		}
+
 		// 1) import specifiers
 		List<ImportSpecifier> importSpecifiers = new ArrayList<>(original.getImportSpecifiers());
 		if (!importSpecifiers.isEmpty() && importSpecifiers.get(0) instanceof DefaultImportSpecifier) {
