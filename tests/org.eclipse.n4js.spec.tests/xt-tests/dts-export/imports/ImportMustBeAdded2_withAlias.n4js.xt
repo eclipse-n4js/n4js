@@ -37,7 +37,7 @@ class Cls {
 
 
 /* XPECT generated_dts ---
-import {Cls as Cls2} from './Other'
+import type {Cls as Cls2} from './Other.d.ts'
 
 export const C: Cls2;
 declare class Cls {}

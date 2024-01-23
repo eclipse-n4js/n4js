@@ -51,7 +51,7 @@ export public class Cls1 extends ClassWithDts {}
 export public class Cls2 extends ClassWithoutDts {}
 
 /* XPECT generated_dts ---
-import {ClassWithDts} from 'ProjectOtherWithDts/src-gen/OtherWithDts'
+import type {ClassWithDts} from 'ProjectOtherWithDts/src-gen/OtherWithDts.d.ts'
 
 export let v1: ClassWithDts;
 export let v2: any;

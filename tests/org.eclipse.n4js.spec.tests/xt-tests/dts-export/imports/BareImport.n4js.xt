@@ -14,23 +14,27 @@
 	Workspace {
 		Project "TestProject" {
 			Folder "src" {
-				File "Other.n4js" { from="./UseExistingNamespaceImport_Other.n4js" }
 				ThisFile {}
+				File "BareImportMe.js" { }
 			}
 		}
 	}
+	
+	File "BareImportMe.js" {
+		export public class CP {}
+	}
+
 	GENERATE_DTS
 
 END_SETUP */
 
 
-import * as NS from "Other"
 
-export public let x = NS.foo();
+import "BareImportMe";
+
 
 
 /* XPECT generated_dts ---
-import type * as NS from './Other.d.ts'
+import './BareImportMe.js'
 
-export let x: NS.ClsOther;
 --- */

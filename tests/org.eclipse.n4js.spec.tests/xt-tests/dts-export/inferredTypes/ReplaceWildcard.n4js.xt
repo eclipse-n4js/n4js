@@ -29,8 +29,8 @@ import {C} from "Other";
 const c: C<?> = null
 
 /* XPECT generated_dts ---
-import {D} from './Other'
-import {C} from './Other'
+import type {D} from './Other.d.ts'
+import type {C} from './Other.d.ts'
 
 declare const c: C<D>;
 --- */

@@ -93,11 +93,16 @@ public class URIUtils {
 		if (firstIdx < 0) {
 			return -1;
 		}
+		boolean foundDot = false;
 		for (int idx = firstIdx; idx > 0; idx--) {
 			if (lastSegment.charAt(idx) == '.') {
+				foundDot = true;
 				firstIdx = idx + 1;
 				break;
 			}
+		}
+		if (!foundDot) {
+			return -1;
 		}
 		String ext1 = lastSegment.substring(firstIdx);
 		if (extensionPrefixes.containsKey(ext1)) {
