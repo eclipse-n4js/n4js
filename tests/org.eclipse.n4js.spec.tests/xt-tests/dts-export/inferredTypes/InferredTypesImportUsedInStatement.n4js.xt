@@ -37,7 +37,7 @@ export class ClassWithFields {
 
 
 /* XPECT generated_dts ---
-import {ClassOther} from './Other'
+import type {ClassOther} from './Other.d.ts'
 
 export let v: ClassOther;
 export class ClassWithFields {

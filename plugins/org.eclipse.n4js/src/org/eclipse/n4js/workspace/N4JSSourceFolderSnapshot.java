@@ -10,12 +10,16 @@
  */
 package org.eclipse.n4js.workspace;
 
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
+import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.UriExtensions;
 
 /**
@@ -25,12 +29,16 @@ public class N4JSSourceFolderSnapshot extends SourceFolderSnapshot {
 
 	private final SourceContainerType type;
 	private final String relativeLocation;
+	private final FileSystemScannerAceptor fssAcceptor;
 
 	/** Creates a new {@link N4JSSourceFolderSnapshot}. */
-	public N4JSSourceFolderSnapshot(String name, URI path, SourceContainerType type, String relativeLocation) {
+	public N4JSSourceFolderSnapshot(String name, URI path, SourceContainerType type, String relativeLocation,
+			List<String> workspaces) {
+
 		super(name, path);
 		this.type = type;
 		this.relativeLocation = relativeLocation;
+		this.fssAcceptor = new FileSystemScannerAceptor(path, workspaces);
 	}
 
 	/** The {@link SourceContainerType type}. */
@@ -67,6 +75,25 @@ public class N4JSSourceFolderSnapshot extends SourceFolderSnapshot {
 				+ ", path: " + getPath() + " }";
 	}
 
+	@Override
+	public List<URI> getAllResources(IFileSystemScanner scanner) {
+		scanner.scan(getPath(), fssAcceptor);
+		return fssAcceptor.getSources();
+	}
+
+	@Override
+	public boolean contains(URI uri) {
+		if (!super.contains(uri)) {
+			return false;
+		}
+		for (PathMatcher pathMatcher : fssAcceptor.getPathMatchers()) {
+			if (pathMatcher.matches(Path.of(uri.toFileString()))) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 	// ==============================================================================================================
 	// Convenience and utility methods (do not introduce additional data)
 

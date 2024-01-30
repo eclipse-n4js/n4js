@@ -43,8 +43,10 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		private final RuleCall cLocalPathVersionRequirementParserRuleCall_1_0_0 = (RuleCall)cAlternatives_1_0.eContents().get(0);
 		private final Alternatives cAlternatives_1_0_1 = (Alternatives)cAlternatives_1_0.eContents().get(1);
 		private final RuleCall cURLVersionRequirementParserRuleCall_1_0_1_0 = (RuleCall)cAlternatives_1_0_1.eContents().get(0);
-		private final RuleCall cGitHubVersionRequirementParserRuleCall_1_0_1_1 = (RuleCall)cAlternatives_1_0_1.eContents().get(1);
-		private final RuleCall cTagVersionRequirementParserRuleCall_1_0_1_2 = (RuleCall)cAlternatives_1_0_1.eContents().get(2);
+		private final Alternatives cAlternatives_1_0_1_1 = (Alternatives)cAlternatives_1_0_1.eContents().get(1);
+		private final RuleCall cWorkspaceVersionRequirementParserRuleCall_1_0_1_1_0 = (RuleCall)cAlternatives_1_0_1_1.eContents().get(0);
+		private final RuleCall cGitHubVersionRequirementParserRuleCall_1_0_1_1_1 = (RuleCall)cAlternatives_1_0_1_1.eContents().get(1);
+		private final RuleCall cTagVersionRequirementParserRuleCall_1_0_1_1_2 = (RuleCall)cAlternatives_1_0_1_1.eContents().get(2);
 		private final RuleCall cWSTerminalRuleCall_1_1 = (RuleCall)cGroup_1.eContents().get(1);
 		
 		//// This grammar of SemVer 2.0.0 is an adapted version of the BNF found at:
@@ -55,8 +57,10 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//        (
 		//            =>LocalPathVersionRequirement
 		//            | ( =>URLVersionRequirement
-		//                | GitHubVersionRequirement
-		//                | TagVersionRequirement
+		//                | ( =>WorkspaceVersionRequirement
+		//                    | GitHubVersionRequirement
+		//                    | TagVersionRequirement // this can be any string
+		//                )
 		//            )
 		//        ) WS?
 		//;
@@ -67,8 +71,10 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//    (
 		//        =>LocalPathVersionRequirement
 		//        | ( =>URLVersionRequirement
-		//            | GitHubVersionRequirement
-		//            | TagVersionRequirement
+		//            | ( =>WorkspaceVersionRequirement
+		//                | GitHubVersionRequirement
+		//                | TagVersionRequirement // this can be any string
+		//            )
 		//        )
 		//    ) WS?
 		public Alternatives getAlternatives() { return cAlternatives; }
@@ -85,8 +91,10 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//(
 		//    =>LocalPathVersionRequirement
 		//    | ( =>URLVersionRequirement
-		//        | GitHubVersionRequirement
-		//        | TagVersionRequirement
+		//        | ( =>WorkspaceVersionRequirement
+		//            | GitHubVersionRequirement
+		//            | TagVersionRequirement // this can be any string
+		//        )
 		//    )
 		//) WS?
 		public Group getGroup_1() { return cGroup_1; }
@@ -94,8 +102,10 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//(
 		//    =>LocalPathVersionRequirement
 		//    | ( =>URLVersionRequirement
-		//        | GitHubVersionRequirement
-		//        | TagVersionRequirement
+		//        | ( =>WorkspaceVersionRequirement
+		//            | GitHubVersionRequirement
+		//            | TagVersionRequirement // this can be any string
+		//        )
 		//    )
 		//)
 		public Alternatives getAlternatives_1_0() { return cAlternatives_1_0; }
@@ -104,19 +114,30 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		public RuleCall getLocalPathVersionRequirementParserRuleCall_1_0_0() { return cLocalPathVersionRequirementParserRuleCall_1_0_0; }
 		
 		//( =>URLVersionRequirement
-		//               | GitHubVersionRequirement
-		//               | TagVersionRequirement
+		//               | ( =>WorkspaceVersionRequirement
+		//                   | GitHubVersionRequirement
+		//                   | TagVersionRequirement // this can be any string
+		//               )
 		//           )
 		public Alternatives getAlternatives_1_0_1() { return cAlternatives_1_0_1; }
 		
 		//=>URLVersionRequirement
 		public RuleCall getURLVersionRequirementParserRuleCall_1_0_1_0() { return cURLVersionRequirementParserRuleCall_1_0_1_0; }
 		
+		//( =>WorkspaceVersionRequirement
+		//                   | GitHubVersionRequirement
+		//                   | TagVersionRequirement // this can be any string
+		//               )
+		public Alternatives getAlternatives_1_0_1_1() { return cAlternatives_1_0_1_1; }
+		
+		//=>WorkspaceVersionRequirement
+		public RuleCall getWorkspaceVersionRequirementParserRuleCall_1_0_1_1_0() { return cWorkspaceVersionRequirementParserRuleCall_1_0_1_1_0; }
+		
 		//GitHubVersionRequirement
-		public RuleCall getGitHubVersionRequirementParserRuleCall_1_0_1_1() { return cGitHubVersionRequirementParserRuleCall_1_0_1_1; }
+		public RuleCall getGitHubVersionRequirementParserRuleCall_1_0_1_1_1() { return cGitHubVersionRequirementParserRuleCall_1_0_1_1_1; }
 		
 		//TagVersionRequirement
-		public RuleCall getTagVersionRequirementParserRuleCall_1_0_1_2() { return cTagVersionRequirementParserRuleCall_1_0_1_2; }
+		public RuleCall getTagVersionRequirementParserRuleCall_1_0_1_1_2() { return cTagVersionRequirementParserRuleCall_1_0_1_1_2; }
 		
 		//WS?
 		public RuleCall getWSTerminalRuleCall_1_1() { return cWSTerminalRuleCall_1_1; }
@@ -299,24 +320,49 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//SimpleVersion
 		public RuleCall getSimpleVersionSimpleVersionParserRuleCall_2_0() { return cSimpleVersionSimpleVersionParserRuleCall_2_0; }
 	}
-	public class TagVersionRequirementElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.TagVersionRequirement");
-		private final Assignment cTagNameAssignment = (Assignment)rule.eContents().get(1);
-		private final RuleCall cTagNameTAGParserRuleCall_0 = (RuleCall)cTagNameAssignment.eContents().get(0);
+	public class WorkspaceVersionRequirementElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.WorkspaceVersionRequirement");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cWORKSPACE_TAGParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Assignment cVersionAssignment_1_0 = (Assignment)cAlternatives_1.eContents().get(0);
+		private final RuleCall cVersionSimpleVersionParserRuleCall_1_0_0 = (RuleCall)cVersionAssignment_1_0.eContents().get(0);
+		private final Assignment cOtherVersionAssignment_1_1 = (Assignment)cAlternatives_1.eContents().get(1);
+		private final RuleCall cOtherVersionWORKSPACE_VERSIONParserRuleCall_1_1_0 = (RuleCall)cOtherVersionAssignment_1_1.eContents().get(0);
 		
-		////URLCommitISH:
-		////    commitISH=ALPHA_NUMERIC_CHARS
-		////;
-		//TagVersionRequirement:
-		//    tagName=TAG
+		//WorkspaceVersionRequirement:
+		//    (WORKSPACE_TAG)
+		//    (    =>version=SimpleVersion
+		//    |    otherVersion=WORKSPACE_VERSION    // fallback for various other version kinds
+		//    )
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//tagName=TAG
-		public Assignment getTagNameAssignment() { return cTagNameAssignment; }
+		//(WORKSPACE_TAG)
+		//(    =>version=SimpleVersion
+		//|    otherVersion=WORKSPACE_VERSION    // fallback for various other version kinds
+		//)
+		public Group getGroup() { return cGroup; }
 		
-		//TAG
-		public RuleCall getTagNameTAGParserRuleCall_0() { return cTagNameTAGParserRuleCall_0; }
+		//(WORKSPACE_TAG)
+		public RuleCall getWORKSPACE_TAGParserRuleCall_0() { return cWORKSPACE_TAGParserRuleCall_0; }
+		
+		//(    =>version=SimpleVersion
+		//|    otherVersion=WORKSPACE_VERSION    // fallback for various other version kinds
+		//)
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		
+		//=>version=SimpleVersion
+		public Assignment getVersionAssignment_1_0() { return cVersionAssignment_1_0; }
+		
+		//SimpleVersion
+		public RuleCall getVersionSimpleVersionParserRuleCall_1_0_0() { return cVersionSimpleVersionParserRuleCall_1_0_0; }
+		
+		//otherVersion=WORKSPACE_VERSION
+		public Assignment getOtherVersionAssignment_1_1() { return cOtherVersionAssignment_1_1; }
+		
+		//WORKSPACE_VERSION
+		public RuleCall getOtherVersionWORKSPACE_VERSIONParserRuleCall_1_1_0() { return cOtherVersionWORKSPACE_VERSIONParserRuleCall_1_1_0; }
 	}
 	public class GitHubVersionRequirementElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.GitHubVersionRequirement");
@@ -353,6 +399,25 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		
 		//ALPHA_NUMERIC_CHARS
 		public RuleCall getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_1_1_0() { return cCommitISHALPHA_NUMERIC_CHARSParserRuleCall_1_1_0; }
+	}
+	public class TagVersionRequirementElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.TagVersionRequirement");
+		private final Assignment cTagNameAssignment = (Assignment)rule.eContents().get(1);
+		private final RuleCall cTagNameTAGParserRuleCall_0 = (RuleCall)cTagNameAssignment.eContents().get(0);
+		
+		////URLCommitISH:
+		////    commitISH=ALPHA_NUMERIC_CHARS
+		////;
+		//TagVersionRequirement:
+		//    tagName=TAG
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//tagName=TAG
+		public Assignment getTagNameAssignment() { return cTagNameAssignment; }
+		
+		//TAG
+		public RuleCall getTagNameTAGParserRuleCall_0() { return cTagNameTAGParserRuleCall_0; }
 	}
 	public class VersionRangeSetRequirementElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement");
@@ -852,23 +917,73 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//':'
 		public Keyword getColonKeyword_6() { return cColonKeyword_6; }
 	}
+	public class WORKSPACE_TAGElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.WORKSPACE_TAG");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cLETTER_WTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final RuleCall cLETTER_OTerminalRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		private final RuleCall cLETTER_RTerminalRuleCall_2 = (RuleCall)cGroup.eContents().get(2);
+		private final RuleCall cLETTER_KTerminalRuleCall_3 = (RuleCall)cGroup.eContents().get(3);
+		private final RuleCall cLETTER_STerminalRuleCall_4 = (RuleCall)cGroup.eContents().get(4);
+		private final RuleCall cLETTER_PTerminalRuleCall_5 = (RuleCall)cGroup.eContents().get(5);
+		private final RuleCall cLETTER_ATerminalRuleCall_6 = (RuleCall)cGroup.eContents().get(6);
+		private final RuleCall cLETTER_CTerminalRuleCall_7 = (RuleCall)cGroup.eContents().get(7);
+		private final RuleCall cLETTER_ETerminalRuleCall_8 = (RuleCall)cGroup.eContents().get(8);
+		private final Keyword cColonKeyword_9 = (Keyword)cGroup.eContents().get(9);
+		
+		//WORKSPACE_TAG:
+		//    LETTER_W LETTER_O LETTER_R LETTER_K LETTER_S LETTER_P LETTER_A LETTER_C LETTER_E ':'
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//LETTER_W LETTER_O LETTER_R LETTER_K LETTER_S LETTER_P LETTER_A LETTER_C LETTER_E ':'
+		public Group getGroup() { return cGroup; }
+		
+		//LETTER_W
+		public RuleCall getLETTER_WTerminalRuleCall_0() { return cLETTER_WTerminalRuleCall_0; }
+		
+		//LETTER_O
+		public RuleCall getLETTER_OTerminalRuleCall_1() { return cLETTER_OTerminalRuleCall_1; }
+		
+		//LETTER_R
+		public RuleCall getLETTER_RTerminalRuleCall_2() { return cLETTER_RTerminalRuleCall_2; }
+		
+		//LETTER_K
+		public RuleCall getLETTER_KTerminalRuleCall_3() { return cLETTER_KTerminalRuleCall_3; }
+		
+		//LETTER_S
+		public RuleCall getLETTER_STerminalRuleCall_4() { return cLETTER_STerminalRuleCall_4; }
+		
+		//LETTER_P
+		public RuleCall getLETTER_PTerminalRuleCall_5() { return cLETTER_PTerminalRuleCall_5; }
+		
+		//LETTER_A
+		public RuleCall getLETTER_ATerminalRuleCall_6() { return cLETTER_ATerminalRuleCall_6; }
+		
+		//LETTER_C
+		public RuleCall getLETTER_CTerminalRuleCall_7() { return cLETTER_CTerminalRuleCall_7; }
+		
+		//LETTER_E
+		public RuleCall getLETTER_ETerminalRuleCall_8() { return cLETTER_ETerminalRuleCall_8; }
+		
+		//':'
+		public Keyword getColonKeyword_9() { return cColonKeyword_9; }
+	}
 	public class PATHElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.PATH");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final Keyword cSolidusKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
 		private final Keyword cFullStopKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
 		private final Keyword cCommercialAtKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
-		private final Keyword cHyphenMinusKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
-		private final Keyword c_Keyword_4 = (Keyword)cAlternatives.eContents().get(4);
-		private final RuleCall cDIGITSTerminalRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
-		private final RuleCall cLETTERParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
+		private final Keyword c_Keyword_3 = (Keyword)cAlternatives.eContents().get(3);
+		private final RuleCall cALPHA_NUMERIC_CHARParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		
 		//PATH:
-		//    ('/' | '.' | '@' | '-' | '_' | DIGITS | LETTER)+
+		//    ('/' | '.' | '@' | '_' | ALPHA_NUMERIC_CHAR)+
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//('/' | '.' | '@' | '-' | '_' | DIGITS | LETTER)+
+		//('/' | '.' | '@' | '_' | ALPHA_NUMERIC_CHAR)+
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//'/'
@@ -880,17 +995,11 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//'@'
 		public Keyword getCommercialAtKeyword_2() { return cCommercialAtKeyword_2; }
 		
-		//'-'
-		public Keyword getHyphenMinusKeyword_3() { return cHyphenMinusKeyword_3; }
-		
 		//'_'
-		public Keyword get_Keyword_4() { return c_Keyword_4; }
+		public Keyword get_Keyword_3() { return c_Keyword_3; }
 		
-		//DIGITS
-		public RuleCall getDIGITSTerminalRuleCall_5() { return cDIGITSTerminalRuleCall_5; }
-		
-		//LETTER
-		public RuleCall getLETTERParserRuleCall_6() { return cLETTERParserRuleCall_6; }
+		//ALPHA_NUMERIC_CHAR
+		public RuleCall getALPHA_NUMERIC_CHARParserRuleCall_4() { return cALPHA_NUMERIC_CHARParserRuleCall_4; }
 	}
 	public class URL_PROTOCOLElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.URL_PROTOCOL");
@@ -924,10 +1033,8 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.URL");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Alternatives cAlternatives_0 = (Alternatives)cGroup.eContents().get(0);
-		private final Keyword cHyphenMinusKeyword_0_0 = (Keyword)cAlternatives_0.eContents().get(0);
-		private final Keyword c_Keyword_0_1 = (Keyword)cAlternatives_0.eContents().get(1);
-		private final RuleCall cDIGITSTerminalRuleCall_0_2 = (RuleCall)cAlternatives_0.eContents().get(2);
-		private final RuleCall cLETTERParserRuleCall_0_3 = (RuleCall)cAlternatives_0.eContents().get(3);
+		private final Keyword c_Keyword_0_0 = (Keyword)cAlternatives_0.eContents().get(0);
+		private final RuleCall cALPHA_NUMERIC_CHARParserRuleCall_0_1 = (RuleCall)cAlternatives_0.eContents().get(1);
 		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
 		private final Keyword cSolidusKeyword_1_0 = (Keyword)cAlternatives_1.eContents().get(0);
 		private final Keyword cFullStopKeyword_1_1 = (Keyword)cAlternatives_1.eContents().get(1);
@@ -938,37 +1045,29 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		private final Keyword cFullStopKeyword_2_1 = (Keyword)cAlternatives_2.eContents().get(1);
 		private final Keyword cColonKeyword_2_2 = (Keyword)cAlternatives_2.eContents().get(2);
 		private final Keyword cCommercialAtKeyword_2_3 = (Keyword)cAlternatives_2.eContents().get(3);
-		private final Keyword cHyphenMinusKeyword_2_4 = (Keyword)cAlternatives_2.eContents().get(4);
-		private final Keyword c_Keyword_2_5 = (Keyword)cAlternatives_2.eContents().get(5);
-		private final RuleCall cDIGITSTerminalRuleCall_2_6 = (RuleCall)cAlternatives_2.eContents().get(6);
-		private final RuleCall cLETTERParserRuleCall_2_7 = (RuleCall)cAlternatives_2.eContents().get(7);
+		private final Keyword c_Keyword_2_4 = (Keyword)cAlternatives_2.eContents().get(4);
+		private final RuleCall cALPHA_NUMERIC_CHARParserRuleCall_2_5 = (RuleCall)cAlternatives_2.eContents().get(5);
 		
 		//URL:
-		//    ('-' | '_' | DIGITS | LETTER)*
+		//    ('_' | ALPHA_NUMERIC_CHAR)*
 		//    ('/' | '.' | ':' | '@')
-		//    ('/' | '.' | ':' | '@' | '-' | '_' | DIGITS | LETTER)*
+		//    ('/' | '.' | ':' | '@' | '_' | ALPHA_NUMERIC_CHAR)*
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//('-' | '_' | DIGITS | LETTER)*
+		//('_' | ALPHA_NUMERIC_CHAR)*
 		//('/' | '.' | ':' | '@')
-		//('/' | '.' | ':' | '@' | '-' | '_' | DIGITS | LETTER)*
+		//('/' | '.' | ':' | '@' | '_' | ALPHA_NUMERIC_CHAR)*
 		public Group getGroup() { return cGroup; }
 		
-		//('-' | '_' | DIGITS | LETTER)*
+		//('_' | ALPHA_NUMERIC_CHAR)*
 		public Alternatives getAlternatives_0() { return cAlternatives_0; }
 		
-		//'-'
-		public Keyword getHyphenMinusKeyword_0_0() { return cHyphenMinusKeyword_0_0; }
-		
 		//'_'
-		public Keyword get_Keyword_0_1() { return c_Keyword_0_1; }
+		public Keyword get_Keyword_0_0() { return c_Keyword_0_0; }
 		
-		//DIGITS
-		public RuleCall getDIGITSTerminalRuleCall_0_2() { return cDIGITSTerminalRuleCall_0_2; }
-		
-		//LETTER
-		public RuleCall getLETTERParserRuleCall_0_3() { return cLETTERParserRuleCall_0_3; }
+		//ALPHA_NUMERIC_CHAR
+		public RuleCall getALPHA_NUMERIC_CHARParserRuleCall_0_1() { return cALPHA_NUMERIC_CHARParserRuleCall_0_1; }
 		
 		//('/' | '.' | ':' | '@')
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
@@ -985,7 +1084,7 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//'@'
 		public Keyword getCommercialAtKeyword_1_3() { return cCommercialAtKeyword_1_3; }
 		
-		//('/' | '.' | ':' | '@' | '-' | '_' | DIGITS | LETTER)*
+		//('/' | '.' | ':' | '@' | '_' | ALPHA_NUMERIC_CHAR)*
 		public Alternatives getAlternatives_2() { return cAlternatives_2; }
 		
 		//'/'
@@ -1000,30 +1099,22 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//'@'
 		public Keyword getCommercialAtKeyword_2_3() { return cCommercialAtKeyword_2_3; }
 		
-		//'-'
-		public Keyword getHyphenMinusKeyword_2_4() { return cHyphenMinusKeyword_2_4; }
-		
 		//'_'
-		public Keyword get_Keyword_2_5() { return c_Keyword_2_5; }
+		public Keyword get_Keyword_2_4() { return c_Keyword_2_4; }
 		
-		//DIGITS
-		public RuleCall getDIGITSTerminalRuleCall_2_6() { return cDIGITSTerminalRuleCall_2_6; }
-		
-		//LETTER
-		public RuleCall getLETTERParserRuleCall_2_7() { return cLETTERParserRuleCall_2_7; }
+		//ALPHA_NUMERIC_CHAR
+		public RuleCall getALPHA_NUMERIC_CHARParserRuleCall_2_5() { return cALPHA_NUMERIC_CHARParserRuleCall_2_5; }
 	}
 	public class URL_NO_VXElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.URL_NO_VX");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Alternatives cAlternatives_0 = (Alternatives)cGroup.eContents().get(0);
-		private final Keyword cHyphenMinusKeyword_0_0 = (Keyword)cAlternatives_0.eContents().get(0);
-		private final Keyword c_Keyword_0_1 = (Keyword)cAlternatives_0.eContents().get(1);
+		private final Keyword c_Keyword_0_0 = (Keyword)cAlternatives_0.eContents().get(0);
+		private final Keyword cHyphenMinusKeyword_0_1 = (Keyword)cAlternatives_0.eContents().get(1);
 		private final RuleCall cLETTER_NO_VXParserRuleCall_0_2 = (RuleCall)cAlternatives_0.eContents().get(2);
 		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
-		private final Keyword cHyphenMinusKeyword_1_0 = (Keyword)cAlternatives_1.eContents().get(0);
-		private final Keyword c_Keyword_1_1 = (Keyword)cAlternatives_1.eContents().get(1);
-		private final RuleCall cDIGITSTerminalRuleCall_1_2 = (RuleCall)cAlternatives_1.eContents().get(2);
-		private final RuleCall cLETTERParserRuleCall_1_3 = (RuleCall)cAlternatives_1.eContents().get(3);
+		private final Keyword c_Keyword_1_0 = (Keyword)cAlternatives_1.eContents().get(0);
+		private final RuleCall cALPHA_NUMERIC_CHARParserRuleCall_1_1 = (RuleCall)cAlternatives_1.eContents().get(1);
 		private final Alternatives cAlternatives_2 = (Alternatives)cGroup.eContents().get(2);
 		private final Keyword cSolidusKeyword_2_0 = (Keyword)cAlternatives_2.eContents().get(0);
 		private final Keyword cFullStopKeyword_2_1 = (Keyword)cAlternatives_2.eContents().get(1);
@@ -1034,51 +1125,43 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		private final Keyword cFullStopKeyword_3_1 = (Keyword)cAlternatives_3.eContents().get(1);
 		private final Keyword cColonKeyword_3_2 = (Keyword)cAlternatives_3.eContents().get(2);
 		private final Keyword cCommercialAtKeyword_3_3 = (Keyword)cAlternatives_3.eContents().get(3);
-		private final Keyword cHyphenMinusKeyword_3_4 = (Keyword)cAlternatives_3.eContents().get(4);
-		private final Keyword c_Keyword_3_5 = (Keyword)cAlternatives_3.eContents().get(5);
-		private final RuleCall cDIGITSTerminalRuleCall_3_6 = (RuleCall)cAlternatives_3.eContents().get(6);
-		private final RuleCall cLETTERParserRuleCall_3_7 = (RuleCall)cAlternatives_3.eContents().get(7);
+		private final Keyword c_Keyword_3_4 = (Keyword)cAlternatives_3.eContents().get(4);
+		private final RuleCall cALPHA_NUMERIC_CHARParserRuleCall_3_5 = (RuleCall)cAlternatives_3.eContents().get(5);
 		
 		//URL_NO_VX:
-		//    ('-' | '_' | LETTER_NO_VX)
-		//    ('-' | '_' | DIGITS | LETTER)*
+		//    ('_' | '-' | LETTER_NO_VX)
+		//    ('_' | ALPHA_NUMERIC_CHAR)*
 		//    ('/' | '.' | ':' | '@')
-		//    ('/' | '.' | ':' | '@' | '-' | '_' | DIGITS | LETTER)*
+		//    ('/' | '.' | ':' | '@' | '_' | ALPHA_NUMERIC_CHAR)*
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//('-' | '_' | LETTER_NO_VX)
-		//('-' | '_' | DIGITS | LETTER)*
+		//('_' | '-' | LETTER_NO_VX)
+		//('_' | ALPHA_NUMERIC_CHAR)*
 		//('/' | '.' | ':' | '@')
-		//('/' | '.' | ':' | '@' | '-' | '_' | DIGITS | LETTER)*
+		//('/' | '.' | ':' | '@' | '_' | ALPHA_NUMERIC_CHAR)*
 		public Group getGroup() { return cGroup; }
 		
-		//('-' | '_' | LETTER_NO_VX)
+		//('_' | '-' | LETTER_NO_VX)
 		public Alternatives getAlternatives_0() { return cAlternatives_0; }
 		
-		//'-'
-		public Keyword getHyphenMinusKeyword_0_0() { return cHyphenMinusKeyword_0_0; }
-		
 		//'_'
-		public Keyword get_Keyword_0_1() { return c_Keyword_0_1; }
+		public Keyword get_Keyword_0_0() { return c_Keyword_0_0; }
+		
+		//'-'
+		public Keyword getHyphenMinusKeyword_0_1() { return cHyphenMinusKeyword_0_1; }
 		
 		//LETTER_NO_VX
 		public RuleCall getLETTER_NO_VXParserRuleCall_0_2() { return cLETTER_NO_VXParserRuleCall_0_2; }
 		
-		//('-' | '_' | DIGITS | LETTER)*
+		//('_' | ALPHA_NUMERIC_CHAR)*
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
-		//'-'
-		public Keyword getHyphenMinusKeyword_1_0() { return cHyphenMinusKeyword_1_0; }
-		
 		//'_'
-		public Keyword get_Keyword_1_1() { return c_Keyword_1_1; }
+		public Keyword get_Keyword_1_0() { return c_Keyword_1_0; }
 		
-		//DIGITS
-		public RuleCall getDIGITSTerminalRuleCall_1_2() { return cDIGITSTerminalRuleCall_1_2; }
-		
-		//LETTER
-		public RuleCall getLETTERParserRuleCall_1_3() { return cLETTERParserRuleCall_1_3; }
+		//ALPHA_NUMERIC_CHAR
+		public RuleCall getALPHA_NUMERIC_CHARParserRuleCall_1_1() { return cALPHA_NUMERIC_CHARParserRuleCall_1_1; }
 		
 		//('/' | '.' | ':' | '@')
 		public Alternatives getAlternatives_2() { return cAlternatives_2; }
@@ -1095,7 +1178,7 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//'@'
 		public Keyword getCommercialAtKeyword_2_3() { return cCommercialAtKeyword_2_3; }
 		
-		//('/' | '.' | ':' | '@' | '-' | '_' | DIGITS | LETTER)*
+		//('/' | '.' | ':' | '@' | '_' | ALPHA_NUMERIC_CHAR)*
 		public Alternatives getAlternatives_3() { return cAlternatives_3; }
 		
 		//'/'
@@ -1110,63 +1193,145 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//'@'
 		public Keyword getCommercialAtKeyword_3_3() { return cCommercialAtKeyword_3_3; }
 		
-		//'-'
-		public Keyword getHyphenMinusKeyword_3_4() { return cHyphenMinusKeyword_3_4; }
-		
 		//'_'
-		public Keyword get_Keyword_3_5() { return c_Keyword_3_5; }
+		public Keyword get_Keyword_3_4() { return c_Keyword_3_4; }
 		
-		//DIGITS
-		public RuleCall getDIGITSTerminalRuleCall_3_6() { return cDIGITSTerminalRuleCall_3_6; }
-		
-		//LETTER
-		public RuleCall getLETTERParserRuleCall_3_7() { return cLETTERParserRuleCall_3_7; }
+		//ALPHA_NUMERIC_CHAR
+		public RuleCall getALPHA_NUMERIC_CHARParserRuleCall_3_5() { return cALPHA_NUMERIC_CHARParserRuleCall_3_5; }
 	}
 	public class TAGElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.TAG");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final RuleCall cLETTER_NO_VXParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
-		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
-		private final Keyword cHyphenMinusKeyword_1_0 = (Keyword)cAlternatives_1.eContents().get(0);
-		private final RuleCall cDIGITSTerminalRuleCall_1_1 = (RuleCall)cAlternatives_1.eContents().get(1);
-		private final RuleCall cLETTERParserRuleCall_1_2 = (RuleCall)cAlternatives_1.eContents().get(2);
+		private final RuleCall cALPHA_NUMERIC_CHARSParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
 		
 		//TAG:
-		//    (LETTER_NO_VX /*| LETTER_X*/) ('-' | DIGITS | LETTER)+
+		//    (LETTER_NO_VX /*| LETTER_X*/) ALPHA_NUMERIC_CHARS
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//(LETTER_NO_VX /*| LETTER_X*/) ('-' | DIGITS | LETTER)+
+		//(LETTER_NO_VX /*| LETTER_X*/) ALPHA_NUMERIC_CHARS
 		public Group getGroup() { return cGroup; }
 		
 		//(LETTER_NO_VX /*| LETTER_X*/)
 		public RuleCall getLETTER_NO_VXParserRuleCall_0() { return cLETTER_NO_VXParserRuleCall_0; }
 		
-		//('-' | DIGITS | LETTER)+
-		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		//ALPHA_NUMERIC_CHARS
+		public RuleCall getALPHA_NUMERIC_CHARSParserRuleCall_1() { return cALPHA_NUMERIC_CHARSParserRuleCall_1; }
+	}
+	public class WORKSPACE_VERSIONElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.WORKSPACE_VERSION");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Keyword cSolidusKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
+		private final Keyword cFullStopKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
+		private final Keyword cColonKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
+		private final Keyword cCommercialAtKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
+		private final Keyword c_Keyword_4 = (Keyword)cAlternatives.eContents().get(4);
+		private final Keyword cEqualsSignKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
+		private final Keyword cTildeKeyword_6 = (Keyword)cAlternatives.eContents().get(6);
+		private final Keyword cCircumflexAccentKeyword_7 = (Keyword)cAlternatives.eContents().get(7);
+		private final Keyword cLessThanSignKeyword_8 = (Keyword)cAlternatives.eContents().get(8);
+		private final Keyword cGreaterThanSignKeyword_9 = (Keyword)cAlternatives.eContents().get(9);
+		private final Keyword cLessThanSignEqualsSignKeyword_10 = (Keyword)cAlternatives.eContents().get(10);
+		private final Keyword cGreaterThanSignEqualsSignKeyword_11 = (Keyword)cAlternatives.eContents().get(11);
+		private final RuleCall cASTERIXTerminalRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
+		private final RuleCall cALPHA_NUMERIC_CHARParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
 		
-		//'-'
-		public Keyword getHyphenMinusKeyword_1_0() { return cHyphenMinusKeyword_1_0; }
+		//WORKSPACE_VERSION:
+		//    ( '/' | '.' | ':' | '@' | '_' | '=' | '~' | '^' | '<' | '>' | '<=' | '>=' | ASTERIX | ALPHA_NUMERIC_CHAR)+
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//( '/' | '.' | ':' | '@' | '_' | '=' | '~' | '^' | '<' | '>' | '<=' | '>=' | ASTERIX | ALPHA_NUMERIC_CHAR)+
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//'/'
+		public Keyword getSolidusKeyword_0() { return cSolidusKeyword_0; }
+		
+		//'.'
+		public Keyword getFullStopKeyword_1() { return cFullStopKeyword_1; }
+		
+		//':'
+		public Keyword getColonKeyword_2() { return cColonKeyword_2; }
+		
+		//'@'
+		public Keyword getCommercialAtKeyword_3() { return cCommercialAtKeyword_3; }
+		
+		//'_'
+		public Keyword get_Keyword_4() { return c_Keyword_4; }
+		
+		//'='
+		public Keyword getEqualsSignKeyword_5() { return cEqualsSignKeyword_5; }
+		
+		//'~'
+		public Keyword getTildeKeyword_6() { return cTildeKeyword_6; }
+		
+		//'^'
+		public Keyword getCircumflexAccentKeyword_7() { return cCircumflexAccentKeyword_7; }
+		
+		//'<'
+		public Keyword getLessThanSignKeyword_8() { return cLessThanSignKeyword_8; }
+		
+		//'>'
+		public Keyword getGreaterThanSignKeyword_9() { return cGreaterThanSignKeyword_9; }
+		
+		//'<='
+		public Keyword getLessThanSignEqualsSignKeyword_10() { return cLessThanSignEqualsSignKeyword_10; }
+		
+		//'>='
+		public Keyword getGreaterThanSignEqualsSignKeyword_11() { return cGreaterThanSignEqualsSignKeyword_11; }
+		
+		//ASTERIX
+		public RuleCall getASTERIXTerminalRuleCall_12() { return cASTERIXTerminalRuleCall_12; }
+		
+		//ALPHA_NUMERIC_CHAR
+		public RuleCall getALPHA_NUMERIC_CHARParserRuleCall_13() { return cALPHA_NUMERIC_CHARParserRuleCall_13; }
+	}
+	public class ALPHA_NUMERIC_CHARS_START_WITH_DIGITSElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.ALPHA_NUMERIC_CHARS_START_WITH_DIGITS");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cDIGITSTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final RuleCall cALPHA_NUMERIC_CHARSParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		
+		//ALPHA_NUMERIC_CHARS_START_WITH_DIGITS:
+		//    DIGITS ALPHA_NUMERIC_CHARS
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//DIGITS ALPHA_NUMERIC_CHARS
+		public Group getGroup() { return cGroup; }
 		
 		//DIGITS
-		public RuleCall getDIGITSTerminalRuleCall_1_1() { return cDIGITSTerminalRuleCall_1_1; }
+		public RuleCall getDIGITSTerminalRuleCall_0() { return cDIGITSTerminalRuleCall_0; }
 		
-		//LETTER
-		public RuleCall getLETTERParserRuleCall_1_2() { return cLETTERParserRuleCall_1_2; }
+		//ALPHA_NUMERIC_CHARS
+		public RuleCall getALPHA_NUMERIC_CHARSParserRuleCall_1() { return cALPHA_NUMERIC_CHARSParserRuleCall_1; }
 	}
 	public class ALPHA_NUMERIC_CHARSElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.ALPHA_NUMERIC_CHARS");
+		private final RuleCall cALPHA_NUMERIC_CHARParserRuleCall = (RuleCall)rule.eContents().get(1);
+		
+		//ALPHA_NUMERIC_CHARS:
+		//    ALPHA_NUMERIC_CHAR+
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//ALPHA_NUMERIC_CHAR+
+		public RuleCall getALPHA_NUMERIC_CHARParserRuleCall() { return cALPHA_NUMERIC_CHARParserRuleCall; }
+	}
+	public class ALPHA_NUMERIC_CHARElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.ALPHA_NUMERIC_CHAR");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final Keyword cHyphenMinusKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
 		private final RuleCall cDIGITSTerminalRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cLETTERParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		
-		//ALPHA_NUMERIC_CHARS:
-		//    ('-' | DIGITS | LETTER)+
+		//ALPHA_NUMERIC_CHAR:
+		//    '-' | DIGITS | LETTER
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//('-' | DIGITS | LETTER)+
+		//'-' | DIGITS | LETTER
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//'-'
@@ -1177,38 +1342,6 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		
 		//LETTER
 		public RuleCall getLETTERParserRuleCall_2() { return cLETTERParserRuleCall_2; }
-	}
-	public class ALPHA_NUMERIC_CHARS_START_WITH_DIGITSElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.ALPHA_NUMERIC_CHARS_START_WITH_DIGITS");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final RuleCall cDIGITSTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
-		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
-		private final Keyword cHyphenMinusKeyword_1_0 = (Keyword)cAlternatives_1.eContents().get(0);
-		private final RuleCall cDIGITSTerminalRuleCall_1_1 = (RuleCall)cAlternatives_1.eContents().get(1);
-		private final RuleCall cLETTERParserRuleCall_1_2 = (RuleCall)cAlternatives_1.eContents().get(2);
-		
-		//ALPHA_NUMERIC_CHARS_START_WITH_DIGITS:
-		//    DIGITS ('-' | DIGITS | LETTER)+
-		//;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//DIGITS ('-' | DIGITS | LETTER)+
-		public Group getGroup() { return cGroup; }
-		
-		//DIGITS
-		public RuleCall getDIGITSTerminalRuleCall_0() { return cDIGITSTerminalRuleCall_0; }
-		
-		//('-' | DIGITS | LETTER)+
-		public Alternatives getAlternatives_1() { return cAlternatives_1; }
-		
-		//'-'
-		public Keyword getHyphenMinusKeyword_1_0() { return cHyphenMinusKeyword_1_0; }
-		
-		//DIGITS
-		public RuleCall getDIGITSTerminalRuleCall_1_1() { return cDIGITSTerminalRuleCall_1_1; }
-		
-		//LETTER
-		public RuleCall getLETTERParserRuleCall_1_2() { return cLETTERParserRuleCall_1_2; }
 	}
 	public class WILDCARDElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.WILDCARD");
@@ -1261,45 +1394,63 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	public class LETTER_NO_VXElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_NO_VX");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cLETTER_STerminalRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cLETTER_MTerminalRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cLETTER_RTerminalRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cLETTER_ATerminalRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cLETTER_CTerminalRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cLETTER_ETerminalRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		private final RuleCall cLETTER_FTerminalRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
 		private final RuleCall cLETTER_ITerminalRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
-		private final RuleCall cLETTER_LTerminalRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
-		private final RuleCall cLETTER_ETerminalRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
-		private final RuleCall cLETTER_OTHERTerminalRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
+		private final RuleCall cLETTER_KTerminalRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cLETTER_LTerminalRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
+		private final RuleCall cLETTER_MTerminalRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
+		private final RuleCall cLETTER_OTerminalRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
+		private final RuleCall cLETTER_PTerminalRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
+		private final RuleCall cLETTER_RTerminalRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
+		private final RuleCall cLETTER_STerminalRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
+		private final RuleCall cLETTER_WTerminalRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
+		private final RuleCall cLETTER_OTHERTerminalRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
 		
 		//fragment LETTER_NO_VX:
-		//    LETTER_S
-		//    | LETTER_M
-		//    | LETTER_R
+		//    LETTER_A
+		//    | LETTER_C
+		//    | LETTER_E
 		//    | LETTER_F
 		//    | LETTER_I
+		//    | LETTER_K
 		//    | LETTER_L
-		//    | LETTER_E
+		//    | LETTER_M
+		//    | LETTER_O
+		//    | LETTER_P
+		//    | LETTER_R
+		//    | LETTER_S
+		//    | LETTER_W
 		//    | LETTER_OTHER
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//LETTER_S
-		//| LETTER_M
-		//| LETTER_R
+		//LETTER_A
+		//| LETTER_C
+		//| LETTER_E
 		//| LETTER_F
 		//| LETTER_I
+		//| LETTER_K
 		//| LETTER_L
-		//| LETTER_E
+		//| LETTER_M
+		//| LETTER_O
+		//| LETTER_P
+		//| LETTER_R
+		//| LETTER_S
+		//| LETTER_W
 		//| LETTER_OTHER
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
-		//LETTER_S
-		public RuleCall getLETTER_STerminalRuleCall_0() { return cLETTER_STerminalRuleCall_0; }
+		//LETTER_A
+		public RuleCall getLETTER_ATerminalRuleCall_0() { return cLETTER_ATerminalRuleCall_0; }
 		
-		//LETTER_M
-		public RuleCall getLETTER_MTerminalRuleCall_1() { return cLETTER_MTerminalRuleCall_1; }
+		//LETTER_C
+		public RuleCall getLETTER_CTerminalRuleCall_1() { return cLETTER_CTerminalRuleCall_1; }
 		
-		//LETTER_R
-		public RuleCall getLETTER_RTerminalRuleCall_2() { return cLETTER_RTerminalRuleCall_2; }
+		//LETTER_E
+		public RuleCall getLETTER_ETerminalRuleCall_2() { return cLETTER_ETerminalRuleCall_2; }
 		
 		//LETTER_F
 		public RuleCall getLETTER_FTerminalRuleCall_3() { return cLETTER_FTerminalRuleCall_3; }
@@ -1307,14 +1458,32 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//LETTER_I
 		public RuleCall getLETTER_ITerminalRuleCall_4() { return cLETTER_ITerminalRuleCall_4; }
 		
-		//LETTER_L
-		public RuleCall getLETTER_LTerminalRuleCall_5() { return cLETTER_LTerminalRuleCall_5; }
+		//LETTER_K
+		public RuleCall getLETTER_KTerminalRuleCall_5() { return cLETTER_KTerminalRuleCall_5; }
 		
-		//LETTER_E
-		public RuleCall getLETTER_ETerminalRuleCall_6() { return cLETTER_ETerminalRuleCall_6; }
+		//LETTER_L
+		public RuleCall getLETTER_LTerminalRuleCall_6() { return cLETTER_LTerminalRuleCall_6; }
+		
+		//LETTER_M
+		public RuleCall getLETTER_MTerminalRuleCall_7() { return cLETTER_MTerminalRuleCall_7; }
+		
+		//LETTER_O
+		public RuleCall getLETTER_OTerminalRuleCall_8() { return cLETTER_OTerminalRuleCall_8; }
+		
+		//LETTER_P
+		public RuleCall getLETTER_PTerminalRuleCall_9() { return cLETTER_PTerminalRuleCall_9; }
+		
+		//LETTER_R
+		public RuleCall getLETTER_RTerminalRuleCall_10() { return cLETTER_RTerminalRuleCall_10; }
+		
+		//LETTER_S
+		public RuleCall getLETTER_STerminalRuleCall_11() { return cLETTER_STerminalRuleCall_11; }
+		
+		//LETTER_W
+		public RuleCall getLETTER_WTerminalRuleCall_12() { return cLETTER_WTerminalRuleCall_12; }
 		
 		//LETTER_OTHER
-		public RuleCall getLETTER_OTHERTerminalRuleCall_7() { return cLETTER_OTHERTerminalRuleCall_7; }
+		public RuleCall getLETTER_OTHERTerminalRuleCall_13() { return cLETTER_OTHERTerminalRuleCall_13; }
 	}
 	
 	public class VersionComparatorElements extends AbstractElementFinder.AbstractEnumRuleElementFinder {
@@ -1322,36 +1491,36 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final EnumLiteralDeclaration cEqualsEnumLiteralDeclaration_0 = (EnumLiteralDeclaration)cAlternatives.eContents().get(0);
 		private final Keyword cEqualsEqualsSignKeyword_0_0 = (Keyword)cEqualsEnumLiteralDeclaration_0.eContents().get(0);
-		private final EnumLiteralDeclaration cSmallerEnumLiteralDeclaration_1 = (EnumLiteralDeclaration)cAlternatives.eContents().get(1);
-		private final Keyword cSmallerLessThanSignKeyword_1_0 = (Keyword)cSmallerEnumLiteralDeclaration_1.eContents().get(0);
-		private final EnumLiteralDeclaration cTildeEnumLiteralDeclaration_2 = (EnumLiteralDeclaration)cAlternatives.eContents().get(2);
-		private final Keyword cTildeTildeKeyword_2_0 = (Keyword)cTildeEnumLiteralDeclaration_2.eContents().get(0);
-		private final EnumLiteralDeclaration cCaretEnumLiteralDeclaration_3 = (EnumLiteralDeclaration)cAlternatives.eContents().get(3);
-		private final Keyword cCaretCircumflexAccentKeyword_3_0 = (Keyword)cCaretEnumLiteralDeclaration_3.eContents().get(0);
-		private final EnumLiteralDeclaration cSmallerEqualsEnumLiteralDeclaration_4 = (EnumLiteralDeclaration)cAlternatives.eContents().get(4);
-		private final Keyword cSmallerEqualsLessThanSignEqualsSignKeyword_4_0 = (Keyword)cSmallerEqualsEnumLiteralDeclaration_4.eContents().get(0);
-		private final EnumLiteralDeclaration cGreaterEnumLiteralDeclaration_5 = (EnumLiteralDeclaration)cAlternatives.eContents().get(5);
-		private final Keyword cGreaterGreaterThanSignKeyword_5_0 = (Keyword)cGreaterEnumLiteralDeclaration_5.eContents().get(0);
+		private final EnumLiteralDeclaration cTildeEnumLiteralDeclaration_1 = (EnumLiteralDeclaration)cAlternatives.eContents().get(1);
+		private final Keyword cTildeTildeKeyword_1_0 = (Keyword)cTildeEnumLiteralDeclaration_1.eContents().get(0);
+		private final EnumLiteralDeclaration cCaretEnumLiteralDeclaration_2 = (EnumLiteralDeclaration)cAlternatives.eContents().get(2);
+		private final Keyword cCaretCircumflexAccentKeyword_2_0 = (Keyword)cCaretEnumLiteralDeclaration_2.eContents().get(0);
+		private final EnumLiteralDeclaration cSmallerEnumLiteralDeclaration_3 = (EnumLiteralDeclaration)cAlternatives.eContents().get(3);
+		private final Keyword cSmallerLessThanSignKeyword_3_0 = (Keyword)cSmallerEnumLiteralDeclaration_3.eContents().get(0);
+		private final EnumLiteralDeclaration cGreaterEnumLiteralDeclaration_4 = (EnumLiteralDeclaration)cAlternatives.eContents().get(4);
+		private final Keyword cGreaterGreaterThanSignKeyword_4_0 = (Keyword)cGreaterEnumLiteralDeclaration_4.eContents().get(0);
+		private final EnumLiteralDeclaration cSmallerEqualsEnumLiteralDeclaration_5 = (EnumLiteralDeclaration)cAlternatives.eContents().get(5);
+		private final Keyword cSmallerEqualsLessThanSignEqualsSignKeyword_5_0 = (Keyword)cSmallerEqualsEnumLiteralDeclaration_5.eContents().get(0);
 		private final EnumLiteralDeclaration cGreaterEqualsEnumLiteralDeclaration_6 = (EnumLiteralDeclaration)cAlternatives.eContents().get(6);
 		private final Keyword cGreaterEqualsGreaterThanSignEqualsSignKeyword_6_0 = (Keyword)cGreaterEqualsEnumLiteralDeclaration_6.eContents().get(0);
 		
 		//enum VersionComparator:
 		//    Equals = '='
-		//|    Smaller = '<'
 		//|    Tilde = '~'
 		//|    Caret = '^'
-		//|    SmallerEquals = '<='
+		//|    Smaller = '<'
 		//|    Greater = '>'
+		//|    SmallerEquals = '<='
 		//|    GreaterEquals = '>='
 		//;
 		public EnumRule getRule() { return rule; }
 		
 		//    Equals = '='
-		//|    Smaller = '<'
 		//|    Tilde = '~'
 		//|    Caret = '^'
-		//|    SmallerEquals = '<='
+		//|    Smaller = '<'
 		//|    Greater = '>'
+		//|    SmallerEquals = '<='
 		//|    GreaterEquals = '>='
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
@@ -1361,35 +1530,35 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//'='
 		public Keyword getEqualsEqualsSignKeyword_0_0() { return cEqualsEqualsSignKeyword_0_0; }
 		
-		//Smaller = '<'
-		public EnumLiteralDeclaration getSmallerEnumLiteralDeclaration_1() { return cSmallerEnumLiteralDeclaration_1; }
-		
-		//'<'
-		public Keyword getSmallerLessThanSignKeyword_1_0() { return cSmallerLessThanSignKeyword_1_0; }
-		
 		//Tilde = '~'
-		public EnumLiteralDeclaration getTildeEnumLiteralDeclaration_2() { return cTildeEnumLiteralDeclaration_2; }
+		public EnumLiteralDeclaration getTildeEnumLiteralDeclaration_1() { return cTildeEnumLiteralDeclaration_1; }
 		
 		//'~'
-		public Keyword getTildeTildeKeyword_2_0() { return cTildeTildeKeyword_2_0; }
+		public Keyword getTildeTildeKeyword_1_0() { return cTildeTildeKeyword_1_0; }
 		
 		//Caret = '^'
-		public EnumLiteralDeclaration getCaretEnumLiteralDeclaration_3() { return cCaretEnumLiteralDeclaration_3; }
+		public EnumLiteralDeclaration getCaretEnumLiteralDeclaration_2() { return cCaretEnumLiteralDeclaration_2; }
 		
 		//'^'
-		public Keyword getCaretCircumflexAccentKeyword_3_0() { return cCaretCircumflexAccentKeyword_3_0; }
+		public Keyword getCaretCircumflexAccentKeyword_2_0() { return cCaretCircumflexAccentKeyword_2_0; }
 		
-		//SmallerEquals = '<='
-		public EnumLiteralDeclaration getSmallerEqualsEnumLiteralDeclaration_4() { return cSmallerEqualsEnumLiteralDeclaration_4; }
+		//Smaller = '<'
+		public EnumLiteralDeclaration getSmallerEnumLiteralDeclaration_3() { return cSmallerEnumLiteralDeclaration_3; }
 		
-		//'<='
-		public Keyword getSmallerEqualsLessThanSignEqualsSignKeyword_4_0() { return cSmallerEqualsLessThanSignEqualsSignKeyword_4_0; }
+		//'<'
+		public Keyword getSmallerLessThanSignKeyword_3_0() { return cSmallerLessThanSignKeyword_3_0; }
 		
 		//Greater = '>'
-		public EnumLiteralDeclaration getGreaterEnumLiteralDeclaration_5() { return cGreaterEnumLiteralDeclaration_5; }
+		public EnumLiteralDeclaration getGreaterEnumLiteralDeclaration_4() { return cGreaterEnumLiteralDeclaration_4; }
 		
 		//'>'
-		public Keyword getGreaterGreaterThanSignKeyword_5_0() { return cGreaterGreaterThanSignKeyword_5_0; }
+		public Keyword getGreaterGreaterThanSignKeyword_4_0() { return cGreaterGreaterThanSignKeyword_4_0; }
+		
+		//SmallerEquals = '<='
+		public EnumLiteralDeclaration getSmallerEqualsEnumLiteralDeclaration_5() { return cSmallerEqualsEnumLiteralDeclaration_5; }
+		
+		//'<='
+		public Keyword getSmallerEqualsLessThanSignEqualsSignKeyword_5_0() { return cSmallerEqualsLessThanSignEqualsSignKeyword_5_0; }
 		
 		//GreaterEquals = '>='
 		public EnumLiteralDeclaration getGreaterEqualsEnumLiteralDeclaration_6() { return cGreaterEqualsEnumLiteralDeclaration_6; }
@@ -1403,8 +1572,9 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	private final URLVersionRequirementElements pURLVersionRequirement;
 	private final URLVersionSpecifierElements pURLVersionSpecifier;
 	private final URLSemverElements pURLSemver;
-	private final TagVersionRequirementElements pTagVersionRequirement;
+	private final WorkspaceVersionRequirementElements pWorkspaceVersionRequirement;
 	private final GitHubVersionRequirementElements pGitHubVersionRequirement;
+	private final TagVersionRequirementElements pTagVersionRequirement;
 	private final VersionRangeSetRequirementElements pVersionRangeSetRequirement;
 	private final VersionRangeElements pVersionRange;
 	private final HyphenVersionRangeElements pHyphenVersionRange;
@@ -1416,24 +1586,33 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	private final QualifierTagElements pQualifierTag;
 	private final FILE_TAGElements pFILE_TAG;
 	private final SEMVER_TAGElements pSEMVER_TAG;
+	private final WORKSPACE_TAGElements pWORKSPACE_TAG;
 	private final PATHElements pPATH;
 	private final URL_PROTOCOLElements pURL_PROTOCOL;
 	private final URLElements pURL;
 	private final URL_NO_VXElements pURL_NO_VX;
 	private final TAGElements pTAG;
-	private final ALPHA_NUMERIC_CHARSElements pALPHA_NUMERIC_CHARS;
+	private final WORKSPACE_VERSIONElements pWORKSPACE_VERSION;
 	private final ALPHA_NUMERIC_CHARS_START_WITH_DIGITSElements pALPHA_NUMERIC_CHARS_START_WITH_DIGITS;
+	private final ALPHA_NUMERIC_CHARSElements pALPHA_NUMERIC_CHARS;
+	private final ALPHA_NUMERIC_CHARElements pALPHA_NUMERIC_CHAR;
 	private final WILDCARDElements pWILDCARD;
 	private final LETTERElements pLETTER;
 	private final LETTER_NO_VXElements pLETTER_NO_VX;
-	private final TerminalRule tLETTER_S;
-	private final TerminalRule tLETTER_M;
-	private final TerminalRule tLETTER_R;
+	private final TerminalRule tLETTER_A;
+	private final TerminalRule tLETTER_C;
+	private final TerminalRule tLETTER_E;
 	private final TerminalRule tLETTER_F;
 	private final TerminalRule tLETTER_I;
+	private final TerminalRule tLETTER_K;
 	private final TerminalRule tLETTER_L;
-	private final TerminalRule tLETTER_E;
+	private final TerminalRule tLETTER_M;
+	private final TerminalRule tLETTER_O;
+	private final TerminalRule tLETTER_P;
+	private final TerminalRule tLETTER_R;
+	private final TerminalRule tLETTER_S;
 	private final TerminalRule tLETTER_V;
+	private final TerminalRule tLETTER_W;
 	private final TerminalRule tLETTER_X;
 	private final TerminalRule tLETTER_OTHER;
 	private final TerminalRule tASTERIX;
@@ -1456,8 +1635,9 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		this.pURLVersionRequirement = new URLVersionRequirementElements();
 		this.pURLVersionSpecifier = new URLVersionSpecifierElements();
 		this.pURLSemver = new URLSemverElements();
-		this.pTagVersionRequirement = new TagVersionRequirementElements();
+		this.pWorkspaceVersionRequirement = new WorkspaceVersionRequirementElements();
 		this.pGitHubVersionRequirement = new GitHubVersionRequirementElements();
+		this.pTagVersionRequirement = new TagVersionRequirementElements();
 		this.pVersionRangeSetRequirement = new VersionRangeSetRequirementElements();
 		this.pVersionRange = new VersionRangeElements();
 		this.pHyphenVersionRange = new HyphenVersionRangeElements();
@@ -1469,24 +1649,33 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		this.pQualifierTag = new QualifierTagElements();
 		this.pFILE_TAG = new FILE_TAGElements();
 		this.pSEMVER_TAG = new SEMVER_TAGElements();
+		this.pWORKSPACE_TAG = new WORKSPACE_TAGElements();
 		this.pPATH = new PATHElements();
 		this.pURL_PROTOCOL = new URL_PROTOCOLElements();
 		this.pURL = new URLElements();
 		this.pURL_NO_VX = new URL_NO_VXElements();
 		this.pTAG = new TAGElements();
-		this.pALPHA_NUMERIC_CHARS = new ALPHA_NUMERIC_CHARSElements();
+		this.pWORKSPACE_VERSION = new WORKSPACE_VERSIONElements();
 		this.pALPHA_NUMERIC_CHARS_START_WITH_DIGITS = new ALPHA_NUMERIC_CHARS_START_WITH_DIGITSElements();
+		this.pALPHA_NUMERIC_CHARS = new ALPHA_NUMERIC_CHARSElements();
+		this.pALPHA_NUMERIC_CHAR = new ALPHA_NUMERIC_CHARElements();
 		this.pWILDCARD = new WILDCARDElements();
 		this.pLETTER = new LETTERElements();
 		this.pLETTER_NO_VX = new LETTER_NO_VXElements();
-		this.tLETTER_S = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_S");
-		this.tLETTER_M = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_M");
-		this.tLETTER_R = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_R");
+		this.tLETTER_A = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_A");
+		this.tLETTER_C = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_C");
+		this.tLETTER_E = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_E");
 		this.tLETTER_F = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_F");
 		this.tLETTER_I = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_I");
+		this.tLETTER_K = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_K");
 		this.tLETTER_L = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_L");
-		this.tLETTER_E = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_E");
+		this.tLETTER_M = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_M");
+		this.tLETTER_O = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_O");
+		this.tLETTER_P = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_P");
+		this.tLETTER_R = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_R");
+		this.tLETTER_S = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_S");
 		this.tLETTER_V = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_V");
+		this.tLETTER_W = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_W");
 		this.tLETTER_X = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_X");
 		this.tLETTER_OTHER = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_OTHER");
 		this.tASTERIX = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.ASTERIX");
@@ -1531,8 +1720,10 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	//        (
 	//            =>LocalPathVersionRequirement
 	//            | ( =>URLVersionRequirement
-	//                | GitHubVersionRequirement
-	//                | TagVersionRequirement
+	//                | ( =>WorkspaceVersionRequirement
+	//                    | GitHubVersionRequirement
+	//                    | TagVersionRequirement // this can be any string
+	//                )
 	//            )
 	//        ) WS?
 	//;
@@ -1593,6 +1784,31 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		return getURLSemverAccess().getRule();
 	}
 	
+	//WorkspaceVersionRequirement:
+	//    (WORKSPACE_TAG)
+	//    (    =>version=SimpleVersion
+	//    |    otherVersion=WORKSPACE_VERSION    // fallback for various other version kinds
+	//    )
+	//;
+	public WorkspaceVersionRequirementElements getWorkspaceVersionRequirementAccess() {
+		return pWorkspaceVersionRequirement;
+	}
+	
+	public ParserRule getWorkspaceVersionRequirementRule() {
+		return getWorkspaceVersionRequirementAccess().getRule();
+	}
+	
+	//GitHubVersionRequirement:
+	//    githubUrl=URL_NO_VX ('#' commitISH=ALPHA_NUMERIC_CHARS)?
+	//;
+	public GitHubVersionRequirementElements getGitHubVersionRequirementAccess() {
+		return pGitHubVersionRequirement;
+	}
+	
+	public ParserRule getGitHubVersionRequirementRule() {
+		return getGitHubVersionRequirementAccess().getRule();
+	}
+	
 	////URLCommitISH:
 	////    commitISH=ALPHA_NUMERIC_CHARS
 	////;
@@ -1605,17 +1821,6 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	
 	public ParserRule getTagVersionRequirementRule() {
 		return getTagVersionRequirementAccess().getRule();
-	}
-	
-	//GitHubVersionRequirement:
-	//    githubUrl=URL_NO_VX ('#' commitISH=ALPHA_NUMERIC_CHARS)?
-	//;
-	public GitHubVersionRequirementElements getGitHubVersionRequirementAccess() {
-		return pGitHubVersionRequirement;
-	}
-	
-	public ParserRule getGitHubVersionRequirementRule() {
-		return getGitHubVersionRequirementAccess().getRule();
 	}
 	
 	//VersionRangeSetRequirement:
@@ -1747,8 +1952,19 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		return getSEMVER_TAGAccess().getRule();
 	}
 	
+	//WORKSPACE_TAG:
+	//    LETTER_W LETTER_O LETTER_R LETTER_K LETTER_S LETTER_P LETTER_A LETTER_C LETTER_E ':'
+	//;
+	public WORKSPACE_TAGElements getWORKSPACE_TAGAccess() {
+		return pWORKSPACE_TAG;
+	}
+	
+	public ParserRule getWORKSPACE_TAGRule() {
+		return getWORKSPACE_TAGAccess().getRule();
+	}
+	
 	//PATH:
-	//    ('/' | '.' | '@' | '-' | '_' | DIGITS | LETTER)+
+	//    ('/' | '.' | '@' | '_' | ALPHA_NUMERIC_CHAR)+
 	//;
 	public PATHElements getPATHAccess() {
 		return pPATH;
@@ -1770,9 +1986,9 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	}
 	
 	//URL:
-	//    ('-' | '_' | DIGITS | LETTER)*
+	//    ('_' | ALPHA_NUMERIC_CHAR)*
 	//    ('/' | '.' | ':' | '@')
-	//    ('/' | '.' | ':' | '@' | '-' | '_' | DIGITS | LETTER)*
+	//    ('/' | '.' | ':' | '@' | '_' | ALPHA_NUMERIC_CHAR)*
 	//;
 	public URLElements getURLAccess() {
 		return pURL;
@@ -1783,10 +1999,10 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	}
 	
 	//URL_NO_VX:
-	//    ('-' | '_' | LETTER_NO_VX)
-	//    ('-' | '_' | DIGITS | LETTER)*
+	//    ('_' | '-' | LETTER_NO_VX)
+	//    ('_' | ALPHA_NUMERIC_CHAR)*
 	//    ('/' | '.' | ':' | '@')
-	//    ('/' | '.' | ':' | '@' | '-' | '_' | DIGITS | LETTER)*
+	//    ('/' | '.' | ':' | '@' | '_' | ALPHA_NUMERIC_CHAR)*
 	//;
 	public URL_NO_VXElements getURL_NO_VXAccess() {
 		return pURL_NO_VX;
@@ -1797,7 +2013,7 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	}
 	
 	//TAG:
-	//    (LETTER_NO_VX /*| LETTER_X*/) ('-' | DIGITS | LETTER)+
+	//    (LETTER_NO_VX /*| LETTER_X*/) ALPHA_NUMERIC_CHARS
 	//;
 	public TAGElements getTAGAccess() {
 		return pTAG;
@@ -1807,8 +2023,30 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		return getTAGAccess().getRule();
 	}
 	
+	//WORKSPACE_VERSION:
+	//    ( '/' | '.' | ':' | '@' | '_' | '=' | '~' | '^' | '<' | '>' | '<=' | '>=' | ASTERIX | ALPHA_NUMERIC_CHAR)+
+	//;
+	public WORKSPACE_VERSIONElements getWORKSPACE_VERSIONAccess() {
+		return pWORKSPACE_VERSION;
+	}
+	
+	public ParserRule getWORKSPACE_VERSIONRule() {
+		return getWORKSPACE_VERSIONAccess().getRule();
+	}
+	
+	//ALPHA_NUMERIC_CHARS_START_WITH_DIGITS:
+	//    DIGITS ALPHA_NUMERIC_CHARS
+	//;
+	public ALPHA_NUMERIC_CHARS_START_WITH_DIGITSElements getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess() {
+		return pALPHA_NUMERIC_CHARS_START_WITH_DIGITS;
+	}
+	
+	public ParserRule getALPHA_NUMERIC_CHARS_START_WITH_DIGITSRule() {
+		return getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getRule();
+	}
+	
 	//ALPHA_NUMERIC_CHARS:
-	//    ('-' | DIGITS | LETTER)+
+	//    ALPHA_NUMERIC_CHAR+
 	//;
 	public ALPHA_NUMERIC_CHARSElements getALPHA_NUMERIC_CHARSAccess() {
 		return pALPHA_NUMERIC_CHARS;
@@ -1818,15 +2056,15 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		return getALPHA_NUMERIC_CHARSAccess().getRule();
 	}
 	
-	//ALPHA_NUMERIC_CHARS_START_WITH_DIGITS:
-	//    DIGITS ('-' | DIGITS | LETTER)+
+	//ALPHA_NUMERIC_CHAR:
+	//    '-' | DIGITS | LETTER
 	//;
-	public ALPHA_NUMERIC_CHARS_START_WITH_DIGITSElements getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess() {
-		return pALPHA_NUMERIC_CHARS_START_WITH_DIGITS;
+	public ALPHA_NUMERIC_CHARElements getALPHA_NUMERIC_CHARAccess() {
+		return pALPHA_NUMERIC_CHAR;
 	}
 	
-	public ParserRule getALPHA_NUMERIC_CHARS_START_WITH_DIGITSRule() {
-		return getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getRule();
+	public ParserRule getALPHA_NUMERIC_CHARRule() {
+		return getALPHA_NUMERIC_CHARAccess().getRule();
 	}
 	
 	//WILDCARD:
@@ -1854,13 +2092,19 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	}
 	
 	//fragment LETTER_NO_VX:
-	//    LETTER_S
-	//    | LETTER_M
-	//    | LETTER_R
+	//    LETTER_A
+	//    | LETTER_C
+	//    | LETTER_E
 	//    | LETTER_F
 	//    | LETTER_I
+	//    | LETTER_K
 	//    | LETTER_L
-	//    | LETTER_E
+	//    | LETTER_M
+	//    | LETTER_O
+	//    | LETTER_P
+	//    | LETTER_R
+	//    | LETTER_S
+	//    | LETTER_W
 	//    | LETTER_OTHER
 	//;
 	public LETTER_NO_VXElements getLETTER_NO_VXAccess() {
@@ -1871,25 +2115,25 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		return getLETTER_NO_VXAccess().getRule();
 	}
 	
-	//terminal LETTER_S :
-	//    's' | 'S'
+	//terminal LETTER_A :
+	//    'a' | 'A'
 	//;
-	public TerminalRule getLETTER_SRule() {
-		return tLETTER_S;
+	public TerminalRule getLETTER_ARule() {
+		return tLETTER_A;
 	}
 	
-	//terminal LETTER_M :
-	//    'm' | 'M'
+	//terminal LETTER_C :
+	//    'c' | 'C'
 	//;
-	public TerminalRule getLETTER_MRule() {
-		return tLETTER_M;
+	public TerminalRule getLETTER_CRule() {
+		return tLETTER_C;
 	}
 	
-	//terminal LETTER_R :
-	//    'r' | 'R'
+	//terminal LETTER_E :
+	//    'e' | 'E'
 	//;
-	public TerminalRule getLETTER_RRule() {
-		return tLETTER_R;
+	public TerminalRule getLETTER_ERule() {
+		return tLETTER_E;
 	}
 	
 	//terminal LETTER_F :
@@ -1906,6 +2150,13 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		return tLETTER_I;
 	}
 	
+	//terminal LETTER_K :
+	//    'k' | 'K'
+	//;
+	public TerminalRule getLETTER_KRule() {
+		return tLETTER_K;
+	}
+	
 	//terminal LETTER_L :
 	//    'l' | 'L'
 	//;
@@ -1913,11 +2164,39 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		return tLETTER_L;
 	}
 	
-	//terminal LETTER_E :
-	//    'e' | 'E'
+	//terminal LETTER_M :
+	//    'm' | 'M'
 	//;
-	public TerminalRule getLETTER_ERule() {
-		return tLETTER_E;
+	public TerminalRule getLETTER_MRule() {
+		return tLETTER_M;
+	}
+	
+	//terminal LETTER_O :
+	//    'o' | 'O'
+	//;
+	public TerminalRule getLETTER_ORule() {
+		return tLETTER_O;
+	}
+	
+	//terminal LETTER_P :
+	//    'p' | 'P'
+	//;
+	public TerminalRule getLETTER_PRule() {
+		return tLETTER_P;
+	}
+	
+	//terminal LETTER_R :
+	//    'r' | 'R'
+	//;
+	public TerminalRule getLETTER_RRule() {
+		return tLETTER_R;
+	}
+	
+	//terminal LETTER_S :
+	//    's' | 'S'
+	//;
+	public TerminalRule getLETTER_SRule() {
+		return tLETTER_S;
 	}
 	
 	//terminal LETTER_V :
@@ -1925,6 +2204,13 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	//;
 	public TerminalRule getLETTER_VRule() {
 		return tLETTER_V;
+	}
+	
+	//terminal LETTER_W :
+	//    'w' | 'W'
+	//;
+	public TerminalRule getLETTER_WRule() {
+		return tLETTER_W;
 	}
 	
 	//terminal LETTER_X:
@@ -1935,9 +2221,9 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	}
 	
 	//terminal LETTER_OTHER:
-	//      'a' | 'A'
-	//    | 'b' | 'B'
-	//    | 'c' | 'C'
+	//    //  'a' | 'A' // part of 'workspace' tag
+	//     'b' | 'B'
+	//    // | 'c' | 'C' // part of 'workspace' tag
 	//    | 'd' | 'D'
 	//    // | 'e' | 'E' // part of 'semver' and/or 'file' tag
 	//    // | 'f' | 'F' // part of 'file' tag
@@ -1945,19 +2231,19 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	//    | 'h' | 'H'
 	//    // | 'i' | 'I' // part of 'file' tag
 	//    | 'j' | 'J'
-	//    | 'k' | 'K'
+	//    // | 'k' | 'K' // part of 'workspace' tag
 	//    // | 'l' | 'L' // part of 'file' tag
 	//    // | 'm' | 'M' // part of 'semver' tag
 	//    | 'n' | 'N'
-	//    | 'o' | 'O'
-	//    | 'p' | 'P'
+	//    // | 'o' | 'O' // part of 'workspace' tag
+	//    // | 'p' | 'P' // part of 'workspace' tag
 	//    | 'q' | 'Q'
 	//    // | 'r' | 'R' // part of 'semver' tag
 	//    // | 's' | 'S' // part of 'semver' tag
 	//    | 't' | 'T'
 	//    | 'u' | 'U'
 	//    // | 'v' | 'V' // can be a prefix of a version and/or part of 'semver' tag
-	//    | 'w' | 'W'
+	//    // | 'w' | 'W' // part of 'workspace' tag
 	//    // | 'x' | 'X' // can be a wildcard
 	//    | 'y' | 'Y'
 	//    | 'z' | 'Z'
@@ -1994,11 +2280,11 @@ public class SemverGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	
 	//enum VersionComparator:
 	//    Equals = '='
-	//|    Smaller = '<'
 	//|    Tilde = '~'
 	//|    Caret = '^'
-	//|    SmallerEquals = '<='
+	//|    Smaller = '<'
 	//|    Greater = '>'
+	//|    SmallerEquals = '<='
 	//|    GreaterEquals = '>='
 	//;
 	public VersionComparatorElements getVersionComparatorAccess() {

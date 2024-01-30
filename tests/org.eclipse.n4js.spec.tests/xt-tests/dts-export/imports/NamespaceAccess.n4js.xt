@@ -36,7 +36,7 @@ export public class Cls extends NS.SomeClass {}
 
 
 /* XPECT generated_dts ---
-import * as NS from './Other'
+import type * as NS from './Other.d.ts'
 
 export let x: NS.SomeClass;
 export function foo(p: NS.SomeClass): NS.SomeClass;

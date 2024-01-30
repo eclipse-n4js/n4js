@@ -10,7 +10,8 @@
  */
 package org.eclipse.n4js.workspace;
 
-import java.util.ArrayList;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,11 +25,12 @@ import org.eclipse.xtext.util.IFileSystemScanner;
  * Wrapper around {@link SourceContainerDescription}.
  */
 public class N4JSSourceFolder implements IN4JSSourceFolder {
-
 	private final N4JSProjectConfig project;
 	private final SourceContainerType type;
 	private final String relativePath;
 	private final FileURI absolutePath;
+	private final List<String> workspaces;
+	private final FileSystemScannerAceptor fssAcceptor;
 
 	/**
 	 * Constructor
@@ -38,6 +40,8 @@ public class N4JSSourceFolder implements IN4JSSourceFolder {
 		this.type = Objects.requireNonNull(type);
 		this.relativePath = Objects.requireNonNull(relativePath);
 		this.absolutePath = project.getAbsolutePath(relativePath);
+		this.workspaces = project.getProjectDescription().getWorkspaces();
+		this.fssAcceptor = new FileSystemScannerAceptor(getPath(), workspaces);
 	}
 
 	@Override
@@ -70,11 +74,30 @@ public class N4JSSourceFolder implements IN4JSSourceFolder {
 		return absolutePath;
 	}
 
+	/**  */
+	public List<String> getWorkspaces() {
+		return workspaces;
+	}
+
 	@Override
 	public List<URI> getAllResources(IFileSystemScanner scanner) {
-		List<URI> sources = new ArrayList<>();
-		scanner.scan(getPath(), sources::add);
-		return sources;
+		scanner.scan(getPath(), fssAcceptor); // assumes a FileSystemScanner
+		return fssAcceptor.getSources();
+	}
+
+	@SuppressWarnings("restriction")
+	@Override
+	public boolean contains(URI uri) {
+		if (!IN4JSSourceFolder.super.contains(uri)) {
+			return false;
+		}
+		for (PathMatcher pathMatcher : fssAcceptor.getPathMatchers()) {
+			if (pathMatcher.matches(Path.of(uri.toFileString()))) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 }

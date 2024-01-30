@@ -30,7 +30,7 @@ export public let x = NS.foo();
 
 
 /* XPECT generated_dts ---
-import * as NS from './Other'
+import type * as NS from './Other.d.ts'
 
 export let x: NS.ClsOther;
 --- */

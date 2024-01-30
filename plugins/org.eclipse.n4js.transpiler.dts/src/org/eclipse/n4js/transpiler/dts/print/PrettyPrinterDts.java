@@ -43,6 +43,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
+import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
@@ -89,6 +90,7 @@ import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils;
 import org.eclipse.xtext.EcoreUtil2;
 
@@ -214,8 +216,19 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 				? original.getModuleSpecifierAsText().replace("%3A", ":") // see ModuleSpecifierValueConverter
 				: original.getModule().getQualifiedName();
 
+		if (original.getModuleSpecifierForm() != ModuleSpecifierForm.PROJECT
+				&& Strings.isNullOrEmpty(URIUtils.fileExtension(URIUtils.toFileUri(moduleSpecifier)))) {
+
+			String extension = original.isBare() ? N4JSGlobals.JS_FILE_EXTENSION : N4JSGlobals.DTS_FILE_EXTENSION;
+			moduleSpecifier += "." + extension;
+		}
+
 		processAnnotations(original.getAnnotations());
 		write("import ");
+		if (!original.isBare()) {
+			write("type ");
+		}
+
 		// 1) import specifiers
 		List<ImportSpecifier> importSpecifiers = new ArrayList<>(original.getImportSpecifiers());
 		if (!importSpecifiers.isEmpty() && importSpecifiers.get(0) instanceof DefaultImportSpecifier) {

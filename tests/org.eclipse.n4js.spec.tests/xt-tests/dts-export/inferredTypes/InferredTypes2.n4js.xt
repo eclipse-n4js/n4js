@@ -58,7 +58,7 @@ export class ClassWithFields {
 
 
 /* XPECT generated_dts ---
-import {ClassDirectExported} from 'ProjectOtherDirect/src-gen/OtherDirect'
+import type {ClassDirectExported} from 'ProjectOtherDirect/src-gen/OtherDirect.d.ts'
 
 export let v1: ClassDirectExported;
 export let v2: any;

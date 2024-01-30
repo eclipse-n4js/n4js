@@ -14,9 +14,9 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDependency;
-import org.eclipse.n4js.workspace.IN4JSSourceFolder;
 import org.eclipse.n4js.workspace.N4JSProjectConfig;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.N4JSSourceFolder;
 import org.eclipse.n4js.workspace.N4JSSourceFolderForPackageJson;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshotForPackageJson;
@@ -65,8 +65,8 @@ public class N4JSConfigSnapshotFactory extends ConfigSnapshotFactory {
 		if (sourceFolder instanceof N4JSSourceFolderForPackageJson) {
 			return new N4JSSourceFolderSnapshotForPackageJson((N4JSSourceFolderForPackageJson) sourceFolder);
 		}
-		IN4JSSourceFolder sourceFolderCasted = (IN4JSSourceFolder) sourceFolder;
+		N4JSSourceFolder sourceFolderCasted = (N4JSSourceFolder) sourceFolder;
 		return new N4JSSourceFolderSnapshot(sourceFolder.getName(), sourceFolder.getPath(),
-				sourceFolderCasted.getType(), sourceFolderCasted.getRelativePath());
+				sourceFolderCasted.getType(), sourceFolderCasted.getRelativePath(), sourceFolderCasted.getWorkspaces());
 	}
 }

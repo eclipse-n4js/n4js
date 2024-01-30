@@ -2060,6 +2060,10 @@ public enum IssueCodes {
 	PKGJ_REWRITE_MODULE_SPECIFIERS__INVALID_VALUE(ERROR,
 			"String expected (i.e. the module specifier to use in the output code)."),
 
+	/** no parameters */
+	PKGJ_PNPM_WORKSPACES_OVERRIDE(WARNING,
+			"This property is overridden by property 'packages' in file pnpm-workspaces.yaml."),
+
 	/** 0: dependency cycle */
 	LTD_ILLEGAL_LOADTIME_REFERENCE(ERROR,
 			"Load-time references to the same or other modules are not allowed within a runtime dependency cycle (except in extends/implements clauses).{0}"),

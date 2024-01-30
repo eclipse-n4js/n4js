@@ -68,6 +68,7 @@ public class SemverFactoryImpl extends EFactoryImpl implements SemverFactory {
 			case SemverPackage.URL_VERSION_REQUIREMENT: return createURLVersionRequirement();
 			case SemverPackage.URL_SEMVER: return createURLSemver();
 			case SemverPackage.URL_COMMIT_ISH: return createURLCommitISH();
+			case SemverPackage.WORKSPACE_VERSION_REQUIREMENT: return createWorkspaceVersionRequirement();
 			case SemverPackage.GIT_HUB_VERSION_REQUIREMENT: return createGitHubVersionRequirement();
 			case SemverPackage.LOCAL_PATH_VERSION_REQUIREMENT: return createLocalPathVersionRequirement();
 			case SemverPackage.TAG_VERSION_REQUIREMENT: return createTagVersionRequirement();
@@ -145,6 +146,17 @@ public class SemverFactoryImpl extends EFactoryImpl implements SemverFactory {
 	public URLCommitISH createURLCommitISH() {
 		URLCommitISHImpl urlCommitISH = new URLCommitISHImpl();
 		return urlCommitISH;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public WorkspaceVersionRequirement createWorkspaceVersionRequirement() {
+		WorkspaceVersionRequirementImpl workspaceVersionRequirement = new WorkspaceVersionRequirementImpl();
+		return workspaceVersionRequirement;
 	}
 
 	/**

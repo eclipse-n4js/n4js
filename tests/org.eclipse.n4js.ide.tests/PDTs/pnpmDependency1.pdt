@@ -1,0 +1,19 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+
+FOLDERS
+-*Root [PROJECT workspaces-pnpm=["packages/*"]]
+-- packages
+--- P1 [PROJECT dependencies={"D1":"*"}]
+---- node_modules
+----- D1 [SYMLINK_TO_PATH Root/node_modules/.pnpm/D1]
+-- node_modules
+--- .pnpm
+---- P1 [SYMLINK_TO_PATH Root/packages/P1]
+---- D1 [PROJECT]
+
+EXPECT
+- Root
+- Root/packages/P1
+- Root/node_modules/.pnpm/D1

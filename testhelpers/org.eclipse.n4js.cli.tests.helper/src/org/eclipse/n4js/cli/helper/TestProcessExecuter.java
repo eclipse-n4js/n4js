@@ -72,6 +72,11 @@ public class TestProcessExecuter {
 		return joinProcess("yarn", () -> testProcessBuilder.yarnRun(workingDir, environment, options));
 	}
 
+	/** Runs pnpm OPTIONS in the given {@code workingDir} */
+	public ProcessResult pnpmRun(Path workingDir, Map<String, String> environment, String... options) {
+		return joinProcess("pnpm", () -> testProcessBuilder.pnpmRun(workingDir, environment, options));
+	}
+
 	/** Runs git OPTIONS in the given {@code workingDir} */
 	public ProcessResult gitRun(Path workingDir, Map<String, String> environment, String... options) {
 		return joinProcess("git", () -> testProcessBuilder.gitRun(workingDir, environment, options));
