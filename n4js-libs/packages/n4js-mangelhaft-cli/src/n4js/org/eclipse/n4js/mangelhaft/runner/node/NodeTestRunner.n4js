@@ -9,32 +9,38 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+import * as lib_fs from "fs";
 import {Module} from "module";
+import * as lib_glob from "glob";
+import * as lib_path from "path";
+import * as lib_url from "url";
+import cli_color_+ from "cli-color";
+import * as lib_coverage+ from "istanbul-lib-coverage";
+import {NodeTestCLI} from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
 import {N4Injector} from "n4js/lang/N4Injector";
 import {FIXME1} from "org/eclipse/n4js/mangelhaft/Test";
 import {FIXME2} from "org/eclipse/n4js/mangelhaft/Test";
 import {IFIXME} from "org/eclipse/n4js/mangelhaft/Test";
 import {IFIXME2} from "org/eclipse/n4js/mangelhaft/Test";
 import {TestController} from "org/eclipse/n4js/mangelhaft/TestController";
-import {ConsoleReporter} from "org/eclipse/n4js/mangelhaft/reporter/console/ConsoleReporter";
-import {XUnitReporter} from "org/eclipse/n4js/mangelhaft/reporter/xunit/XUnitReporter";
-import {NodeTestCLI} from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
 import {ITestReporter} from "org/eclipse/n4js/mangelhaft/types/ITestReporter";
+import {ResultGroups} from "org/eclipse/n4js/mangelhaft/types/ResultGroups";
+import {TestCatalogInfo} from "org/eclipse/n4js/mangelhaft/types/TestCatalogInfo";
 import {TestDIComponent} from "org/eclipse/n4js/mangelhaft/types/TestDIComponent";
 import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
-import {TestInfos} from "org/eclipse/n4js/mangelhaft/types/TestInfos";
+import {mkdirp} from "org/eclipse/n4js/mangelhaft/util/fs";
 import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
 import {waitAndExitProcess} from "org/eclipse/n4js/mangelhaft/util/proc";
-import {findProjectDirectories} from "org/eclipse/n4js/mangelhaft/runner/node/ProjectDiscoverer";
-import cli_color_+ from "cli-color";
-import * as lib_path from "path";
-import * as lib_fs from "fs";
-import * as lib_coverage+ from "istanbul-lib-coverage";
+import {ConsoleReporter} from "org/eclipse/n4js/mangelhaft/reporter/console/ConsoleReporter";
 import {SonarReporter} from "org/eclipse/n4js/mangelhaft/reporter/sonar/SonarReporter";
-import {mkdirp} from "org/eclipse/n4js/mangelhaft/util/fs";
+import {XUnitReporter} from "org/eclipse/n4js/mangelhaft/reporter/xunit/XUnitReporter";
 
 
-class NodeTestRunner  {
+const DEFAULT_TEST_CATALOG_NAME = "test-catalog.json";
+const GLOB_PREFIX = "glob:";
+
+export public class NodeTestRunner  {
+
     @Inject
     controller: TestController;
     @Inject
@@ -51,60 +57,29 @@ class NodeTestRunner  {
         }
  
         const log = options.quiet ? function(...p) {} : console.log.bind(console);
-        let testCatalog: TestInfos;
+        let testCatalogs: TestCatalogInfo[] = [];
 
-        const stat = lib_fs.statSync(options.testCatalog);
-        if (stat.isFile()) {
-            testCatalog = loadTestCatalog(log, options.testCatalog);
-        } else if (stat.isDirectory()) {
-            const projectDirs : string[] = findProjectDirectories(options.testCatalog);
-            const testCatalogs : TestInfos[] = loadTestCatalogsInDirectories(log, projectDirs);
-            testCatalog = mergeTestCatalogs(testCatalogs);
-            if (!testCatalog) {
-                log("Did not find any test catalogs in: " + projectDirs);
-                return;
-            }
-        } else {
-            throw "Unsupported value for option 'testCatalog': " + options.testCatalog;
-        }
-
-        if (options.filter && options.filter.length) { // filter out tests
-            const filters = options.filter.slice(0).sort();
-            const descriptors: TestInfo[] = [];
-
-            for (const info of testCatalog.testDescriptors) {
-                let methods = new Set<string>();
-                for (const filter of filters) {
-                    const [fqnFilter, methodFilter] = filter.split("#");
-                    if (!fqnFilter || info.fqn.indexOf(fqnFilter) >= 0) {
-                        if (methodFilter) { // filter methods
-                            for (const method of info.testMethods) {
-                                if (method.indexOf(methodFilter) >= 0) {
-                                    methods.add(method);
-                                }
-                            }
-                        } else {
-                            methods = new Set<string>(info.testMethods); // take all
-                            break;
-                        }
-                    }
-                }
-                if (methods.size > 0) {
-                    info.testMethods = Array.from(methods);
-                    descriptors.push(info);
+        for (let testCatalogArg of options.testCatalogs) {
+            const newTestCatalogs = await findTestCatalogs(testCatalogArg, log);
+            if (options.filter && options.filter.length) {
+                for (let testCatalog of newTestCatalogs) {
+                    filterTestCatalog(testCatalog, options.filter);
                 }
             }
-            testCatalog.testDescriptors = descriptors;
+            testCatalogs = testCatalogs.concat(newTestCatalogs);
         }
+
         
         this.consoleReporter.cliColor = cli_color_;
         this.consoleReporter.setLogger(log);
 
         const reporters: ITestReporter[] = [this.consoleReporter];
+        const allResultGroups : ResultGroups[] = [];
+        let updateXUnitReportPackage = false;
 
         if (options.xunitReportFile) {
             if (!options.xunitReportPackage) {
-                options.xunitReportPackage = lib_path.dirname(options.testCatalog);
+                updateXUnitReportPackage = true;
             }
             this.xunitReporter.spec = options;
             reporters.push(this.xunitReporter);
@@ -117,15 +92,29 @@ class NodeTestRunner  {
         }
 
         this.controller.reporters = reporters;
-
-        const resGroups = await this.controller.runGroups(testCatalog, 420187, options.testScope);
         const cliColor = this.consoleReporter.cliColor;
         const success = cliColor.green.bind(cliColor);
         const fail = cliColor.red.bind(cliColor);
         const skipped = cliColor.cyan.bind(cliColor);
-        log(`\nTesting completed: ${success("SUCCESSES")}: ${resGroups.successes}, ${fail("FAILURES")}: ${resGroups.failures}, ${fail("ERRORS")}: ${resGroups.errors}, ${skipped("SKIPPED")}: ${resGroups.skipped}`);
 
-        const failed = (resGroups.failures !== 0) || (resGroups.errors !== 0);
+
+        for (let testCatalog of testCatalogs) {
+            if (updateXUnitReportPackage) {
+                options.xunitReportPackage = lib_path.dirname(testCatalog.location);
+            }
+
+            const resGroups = await this.controller.runGroups(testCatalog, 420187, options.testScope);
+            allResultGroups.push(resGroups);
+
+            if (testCatalogs.length > 1) {
+                log(`\nTested ${testCatalog.location}\nTesting results: ${success("SUCCESSES")}: ${resGroups.successes}, ${fail("FAILURES")}: ${resGroups.failures}, ${fail("ERRORS")}: ${resGroups.errors}, ${skipped("SKIPPED")}: ${resGroups.skipped}`);
+            }
+        }
+
+        const concatResultGroups = ResultGroups.concatArray(allResultGroups);
+        log(`\nTesting completed: ${success("SUCCESSES")}: ${concatResultGroups.successes}, ${fail("FAILURES")}: ${concatResultGroups.failures}, ${fail("ERRORS")}: ${concatResultGroups.errors}, ${skipped("SKIPPED")}: ${concatResultGroups.skipped}`);
+
+        const failed = (concatResultGroups.failures !== 0) || (concatResultGroups.errors !== 0);
         if (failed) {
             log(`${fail("Test run failed.")} To rerun just the failing tests use the command: \n n4js-mangelhaft ${this.consoleReporter.unsuccessfulTests.map(test => `\\\n    -f ${test}`).join(" ")}`);
         }
@@ -154,38 +143,105 @@ class NodeTestRunner  {
     }
 }
 
-function loadTestCatalog(log: {function(any):void}, testCatalogFile: string) : TestInfos {
+async function findTestCatalogs(testCatalogArg: string, log: {function(...any):void}) : TestCatalogInfo[] {
+    if (testCatalogArg.startsWith(GLOB_PREFIX)) {
+        const testCatalogLocations = resolveGlob(process.cwd(), testCatalogArg.substring(GLOB_PREFIX.length));
+        const testCatalogs : TestCatalogInfo[] = [];
+        for (const testCatalogLocation of testCatalogLocations) {
+            let testCatalog = resolveTestCatalog(testCatalogLocation, log);
+            if (testCatalog) {
+                testCatalogs.push(testCatalog);
+            }
+        }
+        return testCatalogs;
+    } else {
+        const file1 = lib_path.resolve(process.cwd(), testCatalogArg);
+        let testCatalog = resolveTestCatalog(file1, log);
+        if (!testCatalog) {
+            const file2 = lib_url.fileURLToPath((await import.meta.resolve(testCatalogArg)) as string);
+            testCatalog = resolveTestCatalog(file2, log);
+        }
+        if (testCatalog) {
+            return [testCatalog];
+        }
+        return [];
+    }
+}
+
+function resolveGlob(root: string, glob: string) : string[] {
+    const testCatalogLocations : string[] = [];
+    const options = { cwd: root, absolute: true, sync: true };
+    const ee = new lib_glob.Glob(glob, options);
+    const foundLocs = ee.found;
+
+    for (const foundLoc of foundLocs) {
+        if (lib_fs.existsSync(foundLoc)) {
+            const locStat = lib_fs.statSync(foundLoc);
+            if (locStat.isFile()) {
+                testCatalogLocations.push(locStat);
+            } else if (locStat.isDirectory()) {
+                const testCatalogFile = lib_path.join(locStat, DEFAULT_TEST_CATALOG_NAME);
+                testCatalogLocations.push(testCatalogFile);
+            }
+        }
+    }
+    return testCatalogLocations;
+}
+
+function resolveTestCatalog(fileLocation: string, log: {function(...any):void}) : TestCatalogInfo {
+    if (lib_fs.existsSync(fileLocation)) {
+        const stat = lib_fs.statSync(fileLocation);
+        if (stat.isFile()) {
+            return loadTestCatalog(log, fileLocation);
+        } else if (stat.isDirectory()) {
+            const potentialTestCatalogFile = lib_path.resolve(fileLocation, DEFAULT_TEST_CATALOG_NAME);
+            if (lib_fs.existsSync(potentialTestCatalogFile) && lib_fs.statSync(potentialTestCatalogFile).isFile()) {
+                return loadTestCatalog(log, potentialTestCatalogFile);
+            }
+        }
+    }
+    log("Did not find any test catalogs in: " + fileLocation);
+    return null;
+}
+
+function loadTestCatalog(log: {function(any):void}, testCatalogFile: string) : TestCatalogInfo {
     log("Loading test catalog: " + testCatalogFile);
-    return readJsonFile(testCatalogFile);
+    let testCatalog : TestCatalogInfo = readJsonFile(testCatalogFile);
+    testCatalog.location = lib_path.dirname(testCatalogFile);
+    testCatalog.fileName = lib_path.basename(testCatalogFile);
+    testCatalog.testDescriptors = [];
+    return testCatalog;
 }
 
-function loadTestCatalogsInDirectories(log: {function(any):void}, projectDirs: string[]) : TestInfos[] {
-    const catalogs : TestInfos[] = [];
-    for (const pd of projectDirs) {
-        const potentialTestCatalogFile = lib_path.resolve(pd, "test-catalog.json");
-        if (lib_fs.existsSync(potentialTestCatalogFile) && lib_fs.statSync(potentialTestCatalogFile).isFile()) {
-            const catalog = loadTestCatalog(log, potentialTestCatalogFile);
-            catalogs.push(catalog);
+/** filter out tests */
+function filterTestCatalog(testCatalog: TestCatalogInfo, filter: Array<string>) {
+    const filters = filter.slice(0).sort();
+    const descriptors: TestInfo[] = [];
+
+    for (const info of testCatalog.testDescriptors) {
+        let methods = new Set<string>();
+        for (const filter of filters) {
+            const [fqnFilter, methodFilter] = filter.split("#");
+            if (!fqnFilter || info.fqn.indexOf(fqnFilter) >= 0) {
+                if (methodFilter) { // filter methods
+                    for (const method of info.testMethods) {
+                        if (method.indexOf(methodFilter) >= 0) {
+                            methods.add(method);
+                        }
+                    }
+                } else {
+                    methods = new Set<string>(info.testMethods); // take all
+                    break;
+                }
+            }
+        }
+        if (methods.size > 0) {
+            info.testMethods = Array.from(methods);
+            descriptors.push(info);
         }
     }
-    return catalogs;
+    testCatalog.testDescriptors = descriptors;
 }
-
-function mergeTestCatalogs(testCatalogs: TestInfos[]) : TestInfos {
-    if (!testCatalogs || testCatalogs.length === 0) {
-        return null;
-    }
-    const mergedTI = new TestInfos();
-    mergedTI.endpoint = testCatalogs[0].endpoint;
-    mergedTI.sessionId = testCatalogs[0].sessionId;
-    for (const ti of testCatalogs) {
-        for (const td of ti.testDescriptors) {
-            mergedTI.testDescriptors.push(td);
-        }
-    }
-    return mergedTI;
-}
-
 
 @Bind(IFIXME, FIXME1)
 @Bind(IFIXME2, FIXME2)

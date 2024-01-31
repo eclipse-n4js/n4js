@@ -19,7 +19,7 @@ import {ResultGroup} from "org/eclipse/n4js/mangelhaft/types/ResultGroup";
 import {ResultGroups} from "org/eclipse/n4js/mangelhaft/types/ResultGroups";
 import {TestFunctionType} from "org/eclipse/n4js/mangelhaft/types/TestFunctionType";
 import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
-import {TestInfos} from "org/eclipse/n4js/mangelhaft/types/TestInfos";
+import {TestCatalogInfo} from "org/eclipse/n4js/mangelhaft/types/TestCatalogInfo";
 import {TestMethodDescriptor} from "org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor";
 import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult";
 import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy";
@@ -63,7 +63,7 @@ export public class TestController {
      * Entry point to running tests. Called from a test runner with the test meta information. Any configured reporters
      * will get updated with progress of tests.
      */
-    public async runGroups(testCatalog: TestInfos, numTests: number=, scope: string=): ResultGroups {
+    public async runGroups(testCatalog: TestCatalogInfo, numTests: number=, scope: string=): ResultGroups {
         if (!testCatalog) {
             throw new Error("TestController::runGroups called with a null testCatalog");
         }
@@ -82,13 +82,13 @@ export public class TestController {
             console.log("testingStarted.dispatch is bad", ex);
         }
 
-        const res = await this.runInBatches(testInfos, scope);
+        const res = await this.runInBatches(testCatalog.location, testInfos, scope);
         await this.spy.testingFinished.dispatch([res]);
         return res;
     }
 
     /** Runs provided tests in batches,  */
-    private async runInBatches(testInfos: TestInfo[], scope: string=): ResultGroups {
+    private async runInBatches(testCatalogLocation: string, testInfos: TestInfo[], scope: string=): ResultGroups {
         let res: ResultGroups;
 
         // groups tests into batches to execute
@@ -100,7 +100,7 @@ export public class TestController {
 
         // utils
         const mapper: (TestInfo) => Promise<InstrumentedTest[], ?> = async (testInfo) => await this
-            .instrument(testInfo);
+            .instrument(testCatalogLocation, testInfo);
         const flatten = (arr: InstrumentedTest[][]): InstrumentedTest[] => Array.prototype.concat.apply([],
             arr) as InstrumentedTest[];
         const instrumentBatch = async function(testInfosBatch: TestInfo[]): InstrumentedTest[] {
@@ -131,7 +131,7 @@ export public class TestController {
         return res;
     }
 
-    private async instrument(info: TestInfo): InstrumentedTest[] {
+    private async instrument(testCatalogLocation: string, info: TestInfo): InstrumentedTest[] {
         let testClasses: constructor{N4Object}[];
 
         const parts = info.fqn.split("/");
@@ -140,7 +140,7 @@ export public class TestController {
         try {
             let groupModule: Object;
             try {
-                const mod = `${info.origin}/${moduleName}.js`;
+                const mod = `${testCatalogLocation}/${moduleName}.js`;
                 groupModule = await import(mod);
                 info.filePath = Module.createRequire(import.meta.url).resolve(mod);
             } catch (exc) { // find package.json

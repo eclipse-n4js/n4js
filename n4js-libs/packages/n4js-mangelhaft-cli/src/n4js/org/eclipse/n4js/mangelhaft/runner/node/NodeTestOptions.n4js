@@ -15,13 +15,19 @@ import { XUnitReportSpec } from "org/eclipse/n4js/mangelhaft/reporter/xunit/XUni
  */
 export default public class NodeTestOptions extends XUnitReportSpec {
     /**
-     * Test catalog to be tested.
+     * One or more files or directories pointing to the test catalog to be tested. Globs start with 'glob:'.
      */
-    public testCatalog: string;
+    public testCatalogs: string[];
+
     /**
      * Filter for matching test cases.
      */
     public filter: string[];
+
+    /**
+     * Merge all results into a single file stored in CWD.
+     */
+    public mergeResult: boolean;
 
     /**
      * Sonar base dir.

@@ -10,13 +10,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import NodeTestAPI from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestAPI";
-import {NodeTestCLI} from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
 import {waitAndExitProcess} from "org/eclipse/n4js/mangelhaft/util/proc";
 
 waitAndExitProcess(async () => {
-    const options = NodeTestCLI.parseCommandLine();
-    if (options) {
-        await NodeTestAPI.exec(options);
-    }
+    await import("./NodeTestRunner.js");
 });
