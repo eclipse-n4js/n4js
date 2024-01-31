@@ -82,13 +82,13 @@ export public class TestController {
             console.log("testingStarted.dispatch is bad", ex);
         }
 
-        const res = await this.runInBatches(testCatalog.location, testInfos, scope);
+        const res = await this.runInBatches(testCatalog, testInfos, scope);
         await this.spy.testingFinished.dispatch([res]);
         return res;
     }
 
     /** Runs provided tests in batches,  */
-    private async runInBatches(testCatalogLocation: string, testInfos: TestInfo[], scope: string=): ResultGroups {
+    private async runInBatches(testCatalog: TestCatalogInfo, testInfos: TestInfo[], scope: string=): ResultGroups {
         let res: ResultGroups;
 
         // groups tests into batches to execute
@@ -100,7 +100,7 @@ export public class TestController {
 
         // utils
         const mapper: (TestInfo) => Promise<InstrumentedTest[], ?> = async (testInfo) => await this
-            .instrument(testCatalogLocation, testInfo);
+            .instrument(testCatalog, testInfo);
         const flatten = (arr: InstrumentedTest[][]): InstrumentedTest[] => Array.prototype.concat.apply([],
             arr) as InstrumentedTest[];
         const instrumentBatch = async function(testInfosBatch: TestInfo[]): InstrumentedTest[] {
@@ -131,21 +131,22 @@ export public class TestController {
         return res;
     }
 
-    private async instrument(testCatalogLocation: string, info: TestInfo): InstrumentedTest[] {
+    private async instrument(testCatalog: TestCatalogInfo, info: TestInfo): InstrumentedTest[] {
         let testClasses: constructor{N4Object}[];
 
+        const originOrPackageName = info.origin || testCatalog.packageName; // TODO: remove when origin is not set by n4jsc anymore
         const parts = info.fqn.split("/");
         const ctorName = parts.pop();
         const moduleName = parts.join("/");
         try {
             let groupModule: Object;
             try {
-                const mod = `${testCatalogLocation}/${moduleName}.js`;
+                const mod = `${testCatalog.location}/${moduleName}.js`;
                 groupModule = await import(mod);
                 info.filePath = Module.createRequire(import.meta.url).resolve(mod);
             } catch (exc) { // find package.json
                 const packageJsonPath = findPackageJson(process.cwd());
-                if (!packageJsonPath || readJsonFile(packageJsonPath).name !== info.origin) {
+                if (!packageJsonPath || readJsonFile(packageJsonPath).name !== originOrPackageName) {
                     throw exc;
                 }
                 const parts = moduleName.split("/");
@@ -155,17 +156,17 @@ export public class TestController {
             }
             testClasses = [groupModule[ctorName] as constructor{N4Object}];
         } catch (ex) {
-            await this.errorGroup(info, info.origin + "/" + moduleName, null, ex);
+            await this.errorGroup(info, originOrPackageName + "/" + moduleName, null, ex);
             return null;
         }
         if (!testClasses) {
-            await this.errorGroup(info, info.origin + "/" + parts.join("/"));
+            await this.errorGroup(info, originOrPackageName + "/" + parts.join("/"));
             return null;
         }
         let instrumentedTests: IInstrumentedTest[] = [];
         for (const testClass of testClasses) {
             if (!testClass) {
-                await this.errorGroup(info, info.origin + "/" + moduleName, null,
+                await this.errorGroup(info, originOrPackageName + "/" + moduleName, null,
                 new Error("Empty object loaded (is the test class exported?)"));
                 continue;
             }

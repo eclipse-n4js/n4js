@@ -17,6 +17,8 @@
      public location?: string;
      /** File name of the test catalog */
      public fileName?: string;
+     /** Package name this test catalog refers to */
+     public packageName?: string;
      public sessionId?: string;
      public endpoint?: string;
  }

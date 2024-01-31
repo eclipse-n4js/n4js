@@ -209,7 +209,7 @@ function loadTestCatalog(log: {function(any):void}, testCatalogFile: string) : T
     let testCatalog : TestCatalogInfo = readJsonFile(testCatalogFile);
     testCatalog.location = lib_path.dirname(testCatalogFile);
     testCatalog.fileName = lib_path.basename(testCatalogFile);
-    testCatalog.testDescriptors = [];
+    testCatalog.testDescriptors = testCatalog.testDescriptors || [];
     return testCatalog;
 }
 
