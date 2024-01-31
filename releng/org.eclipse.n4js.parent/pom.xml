@@ -35,7 +35,7 @@ Contributors:
 		<maven.compiler.source>${jdk-version}</maven.compiler.source>
 		<maven.compiler.target>${jdk-version}</maven.compiler.target>
 		<!-- keep in sync with n4js-extended/docker-build/Dockerfile -->
-		<maven-version>3.9.5</maven-version>
+		<maven-version>3.9.6</maven-version>
 
 		<!-- encoding -->
 		<project.encoding>UTF-8</project.encoding>
@@ -44,10 +44,10 @@ Contributors:
 		<project.reporting.outputEncoding>${project.encoding}</project.reporting.outputEncoding>
 
 		<!-- tycho -->
-		<tycho-version>4.0.4</tycho-version>
+		<tycho-version>4.0.5</tycho-version>
 
 		<!-- Xtext, Xtend and their runtime -->
-		<xtext-version>2.32.0</xtext-version>
+		<xtext-version>2.33.0</xtext-version>
 
 		<!-- maven plugins -->
 		<build-helper-maven-plugin.version>3.4.0</build-helper-maven-plugin.version>
@@ -63,7 +63,6 @@ Contributors:
 		<maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
 		<maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
 		<maven-install-plugin.version>3.1.1</maven-install-plugin.version>
-		<maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
 		<maven-javadoc-plugin.version>3.6.2</maven-javadoc-plugin.version>
 		<maven-jxr-plugin.version>3.3.1</maven-jxr-plugin.version>
 		<maven-pmd-plugin.version>3.21.2</maven-pmd-plugin.version>
@@ -74,6 +73,7 @@ Contributors:
 		<maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
 		<maven-verifier-plugin.version>1.1</maven-verifier-plugin.version>
 		<xslt-generator-maven-plugin.version>1.8</xslt-generator-maven-plugin.version>
+		<maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
 		<addjars-maven-plugin.version>1.0.5</addjars-maven-plugin.version>
 		<maven-shade-plugin.version>3.5.1</maven-shade-plugin.version>
 
