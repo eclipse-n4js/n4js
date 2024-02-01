@@ -15,6 +15,7 @@
 import {ResultGroup} from "org/eclipse/n4js/mangelhaft/types/ResultGroup";
 import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult";
 import {aggregateTestStatuses} from "org/eclipse/n4js/mangelhaft/types/TestStatus";
+
 export public class ResultGroups {
     public results: ResultGroup[];
     public successes: number = 0;
@@ -24,7 +25,7 @@ export public class ResultGroups {
 
     public constructor(results: ResultGroup[]) {
         this.results = results;
-        ResultGroups.accumulateResults(this, results);
+        this.accumulateResults(results);
     }
     /**
      * Aggregates ResultGroups into a single ResultGroup. tests with the same name are collapsed with
@@ -51,17 +52,14 @@ export public class ResultGroups {
         result = new ResultGroup(Array.from(trMap.values()), description);
         return result;
     }
-    private static accumulateResults(target:ResultGroups, results:(? extends ~~ResultGroup)[]): ResultGroups {
+    
+    private accumulateResults(results: ResultGroup[]): void {
         for (let result of results) {
-            target.successes += result.successes;
-            target.failures += result.failures;
-            target.errors += result.errors;
-            target.skipped += result.skipped;
-            if (result instanceof ResultGroups) {
-                target.results = target.results.concat(result.results); // joe TODO consider refactoring of ResultGroup and ResultGroups
-            }
+            this.successes += result.successes;
+            this.failures += result.failures;
+            this.errors += result.errors;
+            this.skipped += result.skipped;
         }
-        return target;
     }
 
     /**
@@ -72,10 +70,19 @@ export public class ResultGroups {
     public static concat(...resultGroups: ResultGroups): ResultGroups {
         return this.concatArray(resultGroups);
     }
+
     /**
      * same as concat but takes a whole array
      */
     public static concatArray(resultGroupss: ResultGroups[]): ResultGroups {
-        return this.accumulateResults(new ResultGroups([]), (resultGroupss as Object) as (? extends ~~ResultGroup)[]); // joe TODO consider refactoring of ResultGroup and ResultGroups
+        const newResultGroups = new ResultGroups([]);
+        for (let resultGroup of resultGroupss) {
+            newResultGroups.successes += resultGroup.successes;
+            newResultGroups.failures += resultGroup.failures;
+            newResultGroups.errors += resultGroup.errors;
+            newResultGroups.skipped += resultGroup.skipped;
+            newResultGroups.results = newResultGroups.results.concat(resultGroup.results);
+        }
+        return newResultGroups;
     }
 }

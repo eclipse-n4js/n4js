@@ -13,7 +13,6 @@ import * as lib_fs from "fs";
 import {Module} from "module";
 import * as lib_glob from "glob";
 import * as lib_path from "path";
-import * as lib_url from "url";
 import cli_color_+ from "cli-color";
 import * as lib_coverage+ from "istanbul-lib-coverage";
 import {NodeTestCLI} from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
@@ -37,7 +36,6 @@ import {XUnitReporter} from "org/eclipse/n4js/mangelhaft/reporter/xunit/XUnitRep
 
 
 const DEFAULT_TEST_CATALOG_NAME = "test-catalog.json";
-const GLOB_PREFIX = "glob:";
 
 export public class NodeTestRunner  {
 
@@ -116,7 +114,9 @@ export public class NodeTestRunner  {
 
         const failed = (concatResultGroups.failures !== 0) || (concatResultGroups.errors !== 0);
         if (failed) {
-            log(`${fail("Test run failed.")} To rerun just the failing tests use the command: \n n4js-mangelhaft ${this.consoleReporter.unsuccessfulTests.map(test => `\\\n    -f ${test}`).join(" ")}`);
+            const optionCmdLine = NodeTestCLI.toCommandLine(options);
+            const failedTests = this.consoleReporter.unsuccessfulTests.map(test => `\\\n    -f ${test}`).join(" ");
+            log(`${fail("Test run failed.")} To rerun the failing tests only, execute: \n n4js-mangelhaft ${optionCmdLine} ${failedTests}`);
         }
 
         const nycCoveragePath = options.nycCoveragePath;
