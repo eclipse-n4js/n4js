@@ -55,7 +55,7 @@ public class InitResources {
 
 	private static final String NPM_RUN_N4JSC = "n4jsc";
 	private static final String NPM_RUN_BUILD = "n4jsc compile . --clean || true";
-	private static final String NPM_RUN_TEST = "n4js-mangelhaft";
+	private static final String NPM_RUN_TEST = "n4js-mangelhaft packages/*";
 
 	static class YarnPackageJsonContents {
 		transient boolean exists = false;
