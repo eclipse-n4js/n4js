@@ -29,4 +29,3 @@ packages/n4js-mangelhaft-cli/src-gen/org/eclipse/n4js/mangelhaft/runner/node/Nod
         --xunitReportPackage n4js-libs-report \
         --nycCoveragePath ./build/coverage.json
 echo "Done running mangehaft."
-echo "Saved test report at: ${REPORT_NAME}"

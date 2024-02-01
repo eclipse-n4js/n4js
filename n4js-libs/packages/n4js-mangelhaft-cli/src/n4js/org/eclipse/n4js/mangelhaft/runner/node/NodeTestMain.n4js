@@ -10,8 +10,5 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import {waitAndExitProcess} from "org/eclipse/n4js/mangelhaft/util/proc";
 
-waitAndExitProcess(async () => {
-    await import("./NodeTestRunner.js");
-});
+import("./NodeTestRunner.js");

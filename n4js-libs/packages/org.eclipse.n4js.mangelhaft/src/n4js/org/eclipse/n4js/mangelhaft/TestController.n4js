@@ -98,27 +98,12 @@ export public class TestController {
             batchedTestInfos.push(batch);
         }
 
-        // utils
-        const mapper: (TestInfo) => Promise<InstrumentedTest[], ?> = async (testInfo) => await this
-            .instrument(testCatalog, testInfo);
-        const flatten = (arr: InstrumentedTest[][]): InstrumentedTest[] => Array.prototype.concat.apply([],
-            arr) as InstrumentedTest[];
-        const instrumentBatch = async function(testInfosBatch: TestInfo[]): InstrumentedTest[] {
-                const instrumentedBatches = testInfosBatch.map(mapper).filter(notNull);
-                const instrumentedTestsBatch1d = await Promise.<InstrumentedTest[]>all(instrumentedBatches);
-                const instrumentedTestsBatch2d = await Promise
-                    .<InstrumentedTest[][],any>resolve(instrumentedTestsBatch1d);
-                const instrumentedTestsBatch = flatten(instrumentedTestsBatch2d);
-
-                return instrumentedTestsBatch;
-            };
-
         const resultGroups: ResultGroups[] = [];
         // execute batched groups
         for (let numOfBatches = 0; numOfBatches < batchedTestInfos.length; ++numOfBatches) {
             try {
                 const testInfosBatch = batchedTestInfos[numOfBatches];
-                const instrumentedTestsBatch = await instrumentBatch(testInfosBatch);
+                const instrumentedTestsBatch = await this.instrumentBatch(testCatalog, testInfosBatch);
                 res = await this.executor.runTestsAsync(instrumentedTestsBatch, scope);
                 resultGroups.push(res);
             } catch (er) {
@@ -129,6 +114,15 @@ export public class TestController {
 
         res = ResultGroups.concatArray(resultGroups);
         return res;
+    }
+
+    private async instrumentBatch(testCatalog: TestCatalogInfo, testInfosBatch: TestInfo[]): InstrumentedTest[] {
+        let result: InstrumentedTest[] = [];
+        for (const testInfo of testInfosBatch) {
+            const instrumentedTest = await this.instrument(testCatalog, testInfo);
+            result = result.concat(instrumentedTest);
+        }
+        return result;
     }
 
     private async instrument(testCatalog: TestCatalogInfo, info: TestInfo): InstrumentedTest[] {
