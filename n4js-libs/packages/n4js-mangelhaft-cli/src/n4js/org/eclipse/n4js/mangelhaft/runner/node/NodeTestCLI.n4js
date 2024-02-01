@@ -22,7 +22,7 @@ const nomnomOptions: Object = {
         list: true,
         default: ["."],
         metavar: "PATH|NPM-relpath|glob",
-        help: "Test catalog (JSON) or project location(s) to be inspected for test catalog(s). Globs need to start with 'glob:'."
+        help: "Test catalog (JSON) or project location(s) to be inspected for test catalog(s)."
     },
     filter: {
         abbr: "f",

@@ -15,7 +15,7 @@ import { XUnitReportSpec } from "org/eclipse/n4js/mangelhaft/reporter/xunit/XUni
  */
 export default public class NodeTestOptions extends XUnitReportSpec {
     /**
-     * One or more files or directories pointing to the test catalog to be tested. Globs start with 'glob:'.
+     * One or more files/directories/globs pointing to the test catalog to be tested.
      */
     public testCatalogs: string[];
 

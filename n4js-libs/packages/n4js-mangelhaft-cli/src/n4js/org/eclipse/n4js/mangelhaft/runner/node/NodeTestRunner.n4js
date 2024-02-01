@@ -144,28 +144,15 @@ export public class NodeTestRunner  {
 }
 
 async function findTestCatalogs(testCatalogArg: string, log: {function(...any):void}) : TestCatalogInfo[] {
-    if (testCatalogArg.startsWith(GLOB_PREFIX)) {
-        const testCatalogLocations = resolveGlob(process.cwd(), testCatalogArg.substring(GLOB_PREFIX.length));
-        const testCatalogs : TestCatalogInfo[] = [];
-        for (const testCatalogLocation of testCatalogLocations) {
-            let testCatalog = resolveTestCatalog(testCatalogLocation, log);
-            if (testCatalog) {
-                testCatalogs.push(testCatalog);
-            }
-        }
-        return testCatalogs;
-    } else {
-        const file1 = lib_path.resolve(process.cwd(), testCatalogArg);
-        let testCatalog = resolveTestCatalog(file1, log);
-        if (!testCatalog) {
-            const file2 = lib_url.fileURLToPath((await import.meta.resolve(testCatalogArg)) as string);
-            testCatalog = resolveTestCatalog(file2, log);
-        }
+    const testCatalogLocations = resolveGlob(process.cwd(), testCatalogArg);
+    const testCatalogs : TestCatalogInfo[] = [];
+    for (const testCatalogLocation of testCatalogLocations) {
+        let testCatalog = resolveTestCatalog(testCatalogLocation, log);
         if (testCatalog) {
-            return [testCatalog];
+            testCatalogs.push(testCatalog);
         }
-        return [];
     }
+    return testCatalogs;
 }
 
 function resolveGlob(root: string, glob: string) : string[] {
@@ -178,9 +165,9 @@ function resolveGlob(root: string, glob: string) : string[] {
         if (lib_fs.existsSync(foundLoc)) {
             const locStat = lib_fs.statSync(foundLoc);
             if (locStat.isFile()) {
-                testCatalogLocations.push(locStat);
+                testCatalogLocations.push(foundLoc);
             } else if (locStat.isDirectory()) {
-                const testCatalogFile = lib_path.join(locStat, DEFAULT_TEST_CATALOG_NAME);
+                const testCatalogFile = lib_path.join(foundLoc, DEFAULT_TEST_CATALOG_NAME);
                 testCatalogLocations.push(testCatalogFile);
             }
         }
