@@ -55,7 +55,8 @@ public class InitResources {
 
 	private static final String NPM_RUN_N4JSC = "n4jsc";
 	private static final String NPM_RUN_BUILD = "n4jsc compile . --clean || true";
-	private static final String NPM_RUN_TEST = "n4js-mangelhaft packages/*";
+	private static final String NPM_RUN_TEST_NPM = "n4js-mangelhaft";
+	private static final String NPM_RUN_TEST_YARN = "n4js-mangelhaft packages/*";
 
 	static class YarnPackageJsonContents {
 		transient boolean exists = false;
@@ -136,7 +137,7 @@ public class InitResources {
 		}
 
 		YarnPackageJsonContents defaultsTested() {
-			scripts.put("test", NPM_RUN_TEST);
+			scripts.put("test", NPM_RUN_TEST_YARN);
 			devDependencies.put("n4js-mangelhaft-cli", "");
 			devDependencies.put("org.eclipse.n4js.mangelhaft", "");
 			devDependencies.put("org.eclipse.n4js.mangelhaft.assert", "");
@@ -208,7 +209,7 @@ public class InitResources {
 		}
 
 		PackageJsonContents helloWorldTests() {
-			scripts.put("test", NPM_RUN_TEST);
+			scripts.put("test", NPM_RUN_TEST_NPM);
 			devDependencies.put("n4js-mangelhaft-cli", "");
 			devDependencies.put("org.eclipse.n4js.mangelhaft", "");
 			devDependencies.put("org.eclipse.n4js.mangelhaft.assert", "");
