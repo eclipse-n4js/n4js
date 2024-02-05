@@ -64,9 +64,14 @@ export public class NodeTestRunner  {
                     filterTestCatalog(testCatalog, options.filter);
                 }
             }
-            testCatalogs = testCatalogs.concat(newTestCatalogs);
+            if (newTestCatalogs.length > 0) {
+                testCatalogs = testCatalogs.concat(newTestCatalogs);
+            }
         }
 
+        if (testCatalogs.length == 0) {
+            log("\nNo tests found.");
+        }
         
         this.consoleReporter.cliColor = cli_color_;
         this.consoleReporter.setLogger(log);
