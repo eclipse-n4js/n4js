@@ -62,10 +62,14 @@ export public class NodeTestRunner  {
             if (options.filter && options.filter.length) {
                 for (let testCatalog of newTestCatalogs) {
                     filterTestCatalog(testCatalog, options.filter);
+                    if (testCatalog.testDescriptors.length > 0) {
+                        testCatalogs.push(testCatalog);
+                    }
                 }
-            }
-            if (newTestCatalogs.length > 0) {
-                testCatalogs = testCatalogs.concat(newTestCatalogs);
+            } else {
+                if (newTestCatalogs.length > 0) {
+                    testCatalogs = testCatalogs.concat(newTestCatalogs);
+                }
             }
         }
 
@@ -192,7 +196,7 @@ function resolveTestCatalog(fileLocation: string, log: {function(...any):void}) 
             }
         }
     }
-    log("Did not find any test catalogs in: " + fileLocation);
+    log("No test catalog in: " + fileLocation);
     return null;
 }
 
