@@ -29,8 +29,7 @@ export public class PreconditionNotMetConstructorTest extends MySuperClass {
     }
 
     @Test
-    public nameTest() {
-        console.log("nameTest");
+    public skippedTest() {
         // skipped test
     }
 }
