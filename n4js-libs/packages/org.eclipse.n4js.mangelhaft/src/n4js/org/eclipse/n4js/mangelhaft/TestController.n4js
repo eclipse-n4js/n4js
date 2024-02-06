@@ -19,7 +19,7 @@ import {ResultGroup} from "org/eclipse/n4js/mangelhaft/types/ResultGroup";
 import {ResultGroups} from "org/eclipse/n4js/mangelhaft/types/ResultGroups";
 import {TestFunctionType} from "org/eclipse/n4js/mangelhaft/types/TestFunctionType";
 import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
-import {TestInfos} from "org/eclipse/n4js/mangelhaft/types/TestInfos";
+import {TestCatalogInfo} from "org/eclipse/n4js/mangelhaft/types/TestCatalogInfo";
 import {TestMethodDescriptor} from "org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor";
 import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult";
 import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy";
@@ -63,7 +63,7 @@ export public class TestController {
      * Entry point to running tests. Called from a test runner with the test meta information. Any configured reporters
      * will get updated with progress of tests.
      */
-    public async runGroups(testCatalog: TestInfos, numTests: number=, scope: string=): ResultGroups {
+    public async runGroups(testCatalog: TestCatalogInfo, numTests: number=, scope: string=): ResultGroups {
         if (!testCatalog) {
             throw new Error("TestController::runGroups called with a null testCatalog");
         }
@@ -82,13 +82,13 @@ export public class TestController {
             console.log("testingStarted.dispatch is bad", ex);
         }
 
-        const res = await this.runInBatches(testInfos, scope);
+        const res = await this.runInBatches(testCatalog, testInfos, scope);
         await this.spy.testingFinished.dispatch([res]);
         return res;
     }
 
     /** Runs provided tests in batches,  */
-    private async runInBatches(testInfos: TestInfo[], scope: string=): ResultGroups {
+    private async runInBatches(testCatalog: TestCatalogInfo, testInfos: TestInfo[], scope: string=): ResultGroups {
         let res: ResultGroups;
 
         // groups tests into batches to execute
@@ -98,27 +98,12 @@ export public class TestController {
             batchedTestInfos.push(batch);
         }
 
-        // utils
-        const mapper: (TestInfo) => Promise<InstrumentedTest[], ?> = async (testInfo) => await this
-            .instrument(testInfo);
-        const flatten = (arr: InstrumentedTest[][]): InstrumentedTest[] => Array.prototype.concat.apply([],
-            arr) as InstrumentedTest[];
-        const instrumentBatch = async function(testInfosBatch: TestInfo[]): InstrumentedTest[] {
-                const instrumentedBatches = testInfosBatch.map(mapper).filter(notNull);
-                const instrumentedTestsBatch1d = await Promise.<InstrumentedTest[]>all(instrumentedBatches);
-                const instrumentedTestsBatch2d = await Promise
-                    .<InstrumentedTest[][],any>resolve(instrumentedTestsBatch1d);
-                const instrumentedTestsBatch = flatten(instrumentedTestsBatch2d);
-
-                return instrumentedTestsBatch;
-            };
-
         const resultGroups: ResultGroups[] = [];
         // execute batched groups
         for (let numOfBatches = 0; numOfBatches < batchedTestInfos.length; ++numOfBatches) {
             try {
                 const testInfosBatch = batchedTestInfos[numOfBatches];
-                const instrumentedTestsBatch = await instrumentBatch(testInfosBatch);
+                const instrumentedTestsBatch = await this.instrumentBatch(testCatalog, testInfosBatch);
                 res = await this.executor.runTestsAsync(instrumentedTestsBatch, scope);
                 resultGroups.push(res);
             } catch (er) {
@@ -131,21 +116,31 @@ export public class TestController {
         return res;
     }
 
-    private async instrument(info: TestInfo): InstrumentedTest[] {
+    private async instrumentBatch(testCatalog: TestCatalogInfo, testInfosBatch: TestInfo[]): InstrumentedTest[] {
+        let result: InstrumentedTest[] = [];
+        for (const testInfo of testInfosBatch) {
+            const instrumentedTest = await this.instrument(testCatalog, testInfo);
+            result = result.concat(instrumentedTest);
+        }
+        return result;
+    }
+
+    private async instrument(testCatalog: TestCatalogInfo, info: TestInfo): InstrumentedTest[] {
         let testClasses: constructor{N4Object}[];
 
+        const originOrPackageName = info.origin || testCatalog.packageName; // TODO: remove when origin is not set by n4jsc anymore
         const parts = info.fqn.split("/");
         const ctorName = parts.pop();
         const moduleName = parts.join("/");
         try {
             let groupModule: Object;
             try {
-                const mod = `${info.origin}/${moduleName}.js`;
+                const mod = `${testCatalog.location}/${moduleName}.js`;
                 groupModule = await import(mod);
                 info.filePath = Module.createRequire(import.meta.url).resolve(mod);
             } catch (exc) { // find package.json
                 const packageJsonPath = findPackageJson(process.cwd());
-                if (!packageJsonPath || readJsonFile(packageJsonPath).name !== info.origin) {
+                if (!packageJsonPath || readJsonFile(packageJsonPath).name !== originOrPackageName) {
                     throw exc;
                 }
                 const parts = moduleName.split("/");
@@ -155,17 +150,17 @@ export public class TestController {
             }
             testClasses = [groupModule[ctorName] as constructor{N4Object}];
         } catch (ex) {
-            await this.errorGroup(info, info.origin + "/" + moduleName, null, ex);
+            await this.errorGroup(info, originOrPackageName + "/" + moduleName, null, ex);
             return null;
         }
         if (!testClasses) {
-            await this.errorGroup(info, info.origin + "/" + parts.join("/"));
+            await this.errorGroup(info, originOrPackageName + "/" + parts.join("/"));
             return null;
         }
         let instrumentedTests: IInstrumentedTest[] = [];
         for (const testClass of testClasses) {
             if (!testClass) {
-                await this.errorGroup(info, info.origin + "/" + moduleName, null,
+                await this.errorGroup(info, originOrPackageName + "/" + moduleName, null,
                 new Error("Empty object loaded (is the test class exported?)"));
                 continue;
             }

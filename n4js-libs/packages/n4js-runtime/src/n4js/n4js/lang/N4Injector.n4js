@@ -482,7 +482,7 @@ export public class N4Injector{
             if(!meta.typeVar){
                 throw new DIConfigurationError('Cannot create provider ' + meta.type + " typelet is " + meta.typeVar);
             }
-            return this.createAnonymousProvider(meta.typeVar) as N4Object;
+            return this.createAnonymousProvider(meta.typeVar);
         }
         return this.internalCreate(meta.type, delegate, cachedInstances);
     }

@@ -10,11 +10,13 @@
  */
  
  /** Describes given test class to be executed. */
-export public class TestInfo {
+export public interface ~TestInfo {
     /** set in case class has been loaded from disk */
     public filePath?: string;
-
-    /** origin used for dynamic loading of the test class */
+    /**
+     * @Deprecated: instead use TestCatalogInfo#packageName
+     * origin used for dynamic loading of the test class
+     */
     public origin: string;
     /** test class fqn used for dynamic loading */
     public fqn?: string;
@@ -23,5 +25,4 @@ export public class TestInfo {
     /** names of the test methods from a given class to be executed */
     public testMethods?: string[];
 
-    public constructor(@Spec spec: ~i~this) {}
 }
