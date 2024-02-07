@@ -20,7 +20,7 @@ echo "========= Running tests defined in the individual packages of yarn workspa
 echo "========= Running mangelhaft tests for all packages in yarn workspace 'n4js-libs' ..."
 mkdir -p "./build"
 echo "Run mangelhaft ..."
-yarn run n4js-mangelhaft \
+./packages/n4js-mangelhaft-cli/src-gen/org/eclipse/n4js/mangelhaft/runner/node/NodeTestMain.js \
         packages/* \
         --xunitReportFile "./build/report.xml" \
         --sonarTestExecutionReportFile ./build/sqreport.xml \
