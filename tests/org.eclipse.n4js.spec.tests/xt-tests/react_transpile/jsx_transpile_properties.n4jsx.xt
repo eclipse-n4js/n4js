@@ -21,6 +21,7 @@
 		Project "react" {
 			File "index.n4jsd" { from = "../react/index.n4jsd" }
 			File "index.js" { from = "../react/index.js" }
+			File "jsx-runtime.js" { from = "../react/jsx-runtime.js" }
 			File "package.json" { from = "../react/package.json" }
 		}
 	}
@@ -78,7 +79,7 @@ const props4 = {
 	a1: 1,
 	a2: 2
 };
-const MyDiv4 = $jsx('div', Object.assign(props4, {
+const MyDiv4 = $jsx('div', Object.assign({}, props4, {
 	ref: "x"
 }), 1);
 MyDiv4;
@@ -86,7 +87,7 @@ const props5 = {
 	a1: 1,
 	a2: 2
 };
-const MyDiv5 = $jsx('div', Object.assign(props5, props4, {
+const MyDiv5 = $jsx('div', Object.assign({}, props5, props4, {
 	ref: "x"
 }), 1);
 MyDiv5;
