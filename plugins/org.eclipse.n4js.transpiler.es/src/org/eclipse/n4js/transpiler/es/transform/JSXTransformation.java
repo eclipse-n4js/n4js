@@ -54,7 +54,6 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
-import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.xtext.EcoreUtil2;
@@ -79,6 +78,9 @@ import com.google.inject.Inject;
 public class JSXTransformation extends Transformation {
 	/** Alias for React transform */
 	public static final String JSX_ALIAS = "$" + REACT_JSX_TRANSFORM_NAME;
+
+	private SymbolTableEntryOriginal steForJsxBackendNamespace;
+	private SymbolTableEntryOriginal steForJsxBackendFragmentComponent;
 
 	@Inject
 	private ReactHelper reactHelper;
@@ -130,24 +132,29 @@ public class JSXTransformation extends Transformation {
 			return; // this transformation is not applicable
 		}
 
-		// Transform JSXFragments and JSXElements
+		// note: we are passing 'true' to #collectNodes(), i.e. we are searching for nested elements
 		List<JSXAbstractElement> jsxAbstractElements = collectNodes(getState().im, JSXAbstractElement.class, true);
 		if (jsxAbstractElements.isEmpty()) {
 			// Nothing to transform
 			return;
 		}
 
-		prepareImportOfJsxBackend();
-		prepareElementFactoryFunction();
-		prepareFragmentComponent();
+		createImportOfJsx();
+		steForJsxBackendNamespace = createImportOfJsxBackend(); // will be removed if obsolete
+		steForJsxBackendFragmentComponent = prepareFragmentComponent();
 
-		// note: we are passing 'true' to #collectNodes(), i.e. we are searching for nested elements
+		// Transform JSXFragments and JSXElements
 		for (JSXAbstractElement jsxElem : jsxAbstractElements) {
 			transformJSXAbstractElement(jsxElem);
 		}
 	}
 
-	private void prepareImportOfJsxBackend() {
+	private void createImportOfJsx() {
+		ImportDeclaration impDecl = addNamedImport(REACT_JSX_TRANSFORM_NAME, JSX_ALIAS, REACT_JSX_RUNTIME_NAME);
+		impDecl.getImportSpecifiers().forEach(is -> is.setFlaggedUsedInCode(true));
+	}
+
+	private SymbolTableEntryOriginal createImportOfJsxBackend() {
 		TModule jsxBackendModule = reactHelper.getJsxBackendModule(getState().resource);
 		if (jsxBackendModule == null) {
 			throw new RuntimeException("cannot locate JSX backend for N4JSX resource " + getState().resource.getURI());
@@ -167,23 +174,12 @@ public class JSXTransformation extends Transformation {
 		if (existingNamespaceImportOfReactIM != null) {
 			// we already have a namespace import of the JSX backend, no need to create a new one:
 			existingNamespaceImportOfReactIM.setFlaggedUsedInCode(true);
-			return;// findSymbolTableEntryForNamespaceImport(existingNamespaceImportOfReactIM);
+			return findSymbolTableEntryForNamespaceImport(existingNamespaceImportOfReactIM);
 		}
 		// create namespace import for the JSX backend
 		// (note: we do not have to care for name clashes regarding name of the namespace, because validations ensure
 		// that "React" is never used as a name in N4JSX files, except as the namespace name of a react import)
-
-		ImportDeclaration impDecl = addNamedImport(REACT_JSX_TRANSFORM_NAME, JSX_ALIAS, REACT_JSX_RUNTIME_NAME);
-		impDecl.getImportSpecifiers().forEach(is -> is.setFlaggedUsedInCode(true));
-	}
-
-	private SymbolTableEntryOriginal prepareElementFactoryFunction() {
-		TFunction elementFactoryFunction = reactHelper.getJsxBackendElementFactoryFunction(getState().resource);
-		if (elementFactoryFunction == null) {
-			throw new RuntimeException("cannot locate element factory function of JSX backend for N4JSX resource "
-					+ getState().resource.getURI());
-		}
-		return getSymbolTableEntryOriginal(elementFactoryFunction, true);
+		return addNamespaceImport(jsxBackendModule, reactHelper.getJsxBackendNamespaceName());
 	}
 
 	private SymbolTableEntryOriginal prepareFragmentComponent() {
@@ -215,12 +211,8 @@ public class JSXTransformation extends Transformation {
 			if (keysValue != null) {
 				args.add(keysValue);
 			}
-		} else {
-			IdentifierRef_IM idRef = ImFactory.eINSTANCE.createIdentifierRef_IM();
-			idRef.setIdAsText(JSX_ALIAS);
-			SymbolTableEntryInternal ste = getSymbolTableEntryInternal(idRef.getIdAsText(), true);
-			idRef.setId_IM(ste);
-			args.add(idRef);
+		} else if (elem instanceof JSXFragment) {
+			args.add(_PropertyAccessExpr(steForJsxBackendNamespace, steForJsxBackendFragmentComponent));
 			args.add(convertJSXAttributes(Collections.emptyList(), elem.getJsxChildren()));
 		}
 

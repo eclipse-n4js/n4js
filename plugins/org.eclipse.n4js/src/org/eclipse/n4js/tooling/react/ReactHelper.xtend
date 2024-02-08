@@ -65,7 +65,7 @@ class ReactHelper {
 	public final static String REACT_ELEMENT_FACTORY_FUNCTION_NAME = "createElement";
 	public final static String REACT_ELEMENT_PROPERTY_KEY_NAME = "key";
 	public final static String REACT_ELEMENT_PROPERTY_CHILDREN_NAME = "children";
-	public final static String REACT_JSX_RUNTIME_NAME = "react/jsx-runtime";
+	public final static String REACT_JSX_RUNTIME_NAME = "react/jsx-runtime.js";
 	
 
 	private final static String REACT_KEY = "KEY__" + REACT_PROJECT_ID
