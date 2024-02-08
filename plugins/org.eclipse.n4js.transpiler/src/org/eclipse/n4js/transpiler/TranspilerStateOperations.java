@@ -187,6 +187,32 @@ public class TranspilerStateOperations {
 	}
 
 	/**
+	 * Creates a new named import for the given STE and adds it to the intermediate model of the given transpiler state.
+	 * Note that this method does not perform a binding to an existing target module.
+	 * <p>
+	 * IMPORTANT: this method does not check if the given element name or alias is unique (i.e. does not avoid name
+	 * clashes!).
+	 */
+	public static ImportDeclaration addNamedImport(TranspilerState state, String elementNameToImport,
+			String aliasOrNull, String moduleSpecifierName) {
+
+		// 1) create import declaration & specifier
+		NamedImportSpecifier importSpec = _NamedImportSpecifier(elementNameToImport, aliasOrNull, true);
+		ImportDeclaration importDecl = _ImportDecl(importSpec);
+		importDecl.setModuleSpecifierAsText(moduleSpecifierName);
+
+		// 2) add import to intermediate model
+		EList<ScriptElement> scriptElements = state.im.getScriptElements();
+		if (scriptElements.isEmpty()) {
+			scriptElements.add(importDecl);
+		} else {
+			insertBefore(scriptElements.get(0), importDecl);
+		}
+
+		return importDecl;
+	}
+
+	/**
 	 * Adds an "empty" import to the intermediate model, i.e. an import of the form:
 	 *
 	 * <pre>

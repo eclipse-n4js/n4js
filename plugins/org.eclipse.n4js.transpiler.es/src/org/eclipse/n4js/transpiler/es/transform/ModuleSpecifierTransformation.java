@@ -16,9 +16,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.apache.log4j.Logger;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
+import org.eclipse.n4js.tooling.react.ReactHelper;
 import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.DeclMergingUtils;
@@ -39,6 +41,7 @@ import com.google.inject.Inject;
  * For details, see {@link #computeModuleSpecifierForOutputCode(ImportDeclaration)}.
  */
 public class ModuleSpecifierTransformation extends Transformation {
+	private final static Logger LOGGER = Logger.getLogger(ModuleSpecifierTransformation.class);
 
 	@Inject
 	private WorkspaceAccess workspaceAccess;
@@ -120,6 +123,17 @@ public class ModuleSpecifierTransformation extends Transformation {
 	 */
 	private String computeModuleSpecifierForOutputCode(ImportDeclaration importDeclIM) {
 		TModule targetModule = getState().info.getImportedModule(importDeclIM);
+
+		if (targetModule == null) {
+			if (ReactHelper.REACT_JSX_RUNTIME_NAME.equals(importDeclIM.getModuleSpecifierAsText())) {
+				// expected to happen since this import was added by JSXTransformation
+				return importDeclIM.getModuleSpecifierAsText();
+			}
+			// fallback, should not happen
+			LOGGER.error("targetModule is null at import declaration with module specifier: "
+					+ importDeclIM.getModuleSpecifierAsText());
+			return importDeclIM.getModuleSpecifierAsText();
+		}
 
 		if (URIUtils.isVirtualResourceURI(targetModule.eResource().getURI())
 				&& !DeclMergingUtils.isModuleAugmentation(targetModule)) {

@@ -158,6 +158,10 @@ public class SanitizeImportsTransformation extends Transformation {
 			// add new usages of an existing import)
 			// -> therefore simply return false (i.e. unused)
 			return false;
+		} else if (importSpec instanceof NamedImportSpecifier
+				&& JSXTransformation.JSX_ALIAS.equals(((NamedImportSpecifier) importSpec).getAlias())) {
+			// special case for import that is added in JSXTransformation
+			return true;
 		} else {
 			// for performance reasons, we do not require the flaggedUsedInCode to be set to false if usages are removed
 			// -> therefore have to check for references now

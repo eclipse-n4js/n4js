@@ -61,7 +61,11 @@ class ReactHelper {
 	public final static String REACT_FRAGMENT_NAME = "Fragment";
 
 	public final static String REACT_NAMESPACE_NAME = REACT_PROJECT_ID.toFirstUpper;
+	public final static String REACT_JSX_TRANSFORM_NAME = "jsx";
 	public final static String REACT_ELEMENT_FACTORY_FUNCTION_NAME = "createElement";
+	public final static String REACT_ELEMENT_PROPERTY_KEY_NAME = "key";
+	public final static String REACT_ELEMENT_PROPERTY_CHILDREN_NAME = "children";
+	public final static String REACT_JSX_RUNTIME_NAME = "react/jsx-runtime";
 	
 
 	private final static String REACT_KEY = "KEY__" + REACT_PROJECT_ID

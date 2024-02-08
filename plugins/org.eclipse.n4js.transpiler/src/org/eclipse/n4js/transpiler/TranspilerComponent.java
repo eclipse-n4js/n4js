@@ -21,6 +21,7 @@ import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.FunctionExpression;
+import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
@@ -106,6 +107,12 @@ public abstract class TranspilerComponent {
 	/** See {@link TranspilerStateOperations#addNamedImport(TranspilerState, SymbolTableEntryOriginal, String)}. */
 	public void addNamedImport(SymbolTableEntryOriginal steOfElementToImport, String aliasOrNull) {
 		TranspilerStateOperations.addNamedImport(state, steOfElementToImport, aliasOrNull);
+	}
+
+	/** See {@link TranspilerStateOperations#addNamedImport(TranspilerState, String, String, String)}. */
+	public ImportDeclaration addNamedImport(String elementNameToImport, String aliasOrNull,
+			String moduleSpecifierName) {
+		return TranspilerStateOperations.addNamedImport(state, elementNameToImport, aliasOrNull, moduleSpecifierName);
 	}
 
 	/** See {@link TranspilerStateOperations#addEmptyImport(TranspilerState, String)}. */
