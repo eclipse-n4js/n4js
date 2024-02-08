@@ -264,6 +264,7 @@ public class JSXTransformation extends Transformation {
 			List<PropertyNameValuePair> props = new ArrayList<>();
 			if (attrs.get(0) instanceof JSXSpreadAttribute) {
 				// The first attribute is a spread object, the target must be {}.
+				parameters.add(_ObjLit());
 			} else {
 				// Otherwise, the target is of the form {foo: true, bar: "Hi"}
 				int firstSpreadIndex = (!spreadIndices.isEmpty()) ? spreadIndices.get(0) : attrs.size();
@@ -273,8 +274,7 @@ public class JSXTransformation extends Transformation {
 						props.add(convertJSXAttribute(propAttr));
 					}
 				}
-				ObjectLiteral target = _ObjLit(props.toArray(new PropertyNameValuePair[0]));
-				parameters.add(target);
+				parameters.add(_ObjLit(props.toArray(new PropertyNameValuePair[0])));
 			}
 
 			for (int i = 0; i < spreadIndices.size(); i++) {
