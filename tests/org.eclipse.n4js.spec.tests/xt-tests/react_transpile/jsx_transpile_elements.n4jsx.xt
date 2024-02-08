@@ -30,8 +30,18 @@
  
 
 // XPECT noerrors -->
-const MyDiv = <div><h1></h1></div>;
+const MyDiv = <div></div>;
 MyDiv;
+
+const MyDivText = <div>{"Hello World"}</div>;
+MyDivText;
+
+const MyDivWithChild = <div><h1></h1></div>;
+MyDivWithChild;
+
+const MyDivWithChildren = <div><h1></h1><h2></h2></div>;
+MyDivWithChildren;
+
 
 
 /* XPECT compileResult ---
@@ -40,7 +50,22 @@ MyDiv;
 import 'n4js-runtime'
 import {jsx as $jsx} from 'react/jsx-runtime'
 
-const MyDiv = $jsx('div', null);
+const MyDiv = $jsx('div', {});
 MyDiv;
-//# sourceMappingURL=Trnsp_00_Simple.map
+const MyDivText = $jsx('div', {
+	children: "Hello World"
+});
+MyDivText;
+const MyDivWithChild = $jsx('div', {
+	children: $jsx('h1', {})
+});
+MyDivWithChild;
+const MyDivWithChildren = $jsx('div', {
+	children: [
+		$jsx('h1', {}),
+		$jsx('h2', {})
+	]
+});
+MyDivWithChildren;
+//# sourceMappingURL=jsx_transpile_elements.map
 --- */
