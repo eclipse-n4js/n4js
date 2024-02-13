@@ -21,6 +21,7 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._PropertyAcces
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._PropertyNameValuePair;
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._PropertySpread;
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._StringLiteral;
+import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._TRUE;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.filter;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.map;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.toList;
@@ -261,7 +262,9 @@ public class JSXTransformation extends Transformation {
 				if (REACT_ELEMENT_PROPERTY_KEY_NAME.equals(pAttr.getPropertyAsText())) {
 					continue;
 				}
-				pas.add(_PropertyNameValuePair(pAttr.getPropertyAsText(), pAttr.getJsxAttributeValue()));
+				pas.add(_PropertyNameValuePair(
+						getNameFromPropertyAttribute(pAttr),
+						getValueExpressionFromPropertyAttribute(pAttr)));
 			}
 		}
 
@@ -303,5 +306,17 @@ public class JSXTransformation extends Transformation {
 			}
 		}
 		return nameExpr;
+	}
+
+	private String getNameFromPropertyAttribute(JSXPropertyAttribute attr) {
+		IdentifiableElement prop = attr.getProperty();
+		if (prop != null && !prop.eIsProxy()) {
+			return prop.getName();
+		}
+		return attr.getPropertyAsText();
+	}
+
+	private Expression getValueExpressionFromPropertyAttribute(JSXPropertyAttribute attr) {
+		return attr.getJsxAttributeValue() != null ? attr.getJsxAttributeValue() : _TRUE();
 	}
 }
