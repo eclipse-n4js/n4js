@@ -312,8 +312,10 @@ public class QueuedExecutorService {
 		while ((allTasks = allTasksOrNull()) != null) {
 			try {
 				allTasks.join();
-			} catch (CompletionException | CancellationException e) {
+			} catch (CancellationException e) {
 				// ignore cancellations
+			} catch (CompletionException e) {
+				throw e;
 			}
 		}
 	}

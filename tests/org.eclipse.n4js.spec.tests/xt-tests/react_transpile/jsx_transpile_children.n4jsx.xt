@@ -43,6 +43,11 @@ MyDiv2;
 const MyDiv3 = <div children={"Hello World"}><h2></h2></div>;
 MyDiv3;
 
+// XPECT nowarnings -->
+const props4 = {a1: 1, a2: 2}
+const MyDiv4 = <div {...props4} key={1} ref="x"><h2></h2></div>;
+MyDiv4;
+
 
 
 
@@ -56,17 +61,23 @@ const MyDiv1 = $jsx('div', {
 	children: "Hello World"
 });
 MyDiv1;
-const MyDiv2 = $jsx('div', Object.assign({
-	children: "Hello World"
-}, {
+const MyDiv2 = $jsx('div', {
 	children: "Guten Tag"
-}));
+});
 MyDiv2;
-const MyDiv3 = $jsx('div', Object.assign({
-	children: "Hello World"
-}, {
+const MyDiv3 = $jsx('div', {
 	children: $jsx('h2', {})
-}));
+});
 MyDiv3;
+const props4 = {
+	a1: 1,
+	a2: 2
+};
+const MyDiv4 = $jsx('div', {
+	...props4,
+	ref: "x",
+	children: $jsx('h2', {})
+}, 1);
+MyDiv4;
 //# sourceMappingURL=jsx_transpile_children.map
 --- */

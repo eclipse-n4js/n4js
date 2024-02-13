@@ -71,25 +71,29 @@ const props3 = {
 	a1: 1,
 	a2: 2
 };
-const MyDiv3 = $jsx('div', Object.assign({
-	ref: "x"
-}, props3), 1);
+const MyDiv3 = $jsx('div', {
+	ref: "x",
+	...props3
+}, 1);
 MyDiv3;
 const props4 = {
 	a1: 1,
 	a2: 2
 };
-const MyDiv4 = $jsx('div', Object.assign({}, props4, {
+const MyDiv4 = $jsx('div', {
+	...props4,
 	ref: "x"
-}), 1);
+}, 1);
 MyDiv4;
 const props5 = {
 	a1: 1,
 	a2: 2
 };
-const MyDiv5 = $jsx('div', Object.assign({}, props5, props4, {
+const MyDiv5 = $jsx('div', {
+	...props5,
+	...props4,
 	ref: "x"
-}), 1);
+}, 1);
 MyDiv5;
 const props6 = {
 	a1: 1,

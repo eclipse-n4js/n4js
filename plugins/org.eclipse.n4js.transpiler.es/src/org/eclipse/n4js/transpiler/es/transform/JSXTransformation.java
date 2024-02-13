@@ -19,8 +19,8 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._CallExpr;
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._ObjLit;
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._PropertyAccessExpr;
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._PropertyNameValuePair;
+import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._PropertySpread;
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._StringLiteral;
-import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._TRUE;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.filter;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.map;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.toList;
@@ -43,7 +43,6 @@ import org.eclipse.n4js.n4JS.JSXSpreadAttribute;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.PropertyAssignment;
-import org.eclipse.n4js.n4JS.PropertyNameValuePair;
 import org.eclipse.n4js.tooling.react.ReactHelper;
 import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
@@ -237,65 +236,32 @@ public class JSXTransformation extends Transformation {
 		return null;
 	}
 
-	// Generate Object.assign({}, {foo, bar: "Hi"}, spr)
+	// Generate {foo:foo, ...spread, bar: "Hi", children: []}
 	private Expression convertJSXAttributes(List<JSXAttribute> attrs, List<JSXChild> children) {
 		if (children.isEmpty() && attrs.isEmpty()) {
 			return _ObjLit();
 		}
 		if (children.isEmpty() && attrs.size() == 1 && attrs.get(0) instanceof JSXSpreadAttribute) {
 			// Special case: if only a single spread operator is passed, we pass it directly, e.g. spr instead of
-			// cloning with Object.assign.
+			// cloning.
 			return ((JSXSpreadAttribute) attrs.get(0)).getExpression();
 		}
 
-		List<Integer> spreadIndices = new ArrayList<>();
-		for (int idx = 0; idx < attrs.size(); idx++) {
-			if (attrs.get(idx) instanceof JSXSpreadAttribute) {
-				spreadIndices.add(idx);
-			}
-		}
+		List<PropertyAssignment> pas = new ArrayList<>();
 
-		List<Expression> parameters = new ArrayList<>();
-
-		if (!attrs.isEmpty()) {
-			// GHOLD-413: We have to make sure that the only properties locating next to each other are combined.
-			// Moreover, the order of properties as well as spread operators must be preserved!
-			List<PropertyNameValuePair> props = new ArrayList<>();
-			if (attrs.get(0) instanceof JSXSpreadAttribute) {
-				// The first attribute is a spread object, the target must be {}.
-				parameters.add(_ObjLit());
-			} else {
-				// Otherwise, the target is of the form {foo: true, bar: "Hi"}
-				int firstSpreadIndex = (!spreadIndices.isEmpty()) ? spreadIndices.get(0) : attrs.size();
-				for (int i = 0; i < firstSpreadIndex; i++) {
-					JSXPropertyAttribute propAttr = (JSXPropertyAttribute) attrs.get(i);
-					if (!REACT_ELEMENT_PROPERTY_KEY_NAME.equals(propAttr.getPropertyAsText())) {
-						props.add(convertJSXAttribute(propAttr));
-					}
+		for (JSXAttribute attr : attrs) {
+			if (attr instanceof JSXSpreadAttribute) {
+				JSXSpreadAttribute sAttr = (JSXSpreadAttribute) attr;
+				pas.add(_PropertySpread(sAttr.getExpression()));
+			} else if (attr instanceof JSXPropertyAttribute) {
+				JSXPropertyAttribute pAttr = (JSXPropertyAttribute) attr;
+				if (!children.isEmpty() && REACT_ELEMENT_PROPERTY_CHILDREN_NAME.equals(pAttr.getPropertyAsText())) {
+					continue;
 				}
-				parameters.add(_ObjLit(props.toArray(new PropertyNameValuePair[0])));
-			}
-
-			for (int i = 0; i < spreadIndices.size(); i++) {
-				int curSpreadIdx = spreadIndices.get(i);
-				// Spread expression passed is used directly
-				parameters.add(((JSXSpreadAttribute) attrs.get(curSpreadIdx)).getExpression());
-				// Combine properties between spread intervals
-				int nextSpreadIdx = (i < spreadIndices.size() - 1) ? spreadIndices.get(i + 1)
-						: attrs.size();
-				List<JSXAttribute> propsBetweenTwoSpreads = attrs.subList(curSpreadIdx + 1, nextSpreadIdx);
-				if (!propsBetweenTwoSpreads.isEmpty()) {
-					List<PropertyAssignment> props2 = new ArrayList<>();
-					for (JSXAttribute attr : propsBetweenTwoSpreads) {
-						JSXPropertyAttribute propAttr = (JSXPropertyAttribute) attr;
-						if (!REACT_ELEMENT_PROPERTY_KEY_NAME.equals(propAttr.getPropertyAsText())) {
-							props2.add(convertJSXAttribute(propAttr));
-						}
-					}
-					if (!props2.isEmpty()) {
-						parameters.add(_ObjLit(props2.toArray(new PropertyAssignment[0])));
-					}
+				if (REACT_ELEMENT_PROPERTY_KEY_NAME.equals(pAttr.getPropertyAsText())) {
+					continue;
 				}
+				pas.add(_PropertyNameValuePair(pAttr.getPropertyAsText(), pAttr.getJsxAttributeValue()));
 			}
 		}
 
@@ -308,15 +274,10 @@ public class JSXTransformation extends Transformation {
 						toList(map(children, child -> convertJSXChild(child))).toArray(new Expression[0]));
 			}
 			// this will cause any other custom property children to be overwritten
-			parameters.add(_ObjLit(_PropertyNameValuePair(REACT_ELEMENT_PROPERTY_CHILDREN_NAME, childrenValue)));
+			pas.add(_PropertyNameValuePair(REACT_ELEMENT_PROPERTY_CHILDREN_NAME, childrenValue));
 		}
 
-		if (parameters.size() == 1) {
-			return parameters.get(0);
-		}
-
-		return _CallExpr(_PropertyAccessExpr(steFor_Object(), steFor_Object_assign()),
-				parameters.toArray(new Expression[0]));
+		return _ObjLit(pas.toArray(new PropertyAssignment[0]));
 	}
 
 	private Expression convertJSXChild(JSXChild child) {
@@ -332,12 +293,6 @@ public class JSXTransformation extends Transformation {
 		return null;
 	}
 
-	private PropertyNameValuePair convertJSXAttribute(JSXPropertyAttribute attr) {
-		return _PropertyNameValuePair(
-				getNameFromPropertyAttribute(attr),
-				getValueExpressionFromPropertyAttribute(attr));
-	}
-
 	private Expression getTagNameFromElement(JSXElement elem) {
 		Expression nameExpr = elem.getJsxElementName().getExpression();
 		if (nameExpr instanceof IdentifierRef_IM) {
@@ -348,17 +303,5 @@ public class JSXTransformation extends Transformation {
 			}
 		}
 		return nameExpr;
-	}
-
-	private String getNameFromPropertyAttribute(JSXPropertyAttribute attr) {
-		IdentifiableElement prop = attr.getProperty();
-		if (prop != null && !prop.eIsProxy()) {
-			return prop.getName();
-		}
-		return attr.getPropertyAsText();
-	}
-
-	private Expression getValueExpressionFromPropertyAttribute(JSXPropertyAttribute attr) {
-		return attr.getJsxAttributeValue() != null ? attr.getJsxAttributeValue() : _TRUE();
 	}
 }

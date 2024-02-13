@@ -89,6 +89,7 @@ import org.eclipse.n4js.n4JS.PropertyGetterDeclaration;
 import org.eclipse.n4js.n4JS.PropertyNameKind;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
+import org.eclipse.n4js.n4JS.PropertySpread;
 import org.eclipse.n4js.n4JS.RelationalExpression;
 import org.eclipse.n4js.n4JS.RelationalOperator;
 import org.eclipse.n4js.n4JS.ReturnStatement;
@@ -470,6 +471,12 @@ public class TranspilerBuilderBlocks {
 	public static PropertyNameValuePair _PropertyNameValuePair(LiteralOrComputedPropertyName name, Expression value) {
 		PropertyNameValuePair result = N4JSFactory.eINSTANCE.createPropertyNameValuePair();
 		result.setDeclaredName(name);
+		result.setExpression(value);
+		return result;
+	}
+
+	public static PropertySpread _PropertySpread(Expression value) {
+		PropertySpread result = N4JSFactory.eINSTANCE.createPropertySpread();
 		result.setExpression(value);
 		return result;
 	}
