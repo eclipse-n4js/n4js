@@ -41,7 +41,6 @@ import org.eclipse.n4js.n4JS.JSXFragment;
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
 import org.eclipse.n4js.n4JS.JSXSpreadAttribute;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
-import org.eclipse.n4js.n4JS.ObjectLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.PropertyAssignment;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;

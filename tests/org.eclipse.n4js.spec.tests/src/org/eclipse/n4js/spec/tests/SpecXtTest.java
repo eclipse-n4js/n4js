@@ -24,6 +24,6 @@ public class SpecXtTest {
 
 	@XtFolder
 	static String getFolder() {
-		return "xt-tests";
+		return "xt-tests/react_transpile";
 	}
 }
