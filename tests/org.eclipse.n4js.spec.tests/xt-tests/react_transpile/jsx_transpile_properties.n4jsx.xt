@@ -106,5 +106,6 @@ MyDiv6;
 const MyDiv7 = $jsx('div', {
 	trueProp: true
 });
+MyDiv7;
 //# sourceMappingURL=jsx_transpile_properties.map
 --- */
