@@ -1899,6 +1899,10 @@ public enum IssueCodes {
 	JSX_JSXSPROPERTYATTRIBUTE_NOT_DECLARED_IN_PROPS(WARNING,
 			"Attribute {0} is not a declared property in the props of {1}."),
 
+	/** No parameter */
+	JSX_JSXSPROPERTYATTRIBUTE_CHILDREN(WARNING,
+			"Attribute 'children' will be overwritten by jsx child elements."),
+
 	/** 0: JSX element in non-JSX file */
 	JSX_JSXELEMENT_IN_NON_JSX_RESOURCE(ERROR, "JSX element is expected to be placed in JSX like resource, was {0}."),
 

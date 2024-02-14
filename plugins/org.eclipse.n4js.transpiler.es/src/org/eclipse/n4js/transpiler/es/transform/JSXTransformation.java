@@ -10,11 +10,16 @@
  */
 package org.eclipse.n4js.transpiler.es.transform;
 
+import static org.eclipse.n4js.tooling.react.ReactHelper.REACT_ELEMENT_PROPERTY_CHILDREN_NAME;
+import static org.eclipse.n4js.tooling.react.ReactHelper.REACT_ELEMENT_PROPERTY_KEY_NAME;
+import static org.eclipse.n4js.tooling.react.ReactHelper.REACT_JSX_RUNTIME_NAME;
+import static org.eclipse.n4js.tooling.react.ReactHelper.REACT_JSX_TRANSFORM_NAME;
+import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._ArrLit;
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._CallExpr;
-import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._NULL;
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._ObjLit;
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._PropertyAccessExpr;
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._PropertyNameValuePair;
+import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._PropertySpread;
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._StringLiteral;
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._TRUE;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.filter;
@@ -22,8 +27,10 @@ import static org.eclipse.xtext.xbase.lib.IterableExtensions.map;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.toList;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.JSXAbstractElement;
@@ -35,18 +42,17 @@ import org.eclipse.n4js.n4JS.JSXFragment;
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
 import org.eclipse.n4js.n4JS.JSXSpreadAttribute;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
-import org.eclipse.n4js.n4JS.ObjectLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.PropertyAssignment;
-import org.eclipse.n4js.n4JS.PropertyNameValuePair;
 import org.eclipse.n4js.tooling.react.ReactHelper;
 import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
+import org.eclipse.n4js.transpiler.im.ImFactory;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
+import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
-import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.xtext.EcoreUtil2;
@@ -69,9 +75,10 @@ import com.google.inject.Inject;
  * </pre>
  */
 public class JSXTransformation extends Transformation {
+	/** Alias for React transform */
+	public static final String JSX_ALIAS = "$" + REACT_JSX_TRANSFORM_NAME;
 
 	private SymbolTableEntryOriginal steForJsxBackendNamespace;
-	private SymbolTableEntryOriginal steForJsxBackendElementFactoryFunction;
 	private SymbolTableEntryOriginal steForJsxBackendFragmentComponent;
 
 	@Inject
@@ -124,24 +131,29 @@ public class JSXTransformation extends Transformation {
 			return; // this transformation is not applicable
 		}
 
-		// Transform JSXFragments and JSXElements
+		// note: we are passing 'true' to #collectNodes(), i.e. we are searching for nested elements
 		List<JSXAbstractElement> jsxAbstractElements = collectNodes(getState().im, JSXAbstractElement.class, true);
 		if (jsxAbstractElements.isEmpty()) {
 			// Nothing to transform
 			return;
 		}
 
-		steForJsxBackendNamespace = prepareImportOfJsxBackend();
-		steForJsxBackendElementFactoryFunction = prepareElementFactoryFunction();
+		createImportOfJsx();
+		steForJsxBackendNamespace = createImportOfJsxBackend(); // will be removed if obsolete
 		steForJsxBackendFragmentComponent = prepareFragmentComponent();
 
-		// note: we are passing 'true' to #collectNodes(), i.e. we are searching for nested elements
+		// Transform JSXFragments and JSXElements
 		for (JSXAbstractElement jsxElem : jsxAbstractElements) {
 			transformJSXAbstractElement(jsxElem);
 		}
 	}
 
-	private SymbolTableEntryOriginal prepareImportOfJsxBackend() {
+	private void createImportOfJsx() {
+		ImportDeclaration impDecl = addNamedImport(REACT_JSX_TRANSFORM_NAME, JSX_ALIAS, REACT_JSX_RUNTIME_NAME);
+		impDecl.getImportSpecifiers().forEach(is -> is.setFlaggedUsedInCode(true));
+	}
+
+	private SymbolTableEntryOriginal createImportOfJsxBackend() {
 		TModule jsxBackendModule = reactHelper.getJsxBackendModule(getState().resource);
 		if (jsxBackendModule == null) {
 			throw new RuntimeException("cannot locate JSX backend for N4JSX resource " + getState().resource.getURI());
@@ -169,15 +181,6 @@ public class JSXTransformation extends Transformation {
 		return addNamespaceImport(jsxBackendModule, reactHelper.getJsxBackendNamespaceName());
 	}
 
-	private SymbolTableEntryOriginal prepareElementFactoryFunction() {
-		TFunction elementFactoryFunction = reactHelper.getJsxBackendElementFactoryFunction(getState().resource);
-		if (elementFactoryFunction == null) {
-			throw new RuntimeException("cannot locate element factory function of JSX backend for N4JSX resource "
-					+ getState().resource.getURI());
-		}
-		return getSymbolTableEntryOriginal(elementFactoryFunction, true);
-	}
-
 	private SymbolTableEntryOriginal prepareFragmentComponent() {
 		IdentifiableElement fragmentComponent = reactHelper.getJsxBackendFragmentComponent(getState().resource);
 		if (fragmentComponent == null) {
@@ -202,16 +205,82 @@ public class JSXTransformation extends Transformation {
 		if (elem instanceof JSXElement) {
 			JSXElement jsxElem = (JSXElement) elem;
 			args.add(getTagNameFromElement(jsxElem));
-			args.add(convertJSXAttributes(jsxElem.getJsxAttributes()));
-		} else {
+			args.add(convertJSXAttributes(jsxElem.getJsxAttributes(), elem.getJsxChildren()));
+			Expression keysValue = findKeysAttribute(jsxElem.getJsxAttributes());
+			if (keysValue != null) {
+				args.add(keysValue);
+			}
+		} else if (elem instanceof JSXFragment) {
 			args.add(_PropertyAccessExpr(steForJsxBackendNamespace, steForJsxBackendFragmentComponent));
-			args.add(_NULL());
+			args.add(convertJSXAttributes(Collections.emptyList(), elem.getJsxChildren()));
 		}
-		args.addAll(toList(map(elem.getJsxChildren(), child -> convertJSXChild(child))));
 
-		return _CallExpr(
-				_PropertyAccessExpr(steForJsxBackendNamespace, steForJsxBackendElementFactoryFunction),
-				args.toArray(new Expression[0]));
+		IdentifierRef_IM idRef = ImFactory.eINSTANCE.createIdentifierRef_IM();
+		idRef.setIdAsText(JSX_ALIAS);
+		SymbolTableEntryInternal ste = getSymbolTableEntryInternal(idRef.getIdAsText(), true);
+		idRef.setId_IM(ste);
+		return _CallExpr(idRef, args.toArray(new Expression[0]));
+	}
+
+	private Expression findKeysAttribute(EList<JSXAttribute> jsxAttributes) {
+		for (JSXAttribute attr : jsxAttributes) {
+			if (attr instanceof JSXPropertyAttribute) {
+				JSXPropertyAttribute pa = (JSXPropertyAttribute) attr;
+				// https://github.com/reactjs/rfcs/blob/createlement-rfc/text/0000-create-element-changes.md#motivation
+				// notes that the key property will not be extracted from attributes
+				// at some time in the future
+				if (REACT_ELEMENT_PROPERTY_KEY_NAME.equals(pa.getPropertyAsText())) {
+					return pa.getJsxAttributeValue();
+				}
+			}
+		}
+		return null;
+	}
+
+	// Generate {foo:foo, ...spread, bar: "Hi", children: []}
+	private Expression convertJSXAttributes(List<JSXAttribute> attrs, List<JSXChild> children) {
+		if (children.isEmpty() && attrs.isEmpty()) {
+			return _ObjLit();
+		}
+		if (children.isEmpty() && attrs.size() == 1 && attrs.get(0) instanceof JSXSpreadAttribute) {
+			// Special case: if only a single spread operator is passed, we pass it directly, e.g. spr instead of
+			// cloning.
+			return ((JSXSpreadAttribute) attrs.get(0)).getExpression();
+		}
+
+		List<PropertyAssignment> pas = new ArrayList<>();
+
+		for (JSXAttribute attr : attrs) {
+			if (attr instanceof JSXSpreadAttribute) {
+				JSXSpreadAttribute sAttr = (JSXSpreadAttribute) attr;
+				pas.add(_PropertySpread(sAttr.getExpression()));
+			} else if (attr instanceof JSXPropertyAttribute) {
+				JSXPropertyAttribute pAttr = (JSXPropertyAttribute) attr;
+				if (!children.isEmpty() && REACT_ELEMENT_PROPERTY_CHILDREN_NAME.equals(pAttr.getPropertyAsText())) {
+					continue;
+				}
+				if (REACT_ELEMENT_PROPERTY_KEY_NAME.equals(pAttr.getPropertyAsText())) {
+					continue;
+				}
+				pas.add(_PropertyNameValuePair(
+						getNameFromPropertyAttribute(pAttr),
+						getValueExpressionFromPropertyAttribute(pAttr)));
+			}
+		}
+
+		if (!children.isEmpty()) {
+			Expression childrenValue;
+			if (children.size() == 1) {
+				childrenValue = convertJSXChild(children.get(0));
+			} else {
+				childrenValue = _ArrLit(
+						toList(map(children, child -> convertJSXChild(child))).toArray(new Expression[0]));
+			}
+			// this will cause any other custom property children to be overwritten
+			pas.add(_PropertyNameValuePair(REACT_ELEMENT_PROPERTY_CHILDREN_NAME, childrenValue));
+		}
+
+		return _ObjLit(pas.toArray(new PropertyAssignment[0]));
 	}
 
 	private Expression convertJSXChild(JSXChild child) {
@@ -225,67 +294,6 @@ public class JSXTransformation extends Transformation {
 			return ((JSXExpression) child).getExpression();
 		}
 		return null;
-	}
-
-	// Generate Object.assign({}, {foo, bar: "Hi"}, spr)
-	private Expression convertJSXAttributes(List<JSXAttribute> attrs) {
-		if (attrs.isEmpty()) {
-			return _NULL();
-		} else if (attrs.size() == 1 && attrs.get(0) instanceof JSXSpreadAttribute) {
-			// Special case: if only a single spread operator is passed, we pass it directly, e.g. spr instead of
-			// cloning with Object.assign.
-			return ((JSXSpreadAttribute) attrs.get(0)).getExpression();
-		} else {
-
-			List<Integer> spreadIndices = new ArrayList<>();
-			for (int idx = 0; idx < attrs.size(); idx++) {
-				if (attrs.get(idx) instanceof JSXSpreadAttribute) {
-					spreadIndices.add(idx);
-				}
-			}
-			// GHOLD-413: We have to make sure that the only properties locating next to each other are combined.
-			// Moreover, the order of properties as well as spread operators must be preserved!
-			List<PropertyNameValuePair> props = new ArrayList<>();
-			if (attrs.get(0) instanceof JSXSpreadAttribute) {
-				// The first attribute is a spread object, the target must be {}.
-			} else {
-				// Otherwise, the target is of the form {foo: true, bar: "Hi"}
-				int firstSpreadIndex = (!spreadIndices.isEmpty()) ? spreadIndices.get(0) : attrs.size();
-				for (int i = 0; i < firstSpreadIndex; i++) {
-					props.add(convertJSXAttribute((JSXPropertyAttribute) attrs.get(i)));
-				}
-			}
-			ObjectLiteral target = _ObjLit(props.toArray(new PropertyNameValuePair[0]));
-
-			List<Expression> parameters = new ArrayList<>();
-			parameters.add(target);
-
-			for (int i = 0; i < spreadIndices.size(); i++) {
-				int curSpreadIdx = spreadIndices.get(i);
-				// Spread expression passed is used directly
-				parameters.add(((JSXSpreadAttribute) attrs.get(curSpreadIdx)).getExpression());
-				// Combine properties between spread intervals
-				int nextSpreadIdx = (i < spreadIndices.size() - 1) ? spreadIndices.get(i + 1)
-						: attrs.size();
-				List<JSXAttribute> propsBetweenTwoSpreads = attrs.subList(curSpreadIdx + 1, nextSpreadIdx);
-				if (!propsBetweenTwoSpreads.isEmpty()) {
-					List<PropertyAssignment> props2 = new ArrayList<>();
-					for (JSXAttribute attr : propsBetweenTwoSpreads) {
-						props2.add(convertJSXAttribute((JSXPropertyAttribute) attr));
-					}
-					parameters.add(_ObjLit(props2.toArray(new PropertyAssignment[0])));
-				}
-			}
-
-			return _CallExpr(_PropertyAccessExpr(steFor_Object(), steFor_Object_assign()),
-					parameters.toArray(new Expression[0]));
-		}
-	}
-
-	private PropertyNameValuePair convertJSXAttribute(JSXPropertyAttribute attr) {
-		return _PropertyNameValuePair(
-				getNameFromPropertyAttribute(attr),
-				getValueExpressionFromPropertyAttribute(attr));
 	}
 
 	private Expression getTagNameFromElement(JSXElement elem) {
