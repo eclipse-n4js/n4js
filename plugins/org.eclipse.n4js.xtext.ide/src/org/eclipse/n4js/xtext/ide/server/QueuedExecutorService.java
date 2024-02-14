@@ -313,9 +313,14 @@ public class QueuedExecutorService {
 			try {
 				allTasks.join();
 			} catch (CancellationException e) {
+				System.out.println();
 				// ignore cancellations
 			} catch (CompletionException e) {
-				throw e;
+				if (e.getCause() instanceof CancellationException) {
+					// ignore cancellations
+				} else {
+					throw e;
+				}
 			}
 		}
 	}
