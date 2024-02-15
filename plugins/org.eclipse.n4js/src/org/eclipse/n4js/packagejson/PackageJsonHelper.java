@@ -502,6 +502,7 @@ public class PackageJsonHelper {
 			}
 		}
 		if (!target.isWorkspaceRoot()) {
+			// workspace projects my contain unrelated sources hence do not use the default source folder
 			setSourceContainer(target, (String) OUTPUT.defaultValue, false);
 		}
 
