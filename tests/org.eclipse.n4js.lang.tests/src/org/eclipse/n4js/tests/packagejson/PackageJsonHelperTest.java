@@ -35,6 +35,7 @@ import org.eclipse.n4js.packagejson.projectDescription.ModuleFilter;
 import org.eclipse.n4js.packagejson.projectDescription.ModuleFilterType;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDependency;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescriptionBuilder;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
@@ -333,8 +334,10 @@ public class PackageJsonHelperTest {
 		JSONDocument jsonDocument;
 		try {
 			jsonDocument = jsonParseHelper.parseSuccessfully(jsonSource);
-			ProjectDescription pd = packageJsonHelper
-					.convertToProjectDescription(jsonDocument, applyDefaultValues, defaultProjectName).build();
+			ProjectDescriptionBuilder preInitPD = packageJsonHelper.convertToProjectDescription(jsonDocument);
+			packageJsonHelper.adjustAndApplyDefaults(jsonDocument, preInitPD, applyDefaultValues, defaultProjectName);
+			ProjectDescription pd = preInitPD.build();
+
 			return pd;
 		} catch (Exception e) {
 			e.printStackTrace();
