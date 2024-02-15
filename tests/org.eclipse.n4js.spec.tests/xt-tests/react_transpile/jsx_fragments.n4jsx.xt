@@ -57,7 +57,7 @@ let elem: any+ =
 
 import 'n4js-runtime'
 import * as React from 'react'
-import {jsx as $jsx} from 'react/jsx-runtime.js'
+import {jsx as $jsx} from 'react/jsx-runtime'
 
 console.log($jsx(React.Fragment, {
 	children: $jsx('div', {})
