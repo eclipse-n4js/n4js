@@ -112,7 +112,7 @@ public class ProjectDescriptionLoader {
 				? packageJsonHelper.convertToProjectDescription(packageJSON)
 				: null;
 		if (pdbFromPackageJSON != null) {
-			// note the order is important here:
+			// the order is important here:
 
 			setInformationFromFileSystem(location, pdbFromPackageJSON);
 			setInformationFromPnpmWorkspace(location, pdbFromPackageJSON);
