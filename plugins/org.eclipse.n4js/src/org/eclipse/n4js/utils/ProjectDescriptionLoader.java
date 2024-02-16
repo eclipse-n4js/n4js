@@ -112,13 +112,15 @@ public class ProjectDescriptionLoader {
 				? packageJsonHelper.convertToProjectDescription(packageJSON)
 				: null;
 		if (pdbFromPackageJSON != null) {
+			// note the order is important here:
+
 			setInformationFromFileSystem(location, pdbFromPackageJSON);
-			setInformationFromTSConfig(location, pdbFromPackageJSON);
 			setInformationFromPnpmWorkspace(location, pdbFromPackageJSON);
 			pdbFromPackageJSON.setLocation(location);
 			pdbFromPackageJSON.setRelatedRootLocation(relatedRootLocation);
 
 			packageJsonHelper.adjustAndApplyDefaults(packageJSON, pdbFromPackageJSON, true, null);
+			setInformationFromTSConfig(location, pdbFromPackageJSON);
 
 			ProjectDescription result = pdbFromPackageJSON.build();
 			return result;
