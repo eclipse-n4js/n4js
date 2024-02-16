@@ -537,7 +537,7 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 		String fileExtension = fileExtensionCalculator.getFilenameWithoutXpectExtension(uri);
 		boolean isPckjson = fileExtension.equals(N4JSGlobals.PACKAGE_JSON);
 		if (isPckjson) {
-			ProjectDescriptionBuilder pdb = pckjsonHelper.convertToProjectDescription(jsonDocument, true, "xyz");
+			ProjectDescriptionBuilder pdb = pckjsonHelper.convertToProjectDescription(jsonDocument);
 			return pdb != null && pdb.build().getProjectType() == ProjectType.PLAINJS;
 		}
 		return false;

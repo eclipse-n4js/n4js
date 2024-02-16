@@ -21,7 +21,7 @@ import org.junit.Test;
  * Test two cases of projects with the same project name within a yarn setup
  */
 
-public class YarnDifferentPackageNames extends AbstractIncrementalBuilderTest {
+public class YarnDifferentPackageNamesTest extends AbstractIncrementalBuilderTest {
 
 	private static Map<String, Map<String, String>> testData = Map.of(
 			"main-project", Map.of(
