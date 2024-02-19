@@ -8,20 +8,20 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.generator
+package org.eclipse.n4js.generator;
 
 /**
  * Code generator exception handler.
  */
-class GeneratorExceptionHandler {
+public class GeneratorExceptionHandler {
 
 	/**
-	 * Prints provided message to the out stream, and the stack trace of the provided cause.
-	 * Afterwards throws new {@link GeneratorException} wrapping provided cause.
+	 * Prints provided message to the out stream, and the stack trace of the provided cause. Afterwards throws new
+	 * {@link GeneratorException} wrapping provided cause.
 	 */
-	def handleError(String message, Throwable cause) {
-		println(message)
-		cause.printStackTrace
-		throw new GeneratorException( message, cause);
+	public void handleError(String message, Throwable cause) {
+		System.out.println(message);
+		cause.printStackTrace();
+		throw new GeneratorException(message, cause);
 	}
 }
