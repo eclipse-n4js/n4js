@@ -12,10 +12,12 @@ package org.eclipse.n4js.transpiler.es.transform;
 
 import static org.eclipse.n4js.tooling.react.ReactHelper.REACT_ELEMENT_PROPERTY_CHILDREN_NAME;
 import static org.eclipse.n4js.tooling.react.ReactHelper.REACT_ELEMENT_PROPERTY_KEY_NAME;
+import static org.eclipse.n4js.tooling.react.ReactHelper.REACT_JSXS_TRANSFORM_NAME;
 import static org.eclipse.n4js.tooling.react.ReactHelper.REACT_JSX_RUNTIME_NAME;
 import static org.eclipse.n4js.tooling.react.ReactHelper.REACT_JSX_TRANSFORM_NAME;
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._ArrLit;
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._CallExpr;
+import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._NamedImportSpecifier;
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._ObjLit;
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._PropertyAccessExpr;
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._PropertyNameValuePair;
@@ -28,7 +30,10 @@ import static org.eclipse.xtext.xbase.lib.IterableExtensions.toList;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.n4js.n4JS.Expression;
@@ -41,6 +46,7 @@ import org.eclipse.n4js.n4JS.JSXExpression;
 import org.eclipse.n4js.n4JS.JSXFragment;
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
 import org.eclipse.n4js.n4JS.JSXSpreadAttribute;
+import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.PropertyAssignment;
@@ -71,13 +77,15 @@ import com.google.inject.Inject;
  * will be transformed to
  *
  * <pre>
- * React.createElement('div', Object.assign({attr: "value"}));
+ * $jsv('div', {attr: "value"});
  * </pre>
  */
 public class JSXTransformation extends Transformation {
-	/** Alias for React transform */
-	public static final String JSX_ALIAS = "$" + REACT_JSX_TRANSFORM_NAME;
+	static final Map<String, String> ALIAS_MAP = Map.of(
+			REACT_JSX_TRANSFORM_NAME, "$" + REACT_JSX_TRANSFORM_NAME,
+			REACT_JSXS_TRANSFORM_NAME, "$" + REACT_JSXS_TRANSFORM_NAME);
 
+	private final Set<String> necessaryImports = new LinkedHashSet<>();
 	private SymbolTableEntryOriginal steForJsxBackendNamespace;
 	private SymbolTableEntryOriginal steForJsxBackendFragmentComponent;
 
@@ -138,7 +146,6 @@ public class JSXTransformation extends Transformation {
 			return;
 		}
 
-		createImportOfJsx();
 		steForJsxBackendNamespace = createImportOfJsxBackend(); // will be removed if obsolete
 		steForJsxBackendFragmentComponent = prepareFragmentComponent();
 
@@ -146,11 +153,18 @@ public class JSXTransformation extends Transformation {
 		for (JSXAbstractElement jsxElem : jsxAbstractElements) {
 			transformJSXAbstractElement(jsxElem);
 		}
+		createNecessaryImportsOfJsx();
 	}
 
-	private void createImportOfJsx() {
-		ImportDeclaration impDecl = addNamedImport(REACT_JSX_TRANSFORM_NAME, JSX_ALIAS, REACT_JSX_RUNTIME_NAME);
-		impDecl.getImportSpecifiers().forEach(is -> is.setFlaggedUsedInCode(true));
+	private void createNecessaryImportsOfJsx() {
+		List<String> importSpecifierNames = new ArrayList<>(necessaryImports);
+		NamedImportSpecifier[] importSpecs = new NamedImportSpecifier[importSpecifierNames.size()];
+		for (int i = 0; i < importSpecifierNames.size(); i++) {
+			String isn = importSpecifierNames.get(i);
+			String alias = ALIAS_MAP.get(isn);
+			importSpecs[i] = _NamedImportSpecifier(isn, alias, true);
+		}
+		addNamedImport(REACT_JSX_RUNTIME_NAME, importSpecs);
 	}
 
 	private SymbolTableEntryOriginal createImportOfJsxBackend() {
@@ -216,7 +230,10 @@ public class JSXTransformation extends Transformation {
 		}
 
 		IdentifierRef_IM idRef = ImFactory.eINSTANCE.createIdentifierRef_IM();
-		idRef.setIdAsText(JSX_ALIAS);
+		String isn = elem.getJsxChildren().size() > 1 ? REACT_JSXS_TRANSFORM_NAME : REACT_JSX_TRANSFORM_NAME;
+		necessaryImports.add(isn);
+		String jsxAlias = ALIAS_MAP.get(isn);
+		idRef.setIdAsText(jsxAlias);
 		SymbolTableEntryInternal ste = getSymbolTableEntryInternal(idRef.getIdAsText(), true);
 		idRef.setId_IM(ste);
 		return _CallExpr(idRef, args.toArray(new Expression[0]));
