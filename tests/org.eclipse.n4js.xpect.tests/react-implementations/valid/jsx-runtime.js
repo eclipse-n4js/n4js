@@ -13,3 +13,8 @@
 export function jsx(type, config, maybeKey) {
 	return {type: type, config: config, maybeKey: maybeKey};
 }
+
+//Mock implementation for jsxs
+export function jsxs(type, config, maybeKey) {
+	return {type: type, config: config, maybeKey: maybeKey};
+}

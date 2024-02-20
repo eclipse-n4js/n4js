@@ -109,10 +109,9 @@ public abstract class TranspilerComponent {
 		TranspilerStateOperations.addNamedImport(state, steOfElementToImport, aliasOrNull);
 	}
 
-	/** See {@link TranspilerStateOperations#addNamedImport(TranspilerState, String, String, String)}. */
-	public ImportDeclaration addNamedImport(String elementNameToImport, String aliasOrNull,
-			String moduleSpecifierName) {
-		return TranspilerStateOperations.addNamedImport(state, elementNameToImport, aliasOrNull, moduleSpecifierName);
+	/** See {@link TranspilerStateOperations#addNamedImport(TranspilerState, String, NamedImportSpecifier...)}. */
+	public ImportDeclaration addNamedImport(String moduleSpecifierName, NamedImportSpecifier... importSpecifiers) {
+		return TranspilerStateOperations.addNamedImport(state, moduleSpecifierName, importSpecifiers);
 	}
 
 	/** See {@link TranspilerStateOperations#addEmptyImport(TranspilerState, String)}. */

@@ -187,18 +187,17 @@ public class TranspilerStateOperations {
 	}
 
 	/**
-	 * Creates a new named import for the given STE and adds it to the intermediate model of the given transpiler state.
-	 * Note that this method does not perform a binding to an existing target module.
+	 * Creates a new named import for the given names. It does not add it to the intermediate model of the given
+	 * transpiler state. Note that this method does not perform a binding to an existing target module.
 	 * <p>
 	 * IMPORTANT: this method does not check if the given element name or alias is unique (i.e. does not avoid name
 	 * clashes!).
 	 */
-	public static ImportDeclaration addNamedImport(TranspilerState state, String elementNameToImport,
-			String aliasOrNull, String moduleSpecifierName) {
+	public static ImportDeclaration addNamedImport(TranspilerState state, String moduleSpecifierName,
+			NamedImportSpecifier... importSpecifiers) {
 
 		// 1) create import declaration & specifier
-		NamedImportSpecifier importSpec = _NamedImportSpecifier(elementNameToImport, aliasOrNull, true);
-		ImportDeclaration importDecl = _ImportDecl(importSpec);
+		ImportDeclaration importDecl = _ImportDecl(importSpecifiers);
 		importDecl.setModuleSpecifierAsText(moduleSpecifierName);
 
 		// 2) add import to intermediate model
