@@ -3,6 +3,13 @@
 	"version": "17.0.1",
 	"type": "module",
 	"main": "./index.js",
+	"exports": {
+		".": {
+			"default": "./index.js"
+		},
+		"./package.json": "./package.json",
+		"./jsx-runtime": "./jsx-runtime.js"
+	},
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "npm",

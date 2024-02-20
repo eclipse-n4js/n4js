@@ -41,6 +41,7 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.VariableStatementKeyword;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
+import org.eclipse.n4js.tooling.react.ReactHelper;
 import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter;
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore;
@@ -100,7 +101,9 @@ public class CommonJsImportsTransformation extends Transformation {
 		ImmutableListMultimap<TModule, ImportDeclaration> importDeclsPerImportedModule = FluentIterable
 				.from(getState().im.getScriptElements())
 				.filter(ImportDeclaration.class)
-				.filter(id -> !id.isBare()) // ignore bare imports
+				// ignore bare imports and special jsx import
+				.filter(id -> !id.isBare()
+						&& !ReactHelper.REACT_JSX_RUNTIME_NAME.equals(id.getModuleSpecifierAsText()))
 				.index(importDecl -> getState().info.getImportedModule(importDecl));
 
 		List<VariableStatement> varStmnts = new ArrayList<>();

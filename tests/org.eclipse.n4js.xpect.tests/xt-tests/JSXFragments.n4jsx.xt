@@ -21,6 +21,7 @@
 		Project "react" {
 			File "index.n4jsd" { from = "../react-implementations/valid/index.n4jsd" }
 			File "index.js" { from = "../react-implementations/valid/index.js" }
+			File "jsx-runtime.js" { from = "../react-implementations/valid/jsx-runtime.js" }
 			File "package.json" { from = "../react-implementations/valid/package.json" }
 		}
 	}
@@ -52,9 +53,17 @@ let elem: any+ =
 		<>
 			<div/>
 		</>
+		<>
+			<div/>
+		</>
 	</div>;
+	
+console.log("elem: ");
 console.log(elem);
-console.log(elem.children[0].children);
+console.log("children: ");
+console.log(elem.config.children);
+console.log("child of child: ");
+console.log(elem.config.children[0].config.children);
 
 console.log('====================================');
 
@@ -63,21 +72,36 @@ console.log('====================================');
 ====================================
 {
   type: undefined,
-  props: null,
-  children: [ { type: 'div', props: null, children: [] } ]
+  config: { children: { type: 'div', config: {}, maybeKey: undefined } },
+  maybeKey: undefined
 }
 ====================================
 {
   type: 'div',
-  props: null,
-  children: [ { type: undefined, props: null, children: [] } ]
+  config: { children: { type: undefined, config: {}, maybeKey: undefined } },
+  maybeKey: undefined
 }
 ====================================
+elem: 
 {
   type: 'div',
-  props: null,
-  children: [ { type: undefined, props: null, children: [Array] } ]
+  config: { children: [ [Object], [Object] ] },
+  maybeKey: undefined
 }
-[ { type: 'div', props: null, children: [] } ]
+children: 
+[
+  {
+    type: undefined,
+    config: { children: [Object] },
+    maybeKey: undefined
+  },
+  {
+    type: undefined,
+    config: { children: [Object] },
+    maybeKey: undefined
+  }
+]
+child of child: 
+{ type: 'div', config: {}, maybeKey: undefined }
 ====================================
 --- */

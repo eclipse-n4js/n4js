@@ -36,36 +36,36 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 				CFG_NODE_MODULES + "@types/mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"index.d.ts", """
-									export class MyClass {
-									}
+								export class MyClass {
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "@types/mypackage",
-										"version": "0.0.1",
-										"main": "index.d.ts"
-									}
+								{
+									"name": "@types/mypackage",
+									"version": "0.0.1",
+									"main": "index.d.ts"
+								}
 								"""),
 				CFG_NODE_MODULES + "mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"index.js", """
-									export class MyClassJS {
-									}
+								export class MyClassJS {
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "mypackage",
-										"version": "0.0.1",
-										"main": "index.js"
-									}
+								{
+									"name": "mypackage",
+									"version": "0.0.1",
+									"main": "index.js"
+								}
 								"""),
 				"client", Map.of(
 						"module", """
-									import { MyClass } from "mypackage";
-									MyClass;
+								import { MyClass } from "mypackage";
+								MyClass;
 								""",
 						CFG_DEPENDENCIES, """
-									mypackage, @types/mypackage
+								mypackage, @types/mypackage
 								"""));
 
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
@@ -82,36 +82,36 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 				CFG_NODE_MODULES + "@types/mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"index.d.ts", """
-									export class MyClass {
-									}
+								export class MyClass {
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "@types/mypackage",
-										"version": "0.0.1",
-										"main": "index"
-									}
+								{
+									"name": "@types/mypackage",
+									"version": "0.0.1",
+									"main": "index"
+								}
 								"""),
 				CFG_NODE_MODULES + "mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"index.js", """
-									export class MyClassJS {
-									}
+								export class MyClassJS {
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "mypackage",
-										"version": "0.0.1",
-										"main": "index.js"
-									}
+								{
+									"name": "mypackage",
+									"version": "0.0.1",
+									"main": "index.js"
+								}
 								"""),
 				"client", Map.of(
 						"module", """
-									import { MyClass } from "mypackage";
-									MyClass;
+								import { MyClass } from "mypackage";
+								MyClass;
 								""",
 						CFG_DEPENDENCIES, """
-									mypackage, @types/mypackage
+								mypackage, @types/mypackage
 								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
@@ -127,41 +127,41 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 				CFG_NODE_MODULES + "@types/mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"index.d.ts", """
-									import * as I from "./imported.d.ts";
-									export class MyClass {
-									}
+								import * as I from "./imported.d.ts";
+								export class MyClass {
+								}
 								""",
 						"imported.d.ts", """
-									export class ImportedClass {
-									}
+								export class ImportedClass {
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "@types/mypackage",
-										"version": "0.0.1",
-										"main": "index.d.ts"
-									}
+								{
+									"name": "@types/mypackage",
+									"version": "0.0.1",
+									"main": "index.d.ts"
+								}
 								"""),
 				CFG_NODE_MODULES + "mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"index.js", """
-									export class MyClassJS {
-									}
+								export class MyClassJS {
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "mypackage",
-										"version": "0.0.1",
-										"main": "index.js"
-									}
+								{
+									"name": "mypackage",
+									"version": "0.0.1",
+									"main": "index.js"
+								}
 								"""),
 				"client", Map.of(
 						"module", """
-									import { ImportedClass } from "mypackage/imported";
-									ImportedClass;
+								import { ImportedClass } from "mypackage/imported";
+								ImportedClass;
 								""",
 						CFG_DEPENDENCIES, """
-									mypackage, @types/mypackage
+								mypackage, @types/mypackage
 								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
@@ -177,40 +177,40 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 				CFG_NODE_MODULES + "@types/mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"index.d.ts", """
-									export class MyClass {
-									}
+								export class MyClass {
+								}
 								""",
 						"tsconfig.json", """
-									{
-									    "files": ["index.d.ts")
-									}
+								{
+								    "files": ["index.d.ts"]
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "@types/mypackage",
-										"version": "0.0.1"
-									}
+								{
+									"name": "@types/mypackage",
+									"version": "0.0.1"
+								}
 								"""),
 				CFG_NODE_MODULES + "mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"index.js", """
-									export class MyClassJS {
-									}
+								export class MyClassJS {
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "mypackage",
-										"version": "0.0.1",
-										"main": "index.js"
-									}
+								{
+									"name": "mypackage",
+									"version": "0.0.1",
+									"main": "index.js"
+								}
 								"""),
 				"client", Map.of(
 						"module", """
-									import { MyClass } from "mypackage/index"; // complete import
-									MyClass;
+								import { MyClass } from "mypackage/index"; // complete import
+								MyClass;
 								""",
 						CFG_DEPENDENCIES, """
-									mypackage, @types/mypackage
+								mypackage, @types/mypackage
 								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
@@ -226,43 +226,43 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 				CFG_NODE_MODULES + "@types/mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"index.d.ts", """
-									// empty
+								// empty
 								""",
 						"lib.d.ts", """
-									export class MyClass {
-									}
+								export class MyClass {
+								}
 								""",
 						"tsconfig.json", """
-									{
-									    "files": ["lib.d.ts")
-									}
+								{
+								    "files": ["lib.d.ts"]
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "@types/mypackage",
-										"version": "0.0.1"
-									}
+								{
+									"name": "@types/mypackage",
+									"version": "0.0.1"
+								}
 								"""),
 				CFG_NODE_MODULES + "mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"index.js", """
-									export class MyClassJS {
-									}
+								export class MyClassJS {
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "mypackage",
-										"version": "0.0.1",
-										"main": "index.js"
-									}
+								{
+									"name": "mypackage",
+									"version": "0.0.1",
+									"main": "index.js"
+								}
 								"""),
 				"client", Map.of(
 						"module", """
-									import { MyClass } from "mypackage/lib"; // complete import
-									MyClass;
+								import { MyClass } from "mypackage/lib"; // complete import
+								MyClass;
 								""",
 						CFG_DEPENDENCIES, """
-									mypackage, @types/mypackage
+								mypackage, @types/mypackage
 								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
@@ -278,46 +278,46 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 				CFG_NODE_MODULES + "@types/mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"index.d.ts", """
-									// empty
+								// empty
 								""",
 						"lib.d.ts", """
-									export class MyClass {
-									}
+								export class MyClass {
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "@types/mypackage",
-										"main": "index.d.ts",
-										"version": "0.0.1"
-									}
+								{
+									"name": "@types/mypackage",
+									"main": "index.d.ts",
+									"version": "0.0.1"
+								}
 								"""),
 				CFG_NODE_MODULES + "mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"index.js", """
-									export class MyClassJS {
-									}
+								export class MyClassJS {
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "mypackage",
-										"version": "0.0.1",
-										"main": "index.js"
-									}
+								{
+									"name": "mypackage",
+									"version": "0.0.1",
+									"main": "index.js"
+								}
 								"""),
 				"client", Map.of(
 						"module", """
-									import { MyClass } from "mypackage/lib"; // complete import
-									MyClass;
+								import { MyClass } from "mypackage/lib"; // complete import
+								MyClass;
 								""",
 						CFG_DEPENDENCIES, """
-									mypackage, @types/mypackage
+								mypackage, @types/mypackage
 								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
 		startAndWaitForLspServer();
 		assertIssuesInModules(Pair.of("client/src/module.n4js", List.of(
-				"(Error, [0:25 - 0:40], Cannot resolve complete module specifier (with project name as first segment): no matching module found.)",
-				"(Error, [1:1 - 1:8], Couldn't resolve reference to IdentifiableElement 'MyClass'.)")));
+				"(Error, [0:24 - 0:39], Cannot resolve complete module specifier (with project name as first segment): no matching module found.)",
+				"(Error, [1:0 - 1:7], Couldn't resolve reference to IdentifiableElement 'MyClass'.)")));
 
 		shutdownLspServer();
 	}
@@ -328,41 +328,41 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 				CFG_NODE_MODULES + "@types/mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"index.d.ts", """
-									export class MyClass {
-									}
+								export class MyClass {
+								}
 								""",
 						"tsconfig.json", """
-									{
-									    "files": ["index.d.ts")
-									}
+								{
+								    "files": ["index.d.ts"]
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "@types/mypackage",
-										"version": "0.0.1",
-										"main": "index.d.ts"
-									}
+								{
+									"name": "@types/mypackage",
+									"version": "0.0.1",
+									"main": "index.d.ts"
+								}
 								"""),
 				CFG_NODE_MODULES + "mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"index.js", """
-									export class MyClassJS {
-									}
+								export class MyClassJS {
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "mypackage",
-										"version": "0.0.1",
-										"main": "index.js"
-									}
+								{
+									"name": "mypackage",
+									"version": "0.0.1",
+									"main": "index.js"
+								}
 								"""),
 				"client", Map.of(
 						"module", """
-									import { MyClass } from "mypackage";
-									MyClass;
+								import { MyClass } from "mypackage";
+								MyClass;
 								""",
 						CFG_DEPENDENCIES, """
-									mypackage, @types/mypackage
+								mypackage, @types/mypackage
 								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
@@ -378,40 +378,40 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 				CFG_NODE_MODULES + "@types/mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"lib.d.ts", """
-									export class MyClass {
-									}
+								export class MyClass {
+								}
 								""",
 						"tsconfig.json", """
-									{
-									    "include": ["lib.d.ts")
-									}
+								{
+								    "include": ["lib.d.ts"]
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "@types/mypackage",
-										"version": "0.0.1",
-									}
+								{
+									"name": "@types/mypackage",
+									"version": "0.0.1",
+								}
 								"""),
 				CFG_NODE_MODULES + "mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"index.js", """
-									export class MyClassJS {
-									}
+								export class MyClassJS {
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "mypackage",
-										"version": "0.0.1",
-										"main": "index.js"
-									}
+								{
+									"name": "mypackage",
+									"version": "0.0.1",
+									"main": "index.js"
+								}
 								"""),
 				"client", Map.of(
 						"module", """
-									import { MyClass } from "mypackage/lib";
-									MyClass;
+								import { MyClass } from "mypackage/lib";
+								MyClass;
 								""",
 						CFG_DEPENDENCIES, """
-									mypackage, @types/mypackage
+								mypackage, @types/mypackage
 								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
@@ -427,40 +427,40 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 				CFG_NODE_MODULES + "@types/mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"lib.d.ts", """
-									export class MyClass {
-									}
+								export class MyClass {
+								}
 								""",
 						"tsconfig.json", """
-									{
-									    "include": ["*.d.ts")
-									}
+								{
+								    "include": ["*.d.ts"]
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "@types/mypackage",
-										"version": "0.0.1",
-									}
+								{
+									"name": "@types/mypackage",
+									"version": "0.0.1",
+								}
 								"""),
 				CFG_NODE_MODULES + "mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"index.js", """
-									export class MyClassJS {
-									}
+								export class MyClassJS {
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "mypackage",
-										"version": "0.0.1",
-										"main": "index.js"
-									}
+								{
+									"name": "mypackage",
+									"version": "0.0.1",
+									"main": "index.js"
+								}
 								"""),
 				"client", Map.of(
 						"module", """
-									import { MyClass } from "mypackage/lib";
-									MyClass;
+								import { MyClass } from "mypackage/lib";
+								MyClass;
 								""",
 						CFG_DEPENDENCIES, """
-									mypackage, @types/mypackage
+								mypackage, @types/mypackage
 								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
@@ -476,48 +476,48 @@ public class TsConfigRespectTest extends AbstractIdeTest {
 				CFG_NODE_MODULES + "@types/mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"lib.d.ts", """
-									export class MyClass {
-									}
+								export class MyClass {
+								}
 								""",
 						"tsconfig.json", """
-									{
-									    "include": ["*.d.ts"],
-									    "exclude": ["lib.d.ts"]
-									}
+								{
+								    "include": ["*.d.ts"],
+								    "exclude": ["lib.d.ts"]
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "@types/mypackage",
-										"version": "0.0.1",
-									}
+								{
+									"name": "@types/mypackage",
+									"version": "0.0.1",
+								}
 								"""),
 				CFG_NODE_MODULES + "mypackage", Map.of(
 						CFG_SOURCE_FOLDER, ".",
 						"index.js", """
-									export class MyClassJS {
-									}
+								export class MyClassJS {
+								}
 								""",
 						PACKAGE_JSON, """
-									{
-										"name": "mypackage",
-										"version": "0.0.1",
-										"main": "index.js"
-									}
+								{
+									"name": "mypackage",
+									"version": "0.0.1",
+									"main": "index.js"
+								}
 								"""),
 				"client", Map.of(
 						"module", """
-									import { MyClass } from "mypackage/lib";
-									MyClass;
+								import { MyClass } from "mypackage/lib";
+								MyClass;
 								""",
 						CFG_DEPENDENCIES, """
-									mypackage, @types/mypackage
+								mypackage, @types/mypackage
 								"""));
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 
 		startAndWaitForLspServer();
 		assertIssuesInModules(Pair.of("client/src/module.n4js", List.of(
-				"(Error, [0:25 - 0:40], Cannot resolve complete module specifier (with project name as first segment): no matching module found.)",
-				"(Error, [1:1 - 1:8], Couldn't resolve reference to IdentifiableElement 'MyClass'.)")));
+				"(Error, [0:24 - 0:39], Cannot resolve complete module specifier (with project name as first segment): no matching module found.)",
+				"(Error, [1:0 - 1:7], Couldn't resolve reference to IdentifiableElement 'MyClass'.)")));
 
 		shutdownLspServer();
 	}

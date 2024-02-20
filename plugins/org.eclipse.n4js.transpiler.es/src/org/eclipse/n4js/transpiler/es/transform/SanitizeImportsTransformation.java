@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.transpiler.es.transform;
 
+import static org.eclipse.n4js.tooling.react.ReactHelper.REACT_JSX_RUNTIME_NAME;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.exists;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.filter;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.toList;
@@ -158,6 +159,11 @@ public class SanitizeImportsTransformation extends Transformation {
 			// add new usages of an existing import)
 			// -> therefore simply return false (i.e. unused)
 			return false;
+		} else if (importSpec.eContainer() instanceof ImportDeclaration
+				&& REACT_JSX_RUNTIME_NAME
+						.equals(((ImportDeclaration) importSpec.eContainer()).getModuleSpecifierAsText())) {
+			// special case for import that is added in JSXTransformation
+			return true;
 		} else {
 			// for performance reasons, we do not require the flaggedUsedInCode to be set to false if usages are removed
 			// -> therefore have to check for references now

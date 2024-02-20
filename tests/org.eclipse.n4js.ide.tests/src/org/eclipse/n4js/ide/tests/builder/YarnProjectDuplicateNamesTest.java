@@ -29,7 +29,7 @@ import org.junit.Test;
  * Test two cases of projects with the same project name within a yarn setup
  */
 @SuppressWarnings("unchecked")
-public class YarnProjectDuplicateNames extends AbstractIncrementalBuilderTest {
+public class YarnProjectDuplicateNamesTest extends AbstractIncrementalBuilderTest {
 
 	private static Map<String, Map<String, String>> testData1 = Map.of(
 			TestWorkspaceManager.YARN_TEST_PROJECT, Map.of(

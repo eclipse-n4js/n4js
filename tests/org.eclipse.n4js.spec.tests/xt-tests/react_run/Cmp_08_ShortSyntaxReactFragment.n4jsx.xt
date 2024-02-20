@@ -22,6 +22,7 @@
 		Project "react" {
 			File "index.n4jsd" { from = "../react/index.n4jsd" }
 			File "index.js" { from = "../react/index.js" }
+			File "jsx-runtime.js" { from = "../react/jsx-runtime.js" }
 			File "package.json" { from = "../react/package.json" }
 		}
 	}
@@ -30,87 +31,64 @@
  */
 
 /* XPECT output ---
-simple self-closing
+empty React fragment
 {
-    "type": "div",
-    "props": null,
-    "children": []
+    "config": {}
 }
 simple open close
 {
-    "type": "div",
-    "props": null,
-    "children": []
+    "config": {}
 }
 nested
 {
-    "type": "div",
-    "props": {
-        "prop1": true,
-        "prop2": "hello",
-        "prop3": 42
-    },
-    "children": [
-        42,
-        {
-            "type": "a",
-            "props": null,
-            "children": [
-                42
-            ]
-        },
-        42,
-        {
-            "type": "p",
-            "props": null,
-            "children": []
-        }
-    ]
-}
-spead operator
-{
-    "type": "div",
-    "props": {
-        "prop0": "0",
-        "prop1": "hi",
-        "prop2": 42,
-        "prop3": true,
-        "prop4": "hi",
-        "prop5": 42,
-        "prop6": true
-    },
-    "children": []
+    "config": {
+        "children": [
+            {
+                "type": "div",
+                "config": {
+                    "prop1": "hello"
+                }
+            },
+            {
+                "type": "div",
+                "config": {
+                    "prop2": "world"
+                }
+            }
+        ]
+    }
 }
 --- */
 
-import * as React from "react"
-import { replacer } from "replacer"
+import * as React from "react";
+import { replacer } from "replacer";
 
 var zzzz: React.ReactElement; // Avoid unused import warnings
 zzzz;
 
+
 export public function logElements(): void {
-	let ss = <div/>
-	console.log('simple self-closing');
+	//console.log('Hi');
+
+	let ss = <></>;
+	console.log('empty React fragment');
 	console.log(JSON.stringify(ss, replacer, 4));
-	let sh = <div></div>
+    
+	let sh = <></>;
 	console.log('simple open close');
 	console.log(JSON.stringify(sh, replacer, 4));
 	let x = 42;
 	console.log('nested');
 	let nested =
-		<div prop1 prop2='hello' prop3={x}>
-			{x}<a>
-				{x}
-			  </a>{x}
-			  <p/>
-		</div>
+		<>
+			<div prop1='hello'>
+			</div>
+			<div prop2='world'>
+			</div>
+		</>
+	
 	console.log(JSON.stringify(nested, replacer, 4));
-	let propsA = { prop1: 'hi', prop2: 42 };
-	let propsB = { prop4: 'hi', prop5: 42 };
-	let sx =  <div prop0='0' {...propsA} prop3 {...propsB} prop6 />
-	console.log('spead operator');
-	console.log(JSON.stringify(sx, replacer, 4));
+
 };
 
 logElements();
