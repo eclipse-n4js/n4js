@@ -210,11 +210,11 @@ abstract class AbstractPolyProcessor extends AbstractProcessor {
 			return null; // function expressions never have nested poly expressions (expression in the body are
 							// detached)
 		} else if (directParent instanceof ArrayElement) {
-			if (((Argument) directParent).getExpression() == poly) {
+			if (((ArrayElement) directParent).getExpression() == poly) {
 				return directParent.eContainer();// return the ArrayLiteral as parent (not the ArrayElement)
 			}
 		} else if (directParent instanceof PropertyNameValuePair) {
-			if (((Argument) directParent).getExpression() == poly) {
+			if (((PropertyNameValuePair) directParent).getExpression() == poly) {
 				return directParent;// return the PropertyNameValuePair as parent (not the ObjectLiteral)
 			}
 		} else if (directParent instanceof ConditionalExpression) {
@@ -310,9 +310,10 @@ abstract class AbstractPolyProcessor extends AbstractProcessor {
 			return ((TSetter) m).getFpar().getTypeRef();
 		} else if (m instanceof TMethod) {
 			throw new IllegalArgumentException("this method should not be used for TMethod");
+		} else {
+			String clsName = m == null ? null : m.eClass() == null ? null : m.eClass().getName();
+			throw new IllegalArgumentException("unknown subtype of TMember: " + clsName);
 		}
-		String clsName = m == null ? null : m.eClass() == null ? null : m.eClass().getName();
-		throw new IllegalArgumentException("unknown subtype of TMember: " + clsName);
 	}
 
 	protected void setTypeOfMember(TMember m, TypeRef type) {
@@ -327,8 +328,9 @@ abstract class AbstractPolyProcessor extends AbstractProcessor {
 			}
 		} else if (m instanceof TMethod) {
 			throw new IllegalArgumentException("this method should not be used for TMethod");
+		} else {
+			String clsName = m == null ? null : m.eClass() == null ? null : m.eClass().getName();
+			throw new IllegalArgumentException("unknown subtype of TMember: " + clsName);
 		}
-		String clsName = m == null ? null : m.eClass() == null ? null : m.eClass().getName();
-		throw new IllegalArgumentException("unknown subtype of TMember: " + clsName);
 	}
 }
