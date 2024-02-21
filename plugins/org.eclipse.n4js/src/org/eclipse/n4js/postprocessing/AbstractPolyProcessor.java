@@ -75,10 +75,10 @@ abstract class AbstractPolyProcessor extends AbstractProcessor {
 	 */
 	boolean isPoly(EObject obj) {
 		if (obj instanceof Expression) {
-			return isPoly(obj);
+			return isPoly((Expression) obj);
 		}
 		if (obj instanceof PropertyAssignment) {
-			return isPoly(obj);
+			return isPoly((PropertyAssignment) obj);
 		}
 		return false;
 	}
