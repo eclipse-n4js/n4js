@@ -146,10 +146,10 @@ public class ASTProcessor extends AbstractProcessor {
 	def private void processAST(RuleEnvironment G, Script script, ASTMetaInfoCache cache) {
 		// phase 0: process compile-time expressions & computed property names (order is important)
 		for(node : script.eAllContents.filter(Expression).toIterable) {
-			compileTimeExpressionProcessor.evaluateCompileTimeExpression(G, node, cache, 0);
+			compileTimeExpressionProcessor.evaluateCompileTimeExpression(G, node, cache);
 		}
 		for(node : script.eAllContents.filter(LiteralOrComputedPropertyName).toIterable) {
-			computedNameProcessor.processComputedPropertyName(G, node, cache, 0);
+			computedNameProcessor.processComputedPropertyName(  node, cache );
 		}
 
 		// phase 1: main processing
