@@ -42,7 +42,6 @@ import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
-import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.generator.AbstractFileSystemAccess;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
@@ -65,7 +64,6 @@ import com.google.inject.Inject;
 abstract public class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	private final static Logger LOGGER = Logger.getLogger(AbstractSubGenerator.class);
 
-	@Accessors
 	private CompilerDescriptor compilerDescriptor = null;
 
 	/***/
@@ -116,6 +114,11 @@ abstract public class AbstractSubGenerator implements ISubGenerator, IGenerator2
 			compilerDescriptor = getDefaultDescriptor();
 		}
 		return compilerDescriptor;
+	}
+
+	@Override
+	public void setCompilerDescriptor(CompilerDescriptor compilerDescriptor) {
+		this.compilerDescriptor = compilerDescriptor;
 	}
 
 	@Override
@@ -333,8 +336,8 @@ abstract public class AbstractSubGenerator implements ISubGenerator, IGenerator2
 	/**
 	 * Convenient access to the Script-Element
 	 */
-	protected void rootElement(Resource resource) {
-		head(filter(resource.getContents(), Script.class));
+	protected Script rootElement(Resource resource) {
+		return head(filter(resource.getContents(), Script.class));
 	}
 
 	/** The file-extension of the compiled result */
@@ -445,13 +448,13 @@ abstract public class AbstractSubGenerator implements ISubGenerator, IGenerator2
 	}
 
 	/** Access to compiler ID */
-	abstract String getCompilerID();
+	abstract public String getCompilerID();
 
 	/** Access to compiler descriptor */
-	abstract CompilerDescriptor getDefaultDescriptor();
+	abstract public CompilerDescriptor getDefaultDescriptor();
 
 	/** Answers: Is this compiler activated for the input at hand? */
-	boolean isActive(Resource input) {
+	public boolean isActive(Resource input) {
 		return Boolean.valueOf(preferenceAccess.getPreference(input, getCompilerID(), CompilerProperties.IS_ACTIVE,
 				getDefaultDescriptor()));
 	}
@@ -459,7 +462,7 @@ abstract public class AbstractSubGenerator implements ISubGenerator, IGenerator2
 	/**
 	 * Checking the availability of a static polyfill, which will override the compilation of this module.
 	 **/
-	boolean isNotStaticallyPolyfilled(Resource resource) {
+	public boolean isNotStaticallyPolyfilled(Resource resource) {
 		// val TModule tmodule = (N4JSResource::getModule(resource) ); // for some reason xtend cannot see static
 		// getModule ?!
 		if (resource instanceof N4JSResource) {
