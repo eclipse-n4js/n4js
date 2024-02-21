@@ -172,7 +172,7 @@ abstract class AbstractPolyProcessor extends AbstractProcessor {
 	 * Convenience method for {@link #isRootPoly(Expression)}, accepting any type of EObject.
 	 */
 	boolean isRootPoly(EObject obj) {
-		return (obj instanceof Expression) ? isRootPoly(obj) : false;
+		return (obj instanceof Expression) ? isRootPoly((Expression) obj) : false;
 	}
 
 	/**
