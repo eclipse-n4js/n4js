@@ -22,6 +22,7 @@ import static org.eclipse.xtext.xbase.lib.IteratorExtensions.filter;
 import static org.eclipse.xtext.xbase.lib.IteratorExtensions.toIterable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -463,19 +464,19 @@ public class ASTProcessor extends AbstractProcessor {
 	private List<EObject> childrenToBeProcessed(EObject obj) {
 		if (obj instanceof SetterDeclaration) {
 			// process formal parameter before body
-			return bringToFront(obj.eContents(), List.of(((SetterDeclaration) obj).getFpar()));
+			return bringToFront(obj.eContents(), ((SetterDeclaration) obj).getFpar());
 		}
 		if (obj instanceof FunctionDefinition) {
 			// process formal parameters before body
-			return bringToFront(obj.eContents(), ((FunctionDefinition) obj).getFpars());
+			return bringToFront(obj.eContents(), ((FunctionDefinition) obj).getFpars().toArray(new EObject[0]));
 		}
 		if (obj instanceof CatchBlock) {
 			// process catch variable before block
-			return bringToFront(obj.eContents(), List.of(((CatchBlock) obj).getCatchVariable()));
+			return bringToFront(obj.eContents(), ((CatchBlock) obj).getCatchVariable());
 		}
 		if (obj instanceof ForStatement) {
 			// process expression before varDeclOrBindings
-			return bringToFront(obj.eContents(), List.of(((ForStatement) obj).getExpression()));
+			return bringToFront(obj.eContents(), ((ForStatement) obj).getExpression());
 		}
 		// standard case: order is insignificant (so we simply use the order provided by EMF)
 		return obj.eContents();
@@ -552,9 +553,9 @@ public class ASTProcessor extends AbstractProcessor {
 		}
 	}
 
-	private List<EObject> bringToFront(List<EObject> l, List<? extends EObject> elements) {
+	private List<EObject> bringToFront(List<EObject> l, EObject... elements) {
 		List<EObject> result = new ArrayList<>(l);
-		List<? extends EObject> elemSanitized = toList(filterNull(elements));
+		List<? extends EObject> elemSanitized = toList(filterNull(Arrays.asList(elements)));
 		result.removeAll(elemSanitized);
 		result.addAll(0, elemSanitized);
 		return result;
