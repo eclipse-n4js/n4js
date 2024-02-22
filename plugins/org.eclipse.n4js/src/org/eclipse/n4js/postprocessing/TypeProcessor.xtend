@@ -83,7 +83,7 @@ public class TypeProcessor extends AbstractProcessor {
 				&& polyProcessor.isEntryPoint(nodeCasted)) {
 				// special case: array or object literal being used as a destructuring pattern
 				log(indentLevel, "ignored (array or object literal being used as a destructuring pattern)")
-				destructureProcessor.typeDestructuringPattern(G, node, cache, indentLevel);
+				destructureProcessor.typeDestructuringPattern(G, node, cache );
 
 			} else {
 				// standard case
