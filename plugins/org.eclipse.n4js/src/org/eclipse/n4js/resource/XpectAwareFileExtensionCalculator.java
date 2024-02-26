@@ -23,7 +23,7 @@ import com.google.inject.Singleton;
 /**
  * This class provides methods for calculating file extensions. The calculation takes into account Xpect file extension
  * {@code .xt}. Custom file Xpect file extensions are not supported e.g. when your Xpect tests are configured to run
- * with {@code .xxt} file extension. Deeply nested structures are also not supported e.g. using {@code file.n4js.xt.xt}.
+ * with {@code .xt} file extension. Deeply nested structures are also not supported e.g. using {@code file.n4js.xt.xt}.
  */
 @Singleton
 public class XpectAwareFileExtensionCalculator {
