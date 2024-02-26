@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.utils.URIUtils;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.inject.Singleton;
 
@@ -61,7 +62,7 @@ public class XpectAwareFileExtensionCalculator {
 	 * extension.
 	 */
 	public String getFilenameWithoutXpectExtension(URI uri) {
-		if (URIUtils.fileExtension(uri) != getXpectAwareFileExtension(uri)) {
+		if (!Objects.equal(URIUtils.fileExtension(uri), getXpectAwareFileExtension(uri))) {
 			return URIUtils.trimFileExtension(uri).lastSegment();
 		} else {
 			return uri.lastSegment();
