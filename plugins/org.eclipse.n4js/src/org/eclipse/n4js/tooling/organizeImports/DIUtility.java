@@ -61,12 +61,11 @@ public class DIUtility {
 	 * {@link AnnotationDefinition#INJECT}.
 	 */
 	public static boolean hasInjectedMembers(Type type, DeclMergingHelper declMergingHelper) {
-		if (type instanceof TClass)
+		if (type instanceof TClass) {
 			return exists(AllSuperTypesCollector.collect((TClass) type, declMergingHelper),
-					t -> exists(t.getOwnedMembers(), m -> INJECT
-							.hasAnnotation(type)));
-		else
-			return false;
+					t -> exists(t.getOwnedMembers(), m -> INJECT.hasAnnotation(m)));
+		}
+		return false;
 	}
 
 	/**
