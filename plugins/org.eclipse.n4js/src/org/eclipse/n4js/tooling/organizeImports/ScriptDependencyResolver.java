@@ -326,7 +326,7 @@ public class ScriptDependencyResolver {
 			Map<String, NamedImportSpecifier> nameToNamedImportSpecifiers,
 			Map<NamespaceImportSpecifier, Boolean> usedNamespaceSpecifiers, Function<EObject, Boolean> compare) {
 
-		TClass tClass = (TClass) eo.getDefinedType();
+		EObject tClass = eo.getDefinedType();
 		return handle(tClass, nameToNamedImportSpecifiers, usedNamespaceSpecifiers, compare);
 	}
 
@@ -334,7 +334,7 @@ public class ScriptDependencyResolver {
 			Map<String, NamedImportSpecifier> nameToNamedImportSpecifiers,
 			Map<NamespaceImportSpecifier, Boolean> usedNamespaceSpecifiers, Function<EObject, Boolean> compare) {
 
-		TInterface tInterface = (TInterface) eo.getDefinedType();
+		EObject tInterface = eo.getDefinedType();
 		return handle(tInterface, nameToNamedImportSpecifiers, usedNamespaceSpecifiers, compare);
 	}
 
