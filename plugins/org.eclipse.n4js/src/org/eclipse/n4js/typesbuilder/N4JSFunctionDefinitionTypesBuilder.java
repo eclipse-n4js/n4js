@@ -33,7 +33,7 @@ import com.google.inject.Singleton;
  * Type builder for function declaration or expression builder.
  */
 // TODO we temporarily create a BuiltInTypeScope in order to get primitive types. This may be changed by passing in this
-// scope, one this method is called by the typesystem
+// scope, one this method is called by the type system
 @Singleton
 public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefinitionTypesBuilder {
 
