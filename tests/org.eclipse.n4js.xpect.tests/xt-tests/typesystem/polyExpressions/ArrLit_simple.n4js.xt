@@ -42,7 +42,7 @@ var v04 : Array<? extends B> = [ b, c ];
 // with padding
 
 
-// XPECT type of '[ ,,, b,,, c,,, ]' --> Array<B>
+// XPECT type of '[ ,,, b,,, c,,, ]' --> Array8<any,any,any,B,any,any,C,any>
 var v11 = [ ,,, b,,, c,,, ];
 
 // XPECT type of '[ ,,, b,,, c,,, ]' --> Array<B>
