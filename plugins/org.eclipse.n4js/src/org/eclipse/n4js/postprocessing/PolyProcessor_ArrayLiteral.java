@@ -14,13 +14,13 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTyp
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayNType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayNTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayType;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isArrayN;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isIterableN;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.iterableType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.iterableTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringTypeRef;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.undefinedTypeRef;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.map;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.toList;
 
@@ -52,7 +52,6 @@ import org.eclipse.n4js.typesystem.constraints.InferenceContext;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -105,25 +104,24 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 			// no type expectation or some entirely wrong type expectation (i.e. other than Array, ArrayN)
 			// -> just derive type from elements (and do not introduce a new inference variable for this ArrayLiteral!)
 			List<TypeRef> elemTypeRefs = new ArrayList<>();
-			List<ArrayElement> nonNullElems = toList(
-					IterableExtensions.filter(arrLit.getElements(), ae -> ae.getExpression() != null));
-			for (ArrayElement arrElem : nonNullElems) {
-				var arrElemTypeRef = polyProcessor.processExpr(G, arrElem.getExpression(), null, infCtx, cache);
-				arrElemTypeRef = ts.upperBoundWithReopen(G, arrElemTypeRef);
-				if (arrElem.isSpread()) {
-					// more than one in case of ArrayN; none in case of invalid value after spread operator
-					elemTypeRefs.addAll(extractSpreadTypeRefs(G, arrElemTypeRef));
+			for (ArrayElement arrElem : arrLit.getElements()) {
+				if (arrElem.getExpression() == null) {
+					elemTypeRefs.add(anyTypeRef(G));
 				} else {
-					elemTypeRefs.add(arrElemTypeRef);
+					TypeRef arrElemTypeRef = polyProcessor.processExpr(G, arrElem.getExpression(), null, infCtx, cache);
+					arrElemTypeRef = ts.upperBoundWithReopen(G, arrElemTypeRef);
+					if (arrElem.isSpread()) {
+						// more than one in case of ArrayN; none in case of invalid value after spread operator
+						elemTypeRefs.addAll(extractSpreadTypeRefs(G, arrElemTypeRef));
+					} else {
+						elemTypeRefs.add(arrElemTypeRef);
+					}
 				}
 			}
 
 			infCtx.onSolved(solution -> handleOnSolvedPerformanceTweak(G, cache, arrLit, expectedElemTypeRefs));
 
-			// TypeRef unionOfElemTypes = (!elemTypeRefs.isEmpty())
-			// ? tsh.createUnionType(G, elemTypeRefs.toArray(new TypeRef[0]))
-			// : anyTypeRef(G);
-			return arrayNTypeRef(G, elemTypeRefs.size(), elemTypeRefs.toArray(new TypeRef[0]));
+			return createArrayType(G, elemTypeRefs);
 		}
 
 		int resultLen = getResultLength(arrLit, expectedElemTypeRefs);
@@ -172,6 +170,66 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 	}
 
 	/**
+	 * Writes final types to cache.
+	 */
+	private void handleOnSolvedPerformanceTweak(RuleEnvironment G, ASTMetaInfoCache cache, ArrayLiteral arrLit,
+			List<TypeRef> expectedElemTypeRefs) {
+
+		List<TypeRef> betterElemTypeRefs = storeTypesOfArrayElements(G, cache, arrLit);
+		int resultLen = getResultLength(arrLit, betterElemTypeRefs);
+		TypeRef fallbackTypeRef = buildFallbackTypeForArrayLiteral(resultLen, betterElemTypeRefs,
+				expectedElemTypeRefs, G);
+		cache.storeType(arrLit, fallbackTypeRef);
+	}
+
+	/**
+	 * Writes final types to cache.
+	 */
+	private void handleOnSolved(RuleEnvironment G, ASTMetaInfoCache cache, ArrayLiteral arrLit,
+			List<TypeRef> expectedElemTypeRefs, TypeRef resultTypeRef,
+			Optional<Map<InferenceVariable, TypeRef>> solution) {
+
+		if (solution.isPresent()) {
+			// success case
+			TypeRef typeRef = applySolution(resultTypeRef, G, solution.get());
+			cache.storeType(arrLit, typeRef);
+		} else {
+			int resultLen = getResultLength(arrLit, expectedElemTypeRefs);
+			// failure case (unsolvable constraint system)
+			List<TypeRef> betterElemTypeRefs = toList(map(
+					arrLit.getElements(), ae -> getFinalResultTypeOfArrayElement(G, ae, Optional.absent())));
+			TypeRef typeRef = buildFallbackTypeForArrayLiteral(resultLen, betterElemTypeRefs,
+					expectedElemTypeRefs, G);
+			cache.storeType(arrLit, typeRef);
+		}
+		storeTypesOfArrayElements(G, cache, arrLit);
+	}
+
+	/**
+	 * choose correct number of type arguments in our to-be-created resultTypeRef (always 1 for Array<T> or Iterable<T>
+	 * but N for ArrayN<..>, e.g. 3 for Array3<T1,T2,T3>)
+	 */
+	private int getResultLength(ArrayLiteral arrLit, List<TypeRef> expectedElemTypeRefs) {
+		int numOfElems = arrLit.getElements().size();
+		int lenA = Math.min(
+				expectedElemTypeRefs.size(), // use number of type arguments provided by type expectation as a basis
+				numOfElems // ... but never more than we have elements in the array literal
+		);
+
+		int lenB = Math.min(
+				lenA,
+				BuiltInTypeScope.ITERABLE_N__MAX_LEN // ... and never more than the max. allowed number of type
+														// arguments for ArrayN
+		);
+
+		int resultLen = Math.max(
+				lenB,
+				1 // ... but at least 1 (even if numOfElems is 0, for example)
+		);
+		return resultLen;
+	}
+
+	/**
 	 * Makes a best effort for building a type in case something went awry. It's only non-trivial in case we have an
 	 * expectation of IterableN.
 	 */
@@ -181,7 +239,7 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 		List<TypeRef> elemTypeRefs = toList(map(
 				elemTypeRefsWithLiteralTypes, elem -> N4JSLanguageUtils.getLiteralTypeBase(G, elem)));
 
-		TypeRef[] typeArgs = new TypeRef[resultLen];
+		List<TypeRef> typeArgs = new ArrayList<>();
 		for (var i = 0; i < resultLen; i++) {
 			boolean isLastElem = i == (resultLen - 1);
 			TypeRef typeRef = null;
@@ -220,7 +278,7 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 						typeRef = tsh.createUnionType(G, allRemainingElementTypeRefs.toArray(new TypeRef[0]));
 					}
 				}
-			} else {
+			} else if (elemTypeRefs.size() > i) {
 				TypeRef currElemTypeRef = elemTypeRefs.get(i);
 				if (expectedElemTypeRefs.isEmpty()) {
 					typeRef = currElemTypeRef;
@@ -237,7 +295,9 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 					}
 				}
 			}
-			typeArgs[i] = typeRef;
+			if (typeRef != null) {
+				typeArgs.add(typeRef);
+			}
 		}
 
 		if (elemTypeRefs.size() > resultLen) {
@@ -245,34 +305,34 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 			TypeRef[] remaining = Arrays.copyOfRange(elemTypeRefs.toArray(new TypeRef[0]), resultLen - 1,
 					elemTypeRefs.size());
 
-			typeArgs[resultLen - 1] = tsh.createUnionType(G, remaining);
+			typeArgs.add(tsh.createUnionType(G, remaining));
 		}
 
-		return arrayNTypeRef(G, resultLen, typeArgs);
+		return createArrayType(G, typeArgs);
 	}
 
-	/**
-	 * choose correct number of type arguments in our to-be-created resultTypeRef (always 1 for Array<T> or Iterable<T>
-	 * but N for ArrayN<..>, e.g. 3 for Array3<T1,T2,T3>)
-	 */
-	private int getResultLength(ArrayLiteral arrLit, List<TypeRef> expectedElemTypeRefs) {
-		int numOfElems = arrLit.getElements().size();
-		int lenA = Math.min(
-				expectedElemTypeRefs.size(), // use number of type arguments provided by type expectation as a basis
-				numOfElems // ... but never more than we have elements in the array literal
-		);
-
-		int lenB = Math.min(
-				lenA,
-				BuiltInTypeScope.ITERABLE_N__MAX_LEN // ... and never more than the max. allowed number of type
-														// arguments for ArrayN
-		);
-
-		int resultLen = Math.max(
-				lenB,
-				1 // ... but at least 1 (even if numOfElems is 0, for example)
-		);
-		return resultLen;
+	private TypeRef createArrayType(RuleEnvironment G, List<TypeRef> elemTypeRefs) {
+		while (elemTypeRefs.size() > 1) {
+			int size = elemTypeRefs.size();
+			TypeRef last = elemTypeRefs.get(size - 1);
+			TypeRef beforeLast = elemTypeRefs.get(size - 2);
+			if (ts.equaltypeSucceeded(G, beforeLast, last)) {
+				elemTypeRefs.remove(last);
+			} else {
+				break;
+			}
+		}
+		if (elemTypeRefs.size() > 1 && elemTypeRefs.size() < 10) {
+			return arrayNTypeRef(G, elemTypeRefs.size(), elemTypeRefs.toArray(new TypeRef[0]));
+		} else {
+			TypeRef unionOfElemTypes = anyTypeRef(G);
+			if (elemTypeRefs.size() == 1) {
+				unionOfElemTypes = elemTypeRefs.get(0);
+			} else if (elemTypeRefs.size() > 1) {
+				unionOfElemTypes = tsh.createUnionType(G, elemTypeRefs.toArray(new TypeRef[0]));
+			}
+			return arrayTypeRef(G, unionOfElemTypes);
+		}
 	}
 
 	/**
@@ -296,8 +356,8 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 	 * type of the array element's expression
 	 */
 	private void processElements(RuleEnvironment G, ASTMetaInfoCache cache, InferenceContext infCtx,
-			ArrayLiteral arrLit,
-			int resultLen, TypeVariable[] resultInfVars) {
+			ArrayLiteral arrLit, int resultLen, TypeVariable[] resultInfVars) {
+
 		int numOfElems = arrLit.getElements().size();
 		for (var idxElem = 0; idxElem < numOfElems; idxElem++) {
 			ArrayElement currElem = arrLit.getElements().get(idxElem);
@@ -320,42 +380,6 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 		}
 	}
 
-	/**
-	 * Writes final types to cache.
-	 */
-	private void handleOnSolvedPerformanceTweak(RuleEnvironment G, ASTMetaInfoCache cache, ArrayLiteral arrLit,
-			List<TypeRef> expectedElemTypeRefs) {
-
-		List<TypeRef> betterElemTypeRefs = storeTypesOfArrayElements(G, cache, arrLit);
-		int resultLen = getResultLength(arrLit, betterElemTypeRefs);
-		TypeRef fallbackTypeRef = buildFallbackTypeForArrayLiteral(resultLen, betterElemTypeRefs,
-				expectedElemTypeRefs, G);
-		cache.storeType(arrLit, fallbackTypeRef);
-	}
-
-	/**
-	 * Writes final types to cache.
-	 */
-	private void handleOnSolved(RuleEnvironment G, ASTMetaInfoCache cache, ArrayLiteral arrLit,
-			List<TypeRef> expectedElemTypeRefs, TypeRef resultTypeRef,
-			Optional<Map<InferenceVariable, TypeRef>> solution) {
-
-		if (solution.isPresent()) {
-			// success case
-			TypeRef typeRef = applySolution(resultTypeRef, G, solution.get());
-			cache.storeType(arrLit, typeRef);
-		} else {
-			int resultLen = getResultLength(arrLit, expectedElemTypeRefs);
-			// failure case (unsolvable constraint system)
-			List<TypeRef> betterElemTypeRefs = toList(map(
-					arrLit.getElements(), ae -> getFinalResultTypeOfArrayElement(G, ae, Optional.absent())));
-			TypeRef typeRef = buildFallbackTypeForArrayLiteral(resultLen, betterElemTypeRefs,
-					expectedElemTypeRefs, G);
-			cache.storeType(arrLit, typeRef);
-		}
-		storeTypesOfArrayElements(G, cache, arrLit);
-	}
-
 	// PolyProcessor#isResponsibleFor(TypableElement) claims responsibility of AST nodes of type 'ArrayElement'
 	// contained in an ArrayLiteral which is poly, so we are responsible for storing the types of those
 	// 'ArrayElement' nodes in cache
@@ -364,7 +388,8 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 		List<TypeRef> storedElemTypeRefs = new ArrayList<>();
 		for (ArrayElement currElem : arrLit.getElements()) {
 			if (currElem instanceof ArrayPadding) {
-				cache.storeType(currElem, undefinedTypeRef(G));
+				cache.storeType(currElem, anyTypeRef(G));
+				storedElemTypeRefs.add(anyTypeRef(G));
 			} else {
 				TypeRef currElemTypeRef = getFinalResultTypeOfArrayElement(G, currElem,
 						Optional.of(storedElemTypeRefs));
