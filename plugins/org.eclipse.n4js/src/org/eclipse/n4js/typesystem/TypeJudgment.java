@@ -53,6 +53,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.compileTime.CompileTimeValue;
+import org.eclipse.n4js.compileTime.CompileTimeValue.ValueNumber;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.InstanceofGuard;
 import org.eclipse.n4js.n4JS.AdditiveExpression;
@@ -166,6 +167,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.TypesSwitch;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper.Callable;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper.Newable;
 import org.eclipse.n4js.utils.DestructureHelper;
@@ -929,10 +931,23 @@ import com.google.inject.Inject;
 					final RuleEnvironment G2 = wrap(G);
 					typeSystemHelper.addSubstitutions(G2, targetTypeRef);
 					setThisBinding(G2, targetTypeRef);
-					final TypeRef elementTypeRef = targetIsLiteralOfStringBasedEnum
-							? stringType(G).getElementType()
-							: targetDeclType.getElementType();
-					T = ts.substTypeVariables(G2, elementTypeRef);
+
+					int n = RuleEnvironmentExtensions.getArrayNNumber(G2, targetDeclType);
+					int idx = Integer.MAX_VALUE;
+					if (n > 0 && indexValue.isValid() && indexValue instanceof ValueNumber) {
+						ValueNumber valueNumber = (ValueNumber) indexValue;
+						idx = valueNumber.getValue().intValue();
+					}
+					if (idx <= n && idx < targetTypeRef.getTypeArgsWithDefaults().size()) {
+						TypeArgument typeArgument = targetTypeRef.getTypeArgsWithDefaults().get(idx);
+						T = ts.substTypeVariables(G2, TypeUtils.convertTypeArgToRef(typeArgument));
+					} else {
+						final TypeRef elementTypeRef = targetIsLiteralOfStringBasedEnum
+								? stringType(G).getElementType()
+								: targetDeclType.getElementType();
+						T = ts.substTypeVariables(G2, elementTypeRef);
+					}
+
 				}
 			} else if (memberName != null) {
 				// indexing via constant computed-name, sub-cases: static or instance member, for the latter
