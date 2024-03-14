@@ -764,6 +764,13 @@ class RuleEnvironmentExtensions {
 		return type !== null && G.arrayNTypes.contains(type);
 	}
 
+	public def static int getArrayNNumber(RuleEnvironment G, Type type) {
+		if (!isArrayN(G, type)) {
+			return -1;
+		}
+		return Integer.parseInt(type.name.substring("Array".length));
+	}
+
 	/* Returns built-in type {@code Promise<S,F>} */
 	public def static promiseType(RuleEnvironment G) {
 		G.getPredefinedTypes().builtInTypeScope.promiseType
