@@ -119,12 +119,10 @@ public class N6_1_07_IndexedAccessExpressionTypeInferenceTest extends AbstractTy
 
 	@Test
 	public void testUnionElementType() {
-		assertIndexedAccessExpressionType("union{string,int}", "[\"Walter\", 1]");
-		assertIndexedAccessExpressionType("union{string,int}", "[\"Walter\", 1\"]"); // syntax error was intended (I
-																						// guess)
-		assertIndexedAccessExpressionType("union{string,A,int}", "[\"Walter\", a, 1]");
-		assertIndexedAccessExpressionType("union{string,A,int}", "[\"Walter\", a, 1\"]"); // syntax error was intended
-																							// (I guess)
+		assertIndexedAccessExpressionType("string", "[\"Walter\", 1]");
+		assertIndexedAccessExpressionType("string", "[\"Walter\", 1\"]"); // syntax error was intended (I guess)
+		assertIndexedAccessExpressionType("string", "[\"Walter\", a, 1]");
+		assertIndexedAccessExpressionType("string", "[\"Walter\", a, 1\"]"); // syntax error was intended (I guess)
 		assertIndexedAccessExpressionType("A", "[a,b]");
 		assertIndexedAccessExpressionType("A", "[a,b,a]");
 		assertIndexedAccessExpressionType("A", "[a,b,a,b,a,a,b]");
@@ -133,16 +131,14 @@ public class N6_1_07_IndexedAccessExpressionTypeInferenceTest extends AbstractTy
 	@Test
 	public void testElementTypeWithIgnoredPadding() {
 		assertIndexedAccessExpressionType("A", "[a,]");
-		assertIndexedAccessExpressionType("A", "[,a]");
-		assertIndexedAccessExpressionType("A", "[,a,]");
-		assertIndexedAccessExpressionType("A", "[,a,,,,]");
+		assertIndexedAccessExpressionType("any", "[,a]");
+		assertIndexedAccessExpressionType("any", "[,a,]");
+		assertIndexedAccessExpressionType("any", "[,a,,,,]");
 
-		assertIndexedAccessExpressionType("union{string,int}", "[,\"Walter\", 1]");
-		assertIndexedAccessExpressionType("union{string,int}", "[,\"Walter\", 1\"]"); // syntax error was intended (I
-																						// guess)
-		assertIndexedAccessExpressionType("union{string,A,int}", "[\"Walter\", a, 1,]");
-		assertIndexedAccessExpressionType("union{string,A,int}", "[\"Walter\", a, 1\",]"); // syntax error was intended
-																							// (I guess)
+		assertIndexedAccessExpressionType("any", "[,\"Walter\", 1]");
+		assertIndexedAccessExpressionType("any", "[,\"Walter\", 1\"]"); // syntax error was intended (I guess)
+		assertIndexedAccessExpressionType("string", "[\"Walter\", a, 1,]");
+		assertIndexedAccessExpressionType("string", "[\"Walter\", a, 1\",]"); // syntax error was intended (I guess)
 		assertIndexedAccessExpressionType("A", "[a,b,,]");
 		assertIndexedAccessExpressionType("A", "[a,b,a,,,]");
 		assertIndexedAccessExpressionType("A", "[a,b,a,,a,,b]");
