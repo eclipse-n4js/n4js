@@ -35,9 +35,9 @@ var v00 : Iterable<B> = [b];
 var v01 : Iterable<B> = [b,c,b];
 // XPECT type of '[b,c,b]' --> Array<B>
 var v02 : Array<B> = [b,c,b];
-// XPECT type of '[b,c,b]' --> Array<B>
+// XPECT type of '[b,c,b]' --> Array3<B,C,B>
 var v03 = [b,c,b];
-// XPECT errors --> "Array<B> is not a subtype of X." at "[b,c,b]"
+// XPECT errors --> "Array3<B,C,B> is not a subtype of X." at "[b,c,b]"
 var v04 : X = [b,c,b];
 
 
@@ -76,9 +76,9 @@ var v14b : Array3<B,B,B> = [b,c,b,b,b,x,b];
 
 // expectation is longer:
 
-// XPECT errors --> "Array3<B,B,B> is not a subtype of Iterable4<B,B,B,B>." at "[b,c,b]"
+// XPECT errors --> "Array<B> is not a subtype of Iterable4<B,B,B,B>." at "[b,c,b]"
 var v15a : Iterable4<B,B,B,B> = [b,c,b];
-// XPECT errors --> "Array3<B,B,B> is not a subtype of Array4<B,B,B,B>." at "[b,c,b]"
+// XPECT errors --> "Array<B> is not a subtype of Array4<B,B,B,B>." at "[b,c,b]"
 var v15b : Array4<B,B,B,B> = [b,c,b];
 
 // XPECT errors --> "Array3<B,X,B> is not a subtype of Iterable4<B,B,B,B>." at "[b,x,b]"

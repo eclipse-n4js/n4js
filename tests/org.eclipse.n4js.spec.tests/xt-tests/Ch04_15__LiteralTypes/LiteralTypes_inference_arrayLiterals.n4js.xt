@@ -25,5 +25,5 @@ let arr3 = [ 0, 42 ];
 // XPECT type of 'arr4' --> Array<int>
 let arr4 = [ 42, 4.3 ];
 
-// XPECT type of 'arr5' --> Array<union{int,string}>
+// XPECT type of 'arr5' --> Array2<int,string>
 let arr5 = [ 42, "hello" ];

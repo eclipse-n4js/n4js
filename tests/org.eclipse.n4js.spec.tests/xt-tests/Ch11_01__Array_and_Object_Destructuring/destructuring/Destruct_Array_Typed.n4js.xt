@@ -15,6 +15,14 @@
 // XPECT type of 'arr' --> Array3<int,string,int>
 const arr = [1, "2", 3];
 
+
+// XPECT type of 'ay' --> int
+// XPECT type of 'by' --> string
+// XPECT type of 'cy' --> int
+const [ay, by, cy] = arr;
+
+ay;by;cy;
+
 // XPECT type of 'ax' --> int
 const ax = arr[0];
 // XPECT type of 'bx' --> string
