@@ -127,7 +127,7 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 		int resultLen = getResultLength(arrLit, expectedElemTypeRefs);
 		TypeVariable[] resultInfVars = infCtx.newInferenceVariables(resultLen);
 
-		processElements(G, cache, infCtx, arrLit, resultLen, resultInfVars);
+		processElements(G, cache, infCtx, arrLit, expectedElemTypeRefs, resultInfVars);
 
 		TypeRef resultTypeRef = getResultTypeRef(G, resultLen, resultInfVars);
 
@@ -194,10 +194,10 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 			TypeRef typeRef = applySolution(resultTypeRef, G, solution.get());
 			cache.storeType(arrLit, typeRef);
 		} else {
-			int resultLen = getResultLength(arrLit, expectedElemTypeRefs);
 			// failure case (unsolvable constraint system)
 			List<TypeRef> betterElemTypeRefs = toList(map(
 					arrLit.getElements(), ae -> getFinalResultTypeOfArrayElement(G, ae, Optional.absent())));
+			int resultLen = getResultLength(arrLit, betterElemTypeRefs);
 			TypeRef typeRef = buildFallbackTypeForArrayLiteral(resultLen, betterElemTypeRefs,
 					expectedElemTypeRefs, G);
 			cache.storeType(arrLit, typeRef);
@@ -278,11 +278,9 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 						typeRef = tsh.createUnionType(G, allRemainingElementTypeRefs.toArray(new TypeRef[0]));
 					}
 				}
-			} else if (elemTypeRefs.size() > i) {
+			} else if (i < elemTypeRefs.size()) {
 				TypeRef currElemTypeRef = elemTypeRefs.get(i);
-				if (expectedElemTypeRefs.isEmpty()) {
-					typeRef = currElemTypeRef;
-				} else {
+				if (i < expectedElemTypeRefs.size()) {
 					TypeRef currExpectedElemTypeRef = expectedElemTypeRefs.get(i);
 					boolean actualIsSubtypeOfExpected = ts.subtypeSucceeded(G, currElemTypeRef,
 							currExpectedElemTypeRef);
@@ -293,6 +291,8 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 						// use actual type (will lead to follow-up errors caught by validations)
 						typeRef = currElemTypeRef;
 					}
+				} else {
+					typeRef = currElemTypeRef;
 				}
 			}
 			if (typeRef != null) {
@@ -356,26 +356,46 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 	 * type of the array element's expression
 	 */
 	private void processElements(RuleEnvironment G, ASTMetaInfoCache cache, InferenceContext infCtx,
-			ArrayLiteral arrLit, int resultLen, TypeVariable[] resultInfVars) {
+			ArrayLiteral arrLit, List<TypeRef> expectedElemTypeRefs, TypeVariable[] resultInfVars) {
 
 		int numOfElems = arrLit.getElements().size();
-		for (var idxElem = 0; idxElem < numOfElems; idxElem++) {
+		for (int idxElem = 0; idxElem < numOfElems; idxElem++) {
 			ArrayElement currElem = arrLit.getElements().get(idxElem);
 			if (currElem == null || currElem.getExpression() == null) {
 				// currElem is null, or has no expression (broken AST), or is an ArrayPadding element
 				// -> ignore (no constraint to add)
 			} else {
 				// currElem is a valid ArrayElement with an expression
-				// -> add constraint currElemTypeRef <: Ti (Ti being the corresponding inf. variable in resultTypeRef)
-				int idxResult = Math.min(idxElem, resultLen - 1);
-				TypeVariable currResultInfVar = resultInfVars[idxResult];
+				// -> add constraint currElemTypeRef <: Ti (Ti being the corresponding inf. variable in
+				// resultTypeRef)
+
+				TypeRef currExpectedTypeRef = expectedElemTypeRefs.isEmpty()
+						? null
+						: expectedElemTypeRefs.get(Math.min(idxElem, expectedElemTypeRefs.size() - 1));
+
+				TypeVariable currResultInfVar = resultInfVars[Math.min(idxElem, resultInfVars.length - 1)];
 				TypeRef currResultInfVarTypeRef = TypeUtils.createTypeRef(currResultInfVar);
-				TypeRef currExpectedTypeRef = (currElem.isSpread())
+				currResultInfVarTypeRef = (currElem.isSpread())
 						? iterableTypeRef(G, TypeUtils.createWildcardExtends(currResultInfVarTypeRef))
 						: currResultInfVarTypeRef;
-				TypeRef currElemTypeRef = polyProcessor.processExpr(G, currElem.getExpression(), currExpectedTypeRef,
-						infCtx, cache);
-				infCtx.addConstraint(currElemTypeRef, currExpectedTypeRef, Variance.CO);
+
+				if (polyProcessor.isPoly(currElem.getExpression())) {
+					TypeRef result = polyProcessor.processExpr(G, currElem.getExpression(),
+							currExpectedTypeRef, infCtx, cache);
+
+					infCtx.addConstraint(0, result, currResultInfVarTypeRef, Variance.CO);
+
+				} else {
+
+					if (currExpectedTypeRef != null && !currExpectedTypeRef.isExistential()) {
+						infCtx.addConstraint(currResultInfVarTypeRef, currExpectedTypeRef, Variance.CO);
+					}
+
+					TypeRef result = polyProcessor.processExpr(G, currElem.getExpression(),
+							currResultInfVarTypeRef, infCtx, cache);
+
+					infCtx.addConstraint(result, currResultInfVarTypeRef, Variance.CO);
+				}
 			}
 		}
 	}

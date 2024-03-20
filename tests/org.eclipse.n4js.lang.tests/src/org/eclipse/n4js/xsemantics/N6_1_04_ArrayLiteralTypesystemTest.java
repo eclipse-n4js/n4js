@@ -107,6 +107,11 @@ public class N6_1_04_ArrayLiteralTypesystemTest extends AbstractTypesystemTest {
 	}
 
 	@Test
+	public void testArrayUnionElementType2() {
+		assertArrayLiteralType("Array3<A,B,Array2<A,B>>", "[a,b,[a,b]]");
+	}
+
+	@Test
 	public void testArrayElementTypeWithIgnoredPadding() {
 		assertArrayLiteralType("Array<A>", "[a,]");
 		assertArrayLiteralType("Array2<any,A>", "[,a]");

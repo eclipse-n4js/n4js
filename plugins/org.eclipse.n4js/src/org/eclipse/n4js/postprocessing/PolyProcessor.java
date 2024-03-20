@@ -161,14 +161,14 @@ class PolyProcessor extends AbstractPolyProcessor {
 			infCtx.addConstraint(TypeConstraint.FALSE);
 		}
 
-		TypeRef expectedTypeOfPoly = destructureHelper.calculateExpectedType(rootPoly, G, infCtx);
+		TypeRef expectedTypeByLiteralStructure = destructureHelper.calculateExpectedType(rootPoly, G, infCtx);
 		// we have to pass the expected type to the #getType() method, so retrieve it first
 		// (until the expectedType judgment is integrated into AST traversal, we have to invoke this judgment here;
 		// in case of not-well-behaving expectedType rules, we use 'null' as expected type, i.e. no expectation)
 		// TODO integrate expectedType judgment into AST traversal and remove #isProblematicCaseOfExpectedType()
 		TypeRef expectedTypeRef = null;
-		if (expectedTypeOfPoly != null) {
-			expectedTypeRef = expectedTypeOfPoly;
+		if (expectedTypeByLiteralStructure != null) {
+			expectedTypeRef = expectedTypeByLiteralStructure;
 		} else if (!isProblematicCaseOfExpectedType(rootPoly)) {
 			expectedTypeRef = ts.expectedType(G, rootPoly.eContainer(), rootPoly);
 		}
@@ -178,7 +178,7 @@ class PolyProcessor extends AbstractPolyProcessor {
 
 		// add constraint to ensure that type of 'rootPoly' is subtype of its expected type
 		if (!TypeUtils.isVoid(typeRef)) {
-			if (expectedTypeRef != null) {
+			if (expectedTypeRef != null && expectedTypeByLiteralStructure == null) {
 				infCtx.addConstraint(0, typeRef, expectedTypeRef, Variance.CO);
 			}
 		}

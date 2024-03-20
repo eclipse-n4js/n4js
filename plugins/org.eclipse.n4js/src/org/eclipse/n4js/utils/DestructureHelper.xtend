@@ -367,7 +367,7 @@ class DestructureHelper {
 			if (elemCount == 1) {
 				 G.arrayTypeRef(elementTypes.get(0))
 			} else if (elemCount > 1){
-				G.iterableNTypeRef(elemCount, elementTypes);
+				G.arrayNTypeRef(elemCount, elementTypes);
 			} else {
 				null
 			}
