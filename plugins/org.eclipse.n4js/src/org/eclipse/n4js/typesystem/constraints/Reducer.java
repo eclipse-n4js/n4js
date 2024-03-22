@@ -391,6 +391,14 @@ import com.google.common.collect.Sets;
 			}
 		}
 
+		if (variance == CONTRA) {
+			if (TypeUtils.isAny(right) && !TypeUtils.isAny(left)) {
+				return giveUp(left, right, variance);
+			}
+		} else if (TypeUtils.isAny(left) && !TypeUtils.isAny(right)) {
+			return giveUp(left, right, variance);
+		}
+
 		final boolean isLeftStructural = left.isUseSiteStructuralTyping() || left.isDefSiteStructuralTyping();
 		final boolean isRightStructural = right.isUseSiteStructuralTyping() || right.isDefSiteStructuralTyping();
 		if ((isLeftStructural && (variance == CONTRA || variance == INV))

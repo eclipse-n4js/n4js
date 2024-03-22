@@ -178,7 +178,7 @@ class PolyProcessor extends AbstractPolyProcessor {
 
 		// add constraint to ensure that type of 'rootPoly' is subtype of its expected type
 		if (!TypeUtils.isVoid(typeRef)) {
-			if (expectedTypeRef != null && expectedTypeByLiteralStructure == null) {
+			if (expectedTypeRef != null) {
 				infCtx.addConstraint(0, typeRef, expectedTypeRef, Variance.CO);
 			}
 		}

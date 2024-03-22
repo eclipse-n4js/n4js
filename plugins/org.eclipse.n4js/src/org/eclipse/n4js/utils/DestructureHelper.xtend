@@ -32,7 +32,6 @@ import org.eclipse.n4js.scoping.members.MemberScopingHelper
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TStructMember
@@ -333,7 +332,7 @@ class DestructureHelper {
 				calculateExpectedType(nestedNode, G, infCtx)
 			} else {
 				// Extract type of leaf node
-				nestedNode.createTypeFromLeafDestructNode(G)
+				createTypeFromLeafDestructNode(nestedNode, G);
 			}
 
 			if (nestedNode.propName !== null) {
@@ -352,7 +351,9 @@ class DestructureHelper {
 				if (elemExpectedType !== null) {
 					elementTypes.add(elemExpectedType)
 				} else {
-					elementTypes.add(TypeRefsFactory.eINSTANCE.createWildcard)
+					// If the expected type is not specified, the expected type is arbitrary hence return a new inference variable.
+					val iv = infCtx.newInferenceVariable;
+					elementTypes.add(TypeUtils.createTypeRef(iv));
 				}
 			}
 		}
@@ -367,7 +368,7 @@ class DestructureHelper {
 			if (elemCount == 1) {
 				 G.arrayTypeRef(elementTypes.get(0))
 			} else if (elemCount > 1){
-				G.arrayNTypeRef(elemCount, elementTypes);
+				G.iterableNTypeRef(elemCount, elementTypes);
 			} else {
 				null
 			}

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.postprocessing;
 
+import static org.eclipse.n4js.types.utils.TypeUtils.createWildcardExtends;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayNType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayNTypeRef;
@@ -129,7 +130,7 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 
 		processElements(G, cache, infCtx, arrLit, expectedElemTypeRefs, resultInfVars);
 
-		TypeRef resultTypeRef = getResultTypeRef(G, resultLen, resultInfVars);
+		TypeRef resultTypeRef = getResultTypeRef(G, resultInfVars);
 
 		// register onSolved handlers to add final types to cache (i.e. may not contain inference variables)
 		infCtx.onSolved(solution -> handleOnSolved(G, cache, arrLit, expectedElemTypeRefs, resultTypeRef, solution));
@@ -342,13 +343,18 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 	 * <li>ArrayN<T1,T2,...,TN> (where T1,...TN are new inference variables, N>=2)</li>
 	 * </ul>
 	 */
-	private TypeRef getResultTypeRef(RuleEnvironment G, int resultLen, TypeVariable[] resultInfVars) {
-		boolean isArrayN = resultLen >= 2;
-		TClass declaredType = (isArrayN) ? arrayNType(G, resultLen) : arrayType(G);
-		List<ParameterizedTypeRef> typeArgs = toList(
-				map(Arrays.asList(resultInfVars), v -> TypeUtils.createTypeRef(v)));
-		TypeRef resultTypeRef = TypeUtils.createTypeRef(declaredType, typeArgs.toArray(new ParameterizedTypeRef[0]));
-		return resultTypeRef;
+	private TypeRef getResultTypeRef(RuleEnvironment G, TypeVariable[] resultInfVars) {
+		if (resultInfVars.length > 1) {
+			TClass declaredType = arrayNType(G, resultInfVars.length);
+			ParameterizedTypeRef[] ptRefs = new ParameterizedTypeRef[resultInfVars.length];
+			for (int i = 0; i < resultInfVars.length; i++) {
+				ptRefs[i] = TypeUtils.createTypeRef(resultInfVars[i]);
+			}
+			return TypeUtils.createTypeRef(declaredType, ptRefs);
+		} else {
+			TClass declaredType = arrayType(G);
+			return TypeUtils.createTypeRef(declaredType, TypeUtils.createTypeRef(resultInfVars[0]));
+		}
 	}
 
 	/**
@@ -373,29 +379,21 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 						? null
 						: expectedElemTypeRefs.get(Math.min(idxElem, expectedElemTypeRefs.size() - 1));
 
-				TypeVariable currResultInfVar = resultInfVars[Math.min(idxElem, resultInfVars.length - 1)];
-				TypeRef currResultInfVarTypeRef = TypeUtils.createTypeRef(currResultInfVar);
-				currResultInfVarTypeRef = (currElem.isSpread())
-						? iterableTypeRef(G, TypeUtils.createWildcardExtends(currResultInfVarTypeRef))
-						: currResultInfVarTypeRef;
-
-				if (polyProcessor.isPoly(currElem.getExpression())) {
-					TypeRef result = polyProcessor.processExpr(G, currElem.getExpression(),
-							currExpectedTypeRef, infCtx, cache);
-
-					infCtx.addConstraint(0, result, currResultInfVarTypeRef, Variance.CO);
-
+				TypeRef currResultTypeRef;
+				if (isArrayN(G, currExpectedTypeRef) || isIterableN(G, currExpectedTypeRef)) {
+					currResultTypeRef = currExpectedTypeRef;
 				} else {
-
-					if (currExpectedTypeRef != null && !currExpectedTypeRef.isExistential()) {
-						infCtx.addConstraint(currResultInfVarTypeRef, currExpectedTypeRef, Variance.CO);
+					int idxResult = Math.min(idxElem, resultInfVars.length - 1);
+					TypeVariable currResultInfVar = resultInfVars[idxResult];
+					currResultTypeRef = TypeUtils.createTypeRef(currResultInfVar);
+					if (currElem.isSpread()) {
+						currResultTypeRef = iterableTypeRef(G, createWildcardExtends(currResultTypeRef));
 					}
-
-					TypeRef result = polyProcessor.processExpr(G, currElem.getExpression(),
-							currResultInfVarTypeRef, infCtx, cache);
-
-					infCtx.addConstraint(result, currResultInfVarTypeRef, Variance.CO);
 				}
+
+				TypeRef currElemTypeRef = polyProcessor.processExpr(G, currElem.getExpression(),
+						currResultTypeRef, infCtx, cache);
+				infCtx.addConstraint(currElemTypeRef, currResultTypeRef, Variance.CO);
 			}
 		}
 	}
