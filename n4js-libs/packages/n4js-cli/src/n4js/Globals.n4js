@@ -37,7 +37,7 @@ export public const JRE_INFO_MAP = new Map<Platform, JreInfo>([
     [Platform.x64_sunos,   null],
     [Platform.x32_win32,   {bin: "bin/java.exe", name: "OpenJDK-jre_x86-32_windows_hotspot_2021-05-06-23-30.zip"}],
     [Platform.x64_win32,   {bin: "bin/java.exe", name: "OpenJDK-jre_x64_windows_hotspot_2021-05-06-23-30.zip"}]]
-     as Iterable<Iterable2<Platform, JreInfo>>);
+    );
 
 
 @StringBased
