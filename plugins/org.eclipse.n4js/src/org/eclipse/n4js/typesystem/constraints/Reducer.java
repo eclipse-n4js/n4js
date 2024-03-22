@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
@@ -389,14 +390,6 @@ import com.google.common.collect.Sets;
 			} else {
 				return addBound((InferenceVariable) right.getDeclaredType(), left, variance.inverse());
 			}
-		}
-
-		if (variance == CONTRA) {
-			if (TypeUtils.isAny(right) && !TypeUtils.isAny(left)) {
-				return giveUp(left, right, variance);
-			}
-		} else if (TypeUtils.isAny(left) && !TypeUtils.isAny(right)) {
-			return giveUp(left, right, variance);
 		}
 
 		final boolean isLeftStructural = left.isUseSiteStructuralTyping() || left.isDefSiteStructuralTyping();
@@ -854,13 +847,20 @@ import com.google.common.collect.Sets;
 					// in case a call signature is missing on the left side, it is ok
 					// if the left side is itself a function
 					reduceFunctionTypeExprOrRef((FunctionTypeExpression) left, rightTypeRef, variance);
-				}
+				} else
 
-				// ignore missing members
-				// (Note: we're ignoring this altogether, here. We could check if the existing member is optional and
-				// otherwise add bound FALSE, but this is not our job. There are other validations checking that and
-				// commencing with type inference here produces better error messages.)
-				continue;
+				// Note: There are also other validations checking that and produce better error messages.
+				if (variance == CO && r != null && r.isOptional()) {
+					// check if the existing member is optional
+					continue;
+				} else if (variance == CO && right instanceof BoundThisTypeRef) {
+					// check if the existing member is quasi-optional due to being used as argument for @Spec
+					// constructor.
+					continue;
+				} else {
+					// otherwise add bound FALSE.
+					return giveUp(l, r, variance);
+				}
 			}
 			final List<TypeConstraint> constraints = new ArrayList<>();
 			switch (variance) {
