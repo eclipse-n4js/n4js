@@ -94,7 +94,7 @@ var c3s : C3<string>;
 c3s.m({prop: "Hello prop!"});
 // TODO improve typeRefAsString in StructuralTypeRef
 // XPECT FIXME errors --> "~Object with { prop: 42; } is not a structural subtype of ~Object with { prop: string }: prop failed: 42 is not equal to string." at "{prop: 42}"
-// XPECT errors --> "~Object with { prop: 42 } is not a structural subtype of ~Object with { prop: T } [[T->string]]: prop failed: 42 is not equal to string." at "{prop: 42}"
+// XPECT errors --> "~Object with { prop: int } is not a structural subtype of ~Object with { prop: T } [[T->string]]: prop failed: int is not equal to string." at "{prop: 42}"
 c3s.m({prop: 42});
 
 
