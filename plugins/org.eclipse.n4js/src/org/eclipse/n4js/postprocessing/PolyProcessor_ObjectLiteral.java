@@ -267,7 +267,7 @@ class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 			TStructMember memberInTModule = propAssignm.getDefinedMember();
 			if (memberInTModule != null) {
 				TypeRef memberType = getMemberType(G, infCtx, solution, quickMode, propPair);
-				boolean resolveLiteralTypes = (quickMode)
+				boolean resolveLiteralTypes = (quickMode || !solution.isPresent())
 						? // quick mode means we do not have a type expectation, so we handle literal types exactly
 							// as when inferring the implicit type of variables with an initializer expression
 						!N4JSASTUtils.isImmutable(propAssignm)
