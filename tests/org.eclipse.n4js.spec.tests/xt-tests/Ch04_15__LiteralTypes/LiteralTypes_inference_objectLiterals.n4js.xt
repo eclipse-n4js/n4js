@@ -35,5 +35,5 @@ let obj3: ~Object with { prop: 0 | 42 } = { prop: 42, propWithoutExpectation: 43
 // In the next test case, we want to avoid seeing the following extremely confusing error message:
 // ~Object with { prop1: "hello"; prop2: "BAD!" } is not a structural subtype of ~Object with { prop1: string; prop2: number }: prop1 failed: "hello" is not equal to string and 1 more problems.
 
-// XPECT errors --> "~Object with { prop1: string; prop2: "BAD!" } is not a structural subtype of ~Object with { prop1: string; prop2: number }: prop2 failed: "BAD!" is not equal to number." at "{ prop1: "hello", prop2: "BAD!" }"
+// XPECT errors --> "~Object with { prop1: string; prop2: string } is not a structural subtype of ~Object with { prop1: string; prop2: number }: prop2 failed: string is not equal to number." at "{ prop1: "hello", prop2: "BAD!" }"
 let obj4: ~Object with { prop1: string, prop2: number } = { prop1: "hello", prop2: "BAD!" };
