@@ -280,9 +280,9 @@ class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	 * Writes final types to cache
 	 */
 	private void handleOnSolved(RuleEnvironment G, ASTMetaInfoCache cache, InferenceContext infCtx,
-			FunctionExpression funExpr,
-			TypeRef expectedTypeRef, FunctionTypeExpression resultTypeRef,
+			FunctionExpression funExpr, TypeRef expectedTypeRef, FunctionTypeExpression resultTypeRef,
 			Optional<Map<InferenceVariable, TypeRef>> solution) {
+
 		Map<InferenceVariable, TypeRef> solution2 = (solution.isPresent()) ? solution.get()
 				: createPseudoSolution(infCtx, anyTypeRef(G));
 		// sanitize parameter types

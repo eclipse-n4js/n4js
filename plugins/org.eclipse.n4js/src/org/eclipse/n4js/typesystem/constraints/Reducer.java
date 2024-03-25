@@ -15,12 +15,15 @@ import static org.eclipse.n4js.ts.types.util.Variance.CONTRA;
 import static org.eclipse.n4js.ts.types.util.Variance.INV;
 import static org.eclipse.n4js.typesystem.constraints.Reducer.BooleanOp.CONJUNCTION;
 import static org.eclipse.n4js.typesystem.constraints.Reducer.BooleanOp.DISJUNCTION;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isObjectStructural;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
@@ -29,6 +32,7 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
@@ -43,6 +47,7 @@ import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TN4Classifier;
+import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypingStrategy;
@@ -276,6 +281,7 @@ import com.google.common.collect.Sets;
 						}
 					}
 				}
+				boolean checkedForPoormansSybtype = false;
 				if (idx == -1 && left instanceof ParameterizedTypeRef && !TypeUtils.isInferenceVariable(left)) {
 					final Type leftDecl = left.getDeclaredType();
 					if (idx == -1 && leftDecl != null) {
@@ -283,8 +289,20 @@ import com.google.common.collect.Sets;
 						for (int i = 0; i < rightsSize; i++) {
 							final TypeRef currElem = rights.get(i);
 							if (leftDecl == currElem.getDeclaredType()) {
-								idx = i;
-								break;
+								if (isObjectStructural(G, left) && isObjectStructural(G, currElem)) {
+									ParameterizedTypeRefStructural ptrsLeft = (ParameterizedTypeRefStructural) left;
+									ParameterizedTypeRefStructural ptrsCurrElem = (ParameterizedTypeRefStructural) currElem;
+									// poor-man's-subtype check to avoid backtracking
+									boolean isPoormansSybtype = isPoorMansSubtype(ptrsLeft, ptrsCurrElem);
+									checkedForPoormansSybtype = true;
+									if (isPoormansSybtype) {
+										idx = i;
+										break;
+									}
+								} else {
+									idx = i;
+									break;
+								}
 							}
 						}
 					}
@@ -293,7 +311,8 @@ import com.google.common.collect.Sets;
 						// (note: same as below, but has higher priority for primitive types than next heuristic)
 						idx = chooseFirstInferenceVariable(rights);
 					}
-					if (idx == -1 && variance == CO && leftDecl instanceof ContainerType<?>) {
+					if (idx == -1 && variance == CO && !checkedForPoormansSybtype
+							&& leftDecl instanceof ContainerType<?>) {
 						// choose first supertype of left
 						final List<TClassifier> superTypesOfLeft = AllSuperTypesCollector
 								.collect((ContainerType<?>) leftDecl, declMergingHelper);
@@ -373,6 +392,23 @@ import com.google.common.collect.Sets;
 			}
 		}
 		return -1;
+	}
+
+	private final boolean isPoorMansSubtype(ParameterizedTypeRefStructural ptrsLeft,
+			ParameterizedTypeRefStructural ptrsRight) {
+		EList<TStructMember> genMembersLeft = ptrsLeft.getStructuralMembers();
+		EList<TStructMember> genMembersRight = ptrsRight.getStructuralMembers();
+		// poor-man's-subtype check to avoid backtracking
+		Set<String> memberNamesRight = new HashSet<>();
+		for (TStructMember member : genMembersRight) {
+			memberNamesRight.add(member.getName());
+		}
+		for (TStructMember member : genMembersLeft) {
+			if (!memberNamesRight.contains(member.getName())) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private boolean reduceTypeRef(TypeRef left, TypeRef right, Variance variance) {
