@@ -83,7 +83,7 @@ var f3aOK : ~C = g.f({n: 3, foo: function (){} });
 
 /* type returned and argument incompatible XPECT errors ---
 "Structural type ~C is not a subtype of non-structural type C." at "g.f({n: 3})"
-"~Object with { n: number } is not a structural subtype of ~C: missing method foo." at "{n: 3}"
+"~Object with { n: int } is not a structural subtype of ~C: missing method foo." at "{n: 3}"
 --- */
 var f3b : C = g.f({n: 3});
 
