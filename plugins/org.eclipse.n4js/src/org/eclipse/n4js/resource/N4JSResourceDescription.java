@@ -22,6 +22,7 @@ import java.util.SortedSet;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.naming.N4JSImportedNamesAdapter;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TEnum;
@@ -145,18 +146,15 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 					// also all names are collected that cannot be resolved
 
 					EcoreUtil2.resolveLazyCrossReferences(getResource(), CancelIndicator.NullImpl);
-					ImportedNamesAdapter adapter = ImportedNamesAdapter.find(getResource());
-					Iterable<QualifiedName> superImportedNames = Collections.emptySet();
-					if (adapter != null) {
-						superImportedNames = adapter.getImportedNames();
-					}
+					N4JSImportedNamesAdapter adapter = (N4JSImportedNamesAdapter) ImportedNamesAdapter
+							.find(getResource());
 
 					// use sorted set to ensure order of items
 					final SortedSet<QualifiedName> importedNames;
-					if (superImportedNames != null) {
-						importedNames = Sets.newTreeSet(superImportedNames);
-					} else {
+					if (adapter == null) {
 						importedNames = Sets.<QualifiedName> newTreeSet();
+					} else {
+						importedNames = adapter.getImportedNames();
 					}
 					// import our own module name to get a proper change notification
 					Resource resource = getResource();
