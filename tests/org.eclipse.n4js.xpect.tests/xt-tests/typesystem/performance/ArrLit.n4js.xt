@@ -1,0 +1,380 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+// XPECT noerrors -->
+
+@StringBased
+export public enum Colors {
+    grey: "#000000" /* rgb(0, 0, 0) */
+}
+
+
+@StringBased
+export public enum PageThemeCssVar {
+    primary: "--primary",
+    secondary: "--secondary",
+    accent: "--accent",
+    text: "--text",
+    outline: "--outline",
+    background: "--background",
+    surface: "--surface",
+    onPrimary: "--on-primary",
+    onSecondary: "--on-secondary",
+    statusNormal: "--status-normal",
+    statusAllGood: "--status-all-good",
+    statusWarning: "--status-warning",
+    statusProblem: "--status-problem",
+    statusInactive: "--status-inactive",
+    highlightGlue: "--highlight-glue",
+    highlightTeal: "--highlight-teal",
+    highlightYellow: "--highlight-yellow",
+    highlightGolden: "--highlight-golden",
+    highlightPurple: "--highlight-purple",
+    ncShadow: "--nc-shadow",
+    ncOnShadow: "--nc-on-shadow",
+    ncPopupDimming: "--nc-popup-dimming",
+    ncTransparent: "--nc-transparent",
+    _creative,
+    _audioHaptics,
+    _audioHapticTick,
+    _audioHapticTickOff,
+    _audioHapticOpenOverlay,
+    _audioHapticError,
+    ffPrimary: "--ff-primary",
+    fwNormal: "--fw-normal",
+    fwMedium: "--fw-medium",
+    fwBold: "--fw-bold",
+    _mixColorPos,
+    _mixColorNeg,
+    _siteHeaderType,
+    _siteHeaderNavBarBackground,
+    _siteHeaderDisableBusinessName
+}
+
+export public interface ~PageThemeStyles {
+    public label?: string;
+    public colorScheme?: "light"|"dark";
+
+    public [PageThemeCssVar.primary]?: string;
+    public [PageThemeCssVar.secondary]?: string;
+    public [PageThemeCssVar.accent]?: string;
+    public [PageThemeCssVar.text]?: string;
+    public [PageThemeCssVar.outline]?: string;
+    public [PageThemeCssVar.background]?: string;
+    public [PageThemeCssVar.surface]?: string;
+    public [PageThemeCssVar.onPrimary]?: string;
+    public [PageThemeCssVar.onSecondary]?: string;
+    public [PageThemeCssVar.statusNormal]?: string;
+    public [PageThemeCssVar.statusAllGood]?: string;
+    public [PageThemeCssVar.statusWarning]?: string;
+    public [PageThemeCssVar.statusProblem]?: string;
+    public [PageThemeCssVar.statusInactive]?: string;
+    public [PageThemeCssVar.highlightGlue]?: string;
+    public [PageThemeCssVar.highlightTeal]?: string;
+    public [PageThemeCssVar.highlightYellow]?: string;
+    public [PageThemeCssVar.highlightGolden]?: string;
+    public [PageThemeCssVar.highlightPurple]?: string;
+    public [PageThemeCssVar.ncShadow]?: string;
+    public [PageThemeCssVar.ncOnShadow]?: string;
+    public [PageThemeCssVar.ncPopupDimming]?: string;
+    public [PageThemeCssVar.ncTransparent]?: string;
+    public [PageThemeCssVar._creative]?: any;
+    public [PageThemeCssVar._audioHaptics]?: any;
+    public [PageThemeCssVar._audioHapticTick]?: any;
+    public [PageThemeCssVar._audioHapticTickOff]?: any;
+    public [PageThemeCssVar._audioHapticOpenOverlay]?: any;
+    public [PageThemeCssVar._audioHapticError]?: any;
+    public [PageThemeCssVar.ffPrimary]?: string;
+    public [PageThemeCssVar.fwNormal]?: string;
+    public [PageThemeCssVar.fwMedium]?: string;
+    public [PageThemeCssVar.fwBold]?: string;
+    public [PageThemeCssVar._mixColorPos]?: any;
+    public [PageThemeCssVar._mixColorNeg]?: any;
+    public [PageThemeCssVar._siteHeaderType]?: any;
+    public [PageThemeCssVar._siteHeaderNavBarBackground]?: any;
+    public [PageThemeCssVar._siteHeaderDisableBusinessName]?: any;
+}
+
+export default public const brownTheme: [PageThemeStyles+, PageThemeStyles+] = [{
+    label: "brown",
+
+    colorScheme: "light",
+    "--primary": "#592d1d",
+    "--secondary": "#e45c46",
+    "--accent": "#ce8503",
+    "--text": Colors.grey,
+    "--outline": Colors.grey,
+    "--background": Colors.grey,
+    "--surface": Colors.grey,
+    "--on-primary": Colors.grey,
+    "--on-secondary": Colors.grey,
+    "--status-normal": Colors.grey,
+    "--status-all-good": Colors.grey,
+    "--status-warning": Colors.grey,
+    "--status-problem": Colors.grey,
+    "--status-inactive": Colors.grey,
+    "--highlight-glue": Colors.grey,
+    "--highlight-teal": Colors.grey,
+    "--highlight-yellow": Colors.grey,
+    "--highlight-golden": Colors.grey,
+    "--highlight-purple": Colors.grey,
+    "--nc-shadow": "255,255,255",
+    "--nc-on-shadow": "0,0,0",
+    "--nc-popup-dimming": "rgba(0,0,0,.3)",
+    "--nc-transparent": Colors.grey,
+    _creative: false,
+    _audioHaptics: false,
+    _audioHapticTick: "switch-on.mp3",
+    _audioHapticTickOff: "switch-off.mp3",
+    _audioHapticOpenOverlay: "pop.mp3",
+    _audioHapticError: "boop.mp3",
+    "--ff-primary": "Nunito",
+    "--fw-normal": "400",
+    "--fw-medium": "500",
+    "--fw-bold": "700",
+    _mixColorPos: [255,255,255,1],
+    _mixColorNeg: [0,0,0,1],
+    _siteHeaderType: "centeredLarge",
+    _siteHeaderNavBarBackground: "DEFAULT",
+    _siteHeaderDisableBusinessName: true,
+    "--text-2": "#393838",
+    "--text-4": "#2b2a2a",
+    "--text-5": "#242323",
+    "--text2": "#6c6b6b",
+    "--text3": "#7e7e7e",
+    "--text4": "#919090",
+    "--text5": "#a3a3a3",
+    "--text6": "#b5b5b5",
+    "--secondary-1": "#cd533f",
+    "--secondary-2": "#b64a38",
+    "--secondary-3": "#a04031",
+    "--secondary-4": "#89372a",
+    "--secondary1": "#e76c59",
+    "--secondary2": "#e97d6b",
+    "--secondary3": "#ec8d7e",
+    "--secondary4": "#ef9d90",
+    "--secondary6": "#f4beb5",
+    "--secondary8": "#fadeda",
+    "--secondary9": "#fcefed",
+    "--outline-1": "#cdcccc",
+    "--outline-2": "#b6b6b6",
+    "--outline-4": "#898888",
+    "--outline2": "#e9e9e9",
+    "--surface1": "#fefaf9",
+    "--surface2": "#fdf5f4",
+    "--surface3": "#fdf0ee",
+    "--surface4": "#fcebe9",
+    "--status-inactive-1": "#878584",
+    "--status-inactive-2": "#787676",
+    "--status-inactive-3": "#696867",
+    "--status-inactive5": "#cbcac9",
+    "--status-inactive8": "#eaeae9",
+    "--status-inactive9": "#f5f4f4",
+    "--status-normal-2": "#1152a7",
+    "--status-normal-3": "#0f4792",
+    "--status-normal5": "#8ab3e8",
+    "--status-normal8": "#d0e0f6",
+    "--status-normal9": "#e8f0fa",
+    "--status-all-good-2": "#3e8516",
+    "--status-all-good-3": "#377413",
+    "--status-all-good4": "#95ca76",
+    "--status-all-good5": "#a7d38d",
+    "--status-all-good8": "#dcedd1",
+    "--status-all-good9": "#edf6e8",
+    "--status-warning-2": "#c0571e",
+    "--status-warning-3": "#a84c1b",
+    "--status-warning5": "#f8b693",
+    "--status-warning8": "#fce2d4",
+    "--status-warning9": "#fef0e9",
+    "--status-problem-2": "#ab2222",
+    "--status-problem-3": "#961e1e",
+    "--status-problem-4": "#801a1a",
+    "--status-problem3": "#e26b6b",
+    "--status-problem4": "#e68080",
+    "--status-problem5": "#eb9595",
+    "--status-problem6": "#efaaaa",
+    "--status-problem8": "#f7d5d5",
+    "--status-problem9": "#fbeaea",
+    "--primary-2": "#472417",
+    "--primary-3": "#3e1f14",
+    "--primary-4": "#351b11",
+    "--primary-6": "#24120c",
+    "--primary1": "#6a4234",
+    "--primary3": "#8b6c61",
+    "--primary4": "#9b8177",
+    "--primary5": "#ac968e",
+    "--primary6": "#bdaba5",
+    "--primary8": "#ded5d2",
+    "--background1": "#faf9f8",
+    "--background2": "#f5f2f1",
+    "--background3": "#f0eceb",
+    "--background4": "#ebe6e4",
+    "--background5": "#e6e0dd",
+    "--accent2": "#d89d35",
+    "--accent7": "#f0dab3",
+    "--on-secondary6": "#ffffff",
+    "--on-primary-1": "#e6e6e6",
+    "--on-primary-3": "#b3b3b3",
+    "--highlight-glue-1": "#66899c",
+    "--highlight-glue-3": "#4f6a79",
+    "--highlight-glue8": "#e3eaef",
+    "--highlight-teal-1": "#2ca0b8",
+    "--highlight-teal-3": "#227d8f",
+    "--highlight-teal8": "#d6f0f5",
+    "--highlight-yellow-1": "#debf21",
+    "--highlight-yellow-3": "#ad941a",
+    "--highlight-yellow8": "#fdf6d3",
+    "--highlight-golden-1": "#9e996a",
+    "--highlight-golden-3": "#7b7753",
+    "--highlight-golden8": "#efeee4",
+    "--highlight-purple-1": "#a656b3",
+    "--highlight-purple-3": "#81438b",
+    "--highlight-purple8": "#f1dff4"
+}, {
+    label: "brown-dark",
+
+    colorScheme: "dark",
+    "--primary": "#bdaba5",
+    "--secondary": "#f2aea2",
+    "--accent": "#e6c281",
+    "--text": Colors.grey,
+    "--outline": "#363636",
+    "--background": "#1a1a1a",
+    "--surface": "#1a1a1a",
+    "--on-primary": Colors.grey,
+    "--on-secondary": Colors.grey,
+    "--status-normal": "#8ab3e8",
+    "--status-all-good": "#a6d28d",
+    "--status-warning": "#f8b693",
+    "--status-problem": "#ea9595",
+    "--status-inactive": "#cac9c9",
+    "--highlight-glue": "#b8ccd6",
+    "--highlight-teal": "#98d8e6",
+    "--highlight-yellow": "#fbe992",
+    "--highlight-golden": "#d7d5bb",
+    "--highlight-purple": "#dcafe3",
+    "--nc-shadow": "0,0,0",
+    "--nc-on-shadow": "0,0,0",
+    "--nc-popup-dimming": "rgba(0,0,0,.6)",
+    "--nc-transparent": Colors.grey,
+    _creative: false,
+    _audioHaptics: false,
+    _audioHapticTick: "switch-on.mp3",
+    _audioHapticTickOff: "switch-off.mp3",
+    _audioHapticOpenOverlay: "pop.mp3",
+    _audioHapticError: "boop.mp3",
+    "--ff-primary": "Nunito",
+    "--fw-normal": "400",
+    "--fw-medium": "500",
+    "--fw-bold": "700",
+    _mixColorPos: [0,0,0,1],
+    _mixColorNeg: [255,255,255,1],
+    _siteHeaderType: null,
+    _siteHeaderNavBarBackground: "DEFAULT",
+    _siteHeaderDisableBusinessName: false,
+    "--text-2": "#f6f6f5",
+    "--text-4": "#f8f8f8",
+    "--text-5": "#fafaf9",
+    "--text2": "#c3c3c2",
+    "--text3": "#ababaa",
+    "--text4": "#929292",
+    "--text5": "#7a7a7a",
+    "--text6": "#626261",
+    "--secondary-1": "#f3b6ab",
+    "--secondary-2": "#f5beb5",
+    "--secondary-3": "#f6c6be",
+    "--secondary-4": "#f7cec7",
+    "--secondary1": "#da9d92",
+    "--secondary2": "#c28b82",
+    "--secondary3": "#a97a71",
+    "--secondary4": "#916861",
+    "--secondary6": "#614641",
+    "--secondary8": "#302320",
+    "--secondary9": "#181110",
+    "--outline-1": "#4a4a4a",
+    "--outline-2": "#5e5e5e",
+    "--outline-4": "#868686",
+    "--outline2": "#2b2b2b",
+    "--surface1": "#201e1e",
+    "--surface2": "#272322",
+    "--surface3": "#2d2726",
+    "--surface4": "#342c2a",
+    "--status-inactive-1": "#cfcece",
+    "--status-inactive-2": "#d5d4d4",
+    "--status-inactive-3": "#dad9d9",
+    "--status-inactive5": "#656565",
+    "--status-inactive8": "#282828",
+    "--status-inactive9": "#141414",
+    "--status-normal-2": "#a1c2ed",
+    "--status-normal-3": "#adcaef",
+    "--status-normal5": "#455a74",
+    "--status-normal8": "#1c242e",
+    "--status-normal9": "#0e1217",
+    "--status-all-good-2": "#b8dba4",
+    "--status-all-good-3": "#c1e0af",
+    "--status-all-good4": "#647e55",
+    "--status-all-good5": "#536947",
+    "--status-all-good8": "#212a1c",
+    "--status-all-good9": "#11150e",
+    "--status-warning-2": "#f9c5a9",
+    "--status-warning-3": "#faccb3",
+    "--status-warning5": "#7c5b4a",
+    "--status-warning8": "#32241d",
+    "--status-warning9": "#19120f",
+    "--status-problem-2": "#eeaaaa",
+    "--status-problem-3": "#f0b5b5",
+    "--status-problem-4": "#f2bfbf",
+    "--status-problem3": "#a46868",
+    "--status-problem4": "#8c5959",
+    "--status-problem5": "#754b4b",
+    "--status-problem6": "#5e3c3c",
+    "--status-problem8": "#2f1e1e",
+    "--status-problem9": "#170f0f",
+    "--primary-2": "#cabcb7",
+    "--primary-3": "#d1c4c0",
+    "--primary-4": "#d7cdc9",
+    "--primary-6": "#e5dddb",
+    "--primary1": "#aa9a95",
+    "--primary3": "#847873",
+    "--primary4": "#716763",
+    "--primary5": "#5f5653",
+    "--primary6": "#4c4442",
+    "--primary8": "#262221",
+    "--background1": "#1f1e1e",
+    "--background2": "#242322",
+    "--background3": "#292727",
+    "--background4": "#2e2b2b",
+    "--background5": "#32302f",
+    "--accent2": "#b89b67",
+    "--accent7": "#453a27",
+    "--on-secondary6": "#0d0d0d",
+    "--on-primary-1": "#373736",
+    "--on-primary-3": "#646463",
+    "--highlight-glue-1": "#bfd1da",
+    "--highlight-glue-3": "#cddbe2",
+    "--highlight-glue8": "#25292b",
+    "--highlight-teal-1": "#a2dce9",
+    "--highlight-teal-3": "#b7e4ee",
+    "--highlight-teal8": "#1e2b2e",
+    "--highlight-yellow-1": "#fbeb9d",
+    "--highlight-yellow-3": "#fcf0b3",
+    "--highlight-yellow8": "#322f1d",
+    "--highlight-golden-1": "#dbd9c2",
+    "--highlight-golden-3": "#e3e2cf",
+    "--highlight-golden8": "#2b2b25",
+    "--highlight-purple-1": "#e0b7e6",
+    "--highlight-purple-3": "#e7c7eb",
+    "--highlight-purple8": "#2c232d"
+}];

@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
@@ -372,6 +374,12 @@ public final class InferenceContext {
 	 * {@link #isPromisingPartialSolution(InferenceVariable, TypeRef)} might be helpful in some cases.
 	 */
 	public Map<InferenceVariable, TypeRef> solve() {
+		try (Measurement m = N4JSDataCollectors.dcInferenceContextSolve.getMeasurement()) {
+			return doSolve();
+		}
+	}
+
+	private Map<InferenceVariable, TypeRef> doSolve() {
 		if (isSolved) {
 			return solution;
 		}
@@ -393,7 +401,9 @@ public final class InferenceContext {
 		if (DEBUG) {
 			log("****** Reduction");
 		}
-		reducer.reduce(constraints);
+		try (Measurement m = N4JSDataCollectors.dcInferenceContextReduce.getMeasurement()) {
+			reducer.reduce(constraints);
+		}
 		// clearing the list of constraints is ok given their information has been transferred to the bound set,
 		// to which bounds are added but never removed.
 		constraints.clear();
@@ -405,7 +415,9 @@ public final class InferenceContext {
 			log("****** Incorporation");
 		}
 		if (!isDoomed()) {
-			currentBounds.incorporate();
+			try (Measurement m = N4JSDataCollectors.dcInferenceContextIncorporate.getMeasurement()) {
+				currentBounds.incorporate();
+			}
 		}
 
 		// ---------------------------------------------------------------------------
@@ -414,13 +426,15 @@ public final class InferenceContext {
 		if (DEBUG) {
 			log("****** Resolution");
 		}
-		final boolean success = resolve();
-		if (DEBUG) {
-			if (!success) {
-				log("NO SOLUTION FOUND");
-			} else {
-				log("SOLUTION:");
-				currentBounds.dumpInstantiations();
+		try (Measurement m = N4JSDataCollectors.dcInferenceContextResolve.getMeasurement()) {
+			final boolean success = resolve();
+			if (DEBUG) {
+				if (!success) {
+					log("NO SOLUTION FOUND");
+				} else {
+					log("SOLUTION:");
+					currentBounds.dumpInstantiations();
+				}
 			}
 		}
 

@@ -27,7 +27,7 @@ import org.eclipse.n4js.types.utils.TypeUtils;
 	public final TypeRef right;
 	public final Variance variance;
 
-	private Integer hashCode = null;
+	private final int hashCode;
 
 	/**
 	 * Creates an instance.
@@ -36,14 +36,12 @@ import org.eclipse.n4js.types.utils.TypeUtils;
 		this.left = left;
 		this.right = right;
 		this.variance = variance;
+		this.hashCode = this.toString().hashCode(); // TODO find better way to compute hash code
 	}
 
 	@Override
 	public int hashCode() {
-		if (hashCode == null) {
-			hashCode = this.toString().hashCode(); // TODO find better way to compute hash code
-		}
-		return hashCode.intValue();
+		return hashCode;
 	}
 
 	@Override

@@ -12,7 +12,6 @@ package org.eclipse.n4js.postprocessing;
 
 import static org.eclipse.n4js.types.utils.TypeUtils.createWildcardExtends;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRef;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayNType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayNTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayTypeRef;
@@ -307,24 +306,33 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 					elemTypeRefs.size());
 
 			typeArgs.add(tsh.createUnionType(G, remaining));
+		} else {
+			while (typeArgs.size() > 1) {
+				int size = typeArgs.size();
+				TypeRef last = typeArgs.get(size - 1);
+				TypeRef beforeLast = typeArgs.get(size - 2);
+				if (ts.equaltypeFastSucceeded(beforeLast, last)) {
+					typeArgs.remove(size - 1);
+				} else {
+					break;
+				}
+			}
 		}
 
 		return createArrayType(G, typeArgs);
 	}
 
 	private TypeRef createArrayType(RuleEnvironment G, List<TypeRef> elemTypeRefs) {
-		while (elemTypeRefs.size() > 1) {
-			int size = elemTypeRefs.size();
-			TypeRef last = elemTypeRefs.get(size - 1);
-			TypeRef beforeLast = elemTypeRefs.get(size - 2);
-			if (ts.equaltypeSucceeded(G, beforeLast, last)) {
-				elemTypeRefs.remove(last);
+		if (elemTypeRefs.size() > 1) {
+			if (elemTypeRefs.size() <= BuiltInTypeScope.ITERABLE_N__MAX_LEN) {
+				return arrayNTypeRef(G, elemTypeRefs.size(), elemTypeRefs.toArray(new TypeRef[0]));
 			} else {
-				break;
+				List<TypeRef> arrayNTypes = new ArrayList<>(
+						elemTypeRefs.subList(0, BuiltInTypeScope.ITERABLE_N__MAX_LEN - 1));
+				List<TypeRef> tail = elemTypeRefs.subList(BuiltInTypeScope.ITERABLE_N__MAX_LEN, elemTypeRefs.size());
+				arrayNTypes.add(tsh.createUnionType(G, tail.toArray(new TypeRef[0])));
+				return arrayNTypeRef(G, BuiltInTypeScope.ITERABLE_N__MAX_LEN, arrayNTypes.toArray(new TypeRef[0]));
 			}
-		}
-		if (elemTypeRefs.size() > 1 && elemTypeRefs.size() < 10) {
-			return arrayNTypeRef(G, elemTypeRefs.size(), elemTypeRefs.toArray(new TypeRef[0]));
 		} else {
 			TypeRef unionOfElemTypes = anyTypeRef(G);
 			if (elemTypeRefs.size() == 1) {
@@ -344,17 +352,11 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 	 * </ul>
 	 */
 	private TypeRef getResultTypeRef(RuleEnvironment G, TypeVariable[] resultInfVars) {
-		if (resultInfVars.length > 1) {
-			TClass declaredType = arrayNType(G, resultInfVars.length);
-			ParameterizedTypeRef[] ptRefs = new ParameterizedTypeRef[resultInfVars.length];
-			for (int i = 0; i < resultInfVars.length; i++) {
-				ptRefs[i] = TypeUtils.createTypeRef(resultInfVars[i]);
-			}
-			return TypeUtils.createTypeRef(declaredType, ptRefs);
-		} else {
-			TClass declaredType = arrayType(G);
-			return TypeUtils.createTypeRef(declaredType, TypeUtils.createTypeRef(resultInfVars[0]));
+		List<TypeRef> ptRefs = new ArrayList<>();
+		for (int i = 0; i < resultInfVars.length; i++) {
+			ptRefs.add(TypeUtils.createTypeRef(resultInfVars[i]));
 		}
+		return createArrayType(G, ptRefs);
 	}
 
 	/**
