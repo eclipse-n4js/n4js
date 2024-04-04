@@ -88,7 +88,7 @@ public class N6_1_04_ArrayLiteralTypesystemTest extends AbstractTypesystemTest {
 		assertArrayLiteralType("Array<int>", "[1,2,3]");
 		assertArrayLiteralType("Array<number>", "[n1]");
 		assertArrayLiteralType("Array<number>", "[n1,n2]");
-		assertArrayLiteralType("Array<number>", "[n1,2,3]");
+		assertArrayLiteralType("Array2<number,int>", "[n1,2,3]");
 		assertArrayLiteralType("Array<string>", "[s1]");
 		assertArrayLiteralType("Array<string>", "[s1,s2]");
 		assertArrayLiteralType("Array<A>", "[a]");
