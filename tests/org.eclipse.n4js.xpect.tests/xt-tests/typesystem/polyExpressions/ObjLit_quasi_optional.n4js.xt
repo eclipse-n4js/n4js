@@ -15,9 +15,9 @@
 
 // XPECT noerrors -->
 class I {
-    public var0 = new List<int>();
-    public var1: LineItem
+    public var0 = new Object();
+    public var1: int
 }
 function <T extends I>f(a:~i~T=) :T {return null;}
-// XPECT type of '{var1: undefined}' --> I
+// XPECT type of '{var1: undefined}' --> ~Object with { var1: int }
 <I>f({var1: undefined})
