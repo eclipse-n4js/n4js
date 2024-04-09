@@ -13,8 +13,13 @@ package org.eclipse.n4js.ide.server;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.xtext.ide.server.ResourceTaskContext;
+import org.eclipse.n4js.xtext.ide.server.ResourceTaskManager;
+import org.eclipse.n4js.xtext.ide.server.util.XChunkedResourceDescriptions;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.resource.XtextResource;
 
 /**
@@ -29,4 +34,15 @@ public class N4JSResourceTaskContext extends ResourceTaskContext {
 		return options;
 	}
 
+	@Override
+	public synchronized void initialize(
+			ResourceTaskManager parent,
+			URI uri,
+			boolean isTemporary,
+			XChunkedResourceDescriptions index,
+			WorkspaceConfigSnapshot workspaceConfig) {
+
+		super.initialize(parent, uri, isTemporary, index, workspaceConfig);
+		BuiltInTypeScope.get(getResourceSet()); // force loading built-ins to avoid deadlock later
+	}
 }
