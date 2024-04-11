@@ -25,12 +25,12 @@ interface ~V<T> {
 const i1 : I = { valueI: { valueV: 2 } };
 i1;
 
-// XPECT noerrors -->
+// XPECT errors --> "~Object with { valueI: V<int> } is not a structural subtype of I: valueI failed: V<int> is not equal to union{int,string,V<int>}." at "{ V<int> valueI: { valueV: 2 } }"
 // XPECT type of '{ V<int> valueI: { valueV: 2 } }' --> ~Object with { valueI: V<int> }
 const i2 : I = { V<int> valueI: { valueV: 2 } };
 i2;
 
-// XPECT noerrors --> "" at "V<string>"
+// XPECT errors --> "~Object with { valueI: V<string> } is not a structural subtype of I: valueI failed: V<string> is not equal to union{int,string,V<int>}." at "{ V<string> valueI: { valueV: 2 } }"
 // XPECT type of '{ V<string> valueI: { valueV: 2 } }' --> ~Object with { valueI: V<string> }
 const i3 : I = { V<string> valueI: { valueV: 2 } };
 i3;

@@ -23,14 +23,15 @@ const aa : A[]  = [];
 
 
 
+
 // XPECT noerrors -->
 // XPECT type of 'oo1' --> Array<B>
-// XPECT type of '{i:a1.j}' --> ~Object with { i: I }
+// XPECT type of '{i:a1.j}' --> ~Object with { i: J }
 const oo1 = aa.map((a1) :B => ({i:a1.j} as B));
 
 // XPECT noerrors -->
-// XPECT type of 'oo2' --> Array<any>
-// XPECT type of '{i:a2.j}' --> ~Object with { i: I }
+// XPECT type of 'oo2' --> Array<B>
+// XPECT type of '{i:a2.j}' --> ~Object with { i: J }
 const oo2 = aa.map((a2) => ({i:a2.j} as B));
 
 // XPECT noerrors -->
@@ -40,7 +41,7 @@ const oo3 = aa.map((a3) :B => ({i:a3.j}));
 
 // XPECT noerrors -->
 // XPECT type of 'oo4' --> Array<B>
-// XPECT type of '{i:a4.j}' --> ~Object with { i: I }
+// XPECT type of '{i:a4.j}' --> ~Object with { i: J }
 const oo4 = aa.map((a4) => ({i:a4.j})) as B[];
 
 // XPECT noerrors -->

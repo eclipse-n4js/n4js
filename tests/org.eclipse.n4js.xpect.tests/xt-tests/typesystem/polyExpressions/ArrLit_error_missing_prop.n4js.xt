@@ -21,7 +21,7 @@ function <T> fn(iter: Iterable<T>): T? {
 }
 interface ~I { public cx1: int; public cx2: int }
 
-// XPECT errors -->
-// XPECT type of '{ cx1 : fn([1]) }' --> Array<any>
+// XPECT noerrors -->
+// XPECT type of '{ cx1 : fn([1]) }' --> ~Object with { cx1: int }
 const cy = { cx1 : fn([1]) } as I
 cy;

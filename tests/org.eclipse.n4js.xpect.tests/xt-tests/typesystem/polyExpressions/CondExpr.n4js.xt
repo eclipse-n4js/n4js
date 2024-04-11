@@ -26,15 +26,16 @@ class K implements I {
 let b : boolean = true;
 
 
-// X PECT type of '{i : new J()}' --> ~Object with { i: ~I }
-//const k1 : ~Object with {i: ~I} = {i : new J()};
+// XPECT type of '{i : new J()}' --> ~Object with { i: ~I }
+const k1 : ~Object with {i: ~I} = {i : new J()};
 
-// X PECT type of 'b ? {i : new J()} : undefined' --> ~Object with { i: ~I }
-//const k2 : ~Object with {i: ~I} = b ? {i : new J()} : undefined;
+// XPECT type of 'b ? {i : new J()} : undefined' --> ~Object with { i: ~I }
+const k2 : ~Object with {i: ~I} = b ? {i : new J()} : undefined;
 
-// X PECT type of 'b ? {i : new J()} : null' --> ~Object with { i: ~I }
-//const k3 : ~Object with {i: ~I} = b ? {i : new J()} : null;
+// XPECT type of 'b ? {i : new J()} : null' --> ~Object with { i: ~I }
+const k3 : ~Object with {i: ~I} = b ? {i : new J()} : null;
 
+// XPECT noerrors --> 
 // XPECT type of 'b ? {i : new J()} : {i : new K()}' --> ~Object with { i: ~I }
 const k4  : ~Object with {i: ~I} = b ? {i : new J()} : {i : new K()};
 

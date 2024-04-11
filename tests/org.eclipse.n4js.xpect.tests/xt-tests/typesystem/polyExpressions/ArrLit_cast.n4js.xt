@@ -13,9 +13,20 @@
 
 
 
+let a1 : Array<out N4NamedElement> = [];
+let a2 : Array<out N4DataField> = [];
+// XPECT noerrors -->
+a1 = a2;
+// XPECT noerrors -->
+a2 = a1 as Array<out N4DataField>;
+
+// XPECT noerrors -->
+// XPECT type of 'a1.filter((m) => m instanceof N4DataField)' --> Array<? extends N4NamedElement>
+let r = a1.filter((m) => m instanceof N4DataField) as Array<out N4DataField>;
+
 
 
 // XPECT noerrors -->
-// XPECT type of '[1, ""]' --> Array<any>
+// XPECT type of '[1, ""]' --> Array2<int,string>
 let x = [1, ""] as any[];
 x;
