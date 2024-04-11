@@ -12,6 +12,7 @@ package org.eclipse.n4js.postprocessing;
 
 import static org.eclipse.n4js.types.utils.TypeUtils.createWildcardExtends;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRef;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRefDynamic;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayNTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayTypeRef;
@@ -35,6 +36,8 @@ import org.eclipse.n4js.n4JS.ArrayLiteral;
 import org.eclipse.n4js.n4JS.ArrayPadding;
 import org.eclipse.n4js.n4JS.DestructureUtils;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -175,11 +178,38 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 	private void handleOnSolvedPerformanceTweak(RuleEnvironment G, ASTMetaInfoCache cache, ArrayLiteral arrLit,
 			List<TypeRef> expectedElemTypeRefs) {
 
-		List<TypeRef> betterElemTypeRefs = storeTypesOfArrayElements(G, cache, arrLit);
-		int resultLen = getResultLength(arrLit, betterElemTypeRefs);
-		TypeRef fallbackTypeRef = buildFallbackTypeForArrayLiteral(resultLen, betterElemTypeRefs,
-				expectedElemTypeRefs, G);
+		TypeRef fallbackTypeRef;
+		if (isEmptyArrayLiteralAndCallReceiver(arrLit)) {
+			fallbackTypeRef = arrayTypeRef(G, anyTypeRefDynamic(G));
+		} else {
+			List<TypeRef> betterElemTypeRefs = storeTypesOfArrayElements(G, cache, arrLit);
+			int resultLen = getResultLength(arrLit, betterElemTypeRefs);
+			fallbackTypeRef = buildFallbackTypeForArrayLiteral(resultLen, betterElemTypeRefs,
+					expectedElemTypeRefs, G);
+		}
+
 		cache.storeType(arrLit, fallbackTypeRef);
+	}
+
+	/**
+	 * Support for a special case:
+	 *
+	 * <pre>
+	 * // XPECT type of 'c' --> Array<int|any+>
+	 * const c = [].concat([1]);
+	 * </pre>
+	 */
+	private boolean isEmptyArrayLiteralAndCallReceiver(ArrayLiteral arrLit) {
+		if (arrLit.getElements().isEmpty() && arrLit.eContainer() instanceof ParameterizedPropertyAccessExpression) {
+			ParameterizedPropertyAccessExpression ppae = (ParameterizedPropertyAccessExpression) arrLit.eContainer();
+			if (ppae.getTarget() == arrLit && ppae.eContainer() instanceof ParameterizedCallExpression) {
+				ParameterizedCallExpression pce = (ParameterizedCallExpression) ppae.eContainer();
+				if (pce.getTarget() == ppae) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -323,7 +353,11 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 	}
 
 	private TypeRef createArrayType(RuleEnvironment G, List<TypeRef> elemTypeRefs) {
-		if (elemTypeRefs.size() > 1) {
+		if (elemTypeRefs.size() == 0) {
+			return arrayTypeRef(G, anyTypeRef(G));
+		} else if (elemTypeRefs.size() == 1) {
+			return arrayTypeRef(G, elemTypeRefs.get(0));
+		} else if (elemTypeRefs.size() > 1) {
 			if (elemTypeRefs.size() <= BuiltInTypeScope.ITERABLE_N__MAX_LEN) {
 				return arrayNTypeRef(G, elemTypeRefs.size(), elemTypeRefs.toArray(new TypeRef[0]));
 			} else {
@@ -333,15 +367,8 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 				arrayNTypes.add(tsh.createUnionType(G, tail.toArray(new TypeRef[0])));
 				return arrayNTypeRef(G, BuiltInTypeScope.ITERABLE_N__MAX_LEN, arrayNTypes.toArray(new TypeRef[0]));
 			}
-		} else {
-			TypeRef unionOfElemTypes = anyTypeRef(G);
-			if (elemTypeRefs.size() == 1) {
-				unionOfElemTypes = elemTypeRefs.get(0);
-			} else if (elemTypeRefs.size() > 1) {
-				unionOfElemTypes = tsh.createUnionType(G, elemTypeRefs.toArray(new TypeRef[0]));
-			}
-			return arrayTypeRef(G, unionOfElemTypes);
 		}
+		return arrayTypeRef(G, anyTypeRef(G)); // unreachable
 	}
 
 	/**

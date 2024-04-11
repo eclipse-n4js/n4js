@@ -61,6 +61,7 @@ import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.NewExpression;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
+import org.eclipse.n4js.n4JS.ParenExpression;
 import org.eclipse.n4js.n4JS.PostfixExpression;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
 import org.eclipse.n4js.n4JS.PropertySpread;
@@ -486,6 +487,11 @@ import com.google.inject.Inject;
 					return anyTypeRef(G);
 				}
 			}// end switch
+		}
+
+		@Override
+		public TypeRef caseParenExpression(ParenExpression e) {
+			return doSwitch(e.eContainer());
 		}
 
 		/**

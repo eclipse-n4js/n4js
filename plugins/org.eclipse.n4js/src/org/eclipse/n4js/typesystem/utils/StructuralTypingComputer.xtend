@@ -16,7 +16,6 @@ import com.google.inject.Singleton
 import java.util.Collections
 import java.util.List
 import org.eclipse.emf.ecore.util.EcoreUtil.EqualityHelper
-import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
@@ -44,14 +43,13 @@ import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.xtend.lib.annotations.Data
 
-import static org.eclipse.n4js.AnnotationDefinition.*
 import static org.eclipse.n4js.ts.types.TypingStrategy.*
 import static org.eclipse.n4js.typesystem.utils.StructuralTypingResult.*
 import static org.eclipse.n4js.utils.StructuralMembersPredicates.*
+import static org.eclipse.n4js.validation.IssueCodes.TYS_NO_SUBTYPE
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import static org.eclipse.n4js.validation.IssueCodes.TYS_NO_SUBTYPE
 
 /**
  */
@@ -247,7 +245,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 
 				// For any non-optional and writable right members.
 				// Important: unlike in case of ~r~, here we treat initialized fields, such as @Final ones as optional fields.
-				if (WRITABLE_FIELDS_PREDICATE.apply(rightMember) && rightMember.mandatoryField) {
+				if (WRITABLE_FIELDS_PREDICATE.apply(rightMember) && TypeUtils.isMandatoryField(rightMember)) {
 
 					// If left is ~w~, then getters are required.
 					if (STRUCTURAL_WRITE_ONLY_FIELDS === leftStrategy
@@ -352,8 +350,8 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 							return;
 						}
 					}
-				}
-				if (right instanceof TField) {
+
+				} else if (right instanceof TField) {
 					val leftOptionalStrategy = leftTypeRef.ASTNodeOptionalFieldStrategy;
 					if (leftOptionalStrategy === OptionalFieldStrategy.GETTERS_OPTIONAL) {
 						info.missingMembers.add("setter or field " + right.name);
@@ -368,7 +366,6 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 			// found a corresponding member
 			// -> make sure types are compatible
 
-			val mtypes = getMemberTypes(left, right, info);
 
 			var Variance variance;
 			if (left.optional && !right.optional) {
@@ -395,6 +392,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 				variance = Variance.CO;
 			}
 
+			val mtypes = getMemberTypes(left, right, info);
 			val result = tsh.checkTypeArgumentCompatibility(G, mtypes.key, mtypes.value, Optional.of(variance), true);
 			if (result.failure) {
 				info.wrongMembers.add(getMemberName(right) + " failed: " + result.failureMessage);
@@ -430,7 +428,6 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 			}
 
 		} else {
-			val mtypes = getMemberTypes(left, right, info);
 
 			var Variance variance;
 			if (left.optional && !right.optional) {
@@ -448,6 +445,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 			} else {
 				variance = Variance.CO;
 			}
+			val mtypes = getMemberTypes(left, right, info);
 			return tsh.reduceTypeArgumentCompatibilityCheck(G, mtypes.key, mtypes.value, Optional.of(variance), false);
 		}
 	}
@@ -498,7 +496,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 			case STRUCTURAL_FIELD_INITIALIZER: {
 				// L <: ~i~N
 				(right.optional && leftOptionalStrategy.isOptionalityLessRestrictedOrEqual(OptionalFieldStrategy.GETTERS_OPTIONAL)) ||
-				right.initializedField || right.optionalSetter
+				TypeUtils.isInitializedField(right) || TypeUtils.isOptionalSetter(right)
 			}
 
 			default: {
@@ -575,34 +573,6 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		return typeLeft -> typeRight;
 	}
 
-	/**
-	 * Returns with {@code true} if the member argument is
-	 * <ul>
-	 * <li>*NOT* {@link TMember#isOptional() optional} member,</li>
-	 * <li>*NOT* {@link #isInitializedField(TMember) initialized field} and</li>
-	 * <li>*NOT* {@link #isOptionalSetter(TMember) optional setter}.</li>
-	 * </ul>
-	 * Otherwise returns with {@code false}.
-	 */
-	def private isMandatoryField(TMember it) {
-		null !== it && !optional && !initializedField && !optionalSetter;
-	}
-
-	/**
-	 * Argument is an instance of a {@link TField field} and {@link TField#isHasExpression() has initializer expression}.
-	 * This method is {@code null} safe.
-	 */
-	def private isInitializedField(TMember it) {
-		if (it instanceof TField) { hasExpression } else false;
-	}
-
-	/**
-	 * Returns {@code true} if the member argument is an instance of a {@link TSetter setter} and has
-	 * {@link AnnotationDefinition#IDE_1996 IDE_1996} annotation. Otherwise returns with {@code false}.
-	 */
-	def private isOptionalSetter(TMember it) {
-		it instanceof TSetter && PROVIDES_INITIALZER.hasAnnotation(it);
-	}
 
 	def private String getMemberName(TMember member) {
 		if (member instanceof TMethod) {

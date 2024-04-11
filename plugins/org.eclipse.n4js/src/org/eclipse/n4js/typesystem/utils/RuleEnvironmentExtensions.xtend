@@ -749,6 +749,23 @@ class RuleEnvironmentExtensions {
 
 	/**
 	 * Returns true iff <code>obj</code> is a {@link Type} or {@link TypeRef} and is or points to
+	 * one of the <code>Array&lt;T></code> built-in type. Does <b>not</b> check for the
+	 * built-in types <code>ArrayN&lt;...></code>.
+	 */
+	public def static boolean isArray(RuleEnvironment G, EObject obj) {
+		val type = switch(obj) {
+			Type: obj
+			TypeRef: obj.declaredType
+		};
+		return isArray(G, type);
+	}
+
+	public def static boolean isArray(RuleEnvironment G, Type type) {
+		return type !== null && G.arrayType == type;
+	}
+
+	/**
+	 * Returns true iff <code>obj</code> is a {@link Type} or {@link TypeRef} and is or points to
 	 * one of the <code>ArrayN&lt;...></code> built-in types. Does <b>not</b> check for the
 	 * built-in type <code>Array&lt;T></code>.
 	 */

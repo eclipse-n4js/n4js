@@ -141,6 +141,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.n4JS.N4JSASTUtils
 
 /**
  */
@@ -447,11 +448,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (!N4JSLanguageUtils.isAsync(fteor, G)) {
 			return
 		}
-		var container = callExpression.eContainer
-		while (container instanceof ParenExpression) {
-			// related: ExpressionExtensions.isPotentialEvalResult()
-			container = container.eContainer
-		}
+		// related: ExpressionExtensions.isPotentialEvalResult()
+		var container = N4JSASTUtils.skipParenExpressionUpward(callExpression.eContainer);
 		val isAwaitedFor = (container instanceof AwaitExpression);
 		val isTopLevel = (container instanceof ExpressionStatement && container.eContainer instanceof Script);
 		if (isAwaitedFor || isTopLevel) {
@@ -794,10 +792,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		} else if (expression instanceof ParameterizedPropertyAccessExpression) {
 			// guard against broken models:
 			if (expression.property !== null && !expression.property.eIsProxy) {
-				var target = expression.target;
-				while (target instanceof ParenExpression) {
-					target = target.expression;
-				}
+				var target = N4JSASTUtils.skipParenExpressionDownward(expression.target);
 				if (target instanceof IdentifierRef) {
 					val id = target.id;
 					// handle namespace imports:
@@ -1356,6 +1351,12 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		} else if ((T.declaredType instanceof TEnum && isLiteralOfNumberStringBasedEnum(S, T.declaredType as TEnum))
 			|| (S.declaredType instanceof TEnum && isLiteralOfNumberStringBasedEnum(T, S.declaredType as TEnum))) {
 			// allow casting numbers/strings to @NumberBased/@StringBased enums
+			return true; // cast is ok
+		} else if (castExpression.expression instanceof ArrayLiteral && RuleEnvironmentExtensions.isArrayN(G, S)) {
+			// FIXME: do some type checking of TypeArgs
+			if (RuleEnvironmentExtensions.isArray(G, T)) {
+				return true;
+			}
 			return true; // cast is ok
 		} else if (canCheck(G, S, T, actualSourceTypeIsCPOE)) { // Constraint 81.3 (Cast Validation At Compile-Time):
 			var castOK = ts.subtypeSucceeded(G, T, S);
