@@ -19,6 +19,7 @@ import java.util.function.Predicate;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
@@ -44,6 +45,7 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.InferenceVariable;
 import org.eclipse.n4js.ts.types.MemberType;
+import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TSetter;
@@ -55,10 +57,20 @@ import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.utils.RecursionGuard;
 
+import com.google.common.base.Stopwatch;
+
 /**
  * Static utility methods for type and type ref handling, for non-static utility methods see {@link TypeHelper}.
  */
 public class TypeUtils {
+	// FIXME: evaluate, remove
+	public static Stopwatch sw0 = Stopwatch.createUnstarted();
+	public static Stopwatch sw1 = Stopwatch.createUnstarted();
+	public static Stopwatch sw2 = Stopwatch.createUnstarted();
+	public static Stopwatch sw3 = Stopwatch.createUnstarted();
+	public static Stopwatch sw4 = Stopwatch.createUnstarted();
+	public static Stopwatch sw5 = Stopwatch.createUnstarted();
+	public static Stopwatch sw6 = Stopwatch.createUnstarted();
 
 	/** @see org.eclipse.n4js.ts.types.util.TypeUtils#createTSetter(String, String, TypeRef) */
 	public static TSetter createTSetter(String name, String fparName, TypeRef fparTypeRef) {
@@ -321,33 +333,63 @@ public class TypeUtils {
 
 	/** @see org.eclipse.n4js.ts.types.util.TypeUtils#isOrContainsType(TypeRef, Type) */
 	public static boolean isOrContainsType(TypeRef typeRef, Type declaredType) {
-		return org.eclipse.n4js.ts.types.util.TypeUtils.isOrContainsType(typeRef, declaredType);
+		try {
+			// sw0.start();
+			return org.eclipse.n4js.ts.types.util.TypeUtils.isOrContainsType(typeRef, declaredType);
+		} finally {
+			// sw0.stop();
+		}
 
 	}
 
 	/** @see org.eclipse.n4js.ts.types.util.TypeUtils#isOrContainsTypeRefOfType(TypeRef, Class) */
 	public static boolean isOrContainsTypeRefOfType(TypeRef typeRef, final Class<? extends TypeRef> typeOfTypeRef) {
-		return org.eclipse.n4js.ts.types.util.TypeUtils.isOrContainsTypeRefOfType(typeRef, typeOfTypeRef);
+		try {
+			// sw1.start();
+			return org.eclipse.n4js.ts.types.util.TypeUtils.isOrContainsTypeRefOfType(typeRef, typeOfTypeRef);
+		} finally {
+			// sw1.stop();
+		}
 	}
 
 	/** @see org.eclipse.n4js.ts.types.util.TypeUtils#isOrContainsRefToTypeVar(EObject, TypeVariable...) */
 	public static boolean isOrContainsRefToTypeVar(EObject obj, TypeVariable... typeVars) {
-		return org.eclipse.n4js.ts.types.util.TypeUtils.isOrContainsRefToTypeVar(obj, typeVars);
+		try {
+			// sw2.start();
+			return org.eclipse.n4js.ts.types.util.TypeUtils.isOrContainsRefToTypeVar(obj, typeVars);
+		} finally {
+			// sw2.stop();
+		}
 	}
 
 	/** @see org.eclipse.n4js.ts.types.util.TypeUtils#isOrContainsRefToInfVar(EObject, InferenceVariable...) */
 	public static boolean isOrContainsRefToInfVar(EObject obj, InferenceVariable... infVars) {
-		return org.eclipse.n4js.ts.types.util.TypeUtils.isOrContainsRefToInfVar(obj, infVars);
+		try {
+			// sw3.start();
+			return org.eclipse.n4js.ts.types.util.TypeUtils.isOrContainsRefToInfVar(obj, infVars);
+		} finally {
+			// sw3.stop();
+		}
 	}
 
 	/** @see org.eclipse.n4js.ts.types.util.TypeUtils#getReferencedTypeVars(EObject) */
 	public static Set<TypeVariable> getReferencedTypeVars(EObject obj) {
-		return org.eclipse.n4js.ts.types.util.TypeUtils.getReferencedTypeVars(obj);
+		try {
+			// sw4.start();
+			return org.eclipse.n4js.ts.types.util.TypeUtils.getReferencedTypeVars(obj);
+		} finally {
+			// sw4.stop();
+		}
 	}
 
 	/** @see org.eclipse.n4js.ts.types.util.TypeUtils#getReferencedDeclaredTypes(EObject) */
 	public static Set<Type> getReferencedDeclaredTypes(EObject obj) {
-		return org.eclipse.n4js.ts.types.util.TypeUtils.getReferencedDeclaredTypes(obj);
+		try {
+			// sw5.start();
+			return org.eclipse.n4js.ts.types.util.TypeUtils.getReferencedDeclaredTypes(obj);
+		} finally {
+			// sw5.stop();
+		}
 	}
 
 	/**
@@ -359,8 +401,13 @@ public class TypeUtils {
 			Predicate<EObject> ignore, Predicate<T> operation,
 			RecursionGuard<IdentifiableElement> guard) {
 
-		return org.eclipse.n4js.ts.types.util.TypeUtils.forAllTypeRefs(obj, typeRefKind, includeChildren,
-				followFunctionTypeRefs, ignore, operation, guard);
+		try {
+			// sw6.start();
+			return org.eclipse.n4js.ts.types.util.TypeUtils.forAllTypeRefs(obj, typeRefKind, includeChildren,
+					followFunctionTypeRefs, ignore, operation, guard);
+		} finally {
+			// sw6.stop();
+		}
 	}
 
 	/** @see org.eclipse.n4js.ts.types.util.TypeUtils#isAccessorPair(TMember, TMember) */
@@ -683,5 +730,34 @@ public class TypeUtils {
 			return createTypeRef(scope.getArrayType(), typeRef);
 		}
 		return typeRef;
+	}
+
+	/**
+	 * Returns with {@code true} if the member argument is
+	 * <ul>
+	 * <li>*NOT* {@link TMember#isOptional() optional} member,</li>
+	 * <li>*NOT* {@link #isInitializedField(TMember) initialized field} and</li>
+	 * <li>*NOT* {@link #isOptionalSetter(TMember) optional setter}.</li>
+	 * </ul>
+	 * Otherwise returns with {@code false}.
+	 */
+	public static boolean isMandatoryField(TMember it) {
+		return null != it && !it.isOptional() && !isInitializedField(it) && !isOptionalSetter(it);
+	}
+
+	/**
+	 * Argument is an instance of a {@link TField field} and {@link TField#isHasExpression() has initializer
+	 * expression}. This method is {@code null} safe.
+	 */
+	public static boolean isInitializedField(TMember it) {
+		return (it instanceof TField) ? ((TField) it).isHasExpression() : false;
+	}
+
+	/**
+	 * Returns {@code true} if the member argument is an instance of a {@link TSetter setter} and has
+	 * {@link AnnotationDefinition#PROVIDES_INITIALZER} annotation. Otherwise returns with {@code false}.
+	 */
+	public static boolean isOptionalSetter(TMember it) {
+		return it instanceof TSetter && AnnotationDefinition.PROVIDES_INITIALZER.hasAnnotation(it);
 	}
 }

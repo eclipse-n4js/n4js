@@ -13,8 +13,10 @@ package org.eclipse.n4js.typesystem.constraints;
 import static org.eclipse.n4js.ts.types.util.Variance.CO;
 import static org.eclipse.n4js.ts.types.util.Variance.CONTRA;
 import static org.eclipse.n4js.ts.types.util.Variance.INV;
+import static org.eclipse.n4js.types.utils.TypeUtils.isInferenceVariable;
 import static org.eclipse.n4js.typesystem.constraints.Reducer.BooleanOp.CONJUNCTION;
 import static org.eclipse.n4js.typesystem.constraints.Reducer.BooleanOp.DISJUNCTION;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isAnyDynamic;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isObjectStructural;
 
 import java.util.ArrayList;
@@ -85,6 +87,12 @@ import com.google.common.collect.Sets;
 	private final TypeSystemHelper tsh;
 	private final DeclMergingHelper declMergingHelper;
 
+	/**
+	 * Rational: During first reduction, constraints are allowed to fail. In a second try new bounds or instantiations
+	 * might help to reduce the before failed constraint.
+	 */
+	private boolean firstReduction;
+
 	enum BooleanOp {
 		CONJUNCTION, DISJUNCTION
 	}
@@ -139,9 +147,23 @@ import com.google.common.collect.Sets;
 	 * @return true iff new bounds were added
 	 */
 	public boolean reduce(Iterable<? extends TypeConstraint> constraints) {
+		firstReduction = true;
 		boolean wasAdded = false;
+		List<TypeConstraint> tryAgain = new ArrayList<>();
 		for (TypeConstraint constraint : constraints) {
-			wasAdded |= reduce(constraint);
+			boolean cWasAdded = reduce(constraint);
+			wasAdded |= cWasAdded;
+			if (ic.isDoomed()) {
+				break;
+			}
+			if (!cWasAdded) {
+				tryAgain.add(constraint);
+			}
+		}
+		firstReduction = false;
+		for (TypeConstraint constraint : tryAgain) {
+			boolean cWasAdded = reduce(constraint);
+			wasAdded |= cWasAdded;
 			if (ic.isDoomed()) {
 				break;
 			}
@@ -247,6 +269,9 @@ import com.google.common.collect.Sets;
 			} else if (rightsSize == 1) {
 				return reduce(left, rights.get(0), variance);
 			} else {
+				if (firstReduction) {
+					return false;
+				}
 				// preparation:
 				// if the left side is a ComposedTypeRef that would lead to a conjunction, we have to tear it apart
 				// first to avoid incorrect results (for example, A|B <: [A,B,C] with operator DISJUNCTION must be
@@ -263,81 +288,103 @@ import com.google.common.collect.Sets;
 				// choose the "most promising" of the disjoint constraints and continue with that (and simply ignore the
 				// other possible paths)
 				int idx = -1;
-				if (idx == -1 && left instanceof FunctionTypeExprOrRef) {
-					// choose first function type (except those for which it is obvious they cannot match)
+				boolean isFunTypeExprOrRef = left instanceof FunctionTypeExprOrRef;
+				boolean isParaTypeRef = left instanceof ParameterizedTypeRef && !isInferenceVariable(left);
+				if (isFunTypeExprOrRef || isParaTypeRef) {
+					List<Integer> potIdx = new ArrayList<>();
 					for (int i = 0; i < rightsSize; i++) {
-						final TypeRef currElem = rights.get(i);
-						if (currElem instanceof FunctionTypeExprOrRef) {
-							final FunctionTypeExprOrRef leftCasted = (FunctionTypeExprOrRef) left;
-							final FunctionTypeExprOrRef currElemCasted = (FunctionTypeExprOrRef) currElem;
-							final boolean mightMatch = (variance == CO && mightBeSubtypeOf(leftCasted, currElemCasted))
-									|| (variance == CONTRA && mightBeSubtypeOf(currElemCasted, leftCasted))
-									|| (variance == INV && mightBeSubtypeOf(leftCasted, currElemCasted)
-											&& mightBeSubtypeOf(currElemCasted, leftCasted));
-							if (mightMatch) {
+						final TypeRef currRight = rights.get(i);
+						TypeRef subType = variance == CONTRA ? currRight : left;
+						TypeRef superType = variance == CONTRA ? left : currRight;
+						if (mightBeSubtypeOf(subType, superType)) {
+							potIdx.add(i);
+						}
+					}
+					if (potIdx.size() == 1) {
+						idx = potIdx.get(0);
+					} else if (potIdx.size() > 1) {
+						int bestMatchIdx = 0;
+						int bestMatchCnt = 0;
+						for (int i : potIdx) {
+							int currMatchCnt = computeMatchCount(left, rights.get(i), variance);
+							if (currMatchCnt > bestMatchCnt) {
+								bestMatchIdx = i;
+								bestMatchCnt = currMatchCnt;
+							}
+						}
+						idx = bestMatchIdx;
+					}
+
+					// FIXME: check if obsolete
+					if (idx == -1 && isFunTypeExprOrRef) {
+						// choose first function type (except those for which it is obvious they cannot match)
+						for (Integer i : potIdx) {
+							final TypeRef currRight = rights.get(i);
+							if (currRight instanceof FunctionTypeExprOrRef) {
 								idx = i;
 								break;
 							}
 						}
 					}
-				}
-				boolean checkedForPoormansSybtype = false;
-				if (idx == -1 && left instanceof ParameterizedTypeRef && !TypeUtils.isInferenceVariable(left)) {
-					final Type leftDecl = left.getDeclaredType();
-					if (idx == -1 && leftDecl != null) {
-						// choose first matching declared type
-						for (int i = 0; i < rightsSize; i++) {
-							final TypeRef currElem = rights.get(i);
-							if (leftDecl == currElem.getDeclaredType()) {
-								if (isObjectStructural(G, left) && isObjectStructural(G, currElem)) {
-									ParameterizedTypeRefStructural ptrsLeft = (ParameterizedTypeRefStructural) left;
-									ParameterizedTypeRefStructural ptrsCurrElem = (ParameterizedTypeRefStructural) currElem;
-									// poor-man's-subtype check to avoid backtracking
-									boolean isPoormansSybtype = isPoorMansSubtype(ptrsLeft, ptrsCurrElem);
-									checkedForPoormansSybtype = true;
-									if (isPoormansSybtype) {
+					if (idx == -1 && isParaTypeRef) {
+						boolean checkedForPoormansSybtype = false;
+						final Type leftDecl = left.getDeclaredType();
+						if (idx == -1 && leftDecl != null) {
+							// choose first matching declared type
+							for (int i = 0; i < rightsSize; i++) {
+								final TypeRef currElem = rights.get(i);
+								if (leftDecl == currElem.getDeclaredType()) {
+									if (isObjectStructural(G, left) && isObjectStructural(G, currElem)) {
+										ParameterizedTypeRefStructural ptrsLeft = (ParameterizedTypeRefStructural) left;
+										ParameterizedTypeRefStructural ptrsCurrElem = (ParameterizedTypeRefStructural) currElem;
+										// poor-man's-subtype check to avoid backtracking
+										boolean isPoormansSybtype = isPoorMansSubtype(ptrsLeft, ptrsCurrElem);
+										checkedForPoormansSybtype = true;
+										if (isPoormansSybtype) {
+											idx = i;
+											break;
+										}
+									} else {
 										idx = i;
 										break;
 									}
-								} else {
+								}
+							}
+						}
+						if (idx == -1 && leftDecl instanceof PrimitiveType) {
+							// choose first naked inference variable (if any)
+							// (note: same as below, but has higher priority for primitive types than next heuristic)
+							idx = chooseFirstInferenceVariable(rights);
+						}
+						if (idx == -1 && variance == CO && !checkedForPoormansSybtype
+								&& leftDecl instanceof ContainerType<?>) {
+							// choose first supertype of left
+							final List<TClassifier> superTypesOfLeft = AllSuperTypesCollector
+									.collect((ContainerType<?>) leftDecl, declMergingHelper);
+							for (int i = 0; i < rightsSize; i++) {
+								final TypeRef currElem = rights.get(i);
+								final Type currElemDecl = currElem.getDeclaredType();
+								if (currElemDecl != null && superTypesOfLeft.contains(currElemDecl)) {
 									idx = i;
 									break;
 								}
 							}
 						}
-					}
-					if (idx == -1 && leftDecl instanceof PrimitiveType) {
-						// choose first naked inference variable (if any)
-						// (note: same as below, but has higher priority for primitive types than next heuristic)
-						idx = chooseFirstInferenceVariable(rights);
-					}
-					if (idx == -1 && variance == CO && !checkedForPoormansSybtype
-							&& leftDecl instanceof ContainerType<?>) {
-						// choose first supertype of left
-						final List<TClassifier> superTypesOfLeft = AllSuperTypesCollector
-								.collect((ContainerType<?>) leftDecl, declMergingHelper);
-						for (int i = 0; i < rightsSize; i++) {
-							final TypeRef currElem = rights.get(i);
-							final Type currElemDecl = currElem.getDeclaredType();
-							if (currElemDecl != null && superTypesOfLeft.contains(currElemDecl)) {
-								idx = i;
-								break;
-							}
-						}
-					}
-					if (idx == -1 && variance == CONTRA && leftDecl != null) {
-						// choose first subtype of left
-						for (int i = 0; i < rightsSize; i++) {
-							final TypeRef currElem = rights.get(i);
-							final Type currElemDecl = currElem.getDeclaredType();
-							if (currElemDecl instanceof ContainerType<?>) {
-								// TODO improve performance by using a super class iterator or super interfaces iterator
-								// depending on type of leftDecl
-								final List<TClassifier> superTypesOfCurrElem = AllSuperTypesCollector
-										.collect((ContainerType<?>) currElemDecl, declMergingHelper);
-								if (superTypesOfCurrElem.contains(leftDecl)) {
-									idx = i;
-									break;
+						if (idx == -1 && variance == CONTRA && leftDecl != null) {
+							// choose first subtype of left
+							for (int i = 0; i < rightsSize; i++) {
+								final TypeRef currElem = rights.get(i);
+								final Type currElemDecl = currElem.getDeclaredType();
+								if (currElemDecl instanceof ContainerType<?>) {
+									// TODO improve performance by using a super class iterator or super interfaces
+									// iterator
+									// depending on type of leftDecl
+									final List<TClassifier> superTypesOfCurrElem = AllSuperTypesCollector
+											.collect((ContainerType<?>) currElemDecl, declMergingHelper);
+									if (superTypesOfCurrElem.contains(leftDecl)) {
+										idx = i;
+										break;
+									}
 								}
 							}
 						}
@@ -372,11 +419,107 @@ import com.google.common.collect.Sets;
 		}
 	}
 
+	private int computeMatchCount(TypeRef left, TypeRef right, Variance variance) {
+		int matchCount = 1000;
+		Type leftDT = left.getDeclaredType();
+		Type rightDT = right.getDeclaredType();
+
+		if (leftDT != null && leftDT == rightDT) {
+			matchCount += 1000;
+
+			if (leftDT.isGeneric()) {
+				EList<TypeArgument> lTArgs = left.getTypeArgsWithDefaults();
+				EList<TypeArgument> rTArgs = right.getTypeArgsWithDefaults();
+				if (lTArgs.size() == rTArgs.size()) {
+					matchCount += 100;
+
+					for (int i = 0; i < lTArgs.size(); i++) {
+						if (mightSufficeExistingBounds(lTArgs.get(i), rTArgs.get(i), variance)) {
+							matchCount += 10;
+						}
+					}
+				}
+			}
+			return matchCount;
+		}
+
+		if (variance == CO && rightDT != null && leftDT instanceof ContainerType<?>) {
+			// choose first supertype of left
+			ContainerType<?> lCT = (ContainerType<?>) leftDT;
+			List<TClassifier> lSTs = AllSuperTypesCollector.collect(lCT, declMergingHelper);
+			for (TClassifier leftSuperType : lSTs) {
+				if (leftSuperType == rightDT) {
+					return matchCount;
+				}
+				matchCount--;
+			}
+		}
+		if (variance == CONTRA && leftDT != null && rightDT instanceof ContainerType<?>) {
+			// choose first subtype of left
+			// TODO improve performance by using a super class iterator or super interfaces
+			// iterator depending on type of leftDecl
+			ContainerType<?> rightCT = (ContainerType<?>) rightDT;
+			List<TClassifier> rSTs = AllSuperTypesCollector.collect(rightCT, declMergingHelper);
+			for (TClassifier rightSuperType : rSTs) {
+				if (rightSuperType == leftDT) {
+					return matchCount;
+				}
+				matchCount--;
+			}
+		}
+		if (left instanceof FunctionTypeExprOrRef && right instanceof FunctionTypeExprOrRef) {
+			return 100;
+		}
+		if (isObjectStructural(G, left) && isObjectStructural(G, right)) {
+			return 100;
+		}
+		return 0;
+	}
+
+	private boolean mightSufficeExistingBounds(TypeArgument left, TypeArgument right, Variance variance) {
+		if (!(left instanceof TypeRef) || !isInferenceVariable((TypeRef) left)) {
+			if (!(right instanceof TypeRef) || !isInferenceVariable((TypeRef) right)) {
+				return false;
+			}
+			TypeArgument tmp = left;
+			left = right;
+			right = tmp;
+			variance = variance.inverse();
+		}
+
+		if (left instanceof TypeRef && isInferenceVariable((TypeRef) left) && right instanceof TypeRef) {
+			Type lDT = left.getDeclaredType();
+			if (lDT instanceof InferenceVariable) {
+				InferenceVariable lInfVar = (InferenceVariable) lDT;
+				TypeRef rTR = (TypeRef) right;
+				TypeBound newTypeBound = new TypeBound(lInfVar, rTR, variance);
+				List<TypeConstraint> newConstraints = ic.currentBounds.combineAll(newTypeBound);
+				for (TypeConstraint newConstraint : newConstraints) {
+					if (newConstraint.left instanceof TypeRef && newConstraint.right instanceof TypeRef) {
+						TypeRef lTRef = (TypeRef) newConstraint.left;
+						TypeRef rTRef = (TypeRef) newConstraint.right;
+						if (newConstraint.variance == CONTRA) {
+							if (!mightBeSubtypeOf(rTRef, lTRef)) {
+								return false;
+							}
+						} else {
+							if (!mightBeSubtypeOf(lTRef, rTRef)) {
+								return false;
+							}
+						}
+					}
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private final int chooseFirstInferenceVariable(List<TypeRef> typeRefs) {
 		final int typeRefsSize = typeRefs.size();
 		for (int i = 0; i < typeRefsSize; i++) {
 			final TypeRef currTypeRef = typeRefs.get(i);
-			if (TypeUtils.isInferenceVariable(currTypeRef)) {
+			if (isInferenceVariable(currTypeRef)) {
 				return i;
 			}
 		}
@@ -418,8 +561,8 @@ import com.google.common.collect.Sets;
 			return reduceProper(left, right, variance);
 		}
 
-		final boolean isLeftInfVar = TypeUtils.isInferenceVariable(left);
-		final boolean isRightInfVar = TypeUtils.isInferenceVariable(right);
+		final boolean isLeftInfVar = isInferenceVariable(left);
+		final boolean isRightInfVar = isInferenceVariable(right);
 		if (isLeftInfVar || isRightInfVar) {
 			if (isLeftInfVar) {
 				return addBound((InferenceVariable) left.getDeclaredType(), right, variance);
@@ -428,11 +571,21 @@ import com.google.common.collect.Sets;
 			}
 		}
 
-		final boolean isLeftStructural = left.isUseSiteStructuralTyping() || left.isDefSiteStructuralTyping();
-		final boolean isRightStructural = right.isUseSiteStructuralTyping() || right.isDefSiteStructuralTyping();
-		if ((isLeftStructural && (variance == CONTRA || variance == INV))
-				|| (isRightStructural && (variance == CO || variance == INV))) {
-			return reduceStructuralTypeRef(left, right, variance);
+		// top and bottom types, including the pseudo-bottom type 'null'
+		// (NOTE: doing this up-front here instead of in method #applyParameterizedTypeRef()
+		// simplifies the handling of other special cases)
+		boolean isBottomType = (variance == CONTRA ? right : left).isBottomType();
+		boolean isTopType = (variance == CONTRA ? left : right).isTopType();
+		if (isBottomType || isTopType) {
+			return true;
+		}
+		boolean isNull = TypeUtils.isNull(variance == CONTRA ? right : left);
+		boolean isUndefined = TypeUtils.isUndefined(variance == CONTRA ? left : right);
+		if (isNull && !isUndefined) {
+			return true;
+		}
+		if (isAnyDynamic(G, left) || isAnyDynamic(G, right)) {
+			return true;
 		}
 		// note: one side might still be structural, but we can ignore this
 		// (e.g. given ⟨ S <: N ⟩ with S being structural, N nominal, we have a plain nominal subtype relation)
@@ -442,6 +595,13 @@ import com.google.common.collect.Sets;
 		}
 		if (right instanceof ComposedTypeRef) {
 			return reduceComposedTypeRef(left, (ComposedTypeRef) right, variance);
+		}
+
+		final boolean isLeftStructural = left.isUseSiteStructuralTyping() || left.isDefSiteStructuralTyping();
+		final boolean isRightStructural = right.isUseSiteStructuralTyping() || right.isDefSiteStructuralTyping();
+		if ((isLeftStructural && (variance == CONTRA || variance == INV))
+				|| (isRightStructural && (variance == CO || variance == INV))) {
+			return reduceStructuralTypeRef(left, right, variance);
 		}
 
 		if (left instanceof TypeTypeRef && right instanceof TypeTypeRef) {
@@ -886,7 +1046,7 @@ import com.google.common.collect.Sets;
 				} else
 
 				// Note: There are also other validations checking that and produce better error messages.
-				if (variance == CO && r != null && r.isOptional()) {
+				if (variance == CO && r != null && !TypeUtils.isMandatoryField(r)) {
 					// check if the existing member is optional
 					continue;
 				} else if (variance == CO && right instanceof BoundThisTypeRef) {
@@ -971,7 +1131,7 @@ import com.google.common.collect.Sets;
 		throw new IllegalStateException("unreachable"); // actually unreachable, each case above returns
 	}
 
-	private boolean mightBeSubtypeOf(FunctionTypeExprOrRef left, FunctionTypeExprOrRef right) {
+	private boolean mightBeSubtypeOf(TypeRef left, TypeRef right) {
 		// step 1: replace all inference variables by UnknownTypeRef
 		final TypeRef unknown = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
 		final RuleEnvironment G_temp = RuleEnvironmentExtensions.newRuleEnvironment(G);

@@ -28,15 +28,20 @@ import static org.eclipse.xtext.xbase.lib.IterableExtensions.map;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.toList;
 import static org.eclipse.xtext.xbase.lib.IteratorExtensions.toIterable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.ArrowFunction;
 import org.eclipse.n4js.n4JS.Block;
+import org.eclipse.n4js.n4JS.CastExpression;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
@@ -261,6 +266,24 @@ class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 				// introduce new inference variable for (inner) return type
 				InferenceVariable iv = infCtx.newInferenceVariable();
 				returnTypeRef = TypeUtils.createTypeRef(iv);
+
+				// no return type was declared:
+				// infer constraint for return type from cast expression if available
+				List<Expression> returnExpressions = getReturnExpressions(funExpr);
+				if (!returnExpressions.isEmpty()) {
+					List<TypeRef> retrs = new ArrayList<>();
+					for (Expression re : returnExpressions) {
+						EObject eob = N4JSASTUtils.skipParenExpressionDownward(re);
+						if (eob instanceof CastExpression) {
+							CastExpression ce = (CastExpression) eob;
+							retrs.add(TypeUtils.copy(ce.getTargetTypeRefNode().getTypeRefInAST()));
+						}
+					}
+					if (!retrs.isEmpty()) {
+						TypeRef tRef = tsh.createUnionType(G, retrs.toArray(new TypeRef[1]));
+						infCtx.addConstraint(TypeUtils.createTypeRef(iv), tRef, Variance.CONTRA);
+					}
+				}
 			} else {
 				// void
 				returnTypeRef = voidTypeRef(G);
