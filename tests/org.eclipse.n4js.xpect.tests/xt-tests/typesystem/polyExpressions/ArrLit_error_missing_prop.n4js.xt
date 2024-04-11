@@ -14,10 +14,14 @@
 
 
 
-// XPECT noerrors -->
-// XPECT type of '[].concat(1)' --> Array<union{int,any+}>
-const a : number[] = [].concat(1);
 
-// XPECT noerrors -->
-// XPECT type of '[1].concat([])' --> Array<number>
-const b : number[] = [1].concat([]);
+
+function <T> fn(iter: Iterable<T>): T? {
+    return null;
+}
+interface ~I { public cx1: int; public cx2: int }
+
+// XPECT errors -->
+// XPECT type of '{ cx1 : fn([1]) }' --> Array<any>
+const cy = { cx1 : fn([1]) } as I
+cy;
