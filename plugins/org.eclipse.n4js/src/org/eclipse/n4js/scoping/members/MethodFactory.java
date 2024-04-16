@@ -88,6 +88,7 @@ abstract class MethodFactory implements MemberFactory {
 			TFormalParameter tFPar = currFparDesc.create();
 			method.getFpars().add(tFPar);
 		}
+		method.getTypeVars().addAll(cma.getTypeVariables());
 		return method;
 	}
 
