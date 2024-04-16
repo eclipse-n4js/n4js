@@ -43,6 +43,6 @@ public class N4JSResourceTaskContext extends ResourceTaskContext {
 			WorkspaceConfigSnapshot workspaceConfig) {
 
 		super.initialize(parent, uri, isTemporary, index, workspaceConfig);
-		BuiltInTypeScope.get(getResourceSet()); // force loading built-ins to avoid deadlock later
+		BuiltInTypeScope.get(getResourceSet()).getNullType(); // force loading built-ins to avoid deadlock later
 	}
 }
