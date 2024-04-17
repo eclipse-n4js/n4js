@@ -94,7 +94,13 @@ class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 			InferenceContext infCtx, ASTMetaInfoCache cache) {
 		TFunction fun = (TFunction) funExpr.getDefinedType(); // types builder will have created this already
 
-		if (!isPoly(funExpr)) { // funExpr has declared types on all fpars and explicitly declared return type
+		if (fun == null) {
+			// on hovering fun might be null TODO: investigate
+			return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+		}
+
+		if (!isPoly(funExpr)) {
+			// funExpr has declared types on all fpars and explicitly declared return type
 			// can't use xsemantics here, because it would give us a DeferredTypeRef
 			// return ts.type(G, funExpr).getValue();
 			FunctionTypeExpression funTE = TypeUtils.createFunctionTypeExpression(null, emptyList(), fun.getFpars(),
