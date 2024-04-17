@@ -34,6 +34,9 @@ a instanceof --x;
 // XPECT errors --> "number is not a subtype of union{Function,type{Object},type{N4Enum}}." at "~x"
 a instanceof ~x
 
+// XPECT errors --> "47 is not a subtype of union{Function,type{Object},type{N4Enum}}." at "47" 
+a instanceof 47;
+
 // XPECT errors --> "number is not a subtype of union{Function,type{Object},type{N4Enum}}." at "~(3 + 4)"
 a instanceof ~(3 + 4)
 

@@ -129,11 +129,11 @@ async function *ait2() : AsyncGenerator<string,int,boolean> {
 }
 
 function *it3() : Generator<string,int,boolean> {
-    // XPECT errors --> "Array<int> is not a structural subtype of Iterable<string>: #iterator failed: {function():Iterator<int>} is not a subtype of {function():Iterator<string>}." at "([1,2,3])"
+    // XPECT errors --> "Array<int> is not a structural subtype of Iterable<string>: #iterator failed: {function():Iterator<int>} is not a subtype of {function():Iterator<string>}." at "[1,2,3]"
     yield* ([1,2,3]);
 }
 async function *ait3() : AsyncGenerator<string,int,boolean> {
-    // XPECT errors --> "Array<int> is not a structural subtype of Iterable<string>: #iterator failed: {function():Iterator<int>} is not a subtype of {function():Iterator<string>}." at "([1,2,3])"
+    // XPECT errors --> "Array<int> is not a structural subtype of Iterable<string>: #iterator failed: {function():Iterator<int>} is not a subtype of {function():Iterator<string>}." at "[1,2,3]"
     yield* ([1,2,3]);
 }
 
