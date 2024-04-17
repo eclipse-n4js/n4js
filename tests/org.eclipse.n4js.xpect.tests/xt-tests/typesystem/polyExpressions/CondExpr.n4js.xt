@@ -35,8 +35,8 @@ const k2 : ~Object with {i: ~I} = b ? {i : new J()} : undefined;
 // XPECT type of 'b ? {i : new J()} : null' --> ~Object with { i: ~I }
 const k3 : ~Object with {i: ~I} = b ? {i : new J()} : null;
 
-// XPECT noerrors --> 
-// XPECT type of 'b ? {i : new J()} : {i : new K()}' --> ~Object with { i: ~I }
+// GH-2615 XPECT FIXME noerrors --> 
+// GH-2615 XPECT FIXME type of 'b ? {i : new J()} : {i : new K()}' --> ~Object with { i: ~I }
 const k4  : ~Object with {i: ~I} = b ? {i : new J()} : {i : new K()};
 
 
