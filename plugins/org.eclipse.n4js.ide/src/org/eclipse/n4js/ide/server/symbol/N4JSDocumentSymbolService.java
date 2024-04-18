@@ -109,7 +109,9 @@ public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 						.eGet(N4JSPackage.eINSTANCE.getPropertyNameValuePair_Expression())) {
 
 			EObject elementInDestructuring = findReferenceHelper.getMemberInDestructuring(elemAtOffset);
-			addLocations(resourceAccess, cancelIndicator, elementInDestructuring, locations);
+			if (elementInDestructuring != null) {
+				addLocations(resourceAccess, cancelIndicator, elementInDestructuring, locations);
+			}
 		}
 
 		addLocations(resourceAccess, cancelIndicator, element, locations);

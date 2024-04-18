@@ -37,6 +37,7 @@ import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.JavaScriptVariant;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -135,10 +136,10 @@ abstract public class AbstractTypeSystemHelperTests {
 	 * {@link TypeRef#getTypeRefAsString()} is used.
 	 */
 	public void assertJoin(String expectedType, String... typeExpressionsToBeJoined) {
-		assertJoin(new String[0], expectedType, typeExpressionsToBeJoined);
+		assertJoin(new IssueCodes[0], expectedType, typeExpressionsToBeJoined);
 	}
 
-	public void assertJoin(String[] expectedMessages, String expectedType, String... typeExpressionsToBeJoined) {
+	public void assertJoin(IssueCodes[] expectedMessages, String expectedType, String... typeExpressionsToBeJoined) {
 		RuleEnvironment G = assembler.prepareScriptAndCreateRuleEnvironment(expectedMessages,
 				typeExpressionsToBeJoined);
 		Iterable<TypeRef> typeRefs = map(Arrays.asList(typeExpressionsToBeJoined), tExp -> assembler.getTypeRef(tExp));
@@ -152,10 +153,10 @@ abstract public class AbstractTypeSystemHelperTests {
 	 * {@link TypeRef#getTypeRefAsString()} is used.
 	 */
 	public void assertMeet(String expectedType, String... typeExpressionsToBeMeet) {
-		assertMeet(new String[0], expectedType, typeExpressionsToBeMeet);
+		assertMeet(new IssueCodes[0], expectedType, typeExpressionsToBeMeet);
 	}
 
-	public void assertMeet(String[] expectedMessages, String expectedType, String... typeExpressionsToBeMeet) {
+	public void assertMeet(IssueCodes[] expectedMessages, String expectedType, String... typeExpressionsToBeMeet) {
 		RuleEnvironment G = assembler.prepareScriptAndCreateRuleEnvironment(expectedMessages, typeExpressionsToBeMeet);
 		Iterable<TypeRef> typeRefs = map(Arrays.asList(typeExpressionsToBeMeet), tExp -> assembler.getTypeRef(tExp));
 		TypeRef meet = TypeUtils.copy(tsh.meet(G, typeRefs));

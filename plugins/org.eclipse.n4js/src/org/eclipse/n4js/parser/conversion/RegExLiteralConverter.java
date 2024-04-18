@@ -112,8 +112,8 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 					offsetFixup = node.getOffset() - node.getTotalOffset();
 				}
 				N4JSValueConverterWithValueException mainError = new N4JSValueConverterWithValueException(
-						IssueCodes.getMessageForVCO_REGEX_INVALID(),
-						IssueCodes.VCO_REGEX_INVALID, node,
+						IssueCodes.VCO_REGEX_INVALID.getMessage(),
+						IssueCodes.VCO_REGEX_INVALID.name(), node,
 						stringConverterResult.getSourceOffset(localOffset) + offsetFixup,
 						syntaxError.getLength(), string,
 						null);
@@ -139,8 +139,8 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 					if (offsetFixup == -1) {
 						offsetFixup = node.getOffset() - node.getTotalOffset();
 					}
-					errors.add(new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
-							IssueCodes.VCO_REGEX_INVALID, node,
+					errors.add(new N4JSValueConverterWithValueException(IssueCodes.VCO_REGEX_INVALID.getMessage(),
+							IssueCodes.VCO_REGEX_INVALID.name(), node,
 							stringConverterResult.getSourceOffset(nodeForElement.getOffset()) + offsetFixup,
 							nodeForElement.getLength(),
 							string, null));
@@ -152,8 +152,8 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 						if (offsetFixup == -1) {
 							offsetFixup = node.getOffset() - node.getTotalOffset();
 						}
-						errors.add(new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
-								IssueCodes.VCO_REGEX_INVALID, node,
+						errors.add(new N4JSValueConverterWithValueException(IssueCodes.VCO_REGEX_INVALID.getMessage(),
+								IssueCodes.VCO_REGEX_INVALID.name(), node,
 								stringConverterResult.getSourceOffset(featureNode.getOffset()) + offsetFixup,
 								featureNode.getLength(),
 								string, null));
@@ -165,8 +165,8 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 						if (offsetFixup == -1) {
 							offsetFixup = node.getOffset() - node.getTotalOffset();
 						}
-						errors.add(new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
-								IssueCodes.VCO_REGEX_INVALID, node,
+						errors.add(new N4JSValueConverterWithValueException(IssueCodes.VCO_REGEX_INVALID.getMessage(),
+								IssueCodes.VCO_REGEX_INVALID.name(), node,
 								stringConverterResult.getSourceOffset(nodeForElement.getOffset()) + offsetFixup,
 								nodeForElement.getLength(), string, null));
 					}
@@ -175,8 +175,8 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 						if (offsetFixup == -1) {
 							offsetFixup = node.getOffset() - node.getTotalOffset();
 						}
-						errors.add(new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
-								IssueCodes.VCO_REGEX_INVALID, node,
+						errors.add(new N4JSValueConverterWithValueException(IssueCodes.VCO_REGEX_INVALID.getMessage(),
+								IssueCodes.VCO_REGEX_INVALID.name(), node,
 								stringConverterResult.getSourceOffset(nodeForElement.getOffset()) + offsetFixup,
 								nodeForElement.getLength(), string, null));
 					}
@@ -191,8 +191,8 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 					if (offsetFixup == -1) {
 						offsetFixup = node.getOffset() - node.getTotalOffset();
 					}
-					errors.add(new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_NAMED_GROUP(),
-							IssueCodes.VCO_REGEX_NAMED_GROUP, node,
+					errors.add(new N4JSValueConverterWithValueException(IssueCodes.VCO_REGEX_NAMED_GROUP.getMessage(),
+							IssueCodes.VCO_REGEX_NAMED_GROUP.name(), node,
 							stringConverterResult.getSourceOffset(nameNode.getOffset()) + offsetFixup,
 							nameNode.getLength(),
 							string, null));
@@ -214,8 +214,8 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 		if (result.hasError()) {
 			int offsetFixup = node.getOffset() - node.getTotalOffset();
 			throw new N4JSValueConverterWithValueException(
-					IssueCodes.getMessageForVCO_REGEX_ILLEGAL_ESCAPE(jsString),
-					IssueCodes.VCO_REGEX_ILLEGAL_ESCAPE, node, result.getErrorOffset() + offsetFixup, 1,
+					IssueCodes.VCO_REGEX_ILLEGAL_ESCAPE.getMessage(jsString),
+					IssueCodes.VCO_REGEX_ILLEGAL_ESCAPE.name(), node, result.getErrorOffset() + offsetFixup, 1,
 					result.getValue(), null);
 		}
 		return result;

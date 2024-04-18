@@ -180,6 +180,7 @@ public class SemanticDependencySupplier {
 			// Second check if it is a dependency in the node_modules folder
 			for (File nodeModulesDir : nodeModulesFolder.getNodeModulesFoldersInOrderOfPriority()) {
 				Path absDepPath = nodeModulesDir.toPath().resolve(depName);
+				absDepPath = resolveSymbolicLinkOrDefault(absDepPath);
 				if (candidatePaths.contains(absDepPath)) {
 					// dependency in a node_modules folder
 					return absDepPath;

@@ -85,7 +85,14 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 	 * fix for ASI
 	 */
 	public List<INode> getDocumentationNodes(EObject object, boolean enableSpecialASIFix) {
-		EObject astNode = N4JSASTUtils.getCorrespondingASTNode(object);
+		EObject astNode = null;
+		try {
+			astNode = N4JSASTUtils.getCorrespondingASTNode(object);
+		} catch (Exception e) {
+			// Exception can happen in dirty states when retrieving the ast node
+			logger.warn("Could not find ast node: " + e.getMessage());
+		}
+
 		// TODO GH-1958 approach for documentation look-up in case of hash mismatch:
 		// if (astNode != null && astNode.eIsProxy()) {
 		// // proxy from TModule back to AST could not be resolved (e.g. reconciliation failed due to hash mismatch)
@@ -97,6 +104,7 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 		// astNode = EcoreUtil.resolve(astNode, tempResSet); // TODO disable types builder & post-processing!
 		// }
 		// }
+
 		if (astNode != null && !astNode.eIsProxy()) {
 			final String fileExt = URIUtils.fileExtension(astNode.eResource().getURI());
 			if (N4JSGlobals.DTS_FILE_EXTENSION.equals(fileExt)) {

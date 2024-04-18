@@ -229,9 +229,7 @@ public class ProjectDiscoveryHelper {
 			collectGlobMatches(workspaceGlob, yarnProjectRoot, pdCache, memberProjects);
 		}
 		removeUnnecessaryPlainjsProjects(memberProjects, pdCache);
-		for (Path member : memberProjects) {
-			allProjectDirs.add(member);
-		}
+		allProjectDirs.addAll(memberProjects);
 	}
 
 	private void collectProjects(Path root, Path relatedRoot, boolean includeSubtree,
@@ -431,7 +429,8 @@ public class ProjectDiscoveryHelper {
 	private void collectProjectDependencies(Set<Path> allProjectDirs, Path projectDir,
 			Map<Path, ProjectDescription> pdCache, Set<Path> dependencies) {
 
-		NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectDir, pdCache);
+		Path wsRoot = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectDir, pdCache).getWorkspaceRoot();
+
 		LinkedHashSet<Path> workList = new LinkedHashSet<>();
 		workList.add(projectDir);
 		while (!workList.isEmpty()) {
@@ -439,16 +438,18 @@ public class ProjectDiscoveryHelper {
 			Path nextProject = iterator.next();
 			iterator.remove();
 
-			findDependencies(allProjectDirs, nextProject, nodeModulesFolder, pdCache, workList, dependencies);
+			NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(nextProject, pdCache);
+			findDependencies(allProjectDirs, nextProject, wsRoot, nodeModulesFolder, pdCache, workList, dependencies);
 		}
 	}
 
-	private void findDependencies(Set<Path> allProjectDirs, Path prjDir, NodeModulesFolder nodeModulesFolder,
-			Map<Path, ProjectDescription> pdCache, Set<Path> workList, Set<Path> dependencies) {
+	private void findDependencies(Set<Path> allProjectDirs, Path prjDir, Path wsRoot,
+			NodeModulesFolder nodeModulesFolder, Map<Path, ProjectDescription> pdCache, Set<Path> workList,
+			Set<Path> dependencies) {
 
-		Path relatedRoot = nodeModulesFolder.getRelatedRoot();
+		// Path wsRoot = nodeModulesFolder.getWorkspaceRoot();
 		Path prjNodeModules = prjDir.resolve(N4JSGlobals.NODE_MODULES);
-		ProjectDescription prjDescr = getOrCreateProjectDescription(prjDir, relatedRoot, pdCache);
+		ProjectDescription prjDescr = getOrCreateProjectDescription(prjDir, wsRoot, pdCache);
 		if (prjDescr == null) {
 			return;
 		}
@@ -457,8 +458,8 @@ public class ProjectDiscoveryHelper {
 			String depName = dependency.getPackageName();
 
 			Path depLocation = findDependencyLocation(nodeModulesFolder, prjNodeModules, depName);
-			if (isNewDependency(allProjectDirs, prjDir, pdCache, depLocation, relatedRoot)) {
-				addDependency(depLocation, relatedRoot, pdCache, workList, dependencies);
+			if (isNewDependency(allProjectDirs, prjDir, pdCache, depLocation, wsRoot)) {
+				addDependency(depLocation, wsRoot, pdCache, workList, dependencies);
 			}
 		}
 	}
@@ -516,6 +517,9 @@ public class ProjectDiscoveryHelper {
 		}
 		for (File currNMF : nodeModulesFolder.getNodeModulesFoldersInOrderOfPriority()) {
 			File depLocation = new File(currNMF, depName);
+			if (SemanticDependencySupplier.isSymbolicLink(depLocation.toPath())) {
+				depLocation = SemanticDependencySupplier.resolveSymbolicLink(depLocation.toPath()).toFile();
+			}
 			if (depLocation.isDirectory()) {
 				return depLocation.toPath();
 			}

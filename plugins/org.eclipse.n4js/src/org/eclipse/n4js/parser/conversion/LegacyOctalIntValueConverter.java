@@ -13,11 +13,10 @@ package org.eclipse.n4js.parser.conversion;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.conversion.impl.AbstractLexerBasedConverter;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.util.Strings;
-
-import org.eclipse.n4js.validation.IssueCodes;
 
 /**
  * A value converter that properly converts octal JS numbers to {@link BigDecimal}.
@@ -54,19 +53,19 @@ public class LegacyOctalIntValueConverter extends AbstractLexerBasedConverter<Bi
 	protected void assertValidValue(BigDecimal value) {
 		super.assertValidValue(value);
 		if (value.signum() == -1)
-			throw new N4JSValueConverterException(IssueCodes.getMessageForVCO_OCTALINT_NEGATIVE(getRuleName(), value),
-					IssueCodes.VCO_OCTALINT_NEGATIVE, null, null);
+			throw new N4JSValueConverterException(IssueCodes.VCO_OCTALINT_NEGATIVE.getMessage(getRuleName(), value),
+					IssueCodes.VCO_OCTALINT_NEGATIVE.name(), null, null);
 	}
 
 	@Override
 	public BigDecimal toValue(String string, INode node) {
 		if (Strings.isEmpty(string))
-			throw new N4JSValueConverterException(IssueCodes.getMessageForVCO_OCTALINT_CONVERT_EMPTY_STR(),
-					IssueCodes.VCO_OCTALINT_CONVERT_EMPTY_STR, node, null);
+			throw new N4JSValueConverterException(IssueCodes.VCO_OCTALINT_CONVERT_EMPTY_STR.getMessage(),
+					IssueCodes.VCO_OCTALINT_CONVERT_EMPTY_STR.name(), node, null);
 		if (string.length() <= 1) {
 			throw new N4JSValueConverterWithValueException(
-					IssueCodes.getMessageForVCO_OCTALINT_CONVERT_TOO_SHORT(string),
-					IssueCodes.VCO_OCTALINT_CONVERT_TOO_SHORT, node,
+					IssueCodes.VCO_OCTALINT_CONVERT_TOO_SHORT.getMessage(string),
+					IssueCodes.VCO_OCTALINT_CONVERT_TOO_SHORT.name(), node,
 					BigDecimal.ZERO, null);
 		}
 		try {
@@ -74,11 +73,11 @@ public class LegacyOctalIntValueConverter extends AbstractLexerBasedConverter<Bi
 		} catch (NumberFormatException e) {
 			try {
 				BigDecimal result = new BigDecimal(new BigInteger(string, 10));
-				throw new LeadingZerosException(IssueCodes.getMessageForVCO_OCTALINT_LEADING_ZEROS(string),
-						IssueCodes.VCO_OCTALINT_LEADING_ZEROS, node, result);
+				throw new LeadingZerosException(IssueCodes.VCO_OCTALINT_LEADING_ZEROS.getMessage(string),
+						IssueCodes.VCO_OCTALINT_LEADING_ZEROS.name(), node, result);
 			} catch (NumberFormatException again) {
-				throw new N4JSValueConverterException(IssueCodes.getMessageForVCO_OCTALINT_CONVERT_STR(string),
-						IssueCodes.VCO_OCTALINT_CONVERT_STR, node, null);
+				throw new N4JSValueConverterException(IssueCodes.VCO_OCTALINT_CONVERT_STR.getMessage(string),
+						IssueCodes.VCO_OCTALINT_CONVERT_STR.name(), node, null);
 			}
 		}
 	}

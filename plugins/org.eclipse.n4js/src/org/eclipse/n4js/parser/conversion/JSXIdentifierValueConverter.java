@@ -48,8 +48,8 @@ public class JSXIdentifierValueConverter extends AbstractValueConverter<String> 
 			int idx = disallowedChar.indexIn(string);
 			if (idx != -1) {
 				throw new N4JSValueConverterWithValueException(
-						IssueCodes.getMessageForVCO_IDENT_ILLEGAL_CHAR_WITH_RESULT(string, string.charAt(idx), idx),
-						IssueCodes.VCO_IDENT_ILLEGAL_CHAR_WITH_RESULT, node, string.substring(0, idx), null);
+						IssueCodes.VCO_IDENT_ILLEGAL_CHAR_WITH_RESULT.getMessage(string, string.charAt(idx), idx),
+						IssueCodes.VCO_IDENT_ILLEGAL_CHAR_WITH_RESULT.name(), node, string.substring(0, idx), null);
 			}
 		}
 		return string;
@@ -63,16 +63,16 @@ public class JSXIdentifierValueConverter extends AbstractValueConverter<String> 
 		if (leaf.isHidden()) {
 			int idx = leaf.getTotalOffset() - firstOffset;
 			throw new N4JSValueConverterWithValueException(
-					IssueCodes.getMessageForVCO_JSXIDENT_WHITESPACE_COMMENT(),
-					IssueCodes.VCO_JSXIDENT_WHITESPACE_COMMENT, leaf, value.substring(0, idx), null);
+					IssueCodes.VCO_JSXIDENT_WHITESPACE_COMMENT.getMessage(),
+					IssueCodes.VCO_JSXIDENT_WHITESPACE_COMMENT.name(), leaf, value.substring(0, idx), null);
 		} else {
 			int escapeSequence = leaf.getText().indexOf("\\");
 			if (escapeSequence >= 0) {
 				int idx = leaf.getTotalOffset() - firstOffset + escapeSequence;
 				throw new N4JSValueConverterWithValueException(
-						IssueCodes.getMessageForVCO_IDENT_ILLEGAL_CHAR_WITH_RESULT(value,
+						IssueCodes.VCO_IDENT_ILLEGAL_CHAR_WITH_RESULT.getMessage(value,
 								leaf.getText().charAt(escapeSequence), idx),
-						IssueCodes.VCO_IDENT_ILLEGAL_CHAR_WITH_RESULT, leaf, value.substring(0, idx), null);
+						IssueCodes.VCO_IDENT_ILLEGAL_CHAR_WITH_RESULT.name(), leaf, value.substring(0, idx), null);
 			}
 		}
 	}

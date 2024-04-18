@@ -72,7 +72,7 @@ public class JSDoc2AdocFullTest extends JSDoc2SpecProcessorFullTest {
 		FileURI packageJsonURI = toFileURI(getProjectLocation()).appendSegments(projectName, N4JSGlobals.PACKAGE_JSON);
 		assertIssues(Map.of(
 				packageJsonURI, Lists.newArrayList(
-						"(Error, [4:17 - 4:26], Missing dependency to n4js-runtime (mandatory for all N4JS projects of type library, application, test).)")));
+						"(Error, [4:17 - 4:26], Missing dependency to 'n4js-runtime' (mandatory for all N4JS projects of type library, application, test).)")));
 
 		String systemSeparator = System.getProperty("line.separator", "\n");
 		try {

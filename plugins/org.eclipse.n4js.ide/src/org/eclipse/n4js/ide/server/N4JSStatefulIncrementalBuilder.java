@@ -43,6 +43,7 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.validation.Issue;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -296,7 +297,7 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 			Multimap<String, URI> moduleName2Uri) {
 
 		ProjectDescription pd = projectConfig.getProjectDescription();
-		String prjName = projectConfig.getPackageName();
+		String prjName = Strings.nullToEmpty(projectConfig.getPackageName());
 		if (moduleName2Uri.containsKey(moduleSpecifier)) {
 			return moduleSpecifier;
 		} else if (moduleSpecifier.startsWith("./")) {

@@ -32,6 +32,7 @@ import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.ide.server.ResourceTaskManager;
@@ -48,7 +49,6 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.validation.Issue;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
@@ -251,10 +251,14 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 	}
 
 	private void acceptFix(Fix fix, Object instance, Method method) {
-		String issueCode = fix.value();
-		if (!Strings.isNullOrEmpty(issueCode)) {
+		IssueCodes issueCode = fix.value();
+		String issueCodeName = issueCode.name();
+		if (issueCode == IssueCodes.INVALID_ISSUE_CODE) {
+			issueCodeName = fix.valueName();
+		}
+		if (issueCodeName != null) {
 			QuickFixImplementation impl = new QuickFixImplementation(instance, method, fix.multiFix());
-			quickfixMap.put(issueCode, impl);
+			quickfixMap.put(issueCodeName, impl);
 		}
 	}
 

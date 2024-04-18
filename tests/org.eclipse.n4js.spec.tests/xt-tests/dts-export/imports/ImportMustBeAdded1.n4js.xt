@@ -32,7 +32,7 @@ export const C = F();
 
 
 /* XPECT generated_dts ---
-import {Cls} from './Other'
+import type {Cls} from './Other.d.ts'
 
 export const C: Cls;
 --- */

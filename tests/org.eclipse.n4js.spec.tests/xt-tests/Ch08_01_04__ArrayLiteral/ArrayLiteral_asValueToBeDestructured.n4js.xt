@@ -17,6 +17,11 @@
 var [a1,b1] = ["",42];
 
 
+// XPECT type of 'aa1' --> string
+// XPECT type of 'bb1' --> int
+var [[aa1,bb1]] = [["",42]];
+
+
 var a2 : string, b2 : number;
 // XPECT noerrors -->
 [a2,b2] = ["",42];

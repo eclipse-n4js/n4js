@@ -18,7 +18,6 @@ import java.util.Map;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.utils.io.FileUtils;
 import org.junit.Test;
 
 /**
@@ -33,7 +32,7 @@ public class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 	@Test
 	public void testSymLinkInNodeModulesFolder() throws Exception {
 		createYarnWorkspaceWithProjectMainWithDependencyTo("ProjectOther");
-		Path other = createProjectOutsideWorkspace("ProjectOther", "Other");
+		Path other = createProjectInPnpmFolder("ProjectOther", "Other");
 		Path nodeModulesFolder = getNodeModulesFolder().toPath();
 		Files.createSymbolicLink(nodeModulesFolder.resolve("ProjectOther"), other);
 		startAndWaitForLspServer();
@@ -41,7 +40,7 @@ public class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 		assertProjectsInWorkspace(
 				"yarn-test-project",
 				"yarn-test-project/node_modules/n4js-runtime",
-				"yarn-test-project/node_modules/ProjectOther",
+				"yarn-test-project/node_modules/.pnpm/ProjectOther",
 				"yarn-test-project/packages/ProjectMain");
 		assertNoIssues();
 	}
@@ -49,7 +48,7 @@ public class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 	@Test
 	public void testSymLinkInNodeModulesFolder_withScope01() throws Exception {
 		createYarnWorkspaceWithProjectMainWithDependencyTo("@someScope/ProjectOther");
-		Path other = createProjectOutsideWorkspace("@someScope/ProjectOther", "Other");
+		Path other = createProjectInPnpmFolder("@someScope/ProjectOther", "Other");
 		Path nodeModulesFolder = getNodeModulesFolder().toPath();
 		Files.createSymbolicLink(nodeModulesFolder.resolve("@someScope"), other.getParent());
 		startAndWaitForLspServer();
@@ -57,7 +56,7 @@ public class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 		assertProjectsInWorkspace(
 				"yarn-test-project",
 				"yarn-test-project/node_modules/n4js-runtime",
-				"yarn-test-project/node_modules/@someScope/ProjectOther",
+				"yarn-test-project/node_modules/.pnpm/@someScope/ProjectOther",
 				"yarn-test-project/packages/ProjectMain");
 		assertNoIssues();
 	}
@@ -65,7 +64,7 @@ public class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 	@Test
 	public void testSymLinkInNodeModulesFolder_withScope02() throws Exception {
 		createYarnWorkspaceWithProjectMainWithDependencyTo("@someScope/ProjectOther");
-		Path other = createProjectOutsideWorkspace("@someScope/ProjectOther", "Other");
+		Path other = createProjectInPnpmFolder("@someScope/ProjectOther", "Other");
 		Path nodeModulesFolder = getNodeModulesFolder().toPath();
 		Files.createDirectory(nodeModulesFolder.resolve("@someScope"));
 		Files.createSymbolicLink(nodeModulesFolder.resolve("@someScope").resolve("ProjectOther"), other);
@@ -74,7 +73,7 @@ public class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 		assertProjectsInWorkspace(
 				"yarn-test-project",
 				"yarn-test-project/node_modules/n4js-runtime",
-				"yarn-test-project/node_modules/@someScope/ProjectOther",
+				"yarn-test-project/node_modules/.pnpm/@someScope/ProjectOther",
 				"yarn-test-project/packages/ProjectMain");
 		assertNoIssues();
 	}
@@ -82,7 +81,7 @@ public class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 	@Test
 	public void testSymLinkInPackagesFolder() throws Exception {
 		createYarnWorkspaceWithProjectMainWithDependencyTo("ProjectOther");
-		Path other = createProjectOutsideWorkspace("ProjectOther", "Other");
+		Path other = createProjectInPnpmFolder("ProjectOther", "Other");
 		Path packagesFolder = getProjectLocation().toPath();
 		Files.createSymbolicLink(packagesFolder.resolve("ProjectOther"), other);
 		startAndWaitForLspServer();
@@ -98,7 +97,7 @@ public class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 	@Test
 	public void testSymLinkInPackagesFolder_withScope01() throws Exception {
 		createYarnWorkspaceWithProjectMainWithDependencyTo("@someScope/ProjectOther");
-		Path other = createProjectOutsideWorkspace("@someScope/ProjectOther", "Other");
+		Path other = createProjectInPnpmFolder("@someScope/ProjectOther", "Other");
 		Path packagesFolder = getProjectLocation().toPath();
 		Files.createSymbolicLink(packagesFolder.resolve("@someScope"), other.getParent());
 		startAndWaitForLspServer();
@@ -114,7 +113,7 @@ public class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 	@Test
 	public void testSymLinkInPackagesFolder_withScope02() throws Exception {
 		createYarnWorkspaceWithProjectMainWithDependencyTo("@someScope/ProjectOther");
-		Path other = createProjectOutsideWorkspace("@someScope/ProjectOther", "Other");
+		Path other = createProjectInPnpmFolder("@someScope/ProjectOther", "Other");
 		Path packagesFolder = getProjectLocation().toPath();
 		Files.createDirectory(packagesFolder.resolve("@someScope"));
 		Files.createSymbolicLink(packagesFolder.resolve("@someScope").resolve("ProjectOther"), other);
@@ -131,7 +130,7 @@ public class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 	@Test
 	public void testSymLinkInProject_sourceFolderIsSymLink() throws Exception {
 		createYarnWorkspaceWithProjectMainWithDependencyTo("ProjectOther");
-		Path other = createProjectOutsideWorkspace("ProjectOther", "Other");
+		Path other = createProjectInPnpmFolder("ProjectOther", "Other");
 		Path packagesFolder = getProjectLocation().toPath();
 		Path otherInWorkspace = packagesFolder.resolve("ProjectOther");
 		FileCopier.copy(other, otherInWorkspace);
@@ -144,7 +143,7 @@ public class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 	@Test
 	public void testSymLinkInProject_subFolderOfSourceFolderIsSymLink() throws Exception {
 		createYarnWorkspaceWithProjectMainWithDependencyTo("ProjectOther");
-		Path other = createProjectOutsideWorkspace("ProjectOther", "Other");
+		Path other = createProjectInPnpmFolder("ProjectOther", "Other");
 		Path packagesFolder = getProjectLocation().toPath();
 		Path otherInWorkspace = packagesFolder.resolve("ProjectOther");
 		FileCopier.copy(other, otherInWorkspace);
@@ -166,9 +165,10 @@ public class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 				CFG_DEPENDENCIES, dependenciesOfProjectMain)));
 	}
 
-	private Path createProjectOutsideWorkspace(String projectName, String nameSuffix) throws IOException {
-		Path tempFolder = FileUtils.createTempDirectory(this.getClass().getSimpleName() + "_");
-		Path projectFolder = tempFolder.resolve(projectName); // note: supports npm scopes!
+	private Path createProjectInPnpmFolder(String projectName, String nameSuffix) throws IOException {
+		// Path tempFolder = FileUtils.createTempDirectory(this.getClass().getSimpleName() + "_");
+		Path pnpmFolder = getProjectLocation().getParentFile().toPath().resolve("node_modules/.pnpm");
+		Path projectFolder = pnpmFolder.resolve(projectName); // note: supports npm scopes!
 		Path srcFolder = projectFolder.resolve("src");
 		Path srcFolderABC = srcFolder.resolve("a").resolve("b").resolve("c");
 		Files.createDirectories(projectFolder);

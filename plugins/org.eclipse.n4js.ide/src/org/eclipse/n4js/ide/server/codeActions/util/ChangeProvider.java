@@ -193,7 +193,7 @@ public class ChangeProvider {
 
 			String resultLineContent = startLineContent + endLineContent;
 
-			if (resultLineContent.isBlank()) {
+			if (resultLineContent.isBlank() && doc.getLineCount() > posEnd.getLine() + 1) {
 				posStart = new Position(posStart.getLine(), 0);
 				posEnd = new Position(posEnd.getLine() + 1, 0);
 			}

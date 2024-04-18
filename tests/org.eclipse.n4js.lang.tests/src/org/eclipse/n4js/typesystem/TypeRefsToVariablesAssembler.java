@@ -13,6 +13,7 @@ package org.eclipse.n4js.typesystem;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.JavaScriptVariant;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -29,10 +30,10 @@ import org.eclipse.xtext.xbase.lib.Pair;
 public class TypeRefsToVariablesAssembler extends AbstractScriptAssembler {
 
 	/**
-	 * Convenience method for method {@link #prepareScriptAndCreateRuleEnvironment(String[], String...)}.
+	 * Convenience method for method {@link #prepareScriptAndCreateRuleEnvironment(IssueCodes[], String...)}.
 	 */
 	public RuleEnvironment prepareScriptAndCreateRuleEnvironment(String... typeExpressions) {
-		return prepareScriptAndCreateRuleEnvironment(new String[0], JavaScriptVariant.n4js, typeExpressions);
+		return prepareScriptAndCreateRuleEnvironment(new IssueCodes[0], JavaScriptVariant.n4js, typeExpressions);
 	}
 
 	/**
@@ -50,21 +51,23 @@ public class TypeRefsToVariablesAssembler extends AbstractScriptAssembler {
 	 *
 	 * @return the rule environment to be used when type system rules are called.
 	 */
-	public RuleEnvironment prepareScriptAndCreateRuleEnvironment(String[] expectedMessages, String... typeExpressions) {
+	public RuleEnvironment prepareScriptAndCreateRuleEnvironment(IssueCodes[] expectedMessages,
+			String... typeExpressions) {
 		return prepareScriptAndCreateRuleEnvironment(expectedMessages, JavaScriptVariant.n4js, typeExpressions);
 	}
 
-	public RuleEnvironment prepareScriptAndCreateRuleEnvironment(String[] expectedMessages, JavaScriptVariant variant,
+	public RuleEnvironment prepareScriptAndCreateRuleEnvironment(IssueCodes[] expectedMessages,
+			JavaScriptVariant variant,
 			String... typeExpressions) {
 		return doPrepareScriptAndCreateRuleEnvironment(expectedMessages, variant, typeExpressions).getValue();
 	}
 
 	public Pair<Script, RuleEnvironment> doPrepareScriptAndCreateRuleEnvironment(JavaScriptVariant variant,
 			String... typeExpressions) {
-		return doPrepareScriptAndCreateRuleEnvironment(new String[0], variant, typeExpressions);
+		return doPrepareScriptAndCreateRuleEnvironment(new IssueCodes[0], variant, typeExpressions);
 	}
 
-	public Pair<Script, RuleEnvironment> doPrepareScriptAndCreateRuleEnvironment(String[] expectedMessages,
+	public Pair<Script, RuleEnvironment> doPrepareScriptAndCreateRuleEnvironment(IssueCodes[] expectedMessages,
 			JavaScriptVariant variant, String... typeExpressions) {
 		String completeScript = getScriptPrefix() + "\n" + createVariables(typeExpressions);
 		@SuppressWarnings("hiding")

@@ -10,10 +10,10 @@
  */
 package org.eclipse.n4js.naming;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.eclipse.xtext.linking.impl.ImportedNamesAdapter;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -21,6 +21,7 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
 
 /**
  * Adapts default implementation to not normalize qualified names to be all lower case.
@@ -72,18 +73,18 @@ public class N4JSImportedNamesAdapter extends ImportedNamesAdapter {
 	}
 
 	@Override
-	public Set<QualifiedName> getImportedNames() {
-		return Collections.unmodifiableSet(nonNullImportedNames);
+	synchronized public TreeSet<QualifiedName> getImportedNames() {
+		return Sets.newTreeSet(nonNullImportedNames);
 	}
 
 	/** Adds given element to set of imported names. */
-	public void addImportedName(QualifiedName name) {
+	synchronized public void addImportedName(QualifiedName name) {
 		Preconditions.checkNotNull(name);
 		nonNullImportedNames.add(name);
 	}
 
 	@Override
-	public void clear() {
+	synchronized public void clear() {
 		nonNullImportedNames.clear();
 	}
 }

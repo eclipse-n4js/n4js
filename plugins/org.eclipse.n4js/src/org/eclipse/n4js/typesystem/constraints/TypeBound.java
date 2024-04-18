@@ -10,6 +10,12 @@
  */
 package org.eclipse.n4js.typesystem.constraints;
 
+import static org.eclipse.xtext.xbase.lib.IterableExtensions.filter;
+import static org.eclipse.xtext.xbase.lib.IterableExtensions.toSet;
+
+import java.util.Collections;
+import java.util.Set;
+
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.InferenceVariable;
@@ -26,24 +32,32 @@ import org.eclipse.n4js.types.utils.TypeUtils;
 	public final InferenceVariable left;
 	public final TypeRef right;
 	public final Variance variance;
+	public final Set<InferenceVariable> referencedInfVars;
 
-	private Integer hashCode = null;
+	private final int hashCode;
 
 	/**
 	 * Creates an instance.
 	 */
 	public TypeBound(InferenceVariable left, TypeRef right, Variance variance) {
+		this(left, right, variance, toSet(filter(TypeUtils.getReferencedTypeVars(right), InferenceVariable.class)));
+	}
+
+	/**
+	 * Creates an instance.
+	 */
+	public TypeBound(InferenceVariable left, TypeRef right, Variance variance,
+			Set<InferenceVariable> referencedInfVars) {
 		this.left = left;
 		this.right = right;
 		this.variance = variance;
+		this.referencedInfVars = Collections.unmodifiableSet(referencedInfVars);
+		this.hashCode = this.toString().hashCode(); // TODO find better way to compute hash code
 	}
 
 	@Override
 	public int hashCode() {
-		if (hashCode == null) {
-			hashCode = this.toString().hashCode(); // TODO find better way to compute hash code
-		}
-		return hashCode.intValue();
+		return hashCode;
 	}
 
 	@Override
@@ -82,7 +96,7 @@ import org.eclipse.n4js.types.utils.TypeUtils;
 	 */
 	public TypeBound sanitizeRawTypeRef() {
 		if (TypeUtils.isRawTypeRef(right)) {
-			final TypeBound cpy = new TypeBound(left, TypeUtils.copy(right), variance);
+			final TypeBound cpy = new TypeBound(left, TypeUtils.copy(right), variance, referencedInfVars);
 			TypeUtils.sanitizeRawTypeRef(cpy.right);
 			return cpy;
 		}

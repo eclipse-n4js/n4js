@@ -11,6 +11,7 @@
 package org.eclipse.n4js.accesscontrol.tests;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,7 +63,7 @@ class ScenarioGenerator {
 	 *            the path to generate the scenario in
 	 * @return a list files representing the root directories of the created projects
 	 */
-	public List<File> generateScenario(Path destination) {
+	public List<File> generateScenario(Path destination) throws IOException {
 		List<File> result = new LinkedList<>();
 
 		// Create the required classifiers for the scenario.

@@ -11,6 +11,7 @@
 package org.eclipse.n4js.typesystem;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -170,17 +171,52 @@ public class N4JSTypeSystem {
 
 	/** Tells if {@code left} is equal to {@code right}. Never returns <code>null</code>. */
 	public Result equaltype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
+		return doEqualtype(G, left, right, true);
+	}
+
+	private Result doEqualtype(RuleEnvironment G, TypeArgument left, TypeArgument right, boolean resolveMsg) {
 		if (subtype(G, left, right).isSuccess() && subtype(G, right, left).isSuccess()) {
 			return Result.success();
 		} else {
 			return Result.failure(
-					left.getTypeRefAsString() + " is not equal to " + right.getTypeRefAsString(), false, null);
+					left.getTypeRefAsString(resolveMsg) + " is not equal to " + right.getTypeRefAsString(resolveMsg),
+					false, null);
 		}
 	}
 
 	/** Tells if {@code left} is equal to {@code right}. */
 	public boolean equaltypeSucceeded(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		return equaltype(G, left, right).isSuccess();
+		return doEqualtype(G, left, right, false).isSuccess();
+	}
+
+	/**
+	 * Tells if {@code left} looks equal to {@code right}. Never returns <code>null</code>. Under-approximation of
+	 * {@link #equaltype(RuleEnvironment, TypeArgument, TypeArgument)}.
+	 *
+	 * Only relies on comparison of types as strings.
+	 */
+	// GH-2615 FIXME: evaluate, necessary?
+	public Result equaltypeApprox(TypeArgument left, TypeArgument right) {
+		String leftStr = left.getTypeRefAsString(false);
+		String rightStr = right.getTypeRefAsString(false);
+		if (leftStr == null && rightStr == null) {
+			return Result.success();
+		} else if (Objects.equals(leftStr, rightStr)) {
+			return Result.success();
+		}
+		return Result.failure(
+				left.getTypeRefAsString(false) + " is not equal to " + right.getTypeRefAsString(false), false,
+				null);
+	}
+
+	/**
+	 * Tells if {@code left} is equal to {@code right}. Under-approximation of
+	 * {@link #equaltypeSucceeded(RuleEnvironment, TypeArgument, TypeArgument)}.
+	 *
+	 * Only relies on comparison of types as strings.
+	 */
+	public boolean equaltypeApproxSucceeded(TypeArgument left, TypeArgument right) {
+		return equaltypeApprox(left, right).isSuccess();
 	}
 
 	/**
@@ -589,4 +625,10 @@ public class N4JSTypeSystem {
 			return null;
 		}
 	}
+
+	/** @see TypeProcessor#isPoly(Expression) */
+	public boolean isPoly(Expression expr) {
+		return typeProcessor.isPoly(expr);
+	}
+
 }

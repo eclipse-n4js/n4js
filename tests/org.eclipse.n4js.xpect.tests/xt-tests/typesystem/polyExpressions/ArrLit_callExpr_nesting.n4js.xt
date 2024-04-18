@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
+
+
+
+interface ~A { public j:J }
+interface ~B { public i:I }
+interface ~I { public x:string; }
+interface ~J extends I { public y:string; }
+const aa : A[]  = [];
+
+
+
+
+
+
+// XPECT noerrors -->
+// XPECT type of 'oo1' --> Array<B>
+// XPECT type of '{i:a1.j}' --> ~Object with { i: J }
+const oo1 = aa.map((a1) :B => ({i:a1.j} as B));
+
+// XPECT noerrors -->
+// XPECT type of 'oo2' --> Array<B>
+// XPECT type of '{i:a2.j}' --> ~Object with { i: J }
+const oo2 = aa.map((a2) => ({i:a2.j} as B));
+
+// XPECT noerrors -->
+// XPECT type of 'oo3' --> Array<B>
+// XPECT type of '{i:a3.j}' --> ~Object with { i: I }
+const oo3 = aa.map((a3) :B => ({i:a3.j}));
+
+// XPECT noerrors -->
+// XPECT type of 'oo4' --> Array<B>
+// XPECT type of '{i:a4.j}' --> ~Object with { i: J }
+const oo4 = aa.map((a4) => ({i:a4.j})) as B[];
+
+// XPECT noerrors -->
+// XPECT type of 'oo5' --> Array<B>
+// XPECT type of '{i:a5.j}' --> ~Object with { i: I }
+const oo5 : B[] = aa.map((a5) => ({i:a5.j}));

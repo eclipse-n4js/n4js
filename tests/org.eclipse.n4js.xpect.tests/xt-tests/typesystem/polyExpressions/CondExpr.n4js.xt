@@ -19,18 +19,25 @@ interface I {
 class J implements I {
     public mfj : number;
 }
+class K implements I {
+    public mfj : number;
+}
 
 let b : boolean = true;
 
 
-// XPECT type of 'k1' --> ~Object with { i: ~I }
+// XPECT type of '{i : new J()}' --> ~Object with { i: ~I }
 const k1 : ~Object with {i: ~I} = {i : new J()};
 
-// XPECT type of 'k2' --> ~Object with { i: ~I }
+// XPECT type of 'b ? {i : new J()} : undefined' --> ~Object with { i: ~I }
 const k2 : ~Object with {i: ~I} = b ? {i : new J()} : undefined;
 
-// XPECT type of 'k3' --> ~Object with { i: ~I }
+// XPECT type of 'b ? {i : new J()} : null' --> ~Object with { i: ~I }
 const k3 : ~Object with {i: ~I} = b ? {i : new J()} : null;
+
+// GH-2615 XPECT FIXME noerrors --> 
+// GH-2615 XPECT FIXME type of 'b ? {i : new J()} : {i : new K()}' --> ~Object with { i: ~I }
+const k4  : ~Object with {i: ~I} = b ? {i : new J()} : {i : new K()};
 
 
 

@@ -15,7 +15,6 @@ import org.eclipse.xtext.service.AbstractGenericModule;
 /**
  * Use this class to override bindings for the cli use case.
  */
-@SuppressWarnings({ "javadoc" })
 public class N4jscModule extends AbstractGenericModule {
 
 	// public Class<? extends DefaultBuildRequestFactory> bindDocumentExtensions() {

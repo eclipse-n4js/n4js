@@ -38,10 +38,10 @@ export public const redStringBased = getRedStringBased();
 
 
 /* XPECT generated_dts ---
-import {ColorStringBased} from './Other'
-import {ColorNumberBased} from './Other'
-import {ColorWithLiteralValues} from './Other'
-import {Color} from './Other'
+import type {ColorStringBased} from './Other.d.ts'
+import type {ColorNumberBased} from './Other.d.ts'
+import type {ColorWithLiteralValues} from './Other.d.ts'
+import type {Color} from './Other.d.ts'
 
 export const red: Color;
 export const redWithLiteralValues: ColorWithLiteralValues;

@@ -43,8 +43,8 @@ public class DestructureUtilsForSymbols {
 			return null;
 		}
 
-		EObject assignedValue = dNode.getAssignedElem();
-		EObject defaultValue = dNode.getDefaultExpr();
+		EObject assignedValue = dNode.assignedElem;
+		EObject defaultValue = dNode.defaultExpr;
 
 		return respectDefaultValue(assignedValue, defaultValue);
 	}

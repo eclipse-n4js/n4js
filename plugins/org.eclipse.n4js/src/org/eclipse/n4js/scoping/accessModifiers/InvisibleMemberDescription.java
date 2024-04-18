@@ -51,12 +51,12 @@ public class InvisibleMemberDescription extends AbstractDescriptionWithError {
 		// here, because error message refers not to the member available in the type but to the missing member accessed
 		// by the source code.
 		String memberName = getName().getLastSegment();
-		return IssueCodes.getMessageForVIS_ILLEGAL_MEMBER_ACCESS(memberTypeName, memberName);
+		return IssueCodes.VIS_ILLEGAL_MEMBER_ACCESS.getMessage(memberTypeName, memberName);
 	}
 
 	@Override
 	public String getIssueCode() {
-		return IssueCodes.VIS_ILLEGAL_MEMBER_ACCESS;
+		return IssueCodes.VIS_ILLEGAL_MEMBER_ACCESS.name();
 	}
 
 	@Override

@@ -21,7 +21,6 @@ public class N4JSInjectorProviderWithIndex extends N4JSInjectorProvider {
 		super(new EagerResourceSetModule());
 	}
 
-	@SuppressWarnings("javadoc")
 	public static class EagerResourceSetModule extends BaseTestModule {
 		public Class<? extends IResourceDescriptions> bindResourceDescriptions() {
 			return EagerResourceSetBasedResourceDescriptions.class;

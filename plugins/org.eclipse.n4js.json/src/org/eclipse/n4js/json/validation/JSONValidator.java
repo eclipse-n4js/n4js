@@ -81,8 +81,8 @@ public class JSONValidator extends AbstractJSONValidator {
 				final INode duplicatedNode = NodeModelUtils.findActualNodeFor(value);
 				final int duplicatedLine = NodeModelUtils.getLineAndColumn(duplicatedNode, duplicatedNode.getOffset())
 						.getLine();
-				addIssue(JSONIssueCodes.getMessageForJSON_DUPLICATE_KEY(pair.getName(), duplicatedLine), pair,
-						JSONPackage.Literals.NAME_VALUE_PAIR__NAME, JSONIssueCodes.JSON_DUPLICATE_KEY);
+				addIssue(JSONIssueCodes.JSON_DUPLICATE_KEY.getMessage(pair.getName(), duplicatedLine), pair,
+						JSONPackage.Literals.NAME_VALUE_PAIR__NAME, JSONIssueCodes.JSON_DUPLICATE_KEY.name());
 			}
 			values.put(pair.getName(), pair.getValue());
 		}
@@ -102,8 +102,8 @@ public class JSONValidator extends AbstractJSONValidator {
 				.filter(n -> n instanceof HiddenLeafNode)
 				.filter(n -> isCommentNode(n))
 				.forEach(n -> {
-					addIssue(JSONIssueCodes.getMessageForJSON_COMMENT_UNSUPPORTED(), document, n.getOffset(),
-							n.getLength(), JSONIssueCodes.JSON_COMMENT_UNSUPPORTED);
+					addIssue(JSONIssueCodes.JSON_COMMENT_UNSUPPORTED.getMessage(), document, n.getOffset(),
+							n.getLength(), JSONIssueCodes.JSON_COMMENT_UNSUPPORTED.name());
 				});
 	}
 
@@ -147,8 +147,9 @@ public class JSONValidator extends AbstractJSONValidator {
 				if (Objects.equals(keyword.getValue(), expectedKeywords.get(0))) {
 					expectedKeywords.remove(0);
 					if (expectedKeywords.isEmpty()) {
-						addIssue(JSONIssueCodes.getMessageForJSON_TRAILING_COMMAS_UNSUPPORTED(), value,
-								node.getOffset(), node.getLength(), JSONIssueCodes.JSON_TRAILING_COMMAS_UNSUPPORTED);
+						addIssue(JSONIssueCodes.JSON_TRAILING_COMMAS_UNSUPPORTED.getMessage(), value,
+								node.getOffset(), node.getLength(),
+								JSONIssueCodes.JSON_TRAILING_COMMAS_UNSUPPORTED.name());
 						return;
 					}
 				}

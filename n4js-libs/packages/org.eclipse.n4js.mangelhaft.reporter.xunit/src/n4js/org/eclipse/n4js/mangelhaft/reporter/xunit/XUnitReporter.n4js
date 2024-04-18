@@ -121,6 +121,7 @@ export public class XUnitReporter implements ITestReporter {
         this.spy.testingFinished.add(async (resultGroups: ResultGroups) => {
             this.endTime = new Date();
             outputTextFile(this.spec.xunitReportFile, await this.createXunitReport(resultGroups));
+            console.log("Saved test report at: " + this.spec.xunitReportFile);
         });
         return this;
     }

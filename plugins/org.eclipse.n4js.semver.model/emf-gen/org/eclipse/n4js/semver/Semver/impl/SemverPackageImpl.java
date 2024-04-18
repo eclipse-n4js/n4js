@@ -41,6 +41,7 @@ import org.eclipse.n4js.semver.Semver.VersionPart;
 import org.eclipse.n4js.semver.Semver.VersionRange;
 import org.eclipse.n4js.semver.Semver.VersionRangeConstraint;
 import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
+import org.eclipse.n4js.semver.Semver.WorkspaceVersionRequirement;
 
 /**
  * <!-- begin-user-doc -->
@@ -90,6 +91,13 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * @generated
 	 */
 	private EClass urlCommitISHEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass workspaceVersionRequirementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -394,6 +402,36 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	@Override
 	public EAttribute getURLCommitISH_CommitISH() {
 		return (EAttribute)urlCommitISHEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getWorkspaceVersionRequirement() {
+		return workspaceVersionRequirementEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getWorkspaceVersionRequirement_Version() {
+		return (EReference)workspaceVersionRequirementEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getWorkspaceVersionRequirement_OtherVersion() {
+		return (EAttribute)workspaceVersionRequirementEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -966,6 +1004,10 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 		urlCommitISHEClass = createEClass(URL_COMMIT_ISH);
 		createEAttribute(urlCommitISHEClass, URL_COMMIT_ISH__COMMIT_ISH);
 
+		workspaceVersionRequirementEClass = createEClass(WORKSPACE_VERSION_REQUIREMENT);
+		createEReference(workspaceVersionRequirementEClass, WORKSPACE_VERSION_REQUIREMENT__VERSION);
+		createEAttribute(workspaceVersionRequirementEClass, WORKSPACE_VERSION_REQUIREMENT__OTHER_VERSION);
+
 		gitHubVersionRequirementEClass = createEClass(GIT_HUB_VERSION_REQUIREMENT);
 		createEAttribute(gitHubVersionRequirementEClass, GIT_HUB_VERSION_REQUIREMENT__GITHUB_URL);
 		createEAttribute(gitHubVersionRequirementEClass, GIT_HUB_VERSION_REQUIREMENT__COMMIT_ISH);
@@ -1069,6 +1111,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 		urlVersionSpecifierEClass.getESuperTypes().add(this.getSemverToStringable());
 		urlSemverEClass.getESuperTypes().add(this.getURLVersionSpecifier());
 		urlCommitISHEClass.getESuperTypes().add(this.getURLVersionSpecifier());
+		workspaceVersionRequirementEClass.getESuperTypes().add(this.getNPMVersionRequirement());
 		gitHubVersionRequirementEClass.getESuperTypes().add(this.getNPMVersionRequirement());
 		localPathVersionRequirementEClass.getESuperTypes().add(this.getNPMVersionRequirement());
 		tagVersionRequirementEClass.getESuperTypes().add(this.getNPMVersionRequirement());
@@ -1106,6 +1149,10 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 
 		initEClass(urlCommitISHEClass, URLCommitISH.class, "URLCommitISH", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getURLCommitISH_CommitISH(), theEcorePackage.getEString(), "commitISH", null, 0, 1, URLCommitISH.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(workspaceVersionRequirementEClass, WorkspaceVersionRequirement.class, "WorkspaceVersionRequirement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getWorkspaceVersionRequirement_Version(), this.getSimpleVersion(), null, "version", null, 0, 1, WorkspaceVersionRequirement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getWorkspaceVersionRequirement_OtherVersion(), theEcorePackage.getEString(), "otherVersion", null, 0, 1, WorkspaceVersionRequirement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(gitHubVersionRequirementEClass, GitHubVersionRequirement.class, "GitHubVersionRequirement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getGitHubVersionRequirement_GithubUrl(), theEcorePackage.getEString(), "githubUrl", null, 0, 1, GitHubVersionRequirement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

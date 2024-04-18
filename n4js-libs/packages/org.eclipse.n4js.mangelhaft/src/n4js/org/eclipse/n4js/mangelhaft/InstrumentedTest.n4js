@@ -155,7 +155,7 @@ export public class InstrumentedTest implements IInstrumentedTest {
         // Make shared TestController instance be accessible to test instances (via injection):
         const instance = testInjector.internalCreate(testClass, testInjector, new Map<string, N4Object>([
                 [`${TestController.n4type.origin}${TestController.n4type.fqn}`, controller]
-            ] as Iterable<Iterable2<string, N4Object>>));
+            ]));
 
         return new InstrumentedTest(testClass, info, instance, null, parameterizedTests);
     }

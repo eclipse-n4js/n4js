@@ -39,12 +39,12 @@ public class PlainAccessOfAliasedImportDescription extends AbstractDescriptionWi
 
 	@Override
 	public String getMessage() {
-		return IssueCodes.getMessageForIMP_PLAIN_ACCESS_OF_ALIASED_TYPE(getName(), alias);
+		return IssueCodes.IMP_PLAIN_ACCESS_OF_ALIASED_TYPE.getMessage(getName(), alias);
 	}
 
 	@Override
 	public String getIssueCode() {
-		return IssueCodes.IMP_PLAIN_ACCESS_OF_ALIASED_TYPE;
+		return IssueCodes.IMP_PLAIN_ACCESS_OF_ALIASED_TYPE.name();
 	}
 
 }

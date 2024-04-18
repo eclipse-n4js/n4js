@@ -24,6 +24,7 @@ import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_DIFFERENT_TYPE
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_EXTEND_MISSING;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_FILLED_NOT_PROVIDEDBYRUNTIME;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_INCOMPLETE_TYPEARGS;
+import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_MULTIPOLYFILLS_MEMBER_CONFLICT;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_NOT_DIRECTLY_EXPORTED;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_NOT_PROVIDEDBYRUNTIME;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_NO_EXTENDS_ADDITIONAL;
@@ -32,23 +33,6 @@ import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_STATIC_DIFFERE
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_STATIC_FILLED_TYPE_NOT_AWARE;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_TYPEPARS_DIFFER_TYPEARGS;
 import static org.eclipse.n4js.validation.IssueCodes.POLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_DIFFERENT_CLASSIFIER_KIND;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_DIFFERENT_GLOBALS;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_DIFFERENT_MODIFIER;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_DIFFERENT_MODULE_SPECIFIER;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_DIFFERENT_NAME;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_DIFFERENT_TYPEPARS;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_EXTEND_MISSING;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_FILLED_NOT_PROVIDEDBYRUNTIME;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_INCOMPLETE_TYPEARGS;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_NOT_DIRECTLY_EXPORTED;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_NOT_PROVIDEDBYRUNTIME;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_NO_EXTENDS_ADDITIONAL;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_NO_IMPLEMENTS;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_STATIC_DIFFERENT_VARIANT;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_STATIC_FILLED_TYPE_NOT_AWARE;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_TYPEPARS_DIFFER_TYPEARGS;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForPOLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,7 +63,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
-import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.n4js.validation.IssueItem;
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.resource.IContainer;
@@ -130,8 +114,8 @@ public class PolyfillValidatorFragment {
 		String name;
 	}
 
-	private void addIssue(PolyfillValidationState state, String msg, String issueCode) {
-		state.host.addIssue(msg, state.n4Classifier, N4_TYPE_DECLARATION__NAME, issueCode);
+	private void addIssue(PolyfillValidationState state, IssueItem issueItem) {
+		state.host.addIssue(issueItem.message, state.n4Classifier, N4_TYPE_DECLARATION__NAME, issueItem.getID());
 	}
 
 	/**
@@ -206,8 +190,8 @@ public class PolyfillValidatorFragment {
 		// § 140.1 only static polyfills are allowed in StaticPolyfillModule.
 		if (!isStaticPolyFill && isContainedInStaticPolyfillModule(n4Classifier)) {
 			// n4Classifier is top-level by default
-			validator.addIssue(getMessageForPOLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES(), n4Classifier,
-					N4_TYPE_DECLARATION__NAME, POLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES);
+			validator.addIssue(POLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES.getMessage(), n4Classifier,
+					N4_TYPE_DECLARATION__NAME, POLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES.name());
 			return false;
 		}
 
@@ -220,8 +204,7 @@ public class PolyfillValidatorFragment {
 	private boolean holdsFilledClassIsStaticPolyfillAware(PolyfillValidationState state) {
 
 		if (!(isContainedInStaticPolyfillAware(state.filledType))) { // (Static Polyfill) 139.5
-			final String msg = getMessageForCLF_POLYFILL_STATIC_FILLED_TYPE_NOT_AWARE(state.name);
-			addIssue(state, msg, CLF_POLYFILL_STATIC_FILLED_TYPE_NOT_AWARE);
+			addIssue(state, CLF_POLYFILL_STATIC_FILLED_TYPE_NOT_AWARE.toIssueItem(state.name));
 			return false;
 		}
 
@@ -238,8 +221,7 @@ public class PolyfillValidatorFragment {
 				&& fillerModule.isN4jsdModule() != filledModule.isN4jsdModule()) {
 			final String fileExt = fillerModule.isN4jsdModule() ? N4JSGlobals.N4JSD_FILE_EXTENSION
 					: N4JSGlobals.N4JS_FILE_EXTENSION;
-			final String msg = getMessageForCLF_POLYFILL_STATIC_DIFFERENT_VARIANT(state.name, "." + fileExt);
-			addIssue(state, msg, CLF_POLYFILL_STATIC_DIFFERENT_VARIANT);
+			addIssue(state, CLF_POLYFILL_STATIC_DIFFERENT_VARIANT.toIssueItem(state.name, "." + fileExt));
 			return false;
 		}
 		return true;
@@ -251,9 +233,8 @@ public class PolyfillValidatorFragment {
 	private boolean holdsExplicitExtends(PolyfillValidationState state) {
 		final TypeReferenceNode<ParameterizedTypeRef> filledTypeRef = state.superClassifierNode;
 		if (filledTypeRef == null) { // (Polyfill Class) 156.1
-			final String msg = getMessageForCLF_POLYFILL_EXTEND_MISSING(state.name,
-					keywordProvider.keywordWithIndefiniteArticle(state.polyType));
-			addIssue(state, msg, CLF_POLYFILL_EXTEND_MISSING);
+			addIssue(state, CLF_POLYFILL_EXTEND_MISSING.toIssueItem(state.name,
+					keywordProvider.keywordWithIndefiniteArticle(state.polyType)));
 			return false;
 		}
 		return true;
@@ -261,11 +242,10 @@ public class PolyfillValidatorFragment {
 
 	private boolean holdPolyfillClassifierKind(PolyfillValidationState state) {
 		if (state.polyType.eClass() != state.filledType.eClass()) {
-			final String msg = getMessageForCLF_POLYFILL_DIFFERENT_CLASSIFIER_KIND(
+			addIssue(state, CLF_POLYFILL_DIFFERENT_CLASSIFIER_KIND.toIssueItem(
 					keywordProvider.keyword(state.filledType), state.name,
 					keywordProvider.keywordWithIndefiniteArticle(state.filledType),
-					keywordProvider.keywordWithIndefiniteArticle(state.polyType));
-			addIssue(state, msg, CLF_POLYFILL_DIFFERENT_CLASSIFIER_KIND);
+					keywordProvider.keywordWithIndefiniteArticle(state.polyType)));
 			return false;
 		}
 		return true;
@@ -276,17 +256,16 @@ public class PolyfillValidatorFragment {
 	 */
 	private boolean holdPolyfillName(PolyfillValidationState state) {
 		if (!state.name.equals(state.filledType.getName())) { // (Polyfill Class) 156.2
-			final String msg = getMessageForCLF_POLYFILL_DIFFERENT_NAME(state.name,
-					keywordProvider.keyword(state.filledType), state.filledType.getName());
-			addIssue(state, msg, CLF_POLYFILL_DIFFERENT_NAME);
+			addIssue(state, CLF_POLYFILL_DIFFERENT_NAME.toIssueItem(state.name,
+					keywordProvider.keyword(state.filledType), state.filledType.getName()));
 			return false;
 		}
 		final boolean isGlobalFilled = GLOBAL.hasAnnotation(state.filledType);
 		final boolean isGlobalPoly = GLOBAL.hasAnnotation(state.polyType);
 		if (isGlobalFilled != isGlobalPoly) { // (Polyfill Class) 156.2
-			final String msg = getMessageForCLF_POLYFILL_DIFFERENT_GLOBALS(
+			IssueItem issueItem = CLF_POLYFILL_DIFFERENT_GLOBALS.toIssueItem(
 					state.name, isGlobalPoly ? "global" : "not global", isGlobalFilled ? "global" : "not global");
-			addIssue(state, msg, CLF_POLYFILL_DIFFERENT_GLOBALS);
+			addIssue(state, issueItem);
 			return false;
 		}
 		if (!isGlobalFilled) {
@@ -295,10 +274,11 @@ public class PolyfillValidatorFragment {
 			if (polyModule != null && filledModule != null) { // avoid consequential errors
 				if (!polyModule.getModuleSpecifier().equals(filledModule.getModuleSpecifier())) { // (Polyfill Class)
 																									// 156.2
-					final String msg = getMessageForCLF_POLYFILL_DIFFERENT_MODULE_SPECIFIER(state.name,
+					final IssueItem issueItem = CLF_POLYFILL_DIFFERENT_MODULE_SPECIFIER.toIssueItem(
+							state.name,
 							polyModule.getModuleSpecifier(),
 							filledModule.getModuleSpecifier());
-					addIssue(state, msg, CLF_POLYFILL_DIFFERENT_MODULE_SPECIFIER);
+					addIssue(state, issueItem);
 					return false;
 				}
 			}
@@ -311,13 +291,11 @@ public class PolyfillValidatorFragment {
 	 */
 	private boolean holdsProvidedByRuntime(PolyfillValidationState state) {
 		if (!state.polyType.isProvidedByRuntime()) {
-			final String msg = getMessageForCLF_POLYFILL_NOT_PROVIDEDBYRUNTIME(state.name);
-			addIssue(state, msg, CLF_POLYFILL_NOT_PROVIDEDBYRUNTIME);
+			addIssue(state, CLF_POLYFILL_NOT_PROVIDEDBYRUNTIME.toIssueItem(state.name));
 			return false;
 		}
 		if (!state.filledType.isProvidedByRuntime()) {
-			final String msg = getMessageForCLF_POLYFILL_FILLED_NOT_PROVIDEDBYRUNTIME(state.name);
-			addIssue(state, msg, CLF_POLYFILL_FILLED_NOT_PROVIDEDBYRUNTIME);
+			addIssue(state, CLF_POLYFILL_FILLED_NOT_PROVIDEDBYRUNTIME.toIssueItem(state.name));
 			return false;
 		}
 
@@ -330,14 +308,12 @@ public class PolyfillValidatorFragment {
 	private boolean holdsNoImplementsOrConsumes(PolyfillValidationState state) {
 		if (state.n4Classifier instanceof N4ClassDeclaration) {
 			if (!((N4ClassDeclaration) state.n4Classifier).getImplementedInterfaceRefs().isEmpty()) {
-				final String msg = getMessageForCLF_POLYFILL_NO_IMPLEMENTS(state.name);
-				addIssue(state, msg, CLF_POLYFILL_NO_IMPLEMENTS);
+				addIssue(state, CLF_POLYFILL_NO_IMPLEMENTS.toIssueItem(state.name));
 				return false;
 			}
 		} else if (state.n4Classifier instanceof N4InterfaceDeclaration) {
 			if (((N4InterfaceDeclaration) state.n4Classifier).getSuperInterfaceRefs().size() > 1) {
-				final String msg = getMessageForCLF_POLYFILL_NO_EXTENDS_ADDITIONAL(state.name);
-				addIssue(state, msg, CLF_POLYFILL_NO_EXTENDS_ADDITIONAL);
+				addIssue(state, CLF_POLYFILL_NO_EXTENDS_ADDITIONAL.toIssueItem(state.name));
 				return false;
 			}
 		}
@@ -346,8 +322,7 @@ public class PolyfillValidatorFragment {
 
 	private boolean holdsIsDirectlyExported(PolyfillValidationState state) {
 		if (!state.polyType.isDirectlyExported()) {
-			final String msg = getMessageForCLF_POLYFILL_NOT_DIRECTLY_EXPORTED(state.name);
-			addIssue(state, msg, CLF_POLYFILL_NOT_DIRECTLY_EXPORTED);
+			addIssue(state, CLF_POLYFILL_NOT_DIRECTLY_EXPORTED.toIssueItem(state.name));
 			return false;
 		}
 		return true;
@@ -359,11 +334,11 @@ public class PolyfillValidatorFragment {
 	private boolean holdsEqualModifiers(PolyfillValidationState state) {
 		boolean result = true;
 		if (state.polyType.getTypeAccessModifier() != state.filledType.getTypeAccessModifier()) {
-			final String msg = getMessageForCLF_POLYFILL_DIFFERENT_MODIFIER(state.name,
+			final IssueItem issueItem = CLF_POLYFILL_DIFFERENT_MODIFIER.toIssueItem(state.name,
 					keywordProvider.keyword(state.polyType.getTypeAccessModifier()),
 					keywordProvider.keyword(state.filledType.getTypeAccessModifier()),
 					keywordProvider.keyword(state.filledType));
-			addIssue(state, msg, CLF_POLYFILL_DIFFERENT_MODIFIER);
+			addIssue(state, issueItem);
 			result = false;
 		}
 		result &= holdsEqualModifier(state, "abstract", state.polyType.isAbstract(), state.filledType.isAbstract());
@@ -376,11 +351,11 @@ public class PolyfillValidatorFragment {
 	private boolean holdsEqualModifier(PolyfillValidationState state, String modifierName, boolean poly,
 			boolean filled) {
 		if (poly != filled) {
-			final String msg = getMessageForCLF_POLYFILL_DIFFERENT_MODIFIER(state.name,
+			final IssueItem issueItem = CLF_POLYFILL_DIFFERENT_MODIFIER.toIssueItem(state.name,
 					(poly ? "" : "non-") + modifierName,
 					(filled ? "" : "non-") + modifierName,
 					keywordProvider.keyword(state.filledType));
-			addIssue(state, msg, CLF_POLYFILL_DIFFERENT_MODIFIER);
+			addIssue(state, issueItem);
 			return false;
 		}
 		return true;
@@ -391,11 +366,11 @@ public class PolyfillValidatorFragment {
 		poly = poly == TypingStrategy.DEFAULT ? TypingStrategy.NOMINAL : poly;
 		filled = filled == TypingStrategy.DEFAULT ? TypingStrategy.NOMINAL : filled;
 		if (poly != filled) {
-			final String msg = getMessageForCLF_POLYFILL_DIFFERENT_MODIFIER(state.name,
+			final IssueItem issueItem = CLF_POLYFILL_DIFFERENT_MODIFIER.toIssueItem(state.name,
 					(poly != TypingStrategy.NOMINAL ? "definition-site " : "") + keywordProvider.keyword(poly),
 					(filled != TypingStrategy.NOMINAL ? "definition-site " : "") + keywordProvider.keyword(filled),
 					keywordProvider.keyword(state.filledType));
-			addIssue(state, msg, CLF_POLYFILL_DIFFERENT_MODIFIER);
+			addIssue(state, issueItem);
 			return false;
 		}
 		return true;
@@ -411,9 +386,9 @@ public class PolyfillValidatorFragment {
 		final String typeVars2 = Joiner.on(',').join(
 				state.filledType.getTypeVars().stream().map(v -> v.getTypeAsString()).toArray());
 		if (!typeVars1.equals(typeVars2)) {
-			final String msg = getMessageForCLF_POLYFILL_DIFFERENT_TYPEPARS(state.name,
+			final IssueItem issueItem = CLF_POLYFILL_DIFFERENT_TYPEPARS.toIssueItem(state.name,
 					keywordProvider.keyword(state.filledType));
-			addIssue(state, msg, CLF_POLYFILL_DIFFERENT_TYPEPARS);
+			addIssue(state, issueItem);
 			return false;
 		}
 
@@ -428,8 +403,8 @@ public class PolyfillValidatorFragment {
 		if (args.size() < expectedTypeParamCountMin || args.size() > expectedTypeParamCountMax) {
 			return true; // consequential error
 		} else if (args.size() != expectedTypeParamCountMax) {
-			final String msg = getMessageForCLF_POLYFILL_INCOMPLETE_TYPEARGS(state.name);
-			addIssue(state, msg, CLF_POLYFILL_INCOMPLETE_TYPEARGS);
+			final IssueItem issueItem = CLF_POLYFILL_INCOMPLETE_TYPEARGS.toIssueItem(state.name);
+			addIssue(state, issueItem);
 			return false;
 		}
 		for (int i = state.polyType.getTypeVars().size() - 1; i >= 0; i--) {
@@ -438,8 +413,9 @@ public class PolyfillValidatorFragment {
 			String argString = arg.getTypeRefAsString();
 			String parString = par.getName();
 			if (!argString.equals(parString)) {
-				final String msg = getMessageForCLF_POLYFILL_TYPEPARS_DIFFER_TYPEARGS(state.name, parString, argString);
-				addIssue(state, msg, CLF_POLYFILL_TYPEPARS_DIFFER_TYPEARGS);
+				final IssueItem issueItem = CLF_POLYFILL_TYPEPARS_DIFFER_TYPEARGS.toIssueItem(state.name, parString,
+						argString);
+				addIssue(state, issueItem);
 				return false;
 			}
 		}
@@ -522,9 +498,10 @@ public class PolyfillValidatorFragment {
 			String memberAxis = myMember.getContainingType().getName() + "." + myMember.getName();
 
 			// Issue on filled Member-name declaration:
-			String msg = IssueCodes.getMessageForCLF_POLYFILL_MULTIPOLYFILLS_MEMBER_CONFLICT(uris, memberAxis);
-			state.host.addIssue(msg, myMember.getAstElement(), N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
-					IssueCodes.CLF_POLYFILL_MULTIPOLYFILLS_MEMBER_CONFLICT);
+			IssueItem issueItem = CLF_POLYFILL_MULTIPOLYFILLS_MEMBER_CONFLICT.toIssueItem(uris, memberAxis);
+			state.host.addIssue(issueItem.message, myMember.getAstElement(),
+					N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
+					issueItem.getID());
 		}
 
 		return true;

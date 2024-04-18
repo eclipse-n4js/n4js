@@ -67,6 +67,11 @@ class URLCommitISH extends URLVersionSpecifier {
 	String commitISH
 }
 
+class WorkspaceVersionRequirement extends NPMVersionRequirement {
+	contains SimpleVersion version
+	String otherVersion
+}
+
 class GitHubVersionRequirement extends NPMVersionRequirement {
 	String githubUrl
 	String commitISH

@@ -10,11 +10,10 @@
  */
 package org.eclipse.n4js.scoping.accessModifiers;
 
-import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.resource.IEObjectDescription;
-
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
  * Description marking invalid write access to static member via subtype or other expression.
@@ -46,16 +45,15 @@ public class InvalidStaticWriteAccessDescription extends AbstractDescriptionWith
 		QualifiedName qualifiedName = getName();
 		String memberName = qualifiedName.getLastSegment();
 		return aliasOfMemberDefiningType == null
-				? IssueCodes.getMessageForVIS_ILLEGAL_STATIC_MEMBER_WRITE_ACCESS(memberDefTypeName, memberName)
-				: IssueCodes.getMessageForVIS_ILLEGAL_STATIC_MEMBER_WRITE_ACCESS_WITH_ALIAS(memberDefTypeName,
-						memberName,
-						aliasOfMemberDefiningType);
+				? IssueCodes.VIS_ILLEGAL_STATIC_MEMBER_WRITE_ACCESS.getMessage(memberDefTypeName, memberName)
+				: IssueCodes.VIS_ILLEGAL_STATIC_MEMBER_WRITE_ACCESS_WITH_ALIAS.getMessage(memberDefTypeName,
+						memberName, aliasOfMemberDefiningType);
 	}
 
 	@Override
 	public String getIssueCode() {
-		return aliasOfMemberDefiningType == null ? IssueCodes.VIS_ILLEGAL_STATIC_MEMBER_WRITE_ACCESS
-				: IssueCodes.VIS_ILLEGAL_STATIC_MEMBER_WRITE_ACCESS_WITH_ALIAS;
+		return aliasOfMemberDefiningType == null ? IssueCodes.VIS_ILLEGAL_STATIC_MEMBER_WRITE_ACCESS.name()
+				: IssueCodes.VIS_ILLEGAL_STATIC_MEMBER_WRITE_ACCESS_WITH_ALIAS.name();
 	}
 
 }

@@ -100,6 +100,10 @@ public class SemverAdapterFactory extends AdapterFactoryImpl {
 				return createURLCommitISHAdapter();
 			}
 			@Override
+			public Adapter caseWorkspaceVersionRequirement(WorkspaceVersionRequirement object) {
+				return createWorkspaceVersionRequirementAdapter();
+			}
+			@Override
 			public Adapter caseGitHubVersionRequirement(GitHubVersionRequirement object) {
 				return createGitHubVersionRequirementAdapter();
 			}
@@ -248,6 +252,20 @@ public class SemverAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createURLCommitISHAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.Semver.WorkspaceVersionRequirement <em>Workspace Version Requirement</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.semver.Semver.WorkspaceVersionRequirement
+	 * @generated
+	 */
+	public Adapter createWorkspaceVersionRequirementAdapter() {
 		return null;
 	}
 

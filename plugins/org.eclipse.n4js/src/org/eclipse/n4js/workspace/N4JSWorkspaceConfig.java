@@ -42,9 +42,9 @@ import org.eclipse.xtext.util.UriExtensions;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Sets;
 
 /**
@@ -70,7 +70,8 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	/** All projects registered in this workspace by their id. */
 	protected final Map<String, N4JSProjectConfig> projectID2ProjectConfig = new LinkedHashMap<>();
 	/** All projects by their package name. */
-	protected final HashMultimap<String, N4JSProjectConfig> packageName2ProjectConfigs = HashMultimap.create();
+	protected final LinkedHashMultimap<String, N4JSProjectConfig> packageName2ProjectConfigs = LinkedHashMultimap
+			.create();
 	/** Map between definition projects and their defined projects. */
 	protected final DefinitionProjectMap definitionProjects = new DefinitionProjectMap();
 	/** Set of all runtime-library project ids in the workspace. */

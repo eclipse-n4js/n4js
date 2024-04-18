@@ -33,6 +33,7 @@ import java.util.Stack
 import org.apache.log4j.Logger
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.json.JSON.JSONArray
@@ -64,7 +65,7 @@ import org.eclipse.n4js.utils.ModuleFilterUtils
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper
 import org.eclipse.n4js.utils.ProjectDescriptionLoader
 import org.eclipse.n4js.utils.Strings
-import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.n4js.validation.IssueItem
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyProvider
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
@@ -304,22 +305,19 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			if (keyS.size > 1) {
 
 				// case a: multiple dependencies clash
-				val issMsg = if (polyFilledMemberAsStrings.size == 1) {
-						IssueCodes.getMessageForPOLY_CLASH_IN_RUNTIMEDEPENDENCY(libsString, userPresentablePolyFills)
+				val IssueItem issueItem = if (polyFilledMemberAsStrings.size == 1) {
+						POLY_CLASH_IN_RUNTIMEDEPENDENCY.toIssueItem(libsString, userPresentablePolyFills)
 					} else {
-						IssueCodes.
-							getMessageForPOLY_CLASH_IN_RUNTIMEDEPENDENCY_MULTI(libsString, userPresentablePolyFills)
+						POLY_CLASH_IN_RUNTIMEDEPENDENCY_MULTI.toIssueItem(libsString, userPresentablePolyFills)
 					}
 
 				// add Issue for each
 				keyS.forEach [
-					addIssue(issMsg, it, IssueCodes.POLY_CLASH_IN_RUNTIMEDEPENDENCY)
+					addIssue(it, issueItem)
 				]
 			} else {
 				// case b: not error-free:
-				val issMsg = IssueCodes.
-					getMessageForPOLY_ERROR_IN_RUNTIMEDEPENDENCY(libsString, userPresentablePolyFills)
-				addIssue(issMsg, keyS.head, IssueCodes.POLY_ERROR_IN_RUNTIMEDEPENDENCY)
+				addIssue(keyS.head, POLY_ERROR_IN_RUNTIMEDEPENDENCY.toIssueItem(libsString, userPresentablePolyFills));
 
 			}
 
@@ -376,8 +374,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 					for (projectCycleName : projectCycle) {
 						if (projectCycleName.endsWith("/" + dependencyPair.name)) {
 							val dependencyCycle = Strings.join(", ", projectCycle);
-							val message = getMessageForPROJECT_DEPENDENCY_CYCLE(dependencyCycle);
-							addIssue(message, dependencyPair, JSONPackage.Literals.NAME_VALUE_PAIR__NAME, PROJECT_DEPENDENCY_CYCLE);
+							addIssue(dependencyPair, JSONPackage.Literals.NAME_VALUE_PAIR__NAME, PROJECT_DEPENDENCY_CYCLE.toIssueItem(dependencyCycle));
 						}
 					}
 				}
@@ -415,7 +412,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		}
 		
 		if(!anyDependsOnTestLibrary(wc, #[project])){
-			addIssuePreferred(#[], getMessageForSRCTEST_NO_TESTLIB_DEP(N4JSGlobals.MANGELHAFT), SRCTEST_NO_TESTLIB_DEP);
+			addIssuePreferred(#[], SRCTEST_NO_TESTLIB_DEP.toIssueItem(N4JSGlobals.MANGELHAFT));
 		}
 	}
 
@@ -482,9 +479,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 					return	allProjects.containsKey(projectId) && refProjectType != allProjects.get(projectId)?.type
 				]) {
 					addIssue(
-						messageForMISMATCHING_TESTED_PROJECT_TYPES, 
 						testedProjectsValue,
-						MISMATCHING_TESTED_PROJECT_TYPES);
+						MISMATCHING_TESTED_PROJECT_TYPES.toIssueItem());
 				}
 			}
 		}
@@ -515,9 +511,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 				val dependencyProjectName = pcs.getProjectIdForPackageName(pair.name);
 				val actualImplementationId = allProjects.get(dependencyProjectName)?.implementationId;
 				if (actualImplementationId !== null && actualImplementationId != expectedImplementationId) {
-					val message = getMessageForMISMATCHING_IMPLEMENTATION_ID(expectedImplementationId, 
-						pair.name, actualImplementationId);
-					addIssue(message, pair, MISMATCHING_IMPLEMENTATION_ID);
+					addIssue(pair, MISMATCHING_IMPLEMENTATION_ID.toIssueItem(expectedImplementationId, pair.name, actualImplementationId));
 				}
 			];
 		}
@@ -564,11 +558,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			val workspaceDependency = actualDirectDependencies.findFirst[!external];
 			if (null !== workspaceDependency) {
 				val workspaceDependencyId = workspaceDependency.name;
-				val message = getMessageForEXTERNAL_PROJECT_REFERENCES_WORKSPACE_PROJECT(actualId, workspaceDependencyId);
 				addIssue(
-					message,
 					dependenciesValue,
-					EXTERNAL_PROJECT_REFERENCES_WORKSPACE_PROJECT
+					EXTERNAL_PROJECT_REFERENCES_WORKSPACE_PROJECT.toIssueItem(actualId, workspaceDependencyId)
 				);
 				return;
 			}
@@ -616,15 +608,13 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			val matchingDevDep = devDependencies.findFirst[name == N4JSGlobals.N4JS_RUNTIME.rawName];
 			if (matchingDevDep === null) {
 				// dependency to 'n4js-runtime' missing entirely
-				val msg = IssueCodes.getMessageForPKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME;
 				val projectTypeValue = getDocumentValues(PROJECT_TYPE).head;
 				if (projectTypeValue !== null) { // should always be non-null, because we check for 3 non-default project types above!
-					addIssue(msg, projectTypeValue, IssueCodes.PKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME);
+					addIssue(projectTypeValue, PKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME.toIssueItem());
 				}
 			} else {
 				// dependency to 'n4js-runtime' defined in wrong section (under 'devDependencies' instead of 'dependencies')
-				val msg = IssueCodes.getMessageForPKGJ_WRONG_DEPENDENCY_N4JS_RUNTIME;
-				addIssue(msg, matchingDevDep, IssueCodes.PKGJ_WRONG_DEPENDENCY_N4JS_RUNTIME);
+				addIssue(matchingDevDep, PKGJ_WRONG_DEPENDENCY_N4JS_RUNTIME.toIssueItem());
 			}
 		}
 	}
@@ -663,8 +653,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 		for (projectPair : libraryDependenciesWithImplId) {
 			val reference = projectPair.key;
-			addIssue(IssueCodes.getMessageForINVALID_API_PROJECT_DEPENDENCY(reference.referencedProjectName), reference.astRepresentation, 
-				IssueCodes.INVALID_API_PROJECT_DEPENDENCY);
+			addIssue(reference.astRepresentation, INVALID_API_PROJECT_DEPENDENCY.toIssueItem(reference.referencedProjectName));
 		}
 	}
 
@@ -740,8 +729,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			// make sure an implementationId has been declared
 			val JSONValue implementationIdValue = getSingleDocumentValue(IMPLEMENTATION_ID);
 			if (!references.isEmpty() && implementationIdValue === null ) {
-				addIssue(IssueCodes.getMessageForPKGJ_APIIMPL_MISSING_IMPL_ID(), implementedProjectsValue.eContainer,
-					JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_APIIMPL_MISSING_IMPL_ID);
+				addIssue(implementedProjectsValue.eContainer, JSONPackage.Literals.NAME_VALUE_PAIR__NAME, PKGJ_APIIMPL_MISSING_IMPL_ID.toIssueItem());
 			}
 		}
 	}
@@ -774,6 +762,17 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		holdsValidModuleSpecifiers(filterSpecifierTraceables, project);
 	}
 	
+	/**
+	 * Checks if there is a pnpm-worspaces.yaml file that overrides the workspaces property.
+	 */
+	@CheckProperty(property = WORKSPACES_ARRAY) // also works for WORKSPACES_OBJECT
+	def checkWorspaceDefinitionArray(JSONValue workspacesValue) {
+		val description = getProjectDescription();
+		if (description.isPnpmWorkspaceRoot) {
+			addIssue(workspacesValue.eContainer, JSONPackage.Literals.NAME_VALUE_PAIR__NAME, PKGJ_PNPM_WORKSPACES_OVERRIDE.toIssueItem());
+		}
+	}
+	
 	
 	private def holdsValidModuleSpecifiers(Iterable<ASTTraceable<ModuleFilterSpecifier>> moduleFilterSpecifiers, N4JSProjectConfigSnapshot project) {
 		val validFilterSpecifier = new ArrayList<ASTTraceable<ModuleFilterSpecifier>>();
@@ -797,18 +796,16 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		if (filterSpecifier?.getSpecifierWithWildcard !== null) {
 			if (filterSpecifier.getSpecifierWithWildcard.contains(wrongWildcardPattern)) {
 				addIssue(
-					getMessageForPKGJ_INVALID_WILDCARD(wrongWildcardPattern),
 					filterSpecifierTraceable.astElement,
-					PKGJ_INVALID_WILDCARD
+					PKGJ_INVALID_WILDCARD.toIssueItem(wrongWildcardPattern)
 				)
 				return false
 			}
 			val wrongRelativeNavigation = "../"
 			if (filterSpecifier.getSpecifierWithWildcard.contains(wrongRelativeNavigation)) {
 				addIssue(
-					getMessageForPKGJ_NO_RELATIVE_NAVIGATION,
 					filterSpecifierTraceable.astElement,
-					PKGJ_NO_RELATIVE_NAVIGATION
+					PKGJ_NO_RELATIVE_NAVIGATION.toIssueItem()
 				)
 				return false
 			}
@@ -829,8 +826,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		};
 		if ((moduleSpecifierWithWildcardFromAST !== null && moduleSpecifierWithWildcardFromAST.empty)
 			|| (sourceContainerFromAST !== null && sourceContainerFromAST.empty)) {
-			addIssue(IssueCodes.getMessageForPKGJ_INVALID_MODULE_FILTER_SPECIFIER_EMPTY(),
-					filterSpecifierTraceable.astElement, IssueCodes.PKGJ_INVALID_MODULE_FILTER_SPECIFIER_EMPTY);
+			addIssue(filterSpecifierTraceable.astElement, PKGJ_INVALID_MODULE_FILTER_SPECIFIER_EMPTY.toIssueItem());
 			return false;
 		}
 
@@ -855,8 +851,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			.filter[e | e.value == false].map[e | e.key]
 
 		for (ASTTraceable<ModuleFilterSpecifier> filterSpecifier : unmatchedSpecifiers) {
-			val msg = getMessageForPKGJ_MODULE_FILTER_DOES_NOT_MATCH(filterSpecifier.element.getSpecifierWithWildcard);
-			addIssue(msg, filterSpecifier.astElement, PKGJ_MODULE_FILTER_DOES_NOT_MATCH);
+			addIssue(filterSpecifier.astElement, PKGJ_MODULE_FILTER_DOES_NOT_MATCH.toIssueItem(filterSpecifier.element.getSpecifierWithWildcard));
 		}
 	}
 
@@ -927,8 +922,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 	private def addNoValidationForN4JSFilesIssue(ASTTraceable<ModuleFilterSpecifier> filterSpecifier) {
 		val moduleFilterType = (filterSpecifier.astElement.eContainer.eContainer as NameValuePair).name;
-		addIssue(getMessageForPKGJ_FILTER_NO_N4JS_MATCH(moduleFilterType), filterSpecifier.astElement,
-			PKGJ_FILTER_NO_N4JS_MATCH);
+		addIssue(filterSpecifier.astElement, PKGJ_FILTER_NO_N4JS_MATCH.toIssueItem(moduleFilterType));
 	}
 
 	/**
@@ -958,8 +952,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		
 		// check whether the feature can be used with the current project type
 		if (!supportedTypesPredicate.apply(type)) {
-			addIssue(getMessageForINVALID_FEATURE_FOR_PROJECT_TYPE(featureDescription.toFirstUpper, type.label),
-				issueTarget, INVALID_FEATURE_FOR_PROJECT_TYPE);
+			addIssue(issueTarget, INVALID_FEATURE_FOR_PROJECT_TYPE.toIssueItem(featureDescription.toFirstUpper, type.label));
 			return false;
 		}
 		
@@ -1157,8 +1150,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 		// check for empty project ID
 		if (refId === null || refId.isEmpty) {
-			addIssue(IssueCodes.getMessageForPKGJ_EMPTY_PROJECT_REFERENCE(), ref.astRepresentation,
-				IssueCodes.PKGJ_EMPTY_PROJECT_REFERENCE)
+			addIssue(ref.astRepresentation, PKGJ_EMPTY_PROJECT_REFERENCE.toIssueItem())
 			return;
 		}
 
@@ -1168,9 +1160,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		// type cannot be resolved from index, hence project does not exist in workspace.
 		if (null === project || null === project.type) {
 			if (!currentProject.isExternal) {
-				val msg = getMessageForNON_EXISTING_PROJECT(refName);
 				val packageVersion = if (ref.npmVersion === null) "" else ref.npmVersion.toString;
-				addIssue(msg, ref.astRepresentation, null, NON_EXISTING_PROJECT, refName, packageVersion);
+				val IssueItem issueItem = NON_EXISTING_PROJECT.toIssueItemWithData(
+					List.of(refName, packageVersion),
+					refName
+				);
+				addIssue(ref.astRepresentation, null, issueItem);
 			}
 			return;
 		} else {
@@ -1208,9 +1203,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			val nameOfProjectDefinedByReferencedProject = referencedProject?.definesPackage?.toString;
 			if (nameOfProjectDefinedByReferencedProject !== null) {
 				if (!allReferencedProjectNames.contains(nameOfProjectDefinedByReferencedProject)) {
-					val msg = IssueCodes.getMessageForPKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF(
-						nameOfProjectDefinedByReferencedProject, ref.referencedProjectName);
-					addIssue(msg, ref.astRepresentation, IssueCodes.PKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF);
+					val IssueItem issueItem = PKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF.toIssueItem(nameOfProjectDefinedByReferencedProject, ref.referencedProjectName);
+					addIssue(ref.astRepresentation, issueItem);
 				}
 			}
 		}
@@ -1251,8 +1245,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 		references.forEach[reference |
 			if (!declaredDependencies.containsKey(reference.referencedProjectName)) {
-				addIssue(IssueCodes.getMessageForPKGJ_PROJECT_REFERENCE_MUST_BE_DEPENDENCY(reference.referencedProjectName, sectionLabel),
-					reference.astRepresentation, IssueCodes.PKGJ_PROJECT_REFERENCE_MUST_BE_DEPENDENCY);
+				addIssue(reference.astRepresentation, PKGJ_PROJECT_REFERENCE_MUST_BE_DEPENDENCY.toIssueItem(reference.referencedProjectName, sectionLabel));
 			}
 		]
 	}
@@ -1283,8 +1276,11 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 		val desiredStr = SemverSerializer.serialize(desiredVersion);
 		val availableStr = SemverSerializer.serialize(availableVersion);
-		val msg = getMessageForNO_MATCHING_VERSION(ref.referencedProjectName, desiredStr, availableStr);
-		addIssue(msg, ref.astRepresentation, null, NO_MATCHING_VERSION, ref.referencedProjectId, desiredVersion.toString);
+		val IssueItem issueItem = NO_MATCHING_VERSION.toIssueItemWithData(
+			List.of(ref.referencedProjectId, desiredVersion.toString),
+			ref.referencedProjectName, desiredStr, availableStr
+		);
+		addIssue(ref.astRepresentation, null, issueItem);
 	}
 
 	/**
@@ -1328,16 +1324,15 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	}
 
 	private def addProjectReferencesItselfIssue(EObject target) {
-		addIssue(messageForPROJECT_REFERENCES_ITSELF, target, PROJECT_REFERENCES_ITSELF);
+		addIssue(target, PROJECT_REFERENCES_ITSELF.toIssueItem());
 	}
 
 	private def addInvalidProjectTypeIssue(EObject target, String projectName, ProjectType type, String sectionLabel) {
-		addIssue(getMessageForINVALID_PROJECT_TYPE_REF(projectName, type.label, sectionLabel),
-			target, INVALID_PROJECT_TYPE_REF);
+		addIssue(target, INVALID_PROJECT_TYPE_REF.toIssueItem(projectName, type.label, sectionLabel));
 	}
 
 	private def addDuplicateProjectReferenceIssue(EObject target, String name) {
-		addIssue(getMessageForDUPLICATE_PROJECT_REF(name), target, DUPLICATE_PROJECT_REF);
+		addIssue(target, DUPLICATE_PROJECT_REF.toIssueItem(name));
 	}
 
 	/**
@@ -1348,21 +1343,21 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	 * 
 	 * If there is no {@code name} property, adds an issue to the whole document (see {@link #getDocument()}).
 	 */ 
-	private def void addIssuePreferred(Iterable<? extends EObject> preferredTargets, String message, String issueCode) {
+	private def void addIssuePreferred(Iterable<? extends EObject> preferredTargets, IssueItem issueItem) {
 		// add issue to preferred targets
 		if (!preferredTargets.filterNull.empty) {
 			preferredTargets.filterNull
-				.forEach[t | addIssue(message, t, issueCode); ]
+				.forEach[t | addIssue(t, issueItem); ]
 			return;
 		}
 		// fall back to property 'name' 
 		val nameValue = getSingleDocumentValue(NAME);
 		if (nameValue !== null) {
-			addIssue(message, nameValue, issueCode);
+			addIssue(nameValue, issueItem);
 			return;
 		}
 		// finally fall back to document
-		addIssue(message, document, issueCode)
+		addIssue(document, issueItem)
 	}
 
 	/**
@@ -1383,5 +1378,14 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	/** Transforms a {@link ProjectTypePredicate} into a predicate for {@link N4JSProjectConfigSnapshot}. */
 	private def Predicate<N4JSProjectConfigSnapshot> forN4jsProjects(Predicate<ProjectType> predicate) {
 		return [pcs | predicate.apply(pcs.type)];
+	}
+	
+	
+	def private void addIssue(EObject source, EStructuralFeature feature, IssueItem issueItem) {
+		super.addIssue(issueItem.message, source, feature, issueItem.ID, issueItem.data);
+	}
+	
+	def private void addIssue(EObject source, IssueItem issueItem) {
+		super.addIssue(issueItem.message, source, null, issueItem.ID, issueItem.data);
 	}
 }

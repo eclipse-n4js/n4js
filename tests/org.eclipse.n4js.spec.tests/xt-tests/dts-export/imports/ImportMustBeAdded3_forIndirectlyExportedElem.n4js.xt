@@ -43,7 +43,7 @@ export const C = F();
 
 
 /* XPECT generated_dts ---
-import {ClsExportedName} from './Other'
+import type {ClsExportedName} from './Other.d.ts'
 
 export const C: ClsExportedName;
 --- */

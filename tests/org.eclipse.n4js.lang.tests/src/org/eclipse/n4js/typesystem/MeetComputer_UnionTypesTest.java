@@ -34,10 +34,10 @@ public class MeetComputer_UnionTypesTest extends AbstractTypeSystemHelperTests {
 
 	@Test
 	public void testMeetWithUnion() {
-		assertMeet(new String[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "B", "A", "union{A,B}");
-		assertMeet(new String[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "B", "B", "union{A,B}");
-		assertMeet(new String[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "C", "A", "union{B,C}");
-		assertMeet(new String[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "C", "C", "union{B,C}");
+		assertMeet(new IssueCodes[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "B", "A", "union{A,B}");
+		assertMeet(new IssueCodes[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "B", "B", "union{A,B}");
+		assertMeet(new IssueCodes[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "C", "A", "union{B,C}");
+		assertMeet(new IssueCodes[] { IssueCodes.UNI_REDUNDANT_SUBTYPE }, "C", "C", "union{B,C}");
 	}
 
 }

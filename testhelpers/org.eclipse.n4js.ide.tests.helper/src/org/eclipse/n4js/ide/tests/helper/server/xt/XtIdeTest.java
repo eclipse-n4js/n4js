@@ -81,6 +81,7 @@ import com.google.inject.Inject;
  */
 public class XtIdeTest extends AbstractIdeTest {
 
+	static final String TSC_VERSION = "5.3.2";
 	static final File TSC_PROVIDER = new File("test-tscProvider");
 
 	static final File TSC2 = new File(TSC_PROVIDER, N4JSGlobals.NODE_MODULES + "/.bin/tsc");
@@ -772,10 +773,12 @@ public class XtIdeTest extends AbstractIdeTest {
 
 			for (Project project : allProjectsWithGenerateDts) {
 				File workingDir = getProjectRoot(project.getName());
+				Path wdSrcDir = workingDir.toPath().resolve("src-gen");
+				wdSrcDir.toFile().mkdirs(); // might not exist e.g. if is a definition project
 
 				// copy n4jsglobals.d.ts to output dir to make d.ts globals available
 				Path n4jsGlobalsDTS = N4jsLibsAccess.getN4JSGlobalsDTS();
-				Files.copy(n4jsGlobalsDTS, workingDir.toPath().resolve("src-gen/n4jsglobals.d.ts"));
+				Files.copy(n4jsGlobalsDTS, wdSrcDir.resolve("n4jsglobals.d.ts"));
 
 				ProcessResult result;
 				try {
@@ -802,8 +805,9 @@ public class XtIdeTest extends AbstractIdeTest {
 		}
 		TSC_PROVIDER.mkdirs();
 
-		// npm install --prefix . typescript@4.3.2
-		ProcessResult result = cliTools.npmRun(TSC_PROVIDER.toPath(), "install", "--prefix", ".", "typescript@4.3.2");
+		// npm install --prefix . typescript@<TSC_VERSION>
+		ProcessResult result = cliTools.npmRun(TSC_PROVIDER.toPath(), "install", "--prefix", ".",
+				"typescript@" + TSC_VERSION);
 
 		assertEquals(0, result.getExitCode());
 	}

@@ -102,6 +102,8 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.n4js.validation.IssueItem
+import org.eclipse.n4js.n4JS.ParenExpression
 
 /**
  * Class for validating the N4JS types.
@@ -159,8 +161,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 						return;
 					}
 					val ubInAST = typeVar.declaredUpperBoundNode.typeRefInAST; // never 'null' because 'typeVar.declaredUpperBound' returned non-null value
-					val message = getMessageForCLF_UPPER_BOUND_FINAL(declType.name, typeVar.name);
-					addIssue(message, ubInAST, PARAMETERIZED_TYPE_REF__DECLARED_TYPE, CLF_UPPER_BOUND_FINAL);
+					addIssue(ubInAST, PARAMETERIZED_TYPE_REF__DECLARED_TYPE, CLF_UPPER_BOUND_FINAL.toIssueItem(declType.name, typeVar.name));
 				}
 			};
 		];
@@ -171,7 +172,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		if (script.module === null) {
 			val rootNode = NodeModelUtils.getNode(script)
 			if (rootNode !== null) {
-				addIssue(IssueCodes.getMessageForTYS_MISSING, script, rootNode.offset, rootNode.length, TYS_MISSING);
+				addIssue(script, rootNode.offset, rootNode.length, TYS_MISSING.toIssueItem());
 			}
 		}
 	}
@@ -202,7 +203,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	def private void internalCheckStructuralPrimitiveTypeRef(ParameterizedTypeRef typeRefInAST) {
 		if (typeRefInAST.typingStrategy != TypingStrategy.NOMINAL && !N4JSLanguageUtils.mayBeReferencedStructurally(typeRefInAST.declaredType)) {
-			addIssue(IssueCodes.messageForTYS_STRUCTURAL_PRIMITIVE, typeRefInAST, TYS_STRUCTURAL_PRIMITIVE);
+			addIssue(typeRefInAST, TYS_STRUCTURAL_PRIMITIVE.toIssueItem());
 		}
 	}
 
@@ -210,14 +211,11 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		// IDE-785 uses ParamterizedTypeRefs in ClassifierTypeRefs. Currently Type Arguments are not supported in ClassifierTypeRefs, so
 		// we actively forbid them here. Will be loosened for IDE-1310
 		if (!paramTypeRefInAST.declaredTypeArgs.isEmpty) {
-			addIssue(IssueCodes.getMessageForAST_NO_TYPE_ARGS_IN_CLASSIFIERTYPEREF, paramTypeRefInAST,
-				AST_NO_TYPE_ARGS_IN_CLASSIFIERTYPEREF)
+			addIssue(paramTypeRefInAST, AST_NO_TYPE_ARGS_IN_CLASSIFIERTYPEREF.toIssueItem());
 		} else if (paramTypeRefInAST instanceof FunctionTypeRef) {
-			addIssue(IssueCodes.getMessageForAST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF, paramTypeRefInAST,
-				AST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF)
+			addIssue(paramTypeRefInAST, AST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF.toIssueItem());
 		} else if (paramTypeRefInAST.declaredType instanceof TFunction) {
-			addIssue(IssueCodes.getMessageForAST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF, paramTypeRefInAST,
-				AST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF)
+			addIssue(paramTypeRefInAST, AST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF.toIssueItem());
 		}
 	}
 
@@ -232,7 +230,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		if (!(thisTypeRefInAST.isUsedStructurallyAsFormalParametersInTheConstructor 
 			|| thisTypeRefInAST.isUsedAtCovariantPositionInClassifierDeclaration 
 			|| thisTypeRefInAST.isUsedInVariableWithSyntaxError)) {
-			addIssue(IssueCodes.getMessageForAST_THIS_WRONG_PLACE, thisTypeRefInAST, IssueCodes.AST_THIS_WRONG_PLACE);
+			addIssue(thisTypeRefInAST, AST_THIS_WRONG_PLACE.toIssueItem());
 		}
 	}
 
@@ -292,7 +290,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			// we have a type reference to 'Symbol'
 			val isAllowed = isExtendsClauseInRuntimeLibrary(typeRefInAST);
 			if (!isAllowed) {
-				addIssue(IssueCodes.getMessageForBIT_SYMBOL_INVALID_USE, typeRefInAST, BIT_SYMBOL_INVALID_USE);
+				addIssue(typeRefInAST, BIT_SYMBOL_INVALID_USE.toIssueItem());
 			}
 		}
 	}
@@ -314,8 +312,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		if (refInAST.dynamic) {
 			val Type t = refInAST.declaredType;
 			if (!N4JSLanguageUtils.mayBeReferencedDynamically(t)) {
-				addIssue(IssueCodes.getMessageForTYS_PRIMITIVE_TYPE_DYNAMIC(t.name), refInAST,
-					TYS_PRIMITIVE_TYPE_DYNAMIC);
+				addIssue(refInAST, TYS_PRIMITIVE_TYPE_DYNAMIC.toIssueItem(t.name));
 			}
 		}
 	}
@@ -338,8 +335,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 					val hiddenType = hiddenTypeDscr?.getEObjectOrProxy;
 					if (hiddenType instanceof Type &&
 						!(IEObjectDescriptionWithError.isErrorDescription(hiddenTypeDscr))) {
-						val message = getMessageForVIS_TYPE_PARAMETER_HIDES_TYPE(name, hiddenType.keyword);
-						addIssue(message, it, VIS_TYPE_PARAMETER_HIDES_TYPE);
+						addIssue(it, VIS_TYPE_PARAMETER_HIDES_TYPE.toIssueItem(name, hiddenType.keyword));
 					}
 				}
 			]
@@ -376,8 +372,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 					if (m === null) {
 
 						// no getter at all
-						val message = messageForTYS_COMPOUND_MISSING_GETTER
-						addIssue(message, assExpr.lhs, TYS_COMPOUND_MISSING_GETTER);
+						addIssue(assExpr.lhs, TYS_COMPOUND_MISSING_GETTER.toIssueItem());
 					} else if (m instanceof TGetter) {
 						val TGetter getter = m;
 						var G = assExpr.newRuleEnvironment;
@@ -418,10 +413,9 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 							val ifcName = (tv.eContainer as TInterface).name;
 							val tvName = "invariant " + tv.name;
 							val typeRefsStr = badSubst.map[typeRefAsString].join(", ");
-							val message = getMessageForCLF_IMPLEMENT_EXTEND_SAME_INTERFACE_INCONSISTENTLY(mode,
+							val IssueItem issueItem = CLF_IMPLEMENT_EXTEND_SAME_INTERFACE_INCONSISTENTLY.toIssueItem(mode,
 								ifcName, tvName, typeRefsStr);
-							addIssue(message, classifierDecl, N4JSPackage.eINSTANCE.n4TypeDeclaration_Name,
-								CLF_IMPLEMENT_EXTEND_SAME_INTERFACE_INCONSISTENTLY);
+							addIssue(classifierDecl, N4JSPackage.eINSTANCE.n4TypeDeclaration_Name, issueItem);
 						}
 					}
 				}
@@ -441,10 +435,10 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 
-		// expressionAnnotationList occur on function- and class-expressions.
-		// checking of the content is done in N4JSAnnotationValidation
 		if (expression instanceof ExpressionAnnotationList) {
-			return
+			// expressionAnnotationList occur on function- and class-expressions.
+			// checking of the content is done in N4JSAnnotationValidation
+			return;
 		}
 
 		var G = expression.newRuleEnvironment;
@@ -458,6 +452,16 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 
 		val expectedTypeRef = ts.expectedType(G, expression.eContainer, expression);
 		if (expectedTypeRef !== null) {
+			
+			
+			if (expression instanceof ParenExpression) {
+				val expectedTypeRefInner = ts.expectedType(G, expression, expression.expression);
+				if (expectedTypeRefInner !== null && ts.equaltypeSucceeded(G, expectedTypeRef, expectedTypeRefInner)) {
+					// skip further checks to avoid double reporting of issues
+					return;
+				}
+			}
+			
 
 			// for certain problems in single-expression arrow functions, we want a special error message
 			val singleExprArrowFunction = N4JSASTUtils.getContainingSingleExpressionArrowFunction(expression);
@@ -466,10 +470,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 					return; // all good
 				}
 				if (singleExprArrowFunction.declaredReturnTypeRefInAST === null) { // show specialized error message only if return type of arrow function was inferred (i.e. not declared explicitly)
-					val message = IssueCodes.
-						getMessageForFUN_SINGLE_EXP_LAMBDA_IMPLICIT_RETURN_ALLOWED_UNLESS_VOID();
-					addIssue(message, expression,
-						IssueCodes.FUN_SINGLE_EXP_LAMBDA_IMPLICIT_RETURN_ALLOWED_UNLESS_VOID);
+					addIssue(expression, IssueCodes.FUN_SINGLE_EXP_LAMBDA_IMPLICIT_RETURN_ALLOWED_UNLESS_VOID.toIssueItem());
 					return;
 				}
 			}
@@ -484,9 +485,8 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 
 				if (result.failure) {
 					// use custom error message, because otherwise it will be completely confusing
-					val message = getMessageForTYS_NO_SUPERTYPE_WRITE_ACCESS(expectedTypeRef.typeRefAsString,
-						inferredType.typeRefAsString);
-					addIssue(message, expression, TYS_NO_SUPERTYPE_WRITE_ACCESS)
+					val IssueItem issueItem = TYS_NO_SUPERTYPE_WRITE_ACCESS.toIssueItem(expectedTypeRef.typeRefAsString, inferredType.typeRefAsString);
+					addIssue(expression, issueItem);
 				}
 			} else {
 
@@ -607,11 +607,11 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 						}
 					}
 					if (isSpecArgument) {
-						val message = getMessageForCLF_SPEC_SUPERFLUOUS_PROPERTIES(property.name, typeRef.typeRefAsString);
-						addIssue(message, astElement, feature, CLF_SPEC_SUPERFLUOUS_PROPERTIES);
+						val IssueItem issueItem = CLF_SPEC_SUPERFLUOUS_PROPERTIES.toIssueItem(property.name, typeRef.typeRefAsString);
+						addIssue(astElement, feature, issueItem);
 					} else if (!expectedMembersPlusNotAccessibles.contains(property.name)) {
-						val message = getMessageForCLF_SUPERFLUOUS_PROPERTIES(property.name, typeRef.typeRefAsString, lhsName);
-						addIssue(message, astElement, feature, CLF_SUPERFLUOUS_PROPERTIES);
+						val IssueItem issueItem = CLF_SUPERFLUOUS_PROPERTIES.toIssueItem(property.name, typeRef.typeRefAsString, lhsName);
+						addIssue(astElement, feature, issueItem);
 					}
 				}
 			};
@@ -655,7 +655,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				val isUndefinedLiteral = if (expression instanceof IdentifierRef)
 						expression.id === undefinedField;
 				if (!isUndefinedLiteral) {
-					addIssue(getMessageForEXP_USE_OF_UNDEF_EXPR, expression, EXP_USE_OF_UNDEF_EXPR);
+					addIssue(expression, EXP_USE_OF_UNDEF_EXPR.toIssueItem());
 				}
 			}
 		}
@@ -721,7 +721,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def void checkUnionTypeContainsNoAny(UnionTypeExpression ute) {
-		checkComposedTypeRefContainsNoAny(ute, messageForUNI_ANY_USED, UNI_ANY_USED, true);
+		checkComposedTypeRefContainsNoAny(ute, UNI_ANY_USED.toIssueItem(), true);
 	}
 
 	/**
@@ -730,11 +730,10 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def void checkIntersectionTypeContainsNoAny(IntersectionTypeExpression ite) {
-		checkComposedTypeRefContainsNoAny(ite, messageForINTER_ANY_USED, INTER_ANY_USED, false);
+		checkComposedTypeRefContainsNoAny(ite, INTER_ANY_USED.toIssueItem(), false);
 	}
 
-	def private void checkComposedTypeRefContainsNoAny(ComposedTypeRef ctr, String msg, String issueCode,
-		boolean soleVoidAllowesAny) {
+	def private void checkComposedTypeRefContainsNoAny(ComposedTypeRef ctr, IssueItem issueItem, boolean soleVoidAllowesAny) {
 		val G = ctr.newRuleEnvironment;
 		val anyType = G.anyType;
 		val voidType = G.voidType;
@@ -748,7 +747,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 
 		if (!dontShowWarning) {
 			for (TypeRef anyTR : anyTypeRefs) {
-				addIssue(msg, anyTR, issueCode);
+				addIssue(anyTR, issueItem);
 			}
 		}
 	}
@@ -768,8 +767,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			tRefs.removeAll(intersectionTR);
 
 			for (TypeRef tClassR : tRefs) {
-				val message = messageForUNI_REDUNDANT_SUBTYPE;
-				addIssue(message, tClassR, UNI_REDUNDANT_SUBTYPE);
+				addIssue(tClassR, UNI_REDUNDANT_SUBTYPE.toIssueItem());
 			}
 		}
 	}
@@ -807,16 +805,14 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			
 			if (byTypes.keySet.size>1) {
 				if (covariantTypeArgValidation) {
-					val message = messageForINTER_TYEPARGS_ONLY_ONE_CLASS_ALLOWED;
 					for (TypeRef tClassR : intersectionTR) {
 						if (! (tClassR.eContainer instanceof TypeVariable)) { // nested, type ref coming from def site
-							addIssue(message, tClassR, INTER_TYEPARGS_ONLY_ONE_CLASS_ALLOWED);
+							addIssue(tClassR, INTER_TYEPARGS_ONLY_ONE_CLASS_ALLOWED.toIssueItem());
 						}
 					}
 				} else {
-					val message = messageForINTER_ONLY_ONE_CLASS_ALLOWED;
 					for (TypeRef tClassR : intersectionTR) {
-						addIssue(message, tClassR, INTER_ONLY_ONE_CLASS_ALLOWED);
+						addIssue(tClassR, INTER_ONLY_ONE_CLASS_ALLOWED.toIssueItem());
 					}
 				}
 			} else {
@@ -855,10 +851,9 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 						// all common super types, at least Object, as type arg would work! no warning.
 					} else {
 						// instantiation not possible except with undefined
-						val message = messageForINTER_WITH_ONE_GENERIC;
 						for (TypeRef tClassR : intersectionTR) {
 							if (! (tClassR.eContainer instanceof TypeVariable)) { // nested, type ref coming from def site
-								addIssue(message, tClassR, INTER_WITH_ONE_GENERIC);
+								addIssue(tClassR, INTER_WITH_ONE_GENERIC.toIssueItem());
 							}
 						}
 					}
@@ -894,8 +889,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		tClassRefs.removeAll(intersectionTR);
 
 		for (TypeRef tClassR : tClassRefs) {
-			val message = messageForINTER_REDUNDANT_SUPERTYPE;
-			addIssue(message, tClassR, INTER_REDUNDANT_SUPERTYPE);
+			addIssue(tClassR, INTER_REDUNDANT_SUPERTYPE.toIssueItem());
 		}
 	}
 
@@ -915,8 +909,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		var haveOptional = false;
 		for (n4TypeParam : genDecl.typeVars) {
 			if (haveOptional && !n4TypeParam.optional) {
-				val message = messageForTYP_TYPE_PARAM_MANDATORY_AFTER_OPTIONAL;
-				addIssue(message, n4TypeParam, N4JSPackage.Literals.N4_TYPE_VARIABLE__NAME, TYP_TYPE_PARAM_MANDATORY_AFTER_OPTIONAL);
+				addIssue(n4TypeParam, N4JSPackage.Literals.N4_TYPE_VARIABLE__NAME, TYP_TYPE_PARAM_MANDATORY_AFTER_OPTIONAL.toIssueItem());
 				return false;
 			}
 			haveOptional = haveOptional || n4TypeParam.optional;
@@ -955,8 +948,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		// create error markers
 		if (!forwardReferences.empty) {
 			for (badRef : forwardReferences) {
-				val message = messageForTYP_TYPE_PARAM_DEFAULT_REFERENCES_LATER_TYPE_PARAM;
-				addIssue(message, badRef, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, TYP_TYPE_PARAM_DEFAULT_REFERENCES_LATER_TYPE_PARAM);
+				addIssue(badRef, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, TYP_TYPE_PARAM_DEFAULT_REFERENCES_LATER_TYPE_PARAM.toIssueItem());
 			}
 			return false;
 		}
@@ -974,8 +966,8 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				if (defaultArgInAST !== null && defaultArg !== null && ub !== null) {
 					val result = ts.subtype(G, defaultArg, ub);
 					if (result.failure) {
-						val message = getMessageForTYP_TYPE_PARAM_DEFAULT_NOT_SUBTYPE_OF_BOUND(n4TypeParam.name, result.compiledFailureMessage);
-						addIssue(message, n4TypeParam, N4JSPackage.Literals.N4_TYPE_VARIABLE__DECLARED_DEFAULT_ARGUMENT_NODE, TYP_TYPE_PARAM_DEFAULT_NOT_SUBTYPE_OF_BOUND);
+						val IssueItem issueItem = TYP_TYPE_PARAM_DEFAULT_NOT_SUBTYPE_OF_BOUND.toIssueItem(n4TypeParam.name, result.compiledFailureMessage);
+						addIssue(n4TypeParam, N4JSPackage.Literals.N4_TYPE_VARIABLE__DECLARED_DEFAULT_ARGUMENT_NODE, issueItem);
 						haveInvalidDefault = true;
 					}
 				}

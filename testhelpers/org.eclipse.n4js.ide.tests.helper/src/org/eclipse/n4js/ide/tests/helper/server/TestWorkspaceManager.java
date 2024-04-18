@@ -492,7 +492,11 @@ public class TestWorkspaceManager {
 		}
 
 		destination.toFile().mkdirs();
-		workspace.create(destination);
+		try {
+			workspace.create(destination);
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}
 
 		createdProject = workspace.getProjects().get(0); // TODO
 		return createdProject;
@@ -578,6 +582,7 @@ public class TestWorkspaceManager {
 					Project nmProject = project.getNodeModuleProject(nmName);
 					if (nmProject == null) {
 						nmProject = new Project(nmName, VENDOR, VENDOR + "_name", prjType);
+						addDependencyToN4JSRuntime(nmProject);
 						nmProject.createSourceFolder(DEFAULT_SOURCE_FOLDER);
 						project.addNodeModuleProject(nmProject);
 						project.addProjectDependency(nmProject.getName());
@@ -598,6 +603,7 @@ public class TestWorkspaceManager {
 					int startIdx = moduleName.indexOf(CFG_NODE_MODULES, length) + CFG_NODE_MODULES.length();
 					String nmnmName = moduleName.substring(startIdx);
 					Project nmnmProject = new Project(nmnmName, VENDOR, VENDOR + "_name", prjType);
+					addDependencyToN4JSRuntime(nmnmProject);
 					nmnmProject.createSourceFolder(DEFAULT_SOURCE_FOLDER);
 					nmProject.addNodeModuleProject(nmnmProject);
 					nmProject.addProjectDependency(nmnmProject.getName());
@@ -629,9 +635,8 @@ public class TestWorkspaceManager {
 		}
 
 		// apply default values
+		addDependencyToN4JSRuntime(project);
 		if (N4JSGlobals.PROJECT_TYPES_REQUIRING_N4JS_RUNTIME.contains(project.getType())) {
-			// add dependency to n4js-runtime (if not already present)
-			project.addProjectDependency(N4JS_RUNTIME);
 			// add fake n4js-runtime to node_modules folder (if not already present)
 			if (projectKind == ProjectKind.TopLevel) {
 				if (project.getNodeModuleProject(N4JS_RUNTIME) == null) {
@@ -641,6 +646,16 @@ public class TestWorkspaceManager {
 		}
 
 		return project;
+	}
+
+	private void addDependencyToN4JSRuntime(Project project) {
+		// apply default values
+		if (N4JSGlobals.PROJECT_TYPES_REQUIRING_N4JS_RUNTIME.contains(project.getType())) {
+			if (!N4JSGlobals.N4JS_RUNTIME.getRawName().equals(project.getName())) {
+				// add dependency to n4js-runtime (if not already present)
+				project.addProjectDependency(N4JS_RUNTIME);
+			}
+		}
 	}
 
 	private void createAndAddModule(String contents, String moduleName, Folder nmSourceFolder) {

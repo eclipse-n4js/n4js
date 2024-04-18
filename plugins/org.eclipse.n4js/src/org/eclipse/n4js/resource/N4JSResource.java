@@ -407,6 +407,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		return module != null && module.isReconciled();
 	}
 
+	/** Returns true iff an error occurred while this resource was loaded. */
+	public boolean isLoadedWithFailure() {
+		return this.isLoadedWithFailure;
+	}
+
 	@Override
 	public synchronized EList<EObject> getContents() {
 		if (!removingAdapters) {
@@ -1548,7 +1553,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		for (INode error : getParseResult().getSyntaxErrors()) {
 			processSyntaxDiagnostic(error, diagnostic -> {
 				String code = diagnostic.getCode();
-				Severity severity = IssueCodes.getDefaultSeverity(code);
+				Severity severity = IssueCodes.getSeverityForName(code);
 				if (AbstractN4JSStringValueConverter.WARN_ISSUE_CODE.equals(code)
 						|| RegExLiteralConverter.ISSUE_CODE.equals(code)
 						|| LegacyOctalIntValueConverter.ISSUE_CODE.equals(code)
@@ -1630,9 +1635,10 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		String issueCode = syntaxErrorMessage.getIssueCode();
 		return SYNTAX_DIAGNOSTIC_WITH_RANGE.equals(issueCode)
 				|| RegExLiteralConverter.ISSUE_CODE.equals(issueCode)
-				|| IssueCodes.VCO_REGEX_NAMED_GROUP.equals(issueCode)
-				|| IssueCodes.VCO_REGEX_ILLEGAL_ESCAPE.equals(issueCode)
-				|| (IssueCodes.VCO_TEMPLATE_QUOTE.equals(issueCode) && syntaxErrorMessage.getIssueData() != null);
+				|| IssueCodes.VCO_REGEX_NAMED_GROUP.name().equals(issueCode)
+				|| IssueCodes.VCO_REGEX_ILLEGAL_ESCAPE.name().equals(issueCode)
+				|| (IssueCodes.VCO_TEMPLATE_QUOTE.name().equals(issueCode)
+						&& syntaxErrorMessage.getIssueData() != null);
 	}
 
 	// FIXME the following method should no longer be required once TypingASTWalker is fully functional

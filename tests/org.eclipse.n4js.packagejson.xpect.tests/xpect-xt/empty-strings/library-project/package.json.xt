@@ -45,11 +45,11 @@
 	},
 	"n4js": {
 		"projectType": "library",
-		// XPECT errors --> "Value for property "vendorName" must not be empty." at """"
+		// XPECT errors --> "Value for property 'vendorName' must not be empty." at """"
 		"vendorName": "",
-		// XPECT errors --> "Value for property "vendorId" must not be empty." at """"
+		// XPECT errors --> "Value for property 'vendorId' must not be empty." at """"
 		"vendorId": "",
-		// XPECT errors --> "Value for property "output" must not be empty." at """"
+		// XPECT errors --> "Value for property 'output' must not be empty." at """"
 		"output": "",
 		"sources": {
 			"source": [
@@ -78,7 +78,7 @@
 		},
 		// XPECT errors --> "Main module specifier <empty string> does not exist." at """"
 		"mainModule": "",
-		// XPECT errors --> "Value for property "implementationId" must not be empty." at """"
+		// XPECT errors --> "Value for property 'implementationId' must not be empty." at """"
 		"implementationId": "",
 		"implementedProjects": [
 			// XPECT errors --> "A project reference must not be empty." at """"

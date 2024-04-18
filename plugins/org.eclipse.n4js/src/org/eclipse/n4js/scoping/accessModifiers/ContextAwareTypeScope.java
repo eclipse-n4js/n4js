@@ -86,13 +86,13 @@ public class ContextAwareTypeScope extends FilterWithErrorMarkerScope {
 		}
 		if (!isValidLocationForVoid && eClass == TypesPackage.Literals.VOID_TYPE) {
 			return new DisallowedTypeDescription(originalDescr,
-					IssueCodes.getMessageForTYS_VOID_AT_WRONG_LOCATION(),
-					IssueCodes.TYS_VOID_AT_WRONG_LOCATION);
+					IssueCodes.TYS_VOID_AT_WRONG_LOCATION.getMessage(),
+					IssueCodes.TYS_VOID_AT_WRONG_LOCATION.name());
 		}
 		if (!isValidLocationForFunctionType && TypesPackage.Literals.TFUNCTION.isSuperTypeOf(eClass)) {
 			return new DisallowedTypeDescription(originalDescr,
-					IssueCodes.getMessageForTYS_FUNCTION_DISALLOWED_AS_TYPE(),
-					IssueCodes.TYS_FUNCTION_DISALLOWED_AS_TYPE);
+					IssueCodes.TYS_FUNCTION_DISALLOWED_AS_TYPE.getMessage(),
+					IssueCodes.TYS_FUNCTION_DISALLOWED_AS_TYPE.name());
 		}
 		return null; // should never happen, because #isAccepted() has returned true
 	}

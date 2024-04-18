@@ -27,14 +27,6 @@ import static org.eclipse.n4js.validation.IssueCodes.CLF_NAME_DOES_NOT_START_UPP
 import static org.eclipse.n4js.validation.IssueCodes.CLF_NAME_DOLLAR;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_NAME_INDISTINGUISHABLE;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_NAME_RESERVED;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_NAME_CONFLICTS_WITH_CONSTRUCTOR;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_NAME_CONTAINS_DISCOURAGED_CHARACTER;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_NAME_DIFFERS_TYPE;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_NAME_DOES_NOT_START_LOWERCASE;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_NAME_DOES_NOT_START_UPPERCASE;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_NAME_DOLLAR;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_NAME_INDISTINGUISHABLE;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_NAME_RESERVED;
 
 import java.util.Collection;
 
@@ -51,6 +43,7 @@ import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
+import org.eclipse.n4js.validation.IssueItem;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.validation.Check;
@@ -123,11 +116,10 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 	private boolean holdsTypeNameNotIndistinguishable(N4TypeDeclaration element, String suffix,
 			Collection<String> category) {
 		if (category.contains(element.getName()) && !"yield".equals(element.getName())) {
-			final String message = getMessageForCLF_NAME_INDISTINGUISHABLE(validatorMessageHelper.description(element),
+			final IssueItem issueItem = CLF_NAME_INDISTINGUISHABLE.toIssueItem(
+					Strings.toFirstUpper(validatorMessageHelper.description(element)),
 					suffix);
-			addIssue(Strings.toFirstUpper(message), element,
-					N4_TYPE_DECLARATION__NAME,
-					CLF_NAME_INDISTINGUISHABLE);
+			addIssue(element, N4_TYPE_DECLARATION__NAME, issueItem);
 			return false;
 		}
 		return true;
@@ -135,12 +127,9 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 
 	private boolean holdsDoesNotStartWithLowerCaseLetter(N4TypeDeclaration declaration) {
 		if (Character.isLowerCase(declaration.getName().charAt(0))) {
-			final String msg = getMessageForCLF_NAME_DOES_NOT_START_UPPERCASE(keywordProvider.keyword(declaration));
-			addIssue(
-					Strings.toFirstUpper(msg),
-					declaration,
-					N4_TYPE_DECLARATION__NAME,
-					CLF_NAME_DOES_NOT_START_UPPERCASE);
+			final IssueItem issueItem = CLF_NAME_DOES_NOT_START_UPPERCASE.toIssueItem(
+					Strings.toFirstUpper(keywordProvider.keyword(declaration)));
+			addIssue(declaration, N4_TYPE_DECLARATION__NAME, issueItem);
 			return false;
 		}
 		return true;
@@ -176,9 +165,8 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 
 	private boolean holdsDoesNotEqualWithConstructor(final N4MemberDeclaration n4Member) {
 		if (n4Member.isStatic() && CONSTRUCTOR.equals(getDeclarationName(n4Member))) {
-			final String message = getMessageForCLF_NAME_CONFLICTS_WITH_CONSTRUCTOR();
-			addIssue(message, n4Member, N4JSMetaModelUtils.getElementNameFeature(n4Member),
-					CLF_NAME_CONFLICTS_WITH_CONSTRUCTOR);
+			final IssueItem issueItem = CLF_NAME_CONFLICTS_WITH_CONSTRUCTOR.toIssueItem();
+			addIssue(n4Member, N4JSMetaModelUtils.getElementNameFeature(n4Member), issueItem);
 			return false;
 		}
 		return true;
@@ -190,11 +178,9 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 			final String declarationName = getDeclarationName(n4Member);
 			if (!declarationName.startsWith("$") && declarationName.contains(discouragedCharacter)) {
 				final String discouragedCharacterLabel = DISCOURAGED_CHARACTERS.get(discouragedCharacter);
-				final String message = getMessageForCLF_NAME_CONTAINS_DISCOURAGED_CHARACTER(discouragedCharacterLabel);
-				addIssue(message,
-						n4Member,
-						N4JSMetaModelUtils.getElementNameFeature(n4Member),
-						CLF_NAME_CONTAINS_DISCOURAGED_CHARACTER);
+				final IssueItem issueItem = CLF_NAME_CONTAINS_DISCOURAGED_CHARACTER
+						.toIssueItem(discouragedCharacterLabel);
+				addIssue(n4Member, N4JSMetaModelUtils.getElementNameFeature(n4Member), issueItem);
 				return false;
 			}
 		}
@@ -232,12 +218,9 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		if (Character.isUpperCase(n4Member.getName().charAt(0))) {
-			final String msg = getMessageForCLF_NAME_DOES_NOT_START_LOWERCASE(keywordProvider.keyword(n4Member));
-			addIssue(
-					Strings.toFirstUpper(msg),
-					n4Member,
-					N4JSMetaModelUtils.getElementNameFeature(n4Member),
-					CLF_NAME_DOES_NOT_START_LOWERCASE);
+			final IssueItem issueItem = CLF_NAME_DOES_NOT_START_LOWERCASE.toIssueItem(
+					Strings.toFirstUpper(keywordProvider.keyword(n4Member)));
+			addIssue(n4Member, N4JSMetaModelUtils.getElementNameFeature(n4Member), issueItem);
 			return false;
 		}
 		return true;
@@ -278,8 +261,8 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 
 	private boolean holdsDoesNotEqualWithConstructor(final AbstractVariable<?> variable) {
 		if (CONSTRUCTOR.equals(getVariableName(variable))) {
-			final String message = getMessageForCLF_NAME_CONFLICTS_WITH_CONSTRUCTOR();
-			addIssue(message, variable, ABSTRACT_VARIABLE__NAME, CLF_NAME_CONFLICTS_WITH_CONSTRUCTOR);
+			final IssueItem issueItem = CLF_NAME_CONFLICTS_WITH_CONSTRUCTOR.toIssueItem();
+			addIssue(variable, ABSTRACT_VARIABLE__NAME, issueItem);
 			return false;
 		}
 		return true;
@@ -288,8 +271,8 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 	private boolean holdsDoesNotStartWithDollarSign(final AbstractVariable<?> variable) {
 		// name may be null (invalid file), we do not need an NPE here
 		if (getVariableName(variable).startsWith("$")) {
-			final String message = getMessageForCLF_NAME_DOLLAR();
-			addIssue(message, variable, ABSTRACT_VARIABLE__NAME, CLF_NAME_DOLLAR);
+			final IssueItem issueItem = CLF_NAME_DOLLAR.toIssueItem();
+			addIssue(variable, ABSTRACT_VARIABLE__NAME, issueItem);
 			return false;
 		}
 		return true;
@@ -317,12 +300,9 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 
 		final char first = variable.getName().charAt(0);
 		if (Character.isLetter(first) && !Character.isLowerCase(first)) {
-			final String msg = getMessageForCLF_NAME_DOES_NOT_START_LOWERCASE(keywordProvider.keyword(variable));
-			addIssue(
-					Strings.toFirstUpper(msg),
-					variable,
-					ABSTRACT_VARIABLE__NAME,
-					CLF_NAME_DOES_NOT_START_LOWERCASE);
+			final IssueItem issueItem = CLF_NAME_DOES_NOT_START_LOWERCASE.toIssueItem(
+					Strings.toFirstUpper(keywordProvider.keyword(variable)));
+			addIssue(variable, ABSTRACT_VARIABLE__NAME, issueItem);
 			return false;
 		}
 		return true;
@@ -336,11 +316,9 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 				if (typeRef != null && typeRef.getDeclaredType() != null) {
 					String typeName = typeRef.getDeclaredType().getName();
 					if (!Strings.isEmpty(typeName) && !name.equals(typeName)) {
-						final String message = getMessageForCLF_NAME_DIFFERS_TYPE(
-								validatorMessageHelper.description(namedElement), name, typeName);
-						addIssue(Strings.toFirstUpper(message), namedElement,
-								N4JSMetaModelUtils.getElementNameFeature(namedElement),
-								CLF_NAME_DIFFERS_TYPE);
+						final IssueItem issueItem = CLF_NAME_DIFFERS_TYPE.toIssueItem(
+								Strings.toFirstUpper(validatorMessageHelper.description(namedElement)), name, typeName);
+						addIssue(namedElement, N4JSMetaModelUtils.getElementNameFeature(namedElement), issueItem);
 						return false;
 					}
 				}
@@ -352,10 +330,10 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 	private boolean holdsNameMayNotBeConfusedWith(NamedElement element, String suffix, Collection<String> category) {
 		// N4JSFV#checkFunctionName is responsible for the validation of function definitions
 		if (category.contains(element.getName()) && !(element instanceof FunctionDefinition)) {
-			final String message = getMessageForCLF_NAME_RESERVED(validatorMessageHelper.description(element),
+			final IssueItem issueItem = CLF_NAME_RESERVED.toIssueItem(
+					Strings.toFirstUpper(validatorMessageHelper.description(element)),
 					suffix);
-			addIssue(Strings.toFirstUpper(message), element, N4JSMetaModelUtils.getElementNameFeature(element),
-					CLF_NAME_RESERVED);
+			addIssue(element, N4JSMetaModelUtils.getElementNameFeature(element), issueItem);
 			return false;
 		}
 		return true;
@@ -367,11 +345,9 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 			final String declarationName = getVariableName(variable);
 			if (!declarationName.startsWith(discouragedCharacter) && declarationName.contains(discouragedCharacter)) {
 				final String discouragedCharacterLabel = DISCOURAGED_CHARACTERS.get(discouragedCharacter);
-				final String message = getMessageForCLF_NAME_CONTAINS_DISCOURAGED_CHARACTER(discouragedCharacterLabel);
-				addIssue(message,
-						variable,
-						ABSTRACT_VARIABLE__NAME,
-						CLF_NAME_CONTAINS_DISCOURAGED_CHARACTER);
+				final IssueItem issueItem = CLF_NAME_CONTAINS_DISCOURAGED_CHARACTER
+						.toIssueItem(discouragedCharacterLabel);
+				addIssue(variable, ABSTRACT_VARIABLE__NAME, issueItem);
 				return false;
 			}
 		}

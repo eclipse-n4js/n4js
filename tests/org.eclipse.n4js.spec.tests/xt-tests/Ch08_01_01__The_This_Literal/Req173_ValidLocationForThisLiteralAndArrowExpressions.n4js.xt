@@ -13,20 +13,20 @@
 
 interface J {
 	static s = 5;
-	// XPECT errors --> "In interfaces, the this literal may not be used in static methods or field accessors and in initializers of static data fields." at "this"
+	// XPECT errors --> "In interfaces, the 'this' literal may not be used in static methods or field accessors and in initializers of static data fields." at "this"
     static fn = () => console.log(this.uups);
     num = 5;
-    // XPECT errors --> "In interfaces, the this literal may not be used in initializers of data fields." at "this"
+    // XPECT errors --> "In interfaces, the 'this' literal may not be used in initializers of data fields." at "this"
     fnx = () => console.log(this.num);
 }
 
 class C {
 	i = 5;
 	static s = 5;
-	// XPECT errors --> "The this literal may not be used in initializers of static data fields." at "this"
+	// XPECT errors --> "The 'this' literal may not be used in initializers of static data fields." at "this"
     static fn = () => console.log(this.uups);
 
-	// XPECT errors --> "The this literal may not be used in initializers of static data fields." at "this"
+	// XPECT errors --> "The 'this' literal may not be used in initializers of static data fields." at "this"
     static fn2 = () => console.log(this.i);
 
 	// XPECT errors --> "The static member s cannot be accessed from a non-static context." at "s"

@@ -30,13 +30,18 @@ import org.eclipse.n4js.N4JSGlobals;
  */
 public class CreateProjectStructureUtils {
 
+	enum WorkspaceType {
+		Yarn, Pnpm
+	}
+
 	static class Folder {
 		final Folder parent;
 		final String folderName;
 		final boolean isWorkingDir;
 		final boolean isProject;
 		final boolean isPlainJS;
-		final String yarnWorkspacesFolder;
+		final WorkspaceType workspaceType;
+		final String workspacesFolder; // either yarn or pnpm
 		final String name;
 		final String dependencies;
 		final String packagejson;
@@ -47,14 +52,16 @@ public class CreateProjectStructureUtils {
 		final Path symLinkTarget;
 
 		Folder(Folder parent, String folderName, boolean isWorkingDir, boolean isProject, boolean isPlainJS,
-				String yarnWorkspacesFolder, String name, String dependencies, Path symLinkTarget, String packagejson) {
+				WorkspaceType workspaceType, String workspacesFolder, String name, String dependencies,
+				Path symLinkTarget, String packagejson) {
 
 			this.parent = parent;
 			this.folderName = folderName;
 			this.isWorkingDir = isWorkingDir;
 			this.isProject = isProject;
 			this.isPlainJS = isPlainJS;
-			this.yarnWorkspacesFolder = yarnWorkspacesFolder;
+			this.workspaceType = workspaceType;
+			this.workspacesFolder = workspacesFolder;
 			this.name = name;
 			this.dependencies = dependencies;
 			this.symLinkTarget = symLinkTarget;
@@ -76,7 +83,7 @@ public class CreateProjectStructureUtils {
 			str += folderName;
 			if (isProject) {
 				str += "[PROJECT";
-				str += (yarnWorkspacesFolder == null) ? "" : " workspaces= " + yarnWorkspacesFolder + " ";
+				str += (workspacesFolder == null) ? "" : " workspaces= " + workspacesFolder + " ";
 				str += (name == null) ? "" : " name= " + name + " ";
 				str += (dependencies == null) ? "" : " dependencies= " + dependencies + " ";
 				str += (packagejson == null) ? "" : " package.json= " + packagejson + " ";
@@ -205,7 +212,8 @@ public class CreateProjectStructureUtils {
 
 		boolean isProject = false;
 		boolean isPlainJS = false;
-		String yarnWorkspacesFolder = null;
+		WorkspaceType workspaceType = WorkspaceType.Yarn;
+		String workspacesFolder = null;
 		String dependencies = null;
 		String name = null;
 		Path symLinkTarget = null;
@@ -246,11 +254,21 @@ public class CreateProjectStructureUtils {
 
 					if (restLine.startsWith("workspaces")) {
 						restLine = restLine.substring("workspaces".length()).trim();
+						if (restLine.startsWith("-yarn")) {
+							// default
+							restLine = restLine.substring("-yarn".length()).trim();
+							workspaceType = WorkspaceType.Yarn;
+						}
+						if (restLine.startsWith("-pnpm")) {
+							restLine = restLine.substring("-pnpm".length()).trim();
+							workspaceType = WorkspaceType.Pnpm;
+						}
 						if (restLine.startsWith("=")) {
 							restLine = restLine.substring(1).trim();
 							int startIndex = restLine.indexOf("[");
 							int endIndex = restLine.indexOf("]");
-							yarnWorkspacesFolder = restLine.substring(startIndex, endIndex + 1);
+							// includes brackets
+							workspacesFolder = restLine.substring(startIndex, endIndex + 1);
 
 							restLine = restLine.substring(endIndex + 1).trim();
 						}
@@ -280,23 +298,24 @@ public class CreateProjectStructureUtils {
 			}
 		}
 
-		return new Folder(parent, folderName, isWorkingDir, isProject, isPlainJS, yarnWorkspacesFolder, name,
-				dependencies,
-				symLinkTarget, packagejson);
+		return new Folder(parent, folderName, isWorkingDir, isProject, isPlainJS, workspaceType, workspacesFolder, name,
+				dependencies, symLinkTarget, packagejson);
 	}
 
 	/** Creates the folder structure specified by {@link ProjectDiscoveryTestData} in the given dir */
 	public static void createFolderStructure(File dir, ProjectDiscoveryTestData pdtd) {
 		for (Folder folder : pdtd.folders) {
-			String folderPath = folder.getPath();
-			File folderFile = new File(dir, folderPath);
-			if (folder.symLinkTarget != null) {
-				createSymbolicLink(dir, folderFile, folder.symLinkTarget);
-			} else {
+			if (folder.symLinkTarget == null) {
+				File folderFile = new File(dir, folder.getPath());
 				folderFile.mkdir();
 				if (folder.isProject) {
 					createPackageJson(folderFile, folder);
 				}
+			}
+		}
+		for (Folder folder : pdtd.folders) {
+			if (folder.symLinkTarget != null) {
+				createSymbolicLink(dir, new File(dir, folder.getPath()), folder.symLinkTarget);
 			}
 		}
 	}
@@ -319,7 +338,7 @@ public class CreateProjectStructureUtils {
 			contents = folder.packagejson;
 		} else {
 			contents = "{";
-			if (folder.yarnWorkspacesFolder == null) {
+			if (folder.workspacesFolder == null) {
 				String projectName = folder.folderName;
 				if (folder.parent != null && folder.parent.folderName.startsWith("@")) {
 					projectName = folder.parent.folderName + "/" + projectName;
@@ -328,19 +347,29 @@ public class CreateProjectStructureUtils {
 				if (!folder.isPlainJS) {
 					contents += "\"n4js\": {\"projectType\": \"library\"}";
 				}
-			} else {
-				contents += "\"private\": true, \"workspaces\": " + folder.yarnWorkspacesFolder + "";
+			} else if (folder.workspaceType == WorkspaceType.Yarn) {
+				contents += "\"private\": true, \"workspaces\": " + folder.workspacesFolder + "";
+			} else if (folder.workspaceType == WorkspaceType.Pnpm) {
+				File pnpmWorkspaceYaml = new File(folderFile, N4JSGlobals.PNPM_WORKSPACE);
+				try (PrintWriter printWriter = new PrintWriter(new FileWriter(pnpmWorkspaceYaml))) {
+					String workspacesFolder = folder.workspacesFolder.substring(1,
+							folder.workspacesFolder.length() - 1);
+					printWriter.println("packages:\n  - " + workspacesFolder);
+				} catch (IOException e) {
+					throw new WrappedException("exception while creating a package.json file", e);
+				}
 			}
 			contents += (folder.dependencies == null) ? "" : ", \"dependencies\":" + folder.dependencies;
 			contents += "}";
 		}
 
-		File packageJson = new File(folderFile, N4JSGlobals.PACKAGE_JSON);
-
-		try (PrintWriter printWriter = new PrintWriter(new FileWriter(packageJson))) {
-			printWriter.println(contents);
-		} catch (IOException e) {
-			throw new WrappedException("exception while creating a package.json file", e);
+		if (!contents.isBlank()) {
+			File packageJson = new File(folderFile, N4JSGlobals.PACKAGE_JSON);
+			try (PrintWriter printWriter = new PrintWriter(new FileWriter(packageJson))) {
+				printWriter.println(contents);
+			} catch (IOException e) {
+				throw new WrappedException("exception while creating a package.json file", e);
+			}
 		}
 	}
 }

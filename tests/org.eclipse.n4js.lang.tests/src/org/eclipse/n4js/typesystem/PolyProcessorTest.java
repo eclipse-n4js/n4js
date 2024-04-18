@@ -15,6 +15,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTyp
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayNType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.numberType;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.numberTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.voidType;
@@ -303,7 +304,7 @@ public class PolyProcessorTest extends AbstractTypesystemTest {
 		assertType(firstArrayLiteral(parseAndValidate("""
 				var arr = ["hello", 42];
 				""")),
-				of(arrayType(_G), union(numberType(_G), stringType(_G))) // Array<union{number,string}>
+				of(arrayNType(_G, 2), stringTypeRef(_G), numberTypeRef(_G)) // Array2<string,number>
 		);
 	}
 

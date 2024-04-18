@@ -43,8 +43,8 @@ export let clsOtherLocal: ClsOtherLocal;
 
 
 /* XPECT generated_dts ---
-import {ClsOther as ClsOtherRemote} from 'ProjectOther/src-gen/RemoteOther'
-import {ClsOther as ClsOtherLocal} from './LocalOther'
+import type {ClsOther as ClsOtherRemote} from 'ProjectOther/src-gen/RemoteOther.d.ts'
+import type {ClsOther as ClsOtherLocal} from './LocalOther.d.ts'
 
 export let clsOtherRemote: ClsOtherRemote;
 export let clsOtherLocal: ClsOtherLocal;

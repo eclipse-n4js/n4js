@@ -45,7 +45,7 @@ var g : G<? extends A>;
 g.ptr(a);
 // XPECT errors --> "any is not a subtype of ? extends A." at "top"
 g.ptr(top);
-// no errors, but a warning XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "bot"
+// no errors, but a warning XPECT warnings --> "The type of this expression is 'undefined', so it will never evaluate to a value other than 'undefined'." at "bot"
 g.ptr(bot);
 
 // XPECT noerrors -->

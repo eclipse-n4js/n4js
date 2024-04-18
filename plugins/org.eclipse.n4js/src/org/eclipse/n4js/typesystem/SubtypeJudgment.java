@@ -37,6 +37,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.string
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.undefinedType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
+import static org.eclipse.n4js.validation.IssueCodes.TYS_NO_SUBTYPE;
 
 import java.math.BigDecimal;
 import java.util.Iterator;
@@ -107,7 +108,7 @@ import com.google.common.collect.Iterables;
 			// set default failure message
 			final String leftMsg = leftArg != null ? leftArg.getTypeRefAsString() : "<null>";
 			final String rightMsg = rightArg != null ? rightArg.getTypeRefAsString() : "<null>";
-			return result.setDefaultFailureMessage(leftMsg + " is not a subtype of " + rightMsg);
+			return result.setDefaultFailureMessage(TYS_NO_SUBTYPE.getMessage(leftMsg, rightMsg));
 		}
 		return result;
 	}
@@ -209,6 +210,13 @@ import com.google.common.collect.Iterables;
 		}
 		if (TypeUtils.isNull(left) && !TypeUtils.isUndefined(right)) {
 			return success();
+		}
+		if (TypeUtils.isAny(left)) {
+			if (TypeUtils.isAny(right)) {
+				return success();
+			} else {
+				return failure();
+			}
 		}
 
 		// ExistentialTypeRef
@@ -504,8 +512,11 @@ import com.google.common.collect.Iterables;
 		if ((left.isUseSiteStructuralTyping() || left.isDefSiteStructuralTyping())
 				&& !(rightDeclType == objectType(G) && leftDeclType instanceof TClassifier)
 				&& !(leftDeclType instanceof PrimitiveType)) {
-			return failure("Structural type " + left.getTypeRefAsString()
-					+ " is not a subtype of non-structural type " + right.getTypeRefAsString());
+
+			String msg = TYS_NO_SUBTYPE.getMessage(
+					"Structural type " + left.getTypeRefAsString(),
+					"non-structural type " + right.getTypeRefAsString());
+			return failure(msg);
 		}
 		// nominal typing (the default behavior)
 		if (leftDeclType instanceof TypeVariable || rightDeclType instanceof TypeVariable) {
@@ -856,10 +867,12 @@ import com.google.common.collect.Iterables;
 		if (tempResult.isFailure()) {
 			if (tempResult.isOrIsCausedByPriority()) {
 				// fail with a custom message including the nested custom failure message:
-				return failure(leftContainingTypeRef.getTypeRefAsString()
-						+ " is not a subtype of " + rightContainingTypeRef.getTypeRefAsString()
-						+ " due to incompatible type arguments: "
-						+ tempResult.getPriorityFailureMessage());
+				String msg = TYS_NO_SUBTYPE.getMessage(
+						leftContainingTypeRef.getTypeRefAsString(),
+						rightContainingTypeRef.getTypeRefAsString()
+								+ " due to incompatible type arguments: "
+								+ tempResult.getPriorityFailureMessage());
+				return failure(msg);
 			} else {
 				// fail with our default message:
 				return failure();

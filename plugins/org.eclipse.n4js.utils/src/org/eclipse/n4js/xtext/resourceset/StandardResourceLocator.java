@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
  *
  * This is used to avoid the mutation of the locator field in {@link #basicGetResource(URI, boolean)}
  */
-class StandardResourceLocator extends ResourceLocator {
+public class StandardResourceLocator extends ResourceLocator {
 
 	public StandardResourceLocator(ResourceSetImpl resourceSet) {
 		super(resourceSet);

@@ -23,6 +23,6 @@ function <F,S> swap(param : Iterable2<F,S>) : Iterable2<S,F> {
 }
 
 
-// XPECT type of 'atIndex0' --> number
+// XPECT type of 'atIndex0' --> int
 // XPECT type of 'atIndex1' --> string
-var [atIndex0,atIndex1] = swap(["",42] as Iterable2<string,number>);
+var [atIndex0,atIndex1] = swap(["",42]);

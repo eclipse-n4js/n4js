@@ -36,7 +36,7 @@ i = b? c: null;
 // XPECT noerrors
 i = b? new C() : new C();
 
-// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "b? undefined : undefined"
+// XPECT warnings --> "The type of this expression is 'undefined', so it will never evaluate to a value other than 'undefined'." at "b? undefined : undefined"
 i = b? undefined : undefined;
 
 // XPECT noerrors

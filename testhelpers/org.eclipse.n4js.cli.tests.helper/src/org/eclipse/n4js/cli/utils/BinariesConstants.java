@@ -58,6 +58,11 @@ public final class BinariesConstants {
 	public static final String DEFAULT_YARN_PATH_VM_ARG = "org.eclipse.n4js.defaultYarnPath";
 
 	/**
+	 * Default pnpm path, similar to {@code DEFAULT_NODE_PATH_VM_ARG}
+	 */
+	public static final String DEFAULT_PNPM_PATH_VM_ARG = "org.eclipse.n4js.defaultPnpmPath";
+
+	/**
 	 * Default git path, similar to {@code DEFAULT_NODE_PATH_VM_ARG}
 	 */
 	public static final String DEFAULT_GIT_PATH_VM_ARG = "org.eclipse.n4js.defaultGitPath";
@@ -86,6 +91,16 @@ public final class BinariesConstants {
 	 * argument might override this configuration.
 	 */
 	public static final String YARN_PATH_ENV = "YARN_PATH";
+
+	/**
+	 * Jenkins environment variable for the {@code pnpm} binary path. Points to the actual binary (with an absolute
+	 * path) instead of pointing to the folder containing the binary.
+	 *
+	 * <p>
+	 * Even if it is available the {@link #DEFAULT_PNPM_PATH_VM_ARG <code>org.eclipse.n4js.defaultPnpmPath</code>} VM
+	 * argument might override this configuration.
+	 */
+	public static final String PNPM_PATH_ENV = "PNPM_PATH";
 
 	/**
 	 * Jenkins environment variable for the {@code git} binary path. Points to the actual binary (with an absolute path)
@@ -129,6 +144,18 @@ public final class BinariesConstants {
 	 */
 	public static final String BUILT_IN_DEFAULT_YARN_PATH = isWindows()
 			? new File("C:" + separator + "Program Files" + separator + "yarn").getAbsolutePath()
+			: new File(separator + "usr" + File.separator + "local" + separator + "bin").getAbsolutePath();
+
+	/**
+	 * The (fallback) built-in default {@code pnpm} path if the above VM or ENV property is not specified.
+	 *
+	 * <ul>
+	 * <li>On Windows systems: {@code C:\Program Files\pnpm}</li>
+	 * <li>On Unix systems: {@code /usr/local/bin}</li>
+	 * </ul>
+	 */
+	public static final String BUILT_IN_DEFAULT_PNPM_PATH = isWindows()
+			? new File("C:" + separator + "Program Files" + separator + "pnpm").getAbsolutePath()
 			: new File(separator + "usr" + File.separator + "local" + separator + "bin").getAbsolutePath();
 
 	/**
@@ -179,6 +206,8 @@ public final class BinariesConstants {
 	public static final String YARN_LABEL = "Yarn";
 	/** The {@code yarn} binary name without file extension. */
 	public static final String YARN_BINARY_NAME = "yarn";
+	/** The {@code pnpm} binary name without file extension. */
+	public static final String PNPM_BINARY_NAME = "pnpm";
 	/** The {@code git} binary name without file extension. */
 	public static final String GIT_BINARY_NAME = "git";
 	/** The minimum {@code yarn} version. */

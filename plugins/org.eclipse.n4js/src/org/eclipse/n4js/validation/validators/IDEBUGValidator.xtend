@@ -10,14 +10,15 @@
  */
 package org.eclipse.n4js.validation.validators
 
-import org.eclipse.n4js.AnnotationDefinition
-import org.eclipse.n4js.n4JS.Annotation
-import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator
-import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
-import org.eclipse.n4js.utils.validation.PostValidation
 import java.util.Collection
 import java.util.HashSet
 import java.util.Map
+import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.n4JS.Annotation
+import org.eclipse.n4js.utils.validation.PostValidation
+import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator
+import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
+import org.eclipse.n4js.validation.IssueItem
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
@@ -78,7 +79,8 @@ class IDEBUGValidator extends AbstractMessageAdjustingN4JSValidator {
 		for (Annotation a: definedAnnotations.filter[!usedAnnotations.contains(it)]) {
 			if (!a.args.isEmpty) {
 				val bugID = a.args.get(0).valueAsString;
-				addIssue(getMessageForANN_UNUSED_IDEBUG(bugID), a, ANN_UNUSED_IDEBUG);
+				val IssueItem issueItem = ANN_UNUSED_IDEBUG.toIssueItem(bugID);
+				addIssue(issueItem.message, a, issueItem.getID());
 			}
 		}
 	}

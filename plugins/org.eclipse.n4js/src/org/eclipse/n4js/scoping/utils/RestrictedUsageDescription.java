@@ -10,9 +10,8 @@
  */
 package org.eclipse.n4js.scoping.utils;
 
-import org.eclipse.xtext.resource.IEObjectDescription;
-
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
  * This description wraps an invisible member.
@@ -38,11 +37,11 @@ public class RestrictedUsageDescription extends AbstractDescriptionWithError {
 	@Override
 	public String getMessage() {
 		String memberName = getName().getLastSegment();
-		return IssueCodes.getMessageForVIS_RESTRITCTED_USAGE(memberName, jsVariant);
+		return IssueCodes.VIS_RESTRITCTED_USAGE.getMessage(memberName, jsVariant);
 	}
 
 	@Override
 	public String getIssueCode() {
-		return IssueCodes.VIS_RESTRITCTED_USAGE;
+		return IssueCodes.VIS_RESTRITCTED_USAGE.name();
 	}
 }

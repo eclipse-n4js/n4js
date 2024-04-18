@@ -30,5 +30,5 @@ var a : A<string> = new A<string>({t: "Hello"});
 var b : B = new B({t: "Hello"});
 // should be ok
 b.foo({t: "Hello"}).t = "Hello";
-// XPECT errors --> "~Object with { t: 10 } is not a structural subtype of ~~B: t failed: 10 is not equal to string." at "{t: 10}"
+// XPECT errors --> "~Object with { t: int } is not a structural subtype of ~~B: t failed: int is not equal to string." at "{t: 10}"
 b.foo({t: 10}).t = "Hello";

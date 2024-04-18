@@ -28,10 +28,18 @@ import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.ContentAssistContextFactory;
+import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.PartialContentAssistContextFactory;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.ILeafNode;
 import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.impl.CompositeNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.parser.IParseResult;
+import org.eclipse.xtext.util.ITextRegion;
+import org.eclipse.xtext.util.TextRegion;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 
@@ -100,6 +108,78 @@ public class N4JSContentAssistContextFactory extends PartialContentAssistContext
 	protected ContentAssistContext[] doCreateContexts(int offset) {
 		try (Measurement m = dataCollectors.dcCreateContexts().getMeasurement()) {
 			return super.doCreateContexts(offset);
+		}
+	}
+
+	@Override
+	protected void handleLastCompleteNodeAsPartOfDatatypeNode() {
+		String prefix = getPrefix(datatypeNode);
+		Collection<FollowElement> followElements = parseFollowElements(datatypeNode.getOffset(), false);
+		if (followElements.isEmpty()) {
+			// modification wrt. to superclass: no follow elements indicate situation where an identifier is incomplete
+			// in a single line. Grammar wise this is correct, but scoping wise this identifier cannot be found. Hence
+			// completion would be necessary.
+			handleLastCompleteNodeIsAtEndOfDatatypeNode();
+
+		} else {
+			INode lastCompleteNodeBeforeDatatype = getLastCompleteNodeByOffset(rootNode, datatypeNode.getTotalOffset());
+			doCreateContexts(lastCompleteNodeBeforeDatatype, datatypeNode, prefix, currentModel, followElements);
+		}
+	}
+
+	@Override
+	protected void handleLastCompleteNodeIsAtEndOfDatatypeNode() {
+		String prefix = getPrefix(lastCompleteNode);
+		INode previousNode = getLastCompleteNodeByOffset(rootNode, lastCompleteNode.getOffset());
+		EObject previousModel = previousNode.getSemanticElement();
+		INode currentDatatypeNode = getContainingDatatypeRuleNode(currentNode);
+		Collection<FollowElement> followElements = parseFollowElements(lastCompleteNode.getOffset(), false);
+
+		if (followElements.isEmpty() && !Strings.isNullOrEmpty(prefix)) {
+			// modification wrt. to superclass: no follow elements indicate situation where an identifier is incomplete
+			// in a single line. Grammar wise this is correct, but scoping wise this identifier cannot be found. Hence
+			// completion would be necessary.
+
+			ContentAssistContext.Builder ctxBuilder = contentAssistContextProvider.get();
+			ctxBuilder.setRootNode(rootNode);
+			ctxBuilder.setLastCompleteNode(lastCompleteNode);
+			ctxBuilder.setCurrentNode(currentNode);
+			ctxBuilder.setRootModel(parseResult.getRootASTElement());
+			ctxBuilder.setCurrentModel(currentModel);
+			ctxBuilder.setPreviousModel(previousModel);
+			ctxBuilder.setOffset(completionOffset);
+			ctxBuilder.setPrefix(prefix);
+			int regionLength = prefix.length();
+			if (selection.getLength() > 0) {
+				regionLength = regionLength + selection.getLength();
+			}
+			ITextRegion region = new TextRegion(completionOffset - prefix.length(), regionLength);
+			if (selection.getOffset() >= 0 && selection.getLength() >= 0) {
+				ctxBuilder.setSelectedText(prefix);
+			}
+			ctxBuilder.setReplaceRegion(region);
+			ctxBuilder.setResource(resource);
+
+			ICompositeNode curNode = NodeModelUtils.getNode(currentModel);
+			if (curNode instanceof CompositeNode) {
+				CompositeNode curCompNode = (CompositeNode) curNode;
+				ICompositeNode synParent = curCompNode.resolveAsParent();
+				EObject grammarElement = synParent.getGrammarElement();
+				if (grammarElement instanceof CrossReference) {
+					ctxBuilder.accept((AbstractElement) grammarElement);
+					contextBuilders.add(ctxBuilder);
+				}
+			}
+
+		} else {
+			int prevSize = contextBuilders.size();
+			doCreateContexts(previousNode, currentDatatypeNode, prefix, previousModel, followElements);
+
+			if (lastCompleteNode instanceof ILeafNode && lastCompleteNode.getGrammarElement() == null
+					&& contextBuilders.size() != prevSize) {
+				handleLastCompleteNodeHasNoGrammarElement(contextBuilders.subList(prevSize, contextBuilders.size()),
+						previousModel);
+			}
 		}
 	}
 }

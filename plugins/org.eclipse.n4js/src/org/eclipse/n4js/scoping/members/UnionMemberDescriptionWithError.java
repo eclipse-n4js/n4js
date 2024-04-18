@@ -55,8 +55,8 @@ public class UnionMemberDescriptionWithError extends ComposedMemberDescriptionWi
 			// check for three special cases of error 'multipleKinds' that require a more informative message
 			if (numberOfFields + indexesPerMemberType.numberOf("getter") == max) {
 				if (writeAccess) {
-					message = IssueCodes.getMessageForUNI_INVALID_COMBINATION("getters", name, "read-only");
-					code = IssueCodes.UNI_INVALID_COMBINATION;
+					message = IssueCodes.UNI_INVALID_COMBINATION.getMessage("getters", name, "read-only");
+					code = IssueCodes.UNI_INVALID_COMBINATION.name();
 					return true;
 				} else {
 					return false; // access would be ok, there must be another reason
@@ -65,11 +65,11 @@ public class UnionMemberDescriptionWithError extends ComposedMemberDescriptionWi
 			if (numberOfFields + indexesPerMemberType.numberOf("setter") == max) {
 				if (writeAccess) {
 					if (readOnlyField) {
-						message = IssueCodes.getMessageForUNI_INVALID_COMBINATION_SETTER_VS_READ_ONLY_FIELD(name);
-						code = IssueCodes.UNI_INVALID_COMBINATION_SETTER_VS_READ_ONLY_FIELD;
+						message = IssueCodes.UNI_INVALID_COMBINATION_SETTER_VS_READ_ONLY_FIELD.getMessage(name);
+						code = IssueCodes.UNI_INVALID_COMBINATION_SETTER_VS_READ_ONLY_FIELD.name();
 					} else {
-						message = IssueCodes.getMessageForUNI_INVALID_COMBINATION("setters", name, "write-only");
-						code = IssueCodes.UNI_INVALID_COMBINATION;
+						message = IssueCodes.UNI_INVALID_COMBINATION.getMessage("setters", name, "write-only");
+						code = IssueCodes.UNI_INVALID_COMBINATION.name();
 					}
 					return true;
 				}
@@ -79,9 +79,9 @@ public class UnionMemberDescriptionWithError extends ComposedMemberDescriptionWi
 			}
 
 			// invalid special case
-			if (indexesPerCode.containsKey(IssueCodes.VIS_WRONG_STATIC_ACCESSOR)) {
-				message = IssueCodes.getMessageForVIS_WRONG_STATIC_ACCESSOR("static", name, "non-static");
-				code = IssueCodes.VIS_WRONG_STATIC_ACCESSOR;
+			if (indexesPerCode.containsKey(IssueCodes.VIS_WRONG_STATIC_ACCESSOR.name())) {
+				message = IssueCodes.VIS_WRONG_STATIC_ACCESSOR.getMessage("static", name, "non-static");
+				code = IssueCodes.VIS_WRONG_STATIC_ACCESSOR.name();
 				return true;
 			}
 
@@ -94,8 +94,8 @@ public class UnionMemberDescriptionWithError extends ComposedMemberDescriptionWi
 				}
 				strb.append(memberTypeName + " in " + foundScopes);
 			}
-			message = IssueCodes.getMessageForUNI_MULTIPLE_KINDS(name, strb.toString());
-			code = IssueCodes.UNI_MULTIPLE_KINDS;
+			message = IssueCodes.UNI_MULTIPLE_KINDS.getMessage(name, strb.toString());
+			code = IssueCodes.UNI_MULTIPLE_KINDS.name();
 			return true;
 		}
 		return false;
@@ -103,9 +103,9 @@ public class UnionMemberDescriptionWithError extends ComposedMemberDescriptionWi
 
 	private boolean initMissingFrom(List<String> missingFrom) {
 		if (!missingFrom.isEmpty()) {
-			message = IssueCodes.getMessageForUNI_MISSING(getName().getLastSegment(),
+			message = IssueCodes.UNI_MISSING.getMessage(getName().getLastSegment(),
 					Joiner.on(", ").join(missingFrom));
-			code = IssueCodes.UNI_MISSING;
+			code = IssueCodes.UNI_MISSING.name();
 			return true;
 		} else {
 			return false;
@@ -114,8 +114,8 @@ public class UnionMemberDescriptionWithError extends ComposedMemberDescriptionWi
 
 	private boolean initDefault() {
 		final String memberName = getName().getLastSegment();
-		message = IssueCodes.getMessageForUNI_UNCOMMON(memberName);
-		code = IssueCodes.UNI_UNCOMMON;
+		message = IssueCodes.UNI_UNCOMMON.getMessage(memberName);
+		code = IssueCodes.UNI_UNCOMMON.name();
 		return true;
 	}
 }

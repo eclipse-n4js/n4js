@@ -48,14 +48,14 @@ public abstract class AbstractOrganizeImportsTest extends AbstractStructuredIdeT
 	private final Set<String> IGNORED_ISSUE_CODES = Sets.newHashSet(Iterables.concat(
 			N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS,
 			Sets.newHashSet(
-					IssueCodes.IMP_DUPLICATE,
-					IssueCodes.IMP_DUPLICATE_ALIAS,
-					IssueCodes.IMP_DUPLICATE_NAMESPACE,
-					IssueCodes.IMP_STMT_DUPLICATE_NAMED,
-					IssueCodes.IMP_STMT_DUPLICATE_NAMESPACE,
-					IssueCodes.IMP_AMBIGUOUS,
-					IssueCodes.IMP_UNUSED_IMPORT,
-					IssueCodes.IMP_UNRESOLVED)));
+					IssueCodes.IMP_DUPLICATE.name(),
+					IssueCodes.IMP_DUPLICATE_ALIAS.name(),
+					IssueCodes.IMP_DUPLICATE_NAMESPACE.name(),
+					IssueCodes.IMP_STMT_DUPLICATE_NAMED.name(),
+					IssueCodes.IMP_STMT_DUPLICATE_NAMESPACE.name(),
+					IssueCodes.IMP_AMBIGUOUS.name(),
+					IssueCodes.IMP_UNUSED_IMPORT.name(),
+					IssueCodes.IMP_UNRESOLVED.name())));
 
 	/** Configuration of organize imports tests. */
 	protected static class TestOrganizeImportsConfiguration {

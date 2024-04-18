@@ -61,7 +61,7 @@
 		
 		// XPECT errors --> "Expected string instead of number ." at "123"
 		"projectType": 123,
-		// XPECT errors --> "Invalid project type "invalid"." at ""invalid""
+		// XPECT errors --> "Invalid project type 'invalid'." at ""invalid""
 		"projectType": "invalid",
 		// XPECT noerrors
 		"projectType": "validation",

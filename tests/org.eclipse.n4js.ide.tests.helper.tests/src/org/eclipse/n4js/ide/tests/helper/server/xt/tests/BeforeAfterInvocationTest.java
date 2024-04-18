@@ -37,25 +37,26 @@ public class BeforeAfterInvocationTest extends AbstractXtParentRunnerTest {
 
 	private static List<String> invocationRecorder = null;
 
-	
 	@Test
 	public void test() throws Exception {
 		assertNull(invocationRecorder);
 		invocationRecorder = new ArrayList<>();
 
 		run(new BeforeAfterTestRunSimulator(), "probands/BeforeAfterInvocation");
-		assertEventNames("testRunStarted\n"
+		assertEventNames("testSuiteStarted - org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"
+				+ "testSuiteStarted - BeforeAfterInvocation1.n4js.xt: probands/BeforeAfterInvocation\n"
 				+ "testStarted\n"
 				+ "testFinished\n"
 				+ "testStarted\n"
 				+ "testFinished\n"
-				+ "testRunFinished\n"
-				+ "testRunStarted\n"
+				+ "testSuiteFinished - BeforeAfterInvocation1.n4js.xt: probands/BeforeAfterInvocation\n"
+				+ "testSuiteStarted - BeforeAfterInvocation2.n4js.xt: probands/BeforeAfterInvocation\n"
 				+ "testStarted\n"
 				+ "testFinished\n"
 				+ "testStarted\n"
 				+ "testFinished\n"
-				+ "testRunFinished");
+				+ "testSuiteFinished - BeforeAfterInvocation2.n4js.xt: probands/BeforeAfterInvocation\n"
+				+ "testSuiteFinished - org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup");
 		assertResults("Passed: noerrors~0:  〔probands/BeforeAfterInvocation/BeforeAfterInvocation1.n4js.xt〕\n"
 				+ "Passed: noerrors~1:  〔probands/BeforeAfterInvocation/BeforeAfterInvocation1.n4js.xt〕\n"
 				+ "Passed: noerrors~0:  〔probands/BeforeAfterInvocation/BeforeAfterInvocation2.n4js.xt〕\n"
@@ -91,7 +92,6 @@ public class BeforeAfterInvocationTest extends AbstractXtParentRunnerTest {
 		invocationRecorder = null;
 	}
 
-	
 	public static class SuperBeforeAfterXtIdeTest extends XtIdeTest {
 
 		@BeforeClass
@@ -125,7 +125,6 @@ public class BeforeAfterInvocationTest extends AbstractXtParentRunnerTest {
 		}
 	}
 
-	
 	public static class SubBeforeAfterXtIdeTest extends SuperBeforeAfterXtIdeTest {
 
 		@BeforeClass

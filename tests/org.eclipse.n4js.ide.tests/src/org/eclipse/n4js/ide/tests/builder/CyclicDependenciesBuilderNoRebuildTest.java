@@ -54,18 +54,18 @@ public class CyclicDependenciesBuilderNoRebuildTest extends AbstractIncrementalB
 
 		assertIssues2(
 				Pair.of("P1/package.json", List.of(
-						"(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)")),
+						"(Error, [14:18 - 14:22], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)")),
 				Pair.of("P2/package.json", List.of(
-						"(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)")));
+						"(Error, [14:18 - 14:22], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)")));
 
 		executeCommand(N4JSCommandService.N4JS_REFRESH);
 		joinServerRequests();
 
 		assertIssues2(
 				Pair.of("P1/package.json", List.of(
-						"(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)")),
+						"(Error, [14:18 - 14:22], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)")),
 				Pair.of("P2/package.json", List.of(
-						"(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)")));
+						"(Error, [14:18 - 14:22], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)")));
 	}
 
 	@Override
@@ -73,15 +73,13 @@ public class CyclicDependenciesBuilderNoRebuildTest extends AbstractIncrementalB
 		return Optional.of(Test_Module.class);
 	}
 
-	
 	public static final class Test_Module extends AbstractGenericModule {
-		
+
 		public Class<? extends XWorkspaceManager> bindXWorkspaceManager() {
 			return Test_N4JSWorkspaceManager.class;
 		}
 	}
 
-	
 	@Singleton
 	public static class Test_N4JSWorkspaceManager extends N4JSWorkspaceManager {
 		@Override

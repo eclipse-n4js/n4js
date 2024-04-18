@@ -57,7 +57,7 @@ public class GH_2004_ReviewImportedNamesComputationTest extends AbstractIdeTest 
 				new FileEvent(otherFileURI.toString(), FileChangeType.Deleted))));
 		joinServerRequests();
 		assertIsAffectedBug("ProjectOther/" + PACKAGE_JSON,
-				"(Error, [8:17 - 8:34], Main module specifier some/path/Other does not exist.)");
+				"(Error, [9:16 - 9:33], Main module specifier some/path/Other does not exist.)");
 	}
 
 	@Test

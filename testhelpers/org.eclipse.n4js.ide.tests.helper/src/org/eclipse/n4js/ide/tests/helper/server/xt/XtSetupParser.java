@@ -268,6 +268,16 @@ public class XtSetupParser {
 
 		LOOP: while (tokens.hasNext()) {
 			switch (tokens.next()) {
+			case "File": { // could be the package.json file of the workspace
+				FolderBuilder folderBuilder = yarnProjectBuilder.getOrAddFolder(".");
+				parseFile(tokens, xtFile, xtFileContent, false, folderBuilder);
+				break;
+			}
+			case "ThisFile": { // could be the package.json file of the workspace
+				FolderBuilder folderBuilder = yarnProjectBuilder.getOrAddFolder(".");
+				parseFile(tokens, xtFile, xtFileContent, true, folderBuilder);
+				break;
+			}
 			case "Project":
 			case "JavaProject":
 				parseYarnProject(tokens, xtFile, xtFileContent, yarnProjectBuilder, false);

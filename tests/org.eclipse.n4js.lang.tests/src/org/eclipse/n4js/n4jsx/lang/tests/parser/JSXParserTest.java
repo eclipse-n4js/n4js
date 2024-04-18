@@ -218,7 +218,7 @@ public class JSXParserTest extends AbstractN4JSXParserTest {
 		parseWithError("""
 				<a attr/**/-attr></a>
 				""",
-				"JSX attribute names may not contain whitespace or comments. Attribute names ending with a - and directly followed by another attribute name are merged and must not contain whitespace or comments.");
+				"JSX attribute names may not contain whitespace or comments. Attribute names ending with a '-' and directly followed by another attribute name are merged and must not contain whitespace or comments.");
 	}
 
 	@Test
@@ -226,7 +226,7 @@ public class JSXParserTest extends AbstractN4JSXParserTest {
 		parseWithError("""
 				<a attr -attr></a>
 				""",
-				"JSX attribute names may not contain whitespace or comments. Attribute names ending with a - and directly followed by another attribute name are merged and must not contain whitespace or comments.");
+				"JSX attribute names may not contain whitespace or comments. Attribute names ending with a '-' and directly followed by another attribute name are merged and must not contain whitespace or comments.");
 	}
 
 	@Test
@@ -234,7 +234,7 @@ public class JSXParserTest extends AbstractN4JSXParserTest {
 		parseWithError("""
 				<a attr-- attr></a>
 				""",
-				"JSX attribute names may not contain whitespace or comments. Attribute names ending with a - and directly followed by another attribute name are merged and must not contain whitespace or comments.");
+				"JSX attribute names may not contain whitespace or comments. Attribute names ending with a '-' and directly followed by another attribute name are merged and must not contain whitespace or comments.");
 	}
 
 	@Test

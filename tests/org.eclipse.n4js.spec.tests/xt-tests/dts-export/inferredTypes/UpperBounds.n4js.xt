@@ -43,9 +43,9 @@ export class ClassWithFields {
 
 
 /* XPECT generated_dts ---
-import {ClassExported} from 'ProjectOther/src-gen/Other'
-import {GenClassOfClassExported} from 'ProjectOther/src-gen/Other'
-import {GenClassOfClassNotExported} from 'ProjectOther/src-gen/Other'
+import type {ClassExported} from 'ProjectOther/src-gen/Other.d.ts'
+import type {GenClassOfClassExported} from 'ProjectOther/src-gen/Other.d.ts'
+import type {GenClassOfClassNotExported} from 'ProjectOther/src-gen/Other.d.ts'
 
 export let v1: GenClassOfClassExported<ClassExported>;
 export let v2: GenClassOfClassNotExported<any>;

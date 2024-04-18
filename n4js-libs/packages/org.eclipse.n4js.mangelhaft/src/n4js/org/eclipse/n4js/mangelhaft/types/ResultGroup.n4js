@@ -11,6 +11,7 @@
 
 import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult";
 import {TestStatus} from "org/eclipse/n4js/mangelhaft/types/TestStatus";
+
 export public class ResultGroup {
     public description?: string = "";
     public testResults?: TestResult[] = [];

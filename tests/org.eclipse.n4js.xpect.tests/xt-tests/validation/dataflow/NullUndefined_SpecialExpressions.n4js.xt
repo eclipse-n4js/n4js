@@ -71,7 +71,7 @@ function f2b() {
 
 function f2c() {
 	let a : int = 0;
-	// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "a = undefined"
+	// XPECT warnings --> "The type of this expression is 'undefined', so it will never evaluate to a value other than 'undefined'." at "a = undefined"
 	let b : int = a = undefined;
 	// XPECT warnings --> "Variable a is undefined" at "a"
 	a.toString();

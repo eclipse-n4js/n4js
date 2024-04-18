@@ -57,8 +57,8 @@ public class N4JSScopingConsumableMethodsDiagnosis extends ScopingDiagnosis<Para
 					.anyMatch(m -> m.getName().equals(name.toString()));
 
 			if (hasMethod) {
-				return createMessage(IssueCodes.CLF_CANNOT_REFER_TO_DEFAULT_METHOD_WITH_SUPER,
-						IssueCodes.getMessageForCLF_CANNOT_REFER_TO_DEFAULT_METHOD_WITH_SUPER());
+				return createMessage(IssueCodes.CLF_CANNOT_REFER_TO_DEFAULT_METHOD_WITH_SUPER.name(),
+						IssueCodes.CLF_CANNOT_REFER_TO_DEFAULT_METHOD_WITH_SUPER.getMessage());
 			}
 		}
 		return null;

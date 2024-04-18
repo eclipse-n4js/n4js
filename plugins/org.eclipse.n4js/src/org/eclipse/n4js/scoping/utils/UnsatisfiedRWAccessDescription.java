@@ -34,13 +34,13 @@ public class UnsatisfiedRWAccessDescription extends AbstractDescriptionWithError
 	@Override
 	public String getMessage() {
 		String available = (isReadMissing ? "write-access" : "read-access");
-		return IssueCodes.getMessageForVIS_WRONG_READ_WRITE_ACCESS(
+		return IssueCodes.VIS_WRONG_READ_WRITE_ACCESS.getMessage(
 				"operation", "requires both read and write access, but only " + available, "available");
 	}
 
 	@Override
 	public String getIssueCode() {
-		return IssueCodes.VIS_WRONG_READ_WRITE_ACCESS;
+		return IssueCodes.VIS_WRONG_READ_WRITE_ACCESS.name();
 	}
 
 }

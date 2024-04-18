@@ -12,11 +12,10 @@ package org.eclipse.n4js.parser.conversion;
 
 import java.math.BigDecimal;
 
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.conversion.impl.AbstractLexerBasedConverter;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.util.Strings;
-
-import org.eclipse.n4js.validation.IssueCodes;
 
 /**
  * A value converter that properly converts JS numbers in scientific notation to {@link BigDecimal}.
@@ -32,20 +31,20 @@ public class ScientificIntValueConverter extends AbstractLexerBasedConverter<Big
 	protected void assertValidValue(BigDecimal value) {
 		super.assertValidValue(value);
 		if (value.signum() == -1)
-			throw new N4JSValueConverterException(IssueCodes.getMessageForVCO_SCIINT_NEGATIVE(getRuleName(), value),
-					IssueCodes.VCO_SCIINT_NEGATIVE, null, null);
+			throw new N4JSValueConverterException(IssueCodes.VCO_SCIINT_NEGATIVE.getMessage(getRuleName(), value),
+					IssueCodes.VCO_SCIINT_NEGATIVE.name(), null, null);
 	}
 
 	@Override
 	public BigDecimal toValue(String string, INode node) {
 		if (Strings.isEmpty(string))
-			throw new N4JSValueConverterException(IssueCodes.getMessageForVCO_SCIINT_CONVERT_EMPTY_STR(),
-					IssueCodes.VCO_SCIINT_CONVERT_EMPTY_STR, node, null);
+			throw new N4JSValueConverterException(IssueCodes.VCO_SCIINT_CONVERT_EMPTY_STR.getMessage(),
+					IssueCodes.VCO_SCIINT_CONVERT_EMPTY_STR.name(), node, null);
 		try {
 			return new BigDecimal(string);
 		} catch (NumberFormatException e) {
-			throw new N4JSValueConverterException(IssueCodes.getMessageForVCO_SCIINT_CONVERT_STR(string),
-					IssueCodes.VCO_SCIINT_CONVERT_STR, node, null);
+			throw new N4JSValueConverterException(IssueCodes.VCO_SCIINT_CONVERT_STR.getMessage(string),
+					IssueCodes.VCO_SCIINT_CONVERT_STR.name(), node, null);
 		}
 	}
 

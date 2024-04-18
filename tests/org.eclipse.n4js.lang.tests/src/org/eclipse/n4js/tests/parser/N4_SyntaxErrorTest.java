@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.tests.parser;
 
+import static org.eclipse.n4js.validation.IssueCodes.AST_INVALID_FOR_AWAIT;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.last;
 
 import java.util.List;
@@ -32,7 +33,6 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.utils.Strings;
-import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.linking.impl.XtextLinkingDiagnostic;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.impl.InvariantChecker;
@@ -556,7 +556,7 @@ public class N4_SyntaxErrorTest extends AbstractParserTest {
 				""");
 		List<Diagnostic> errors = script.eResource().getErrors();
 		assertEquals(1, errors.size());
-		assertEquals(IssueCodes.AST_INVALID_FOR_AWAIT, ((XtextLinkingDiagnostic) errors.get(0)).getCode());
+		assertEquals(AST_INVALID_FOR_AWAIT.name(), ((XtextLinkingDiagnostic) errors.get(0)).getCode());
 	}
 
 	@Test
@@ -566,7 +566,7 @@ public class N4_SyntaxErrorTest extends AbstractParserTest {
 				""");
 		List<Diagnostic> errors = script.eResource().getErrors();
 		assertEquals(1, errors.size());
-		assertEquals(IssueCodes.AST_INVALID_FOR_AWAIT, ((XtextLinkingDiagnostic) errors.get(0)).getCode());
+		assertEquals(AST_INVALID_FOR_AWAIT.name(), ((XtextLinkingDiagnostic) errors.get(0)).getCode());
 	}
 
 	@Test

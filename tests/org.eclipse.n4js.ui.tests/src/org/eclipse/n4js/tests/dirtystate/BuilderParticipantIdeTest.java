@@ -158,7 +158,6 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 	 * 07. Brother should have no error markers
 	 */
 	//@formatter:on
-	@SuppressWarnings("resource")
 	@Test
 	// TODO: while running there is a java.lang.IndexOutOfBoundsException: Index: 2, Size: 0 at at
 	// org.eclipse.n4js.resource.N4JSResource.getEncodedURI(N4JSResource.java:446)

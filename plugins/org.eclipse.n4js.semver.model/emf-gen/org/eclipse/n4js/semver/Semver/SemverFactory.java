@@ -57,6 +57,15 @@ public interface SemverFactory extends EFactory {
 	URLCommitISH createURLCommitISH();
 
 	/**
+	 * Returns a new object of class '<em>Workspace Version Requirement</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Workspace Version Requirement</em>'.
+	 * @generated
+	 */
+	WorkspaceVersionRequirement createWorkspaceVersionRequirement();
+
+	/**
 	 * Returns a new object of class '<em>Git Hub Version Requirement</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

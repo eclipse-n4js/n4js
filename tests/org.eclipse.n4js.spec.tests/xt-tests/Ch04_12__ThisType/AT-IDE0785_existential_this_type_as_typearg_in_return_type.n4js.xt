@@ -14,7 +14,7 @@
 
 class C {
 
-	// XPECT noerrors --> No error expected: "The this type isn't allowed on this place. You can only use it as return type of instance methods or structurally on use site in the constructor." at "this"
+	// XPECT noerrors --> No error expected: "The 'this' type isn't allowed on this place. You can only use it as return type of instance methods or structurally on use site in the constructor." at "this"
 	m2() : Array<? extends this> {
 		return null;
 	}

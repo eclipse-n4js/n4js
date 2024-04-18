@@ -22,7 +22,7 @@
  */
 {
 	/** XPECT warnings ---
-	   "As a convention the package name "MyProjectName" should match the name of the project folder "OtherProjectName" on the file system." at ""MyProjectName""
+	   "As a convention the package name 'MyProjectName' should match the name of the project folder 'OtherProjectName' on the file system." at ""MyProjectName""
 	   ---
 	 */
 	"name": "MyProjectName",

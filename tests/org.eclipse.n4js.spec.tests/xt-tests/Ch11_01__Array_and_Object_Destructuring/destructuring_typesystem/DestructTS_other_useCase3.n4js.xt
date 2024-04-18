@@ -42,5 +42,5 @@ async function <T1,T2> waitForBoth(param : Iterable2<Promise<T1,?>,Promise<T2,?>
 async function foo2() {
 	// XPECT type of 'result1' --> string
 	// XPECT type of 'result2' --> number
-	var [result1,result2] = await waitForBoth( [p1,p2] as Iterable2<Promise<string,?>,Promise<number,?>> ); // TODO get rid of cast!
+	var [result1,result2] = await waitForBoth( [p1,p2] );
 }

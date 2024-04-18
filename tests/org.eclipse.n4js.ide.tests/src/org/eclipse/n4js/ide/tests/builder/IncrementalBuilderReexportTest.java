@@ -29,7 +29,7 @@ public class IncrementalBuilderReexportTest extends AbstractIncrementalBuilderTe
 	protected Set<String> getIgnoredIssueCodes() {
 		// note: this test is testing internal infrastructure for a feature not available in N4JS[D] (only in .d.ts)
 		HashSet<String> iic = new HashSet<>(super.getIgnoredIssueCodes());
-		iic.add(IssueCodes.UNSUPPORTED);
+		iic.add(IssueCodes.UNSUPPORTED.name());
 		return iic;
 	}
 

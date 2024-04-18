@@ -16,13 +16,13 @@ var obj = {one:1, two:2};
 var arr = [ {first:1, second:2} ];
 
 
-// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "three": ~Object with { one: int; two: int }." at "three"
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named 'three': ~Object with { one: int; two: int }." at "three"
 var {one:a1,two:b1,three:c1} = obj;
-// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "three": ~Object with { one: int; two: int }." at "three"
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named 'three': ~Object with { one: int; two: int }." at "three"
 ({one:a1,two:b1,three:c1} = obj);
-// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "third": ~Object with { first: int; second: int }." at "third"
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named 'third': ~Object with { first: int; second: int }." at "third"
 for(var {first:a2,second:b2,third:c2} of arr) {}
-// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "third": ~Object with { first: int; second: int }." at "third"
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named 'third': ~Object with { first: int; second: int }." at "third"
 for({first:a2,second:b2,third:c2} of arr) {}
 
 
@@ -31,13 +31,13 @@ for({first:a2,second:b2,third:c2} of arr) {}
 
 // correct position of error message in case of single name bindings:
 
-// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "three": ~Object with { one: int; two: int }." at "three"
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named 'three': ~Object with { one: int; two: int }." at "three"
 var {one,two,three} = obj;
-// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "three": ~Object with { one: int; two: int }." at "three"
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named 'three': ~Object with { one: int; two: int }." at "three"
 ({one,two,three} = obj);
-// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "third": ~Object with { first: int; second: int }." at "third"
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named 'third': ~Object with { first: int; second: int }." at "third"
 for(var {first,second,third} of arr) {}
-// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "third": ~Object with { first: int; second: int }." at "third"
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named 'third': ~Object with { first: int; second: int }." at "third"
 for({first,second,third} of arr) {}
 
 
@@ -67,6 +67,6 @@ var {
 	getterI: [b6i,b6ii,b6iii],
 	fieldC: c6,
 	getterC: d6,
-	// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "notFound": Cls." at "notFound"
+	// XPECT errors --> "Value to be destructured does not contain a property, field or getter named 'notFound': Cls." at "notFound"
 	notFound: e6
 } = cls;

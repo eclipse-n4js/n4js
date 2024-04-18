@@ -26,7 +26,7 @@ public class N4JSSourceFolderSnapshotForPackageJson extends N4JSSourceFolderSnap
 	/** Creates a new {@link N4JSSourceFolderSnapshotForPackageJson}. */
 	public N4JSSourceFolderSnapshotForPackageJson(N4JSSourceFolderForPackageJson sourceFolder) {
 		super(sourceFolder.getName(), sourceFolder.getPath(), sourceFolder.getType(),
-				sourceFolder.getRelativePath());
+				sourceFolder.getRelativePath(), null);
 		this.packageJsonURI = sourceFolder.getPackageJsonURI();
 	}
 

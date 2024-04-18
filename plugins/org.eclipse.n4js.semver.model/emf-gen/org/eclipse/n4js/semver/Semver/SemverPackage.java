@@ -371,6 +371,61 @@ public interface SemverPackage extends EPackage {
 	int URL_COMMIT_ISH_OPERATION_COUNT = URL_VERSION_SPECIFIER_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.semver.Semver.impl.WorkspaceVersionRequirementImpl <em>Workspace Version Requirement</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.semver.Semver.impl.WorkspaceVersionRequirementImpl
+	 * @see org.eclipse.n4js.semver.Semver.impl.SemverPackageImpl#getWorkspaceVersionRequirement()
+	 * @generated
+	 */
+	int WORKSPACE_VERSION_REQUIREMENT = 6;
+
+	/**
+	 * The feature id for the '<em><b>Version</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WORKSPACE_VERSION_REQUIREMENT__VERSION = NPM_VERSION_REQUIREMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Other Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WORKSPACE_VERSION_REQUIREMENT__OTHER_VERSION = NPM_VERSION_REQUIREMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Workspace Version Requirement</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WORKSPACE_VERSION_REQUIREMENT_FEATURE_COUNT = NPM_VERSION_REQUIREMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WORKSPACE_VERSION_REQUIREMENT___TO_STRING = NPM_VERSION_REQUIREMENT___TO_STRING;
+
+	/**
+	 * The number of operations of the '<em>Workspace Version Requirement</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WORKSPACE_VERSION_REQUIREMENT_OPERATION_COUNT = NPM_VERSION_REQUIREMENT_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.Semver.impl.GitHubVersionRequirementImpl <em>Git Hub Version Requirement</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -378,7 +433,7 @@ public interface SemverPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.Semver.impl.SemverPackageImpl#getGitHubVersionRequirement()
 	 * @generated
 	 */
-	int GIT_HUB_VERSION_REQUIREMENT = 6;
+	int GIT_HUB_VERSION_REQUIREMENT = 7;
 
 	/**
 	 * The feature id for the '<em><b>Github Url</b></em>' attribute.
@@ -433,7 +488,7 @@ public interface SemverPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.Semver.impl.SemverPackageImpl#getLocalPathVersionRequirement()
 	 * @generated
 	 */
-	int LOCAL_PATH_VERSION_REQUIREMENT = 7;
+	int LOCAL_PATH_VERSION_REQUIREMENT = 8;
 
 	/**
 	 * The feature id for the '<em><b>Local Path</b></em>' attribute.
@@ -479,7 +534,7 @@ public interface SemverPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.Semver.impl.SemverPackageImpl#getTagVersionRequirement()
 	 * @generated
 	 */
-	int TAG_VERSION_REQUIREMENT = 8;
+	int TAG_VERSION_REQUIREMENT = 9;
 
 	/**
 	 * The feature id for the '<em><b>Tag Name</b></em>' attribute.
@@ -525,7 +580,7 @@ public interface SemverPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.Semver.impl.SemverPackageImpl#getVersionRangeSetRequirement()
 	 * @generated
 	 */
-	int VERSION_RANGE_SET_REQUIREMENT = 9;
+	int VERSION_RANGE_SET_REQUIREMENT = 10;
 
 	/**
 	 * The feature id for the '<em><b>Ranges</b></em>' containment reference list.
@@ -571,7 +626,7 @@ public interface SemverPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.Semver.impl.SemverPackageImpl#getVersionRange()
 	 * @generated
 	 */
-	int VERSION_RANGE = 10;
+	int VERSION_RANGE = 11;
 
 	/**
 	 * The number of structural features of the '<em>Version Range</em>' class.
@@ -608,7 +663,7 @@ public interface SemverPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.Semver.impl.SemverPackageImpl#getHyphenVersionRange()
 	 * @generated
 	 */
-	int HYPHEN_VERSION_RANGE = 11;
+	int HYPHEN_VERSION_RANGE = 12;
 
 	/**
 	 * The feature id for the '<em><b>From</b></em>' containment reference.
@@ -663,7 +718,7 @@ public interface SemverPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.Semver.impl.SemverPackageImpl#getVersionRangeConstraint()
 	 * @generated
 	 */
-	int VERSION_RANGE_CONSTRAINT = 12;
+	int VERSION_RANGE_CONSTRAINT = 13;
 
 	/**
 	 * The feature id for the '<em><b>Version Constraints</b></em>' containment reference list.
@@ -709,7 +764,7 @@ public interface SemverPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.Semver.impl.SemverPackageImpl#getSimpleVersion()
 	 * @generated
 	 */
-	int SIMPLE_VERSION = 13;
+	int SIMPLE_VERSION = 14;
 
 	/**
 	 * The feature id for the '<em><b>Number</b></em>' containment reference.
@@ -845,7 +900,7 @@ public interface SemverPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.Semver.impl.SemverPackageImpl#getVersionNumber()
 	 * @generated
 	 */
-	int VERSION_NUMBER = 14;
+	int VERSION_NUMBER = 15;
 
 	/**
 	 * The feature id for the '<em><b>Major</b></em>' containment reference.
@@ -981,7 +1036,7 @@ public interface SemverPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.Semver.impl.SemverPackageImpl#getVersionPart()
 	 * @generated
 	 */
-	int VERSION_PART = 15;
+	int VERSION_PART = 16;
 
 	/**
 	 * The feature id for the '<em><b>Wildcard</b></em>' attribute.
@@ -1054,7 +1109,7 @@ public interface SemverPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.Semver.impl.SemverPackageImpl#getQualifier()
 	 * @generated
 	 */
-	int QUALIFIER = 16;
+	int QUALIFIER = 17;
 
 	/**
 	 * The feature id for the '<em><b>Pre Release</b></em>' containment reference.
@@ -1118,7 +1173,7 @@ public interface SemverPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.Semver.impl.SemverPackageImpl#getQualifierTag()
 	 * @generated
 	 */
-	int QUALIFIER_TAG = 17;
+	int QUALIFIER_TAG = 18;
 
 	/**
 	 * The feature id for the '<em><b>Parts</b></em>' attribute list.
@@ -1173,7 +1228,7 @@ public interface SemverPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.Semver.impl.SemverPackageImpl#getVersionComparator()
 	 * @generated
 	 */
-	int VERSION_COMPARATOR = 18;
+	int VERSION_COMPARATOR = 19;
 
 
 	/**
@@ -1331,6 +1386,38 @@ public interface SemverPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getURLCommitISH_CommitISH();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.Semver.WorkspaceVersionRequirement <em>Workspace Version Requirement</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Workspace Version Requirement</em>'.
+	 * @see org.eclipse.n4js.semver.Semver.WorkspaceVersionRequirement
+	 * @generated
+	 */
+	EClass getWorkspaceVersionRequirement();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.semver.Semver.WorkspaceVersionRequirement#getVersion <em>Version</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Version</em>'.
+	 * @see org.eclipse.n4js.semver.Semver.WorkspaceVersionRequirement#getVersion()
+	 * @see #getWorkspaceVersionRequirement()
+	 * @generated
+	 */
+	EReference getWorkspaceVersionRequirement_Version();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.Semver.WorkspaceVersionRequirement#getOtherVersion <em>Other Version</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Other Version</em>'.
+	 * @see org.eclipse.n4js.semver.Semver.WorkspaceVersionRequirement#getOtherVersion()
+	 * @see #getWorkspaceVersionRequirement()
+	 * @generated
+	 */
+	EAttribute getWorkspaceVersionRequirement_OtherVersion();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.Semver.GitHubVersionRequirement <em>Git Hub Version Requirement</em>}'.
@@ -2027,6 +2114,32 @@ public interface SemverPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute URL_COMMIT_ISH__COMMIT_ISH = eINSTANCE.getURLCommitISH_CommitISH();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.semver.Semver.impl.WorkspaceVersionRequirementImpl <em>Workspace Version Requirement</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.semver.Semver.impl.WorkspaceVersionRequirementImpl
+		 * @see org.eclipse.n4js.semver.Semver.impl.SemverPackageImpl#getWorkspaceVersionRequirement()
+		 * @generated
+		 */
+		EClass WORKSPACE_VERSION_REQUIREMENT = eINSTANCE.getWorkspaceVersionRequirement();
+
+		/**
+		 * The meta object literal for the '<em><b>Version</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference WORKSPACE_VERSION_REQUIREMENT__VERSION = eINSTANCE.getWorkspaceVersionRequirement_Version();
+
+		/**
+		 * The meta object literal for the '<em><b>Other Version</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute WORKSPACE_VERSION_REQUIREMENT__OTHER_VERSION = eINSTANCE.getWorkspaceVersionRequirement_OtherVersion();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.semver.Semver.impl.GitHubVersionRequirementImpl <em>Git Hub Version Requirement</em>}' class.

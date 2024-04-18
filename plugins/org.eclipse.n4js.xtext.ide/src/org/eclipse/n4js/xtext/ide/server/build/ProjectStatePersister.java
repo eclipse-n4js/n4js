@@ -43,6 +43,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.xtext.ide.server.QueuedExecutorService;
+import org.eclipse.n4js.xtext.ide.server.build.XIndexer.XResolvedResourceDescription;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.xtext.build.Source2GeneratedMapping;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -209,6 +210,8 @@ public class ProjectStatePersister {
 		for (IResourceDescription description : descriptions) {
 			if (description instanceof SerializableResourceDescription) {
 				writeResourceDescription((SerializableResourceDescription) description, baseURI, output);
+			} else if (description instanceof XResolvedResourceDescription) {
+				// ignore
 			} else {
 				throw new IOException("Unexpected type: " + description.getClass().getName());
 			}

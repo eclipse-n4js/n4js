@@ -78,26 +78,14 @@ public class PackageJsonHelper {
 	private VersionNumber cachedJSDefaultVersionNumber = null;
 
 	/**
-	 * Transform the given {@code packageJSON} into an equivalent {@link ProjectDescriptionBuilder} instance. If no
-	 * further adjustments are required, the client can immediately invoke the {@code #build()} method to obtain the
-	 * corresponding {@link ProjectDescription}.
-	 * <p>
-	 * Note: this method does not implement the package.json feature that a "main" path may point to a folder and then a
-	 * file "index.js" in that folder will be used as main module (for details see
-	 * {@link ProjectDescriptionUtils#convertMainPathToModuleSpecifier(String, List)}).
+	 * Transform the given {@code packageJSON} into an equivalent {@link ProjectDescriptionBuilder} instance.
 	 *
 	 * @param packageJSON
 	 *            the JSON document to convert (should be the representation of a valid {@code package.json} file).
-	 * @param applyDefaultValues
-	 *            whether default values should be applied to the project description after conversion.
-	 * @param defaultProjectName
-	 *            the default project ID (will be ignored if {@code applyDefaultValues} is set to <code>false</code>.
 	 * @return the project description converted from the given JSON document or <code>null</code> if the root value of
 	 *         the given JSON document is not a {@link JSONObject}.
 	 */
-	public ProjectDescriptionBuilder convertToProjectDescription(JSONDocument packageJSON, boolean applyDefaultValues,
-			String defaultProjectName) {
-
+	public ProjectDescriptionBuilder convertToProjectDescription(JSONDocument packageJSON) {
 		JSONValue rootValue = packageJSON.getContent();
 		if (!(rootValue instanceof JSONObject)) {
 			return null;
@@ -106,6 +94,35 @@ public class PackageJsonHelper {
 		ProjectDescriptionBuilder target = new ProjectDescriptionBuilder();
 		List<NameValuePair> rootPairs = ((JSONObject) rootValue).getNameValuePairs();
 		convertRootPairs(target, rootPairs);
+
+		return target;
+	}
+
+	/**
+	 * Adjusts the given target and applies default values.
+	 * <p>
+	 * Note: this method does not implement the package.json feature that a "main" path may point to a folder and then a
+	 * file "index.js" in that folder will be used as main module (for details see
+	 * {@link ProjectDescriptionUtils#convertMainPathToModuleSpecifier(String, List)}).
+	 *
+	 * @param packageJSON
+	 *            the JSON document to convert (should be the representation of a valid {@code package.json} file).
+	 * @param target
+	 *            target that will be adjusted
+	 * @param applyDefaultValues
+	 *            whether default values should be applied to the project description after conversion.
+	 * @param defaultProjectName
+	 *            the default project ID (will be ignored if {@code applyDefaultValues} is set to <code>false</code>.
+	 * @return the project description converted from the given JSON document or <code>null</code> if the root value of
+	 *         the given JSON document is not a {@link JSONObject}.
+	 */
+	public ProjectDescriptionBuilder adjustAndApplyDefaults(JSONDocument packageJSON, ProjectDescriptionBuilder target,
+			boolean applyDefaultValues, String defaultProjectName) {
+
+		JSONValue rootValue = packageJSON.getContent();
+		if (!(rootValue instanceof JSONObject)) {
+			return null;
+		}
 
 		String valueOfPropMain = asNonEmptyStringOrNull(getProperty((JSONObject) rootValue, MAIN.name).orElse(null));
 		adjustProjectDescriptionAfterConversion(target, applyDefaultValues, defaultProjectName, valueOfPropMain);
@@ -397,8 +414,7 @@ public class PackageJsonHelper {
 	}
 
 	private void adjustProjectDescriptionAfterConversion(ProjectDescriptionBuilder target,
-			boolean applyDefaultValues,
-			String defaultProjectName, String valueOfTopLevelPropertyMain) {
+			boolean applyDefaultValues, String defaultProjectName, String valueOfTopLevelPropertyMain) {
 
 		if (target.getProjectType() == null || target.getProjectType() == ProjectType.PLAINJS) {
 			if (applyDefaultValues) {
@@ -485,7 +501,10 @@ public class PackageJsonHelper {
 				trimProjectExports(target.getExports(), target.getTypesVersions());
 			}
 		}
-		setSourceContainer(target, (String) OUTPUT.defaultValue, false);
+		if (!target.isWorkspaceRoot()) {
+			// workspace projects my contain unrelated sources hence do not use the default source folder
+			setSourceContainer(target, (String) OUTPUT.defaultValue, false);
+		}
 
 		if (mainOrTypesModulePath != null) {
 			if (mainOrTypesModulePath.startsWith("./")) {
@@ -583,9 +602,9 @@ public class PackageJsonHelper {
 	private void setSourceContainer(ProjectDescriptionBuilder target, String path, boolean replace) {
 		// if no source containers are defined (no matter what type),
 		// then add a default source container of type "source" with path "."
-		// EXCEPT target represents a yarn workspace root
+		// EXCEPT target represents a workspace root
 
-		if (!target.isYarnWorkspaceRoot()) {
+		if (!target.isWorkspaceRoot()) {
 			List<SourceContainerDescription> sourceContainers = target.getSourceContainers();
 			SourceContainerDescription sourceContainerOfTypeSource = null;
 			for (SourceContainerDescription sourceContainer : sourceContainers) {

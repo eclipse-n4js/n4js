@@ -32,13 +32,28 @@ import org.eclipse.xtext.util.RuntimeIOException;
 import com.google.inject.Singleton;
 
 /**
- * A file system scanner that is aware of {@link FileVisitingAcceptor} to cut the traversal short.
+ * A file system scanner that is aware of {@link IFileSystemScannerAcceptor} to cut the traversal short.
  *
  * Compared to the default, it relies internally on {@link Files#walkFileTree(Path, java.nio.file.FileVisitor)} rather
  * than manual traversal based on the {@link File file API}.
  */
 @Singleton
 public class FileSystemScanner implements IFileSystemScanner {
+
+	/** An {@link IAcceptor} that supports skipping subtrees when walking the file tree. */
+	public interface IFileSystemScannerAcceptor<T> extends IAcceptor<T> {
+		/** Callback on every visited directory */
+		default FileVisitResult acceptDirectory(T t) {
+			accept(t);
+			return FileVisitResult.CONTINUE;
+		}
+
+		/** Callback on every visited file */
+		default FileVisitResult acceptFile(T t) {
+			accept(t);
+			return FileVisitResult.CONTINUE;
+		}
+	}
 
 	@Override
 	public void scan(URI root, IAcceptor<URI> acceptor) {
@@ -56,10 +71,14 @@ public class FileSystemScanner implements IFileSystemScanner {
 	}
 
 	static class N4JSFileVisitor implements FileVisitor<Path> {
+		final IFileSystemScannerAcceptor<URI> fssAcceptor;
 		final IAcceptor<URI> acceptor;
 
 		N4JSFileVisitor(IAcceptor<URI> acceptor) {
 			this.acceptor = acceptor;
+			this.fssAcceptor = (acceptor instanceof IFileSystemScannerAcceptor)
+					? (IFileSystemScannerAcceptor<URI>) acceptor
+					: null;
 		}
 
 		@Override
@@ -67,13 +86,21 @@ public class FileSystemScanner implements IFileSystemScanner {
 			if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
 				return FileVisitResult.SKIP_SUBTREE;
 			}
+			if (fssAcceptor != null) {
+				return fssAcceptor.acceptDirectory(new FileURI(dir.toFile()).toURI());
+			}
 			return FileVisitResult.CONTINUE;
 		}
 
 		@Override
 		public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-			acceptor.accept(new FileURI(file.toFile()).toURI());
-			return FileVisitResult.CONTINUE;
+			URI uri = new FileURI(file.toFile()).toURI();
+			if (fssAcceptor != null) {
+				return fssAcceptor.acceptFile(uri);
+			} else {
+				acceptor.accept(uri);
+				return FileVisitResult.CONTINUE;
+			}
 		}
 
 		@Override
@@ -83,8 +110,9 @@ public class FileSystemScanner implements IFileSystemScanner {
 
 		@Override
 		public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-			if (exc != null)
+			if (exc != null) {
 				throw exc;
+			}
 			return FileVisitResult.CONTINUE;
 		}
 	}
