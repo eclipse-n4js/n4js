@@ -97,6 +97,7 @@ public class SystemOutRedirecter {
 	public void clearSystemOut() {
 		ByteArrayOutputStream baos = redirectOut;
 		if (baos != null) {
+			System.out.flush();
 			baos.reset();
 		}
 	}
@@ -117,6 +118,7 @@ public class SystemOutRedirecter {
 	public void clearSystemErr() {
 		ByteArrayOutputStream baos = redirectErr;
 		if (baos != null) {
+			System.err.flush();
 			baos.reset();
 		}
 	}

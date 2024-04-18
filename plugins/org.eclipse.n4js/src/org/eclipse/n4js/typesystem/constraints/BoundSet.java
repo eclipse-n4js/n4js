@@ -32,12 +32,12 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.InferenceVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
-import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.SetMultimap;
@@ -58,9 +58,9 @@ import com.google.common.collect.SetMultimap;
 	private static final boolean DEBUG = InferenceContext.DEBUG;
 
 	private final InferenceContext ic;
-
 	private final RuleEnvironment G;
 	private final N4JSTypeSystem ts;
+	private final TypeBoundCombiner tbc;
 
 	/** Bounds within this bound set, stored per inference variable. */
 	private final SetMultimap<InferenceVariable, TypeBound> boundsPerInfVar = LinkedHashMultimap.create();
@@ -89,6 +89,7 @@ import com.google.common.collect.SetMultimap;
 		this.ic = ic;
 		this.G = G;
 		this.ts = ts;
+		this.tbc = new TypeBoundCombiner(G, ts);
 	}
 
 	private BoundSet(BoundSet other) {
@@ -208,7 +209,7 @@ import com.google.common.collect.SetMultimap;
 	 * For internal use only! Bounds cannot really be removed from a {@code BoundSet}; this is only provided for
 	 * performance reasons to allow removal of type bounds that do no longer have any effect. Use with care.
 	 */
-	private void removeBound(TypeBound bound) {
+	void removeBound(TypeBound bound) {
 		boundsPerInfVar.remove(bound.left, bound);
 		incorporatedBounds.remove(bound);
 	}
@@ -332,212 +333,124 @@ import com.google.common.collect.SetMultimap;
 	 * {@link #combine(TypeBound, TypeBound)}, which is then reduced.
 	 */
 	public void incorporate() {
+		incorporateInstantiations(new ArrayList<>(boundsPerInfVar.values()));
+
+		for (InferenceVariable infVar : new ArrayList<>(boundsPerInfVar.keySet())) {
+			ArrayList<TypeBound> bounds = new ArrayList<>(boundsPerInfVar.get(infVar));
+			incorporateBounds(bounds, false);
+		}
+		incorporateFixpoint();
+	}
+
+	public void incorporateFixpoint() {
 		boolean updated;
 		do {
-			updated = false;
-			final TypeBound[] bounds = getAllBounds();
-			final int len = bounds.length;
-			if (len < 2) {
-				return;
-			}
-			for (int i = 0; i < len; ++i) {
-				final TypeBound boundI = bounds[i];
-				final boolean isIncorporatedI = incorporatedBounds.contains(boundI);
-				for (int j = i + 1; j < len; ++j) {
-					final TypeBound boundJ = bounds[j];
-					final boolean isIncorporatedJ = incorporatedBounds.contains(boundJ);
-					final boolean bothAlreadyIncorporated = (isIncorporatedI && isIncorporatedJ);
-					if (!bothAlreadyIncorporated) {
-						if (DEBUG) {
-							log("--- incorporating:  " + boundI + "  |  " + boundJ);
-						}
-						final TypeConstraint newConstraint = combine(boundI, boundJ);
-						if (newConstraint != null) {
-							// this is where incorporation triggers reduction (of the new constraint)
-							// reduction may in turn trigger incorporation (provided it adds bounds)
-							updated |= ic.reducer.reduce(newConstraint);
-						}
-						if (ic.isDoomed()) {
-							return;
-						}
-					}
-				}
-				if (!isIncorporatedI) {
-					incorporatedBounds.add(boundI);
-				}
-			}
+			// PERFORMANCE: incorporate instantiations at once first reduces computation
+			incorporateInstantiations(new ArrayList<>(boundsPerInfVar.values()));
+			updated = incorporateBounds(new ArrayList<>(boundsPerInfVar.values()), true);
 		} while (updated);
 	}
 
+	public int counter = 0;
+	public Stopwatch sw = Stopwatch.createUnstarted();
+
 	/**
-	 * In terms of JLS8, this method embodies the implication rules listed in Sec. 18.3.1 (the other implication rules
-	 * in JLS8 take as input capture conversion constraints).
+	 * All instantiations are incorporated at once instead of one at a time. This reduces calls to
+	 * {@link Reducer#reduce(Iterable)} drastically.
 	 */
+	private void incorporateInstantiations(ArrayList<TypeBound> bounds) {
+		final int len = bounds.size();
+		if (len < 2) {
+			return;
+		}
+
+		for (int j = 0; j < len; ++j) {
+			final TypeBound boundJ = bounds.get(j);
+
+			List<InferenceVariable> mutualInfVars = new ArrayList<>();
+			for (InferenceVariable refInfVar : boundJ.referencedInfVars) {
+				if (instantiations.containsKey(refInfVar)) {
+					mutualInfVars.add(refInfVar);
+				}
+			}
+
+			if (!mutualInfVars.isEmpty()) {
+				TypeRef rightJ = boundJ.right;
+				for (InferenceVariable mutVar : mutualInfVars) {
+					final TypeRef boundIRight = instantiations.get(mutVar);
+					// (5) `α = S` (where S is proper) and `β Φ T` implies `β Φ T[α:=U]`
+					rightJ = substituteInferenceVariable(rightJ, mutVar, boundIRight);
+				}
+
+				removeBound(boundJ); // performance tweak: avoid unnecessary growth of bounds
+				ic.reducer.reduce(new TypeConstraint(typeRef(boundJ.left), rightJ, boundJ.variance));
+			}
+		}
+	}
+
+	private boolean incorporateBounds(ArrayList<TypeBound> bounds, boolean addToIncorporated) {
+		boolean updated = false;
+		final int len = bounds.size();
+		if (len < 2) {
+			return updated;
+		}
+
+		int knownUntilIdx = 0;
+		while (knownUntilIdx < bounds.size() && incorporatedBounds.contains(bounds.get(knownUntilIdx))) {
+			knownUntilIdx++;
+		}
+
+		for (int i = 0; i < len; ++i) {
+			final TypeBound boundI = bounds.get(i);
+			final boolean isIncorporatedI = incorporatedBounds.contains(boundI);
+			for (int j = Math.max(knownUntilIdx, i + 1); j < len; ++j) {
+				counter++;
+				final TypeBound boundJ = bounds.get(j);
+				final boolean isIncorporatedJ = incorporatedBounds.contains(boundJ);
+				final boolean bothAlreadyIncorporated = (isIncorporatedI && isIncorporatedJ);
+				if (!bothAlreadyIncorporated) {
+					if (DEBUG) {
+						log("--- incorporating:  " + boundI + "  |  " + boundJ);
+					}
+					sw.start();
+					final TypeConstraint newConstraint = combine(boundI, boundJ);
+					sw.stop();
+					if (newConstraint != null) {
+						// this is where incorporation triggers reduction (of the new constraint)
+						// reduction may in turn trigger incorporation (provided it adds bounds)
+						updated |= ic.reducer.reduce(newConstraint);
+					}
+					if (ic.isDoomed()) {
+						return false;
+					}
+				}
+			}
+			if (addToIncorporated && !isIncorporatedI) {
+				incorporatedBounds.add(boundI);
+			}
+		}
+
+		return updated;
+	}
+
 	private TypeConstraint combine(TypeBound boundI, TypeBound boundJ) {
-		switch (boundI.variance) {
-		case INV:
-			switch (boundJ.variance) {
-			case INV:
-				return combineInvInv(boundI, boundJ);
-			case CO:
-			case CONTRA:
-				return combineInvVar(boundI, boundJ);
-			}
-			break;
-		case CO:
-			switch (boundJ.variance) {
-			case INV:
-				return combineInvVar(boundJ, boundI); // note: reversed arguments!
-			case CONTRA:
-				return combineContraCo(boundJ, boundI); // note: reversed arguments!
-			case CO:
-				return combineBothCoOrBothContra(boundI, boundJ);
-			}
-			break;
-		case CONTRA:
-			switch (boundJ.variance) {
-			case INV:
-				return combineInvVar(boundJ, boundI); // note: reversed arguments!
-			case CO:
-				return combineContraCo(boundI, boundJ);
-			case CONTRA:
-				return combineBothCoOrBothContra(boundI, boundJ);
-			}
-		}
-		throw new IllegalStateException("unreachable");
+		return tbc.combine(boundI, boundJ, this);
 	}
 
 	/**
-	 * Case: both bounds are equalities.
+	 * Side effect free, i.e. no bounds will be removed from this {@link #BoundSet} (as an optimization) when calling
+	 * this method.
 	 */
-	private TypeConstraint combineInvInv(TypeBound boundS, TypeBound boundT) {
-		if (boundS.left == boundT.left) {
-			// `α = S` and `α = T` implies `S = T`
-			return new TypeConstraint(boundS.right, boundT.right, INV);
-		}
-		// inference variables are different
-		// -> try to substitute a proper RHS in the RHS of the other bound, to make it a proper type itself
-		TypeConstraint newConstraint = combineInvInvWithProperType(boundS, boundT);
-		if (newConstraint != null) {
-			return newConstraint;
-		}
-		newConstraint = combineInvInvWithProperType(boundT, boundS);
-		if (newConstraint != null) {
-			return newConstraint;
-		}
-		return null;
-	}
-
-	/**
-	 * Given two type bounds `α = U` and `β = T` with α &ne; β, will return a new constraint `β = T[α:=U]` if
-	 * <ul>
-	 * <li>U is proper, and
-	 * <li>T mentions α.
-	 * </ul>
-	 * Otherwise, <code>null</code> is returned.
-	 */
-	private TypeConstraint combineInvInvWithProperType(TypeBound boundWithProperRHS, TypeBound boundOther) {
-		final InferenceVariable alpha = boundWithProperRHS.left;
-		final TypeRef U = boundWithProperRHS.right;
-		final TypeRef T = boundOther.right;
-		if (TypeUtils.isProper(U) && TypeUtils.getReferencedTypeVars(T).contains(alpha)) {
-			final InferenceVariable beta = boundOther.left;
-			final TypeRef T_subst = substituteInferenceVariable(T, alpha, U); // returns T[α:=U]
-			removeBound(boundOther); // performance tweak: avoid unnecessary growth of bounds
-			return new TypeConstraint(typeRef(beta), T_subst, INV);
-		}
-		return null;
-	}
-
-	/**
-	 * Case: first bound is an equality, while the second isn't: `α = S` and `β Φ T` with Φ either {@code <:} or
-	 * {@code :>}.
-	 */
-	private TypeConstraint combineInvVar(TypeBound boundS, TypeBound boundT) {
-		final InferenceVariable alpha = boundS.left;
-		final InferenceVariable beta = boundT.left;
-		final TypeRef S = boundS.right;
-		final TypeRef T = boundT.right;
-		final Variance Phi = boundT.variance;
-		if (alpha == beta) {
-			// (1) `α = S` and `α Φ T` implies `S Φ T`
-			return new TypeConstraint(S, T, Phi);
-		}
-		// both bounds have different inference variables, i.e. α != β
-		if (alpha == T.getDeclaredType()) {
-			// (2) `α = S` and `β Φ α` implies `β Φ S`
-			return new TypeConstraint(typeRef(beta), S, Phi);
-		}
-		if (TypeUtils.isInferenceVariable(S)) {
-			// first bound is of the form `α = γ` (with γ being another inference variable)
-			final InferenceVariable gamma = (InferenceVariable) S.getDeclaredType();
-			if (gamma == beta) {
-				// (3) `α = β` and `β Φ T` implies `α Φ T`
-				return new TypeConstraint(typeRef(alpha), T, Phi);
-			}
-			if (gamma == T.getDeclaredType()) {
-				// (4) `α = γ` and `β Φ γ` implies `β Φ α`
-				return new TypeConstraint(typeRef(beta), typeRef(alpha), Phi);
+	List<TypeConstraint> combineAll(TypeBound newBound) {
+		List<TypeConstraint> result = new ArrayList<>();
+		Set<TypeBound> bounds = ic.currentBounds.getBounds(newBound.left);
+		for (TypeBound tBound : bounds) {
+			TypeConstraint newConstraint = tbc.combine(newBound, tBound, null);
+			if (newConstraint != null) {
+				result.add(newConstraint);
 			}
 		}
-		// so, S is not an inference variable
-		if (TypeUtils.isProper(S) && TypeUtils.getReferencedTypeVars(T).contains(alpha)) {
-			// (5) `α = S` (where S is proper) and `β Φ T` implies `β Φ T[α:=U]`
-			final TypeRef T_subst = substituteInferenceVariable(T, alpha, S); // returns T[α:=U]
-			removeBound(boundT); // performance tweak: avoid unnecessary growth of bounds
-			return new TypeConstraint(typeRef(beta), T_subst, Phi);
-		}
-		return null;
-	}
-
-	/**
-	 * Case: `α :> S` and `β <: T`.
-	 */
-	private TypeConstraint combineContraCo(TypeBound boundS, TypeBound boundT) {
-		final InferenceVariable alpha = boundS.left;
-		final InferenceVariable beta = boundT.left;
-		final TypeRef S = boundS.right;
-		final TypeRef T = boundT.right;
-		if (alpha == beta) {
-			// transitivity, using LHS as bridge:
-			// α :> S and α <: T implies S <: T
-			return new TypeConstraint(S, T, CO);
-		}
-		// so, α and β are different
-		if (TypeUtils.isInferenceVariable(S)) {
-			final InferenceVariable gamma = (InferenceVariable) S.getDeclaredType();
-			if (gamma == T.getDeclaredType()) {
-				// transitivity, using RHS as bridge:
-				// α :> γ and β <: γ implies α :> β
-				return new TypeConstraint(typeRef(alpha), typeRef(beta), CONTRA);
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Case: inequalities of same direction, i.e.
-	 * <ul>
-	 * <li>`α <: S` and `β <: T` or
-	 * <li>`α :> S` and `β :> T`.
-	 * </ul>
-	 */
-	private TypeConstraint combineBothCoOrBothContra(TypeBound boundS, TypeBound boundT) {
-		final InferenceVariable alpha = boundS.left;
-		final InferenceVariable beta = boundT.left;
-		final TypeRef S = boundS.right;
-		final TypeRef T = boundT.right;
-		if (alpha == T.getDeclaredType()) {
-			// α <: S and β <: α implies β <: S
-			// α :> S and β :> α implies β :> S
-			return new TypeConstraint(typeRef(beta), S, boundS.variance);
-		}
-		if (S.getDeclaredType() == beta) {
-			// α <: β and β <: T implies α <: T
-			// α :> β and β :> T implies α :> T
-			return new TypeConstraint(typeRef(alpha), T, boundS.variance);
-		}
-		return null;
+		return result;
 	}
 
 	private static TypeRef typeRef(InferenceVariable infVar) {

@@ -35,9 +35,9 @@ var v00 : Iterable<B> = [b];
 var v01 : Iterable<B> = [b,c,b];
 // XPECT type of '[b,c,b]' --> Array<B>
 var v02 : Array<B> = [b,c,b];
-// XPECT type of '[b,c,b]' --> Array<B>
+// XPECT type of '[b,c,b]' --> Array3<B,C,B>
 var v03 = [b,c,b];
-// XPECT errors --> "Array<B> is not a subtype of X." at "[b,c,b]"
+// XPECT errors --> "Array3<B,C,B> is not a subtype of X." at "[b,c,b]"
 var v04 : X = [b,c,b];
 
 
@@ -67,18 +67,18 @@ var v13a : Iterable3<B,B,B> = [b,c,b,b,b,c,b];
 var v13b : Array3<B,B,B> = [b,c,b,b,b,c,b];
 
 // found during IDE-1852: XPECT FIXME noerrors
-// case NOT all remaining match XPECT type of '[b,c,b,b,b,x,b]' --> Array3<B,B,union{B,X}>
+// case NOT all remaining match XPECT type of '[b,c,b,b,b,x,b]' --> Array7<B,B,B,B,B,X,B>
 var v14a : Iterable3<B,B,B> = [b,c,b,b,b,x,b];
 // found during IDE-1852: XPECT FIXME noerrors
-// case NOT all remaining match XPECT type of '[b,c,b,b,b,x,b]' --> Array3<B,B,union{B,X}>
+// case NOT all remaining match XPECT type of '[b,c,b,b,b,x,b]' --> Array7<B,B,B,B,B,X,B>
 var v14b : Array3<B,B,B> = [b,c,b,b,b,x,b];
 
 
 // expectation is longer:
 
-// XPECT errors --> "Array3<B,B,B> is not a subtype of Iterable4<B,B,B,B>." at "[b,c,b]"
+// XPECT errors --> "Array<B> is not a subtype of Iterable4<B,B,B,B>." at "[b,c,b]"
 var v15a : Iterable4<B,B,B,B> = [b,c,b];
-// XPECT errors --> "Array3<B,B,B> is not a subtype of Array4<B,B,B,B>." at "[b,c,b]"
+// XPECT errors --> "Array<B> is not a subtype of Array4<B,B,B,B>." at "[b,c,b]"
 var v15b : Array4<B,B,B,B> = [b,c,b];
 
 // XPECT errors --> "Array3<B,X,B> is not a subtype of Iterable4<B,B,B,B>." at "[b,x,b]"
@@ -131,3 +131,9 @@ var v22b : union{Array2<A,A>,Array2<A,B>} = [a,x];
 var v23a : union{Iterable2<A,A>,X} = [a,b];
 // XPECT noerrors -->
 var v23b : union{Array2<A,A>,X} = [a,b];
+
+// XPECT type of 'v24' --> Array2<A,Array2<B,string>>
+var v24 : Array2<A,Array2<B,string>> = [a,[b,"hi"]];
+
+// XPECT type of 'v25' --> Array<Array2<A,B>>
+var v25 : Array<Array2<A,B>> = [[b,c]];

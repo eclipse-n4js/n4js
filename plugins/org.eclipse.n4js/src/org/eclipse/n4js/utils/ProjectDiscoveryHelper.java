@@ -229,9 +229,7 @@ public class ProjectDiscoveryHelper {
 			collectGlobMatches(workspaceGlob, yarnProjectRoot, pdCache, memberProjects);
 		}
 		removeUnnecessaryPlainjsProjects(memberProjects, pdCache);
-		for (Path member : memberProjects) {
-			allProjectDirs.add(member);
-		}
+		allProjectDirs.addAll(memberProjects);
 	}
 
 	private void collectProjects(Path root, Path relatedRoot, boolean includeSubtree,

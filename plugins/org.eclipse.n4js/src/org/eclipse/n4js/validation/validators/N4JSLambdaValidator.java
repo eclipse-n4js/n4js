@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.ArrowFunction;
+import org.eclipse.n4js.n4JS.ThisLiteral;
 import org.eclipse.n4js.types.utils.LambdaUtils;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
@@ -60,7 +61,7 @@ public class N4JSLambdaValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	private void rejectUsagesOfThisInTopLevelLambda(ArrowFunction topLevelLambda) {
 		assert LambdaUtils.isLambda(topLevelLambda);
-		Iterator<EObject> thisUsages = LambdaUtils.thisLiterals(topLevelLambda.getBody());
+		Iterator<ThisLiteral> thisUsages = LambdaUtils.thisLiterals(topLevelLambda.getBody());
 		while (thisUsages.hasNext()) {
 			EObject thisUsage = thisUsages.next();
 			addIssue(thisUsage, IssueCodes.KEY_THIS_REJECTED_IN_TOP_LEVEL_LAMBDA);

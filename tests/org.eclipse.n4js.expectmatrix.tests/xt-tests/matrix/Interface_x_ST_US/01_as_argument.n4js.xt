@@ -46,7 +46,7 @@ f(new C2<number>());
 // C2<string> !<: ~I XPECT errors --> "C2<string> is not a structural subtype of ~I: x failed: string is not equal to number." at "new C2<string>()"
 f(new C2<string>());
 
-// got ~~I, ~I expected XPECT errors --> "~Object with { x: number } is not a structural subtype of ~I: missing method foo." at "{x:10}"
+// got ~~I, ~I expected XPECT errors --> "~Object with { x: int } is not a structural subtype of ~I: missing method foo." at "{x:10}"
 f({x:10});
 
 // got ~~I as expected XPECT noerrors -->

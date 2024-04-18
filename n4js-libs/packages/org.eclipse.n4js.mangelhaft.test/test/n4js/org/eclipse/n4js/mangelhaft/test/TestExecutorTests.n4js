@@ -264,7 +264,7 @@ export public class TestExecutorTests {
             ["fixme__multiScope___success", TestStatus.passed],
             ["fixme__multiScope___fail", TestStatus.failed],
         ]
-        const expectedMap = new Map<string, string>(expected as Iterable<Iterable2<string,string>>);
+        const expectedMap = new Map<string, string>(expected);
         const tests: InstrumentedTest[] = []        
         tests.push(new InstrumentedTest().load(FixmeTests).setTestObject(new FixmeTests()));
         const val =  await this.subject.executor.runTestsAsync(tests);
@@ -286,7 +286,7 @@ export public class TestExecutorTests {
             ["fixme__multiScope___success", TestStatus.failed],
             ["fixme__multiScope___fail", TestStatus.skipped_fixme],
         ]
-        const expectedMap = new Map<string, string>(expected as Iterable<Iterable2<string,string>>);
+        const expectedMap = new Map<string, string>(expected);
         const tests: InstrumentedTest[] = []        
         tests.push(new InstrumentedTest().load(FixmeTests).setTestObject(new FixmeTests()));
         const val =  await this.subject.executor.runTestsAsync(tests, "SERVER");
@@ -308,7 +308,7 @@ export public class TestExecutorTests {
             ["fixme__multiScope___success", TestStatus.failed],
             ["fixme__multiScope___fail", TestStatus.skipped_fixme],
         ]
-        const expectedMap = new Map<string, string>(expected as Iterable<Iterable2<string,string>>);
+        const expectedMap = new Map<string, string>(expected);
         const tests: InstrumentedTest[] = []        
         tests.push(new InstrumentedTest().load(FixmeTests).setTestObject(new FixmeTests()));
         const val =  await this.subject.executor.runTestsAsync(tests, "MOCK");

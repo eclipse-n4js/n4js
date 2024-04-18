@@ -340,7 +340,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 
 	private def handleNotImportedTypeRefs(Script script, List<ImportSpecifier> specifiersWithIssues,
 		Map<EObject, String> eObjectToIssueCode) {
-		val importedProvidedElementsWithIssuesByModule = specifiersWithIssues.mapToImportProvidedElements(jsVariantHelper).groupBy [
+		val importedProvidedElementsWithIssuesByModule = mapToImportProvidedElements(specifiersWithIssues).groupBy [
 			importedModule
 		]
 		val potentiallyAffectedTypeRefs = script.eAllContents.filter(ParameterizedTypeRef).filter [

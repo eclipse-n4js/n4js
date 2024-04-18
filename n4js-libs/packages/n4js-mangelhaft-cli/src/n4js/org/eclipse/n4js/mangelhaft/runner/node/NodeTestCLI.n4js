@@ -17,17 +17,22 @@ const cwd = process.cwd();
 const resolvePath = (p: string): string => lib_path.resolve(cwd, p);
 
 const nomnomOptions: Object = {
-    testCatalog: {
+    testCatalogs: {
         position: 0,
-        list: false,
-        default: ".",
-        metavar: "PATH|NPM-relpath",
-        help: "Test catalog (JSON) or project location to be inspected for test cases."
+        list: true,
+        default: ["."],
+        metavar: "PATH|NPM-relpath|glob",
+        help: "Test catalog (JSON) or project location(s) to be inspected for test catalog(s)."
     },
     filter: {
         abbr: "f",
         list: true,
         help: "Filter for matching test cases."
+    },
+    mergeResult: {
+        abbr: "mr",
+        flag: true,
+        help: "Merge all results into a single file stored in CWD."
     },
     xunitReportFile: {
         metavar: "PATH",

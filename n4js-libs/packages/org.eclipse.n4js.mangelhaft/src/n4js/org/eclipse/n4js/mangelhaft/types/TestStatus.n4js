@@ -28,7 +28,7 @@ let testStatusIntMap = new Map<TestStatus, int>([
   , [TestStatus.failed, 6]
   , [TestStatus.error, 7]
 
-] as Iterable<Iterable2<TestStatus,int>>);
+]);
 
 export function aggregateTestStatuses(testStatus1: TestStatus, testStatus2: TestStatus): TestStatus {
     return testStatusIntMap.get(testStatus1) > testStatusIntMap.get(testStatus2) ? testStatus1 : testStatus2;

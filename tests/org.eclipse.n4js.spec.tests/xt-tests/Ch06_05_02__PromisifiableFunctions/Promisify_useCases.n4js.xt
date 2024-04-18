@@ -121,12 +121,12 @@ async function testWithMethod(allDone : {function()}) {
 	console.log('****** method mNone:');
 
 	console.log('use case #1: with await, long syntax');
-	// XPECT warnings --> "The type of this expression is 'undefined', so it will never evaluate to a value other than 'undefined'." at "(await @Promisify c.mNone('some path'))"
+	// XPECT warnings --> "The type of this expression is 'undefined', so it will never evaluate to a value other than 'undefined'." at "await @Promisify c.mNone('some path')"
 	var res31 = (await @Promisify c.mNone('some path')); // assigning undefined to Object here to be able to assert that 'undefined' is returned at runtime
 	console.log('-> res31:', res31);
 
 	console.log('use case #2: with await, short syntax');
-	// XPECT warnings --> "The type of this expression is 'undefined', so it will never evaluate to a value other than 'undefined'." at "(await @Promisify c.mNone('some path'))"
+	// XPECT warnings --> "The type of this expression is 'undefined', so it will never evaluate to a value other than 'undefined'." at "await @Promisify c.mNone('some path')"
 	var res32 = (await @Promisify c.mNone('some path')); // assigning undefined to Object here to be able to assert that 'undefined' is returned at runtime
 	console.log('-> res32:', res32);
 
@@ -155,12 +155,12 @@ async function testWithMethod(allDone : {function()}) {
 	console.log('****** method mNoneNoErr:');
 
 	console.log('use case #1: with await, long syntax');
-	// XPECT warnings --> "The type of this expression is 'undefined', so it will never evaluate to a value other than 'undefined'." at "(await @Promisify c.mNoneNoErr('some path'))"
+	// XPECT warnings --> "The type of this expression is 'undefined', so it will never evaluate to a value other than 'undefined'." at "await @Promisify c.mNoneNoErr('some path')"
 	var res61 = (await @Promisify c.mNoneNoErr('some path')); // assigning undefined to Object here to be able to assert that 'undefined' is returned at runtime
 	console.log('-> res61:', res61);
 
 	console.log('use case #2: with await, short syntax');
-	// XPECT warnings --> "The type of this expression is 'undefined', so it will never evaluate to a value other than 'undefined'." at "(await @Promisify c.mNoneNoErr('some path'))"
+	// XPECT warnings --> "The type of this expression is 'undefined', so it will never evaluate to a value other than 'undefined'." at "await @Promisify c.mNoneNoErr('some path')"
 	var res62 = (await @Promisify c.mNoneNoErr('some path')); // assigning undefined to Object here to be able to assert that 'undefined' is returned at runtime
 	console.log('-> res62:', res62);
 

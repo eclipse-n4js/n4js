@@ -96,7 +96,7 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 
 		val firstJSXAbstractElement = script.eAllContents.findFirst[it instanceof JSXAbstractElement]
 		if (firstJSXAbstractElement !== null && reactHelper.getJsxBackendModule(script.eResource) === null)
-			addIssue(firstJSXAbstractElement, JSX_REACT_NOT_RESOLVED.toIssueItem());
+			addIssue(firstJSXAbstractElement, JSX_REACT_NOT_RESOLVED);
 	}
 
 	/** Make sure the namespace to react module is React. */
@@ -111,7 +111,7 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 		val importedModule = importSpecifier.importedModule;
 		if (reactModule !== null && importedModule === reactModule) {
 			if (importSpecifier.alias != ReactHelper.REACT_NAMESPACE_NAME) {
-				addIssue(importSpecifier, JSX_REACT_NAMESPACE_NOT_ALLOWED.toIssueItem());
+				addIssue(importSpecifier, JSX_REACT_NAMESPACE_NOT_ALLOWED);
 			}
 		}
 	}
@@ -257,7 +257,7 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 		val actualTypeRef = TypeUtils.createTypeRef(tclass, TypingStrategy.DEFAULT, true);
 		val resultSubType = ts.subtype(G, actualTypeRef, expectedTypeRef)
 		if (resultSubType.failure) {
-			addIssue(expr, JSX_REACT_ELEMENT_CLASS_NOT_REACT_ELEMENT_ERROR.toIssueItem());
+			addIssue(expr, JSX_REACT_ELEMENT_CLASS_NOT_REACT_ELEMENT_ERROR);
 		}
 	}
 
@@ -285,6 +285,23 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 				issueItem
 			);
 		}
+	}
+
+	@Check
+	def public void checkChildrenJSXPropertyAttribute(JSXPropertyAttribute propertyAttribute) {
+		if (!ReactHelper.REACT_ELEMENT_PROPERTY_CHILDREN_NAME.equals(propertyAttribute.propertyAsText)) {
+			return;
+		}
+		val jsxElem = propertyAttribute.eContainer as JSXElement;
+		if (jsxElem.jsxChildren.isEmpty) {
+			return;
+		}
+		
+		addIssue(
+			propertyAttribute,
+			JSX_PROPERTY_ATTRIBUTE__PROPERTY,
+			JSX_JSXSPROPERTYATTRIBUTE_CHILDREN.toIssueItem()
+		);
 	}
 
 	/**

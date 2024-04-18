@@ -346,12 +346,17 @@ public abstract class N4JSASTUtils {
 	 * arrow function; otherwise <code>null</code> is returned.
 	 */
 	public static ArrowFunction getContainingSingleExpressionArrowFunction(Expression expression) {
-		final EObject parent = expression.eContainer();
+		EObject skippedParenthesesExpr = expression;
+		EObject parent = expression.eContainer();
+		while (parent instanceof ParenExpression) {
+			skippedParenthesesExpr = parent;
+			parent = parent.eContainer();
+		}
 		final EObject grandparent = parent != null ? parent.eContainer() : null;
 		final EObject grandgrandparent = grandparent != null ? grandparent.eContainer() : null;
 		if (grandgrandparent instanceof ArrowFunction) {
 			final ArrowFunction arrFun = (ArrowFunction) grandgrandparent;
-			if (arrFun.isSingleExprImplicitReturn() && arrFun.implicitReturnExpr() == expression) {
+			if (arrFun.isSingleExprImplicitReturn() && arrFun.implicitReturnExpr() == skippedParenthesesExpr) {
 				return arrFun;
 			}
 		}

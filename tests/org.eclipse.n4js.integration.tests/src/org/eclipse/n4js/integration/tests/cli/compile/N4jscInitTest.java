@@ -183,8 +183,9 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertEquals("Hello World", resultNodejs.getStdOut());
 
 		ProcessResult resultTest = npmRun(cwd.toPath(), "run", "test");
-		assertTrue(resultTest.getStdOut().contains(
-				"Testing completed: [32mSUCCESSES[39m: 1, [31mFAILURES[39m: 0, [31mERRORS[39m: 0, [36mSKIPPED[39m: 0"));
+		String expect = "Testing completed: [32mSUCCESSES[39m: 1, [31mFAILURES[39m: 0, [31mERRORS[39m: 0, [36mSKIPPED[39m: 0";
+		assertTrue("Did not find: " + expect + "\nin output:\n" + resultTest.getStdOut(),
+				resultTest.getStdOut().contains(expect));
 	}
 
 	/** test another project name */
@@ -362,8 +363,10 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertEquals("Hello World", resultNodejs.getStdOut());
 
 		ProcessResult resultTest = yarnRun(cwd.toPath(), "run", "test");
-		assertTrue(resultTest.getStdOut().contains(
-				"Testing completed: [32mSUCCESSES[39m: 1, [31mFAILURES[39m: 0, [31mERRORS[39m: 0, [36mSKIPPED[39m: 0"));
+
+		String expect = "Testing completed: [32mSUCCESSES[39m: 1, [31mFAILURES[39m: 0, [31mERRORS[39m: 0, [36mSKIPPED[39m: 0";
+		assertTrue("Did not find: " + expect + "\nin output:\n" + resultTest.getStdOut(),
+				resultTest.getStdOut().contains(expect));
 	}
 
 	/** test yarn create */

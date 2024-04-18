@@ -48,7 +48,7 @@ a2 instanceof ~A2;
 // GHOLD-9 (IDEBUG-163) instanceof XPECT FIXME errors --> "Cannot use structural field type with instanceof." at "A2"
 a3 instanceof ~~A2;
 
-// missing members  XPECT errors  --> "~Object with { a: number } is not a structural subtype of ~A2: missing method f." at "{a: 2}"
+// missing members  XPECT errors  --> "~Object with { a: int } is not a structural subtype of ~A2: missing method f." at "{a: 2}"
 var a4 : ~A2 = {a: 2};
 
 /* superfluous members in field type, noerrors but XPECT warnings ---

@@ -362,7 +362,11 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		}
 		XtextResource res = rtc.getResource();
 		XDocument doc = rtc.getDocument();
-		return service.getDocumentHighlights(doc, res, params, cancelIndicator);
+		try {
+			return service.getDocumentHighlights(doc, res, params, cancelIndicator);
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
 	}
 
 	@Override

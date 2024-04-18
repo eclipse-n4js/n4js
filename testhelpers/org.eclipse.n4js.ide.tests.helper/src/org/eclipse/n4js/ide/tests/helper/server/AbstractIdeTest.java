@@ -203,18 +203,6 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		oldGlobalState.restoreGlobalState();
 	}
 
-	/** Catch outputs on console to an internal buffer */
-	@BeforeClass
-	static final public void redirectPrintStreams() {
-		SYSTEM_OUT_REDIRECTER.set(false);
-	}
-
-	/** Reset redirection */
-	@AfterClass
-	static final public void resetPrintStreams() {
-		SYSTEM_OUT_REDIRECTER.unset();
-	}
-
 	/** */
 	@Inject
 	protected BuilderFrontend lspBuilder;
@@ -267,6 +255,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		if (root.exists()) {
 			FileUtils.delete(root);
 		}
+		SYSTEM_OUT_REDIRECTER.set(false);
 	}
 
 	/** Deletes the test project in case it exists. */
@@ -281,8 +270,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			if (languageServer != null) { // only if LSP server was started
 				shutdownLspServer();
 			}
-			SYSTEM_OUT_REDIRECTER.clearSystemOut();
-			SYSTEM_OUT_REDIRECTER.clearSystemErr();
+			SYSTEM_OUT_REDIRECTER.unset(); // note that thrown exceptions will now be written to System.err
 			// clear the state related to the test
 			testWorkspaceManager.deleteTestFromDiskIfCreated();
 		}

@@ -36,7 +36,7 @@ function i(d : ~D) {}
 n(new C());
 //XPECT errors --> "C is not a structural subtype of ~I: missing setter or field y." at "new C()"
 f(new C());
-// XPECT errors --> "~Object with { x: number } is not a structural subtype of ~I: missing method foo." at "{x:10}"
+// XPECT errors --> "~Object with { x: int } is not a structural subtype of ~I: missing method foo." at "{x:10}"
 f({x:10});
 g({x:10});
 // XPECT errors --> "D is not a subtype of I." at "new D()"
