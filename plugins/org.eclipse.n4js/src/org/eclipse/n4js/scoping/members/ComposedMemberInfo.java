@@ -11,8 +11,10 @@
 package org.eclipse.n4js.scoping.members;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +26,10 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.scoping.members.ComposedMemberInfoBuilder.ToBeComposedMemberInfo;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
+import org.eclipse.n4js.ts.types.GenericType;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.MemberType;
 import org.eclipse.n4js.ts.types.TField;
@@ -33,6 +37,7 @@ import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TSetter;
+import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.VoidType;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
@@ -85,13 +90,14 @@ public class ComposedMemberInfo {
 	private final boolean hasValidationProblem = false;
 	private MemberAccessModifier accessibilityMin = MemberAccessModifier.PUBLIC;
 	private MemberAccessModifier accessibilityMax = MemberAccessModifier.PRIVATE;
+	private final Map<TypeVariable, TypeVariable> memberTypeVars = new LinkedHashMap<>();
 	private final Multimap<MemberType, TypeRef> typeRefsMap = LinkedHashMultimap.create();
 	private final List<TypeRef> typeRefs = new ArrayList<>();
 	private final List<TypeRef> methodTypeRefsVoid = new ArrayList<>();
 	private final List<TypeRef> methodTypeRefsNonVoid = new ArrayList<>();
 	private final Map<TypeRef, RuleEnvironment> typeRef2G = new HashMap<>();
-
 	private final List<ComposedFParInfo> fParameters = new ArrayList<>();
+
 	private boolean isVariadicButLastFParIsDifferent = false;
 
 	/**
@@ -174,6 +180,7 @@ public class ComposedMemberInfo {
 			RuleEnvironment G = toBeComposedMemberInfo.G;
 			boolean structFieldInitMode = toBeComposedMemberInfo.structFieldInitMode;
 
+			handleTypeVars(member, G);
 			lastMType = handleMemberTypes(lastMType, member, structFieldInitMode);
 			handleReadOnlyField(member);
 			handleAccessibility(member);
@@ -264,6 +271,18 @@ public class ComposedMemberInfo {
 			accessibilityMax = currAccessibility;
 		if (accessibilityMin.getValue() > currAccessibility.getValue())
 			accessibilityMin = currAccessibility;
+	}
+
+	private void handleTypeVars(TMember member, RuleEnvironment G) {
+		if (member instanceof GenericType) {
+			GenericType method = (GenericType) member;
+			for (TypeVariable tv : method.getTypeVars()) {
+				TypeVariable tvCopy = TypeUtils.copyIfContained(tv);
+				ParameterizedTypeRef tvCopyTRef = TypeUtils.createTypeRef(tvCopy);
+				G.put(tv, tvCopyTRef);
+				memberTypeVars.put(tv, tvCopy);
+			}
+		}
 	}
 
 	private void handleTypeRefLists(TMember member, RuleEnvironment G) {
@@ -471,6 +490,12 @@ public class ComposedMemberInfo {
 	public boolean hasValidationProblem() {
 		initMemberAggregate();
 		return hasValidationProblem;
+	}
+
+	/** Returns all type variables */
+	public Collection<? extends TypeVariable> getTypeVariables() {
+		initMemberAggregate();
+		return memberTypeVars.values();
 	}
 
 	/**

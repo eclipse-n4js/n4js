@@ -14,7 +14,6 @@ import com.google.common.base.Optional
 import com.google.inject.Inject
 import java.util.ArrayList
 import java.util.Collection
-import java.util.Collections
 import java.util.List
 import java.util.Set
 import java.util.function.Function
@@ -539,25 +538,24 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 		val rightArgUpper = ts.upperBound(G, rightArg);
 		val rightArgLower = ts.lowerBound(G, rightArg);
 
-		// minor tweak to slightly beautify solutions of the constraint solver
-		// (i.e. having a single constraint ⟨ α = X ⟩ instead of two constraints ⟨ α :> X ⟩, ⟨ α <: X ⟩ helps the
-		// solver to avoid large unions in which one element is the super type of all others, in certain typical
-		// cases involving array/object literals)
-		if (useFancyConstraints
-				&& variance === Variance.INV
-				&& leftArgUpper === leftArg && leftArgLower === leftArg
-				&& rightArgUpper === rightArg && rightArgLower === rightArg) {
-			return Collections.singletonList(new TypeConstraint(leftArg, rightArg, Variance.INV));
-		}
 
 		val List<TypeConstraint> result = new ArrayList(2);
 
 		// require leftArgUpper <: rightArgUpper, except we have contravariance
-		if (variance !== Variance.CONTRA) {
+		if (variance === Variance.INV) {
+			if (leftArgUpper == leftArgLower && rightArgLower == rightArgUpper) {
+				// having a single constraint ⟨ α = X ⟩ instead of two constraints ⟨ α :> X ⟩, ⟨ α <: X ⟩ helps the
+				// solver to avoid large unions in which one element is the super type of all others, in certain typical
+				// cases involving array/object literals)
+				result.add(new TypeConstraint(leftArgUpper, rightArgUpper, Variance.INV));
+			} else {
+				result.add(new TypeConstraint(leftArgUpper, rightArgUpper, Variance.CO));
+				result.add(new TypeConstraint(rightArgLower, leftArgLower, Variance.CO));
+			}
+		} else if (variance === Variance.CO) {
 			result.add(new TypeConstraint(leftArgUpper, rightArgUpper, Variance.CO));
-		}
-		// require rightArgLower <: leftArgLower, except we have covariance
-		if (variance !== Variance.CO) {
+		} else if (variance === Variance.CONTRA) {
+			// require rightArgLower <: leftArgLower, except we have covariance
 			result.add(new TypeConstraint(rightArgLower, leftArgLower, Variance.CO));
 		}
 

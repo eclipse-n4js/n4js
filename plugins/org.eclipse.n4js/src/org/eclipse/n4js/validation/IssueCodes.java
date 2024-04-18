@@ -2122,7 +2122,9 @@ public enum IssueCodes {
 		}
 		String message = msgTemplate;
 		for (int i = 0; i < values.length; i++) {
-			message = message.replace("{" + i + "}", values[i].toString());
+			Object value = values[i];
+			String replace = value == null ? "?" : value.toString();
+			message = message.replace("{" + i + "}", replace);
 		}
 		return message;
 	}

@@ -25,7 +25,7 @@ var c : C;
 // base cases
 
 
-// XPECT type of '[ b, c ]' --> Array<B>
+// XPECT type of '[ b, c ]' --> Array2<B,C>
 var v01 = [ b, c ];
 
 // XPECT type of '[ b, c ]' --> Array<B>
@@ -42,7 +42,7 @@ var v04 : Array<? extends B> = [ b, c ];
 // with padding
 
 
-// XPECT type of '[ ,,, b,,, c,,, ]' --> Array<B>
+// XPECT type of '[ ,,, b,,, c,,, ]' --> Array8<any,any,any,B,any,any,C,any>
 var v11 = [ ,,, b,,, c,,, ];
 
 // XPECT type of '[ ,,, b,,, c,,, ]' --> Array<B>
@@ -58,7 +58,7 @@ var v14 : Array<? extends B> = [ ,,, b,,, c,,, ];
 // ------------------------------------------------------------------
 // with spread of a literal
 
-// XPECT type of '[ b, ...[c] ]' --> Array<B>
+// XPECT type of '[ b, ...[c] ]' --> Array2<B,C>
 var v21 = [ b, ...[c] ];
 
 // XPECT type of '[ b, ...[c] ]' --> Array<B>
@@ -81,9 +81,9 @@ class MyIterable<T> {
 }
 let myIterableOfC: MyIterable<C>;
 
-// XPECT type of '[ b, ...getArrOfC() ]' --> Array<B>
+// XPECT type of '[ b, ...getArrOfC() ]' --> Array2<B,C>
 var v31a = [ b, ...getArrOfC() ];
-// XPECT type of '[ b, ...myIterableOfC ]' --> Array<B>
+// XPECT type of '[ b, ...myIterableOfC ]' --> Array2<B,C>
 var v31b = [ b, ...myIterableOfC ];
 
 // XPECT type of '[ b, ...getArrOfC() ]' --> Array<B>
@@ -125,7 +125,7 @@ var v44 : Array<? extends B> = [];
 // the special handling applies only to IterableN!)
 
 
-// XPECT type of '[ b, c ]' --> Array<B>
+// XPECT type of '[ b, c ]' --> Array2<B,C>
 var v51 = [ b, c ];
 
 // XPECT type of '[ b, c ]' --> Array<B>

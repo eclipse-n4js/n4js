@@ -17,7 +17,10 @@ import static org.eclipse.xtext.xbase.lib.IterableExtensions.map;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.toSet;
 import static org.eclipse.xtext.xbase.lib.IteratorExtensions.exists;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -39,6 +42,7 @@ import org.eclipse.n4js.n4JS.PropertyMethodDeclaration;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration;
 import org.eclipse.n4js.n4JS.PropertySpread;
+import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.InferenceVariable;
@@ -56,6 +60,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper.Callable;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
 import com.google.inject.Inject;
 
@@ -292,6 +297,26 @@ abstract class AbstractPolyProcessor extends AbstractProcessor {
 			pseudoSolution.put(iv, defaultTypeRef); // map all inference variables to the default
 		}
 		return pseudoSolution;
+	}
+
+	protected List<Expression> getReturnExpressions(FunctionDefinition fun) {
+		if (fun instanceof ArrowFunction && ((ArrowFunction) fun).isSingleExprImplicitReturn()) {
+			Expression singleExpression = ((ArrowFunction) fun).getSingleExpression();
+			if (singleExpression != null) {
+				return Collections.singletonList(singleExpression);
+			}
+		}
+		if (fun.getBody() != null) {
+			List<ReturnStatement> returnStmts = IteratorExtensions.toList(fun.getBody().getAllReturnStatements());
+			List<Expression> returnExpr = new ArrayList<>();
+			for (ReturnStatement rs : returnStmts) {
+				if (rs.getExpression() != null) {
+					returnExpr.add(rs.getExpression());
+				}
+			}
+			return returnExpr;
+		}
+		return Collections.emptyList();
 	}
 
 	// FIXME move to a better place

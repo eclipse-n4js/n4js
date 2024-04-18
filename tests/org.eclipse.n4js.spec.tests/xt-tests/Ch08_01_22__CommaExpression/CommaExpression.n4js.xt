@@ -29,5 +29,5 @@ bA = true,12,34,false;
 // XPECT errors --> "2 is not a subtype of boolean." at "2"
 bA = 2,1,0;
 
-// XPECT errors --> ""g" is not a subtype of boolean." at "( 2,true,"g" )"
+// XPECT errors --> ""g" is not a subtype of boolean." at "2,true,"g""
 bA = ( 2,true,"g" );

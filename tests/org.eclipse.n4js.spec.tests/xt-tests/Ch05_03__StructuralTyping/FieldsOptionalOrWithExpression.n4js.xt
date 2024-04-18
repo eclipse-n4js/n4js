@@ -30,7 +30,7 @@ var b : ~B = {};
 // XPECT errors --> "~Object is not a structural subtype of ~C: missing field n." at "{}"
 var c : ~C = {};
 
-// XPECT errors --> "~Object with { n: number } is not a structural subtype of ~A with { s: string }: missing structural field s." at "{ n: 42 }"
+// XPECT errors --> "~Object with { n: int } is not a structural subtype of ~A with { s: string }: missing structural field s." at "{ n: 42 }"
 var aws1 : ~A with { s : string; } = { n: 42 };
 // XPECT noerrors -->
 var aws2 : ~A with { s? : string; } = { n: 42 };  // ok!
@@ -54,7 +54,7 @@ var i : ~I = {};
 // XPECT noerrors --> ""
 var j : ~J = {};
 
-// XPECT errors --> "~Object with { n: number } is not a structural subtype of ~I with { s: string }: missing structural field s." at "{ n: 42 }"
+// XPECT errors --> "~Object with { n: int } is not a structural subtype of ~I with { s: string }: missing structural field s." at "{ n: 42 }"
 var iws1 : ~I with { s : string; } = { n: 42 };
 // XPECT noerrors -->
 var iws2 : ~I with { s? : string; } = { n: 42 };  // ok!

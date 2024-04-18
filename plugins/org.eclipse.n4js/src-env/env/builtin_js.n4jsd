@@ -377,7 +377,7 @@ export external public class Array<T> {
 	public toLocaleString(): string;
 	public pop(): T;
 	public push(...items: T): number;
-	public concat(...items: union {T, Array<? extends T>}): Array<T>;
+	public <S>concat(...items: union {S, Array<? extends S>}): Array<union{S,T}>;
 	public join(separator: string = ): string;
 	public reverse(): Array<T>;
 	public shift(): T;

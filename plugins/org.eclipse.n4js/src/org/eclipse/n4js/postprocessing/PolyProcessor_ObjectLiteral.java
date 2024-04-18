@@ -86,7 +86,7 @@ class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 		// quick mode as a performance tweak:
 		boolean haveUsableExpectedType = expectedTypeRef != null && expectedTypeRef.isStructuralTyping(); // TODO
 																											// reconsider
-		boolean quickMode = !haveUsableExpectedType && !TypeUtils.isInferenceVariable(expectedTypeRef);
+		boolean quickMode = !haveUsableExpectedType && TypeUtils.isProper(expectedTypeRef);
 
 		List<TStructMember> tMembers = new ArrayList<>();
 		// in standard mode: the following list will contain pairs from property assignments to inference variables
@@ -259,15 +259,16 @@ class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 	 * Writes final types to cache
 	 */
 	private void handleOnSolved(RuleEnvironment G, ASTMetaInfoCache cache, InferenceContext infCtx,
-			ObjectLiteral objLit,
-			boolean quickMode, List<? extends Pair<PropertyAssignment, ? extends EObject>> props2InfVarOrFallbackType,
+			ObjectLiteral objLit, boolean quickMode,
+			List<? extends Pair<PropertyAssignment, ? extends EObject>> props2InfVarOrFallbackType,
 			Optional<Map<InferenceVariable, TypeRef>> solution) {
+
 		for (Pair<PropertyAssignment, ? extends EObject> propPair : props2InfVarOrFallbackType) {
 			PropertyAssignment propAssignm = propPair.getKey();
 			TStructMember memberInTModule = propAssignm.getDefinedMember();
 			if (memberInTModule != null) {
 				TypeRef memberType = getMemberType(G, infCtx, solution, quickMode, propPair);
-				boolean resolveLiteralTypes = (quickMode)
+				boolean resolveLiteralTypes = (quickMode || !solution.isPresent())
 						? // quick mode means we do not have a type expectation, so we handle literal types exactly
 							// as when inferring the implicit type of variables with an initializer expression
 						!N4JSASTUtils.isImmutable(propAssignm)
@@ -284,8 +285,7 @@ class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 		}
 
 		ParameterizedTypeRefStructural resultFinal = TypeUtils.createParameterizedTypeRefStructural(objectType(G),
-				TypingStrategy.STRUCTURAL,
-				(TStructuralType) objLit.getDefinedType());
+				TypingStrategy.STRUCTURAL, (TStructuralType) objLit.getDefinedType());
 		resultFinal.setASTNodeOptionalFieldStrategy(OptionalFieldStrategy.FIELDS_AND_ACCESSORS_OPTIONAL);
 		cache.storeType(objLit, resultFinal);
 

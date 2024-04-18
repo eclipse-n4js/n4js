@@ -72,6 +72,11 @@ public final class N4JSDataCollectors {
 	public static final DataCollector dcCacheMakeKeys = create("MakeKeys", dcCache);
 	public static final DataCollector dcCacheSetTarget = create("SetTarget", dcCache);
 
+	public static final DataCollector dcInferenceContextSolve = create("Solve");
+	public static final DataCollector dcInferenceContextReduce = create("Reduce", dcInferenceContextSolve);
+	public static final DataCollector dcInferenceContextIncorporate = create("Incorporate", dcInferenceContextSolve);
+	public static final DataCollector dcInferenceContextResolve = create("Resolve", dcInferenceContextSolve);
+
 	public static final DataCollector dcTypeHierachyTraverser = create("TypeHierachyTraverser");
 	public static final DataCollector dcTHT_AllMembersCollector = create("AllMembersCollector",
 			dcTypeHierachyTraverser);

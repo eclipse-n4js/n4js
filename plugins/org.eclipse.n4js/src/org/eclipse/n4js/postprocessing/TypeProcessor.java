@@ -108,6 +108,11 @@ public class TypeProcessor extends AbstractProcessor {
 		}
 	}
 
+	/** Returns true iff the given expression is a poly expression */
+	public boolean isPoly(Expression expr) {
+		return polyProcessor.isPoly(expr);
+	}
+
 	/**
 	 * Infers type of given AST node and stores the result in the given cache.
 	 * <p>

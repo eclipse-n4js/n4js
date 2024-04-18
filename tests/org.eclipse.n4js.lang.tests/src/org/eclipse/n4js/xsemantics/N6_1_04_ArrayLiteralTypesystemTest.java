@@ -88,7 +88,7 @@ public class N6_1_04_ArrayLiteralTypesystemTest extends AbstractTypesystemTest {
 		assertArrayLiteralType("Array<int>", "[1,2,3]");
 		assertArrayLiteralType("Array<number>", "[n1]");
 		assertArrayLiteralType("Array<number>", "[n1,n2]");
-		assertArrayLiteralType("Array<number>", "[n1,2,3]");
+		assertArrayLiteralType("Array2<number,int>", "[n1,2,3]");
 		assertArrayLiteralType("Array<string>", "[s1]");
 		assertArrayLiteralType("Array<string>", "[s1,s2]");
 		assertArrayLiteralType("Array<A>", "[a]");
@@ -98,27 +98,32 @@ public class N6_1_04_ArrayLiteralTypesystemTest extends AbstractTypesystemTest {
 	@Test
 	public void testArrayUnionElementType() {
 		// syntax error was intended (I guess)
-		assertArrayLiteralType("Array<union{string,int}>", "[\"Walter\", 1\"]");
+		assertArrayLiteralType("Array2<string,int>", "[\"Walter\", 1\"]");
 		// syntax error was intended (I guess)
-		assertArrayLiteralType("Array<union{string,A,int}>", "[\"Walter\", a, 1\"]");
-		assertArrayLiteralType("Array<A>", "[a,b]");
-		assertArrayLiteralType("Array<A>", "[a,b,a]");
-		assertArrayLiteralType("Array<A>", "[a,b,a,b,a,a,b]");
+		assertArrayLiteralType("Array3<string,A,int>", "[\"Walter\", a, 1\"]");
+		assertArrayLiteralType("Array2<A,B>", "[a,b]");
+		assertArrayLiteralType("Array3<A,B,A>", "[a,b,a]");
+		assertArrayLiteralType("Array7<A,B,A,B,A,A,B>", "[a,b,a,b,a,a,b]");
+	}
+
+	@Test
+	public void testArrayUnionElementType2() {
+		assertArrayLiteralType("Array3<A,B,Array2<A,B>>", "[a,b,[a,b]]");
 	}
 
 	@Test
 	public void testArrayElementTypeWithIgnoredPadding() {
 		assertArrayLiteralType("Array<A>", "[a,]");
-		assertArrayLiteralType("Array<A>", "[,a]");
-		assertArrayLiteralType("Array<A>", "[,a,]");
-		assertArrayLiteralType("Array<A>", "[,a,,,,]");
+		assertArrayLiteralType("Array2<any,A>", "[,a]");
+		assertArrayLiteralType("Array2<any,A>", "[,a,]"); // trailing comma => length is 2!
+		assertArrayLiteralType("Array3<any,A,any>", "[,a,,,,]");
 
 		// syntax error was intended (I guess)
-		assertArrayLiteralType("Array<union{string,int}>", "[,\"Walter\", 1\"]");
+		assertArrayLiteralType("Array3<any,string,int>", "[,\"Walter\", 1\"]");
 		// syntax error was intended (I guess)
-		assertArrayLiteralType("Array<union{string,A,int}>", "[\"Walter\", a, 1\",]");
-		assertArrayLiteralType("Array<A>", "[a,b,,]");
-		assertArrayLiteralType("Array<A>", "[a,b,a,,,]");
-		assertArrayLiteralType("Array<A>", "[a,b,a,,a,,b]");
+		assertArrayLiteralType("Array3<string,A,int>", "[\"Walter\", a, 1\",]");
+		assertArrayLiteralType("Array3<A,B,any>", "[a,b,,]");
+		assertArrayLiteralType("Array4<A,B,A,any>", "[a,b,a,,,]");
+		assertArrayLiteralType("Array7<A,B,A,any,A,any,B>", "[a,b,a,,a,,b]");
 	}
 }

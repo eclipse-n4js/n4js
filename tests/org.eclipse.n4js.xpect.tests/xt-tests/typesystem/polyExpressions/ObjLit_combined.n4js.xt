@@ -40,7 +40,7 @@ fooMerge( foo2( foo2( fooOL2(  { left: b, right: null }  ))))
 fooMerge( foo2( foo2( fooOL2(  { left: b, right: c }  ))))
 
 
-// XPECT type of '{ left: b, right: x }' --> ~Object with { left: union{B,X}; right: union{X,B} }
+// XPECT type of '{ left: b, right: x }' --> ~Object with { left: union{B,X}; right: union{B,X} }
 fooMerge( foo2( foo2( fooOL2(  { left: b, right: x }  ))))
 
 

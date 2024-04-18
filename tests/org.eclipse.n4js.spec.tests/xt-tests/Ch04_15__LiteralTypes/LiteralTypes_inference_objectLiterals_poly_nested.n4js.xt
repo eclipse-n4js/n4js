@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+
+interface ~I {
+    public valueI : int|string|V<int>;
+}
+interface ~V<T> {
+    public valueV : int|string;
+}
+
+// XPECT noerrors -->
+// XPECT type of '{ valueI: { valueV: 2 } }' --> ~Object with { valueI: union{int,string,V<int>} }
+const i1 : I = { valueI: { valueV: 2 } };
+i1;
+
+// XPECT errors --> "~Object with { valueI: V<int> } is not a structural subtype of I: valueI failed: V<int> is not equal to union{int,string,V<int>}." at "{ V<int> valueI: { valueV: 2 } }"
+// XPECT type of '{ V<int> valueI: { valueV: 2 } }' --> ~Object with { valueI: V<int> }
+const i2 : I = { V<int> valueI: { valueV: 2 } };
+i2;
+
+// XPECT errors --> "~Object with { valueI: V<string> } is not a structural subtype of I: valueI failed: V<string> is not equal to union{int,string,V<int>}." at "{ V<string> valueI: { valueV: 2 } }"
+// XPECT type of '{ V<string> valueI: { valueV: 2 } }' --> ~Object with { valueI: V<string> }
+const i3 : I = { V<string> valueI: { valueV: 2 } };
+i3;

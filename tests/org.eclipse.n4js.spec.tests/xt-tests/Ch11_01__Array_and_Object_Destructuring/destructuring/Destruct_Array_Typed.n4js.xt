@@ -1,0 +1,33 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP  */
+
+
+// XPECT type of 'arr' --> Array3<int,string,int>
+const arr = [1, "2", 3];
+
+
+// XPECT type of 'ay' --> int
+// XPECT type of 'by' --> string
+// XPECT type of 'cy' --> int
+const [ay, by, cy] = arr;
+
+ay;by;cy;
+
+// XPECT type of 'ax' --> int
+const ax = arr[0];
+// XPECT type of 'bx' --> string
+const bx = arr[1];
+// XPECT type of 'cx' --> int
+const cx = arr[2];
+
+ax;bx;cx;

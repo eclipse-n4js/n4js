@@ -13,7 +13,7 @@
    END_SETUP
  */
 
-
+// XPECT noerrors -->
 const asyncIterable = {
 	elems: [ '1st', '2nd' ],
 	idx: 0,

@@ -1,0 +1,23 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+// XPECT type of '["2", {}]' --> Array2<string,any>
+// XPECT noerrors -->
+let arr1 : [int, int]|[string, any] = ["2", {}];
+
+function f(): [int, int]|[string, any] {
+// XPECT type of '["2", {}]' --> Array2<string,any>
+// XPECT noerrors -->
+    return ["2", {}];
+}

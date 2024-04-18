@@ -44,7 +44,7 @@ function bar1 () : {function (number) : number} {
 }
 
 function bar2 () : {function (number) : number} {
-	// IDE-2140, IDEBUG-177 lambda as return, good syntax XPECT errors -->"{function(number):any} is not a subtype of {function(number):number}." at "( (n : number) => { return n+6 } )"
+	// IDE-2140, IDEBUG-177 lambda as return, good syntax XPECT noerrors --> "{function(number):any} is not a subtype of {function(number):number}." at "( (n : number) => { return n+6 } )"
 	return ( (n : number) => { return n+6 } );
 }
 

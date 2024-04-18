@@ -20,11 +20,13 @@ import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionExpression;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.ObjectLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.PropertyAssignment;
 import org.eclipse.n4js.n4JS.PropertyMethodDeclaration;
 import org.eclipse.n4js.n4JS.RelationalExpression;
+import org.eclipse.n4js.n4JS.YieldExpression;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.util.Variance;
@@ -161,14 +163,14 @@ class PolyProcessor extends AbstractPolyProcessor {
 			infCtx.addConstraint(TypeConstraint.FALSE);
 		}
 
-		TypeRef expectedTypeOfPoly = destructureHelper.calculateExpectedType(rootPoly, G, infCtx);
+		TypeRef expectedTypeByLiteralStructure = destructureHelper.calculateExpectedType(rootPoly, G, infCtx);
 		// we have to pass the expected type to the #getType() method, so retrieve it first
 		// (until the expectedType judgment is integrated into AST traversal, we have to invoke this judgment here;
 		// in case of not-well-behaving expectedType rules, we use 'null' as expected type, i.e. no expectation)
 		// TODO integrate expectedType judgment into AST traversal and remove #isProblematicCaseOfExpectedType()
 		TypeRef expectedTypeRef = null;
-		if (expectedTypeOfPoly != null) {
-			expectedTypeRef = expectedTypeOfPoly;
+		if (expectedTypeByLiteralStructure != null) {
+			expectedTypeRef = expectedTypeByLiteralStructure;
 		} else if (!isProblematicCaseOfExpectedType(rootPoly)) {
 			expectedTypeRef = ts.expectedType(G, rootPoly.eContainer(), rootPoly);
 		}
@@ -261,7 +263,16 @@ class PolyProcessor extends AbstractPolyProcessor {
 	 * Returns true if we are not allowed to ask for the expected type of 'node', because this would lead to illegal
 	 * forward references (temporary).
 	 */
-	private boolean isProblematicCaseOfExpectedType(EObject node) {
-		return node != null && node.eContainer() instanceof RelationalExpression;
+	private boolean isProblematicCaseOfExpectedType(Expression node) {
+		if (node != null) {
+			EObject parent = N4JSASTUtils.skipParenExpressionUpward(node.eContainer());
+			if (parent instanceof RelationalExpression) {
+				return true;
+			}
+			if (parent instanceof YieldExpression) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

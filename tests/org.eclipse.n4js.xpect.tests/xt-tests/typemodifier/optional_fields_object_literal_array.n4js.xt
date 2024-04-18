@@ -14,7 +14,7 @@
 // XPECT noerrors
 var v1: Array<~Object with {a?: string}> = [{}];
 
-// XPECT errors --> "Array<~Object with { a: 42 }> is not a subtype of Array<~Object with { a?: string }> due to incompatible type arguments: ~Object with { a: 42 } is not a structural subtype of ~Object with { a?: string }: a failed: 42 is not equal to string." at "[{a: 42}]"
+// XPECT errors --> "Array<~Object with { a: int }> is not a subtype of Array<~Object with { a?: string }> due to incompatible type arguments: ~Object with { a: int } is not a structural subtype of ~Object with { a?: string }: a failed: int is not equal to string." at "[{a: 42}]"
 var v2: Array<~Object with {a?: string}> = [{a: 42}];
 
 const v3 = {};

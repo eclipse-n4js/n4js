@@ -32,9 +32,9 @@ class G<T> {
 
 // XPECT noerrors -->
 var gFine : Array<constructor{C}> = [ C, C1 ];
-// XPECT errors --> "Array<union{constructor{C},constructor{C1},constructor{C2}}> is not a subtype of Array<constructor{C}>." at "[ C, C1, C2 ]"
+// XPECT errors --> "Array3<constructor{C},constructor{C1},constructor{C2}> is not a subtype of Array<constructor{C}>." at "[ C, C1, C2 ]"
 var gBad : Array<constructor{C}> = [ C, C1, C2 ];
 // XPECT noerrors -->
 var gFixed : Array<union{constructor{C},constructor{C1},constructor{C2}}> = [ C, C1, C2 ];
-// XPECT type of '[ C, C1, C2 ]' --> Array<union{constructor{C},constructor{C1},constructor{C2}}>
+// XPECT type of '[ C, C1, C2 ]' --> Array3<constructor{C},constructor{C1},constructor{C2}>
 var test = [ C, C1, C2 ];

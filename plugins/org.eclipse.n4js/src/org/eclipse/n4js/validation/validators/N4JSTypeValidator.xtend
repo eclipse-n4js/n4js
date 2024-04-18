@@ -103,6 +103,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.validation.IssueItem
+import org.eclipse.n4js.n4JS.ParenExpression
 
 /**
  * Class for validating the N4JS types.
@@ -434,10 +435,10 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 
-		// expressionAnnotationList occur on function- and class-expressions.
-		// checking of the content is done in N4JSAnnotationValidation
 		if (expression instanceof ExpressionAnnotationList) {
-			return
+			// expressionAnnotationList occur on function- and class-expressions.
+			// checking of the content is done in N4JSAnnotationValidation
+			return;
 		}
 
 		var G = expression.newRuleEnvironment;
@@ -451,6 +452,16 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 
 		val expectedTypeRef = ts.expectedType(G, expression.eContainer, expression);
 		if (expectedTypeRef !== null) {
+			
+			
+			if (expression instanceof ParenExpression) {
+				val expectedTypeRefInner = ts.expectedType(G, expression, expression.expression);
+				if (expectedTypeRefInner !== null && ts.equaltypeSucceeded(G, expectedTypeRef, expectedTypeRefInner)) {
+					// skip further checks to avoid double reporting of issues
+					return;
+				}
+			}
+			
 
 			// for certain problems in single-expression arrow functions, we want a special error message
 			val singleExprArrowFunction = N4JSASTUtils.getContainingSingleExpressionArrowFunction(expression);
