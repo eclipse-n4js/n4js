@@ -649,8 +649,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				!(parent instanceof UnaryExpression && (parent as UnaryExpression).op === UnaryOperator.VOID) &&
 				!(expression instanceof UnaryExpression &&
 					(expression as UnaryExpression).op === UnaryOperator.VOID) &&
-				!(expression instanceof ThisLiteral) &&
-				!(expression instanceof ParenExpression)) {
+				!(expression instanceof ThisLiteral)) {
 
 				val undefinedField = G.globalObjectType.findOwnedMember("undefined", false, false) as TField;
 				val isUndefinedLiteral = if (expression instanceof IdentifierRef)

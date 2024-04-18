@@ -341,7 +341,7 @@ class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 				int size = typeArgs.size();
 				TypeRef last = typeArgs.get(size - 1);
 				TypeRef beforeLast = typeArgs.get(size - 2);
-				if (ts.equaltypeFastSucceeded(beforeLast, last)) {
+				if (ts.equaltypeApproxSucceeded(beforeLast, last)) {
 					typeArgs.remove(size - 1);
 				} else {
 					break;

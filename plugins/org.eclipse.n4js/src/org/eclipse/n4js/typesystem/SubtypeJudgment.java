@@ -211,7 +211,7 @@ import com.google.common.collect.Iterables;
 		if (TypeUtils.isNull(left) && !TypeUtils.isUndefined(right)) {
 			return success();
 		}
-		if (TypeUtils.isAny(left)) { // FIXME: check obsolete?
+		if (TypeUtils.isAny(left)) {
 			if (TypeUtils.isAny(right)) {
 				return success();
 			} else {

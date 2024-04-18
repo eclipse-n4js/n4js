@@ -20,7 +20,6 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isAnyD
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isObjectStructural;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -34,7 +33,6 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
@@ -43,13 +41,11 @@ import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.InferenceVariable;
-import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TN4Classifier;
-import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypingStrategy;
@@ -314,81 +310,6 @@ import com.google.common.collect.Sets;
 						}
 						idx = bestMatchIdx;
 					}
-
-					// FIXME: check if obsolete
-					if (idx == -1 && isFunTypeExprOrRef) {
-						// choose first function type (except those for which it is obvious they cannot match)
-						for (Integer i : potIdx) {
-							final TypeRef currRight = rights.get(i);
-							if (currRight instanceof FunctionTypeExprOrRef) {
-								idx = i;
-								break;
-							}
-						}
-					}
-					if (idx == -1 && isParaTypeRef) {
-						boolean checkedForPoormansSybtype = false;
-						final Type leftDecl = left.getDeclaredType();
-						if (idx == -1 && leftDecl != null) {
-							// choose first matching declared type
-							for (int i = 0; i < rightsSize; i++) {
-								final TypeRef currElem = rights.get(i);
-								if (leftDecl == currElem.getDeclaredType()) {
-									if (isObjectStructural(G, left) && isObjectStructural(G, currElem)) {
-										ParameterizedTypeRefStructural ptrsLeft = (ParameterizedTypeRefStructural) left;
-										ParameterizedTypeRefStructural ptrsCurrElem = (ParameterizedTypeRefStructural) currElem;
-										// poor-man's-subtype check to avoid backtracking
-										boolean isPoormansSybtype = isPoorMansSubtype(ptrsLeft, ptrsCurrElem);
-										checkedForPoormansSybtype = true;
-										if (isPoormansSybtype) {
-											idx = i;
-											break;
-										}
-									} else {
-										idx = i;
-										break;
-									}
-								}
-							}
-						}
-						if (idx == -1 && leftDecl instanceof PrimitiveType) {
-							// choose first naked inference variable (if any)
-							// (note: same as below, but has higher priority for primitive types than next heuristic)
-							idx = chooseFirstInferenceVariable(rights);
-						}
-						if (idx == -1 && variance == CO && !checkedForPoormansSybtype
-								&& leftDecl instanceof ContainerType<?>) {
-							// choose first supertype of left
-							final List<TClassifier> superTypesOfLeft = AllSuperTypesCollector
-									.collect((ContainerType<?>) leftDecl, declMergingHelper);
-							for (int i = 0; i < rightsSize; i++) {
-								final TypeRef currElem = rights.get(i);
-								final Type currElemDecl = currElem.getDeclaredType();
-								if (currElemDecl != null && superTypesOfLeft.contains(currElemDecl)) {
-									idx = i;
-									break;
-								}
-							}
-						}
-						if (idx == -1 && variance == CONTRA && leftDecl != null) {
-							// choose first subtype of left
-							for (int i = 0; i < rightsSize; i++) {
-								final TypeRef currElem = rights.get(i);
-								final Type currElemDecl = currElem.getDeclaredType();
-								if (currElemDecl instanceof ContainerType<?>) {
-									// TODO improve performance by using a super class iterator or super interfaces
-									// iterator
-									// depending on type of leftDecl
-									final List<TClassifier> superTypesOfCurrElem = AllSuperTypesCollector
-											.collect((ContainerType<?>) currElemDecl, declMergingHelper);
-									if (superTypesOfCurrElem.contains(leftDecl)) {
-										idx = i;
-										break;
-									}
-								}
-							}
-						}
-					}
 				}
 				if (idx == -1) {
 					// choose first naked inference variable (if present)
@@ -535,23 +456,6 @@ import com.google.common.collect.Sets;
 			}
 		}
 		return -1;
-	}
-
-	private final boolean isPoorMansSubtype(ParameterizedTypeRefStructural ptrsLeft,
-			ParameterizedTypeRefStructural ptrsRight) {
-		EList<TStructMember> genMembersLeft = ptrsLeft.getStructuralMembers();
-		EList<TStructMember> genMembersRight = ptrsRight.getStructuralMembers();
-		// poor-man's-subtype check to avoid backtracking
-		Set<String> memberNamesRight = new HashSet<>();
-		for (TStructMember member : genMembersRight) {
-			memberNamesRight.add(member.getName());
-		}
-		for (TStructMember member : genMembersLeft) {
-			if (!memberNamesRight.contains(member.getName())) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	private boolean reduceTypeRef(TypeRef left, TypeRef right, Variance variance) {

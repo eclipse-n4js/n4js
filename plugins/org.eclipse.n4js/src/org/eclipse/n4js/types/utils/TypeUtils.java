@@ -63,7 +63,7 @@ import com.google.common.base.Stopwatch;
  * Static utility methods for type and type ref handling, for non-static utility methods see {@link TypeHelper}.
  */
 public class TypeUtils {
-	// FIXME: evaluate, remove
+	// GH-2615 FIXME: evaluate, remove
 	public static Stopwatch sw0 = Stopwatch.createUnstarted();
 	public static Stopwatch sw1 = Stopwatch.createUnstarted();
 	public static Stopwatch sw2 = Stopwatch.createUnstarted();

@@ -192,9 +192,11 @@ public class N4JSTypeSystem {
 	/**
 	 * Tells if {@code left} looks equal to {@code right}. Never returns <code>null</code>. Under-approximation of
 	 * {@link #equaltype(RuleEnvironment, TypeArgument, TypeArgument)}.
+	 *
+	 * Only relies on comparison of types as strings.
 	 */
-	// FIXME: performance gain?
-	public Result equaltypeFast(TypeArgument left, TypeArgument right) {
+	// GH-2615 FIXME: evaluate, necessary?
+	public Result equaltypeApprox(TypeArgument left, TypeArgument right) {
 		String leftStr = left.getTypeRefAsString(false);
 		String rightStr = right.getTypeRefAsString(false);
 		if (leftStr == null && rightStr == null) {
@@ -210,9 +212,11 @@ public class N4JSTypeSystem {
 	/**
 	 * Tells if {@code left} is equal to {@code right}. Under-approximation of
 	 * {@link #equaltypeSucceeded(RuleEnvironment, TypeArgument, TypeArgument)}.
+	 *
+	 * Only relies on comparison of types as strings.
 	 */
-	public boolean equaltypeFastSucceeded(TypeArgument left, TypeArgument right) {
-		return equaltypeFast(left, right).isSuccess();
+	public boolean equaltypeApproxSucceeded(TypeArgument left, TypeArgument right) {
+		return equaltypeApprox(left, right).isSuccess();
 	}
 
 	/**

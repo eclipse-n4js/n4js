@@ -1353,7 +1353,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			// allow casting numbers/strings to @NumberBased/@StringBased enums
 			return true; // cast is ok
 		} else if (castExpression.expression instanceof ArrayLiteral && RuleEnvironmentExtensions.isArrayN(G, S)) {
-			// FIXME: do some type checking of TypeArgs
+			// GH-2615 FIXME: do some type checking of TypeArgs
 			if (RuleEnvironmentExtensions.isArray(G, T)) {
 				return true;
 			}
