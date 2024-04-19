@@ -47,18 +47,18 @@ class PatchMemberConfig {
 	public addAnnotations: string[];
 }
 const GEN_CONFIG_TYPE_INFO = new Map<string,PropertyTypeInfo>([
-	[ "GenConfig#patchFiles",                           new PropertyTypeInfo({ type: FileGenConfig,     collectionType: Map   }) ] as [string,PropertyTypeInfo],
-	[ "GenConfig#addFiles",                             new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#ignore",                           new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#replace",                          new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#convertAllCtorInstanceTypes",      new PropertyTypeInfo({ type: Boolean                                  }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#convertSelectedCtorInstanceTypes", new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#ctorInstanceTypes",                new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#polyfills",                        new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#changeToClass",                    new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#patchMembers",                     new PropertyTypeInfo({ type: PatchMemberConfig, collectionType: Map   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#appendCode",                       new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
-	[ "PatchMemberConfig#addAnnotations",               new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo]
+	[ "GenConfig#patchFiles",                           new PropertyTypeInfo({ type: FileGenConfig,     collectionType: Map   }) ],
+	[ "GenConfig#addFiles",                             new PropertyTypeInfo({ type: String,            collectionType: Map   }) ],
+	[ "FileGenConfig#ignore",                           new PropertyTypeInfo({ type: String,            collectionType: Set   }) ],
+	[ "FileGenConfig#replace",                          new PropertyTypeInfo({ type: String,            collectionType: Map   }) ],
+	[ "FileGenConfig#convertAllCtorInstanceTypes",      new PropertyTypeInfo({ type: Boolean                                  }) ],
+	[ "FileGenConfig#convertSelectedCtorInstanceTypes", new PropertyTypeInfo({ type: String,            collectionType: Set   }) ],
+	[ "FileGenConfig#ctorInstanceTypes",                new PropertyTypeInfo({ type: String,            collectionType: Array }) ],
+	[ "FileGenConfig#polyfills",                        new PropertyTypeInfo({ type: String,            collectionType: Set   }) ],
+	[ "FileGenConfig#changeToClass",                    new PropertyTypeInfo({ type: String,            collectionType: Set   }) ],
+	[ "FileGenConfig#patchMembers",                     new PropertyTypeInfo({ type: PatchMemberConfig, collectionType: Map   }) ],
+	[ "FileGenConfig#appendCode",                       new PropertyTypeInfo({ type: String,            collectionType: Map   }) ],
+	[ "PatchMemberConfig#addAnnotations",               new PropertyTypeInfo({ type: String,            collectionType: Array }) ]
 ]);
 
 
