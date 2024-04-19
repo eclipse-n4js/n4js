@@ -77,6 +77,8 @@ public class ReactHelper {
 	/***/
 	public final static String REACT_COMPONENT = "Component";
 	/***/
+	public final static String REACT_NODE = "ReactNode";
+	/***/
 	public final static String REACT_ELEMENT = "ReactElement";
 	/***/
 	public final static String REACT_FRAGMENT_NAME = "Fragment";
@@ -172,6 +174,20 @@ public class ReactHelper {
 			return lookUpReactFragmentComponent(module);
 		}
 		return null;
+	}
+
+	/**
+	 * Look up React.Node in the index.
+	 *
+	 * @param context
+	 *            the EObject serving the context to look for React.Node.
+	 */
+	public TClassifier lookUpReactNode(EObject context) {
+		// val reactElement = lookUpReactClassifier(context, REACT_ELEMENT, TInterface)
+		// if (reactElement !== null) {
+		// return reactElement;
+		// }
+		return lookUpReactClassifier_OLD(context, REACT_NODE, TInterface.class);
 	}
 
 	/**
