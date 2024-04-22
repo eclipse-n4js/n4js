@@ -45,6 +45,17 @@ export external public abstract class PureComponent<PropsT extends ComponentProp
         extends Component<PropsT, StateT> {
 }
 
+
+export external public type ReactText = string | number;
+export external public type ReactChild = ReactElement<?> | ReactText;
+
+export external public type ReactNodeArray = ReactNode[];
+export external public type ReactFragment = Object | ReactNodeArray;
+export external public type ReactNode = ReactChild | ReactFragment | /* ReactPortal<?> | */ boolean;
+
+
+
+
 // mor TODO IDE-2323
 //    public static <PropsT extends ComponentProps> createElement(
 //        type: union{string, {function(PropsT?): ReactElement}, constructor{Component<PropsT, ?>}},

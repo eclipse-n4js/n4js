@@ -49,6 +49,17 @@ export external public abstract class Component<PropsT extends ComponentProps, S
     protected componentWillUnmount(): void;
 }
 
+
+export external public type ReactText = string | number;
+export external public type ReactChild = ReactElement<?> | ReactText;
+
+export external public type ReactNodeArray = ReactNode[];
+export external public type ReactFragment = Object | ReactNodeArray;
+export external public type ReactNode = ReactChild | ReactFragment | /* ReactPortal<?> | */ boolean;
+
+
+
+
 export external public abstract class PureComponent<PropsT extends ComponentProps, StateT extends Object>
         extends Component<PropsT, StateT> {
 }

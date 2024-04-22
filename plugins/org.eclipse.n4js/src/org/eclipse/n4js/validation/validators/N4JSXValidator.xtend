@@ -221,11 +221,11 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 	 * See Req. IDE-241116
 	 */
 	def private void checkFunctionTypeExprOrRef(JSXElement jsxElem, FunctionTypeExprOrRef exprTypeRef) {
-		val tReactElement = reactHelper.lookUpReactElement(jsxElem);
-		if (tReactElement === null)
+		val tReactNode = reactHelper.lookUpReactNode(jsxElem);
+		if (tReactNode === null)
 			return;
 
-		val expectedReturnTypeRef = TypeUtils.createTypeRef(tReactElement, TypingStrategy.DEFAULT, true);
+		val expectedReturnTypeRef = TypeUtils.createTypeRef(tReactNode, TypingStrategy.DEFAULT, true);
 
 		val expr = jsxElem.jsxElementName.expression;
 		val G = expr.newRuleEnvironment;
