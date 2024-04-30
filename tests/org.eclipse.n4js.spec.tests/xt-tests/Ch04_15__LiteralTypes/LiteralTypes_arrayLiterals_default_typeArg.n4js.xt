@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+
+// XPECT noerrors -->
+let arr1 : [];
+let arr2 : any[];
+let arr3 : ?[];
+let arr4 : int[];
+
+
+
+// XPECT errors --> "Array<int> is not a subtype of Array." at "arr4"
+arr1 = arr4;
+// XPECT errors --> "Array is not a subtype of Array<int>." at "arr1"
+arr4 = arr1;
+
+// XPECT errors --> "Array<int> is not a subtype of Array<any>." at "arr4"
+arr2 = arr4;
+// XPECT errors --> "Array<any> is not a subtype of Array<int>." at "arr2"
+arr4 = arr2;
+
+
+// XPECT noerrors -->
+arr1 = arr2;
+arr2 = arr1;
+
+
+// XPECT errors --> "Array<?> is not a subtype of Array." at "arr3"
+arr1 = arr3;
+// XPECT noerrors -->
+arr3 = arr1;
