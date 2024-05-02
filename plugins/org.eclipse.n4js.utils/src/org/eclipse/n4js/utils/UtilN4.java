@@ -419,7 +419,7 @@ public class UtilN4 {
 	 */
 	@SuppressWarnings("hiding")
 	public static <T extends Throwable> T reportError(Logger logger, String msg, T exception) {
-		logger.error(msg, exception); // make sure we see this (some clients eat up all exceptions!)
+		logger.error(msg); // make sure we see this (some clients eat up all exceptions!)
 		return exception;
 	}
 
