@@ -140,7 +140,7 @@ function createMemberAnnotations(memberAnnotations: Object) {
             annotations[memberName] = annotationArray;
 
             for (const memberAnnotation of (memberAnnotations[memberName] as [])) {
-                const annotation = createAnnotation(memberAnnotation as (string|Array<string>));
+                const annotation = createAnnotation(memberAnnotation as (string|Array2<string, Array<string>>));
                 if (annotation) {
                     annotationArray.push(annotation);
                 }
@@ -150,7 +150,7 @@ function createMemberAnnotations(memberAnnotations: Object) {
     return annotations;
 }
 
-function createAnnotations(annotations: Array<string|Array<string>>): N4Annotation[] {
+function createAnnotations(annotations: Array<string|Array2<string, Array<string>>>): N4Annotation[] {
     const annotationArray = new Array<N4Annotation>;
     if (annotations) {
         for (const annotationValues of annotations) {
@@ -163,15 +163,15 @@ function createAnnotations(annotations: Array<string|Array<string>>): N4Annotati
     return annotationArray;
 }
 
-function createAnnotation(annotationValues: string|Array<string>): N4Annotation {
+function createAnnotation(annotationValues: string|Array2<string, Array<string>>): N4Annotation {
     const annotation = new N4Annotation();
     if (typeof annotationValues === "string") {
         annotation.name = annotationValues as string;
         annotation.details = [];
     } else {
-        const [name, details] = annotationValues as [];
-        annotation.name = name as string;
-        annotation.details = details as Array<string> || [];
+        const [name, details] = annotationValues as Array2<string, Array<string>>;
+        annotation.name = name;
+        annotation.details = details || [];
     }
     return annotation;
 }
@@ -377,7 +377,7 @@ class ReflectionValues {
     members: string[];
     memberAnnotations: Object;
     allImplementedInterfaces: string[];
-    annotations: Array<string|Array<string>>;
+    annotations: Array<string|Array2<string, Array<string>>>;
 
 
     static createReflectionValues(reflectionString: string) : ReflectionValues {
@@ -390,7 +390,7 @@ class ReflectionValues {
         rv.members = members as string[] || [];
         rv.memberAnnotations = memberAnnotations as Object;
         rv.allImplementedInterfaces = [];
-        rv.annotations = annotations as Array<string|Array<string>>;
+        rv.annotations = annotations as Array<string|Array2<string, Array<string>>>;
         return rv;
     }
 
