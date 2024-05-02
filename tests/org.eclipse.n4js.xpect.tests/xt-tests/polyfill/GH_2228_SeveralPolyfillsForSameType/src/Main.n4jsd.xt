@@ -27,7 +27,7 @@
 @@Global @@ProvidedByRuntime
 
 // XPECT noerrors -->
-@Polyfill export external public class Array<T> extends Array<T> {
+@Polyfill export external public class Array<T=any> extends Array<T> {
 	// no members required here
 }
 
