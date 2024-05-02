@@ -766,6 +766,8 @@ import com.google.common.collect.Sets;
 		// standard cases:
 		final TypeRef leftRaw = TypeUtils.createTypeRef(left.getDeclaredType());
 		final TypeRef rightRaw = TypeUtils.createTypeRef(right.getDeclaredType()); // note: enforcing nominal here!
+		TypeUtils.sanitizeRawTypeRef(leftRaw);
+		TypeUtils.sanitizeRawTypeRef(rightRaw);
 		if ((variance == CO && !ts.subtypeSucceeded(G, leftRaw, rightRaw))
 				|| (variance == CONTRA && !ts.subtypeSucceeded(G, rightRaw, leftRaw))
 				|| (variance == INV && !ts.equaltypeSucceeded(G, leftRaw, rightRaw))) {
