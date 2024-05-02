@@ -278,18 +278,17 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 				}
 				else break;
 			case TypeRefsPackage.WILDCARD:
-				if (rule == grammarAccess.getEmptyIterableTypeExpressionTailRule()
-						|| rule == grammarAccess.getWildcardOldNotationWithoutBoundRule()) {
-					sequence_EmptyIterableTypeExpressionTail_WildcardOldNotationWithoutBound(context, (Wildcard) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getWildcardNewNotationRule()) {
+				if (rule == grammarAccess.getWildcardNewNotationRule()) {
 					sequence_WildcardNewNotation(context, (Wildcard) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getTypeArgumentRule()
 						|| rule == grammarAccess.getWildcardRule()) {
 					sequence_WildcardNewNotation_WildcardOldNotation(context, (Wildcard) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getWildcardOldNotationWithoutBoundRule()) {
+					sequence_WildcardOldNotationWithoutBound(context, (Wildcard) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getTypeArgInTypeTypeRefRule()
@@ -346,10 +345,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         (declaredTypeArgs+=Wildcard arrayTypeExpression?='[') | 
 	 *         (declaredTypeArgs+=ArrayTypeExpression_ParameterizedTypeRef_1_6_0_0 arrayTypeExpression?='[') | 
 	 *         (declaredTypeArgs+=ArrayTypeExpression_ParameterizedTypeRef_2_1_0_0 arrayTypeExpression?='[') | 
-	 *         (
-	 *             arrayNTypeExpression?='[' 
-	 *             (declaredTypeArgs+=EmptyIterableTypeExpressionTail | (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*))
-	 *         ) | 
+	 *         (arrayNTypeExpression?='[' (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)?) | 
 	 *         (
 	 *             astNamespaceLikeRefs+=NamespaceLikeRef* 
 	 *             declaredType=[Type|TypeReferenceName] 
@@ -371,10 +367,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     ArrayNTypeExpression returns ParameterizedTypeRef
 	 *
 	 * Constraint:
-	 *     (
-	 *         arrayNTypeExpression?='[' 
-	 *         (declaredTypeArgs+=EmptyIterableTypeExpressionTail | (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*))
-	 *     )
+	 *     (arrayNTypeExpression?='[' (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)?)
 	 * </pre>
 	 */
 	protected void sequence_ArrayNTypeExpression(ISerializationContext context, ParameterizedTypeRef semanticObject) {
@@ -389,10 +382,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 	 *     (
-	 *         (
-	 *             arrayNTypeExpression?='[' 
-	 *             (declaredTypeArgs+=EmptyIterableTypeExpressionTail | (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*))
-	 *         ) | 
+	 *         (arrayNTypeExpression?='[' (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)?) | 
 	 *         (
 	 *             astNamespaceLikeRefs+=NamespaceLikeRef* 
 	 *             declaredType=[Type|TypeReferenceName] 
@@ -630,21 +620,6 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 * </pre>
 	 */
 	protected void sequence_ColonSepTypeRef_TStructGetter(ISerializationContext context, TStructGetter semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
-	 *     EmptyIterableTypeExpressionTail returns Wildcard
-	 *     WildcardOldNotationWithoutBound returns Wildcard
-	 *
-	 * Constraint:
-	 *     {Wildcard}
-	 * </pre>
-	 */
-	protected void sequence_EmptyIterableTypeExpressionTail_WildcardOldNotationWithoutBound(ISerializationContext context, Wildcard semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -1172,6 +1147,20 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 * </pre>
 	 */
 	protected void sequence_WildcardNewNotation_WildcardOldNotation(ISerializationContext context, Wildcard semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     WildcardOldNotationWithoutBound returns Wildcard
+	 *
+	 * Constraint:
+	 *     {Wildcard}
+	 * </pre>
+	 */
+	protected void sequence_WildcardOldNotationWithoutBound(ISerializationContext context, Wildcard semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

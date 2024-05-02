@@ -9639,31 +9639,6 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-// Entry rule entryRuleEmptyIterableTypeExpressionTail
-entryRuleEmptyIterableTypeExpressionTail
-:
-{ before(grammarAccess.getEmptyIterableTypeExpressionTailRule()); }
-	 ruleEmptyIterableTypeExpressionTail
-{ after(grammarAccess.getEmptyIterableTypeExpressionTailRule()); } 
-	 EOF 
-;
-
-// Rule EmptyIterableTypeExpressionTail
-ruleEmptyIterableTypeExpressionTail 
-	@init {
-		int stackSize = keepStackSize();
-	}
-	:
-	(
-		{ before(grammarAccess.getEmptyIterableTypeExpressionTailAccess().getGroup()); }
-		(rule__EmptyIterableTypeExpressionTail__Group__0)
-		{ after(grammarAccess.getEmptyIterableTypeExpressionTailAccess().getGroup()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
 
 // Rule TypeReference
 ruleTypeReference 
@@ -14883,9 +14858,9 @@ rule__ArrayNTypeExpression__Alternatives_1
 	}
 :
 	(
-		{ before(grammarAccess.getArrayNTypeExpressionAccess().getDeclaredTypeArgsAssignment_1_0()); }
-		(rule__ArrayNTypeExpression__DeclaredTypeArgsAssignment_1_0)
-		{ after(grammarAccess.getArrayNTypeExpressionAccess().getDeclaredTypeArgsAssignment_1_0()); }
+		{ before(grammarAccess.getArrayNTypeExpressionAccess().getRightSquareBracketKeyword_1_0()); }
+		RightSquareBracket
+		{ after(grammarAccess.getArrayNTypeExpressionAccess().getRightSquareBracketKeyword_1_0()); }
 	)
 	|
 	(
@@ -78554,60 +78529,6 @@ finally {
 }
 
 
-rule__EmptyIterableTypeExpressionTail__Group__0
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	rule__EmptyIterableTypeExpressionTail__Group__0__Impl
-	rule__EmptyIterableTypeExpressionTail__Group__1
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__EmptyIterableTypeExpressionTail__Group__0__Impl
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-(
-	{ before(grammarAccess.getEmptyIterableTypeExpressionTailAccess().getWildcardAction_0()); }
-	()
-	{ after(grammarAccess.getEmptyIterableTypeExpressionTailAccess().getWildcardAction_0()); }
-)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__EmptyIterableTypeExpressionTail__Group__1
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	rule__EmptyIterableTypeExpressionTail__Group__1__Impl
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__EmptyIterableTypeExpressionTail__Group__1__Impl
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-(
-	{ before(grammarAccess.getEmptyIterableTypeExpressionTailAccess().getRightSquareBracketKeyword_1()); }
-	RightSquareBracket
-	{ after(grammarAccess.getEmptyIterableTypeExpressionTailAccess().getRightSquareBracketKeyword_1()); }
-)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
 rule__TypeReference__Group__0
 	@init {
 		int stackSize = keepStackSize();
@@ -93782,21 +93703,6 @@ rule__ArrayNTypeExpression__ArrayNTypeExpressionAssignment_0
 			{ after(grammarAccess.getArrayNTypeExpressionAccess().getArrayNTypeExpressionLeftSquareBracketKeyword_0_0()); }
 		)
 		{ after(grammarAccess.getArrayNTypeExpressionAccess().getArrayNTypeExpressionLeftSquareBracketKeyword_0_0()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__ArrayNTypeExpression__DeclaredTypeArgsAssignment_1_0
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	(
-		{ before(grammarAccess.getArrayNTypeExpressionAccess().getDeclaredTypeArgsEmptyIterableTypeExpressionTailParserRuleCall_1_0_0()); }
-		ruleEmptyIterableTypeExpressionTail
-		{ after(grammarAccess.getArrayNTypeExpressionAccess().getDeclaredTypeArgsEmptyIterableTypeExpressionTailParserRuleCall_1_0_0()); }
 	)
 ;
 finally {

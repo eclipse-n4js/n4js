@@ -1294,8 +1294,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Assignment cArrayNTypeExpressionAssignment_0 = (Assignment)cGroup.eContents().get(0);
 		private final Keyword cArrayNTypeExpressionLeftSquareBracketKeyword_0_0 = (Keyword)cArrayNTypeExpressionAssignment_0.eContents().get(0);
 		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
-		private final Assignment cDeclaredTypeArgsAssignment_1_0 = (Assignment)cAlternatives_1.eContents().get(0);
-		private final RuleCall cDeclaredTypeArgsEmptyIterableTypeExpressionTailParserRuleCall_1_0_0 = (RuleCall)cDeclaredTypeArgsAssignment_1_0.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_1_0 = (Keyword)cAlternatives_1.eContents().get(0);
 		private final Group cGroup_1_1 = (Group)cAlternatives_1.eContents().get(1);
 		private final Assignment cDeclaredTypeArgsAssignment_1_1_0 = (Assignment)cGroup_1_1.eContents().get(0);
 		private final RuleCall cDeclaredTypeArgsTypeArgumentParserRuleCall_1_1_0_0 = (RuleCall)cDeclaredTypeArgsAssignment_1_1_0.eContents().get(0);
@@ -1308,14 +1307,14 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//ArrayNTypeExpression returns ParameterizedTypeRef:
 		//    arrayNTypeExpression?='['
 		//    (
-		//        declaredTypeArgs+=EmptyIterableTypeExpressionTail
+		//        ']'
 		//    |    declaredTypeArgs+=TypeArgument (',' declaredTypeArgs+=TypeArgument)* ']'
 		//    );
 		@Override public ParserRule getRule() { return rule; }
 		
 		//arrayNTypeExpression?='['
 		//(
-		//    declaredTypeArgs+=EmptyIterableTypeExpressionTail
+		//    ']'
 		//|    declaredTypeArgs+=TypeArgument (',' declaredTypeArgs+=TypeArgument)* ']'
 		//)
 		public Group getGroup() { return cGroup; }
@@ -1327,16 +1326,13 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		public Keyword getArrayNTypeExpressionLeftSquareBracketKeyword_0_0() { return cArrayNTypeExpressionLeftSquareBracketKeyword_0_0; }
 		
 		//(
-		//    declaredTypeArgs+=EmptyIterableTypeExpressionTail
+		//    ']'
 		//|    declaredTypeArgs+=TypeArgument (',' declaredTypeArgs+=TypeArgument)* ']'
 		//)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
-		//declaredTypeArgs+=EmptyIterableTypeExpressionTail
-		public Assignment getDeclaredTypeArgsAssignment_1_0() { return cDeclaredTypeArgsAssignment_1_0; }
-		
-		//EmptyIterableTypeExpressionTail
-		public RuleCall getDeclaredTypeArgsEmptyIterableTypeExpressionTailParserRuleCall_1_0_0() { return cDeclaredTypeArgsEmptyIterableTypeExpressionTailParserRuleCall_1_0_0; }
+		//']'
+		public Keyword getRightSquareBracketKeyword_1_0() { return cRightSquareBracketKeyword_1_0; }
 		
 		//declaredTypeArgs+=TypeArgument (',' declaredTypeArgs+=TypeArgument)* ']'
 		public Group getGroup_1_1() { return cGroup_1_1; }
@@ -1362,25 +1358,6 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//']'
 		public Keyword getRightSquareBracketKeyword_1_1_2() { return cRightSquareBracketKeyword_1_1_2; }
 	}
-	public class EmptyIterableTypeExpressionTailElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.EmptyIterableTypeExpressionTail");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cWildcardAction_0 = (Action)cGroup.eContents().get(0);
-		private final Keyword cRightSquareBracketKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		
-		//EmptyIterableTypeExpressionTail returns Wildcard:
-		//    {Wildcard} ']';
-		@Override public ParserRule getRule() { return rule; }
-		
-		//{Wildcard} ']'
-		public Group getGroup() { return cGroup; }
-		
-		//{Wildcard}
-		public Action getWildcardAction_0() { return cWildcardAction_0; }
-		
-		//']'
-		public Keyword getRightSquareBracketKeyword_1() { return cRightSquareBracketKeyword_1; }
-	}
 	public class TypeReferenceElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TypeReference");
 		private final Group cGroup = (Group)rule.eContents().get(0);
@@ -1392,6 +1369,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final CrossReference cDeclaredTypeTypeCrossReference_1_0 = (CrossReference)cDeclaredTypeAssignment_1.eContents().get(0);
 		private final RuleCall cDeclaredTypeTypeTypeReferenceNameParserRuleCall_1_0_1 = (RuleCall)cDeclaredTypeTypeCrossReference_1_0.eContents().get(1);
 		
+		////EmptyIterableTypeExpressionTail returns Wildcard:
+		////    {Wildcard} ']';
 		//fragment TypeReference *:
 		//    (astNamespaceLikeRefs+=NamespaceLikeRef '.')*
 		//    => declaredType=[Type|TypeReferenceName]
@@ -2728,7 +2707,6 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	private final ParameterizedTypeRefNominalElements pParameterizedTypeRefNominal;
 	private final ParameterizedTypeRefStructuralElements pParameterizedTypeRefStructural;
 	private final ArrayNTypeExpressionElements pArrayNTypeExpression;
-	private final EmptyIterableTypeExpressionTailElements pEmptyIterableTypeExpressionTail;
 	private final TypeReferenceElements pTypeReference;
 	private final NamespaceLikeRefElements pNamespaceLikeRef;
 	private final TypeArgumentsElements pTypeArguments;
@@ -2815,7 +2793,6 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		this.pParameterizedTypeRefNominal = new ParameterizedTypeRefNominalElements();
 		this.pParameterizedTypeRefStructural = new ParameterizedTypeRefStructuralElements();
 		this.pArrayNTypeExpression = new ArrayNTypeExpressionElements();
-		this.pEmptyIterableTypeExpressionTail = new EmptyIterableTypeExpressionTailElements();
 		this.pTypeReference = new TypeReferenceElements();
 		this.pNamespaceLikeRef = new NamespaceLikeRefElements();
 		this.pTypeArguments = new TypeArgumentsElements();
@@ -3245,7 +3222,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//ArrayNTypeExpression returns ParameterizedTypeRef:
 	//    arrayNTypeExpression?='['
 	//    (
-	//        declaredTypeArgs+=EmptyIterableTypeExpressionTail
+	//        ']'
 	//    |    declaredTypeArgs+=TypeArgument (',' declaredTypeArgs+=TypeArgument)* ']'
 	//    );
 	public ArrayNTypeExpressionElements getArrayNTypeExpressionAccess() {
@@ -3256,16 +3233,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		return getArrayNTypeExpressionAccess().getRule();
 	}
 	
-	//EmptyIterableTypeExpressionTail returns Wildcard:
-	//    {Wildcard} ']';
-	public EmptyIterableTypeExpressionTailElements getEmptyIterableTypeExpressionTailAccess() {
-		return pEmptyIterableTypeExpressionTail;
-	}
-	
-	public ParserRule getEmptyIterableTypeExpressionTailRule() {
-		return getEmptyIterableTypeExpressionTailAccess().getRule();
-	}
-	
+	////EmptyIterableTypeExpressionTail returns Wildcard:
+	////    {Wildcard} ']';
 	//fragment TypeReference *:
 	//    (astNamespaceLikeRefs+=NamespaceLikeRef '.')*
 	//    => declaredType=[Type|TypeReferenceName]

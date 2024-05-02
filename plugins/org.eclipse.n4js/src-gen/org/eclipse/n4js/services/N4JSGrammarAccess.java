@@ -16295,7 +16295,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//ArrayNTypeExpression returns ParameterizedTypeRef:
 	//    arrayNTypeExpression?='['
 	//    (
-	//        declaredTypeArgs+=EmptyIterableTypeExpressionTail
+	//        ']'
 	//    |    declaredTypeArgs+=TypeArgument (',' declaredTypeArgs+=TypeArgument)* ']'
 	//    );
 	public TypeExpressionsGrammarAccess.ArrayNTypeExpressionElements getArrayNTypeExpressionAccess() {
@@ -16306,16 +16306,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getArrayNTypeExpressionAccess().getRule();
 	}
 	
-	//EmptyIterableTypeExpressionTail returns Wildcard:
-	//    {Wildcard} ']';
-	public TypeExpressionsGrammarAccess.EmptyIterableTypeExpressionTailElements getEmptyIterableTypeExpressionTailAccess() {
-		return gaTypeExpressions.getEmptyIterableTypeExpressionTailAccess();
-	}
-	
-	public ParserRule getEmptyIterableTypeExpressionTailRule() {
-		return getEmptyIterableTypeExpressionTailAccess().getRule();
-	}
-	
+	////EmptyIterableTypeExpressionTail returns Wildcard:
+	////    {Wildcard} ']';
 	//fragment TypeReference *:
 	//    (astNamespaceLikeRefs+=NamespaceLikeRef '.')*
 	//    => declaredType=[Type|TypeReferenceName]

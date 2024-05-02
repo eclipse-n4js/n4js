@@ -39619,25 +39619,10 @@ ruleArrayNTypeExpression returns [EObject current=null]
 			)
 		)
 		(
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getArrayNTypeExpressionAccess().getDeclaredTypeArgsEmptyIterableTypeExpressionTailParserRuleCall_1_0_0());
-					}
-					lv_declaredTypeArgs_1_0=ruleEmptyIterableTypeExpressionTail
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getArrayNTypeExpressionRule());
-						}
-						add(
-							$current,
-							"declaredTypeArgs",
-							lv_declaredTypeArgs_1_0,
-							"org.eclipse.n4js.TypeExpressions.EmptyIterableTypeExpressionTail");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
+			otherlv_1=RightSquareBracket
+			{
+				newLeafNode(otherlv_1, grammarAccess.getArrayNTypeExpressionAccess().getRightSquareBracketKeyword_1_0());
+			}
 			    |
 			(
 				(
@@ -39690,36 +39675,6 @@ ruleArrayNTypeExpression returns [EObject current=null]
 				}
 			)
 		)
-	)
-;
-
-// Entry rule entryRuleEmptyIterableTypeExpressionTail
-entryRuleEmptyIterableTypeExpressionTail returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getEmptyIterableTypeExpressionTailRule()); }
-	iv_ruleEmptyIterableTypeExpressionTail=ruleEmptyIterableTypeExpressionTail
-	{ $current=$iv_ruleEmptyIterableTypeExpressionTail.current; }
-	EOF;
-
-// Rule EmptyIterableTypeExpressionTail
-ruleEmptyIterableTypeExpressionTail returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			{
-				$current = forceCreateModelElement(
-					grammarAccess.getEmptyIterableTypeExpressionTailAccess().getWildcardAction_0(),
-					$current);
-			}
-		)
-		otherlv_1=RightSquareBracket
-		{
-			newLeafNode(otherlv_1, grammarAccess.getEmptyIterableTypeExpressionTailAccess().getRightSquareBracketKeyword_1());
-		}
 	)
 ;
 
