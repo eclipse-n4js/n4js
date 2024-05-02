@@ -423,14 +423,6 @@ import com.google.common.collect.Iterables;
 				|| (leftDeclType == numberType(G) && rightDeclType == intType(G))) {
 			return success(); // int <: number AND number <: int (for now, int and number are synonymous)
 		}
-		if (leftDeclType == rightDeclType && !left.isStructuralTyping() && !right.isStructuralTyping()) {
-			Result result = checkSameDeclaredTypes(G, left, right, rightDeclType);
-			if (result.isSuccess()) {
-				// ignore fails since in structural case type args are only important iff they are actually used in
-				// members
-				return result;
-			}
-		}
 		if (leftDeclType instanceof TEnum) {
 			EnumKind enumKind = N4JSLanguageUtils.getEnumKind((TEnum) leftDeclType);
 			if (rightDeclType == n4EnumType(G)
