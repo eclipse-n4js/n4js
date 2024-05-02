@@ -14,9 +14,23 @@
 
 
 
+
+function <T> fff(t:T, arr: []) { }
+// XPECT noerrors --> "" at "[1]"
+fff(null, [1]);
+
+
+function fn(deps: any[]) {}
+const deps: [] = [];
+// XPECT noerrors -->
+// XPECT type of '["hello"]' --> Array<string>
+fn(["hello"].concat(deps));
+
+
 // XPECT noerrors -->
 // XPECT type of '[].concat(1)' --> Array<union{int,any+}>
 const a : number[] = [].concat(1);
+
 
 // XPECT noerrors -->
 // XPECT type of '[1].concat([])' --> Array<number>
