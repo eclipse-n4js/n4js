@@ -56,7 +56,7 @@ public class GH_2259_PackageJsonValidationMustNotLoadFromSourceTest extends Abst
 								@@Global @@ProvidedByRuntime
 
 								@Polyfill
-								export external public class Array<T> extends Array<T> {
+								export external public class Array<T=any> extends Array<T> {
 									public addedMethod();
 								}
 								""",
@@ -81,7 +81,7 @@ public class GH_2259_PackageJsonValidationMustNotLoadFromSourceTest extends Abst
 								@@Global @@ProvidedByRuntime
 
 								@Polyfill
-								export external public class Array<T> extends Array<T> {
+								export external public class Array<T=any> extends Array<T> {
 									public addedMethod();
 								}
 								""",
