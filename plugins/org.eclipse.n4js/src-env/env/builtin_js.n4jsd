@@ -369,7 +369,7 @@ export external public interface ~ConcatArray<T> {
 }
 
 @EcmaScript
-export external public class Array<T> {
+export external public class Array<T=any> {
 	public length: number;
 	@Override
 	public toString(): string;
