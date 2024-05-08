@@ -279,9 +279,11 @@ public class SourceElementExtensions {
 			if (N4JSLanguageUtils.isNonStaticPolyfill(n4cd) || N4JSLanguageUtils.isStaticPolyfill(n4cd)) {
 				// in polyfill? delegate to filled type and its type variables
 				TClassifier filledType = (TClassifier) n4cd.getDefinedType();
-				Iterator<? extends TClassifier> superClassifiers = filledType.getSuperClassifiers().iterator();
-				if (superClassifiers.hasNext()) {
-					return superClassifiers.next();
+				if (filledType != null) {
+					Iterator<? extends TClassifier> superClassifiers = filledType.getSuperClassifiers().iterator();
+					if (superClassifiers.hasNext()) {
+						return superClassifiers.next();
+					}
 				}
 			}
 		}

@@ -21,7 +21,7 @@ export external public type IteratorResult<T,TReturn> = IteratorYieldResult<T> |
 
 @Polyfill
 @EcmaScript
-export external public class Array<T> extends Array<T> {
+export external public class Array<T=any> extends Array<T> {
 	public entries(): IterableIterator<[number,T]>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<T>;

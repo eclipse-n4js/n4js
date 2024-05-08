@@ -1218,6 +1218,10 @@ public class N4JSLanguageUtils {
 			}
 		}
 		
+		if (expr instanceof AssignmentExpression) {
+			return expr.op === AssignmentOperator.ASSIGN && isConstTransitiveObjectLiteral(G, expr.rhs);
+		}
+		
 		if (expr instanceof ConditionalExpression) {
 			return isConstTransitiveObjectLiteral(G, expr.trueExpression) && isConstTransitiveObjectLiteral(G, expr.falseExpression);
 		}

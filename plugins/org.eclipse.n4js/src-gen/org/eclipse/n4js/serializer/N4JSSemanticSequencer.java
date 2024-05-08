@@ -1658,18 +1658,17 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				}
 				else break;
 			case TypeRefsPackage.WILDCARD:
-				if (rule == grammarAccess.getEmptyIterableTypeExpressionTailRule()
-						|| rule == grammarAccess.getWildcardOldNotationWithoutBoundRule()) {
-					sequence_EmptyIterableTypeExpressionTail_WildcardOldNotationWithoutBound(context, (Wildcard) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getWildcardNewNotationRule()) {
+				if (rule == grammarAccess.getWildcardNewNotationRule()) {
 					sequence_WildcardNewNotation(context, (Wildcard) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getTypeArgumentRule()
 						|| rule == grammarAccess.getWildcardRule()) {
 					sequence_WildcardNewNotation_WildcardOldNotation(context, (Wildcard) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getWildcardOldNotationWithoutBoundRule()) {
+					sequence_WildcardOldNotationWithoutBound(context, (Wildcard) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getTypeArgInTypeTypeRefRule()

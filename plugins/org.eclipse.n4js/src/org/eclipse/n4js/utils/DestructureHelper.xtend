@@ -48,6 +48,8 @@ import org.eclipse.xtext.scoping.IScope
 
 import static extension org.eclipse.n4js.n4JS.DestructNode.arePositional
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.n4JS.ArrayLiteral
+import org.eclipse.n4js.n4JS.ObjectLiteral
 
 /**
  * Helper for dealing with destructuring patterns. For more details on destructuring patterns,
@@ -272,6 +274,10 @@ class DestructureHelper {
 	 * Both the given value type and inferred expression type may be null and then this returns null.
 	 */
 	private def TypeRef mergeWithTypeOfDefaultExpression(RuleEnvironment G, TypeRef valueTypeRef, DestructNode node) {
+		if (node.defaultExpr instanceof ObjectLiteral || node.defaultExpr instanceof ArrayLiteral) {
+			// Example: const { prop = {} } = new C1(); // type should be C2; with: class C1 { prop : C2 }
+			return valueTypeRef;
+		}
 		val exprTypeRef = if(node.defaultExpr!==null) ts.type(G, node.defaultExpr);
 		if(valueTypeRef!==null && exprTypeRef!==null) {
 			// we have to merge the two types ...

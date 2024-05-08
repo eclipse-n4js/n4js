@@ -188,12 +188,9 @@ ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural:
 ArrayNTypeExpression returns ParameterizedTypeRef:
 	arrayNTypeExpression?='['
 	(
-		declaredTypeArgs+=EmptyIterableTypeExpressionTail
+		']'
 	|	declaredTypeArgs+=TypeArgument (',' declaredTypeArgs+=TypeArgument)* ']'
 	);
-
-EmptyIterableTypeExpressionTail returns Wildcard:
-	{Wildcard} ']';
 
 fragment TypeReference *:
 	(astNamespaceLikeRefs+=NamespaceLikeRef '.')*

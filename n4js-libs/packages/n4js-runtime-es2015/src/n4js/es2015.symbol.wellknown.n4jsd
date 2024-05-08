@@ -5,7 +5,7 @@
 
 @Polyfill
 @EcmaScript
-export external public class Array<T> extends Array<T> {
+export external public class Array<T=any> extends Array<T> {
 	public [Symbol.unscopables](): ~Object with { copyWithin: boolean; entries: boolean; fill: boolean; find: boolean; findIndex: boolean; keys: boolean; values: boolean; };
 	public static get [Symbol.species](): ArrayConstructor;
 }

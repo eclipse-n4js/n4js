@@ -35,7 +35,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
 public class TypeModelUtils {
 
 	/**
-	 * Tells if the given URI points to a {@link TModule#getComposedMemberCaches() cached composed member} in the
+	 * Returns true if the given URI points to a {@link TModule#getComposedMemberCaches() cached composed member} in the
 	 * TModule of an N4JS resource.
 	 */
 	public static boolean isComposedMemberURI(URI uri) {
@@ -43,8 +43,8 @@ public class TypeModelUtils {
 	}
 
 	/**
-	 * Tells if the given URI fragment points to a {@link TModule#getComposedMemberCaches() cached composed member} in
-	 * the TModule of an N4JS resource.
+	 * Returns true if the given URI fragment points to a {@link TModule#getComposedMemberCaches() cached composed
+	 * member} in the TModule of an N4JS resource.
 	 */
 	public static boolean isComposedMemberURIFragment(String uriFragment) {
 		return uriFragment.startsWith(
@@ -52,8 +52,8 @@ public class TypeModelUtils {
 	}
 
 	/**
-	 * Tells if the given URI fragment points to a {@link TModule#getComposedMemberCaches() cached composed member} or
-	 * {@link TModule#getExposedInternalTypes() cache} in the TModule of an N4JS resource.
+	 * Returns true if the given URI fragment points to a {@link TModule#getComposedMemberCaches() cached composed
+	 * member} or {@link TModule#getExposedInternalTypes() cache} in the TModule of an N4JS resource.
 	 */
 	public static boolean isURIFragmentToPostProcessingCache(String uriFragment) {
 		return uriFragment.startsWith(
@@ -62,16 +62,14 @@ public class TypeModelUtils {
 						"/1/@" + TypesPackage.eINSTANCE.getTModule_ExposedInternalTypes().getName() + ".");
 	}
 
-	/**
-	 * @return true if the given EObject instance is a composed TMember
-	 */
+	/** Returns true if the given EObject instance is a composed TMember */
 	public static boolean isComposedTElement(EObject eobj) {
 		return ((eobj instanceof TMember) && ((TMember) eobj).isComposed());
 	}
 
 	/**
-	 * @return the single list of that input element if it is not a composed element. Otherwise, return the list of
-	 *         constituent members.
+	 * Returns the single list of that input element if it is not a composed element. Otherwise, return the list of
+	 * constituent members.
 	 */
 	public static List<EObject> getRealElements(EObject eobj) {
 		List<EObject> result = new ArrayList<>();
@@ -86,14 +84,12 @@ public class TypeModelUtils {
 		return result;
 	}
 
-	/** Tells whether the given type reference has a typing strategy that denotes structural typing. */
+	/** Returns true if the given type reference has a typing strategy that denotes structural typing. */
 	public static boolean isStructural(TypeRef typeRef) {
 		return typeRef != null && isStructural(typeRef.getTypingStrategy());
 	}
 
-	/**
-	 * Tells whether the given typing strategy denotes structural typing.
-	 */
+	/** Returns true if the given typing strategy denotes structural typing. */
 	public static boolean isStructural(TypingStrategy typingStrategy) {
 		return typingStrategy != null && typingStrategy != TypingStrategy.NOMINAL
 				&& typingStrategy != TypingStrategy.DEFAULT;

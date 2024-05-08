@@ -95,6 +95,9 @@ public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 		if (element instanceof VariableDeclaration && element.eContainer() instanceof BindingElement) {
 			BindingElement parent = (BindingElement) element.eContainer();
 			element = findReferenceHelper.getMemberInDestructuring(parent);
+			if (element == null) {
+				return Collections.emptyList();
+			}
 		}
 
 		EObject type = N4JSASTUtils.getCorrespondingTypeModelElement(element);

@@ -1317,13 +1317,13 @@ import com.google.inject.Inject;
 		}
 
 		private TypeRef simplifyUnionWithEmptyAnyArray(Expression lhs, Expression rhs) {
+			final TypeRef L = ts.type(G, lhs);
+			final TypeRef R = ts.type(G, rhs);
+
 			final boolean lhsIsEmptyArrayLiteral = lhs instanceof ArrayLiteral
 					&& ((ArrayLiteral) lhs).getElements().isEmpty();
 			final boolean rhsIsEmptyArrayLiteral = rhs instanceof ArrayLiteral
 					&& ((ArrayLiteral) rhs).getElements().isEmpty();
-
-			final TypeRef L = ts.type(G, lhs);
-			final TypeRef R = ts.type(G, rhs);
 
 			if (lhsIsEmptyArrayLiteral && R.getDeclaredType() == arrayType(G)) {
 				// case: [] || someArray
@@ -1332,6 +1332,18 @@ import com.google.inject.Inject;
 				// case: someArray || []
 				return L;
 			}
+
+			final boolean lhsIsObjectLiteralSubtypeOfRhs = lhs instanceof ObjectLiteral && ts.subtypeSucceeded(G, L, R);
+			final boolean rhsIsObjectLiteralSubtypeOfLhs = rhs instanceof ObjectLiteral && ts.subtypeSucceeded(G, R, L);
+
+			if (lhsIsObjectLiteralSubtypeOfRhs) {
+				// case: {} || someObject
+				return R;
+			} else if (rhsIsObjectLiteralSubtypeOfLhs) {
+				// case: someObject || {}
+				return L;
+			}
+
 			return typeSystemHelper.createUnionType(G, L, R);
 		}
 

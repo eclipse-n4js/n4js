@@ -9646,7 +9646,7 @@ ruleParameterizedTypeRefStructural:
 ruleArrayNTypeExpression:
 	'['
 	(
-		ruleEmptyIterableTypeExpressionTail
+		']'
 		    |
 		ruleTypeArgument
 		(
@@ -9655,11 +9655,6 @@ ruleArrayNTypeExpression:
 		)*
 		']'
 	)
-;
-
-// Rule EmptyIterableTypeExpressionTail
-ruleEmptyIterableTypeExpressionTail:
-	']'
 ;
 
 // Rule TypeReference

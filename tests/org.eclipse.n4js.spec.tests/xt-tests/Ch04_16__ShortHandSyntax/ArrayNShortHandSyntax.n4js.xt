@@ -12,7 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
 
 
-// XPECT type of 't01' --> Array<?>
+// XPECT type of 't01' --> Array
 let t01: [];
 
 // XPECT type of 't02' --> Array<string>

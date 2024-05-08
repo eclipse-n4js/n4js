@@ -83,7 +83,7 @@ class IterableComputer extends TypeSystemHelperStrategy {
 			result = typeRef.declaredTypeArgs.convertTypeArgsToRefs;
 		} else if(declType===G.arrayType || (includeIterableN && G.isArrayN(declType))) {
 			// simple: typeRef directly points to Array<> or an ArrayN<>
-			result = typeRef.declaredTypeArgs.convertTypeArgsToRefs;
+			result = typeRef.typeArgsWithDefaults.convertTypeArgsToRefs;
 		} else if(declType===G.anyType && typeRef.isDynamic) {
 			result = #[ G.anyTypeRefDynamic ];
 		} else if(declType instanceof PrimitiveType) {
