@@ -262,7 +262,7 @@ public class JSXTransformation extends Transformation {
 		if (children.isEmpty() && attrs.size() == 1 && attrs.get(0) instanceof JSXSpreadAttribute) {
 			// Special case: if only a single spread operator is passed, we pass it directly, e.g. spr instead of
 			// cloning.
-			return ((JSXSpreadAttribute) attrs.get(0)).getExpression();
+			// return ((JSXSpreadAttribute) attrs.get(0)).getExpression();
 		}
 
 		List<PropertyAssignment> pas = new ArrayList<>();
