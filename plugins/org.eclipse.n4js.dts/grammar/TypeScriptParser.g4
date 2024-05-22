@@ -564,7 +564,7 @@ propertyName
     ;
 
 computedPropertyName
-    : '[' (identifierName '.' identifierName // usually Symbol.iterator
+    : '[' (identifierName ('.' identifierName)? // usually Symbol.iterator
           | StringLiteral
           )
       ']'
