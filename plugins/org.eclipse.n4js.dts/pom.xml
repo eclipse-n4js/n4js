@@ -25,10 +25,10 @@ Contributors:
 	</parent>
 
 	<!--
-	The following configuration will integrate the file lib/antlr4-runtime-4.7.2.jar
+	The following configuration will integrate the file lib/antlr-runtime-4.*.jar
 	into the jar of this bundle. An alternative approach would be to upstream/install
-	the lib/antlr4-runtime-4.7.2.jar into the .m2 location during 'mvn clean install'.
-	One of these options is necessary to make the packages inside lib/antlr4-runtime-4.7.2.jar
+	the lib/antlr-runtime-4.*.jar into the .m2 location during 'mvn clean install'.
+	One of these options is necessary to make the packages inside lib/antlr-runtime-4.*.jar
 	available for other jars during testing.
 	-->
 	<build>
@@ -95,7 +95,7 @@ Contributors:
 						<configuration>
 							<artifactSet>
 								<includes>
-									<include>*:*antlr4-runtime-4.7.2*</include>
+									<include>*:*antlr-runtime-*</include>
 								</includes>
 							</artifactSet>
 						</configuration>
