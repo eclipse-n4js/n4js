@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   
+	File "tslib.d.ts" {
+		export const uniqueSymbol: unique symbol;
+		export type PropertyName = string | number | symbol;
+		export interface LoDashStaticX {
+		    has<T, K extends PropertyName>(object: T, path: K): object is T & { [P in K]: P extends keyof T ? T[P] : Record<string, unknown> extends T ? T[keyof T] : unknown} & {[Symbol.uniqueSymbol]: unknown};
+		    has<T>(object: T, path: string): boolean;
+		}
+		export const aa : {[uniqueSymbol]: unknown};
+		export interface Other {}
+	}
+   END_SETUP
+ */
+
+
+// XPECT noerrors -->
+import * as tslib from "tslib"
+
+
+tslib.uniqueSymbol;
+
+let x : tslib.LoDashStaticX;
+x.has();
+
+
+let y : tslib.Other;
+
+let z = tslib.aa;
