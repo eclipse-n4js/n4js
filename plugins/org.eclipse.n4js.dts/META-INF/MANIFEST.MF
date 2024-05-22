@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.n4js.dts;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-ClassPath: .,
- lib/antlr4-runtime-4.7.2.jar
+ lib/antlr-runtime-4.13.1.jar
 Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.emf.ecore.xcore.lib,
