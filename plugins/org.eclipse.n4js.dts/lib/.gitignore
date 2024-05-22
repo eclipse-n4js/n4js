@@ -1,5 +1,4 @@
 *
 !.gitignore
-!antlr4-runtime-4.7.2.jar
 !antlr-runtime-4.13.1.jar
 !antlr-4.13.1-complete.jar
