@@ -1,4 +1,4 @@
-// Generated from /Users/marcusmews/Eclipses/ECL1/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
+// Generated from /Users/marcusmews/Eclipses/ECL3/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.13.1
 package org.eclipse.n4js.dts;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
@@ -10,6 +10,7 @@ import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
  * @param <T> The return type of the visit operation. Use {@link Void} for
  * operations with no return type.
  */
+@SuppressWarnings("CheckReturnValue")
 public class TypeScriptParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements TypeScriptParserVisitor<T> {
 	/**
 	 * {@inheritDoc}
