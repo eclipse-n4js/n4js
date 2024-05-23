@@ -64,7 +64,6 @@ import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.XtextResource;
 
@@ -345,7 +344,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * // XPECT noerrors --&gt;
 	 * </pre>
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void noerrors(XtMethodData data) {
 		issueHelper.getNoerrors(data);
 	}
@@ -357,7 +355,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * // XPECT nowarnings --&gt;
 	 * </pre>
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void nowarnings(XtMethodData data) {
 		issueHelper.getNowarnings(data);
 	}
@@ -370,7 +367,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * // XPECT errors --&gt; "&ltMESSAGE&gt" at "&ltLOCATION&gt"
 	 * </pre>
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void errors(XtMethodData data) {
 		issueHelper.getErrors(data);
 	}
@@ -383,7 +379,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * // XPECT warnings --&gt; "&ltMESSAGE&gt" at "&ltLOCATION&gt"
 	 * </pre>
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void warnings(XtMethodData data) {
 		issueHelper.getWarnings(data);
 	}
@@ -395,7 +390,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * // XPECT ast --&gt; &ltSERIALIZED AST&gt
 	 * </pre>
 	 */
-	@Xpect
 	public void ast(XtMethodData data) {
 		EObject root = resource.getParseResult().getRootASTElement();
 		String ast = xtMethods.serializeAst(root);
@@ -413,7 +407,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * The location is optional.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void accessModifier(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "accessModifier", "at");
 		String accessModifierStr = XtMethods.getAccessModifierString(ocr.getEObject());
@@ -431,7 +424,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * {@code apply}, {@code contains}, and {@code not} are optional.<br/>
 	 * COMPLETIONS is a comma separated list.<br/>
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void completion(XtMethodData data) throws InterruptedException, ExecutionException {
 		Position position = eobjProvider.checkAndGetPosition(data, "completion", "at");
 		FileURI uri = getFileURIFromModuleName(xtData.workspace.moduleNameOfXtFile);
@@ -493,7 +485,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * // XPECT definition --&gt; &ltFILE AND RANGE&gt
 	 * </pre>
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void definition(XtMethodData data) throws InterruptedException, ExecutionException {
 		Position position = eobjProvider.checkAndGetPosition(data, "definition", "at");
 		FileURI uri = getFileURIFromModuleName(xtData.workspace.moduleNameOfXtFile);
@@ -516,7 +507,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * The location is optional.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void elementKeyword(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "elementKeyword", "at");
 		String elementKeywordStr = xtMethods.getElementKeywordString(ocr);
@@ -532,7 +522,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * EXPORTED OBJECTS is a comma separated list.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void exportedObjects(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "exportedObjects", null);
 		List<String> exportedObjectsArray = xtMethods.getExportedObjectsString(ocr);
@@ -549,7 +538,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * The location is optional.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void findReferences(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "findReferences", "at");
 		List<String> findReferencesArray = xtMethods.getFindReferences(ocr);
@@ -564,7 +552,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * // XPECT formattedLines --&gt; &ltFORMATTED LINES&gt
 	 * </pre>
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void formattedLines(XtMethodData data, Map<String, String> preferences) {
 		String argLines = eobjProvider.checkAndGetArgAfter(data, "formattedLines");
 		int lines = Integer.parseInt(argLines);
@@ -578,7 +565,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * // XPECT linkedName at '&ltLOCATION&gt' --&gt; &ltTYPE NAME&gt
 	 * </pre>
 	 */
-	@Xpect
 	public void linkedName(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "linkedName", "at");
 		QualifiedName linkedName = xtMethods.getLinkedName(ocr);
@@ -590,7 +576,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * // XPECT linkedFragment at '&ltLOCATION&gt' --&gt; &ltFRAGMENT NAME&gt
 	 * </pre>
 	 */
-	@Xpect
 	public void linkedFragment(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "linkedFragment", "at");
 		String fragmentName = xtMethods.getLinkedFragment(ocr);
@@ -608,7 +593,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * // XPECT linkedPathname at '&ltLOCATION&gt' --&gt; &ltPATH NAME&gt
 	 * </pre>
 	 */
-	@Xpect
 	public void linkedPathname(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "linkedPathname", "at");
 		String pathName = xtMethods.getLinkedPathname(ocr);
@@ -625,7 +609,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * {@code resource} is optional.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void renameRefactoring(XtMethodData data) throws InterruptedException, ExecutionException {
 		FileURI uri = getFileURIFromModuleName(xtData.workspace.moduleNameOfXtFile);
 		Position pos = eobjProvider.checkAndGetPosition(data, "renameRefactoring", "at");
@@ -699,7 +682,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * // XPECT compileResult --&gt; &ltCOMPILE RESULT&gt
 	 * </pre>
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void compileResult(XtMethodData data) {
 		FileURI fileUri = getGeneratedFileURI();
 		String generedFileContent = getContentOfFileOnDisk(fileUri);
@@ -713,7 +695,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * // XPECT output --&gt; &ltOUTPUT&gt
 	 * </pre>
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void output(XtMethodData data) {
 		FileURI fileUri = getGeneratedFileURI();
 
@@ -746,7 +727,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * // ---
 	 * </pre>
 	 */
-	@Xpect
 	public void generated_dts(XtMethodData data) throws IOException {
 		String moduleName = xtData.workspace.moduleNameOfXtFile;
 		int idxStart = Math.max(moduleName.lastIndexOf("/") + 1, 0);
@@ -823,7 +803,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * The location is optional.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void binding(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "binding", "at");
 		String bindingName = xtMethods.getBindingName(ocr);
@@ -841,7 +820,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * SCOPES is a comma separated list.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void scope(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "scope", "at");
 		Set<String> scopeStr = xtMethods.getScopeString(ocr);
@@ -859,7 +837,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * SCOPES WITH RESOURCE AND POSITION is a comma separated list.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void scopeWithPosition(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "scopeWithPosition", "at");
 		Set<String> scopeStr = xtMethods.getScopeWithPositionString(ocr);
@@ -877,7 +854,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * SCOPES WITH RESOURCE is a comma separated list.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void scopeWithResource(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "scopeWithResource", "at");
 		Set<String> scopeStr = xtMethods.getScopeWithResourceString(ocr);
@@ -893,7 +869,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * The location is optional.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void expectedType(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "expectedType", "at");
 		String typeStr = xtMethods.getTypeString(ocr.getEObject(), true, false);
@@ -909,7 +884,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * The location is optional.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void type(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "type", "of");
 		String typeStr = xtMethods.getTypeString(ocr.getEObject(), false, false);
@@ -933,7 +907,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Note that the offset denotes the target(!) of the call expression, not the call expression itself. Usually it is
 	 * enough to provide the last IdentifierRef before the call expression's parentheses.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void typeArgs(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "typeArgs", "of");
 		String typeArgStr = xtMethods.getTypeArgumentsString(ocr.getEObject());
@@ -949,7 +922,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * The location is optional.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void typeWithAliasResolution(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "typeWithAliasResolution",
 				"of");
@@ -970,7 +942,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * BRANCHES is a comma separated list.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void allBranches(XtMethodData data) {
 		Match match = PATTERN_ALLBRANCHES.match(data, eobjProvider);
 		String direction = match.getText("direction");
@@ -989,7 +960,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * EDGES is a comma separated list.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void allEdges(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "allEdges", "from");
 		List<String> pathStrings = xtFlowgraphs.getAllEdges(ocr);
@@ -1007,7 +977,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * MERGE BRANCHES is a comma separated list.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void allMergeBranches(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "allMergeBranches", null);
 		List<String> edgeStrings = xtFlowgraphs.getAllMergeBranches(ocr);
@@ -1026,7 +995,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * PATHS is a comma separated list.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void allPaths(XtMethodData data) {
 		Match match = PATTERN_ALLPATHS.match(data, eobjProvider);
 		String direction = match.getText("direction");
@@ -1045,7 +1013,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * AST ORDER is a comma separated list of ast elements.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void astOrder(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "astOrder", "of");
 		List<String> astElements = xtFlowgraphs.getAstOrder(ocr);
@@ -1061,7 +1028,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * CONTROL FLOW CONTAINER is the name of an ast element.
 	 **/
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void cfContainer(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "cfContainer", "of");
 		String containerStr = xtFlowgraphs.getCfContainer(ocr);
@@ -1077,7 +1043,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * COMMON PREDECESSORS is a comma separated list.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void commonPreds(XtMethodData data) {
 		Match match = PATTERN_COMMONPREDS.match(data, eobjProvider);
 		IEObjectCoveringRegion ocrA = match.getEObjectWithOffset("of");
@@ -1095,7 +1060,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * GUARDS is a comma separated list.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void instanceofguard(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "instanceofguard", "of");
 		List<String> guardStrs = xtFlowgraphs.getInstanceofguard(ocr);
@@ -1112,7 +1076,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * Arguments 'to', 'notTo', 'via', 'notVia' are optional. Either 'to' or 'notTo' must be defined.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void path(XtMethodData data) {
 		Match match = PATTERN_PATH.match(data, eobjProvider);
 		IEObjectCoveringRegion ocrReference = match.ocrReference;
@@ -1142,7 +1105,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * PREDECESSORS is a comma separated list.
 	 *
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void preds(XtMethodData data) {
 		Match match = PATTERN_PREDS.match(data, eobjProvider);
 		String type = match.getText("type");
@@ -1164,7 +1126,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * SUCCESSORS is a comma separated list.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void succs(XtMethodData data) {
 		Match match = PATTERN_SUCCS.match(data, eobjProvider);
 		String type = match.getText("type");
@@ -1182,7 +1143,6 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * DOCUMENTATION generated from specs.
 	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void specADoc(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "specADoc", null);
 		String specADoc = xtMethods.getSpecADoc(ocr);

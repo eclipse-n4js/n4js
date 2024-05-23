@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.n4js.jsdoc2spec.tests;singleton:=true
 Bundle-Version: 0.0.1.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-17
 Fragment-Host: org.eclipse.n4js.jsdoc2spec
 Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.ide,
@@ -13,7 +12,7 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.tests.helper,
  org.eclipse.xtext,
  org.eclipse.xtext.testing,
- org.eclipse.xpect,
+ org.junit,
  org.eclipse.lsp4j
 Bundle-Vendor: %providerName
 Automatic-Module-Name: org.eclipse.n4js.jsdoc2spec.tests

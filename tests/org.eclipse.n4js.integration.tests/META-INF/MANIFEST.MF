@@ -10,7 +10,6 @@ Require-Bundle: org.eclipse.n4js,
  org.junit,
  com.google.guava,
  org.apache.log4j,
- org.slf4j.api;bundle-version="1.7.2",
  org.eclipse.lsp4j,
  org.eclipse.xtext.testing,
  org.eclipse.n4js.ide,
@@ -21,5 +20,4 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.ide.tests.helper,
  org.eclipse.n4js.smith,
  org.eclipse.n4js.dts
-Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.eclipse.n4js.integration.tests

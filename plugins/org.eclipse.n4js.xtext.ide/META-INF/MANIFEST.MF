@@ -27,4 +27,3 @@ Export-Package: org.eclipse.n4js.xtext.resource,
  org.eclipse.n4js.xtext.ide.server.symbol,
  org.eclipse.n4js.xtext.ide.server.util
 Automatic-Module-Name: org.eclipse.n4js.xtext
-Bundle-RequiredExecutionEnvironment: JavaSE-17

@@ -22,4 +22,3 @@ Export-Package: org.eclipse.n4js.json.ide,
  org.eclipse.n4js.json.ide.contentassist.antlr.internal,
  org.eclipse.n4js.json.ide.symbol
 Automatic-Module-Name: org.eclipse.n4js.json.ide
-Bundle-RequiredExecutionEnvironment: JavaSE-17

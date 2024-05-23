@@ -23,6 +23,7 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.SymbolKind;
+import org.eclipse.lsp4j.WorkspaceSymbol;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.server.util.SymbolKindUtil;
 import org.eclipse.n4js.n4JS.BindingElement;
@@ -65,7 +66,7 @@ import com.google.inject.Singleton;
  * obtaining symbol information. See {@link #getSymbolLocation(IEObjectDescription)}.
  */
 @Singleton
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "restriction" })
 public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 
 	@Inject
@@ -159,22 +160,22 @@ public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 
 	@Override
 	protected void createSymbol(IEObjectDescription description, IResourceAccess resourceAccess,
-			Procedure1<? super SymbolInformation> acceptor) {
+			Procedure1<? super WorkspaceSymbol> acceptor) {
 
-		SymbolInformation symbol = createSymbol(description);
+		WorkspaceSymbol symbol = createSymbol(description);
 		if (symbol != null) {
 			acceptor.apply(symbol);
 		}
 	}
 
 	@Override
-	protected SymbolInformation createSymbol(IEObjectDescription description) {
-		SymbolInformation symbol = super.createSymbol(description);
+	protected WorkspaceSymbol createSymbol(IEObjectDescription description) {
+		WorkspaceSymbol symbol = super.createSymbol(description);
 		if (symbol == null) {
 			return null;
 		}
 		symbol.setContainerName(getContainerName(description));
-		symbol.setLocation(getSymbolLocation(description));
+		symbol.setLocation(Either.forLeft(getSymbolLocation(description)));
 		return symbol;
 	}
 
@@ -238,19 +239,17 @@ public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 	}
 
 	@Override
-	public List<Either<SymbolInformation, DocumentSymbol>> getSymbols(XtextResource resource,
+	public List<DocumentSymbol> getSymbols(XtextResource resource,
 			CancelIndicator cancelIndicator) {
 
 		ArrayList<DocumentSymbol> infos = new ArrayList<>();
-		List<DocumentSymbol> rootSymbols = Lists
-				.transform(hierarchicalDocumentSymbolService.getSymbols(resource, cancelIndicator), Either::getRight);
-
+		List<DocumentSymbol> rootSymbols = hierarchicalDocumentSymbolService.getSymbols(resource, cancelIndicator);
 		for (DocumentSymbol rootSymbol : rootSymbols) {
 			Iterable<DocumentSymbol> symbols = Traverser.forTree(DocumentSymbol::getChildren)
 					.depthFirstPreOrder(rootSymbol);
 
 			infos.addAll(Lists.newArrayList(symbols));
 		}
-		return Lists.transform(infos, Either::forRight);
+		return infos;
 	}
 }

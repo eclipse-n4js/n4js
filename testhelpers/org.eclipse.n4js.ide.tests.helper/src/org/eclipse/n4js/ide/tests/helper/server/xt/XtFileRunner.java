@@ -15,7 +15,6 @@ import java.nio.file.Path;
 import java.util.Set;
 
 import org.junit.runner.Description;
-import org.junit.runner.Result;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;

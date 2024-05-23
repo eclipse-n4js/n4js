@@ -8,7 +8,6 @@ Require-Bundle: org.junit,
  org.eclipse.equinox.app,
  com.google.guava,
  org.apache.log4j,
- org.slf4j.api;bundle-version="1.7.2",
  org.eclipse.xtext.testing,
  org.eclipse.n4js,
  org.eclipse.n4js.ts.model,
@@ -23,5 +22,4 @@ Require-Bundle: org.junit,
  org.eclipse.n4js.xtext.ide,
  org.eclipse.lsp4j,
  org.eclipse.lsp4j.jsonrpc
-Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.eclipse.n4js.ide.tests

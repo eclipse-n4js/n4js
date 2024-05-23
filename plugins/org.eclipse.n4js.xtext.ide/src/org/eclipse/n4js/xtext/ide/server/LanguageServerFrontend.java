@@ -95,7 +95,6 @@ import com.google.inject.Singleton;
 /**
  *
  */
-@SuppressWarnings("deprecation")
 @Singleton
 public class LanguageServerFrontend implements TextDocumentService, WorkspaceService {
 

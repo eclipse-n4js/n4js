@@ -32,7 +32,7 @@ import com.google.inject.Singleton;
 /**
  * Handles all lsp calls that refer to the whole workspace, i.e. do not specify a specific test document.
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "restriction" })
 @Singleton
 public class WorkspaceFrontend {
 	@Inject
@@ -68,7 +68,8 @@ public class WorkspaceFrontend {
 	protected Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>> symbol(
 			WorkspaceSymbolParams params, CancelIndicator cancelIndicator) {
 		XChunkedResourceDescriptions liveScopeIndex = resourceTaskManager.createLiveScopeIndex();
-		return workspaceSymbolService.getSymbols(params.getQuery(), resourceAccess, liveScopeIndex, cancelIndicator);
+		return Either.forRight(
+				workspaceSymbolService.getSymbols(params.getQuery(), resourceAccess, liveScopeIndex, cancelIndicator));
 	}
 
 	/** Execute the given command. */

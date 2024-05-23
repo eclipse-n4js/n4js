@@ -10,15 +10,16 @@
  */
 package org.eclipse.n4js.validation.validators
 
+import com.google.inject.Inject
 import java.util.List
 import java.util.Map
-import javax.inject.Inject
 import org.eclipse.emf.common.notify.Notifier
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.EmptyStatement
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
+import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
@@ -41,7 +42,6 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.validation.IssueCodes.*
 
-import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.*
 import static extension org.eclipse.n4js.tooling.organizeImports.ImportSpecifiersUtil.*
 
 /** Validations for the import statements. */
@@ -210,7 +210,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 		var boolean stillInHeader = true
 		for (se : script.scriptElements) {
 			if (stillInHeader) {
-				if (! ( se instanceof ImportDeclaration || se instanceof EmptyStatement || se.isStringLiteralExpression )) stillInHeader = false;
+				if (! ( se instanceof ImportDeclaration || se instanceof EmptyStatement || N4JSASTUtils.isStringLiteralExpression(se) )) stillInHeader = false;
 			} else {
 				if (se instanceof ImportDeclaration) handleScatteredImport(se)
 			}

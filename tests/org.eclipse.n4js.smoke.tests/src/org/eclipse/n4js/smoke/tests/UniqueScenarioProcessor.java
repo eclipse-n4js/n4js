@@ -47,7 +47,7 @@ abstract public class UniqueScenarioProcessor extends ScenarioProcessor {
 	public UniqueScenarioProcessor() throws RuntimeException {
 		try {
 			messageDigest = MessageDigest.getInstance("MD5");
-			seen = Collections.newSetFromMap(new ConcurrentHashMap<BigInteger, Boolean>());
+			seen = Collections.newSetFromMap(new ConcurrentHashMap<>());
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		}

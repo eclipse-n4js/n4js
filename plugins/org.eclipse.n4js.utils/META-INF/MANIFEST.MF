@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.n4js.utils;singleton:=true
 Bundle-Version: 0.0.1.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.eclipse.n4js.releng.utils;resolution:=optional,
  org.eclipse.emf.ecore.xcore,
  org.eclipse.emf.mwe2.launch;resolution:=optional,
@@ -15,7 +14,6 @@ Require-Bundle: org.eclipse.n4js.releng.utils;resolution:=optional,
  org.eclipse.xtend,
  org.eclipse.xtend.lib,
  org.apache.log4j;visibility:=reexport,
- org.slf4j.api,
  org.apache.commons.logging;resolution:=optional,
  org.eclipse.equinox.common;resolution:=optional,
  com.google.gson;visibility:=reexport,

@@ -10,5 +10,4 @@ Require-Bundle: org.eclipse.xtext.testing,
  org.eclipse.n4js.semver.tests.helper,
  org.eclipse.n4js.semver.model,
  org.eclipse.n4js.common.unicode
-Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.eclipse.n4js.semver.tests

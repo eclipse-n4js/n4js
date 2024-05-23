@@ -91,7 +91,7 @@ public class YarnWorkspaceProject extends Project {
 		}
 
 		String workspaces = Strings.join(", ", ws -> "\"%s/*\"".formatted(ws), memberProjects.keySet());
-		String deps = Strings.join(",\n", d -> "\"%s\": \"*\"".formatted(d), projectDependencies);
+		String deps = Strings.join(",\n\t\t", d -> "\"%s\": \"*\"".formatted(d), projectDependencies);
 
 		return """
 				{

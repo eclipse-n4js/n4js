@@ -16,8 +16,6 @@ import java.util.function.Consumer;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.DocumentSymbol;
-import org.eclipse.lsp4j.SymbolInformation;
-import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
@@ -32,7 +30,6 @@ import com.google.inject.Inject;
 /**
  * Creates the JSON outline tree for LSP based editors.
  */
-@SuppressWarnings("deprecation")
 public class JSONHierarchicalSymbolService extends HierarchicalDocumentSymbolService {
 
 	@Inject
@@ -42,15 +39,15 @@ public class JSONHierarchicalSymbolService extends HierarchicalDocumentSymbolSer
 	private OperationCanceledManager operationCanceledManager;
 
 	@Override
-	public List<Either<SymbolInformation, DocumentSymbol>> getSymbols(XtextResource resource,
+	public List<DocumentSymbol> getSymbols(XtextResource resource,
 			CancelIndicator cancelIndicator) {
 
-		List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
+		List<DocumentSymbol> result = new ArrayList<>();
 		for (EObject content : resource.getContents()) {
 			if (content instanceof JSONDocument) {
 				JSONDocument document = (JSONDocument) content;
 				JSONValue rootValue = document.getContent();
-				getSymbols(rootValue, symbol -> result.add(Either.forRight(symbol)), cancelIndicator);
+				getSymbols(rootValue, symbol -> result.add(symbol), cancelIndicator);
 			}
 		}
 		return result;

@@ -70,7 +70,6 @@ import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.n4js.xtext.scoping.FilteringScope;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
-import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.common.types.access.TypeResource;
 import org.eclipse.xtext.formatting2.FormatterPreferenceKeys;
@@ -268,7 +267,6 @@ public class XtMethods {
 	}
 
 	/** Implementation for {@link XtIdeTest#linkedName(XtMethodData)} */
-	@Xpect
 	public QualifiedName getLinkedName(IEObjectCoveringRegion ocr) {
 		int offset = ocr.getOffset();
 		EObject eObject = ocr.getEObject();

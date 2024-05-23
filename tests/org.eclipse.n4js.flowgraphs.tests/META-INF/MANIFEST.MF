@@ -4,7 +4,6 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.n4js.flowgraphs.tests;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Fragment-Host: org.eclipse.n4js
-Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.antlr.runtime,
  org.apache.commons.logging;resolution:=optional,
  org.eclipse.emf.codegen.ecore;resolution:=optional,

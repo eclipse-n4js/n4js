@@ -127,8 +127,8 @@
   </setupTask>
   <setupTask
       xsi:type="jdt:JRETask"
-      version="JavaSE-17"
-      location="${jre.location-17}">
+      version="JavaSE-21"
+      location="${jre.location-21}">
     <description>Define the JRE needed to compile and run the Java projects of ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -142,7 +142,7 @@
   <setupTask
       xsi:type="setup:EclipseIniTask"
       option="-Dosgi.requiredJavaVersion"
-      value="=17"
+      value="=21"
       vm="true">
     <description></description>
   </setupTask>
@@ -162,11 +162,11 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="n4js.target.platform"
-      defaultValue="N4JS_2023_03"
+      defaultValue="N4JS_2023_09"
       storageURI="scope://Workspace">    <!-- label! -->
     <choice
-        value="N4JS_2023_03"
-        label="N4JS_2023_03"/>    <!-- label! -->
+        value="N4JS_2023_09"
+        label="N4JS_2023_09"/>    <!-- label! -->
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -195,12 +195,12 @@
       label="Xtext/Xtend">
     <requirement
         name="org.eclipse.xtend.sdk.feature.group"
-        versionRange="[2.29.0,2.29.1)"/>
+        versionRange="[2.32.0,2.32.1)"/>
     <requirement
         name="org.eclipse.xtext.sdk.feature.group"
-        versionRange="[2.29.0,2.29.1)"/>
+        versionRange="[2.32.0,2.32.1)"/>
     <repository
-        url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.29.0"/>
+        url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.32.0"/>
     <description>Install Xtext and Xtend for ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -218,19 +218,10 @@
       label="MWE">
     <requirement
         name="org.eclipse.emf.mwe2.language.sdk.feature.group"
-        versionRange="[2.14.0,2.14.1)"/>
+        versionRange="[2.15.0,2.15.1)"/>
     <repository
-        url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.14.0"/>
+        url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.15.0"/>
     <description>Install MWE2 for ${scope.project.label}</description>
-  </setupTask>
-  <setupTask
-      xsi:type="setup.p2:P2Task"
-      label="XPect">
-    <requirement
-        name="org.eclipse.xpect.sdk.feature.group"
-        versionRange="[0.2.0,0.2.1)"/>
-    <repository
-        url="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/22/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -330,30 +321,25 @@
         </predicate>
       </sourceLocator>
       <repositoryList
-          name="N4JS_2023_03">    <!-- label! -->
+          name="N4JS_2023_09">    <!-- label! -->
         <repository
-            url="http://download.eclipse.org/releases/2023-03/202303151000"/>
+            url="http://download.eclipse.org/releases/2023-09/202309131000"/>
         <repository
             url="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.48.v20220622"/>
         <repository
-            url="http://download.eclipse.org/modeling/emf/emf/builds/release/2.32"/>
+            url="http://download.eclipse.org/modeling/emf/emf/builds/release/2.35.0"/>
         <repository
-            url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.14.0"/>
+            url="http://download.eclipse.org/modeling/emft/mwe/updates/releases/2.15.0"/>
         <repository
             url="http://download.eclipse.org/modeling/m2t/xpand/updates/releases/R201605260315"/>
-<!-- TODO: Switch back again to a release version of Xtext
         <repository
-            url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.25.0"/> -->
+            url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.32.0"/>
         <repository
-            url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.29.0"/>
-        <repository
-            url="https://download.eclipse.org/tools/orbit/downloads/drops/R20210223232630/repository"/>
-        <repository
-            url="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/22/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20210223232630/repository"/>
         <repository
             url="http://download.eclipse.org/cbi/updates/license/1.0.1.v20140414-1359"/>
         <repository
-            url="https://download.eclipse.org/webtools/downloads/drops/R3.15.0/R-3.15.0-20190830034720/repository"/>
+            url="http://download.eclipse.org/webtools/downloads/drops/R3.15.0/R-3.15.0-20190830034720/repository"/>
         <repository
             url="http://download.eclipse.org/tm/updates/4.5.0/repository"/>
         <repository
@@ -443,8 +429,8 @@
     </workingSet>
     <description>The dynamic working sets for ${scope.project.label}</description>
   </setupTask>
-  <stream name="master"
-      label="master (2023_03)"/>    <!-- label! -->
+  <stream name="GH-2571"
+      label="master (2023_09)"/>    <!-- label! -->
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
