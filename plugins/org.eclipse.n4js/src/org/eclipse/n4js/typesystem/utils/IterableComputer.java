@@ -20,6 +20,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isIter
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.iterableType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.filter;
+import static org.eclipse.xtext.xbase.lib.IterableExtensions.head;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.map;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.reduce;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.toList;
@@ -86,10 +87,10 @@ public class IterableComputer extends TypeSystemHelperStrategy {
 	public TypeRef extractIterableElementType(RuleEnvironment G, TypeRef typeRef, boolean includeAsyncIterable) {
 		TypeRef result = null;
 		if (includeAsyncIterable) {
-			result = extractIterableElementTypes(G, typeRef, asyncIterableType(G), false).get(0);
+			result = head(extractIterableElementTypes(G, typeRef, asyncIterableType(G), false));
 		}
 		if (result == null) {
-			result = extractIterableElementTypes(G, typeRef, iterableType(G), false).get(0);
+			result = head(extractIterableElementTypes(G, typeRef, iterableType(G), false));
 		}
 		return result;
 	}
