@@ -220,8 +220,12 @@ class GenericsComputer extends TypeSystemHelperStrategy {
 		List<Object> result = new ArrayList<>();
 
 		for (Object currTypeArg : typeArgs) {
-			Collection<?> l = (currTypeArg instanceof Collection<?>) ? (Collection<?>) currTypeArg
-					: List.of(currTypeArg);
+			Collection<?> l = (currTypeArg instanceof Collection<?>)
+					? (Collection<?>) currTypeArg
+					: currTypeArg == null
+							? Collections.emptyList()
+							: List.of(currTypeArg);
+
 			for (Object currO : l) {
 				if (currO != null && !typeArgAwareContains(G, result, currO)) {
 					result.add(currO);
@@ -241,10 +245,10 @@ class GenericsComputer extends TypeSystemHelperStrategy {
 
 	private boolean typeArgAwareContains(RuleEnvironment G, Collection<?> l, Object o) {
 		if (o instanceof TypeArgument) {
-			Wildcard oSubst = (Wildcard) ts.substTypeVariables(G, (TypeArgument) o);
+			TypeArgument oSubst = ts.substTypeVariables(G, (TypeArgument) o);
 			for (Object currO : l) {
 				if (currO instanceof TypeArgument) {
-					Wildcard currOSubst = (Wildcard) ts.substTypeVariables(G, (TypeArgument) currO);
+					TypeArgument currOSubst = ts.substTypeVariables(G, (TypeArgument) currO);
 					if (typeCompareHelper.compare(currOSubst, oSubst) == 0) {
 						return true;
 					}
