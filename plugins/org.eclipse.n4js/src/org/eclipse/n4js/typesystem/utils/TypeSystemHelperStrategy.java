@@ -8,15 +8,16 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem.utils
+package org.eclipse.n4js.typesystem.utils;
 
-import com.google.inject.Inject
+import com.google.inject.Inject;
 
 /**
  * Base class for type system helper strategies, such as join or meet computer.
  */
-package class TypeSystemHelperStrategy {
+class TypeSystemHelperStrategy {
 
-	@Inject protected TypeSystemHelper tsh;
+	@Inject
+	protected TypeSystemHelper tsh;
 
 }
