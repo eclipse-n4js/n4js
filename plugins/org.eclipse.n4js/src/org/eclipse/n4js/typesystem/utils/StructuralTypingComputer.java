@@ -380,8 +380,9 @@ public class StructuralTypingComputer extends TypeSystemHelperStrategy {
 							+ " failed: readable field requires a readable field or a getter in subtype.");
 				}
 			}
-		}
 			break;
+		}
+
 		// For any ~w~ right members.
 		case STRUCTURAL_WRITE_ONLY_FIELDS: {
 
@@ -404,8 +405,8 @@ public class StructuralTypingComputer extends TypeSystemHelperStrategy {
 							+ " failed: writable field requires a writable field or a setter in subtype.");
 				}
 			}
-		}
 			break;
+		}
 
 		// For any ~i~ right members.
 		case STRUCTURAL_FIELD_INITIALIZER: {
@@ -429,28 +430,29 @@ public class StructuralTypingComputer extends TypeSystemHelperStrategy {
 							+ " failed: non-optional writable field requires a readable field or a getter in subtype.");
 				}
 			}
-		}
 			break;
+		}
 
-		default: {
+		default:
 
 			// If the left member is ~r~, ~w~ and/or ~i~ type.
 			if (STRUCTURAL_READ_ONLY_FIELDS == leftStrategy || STRUCTURAL_WRITE_ONLY_FIELDS == leftStrategy
 					|| STRUCTURAL_FIELD_INITIALIZER == leftStrategy) {
+
 				// If right is writable field, a getter/setter pair is mandatory on the left.
 				if (isWriteableField(rightMember)) {
 					if (!isGetterSetterPair(leftMember, leftOtherAccessor)) {
 						info.wrongMembers.add(rightMember.getName()
 								+ " failed: writable field requires a getter/setter pair in subtype.");
 					}
-				}
+				} else
 				// If right is readable, we require an explicit getter.
 				if (READABLE_FIELDS_PREDICATE.apply(rightMember)) {
 					if (!(GETTERS_PREDICATE.apply(leftMember) || GETTERS_PREDICATE.apply(leftOtherAccessor))) {
 						info.wrongMembers
 								.add(rightMember.getName() + " failed: read-only field requires a getter in subtype.");
 					}
-				}
+				} else
 				// If there is a setter on the right, then we need a setter on the left.
 				if (SETTERS_PREDICATE.apply(rightMember)) {
 					if (!(SETTERS_PREDICATE.apply(leftMember) || SETTERS_PREDICATE.apply(leftOtherAccessor))) {
@@ -483,8 +485,9 @@ public class StructuralTypingComputer extends TypeSystemHelperStrategy {
 				}
 
 			}
+			break;
 		}
-		}
+
 	}
 
 	/** Returns with {@code true} iff the the arguments are a getter-setter accessor pair. */
