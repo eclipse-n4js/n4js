@@ -77,7 +77,7 @@ class ThisTypeComputer extends TypeSystemHelperStrategy {
 		// searching for declaredTypeRefs introduced through @This
 		IdentifiableElement containingTFunctionOrAccessor = null;
 		if (containingFunctionOrAccessor != null) {
-			containingFunctionOrAccessor.getDefinedFunctionOrAccessor();
+			containingTFunctionOrAccessor = containingFunctionOrAccessor.getDefinedFunctionOrAccessor();
 		}
 		TypeRef declaredThisTypeRef = TypeSystemHelper.getDeclaredThisType(containingTFunctionOrAccessor);
 		if (declaredThisTypeRef != null) {
