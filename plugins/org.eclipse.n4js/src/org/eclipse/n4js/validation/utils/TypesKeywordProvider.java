@@ -47,9 +47,8 @@ import com.google.inject.Singleton;
  * Helper returning the keyword of a given AST or type element, e.g., "class" for a class declaration.
  */
 @Singleton
-@SuppressWarnings({ "javadoc", "unused" })
+@SuppressWarnings("all")
 public class TypesKeywordProvider {
-
 	public String keywordWithIndefiniteArticle(EObject elem) {
 		String keyword = keyword(elem);
 		char firstChar = (keyword.length() > 0) ? Character.toLowerCase(keyword.charAt(0)) : 0;
@@ -57,64 +56,7 @@ public class TypesKeywordProvider {
 		return (startsWithVowel) ? "an " + keyword : "a " + keyword;
 	}
 
-	public String keyword(final Object n4Class) {
-		if (n4Class instanceof TClass) {
-			return keyword((TClass) n4Class);
-		} else if (n4Class instanceof TInterface) {
-			return keyword((TInterface) n4Class);
-		} else if (n4Class instanceof TStructGetter) {
-			return keyword((TStructGetter) n4Class);
-		} else if (n4Class instanceof TStructSetter) {
-			return keyword((TStructSetter) n4Class);
-		} else if (n4Class instanceof TClassifier) {
-			return keyword((TClassifier) n4Class);
-		} else if (n4Class instanceof TGetter) {
-			return keyword((TGetter) n4Class);
-		} else if (n4Class instanceof TMethod) {
-			return keyword((TMethod) n4Class);
-		} else if (n4Class instanceof TSetter) {
-			return keyword((TSetter) n4Class);
-		} else if (n4Class instanceof TStructField) {
-			return keyword((TStructField) n4Class);
-		} else if (n4Class instanceof PrimitiveType) {
-			return keyword((PrimitiveType) n4Class);
-		} else if (n4Class instanceof TField) {
-			return keyword((TField) n4Class);
-		} else if (n4Class instanceof TFunction) {
-			return keyword((TFunction) n4Class);
-		} else if (n4Class instanceof TypeAlias) {
-			return keyword((TypeAlias) n4Class);
-		} else if (n4Class instanceof BuiltInType) {
-			return keyword((BuiltInType) n4Class);
-		} else if (n4Class instanceof TEnum) {
-			return keyword((TEnum) n4Class);
-		} else if (n4Class instanceof TypeVariable) {
-			return keyword((TypeVariable) n4Class);
-		} else if (n4Class instanceof TDynamicElement) {
-			return keyword((TDynamicElement) n4Class);
-		} else if (n4Class instanceof TFormalParameter) {
-			return keyword((TFormalParameter) n4Class);
-		} else if (n4Class instanceof TMember) {
-			return keyword((TMember) n4Class);
-		} else if (n4Class instanceof TVariable) {
-			return keyword((TVariable) n4Class);
-		} else if (n4Class instanceof Type) {
-			return keyword((Type) n4Class);
-		} else if (n4Class instanceof MemberAccessModifier) {
-			return keyword((MemberAccessModifier) n4Class);
-		} else if (n4Class instanceof TypeAccessModifier) {
-			return keyword((TypeAccessModifier) n4Class);
-		} else if (n4Class instanceof TypingStrategy) {
-			return keyword((TypingStrategy) n4Class);
-		} else if (n4Class instanceof EObject) {
-			return keyword((EObject) n4Class);
-		} else {
-			throw new IllegalArgumentException("Unhandled parameter types: " +
-					Arrays.<Object> asList(n4Class).toString());
-		}
-	}
-
-	public String keyword(EObject elem, TypingStrategy typingStrategy) {
+	public String keyword(EObject elem, final TypingStrategy typingStrategy) {
 		if (typingStrategy == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER) {
 			EClass replacementType = null;
 			if (elem instanceof TStructGetter) {
@@ -133,7 +75,7 @@ public class TypesKeywordProvider {
 		return keyword(elem);
 	}
 
-	public String keyword(EObject eobj) {
+	protected String _keyword(EObject eobj) {
 		String modelName = eobj.eClass().getName();
 		StringBuilder strb = new StringBuilder(modelName.length() + 1);
 		for (var i = 0; i < modelName.length(); i++) {
@@ -150,43 +92,43 @@ public class TypesKeywordProvider {
 		return strb.toString();
 	}
 
-	public String keyword(TClass n4Class) {
+	protected String _keyword(TClass n4Class) {
 		return "class";
 	}
 
-	public String keyword(TEnum tEnum) {
+	protected String _keyword(TEnum tEnum) {
 		return "enum";
 	}
 
-	public String keyword(TInterface n4Interface) {
+	protected String _keyword(TInterface n4Interface) {
 		return "interface";
 	}
 
-	public String keyword(TClassifier n4Classifier) {
+	protected String _keyword(TClassifier n4Classifier) {
 		return "classifier";
 	}
 
-	public String keyword(TMember n4Member) {
+	protected String _keyword(TMember n4Member) {
 		return "member";
 	}
 
-	public String keyword(TStructField structField) {
+	protected String _keyword(TStructField structField) {
 		return "structural field";
 	}
 
-	public String keyword(TStructGetter structGetter) {
+	protected String _keyword(TStructGetter structGetter) {
 		return "structural getter";
 	}
 
-	public String keyword(TStructSetter structSetter) {
+	protected String _keyword(TStructSetter structSetter) {
 		return "structural setter";
 	}
 
-	public String keyword(TField n4Field) {
+	protected String _keyword(TField n4Field) {
 		return "field";
 	}
 
-	public String keyword(TMethod tMethod) {
+	protected String _keyword(TMethod tMethod) {
 		if (tMethod.isConstructor()) {
 			return "constructor";
 		} else if (tMethod.isCallSignature()) {
@@ -198,52 +140,51 @@ public class TypesKeywordProvider {
 		}
 	}
 
-	public String keyword(TFunction function) {
+	protected String _keyword(TFunction function) {
 		return "function";
 	}
 
-	public String keyword(TGetter n4Getter) {
+	protected String _keyword(TGetter n4Getter) {
 		return "getter";
 	}
 
-	public String keyword(TSetter n4Setter) {
+	protected String _keyword(TSetter n4Setter) {
 		return "setter";
 	}
 
-	public String keyword(TVariable variable) {
+	protected String _keyword(TVariable variable) {
 		return "variable";
 	}
 
-	public String keyword(TFormalParameter parameter) {
+	protected String _keyword(TFormalParameter parameter) {
 		return "parameter";
 	}
 
-	public String keyword(TypeVariable variable) {
+	protected String _keyword(TypeVariable variable) {
 		return "type variable";
 	}
 
-	public String keyword(PrimitiveType primitive) {
+	protected String _keyword(PrimitiveType primitive) {
 		return "primitive";
 	}
 
-	public String keyword(BuiltInType primitive) {
+	protected String _keyword(BuiltInType primitive) {
 		return "built-in type";
 	}
 
-	public String keyword(TDynamicElement dynamicElement) {
+	protected String _keyword(TDynamicElement dynamicElement) {
 		return "element";
 	}
 
-	public String keyword(TypeAlias typeAlias) {
+	protected String _keyword(TypeAlias typeAlias) {
 		return "type alias";
 	}
 
-	// note: following method will also be required in case of unresolved proxies
-	public String keyword(Type other) {
+	protected String _keyword(Type other) {
 		return "type";
 	}
 
-	public String keyword(TypeAccessModifier accessModifier) {
+	protected String _keyword(TypeAccessModifier accessModifier) {
 		switch (accessModifier) {
 		case PUBLIC_INTERNAL:
 			return "@Internal public";
@@ -252,7 +193,7 @@ public class TypesKeywordProvider {
 		}
 	}
 
-	public String keyword(MemberAccessModifier accessModifier) {
+	protected String _keyword(MemberAccessModifier accessModifier) {
 		switch (accessModifier) {
 		case PUBLIC_INTERNAL:
 			return "@Internal public";
@@ -263,7 +204,7 @@ public class TypesKeywordProvider {
 		}
 	}
 
-	public String keyword(TypingStrategy strategy) {
+	protected String _keyword(TypingStrategy strategy) {
 		switch (strategy) {
 		case DEFAULT:
 			return "default";
@@ -283,6 +224,63 @@ public class TypesKeywordProvider {
 			return "structural empty";
 		default:
 			throw new IllegalStateException("unsupported typing strategy: " + strategy);
+		}
+	}
+
+	public String keyword(Object n4Class) {
+		if (n4Class instanceof TClass) {
+			return _keyword((TClass) n4Class);
+		} else if (n4Class instanceof TInterface) {
+			return _keyword((TInterface) n4Class);
+		} else if (n4Class instanceof TStructGetter) {
+			return _keyword((TStructGetter) n4Class);
+		} else if (n4Class instanceof TStructSetter) {
+			return _keyword((TStructSetter) n4Class);
+		} else if (n4Class instanceof TClassifier) {
+			return _keyword((TClassifier) n4Class);
+		} else if (n4Class instanceof TGetter) {
+			return _keyword((TGetter) n4Class);
+		} else if (n4Class instanceof TMethod) {
+			return _keyword((TMethod) n4Class);
+		} else if (n4Class instanceof TSetter) {
+			return _keyword((TSetter) n4Class);
+		} else if (n4Class instanceof TStructField) {
+			return _keyword((TStructField) n4Class);
+		} else if (n4Class instanceof PrimitiveType) {
+			return _keyword((PrimitiveType) n4Class);
+		} else if (n4Class instanceof TField) {
+			return _keyword((TField) n4Class);
+		} else if (n4Class instanceof TFunction) {
+			return _keyword((TFunction) n4Class);
+		} else if (n4Class instanceof TypeAlias) {
+			return _keyword((TypeAlias) n4Class);
+		} else if (n4Class instanceof BuiltInType) {
+			return _keyword((BuiltInType) n4Class);
+		} else if (n4Class instanceof TEnum) {
+			return _keyword((TEnum) n4Class);
+		} else if (n4Class instanceof TypeVariable) {
+			return _keyword((TypeVariable) n4Class);
+		} else if (n4Class instanceof TDynamicElement) {
+			return _keyword((TDynamicElement) n4Class);
+		} else if (n4Class instanceof TFormalParameter) {
+			return _keyword((TFormalParameter) n4Class);
+		} else if (n4Class instanceof TMember) {
+			return _keyword((TMember) n4Class);
+		} else if (n4Class instanceof TVariable) {
+			return _keyword((TVariable) n4Class);
+		} else if (n4Class instanceof Type) {
+			return _keyword((Type) n4Class);
+		} else if (n4Class instanceof MemberAccessModifier) {
+			return _keyword((MemberAccessModifier) n4Class);
+		} else if (n4Class instanceof TypeAccessModifier) {
+			return _keyword((TypeAccessModifier) n4Class);
+		} else if (n4Class instanceof TypingStrategy) {
+			return _keyword((TypingStrategy) n4Class);
+		} else if (n4Class instanceof EObject) {
+			return _keyword((EObject) n4Class);
+		} else {
+			throw new IllegalArgumentException("Unhandled parameter types: " +
+					Arrays.<Object> asList(n4Class).toString());
 		}
 	}
 }
