@@ -930,7 +930,7 @@ public class N4JSLanguageUtils {
 	 */
 	public static TypeRef getLiteralTypeBase(RuleEnvironment G, TypeRef typeRef) {
 		if (typeRef instanceof LiteralTypeRef) {
-			return getLiteralTypeBase(G, typeRef);
+			return getLiteralTypeBase(G, (LiteralTypeRef) typeRef);
 		}
 		return typeRef;
 	}
@@ -943,7 +943,7 @@ public class N4JSLanguageUtils {
 			return booleanTypeRef(G);
 		}
 		if (literalTypeRef instanceof NumericLiteralTypeRef) {
-			return getLiteralTypeBase(G, literalTypeRef);
+			return getLiteralTypeBase(G, (NumericLiteralTypeRef) literalTypeRef);
 		}
 
 		if (literalTypeRef instanceof StringLiteralTypeRef) {
@@ -951,7 +951,7 @@ public class N4JSLanguageUtils {
 		}
 
 		if (literalTypeRef instanceof EnumLiteralTypeRef) {
-			return getLiteralTypeBase(G, literalTypeRef);
+			return getLiteralTypeBase(G, (EnumLiteralTypeRef) literalTypeRef);
 		}
 
 		throw new UnsupportedOperationException("unknown subclass of " + LiteralTypeRef.class.getSimpleName());
@@ -972,7 +972,8 @@ public class N4JSLanguageUtils {
 	 * Same as {@link #getLiteralTypeBase(RuleEnvironment, LiteralTypeRef)}, but accepts only enum literal type
 	 * references.
 	 */
-	public static TypeRef getLiteralTypeBase(EnumLiteralTypeRef literalTypeRef) {
+	public static TypeRef getLiteralTypeBase(@SuppressWarnings("unused") RuleEnvironment G,
+			EnumLiteralTypeRef literalTypeRef) {
 		TEnum enumType = literalTypeRef.getEnumType();
 		if (enumType != null)
 			return TypeUtils.createTypeRef(enumType);
