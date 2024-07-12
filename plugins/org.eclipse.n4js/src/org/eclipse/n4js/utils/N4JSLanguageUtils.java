@@ -1689,7 +1689,7 @@ public class N4JSLanguageUtils {
 			return Optional.absent();
 		}
 		String targetName = ((IdentifierRef) target).getIdAsText();
-		if (N4JSLanguageConstants.IMPORT_KEYWORD != targetName) {
+		if (!N4JSLanguageConstants.IMPORT_KEYWORD.equals(targetName)) {
 			return Optional.absent();
 		}
 		return Optional.of(pce.getArguments());
