@@ -155,6 +155,7 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
 /**
@@ -302,7 +303,7 @@ public class N4JSLanguageUtils {
 	 * module} of the given project.
 	 */
 	public static boolean isMainModule(N4JSProjectConfigSnapshot project, String moduleQualifiedName) {
-		return project.getMainModule() == moduleQualifiedName;
+		return Objects.equal(project.getMainModule(), moduleQualifiedName);
 	}
 
 	/** Convenience method for {@link #isOpaqueModule(ProjectType, URI)}. */
