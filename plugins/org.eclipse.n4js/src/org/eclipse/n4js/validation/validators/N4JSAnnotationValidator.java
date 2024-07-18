@@ -280,7 +280,6 @@ public class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 					PARAMETER.name,
 					BEFOREALL_SETUP.name,
 					BEFORE_SETUP.name,
-					TEST_METHOD.name,
 					AFTERALL_TEARDOWN.name,
 					AFTER_TEARDOWN.name,
 					TEST_IGNORE.name,

@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.validation.validators;
 
+import static com.google.common.collect.Iterables.concat;
+import static java.util.Collections.singletonList;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_DEF_SITE_VARIANCE_ONLY_IN_CLASSIFIER;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_DUP_CTOR;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_DUP_MEMBER;
@@ -63,7 +65,6 @@ import org.eclipse.xtext.util.Tuples;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimaps;
 import com.google.inject.Inject;
 
@@ -96,7 +97,7 @@ public class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 
 		if (n4ClassifierDef instanceof N4ClassDefinition) {
 			N4ClassDefinition cd = (N4ClassDefinition) n4ClassifierDef;
-			superTypeRefNodes = Iterables.concat(List.of(cd.getSuperClassRef()), cd.getImplementedInterfaceRefs());
+			superTypeRefNodes = concat(singletonList(cd.getSuperClassRef()), cd.getImplementedInterfaceRefs());
 		}
 		if (n4ClassifierDef instanceof N4InterfaceDeclaration) {
 			superTypeRefNodes = ((N4InterfaceDeclaration) n4ClassifierDef).getSuperInterfaceRefs();
