@@ -332,7 +332,7 @@ public class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator 
 						EObject dupeEO = iter.next();
 
 						if (baseEO instanceof N4ClassExpression || dupeEO instanceof N4ClassExpression) {
-							return;
+							continue;
 						}
 
 						// in case of when we duplicate element creating given scope (like function names)
@@ -350,7 +350,7 @@ public class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator 
 										messageHelper.descriptionWithLine(baseEO, name));
 								addIssue(dupeEO, findNameEAttribute(dupeEO), issueItem);
 							}
-							return;
+							continue;
 						}
 
 						// otherwise mark duplicates
@@ -367,12 +367,12 @@ public class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator 
 							/*
 							 * Duplication only between ImportSpecifiers is handled in N4JSImportValidator
 							 */
-							return;
+							continue;
 						} else {
 							if (jsVariantHelper.isExternalMode(baseEO)) {
 								// allow name sharing only in N4JSD files
 								if (!isEqualNameDuplicate(baseEO, dupeEO)) {
-									return;
+									continue;
 								}
 							}
 
@@ -641,7 +641,7 @@ public class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator 
 	 * Returns nested scopes of 'scope'. Only direct sub-scopes of 'scope' are returned, no sub-sub-scopes, i.e.
 	 * sub-scopes of sub-scopes.
 	 */
-	private Iterator<VariableEnvironmentElement> getNestedScopes(final VariableEnvironmentElement scope) {
+	private Iterator<VariableEnvironmentElement> getNestedScopes(VariableEnvironmentElement scope) {
 		return filter(filter(EcoreUtilN4.getAllContentsFiltered(scope,
 				it -> !(createsScope(it.eContainer()) && it.eContainer() != scope)),
 				it -> createsScope(it)),
