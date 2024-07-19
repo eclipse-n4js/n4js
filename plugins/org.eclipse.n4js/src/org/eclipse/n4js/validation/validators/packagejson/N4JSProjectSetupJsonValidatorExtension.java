@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.validation.validators.packagejson;
 
-import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Strings.nullToEmpty;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEV_DEPENDENCIES;
@@ -159,6 +158,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 import org.eclipse.xtext.xbase.lib.StringExtensions;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.HashMultimap;
@@ -316,10 +316,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 		// Search for clashes in Polyfill:
 		// markermap: {lib1,lib2,...}->"filledname"
-		Multimap<Set<JSONStringLiteral>, String> markerMapLibs2FilledName = LinkedListMultimap.create(); // Value is
-																											// QualifiedName
-																											// of
-																											// polyfill_Element
+		// Value is QualifiedName of polyfill_Element
+		Multimap<Set<JSONStringLiteral>, String> markerMapLibs2FilledName = LinkedListMultimap.create();
 		for (String polyExport_QN : exportedPolyfills_QN_to_PolyProvision.keySet()) {
 			List<PolyFilledProvision> polyProvisions = exportedPolyfills_QN_to_PolyProvision.get(polyExport_QN);
 			if (polyProvisions.size() > 1) {
@@ -656,7 +654,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		while (!stack.isEmpty()) {
 			N4JSProjectConfigSnapshot actual = stack.pop();
 			String actualId = actual.getPackageName();
-			checkState(actual.isExternal(),
+			Preconditions.checkState(actual.isExternal(),
 					"Implementation error. Only external projects are expected: %s.".formatted(actual));
 
 			if (!visitedProjectNames.add(actualId)) {
@@ -1406,7 +1404,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		}
 
 		// create only a single validation issue for a particular project reference.
-		if (currentProjectName == refName && !allowReflexive) {
+		if (Objects.equals(currentProjectName, refName) && !allowReflexive) {
 			// reflexive self-references
 			addProjectReferencesItselfIssue(ref.astRepresentation);
 			return;
