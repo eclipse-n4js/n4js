@@ -108,32 +108,33 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.Multimaps;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
-/**
- */
-@SuppressWarnings("javadoc")
+@SuppressWarnings("all")
 public class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
+	@Inject
+	private ValidatorMessageHelper messageHelper;
 
 	@Inject
-	ValidatorMessageHelper messageHelper;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
-	WorkspaceAccess workspaceAccess;
+	private SourceElementExtensions sourceElementExtensions;
 
 	@Inject
-	SourceElementExtensions sourceElementExtensions;
+	private JavaScriptVariantHelper jsVariantHelper;
 
 	@Inject
-	JavaScriptVariantHelper jsVariantHelper;
+	private OperationCanceledManager operationCanceledManager;
 
-	@Inject
-	OperationCanceledManager operationCanceledManager;
+	public static final HashSet<String> BASE_JS_TYPES = Sets.<String> newHashSet(
+			new String[] { "Object", "Function", "Array", "String", "Boolean", "Number", "Math", "Date", "RegExp",
+					"Error", "JSON" });
 
-	public static Set<String> BASE_JS_TYPES = Set.of("Object", "Function", "Array", "String", "Boolean", "Number",
-			"Math", "Date", "RegExp", "Error", "JSON");
-	public static Set<String> BASE_GLOBAL_NAMES = Set.of("number", "string", "boolean", "any", "pathSelector",
-			"i18nKey", "typeName", "N4Object", "N4Class", "N4Enum");
+	public static final HashSet<String> BASE_GLOBAL_NAMES = Sets.<String> newHashSet(
+			new String[] { "number", "string", "boolean", "any", "pathSelector", "i18nKey", "typeName", "N4Object",
+					"N4Class", "N4Enum" });
 
 	/**
 	 * NEEEDED
@@ -142,8 +143,7 @@ public class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator 
 	 * AbstractDeclarativeN4JSValidator
 	 */
 	@Override
-	public void register(EValidatorRegistrar registrar) {
-		// nop
+	public void register(final EValidatorRegistrar registrar) {
 	}
 
 	/**
@@ -641,10 +641,10 @@ public class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator 
 	 * Returns nested scopes of 'scope'. Only direct sub-scopes of 'scope' are returned, no sub-sub-scopes, i.e.
 	 * sub-scopes of sub-scopes.
 	 */
-	private Iterator<VariableEnvironmentElement> getNestedScopes(VariableEnvironmentElement scope) {
-		return filter(EcoreUtilN4.getAllContentsFiltered(scope,
-				it -> !(createsScope(it.eContainer()) && it.eContainer() != scope)
-						&& createsScope(it)),
+	private Iterator<VariableEnvironmentElement> getNestedScopes(final VariableEnvironmentElement scope) {
+		return filter(filter(EcoreUtilN4.getAllContentsFiltered(scope,
+				it -> !(createsScope(it.eContainer()) && it.eContainer() != scope)),
+				it -> createsScope(it)),
 				VariableEnvironmentElement.class);
 	}
 
