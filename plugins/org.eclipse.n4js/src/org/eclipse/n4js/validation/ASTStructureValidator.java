@@ -866,7 +866,7 @@ public class ASTStructureValidator {
 		String name = model.getIdAsText();
 		if (name != null) {
 			if (constraints.isStrict() && (RESERVED_WORDS_IN_STRICT_MODE.contains(name))) {
-				if (name == IMPORT_KEYWORD
+				if (IMPORT_KEYWORD.equals(name)
 						&& model.eContainingFeature() == N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET) {
 					// allow use of 'import' here
 				} else {
@@ -874,7 +874,7 @@ public class ASTStructureValidator {
 				}
 			}
 			if (model.eContainingFeature() == N4JSPackage.Literals.NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT
-					&& name == N4JSLanguageConstants.EXPORT_DEFAULT_NAME) {
+					&& N4JSLanguageConstants.EXPORT_DEFAULT_NAME.equals(name)) {
 				EObject grandParent = model.eContainer().eContainer();
 				if (grandParent instanceof ExportDeclaration) {
 					if (((ExportDeclaration) grandParent).getExportedElement() == null
@@ -901,14 +901,14 @@ public class ASTStructureValidator {
 			Constraints constraints) {
 		String name = model.getName();
 		if (name != null) {
-			if (name == LOCAL_ARGUMENTS_VARIABLE_NAME) {
+			if (LOCAL_ARGUMENTS_VARIABLE_NAME.equals(name)) {
 				boolean isFparInN4jsd = constraints.isExternal()// here: isExternal <==> file extension is ".n4jsd"
 						&& (model instanceof FormalParameter);
 				if (!isFparInN4jsd) {
 					issueArgumentsError(model, name, constraints.isStrict(), producer);
 				}
 			} else {
-				if (name != YIELD_KEYWORD && (languageHelper.getECMAKeywords().contains(name)
+				if (!YIELD_KEYWORD.equals(name) && (languageHelper.getECMAKeywords().contains(name)
 						|| "enum".equals(name) || "await".equals(name)
 						|| "true".equals(name) || "false".equals(name) || "null".equals(name))) {
 
@@ -918,7 +918,7 @@ public class ASTStructureValidator {
 						issueNameDiagnostic(model, producer, name);
 					}
 				} else if (constraints.isStrict()) {
-					if (RESERVED_WORDS_IN_STRICT_MODE.contains(name) || name == EVAL_NAME) {
+					if (RESERVED_WORDS_IN_STRICT_MODE.contains(name) || EVAL_NAME.equals(name)) {
 						issueNameDiagnostic(model, producer, name);
 						model.setName(name); // do not pollute scope
 					}
@@ -1312,10 +1312,10 @@ public class ASTStructureValidator {
 			Constraints constraints) {
 		String name = model.getName();
 		if (name != null) {
-			if (name == LOCAL_ARGUMENTS_VARIABLE_NAME) {
+			if (LOCAL_ARGUMENTS_VARIABLE_NAME.equals(name)) {
 				issueArgumentsError(model, name, constraints.isStrict(), producer);
 			} else if (constraints.isStrict()) {
-				if (RESERVED_WORDS_IN_STRICT_MODE.contains(name) || name == EVAL_NAME) {
+				if (RESERVED_WORDS_IN_STRICT_MODE.contains(name) || EVAL_NAME.equals(name)) {
 					issueNameDiagnostic(model, producer, name);
 					model.setName(null); // do not pollute scope
 				}
@@ -1344,10 +1344,10 @@ public class ASTStructureValidator {
 			// TODO improve error message
 			producer.addDiagnostic(newDiagnosticMessage(IssueCodes.AST_STR_FUN_NOT_NESTED));
 		} else if (name != null) {
-			if (name == LOCAL_ARGUMENTS_VARIABLE_NAME) {
+			if (LOCAL_ARGUMENTS_VARIABLE_NAME.equals(name)) {
 				issueArgumentsError(model, name, constraints.isStrict(), producer);
 			} else if (constraints.isStrict()) {
-				if (RESERVED_WORDS_IN_STRICT_MODE.contains(name) || name == EVAL_NAME) {
+				if (RESERVED_WORDS_IN_STRICT_MODE.contains(name) || EVAL_NAME.equals(name)) {
 					issueNameDiagnostic(model, producer, name);
 				}
 			}
