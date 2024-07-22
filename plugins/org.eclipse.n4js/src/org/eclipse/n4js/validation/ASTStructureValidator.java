@@ -20,6 +20,7 @@ import static org.eclipse.n4js.parser.conversion.AbstractN4JSStringValueConverte
 import static org.eclipse.n4js.parser.conversion.AbstractN4JSStringValueConverter.hasOctalEscapeSequence;
 import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.internalCheckFormalParameter;
 import static org.eclipse.xtext.xbase.lib.IntegerExtensions.bitwiseAnd;
+import static org.eclipse.xtext.xbase.lib.IntegerExtensions.bitwiseNot;
 import static org.eclipse.xtext.xbase.lib.IntegerExtensions.bitwiseOr;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.exists;
 import static org.eclipse.xtext.xbase.lib.IterableExtensions.findFirst;
@@ -128,7 +129,6 @@ import org.eclipse.xtext.nodemodel.ILeafNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.xbase.lib.IntegerExtensions;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -253,8 +253,8 @@ public class ASTStructureValidator {
 		}
 
 		public Constraints with(int bit, boolean set) {
-			int newBits = (set) ? IntegerExtensions.bitwiseOr(this.bits, bit)
-					: IntegerExtensions.bitwiseAnd(this.bits, IntegerExtensions.bitwiseNot(bit));
+			int newBits = (set) ? bitwiseOr(this.bits, bit)
+					: bitwiseAnd(this.bits, bitwiseNot(bit));
 			if (newBits == this.bits) {
 				return this;
 			}
@@ -315,7 +315,7 @@ public class ASTStructureValidator {
 		Resource resource = model == null ? null : model.eResource();
 		if (resource != null && !workspaceAccess.isNoValidate(resource, resource.getURI())) {
 			ASTStructureDiagnosticProducer producer = new ASTStructureDiagnosticProducer(consumer);
-			_validateASTStructure(model, producer, Sets.newHashSetWithExpectedSize(2),
+			validateASTStructure(model, producer, Sets.newHashSetWithExpectedSize(2),
 					new Constraints(
 							N4Scheme.isResourceWithN4Scheme(resource),
 							jsVariantHelper.isN4JSMode(model),
