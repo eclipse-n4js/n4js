@@ -30,7 +30,6 @@ import static org.eclipse.xtext.xbase.lib.IterableExtensions.last;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -130,6 +129,7 @@ import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -364,7 +364,7 @@ public class ASTStructureValidator {
 				Expression expression = ((ExpressionStatement) next).getExpression();
 				if (expression instanceof StringLiteral) {
 					StringLiteral slit = (StringLiteral) expression;
-					return BaseJavaScriptVariantHelper.STRICT_MODE_LITERAL_VALUE == slit.getValue();
+					return BaseJavaScriptVariantHelper.STRICT_MODE_LITERAL_VALUE.equals(slit.getValue());
 				}
 			}
 		}
@@ -1535,7 +1535,7 @@ public class ASTStructureValidator {
 			Set<LabelledStatement> validLabels) {
 		String labelAsText = model.getLabelAsText(); // cannot use model.label, because we aren't allowed to resolve
 														// proxies in this phase!
-		if (labelAsText != null && !exists(validLabels, it -> Objects.equals(it.getName(), labelAsText))) {
+		if (labelAsText != null && !exists(validLabels, it -> Objects.equal(it.getName(), labelAsText))) {
 			ICompositeNode target = NodeModelUtils.findActualNodeFor(model);
 			producer.setNode(target);
 			producer.addDiagnostic(newDiagnosticMessage(IssueCodes.AST_INVALID_LABEL));
