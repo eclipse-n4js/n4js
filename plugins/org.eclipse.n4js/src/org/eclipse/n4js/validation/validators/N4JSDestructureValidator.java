@@ -348,7 +348,7 @@ public class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 	 * not have nested nodes or if they are positional (because then property look-up does not make sense).
 	 */
 	private IScope createMemberScope(DestructNode node, TypeRef valueTypeRef, EObject contextObject) {
-		if (node.nestedNodes != null && node.nestedNodes.length == 0
+		if (node.nestedNodes != null && node.nestedNodes.length != 0
 				&& !arePositional(Arrays.asList(node.nestedNodes))) {
 			// also check visibility
 			return destructureHelper.createMemberScopeForPropertyAccess(valueTypeRef, contextObject, true);
