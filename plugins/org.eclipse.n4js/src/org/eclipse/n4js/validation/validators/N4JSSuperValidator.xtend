@@ -116,7 +116,7 @@ class N4JSSuperValidator extends AbstractN4JSDeclarativeValidator {
 
 		if (!(block instanceof Block && block.eContainer === containingMemberDecl)) {
 			val IssueItem issueItem = KEY_SUP_CTOR_NESTED.toIssueItem(
-				descriptionWithLine(
+				validatorMessageHelper.descriptionWithLine(
 					if (block instanceof Block) {
 						block.eContainer
 					} else {
@@ -140,7 +140,7 @@ class N4JSSuperValidator extends AbstractN4JSDeclarativeValidator {
 
 			if (stmt instanceof ReturnStatement) {
 				addIssue(superLiteral.eContainer, superLiteral.eContainmentFeature,
-					KEY_SUP_CTOR_INVALID_EXPR_BEFORE.toIssueItem(descriptionWithLine(stmt)));
+					KEY_SUP_CTOR_INVALID_EXPR_BEFORE.toIssueItem(validatorMessageHelper.descriptionWithLine(stmt)));
 				return false;
 			}
 
@@ -148,13 +148,13 @@ class N4JSSuperValidator extends AbstractN4JSDeclarativeValidator {
 				findFirst[it instanceof ThisLiteral || it instanceof ReturnStatement];
 			if (thisKeyword !== null) {
 				addIssue(superLiteral.eContainer, superLiteral.eContainmentFeature,
-					KEY_SUP_CTOR_INVALID_EXPR_BEFORE.toIssueItem(descriptionWithLine(thisKeyword)));
+					KEY_SUP_CTOR_INVALID_EXPR_BEFORE.toIssueItem(validatorMessageHelper.descriptionWithLine(thisKeyword)));
 				return false;
 			}
 		}
 
 		// must not happen
-		addIssue(superLiteral.eContainer, superLiteral.eContainmentFeature, KEY_SUP_CTOR_NESTED.toIssueItem(descriptionWithLine(exprStmt.eContainer)));
+		addIssue(superLiteral.eContainer, superLiteral.eContainmentFeature, KEY_SUP_CTOR_NESTED.toIssueItem(validatorMessageHelper.descriptionWithLine(exprStmt.eContainer)));
 		return false;
 	}
 

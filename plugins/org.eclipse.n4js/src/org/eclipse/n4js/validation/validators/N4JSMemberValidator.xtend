@@ -266,7 +266,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	def private internalCheckAbstractAndFinal(TMember member) {
 		if (member.final) {
 			if (member.abstract) {
-				addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_ABSTRACT_FINAL.toIssueItem(member.keyword))
+				addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_ABSTRACT_FINAL.toIssueItem(keywordProvider.keyword(member)))
 			} else if (member.containingType instanceof TInterface && !(member instanceof TMethod)) {
 				addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_NO_FINAL_INTERFACE_MEMBER.toIssueItem());
 			}
@@ -500,7 +500,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			if (member.isConstructor) {
 				addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_MISSING_CTOR_BODY.toIssueItem())
 			} else {
-				addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_MISSING_BODY.toIssueItem(member.keyword, member.name))
+				addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_MISSING_BODY.toIssueItem(keywordProvider.keyword(member), member.name))
 			}
 			return false;
 		}
@@ -515,7 +515,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		if (container instanceof TN4Classifier) {
 			val isStructural = container.typingStrategy === TypingStrategy.STRUCTURAL;
 			if (member.abstract && member.static && !container.external && !isStructural) {
-				addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_STATIC_ABSTRACT.toIssueItem(member.keyword, member.name))
+				addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_STATIC_ABSTRACT.toIssueItem(keywordProvider.keyword(member), member.name))
 				return false;
 			}
 		}
@@ -534,7 +534,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		if (member.abstract) {
 			val classifier = EcoreUtil2.getContainerOfType(member, TClassifier)
 			if (classifier !== null && !classifier.abstract) {
-				addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_ABSTRACT_MISSING.toIssueItem(member.keyword, member.name, classifier.name))
+				addIssue(member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_ABSTRACT_MISSING.toIssueItem(keywordProvider.keyword(member), member.name, classifier.name))
 				return false;
 			}
 		}
@@ -602,7 +602,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 				if (existingClassifierMember?.memberAccessModifier == MemberAccessModifier.PUBLIC) {
 					val index = thisTypeRefStructInAST.structuralMembers.indexOf(structuralFieldDuplicate)
 					addIssue(thisTypeRefStructInAST, TypeRefsPackage.Literals.STRUCTURAL_TYPE_REF__AST_STRUCTURAL_MEMBERS, index,
-						CLF_DUP_MEMBER.toIssueItem(structuralFieldDuplicate.descriptionWithLine, existingClassifierMember.descriptionWithLine));
+						CLF_DUP_MEMBER.toIssueItem(validatorMessageHelper.descriptionWithLine(structuralFieldDuplicate), validatorMessageHelper.descriptionWithLine(existingClassifierMember)));
 				}
 			}
 		]

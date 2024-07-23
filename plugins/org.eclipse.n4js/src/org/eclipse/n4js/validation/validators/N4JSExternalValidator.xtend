@@ -351,7 +351,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 
 	private def validateNoObservableAtMember(N4ClassifierDeclaration declaration, String classesOrRolesOrInterface) {
 		for (member : declaration.ownedMembers.filter[AnnotationDefinition.OBSERVABLE.hasAnnotation(it)]) {
-			val IssueItem issueItem = CLF_EXT_METHOD_NO_ANNO.toIssueItem(member.keyword.toFirstUpper + "s",
+			val IssueItem issueItem = CLF_EXT_METHOD_NO_ANNO.toIssueItem(keywordProvider.keyword(member).toFirstUpper + "s",
 				classesOrRolesOrInterface, "Observable")
 			addIssue(member, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, issueItem)
 		}
@@ -359,7 +359,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 
 	private def validateNoNfonAtMember(N4ClassifierDeclaration declaration, String classesOrRolesOrInterface) {
 		for (member : declaration.ownedMembers.filter[AnnotationDefinition.NFON.hasAnnotation(it)]) {
-			val IssueItem issueItem = CLF_EXT_METHOD_NO_ANNO.toIssueItem(member.keyword.toFirstUpper + "s",
+			val IssueItem issueItem = CLF_EXT_METHOD_NO_ANNO.toIssueItem(keywordProvider.keyword(member).toFirstUpper + "s",
 				classesOrRolesOrInterface, "Nfon")
 			addIssue(member, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, issueItem)
 		}
@@ -376,7 +376,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		for (member : declaration.ownedMembers.filter[!(it instanceof N4FieldDeclaration)].filter [
 			body !== null
 		]) {
-			val IssueItem issueItem = CLF_EXT_NO_METHOD_BODY.toIssueItem(member.keyword.toFirstUpper + "s",
+			val IssueItem issueItem = CLF_EXT_NO_METHOD_BODY.toIssueItem(keywordProvider.keyword(member).toFirstUpper + "s",
 				classesOrRolesOrInterface)
 			addIssue(member, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, issueItem)
 		}
