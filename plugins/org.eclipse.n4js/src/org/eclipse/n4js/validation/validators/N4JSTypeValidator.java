@@ -173,8 +173,10 @@ public class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject
 	private N4JSTypeSystem ts;
+
 	@Inject
 	private TypeSystemHelper tsh;
+
 	@Inject
 	private TypeCompareHelper typeCompareHelper;
 
@@ -224,10 +226,8 @@ public class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 						// class C<T extends Function> {} makes sense even though Function is final
 						return;
 					}
-					TypeRef ubInAST = typeVar.getDeclaredUpperBoundNode().getTypeRefInAST(); // never 'null' because
-																								// 'typeVar.declaredUpperBound'
-																								// returned non-null
-																								// value
+					// never 'null' because 'typeVar.declaredUpperBound' returned non-null value
+					TypeRef ubInAST = typeVar.getDeclaredUpperBoundNode().getTypeRefInAST();
 					addIssue(ubInAST, PARAMETERIZED_TYPE_REF__DECLARED_TYPE,
 							CLF_UPPER_BOUND_FINAL.toIssueItem(declType.getName(), typeVar.getName()));
 				}
@@ -299,11 +299,10 @@ public class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			// is not the job of this validation)
 			return;
 		}
-		BoundThisTypeRef bttr = (BoundThisTypeRef) thisTypeRefInAST;
-		if (!(isUsedStructurallyAsFormalParametersInTheConstructor(bttr)
-				|| isUsedAtCovariantPositionInClassifierDeclaration(bttr)
-				|| isUsedInVariableWithSyntaxError(bttr))) {
-			addIssue(bttr, AST_THIS_WRONG_PLACE.toIssueItem());
+		if (!(isUsedStructurallyAsFormalParametersInTheConstructor(thisTypeRefInAST)
+				|| isUsedAtCovariantPositionInClassifierDeclaration(thisTypeRefInAST)
+				|| isUsedInVariableWithSyntaxError(thisTypeRefInAST))) {
+			addIssue(thisTypeRefInAST, AST_THIS_WRONG_PLACE.toIssueItem());
 		}
 	}
 
