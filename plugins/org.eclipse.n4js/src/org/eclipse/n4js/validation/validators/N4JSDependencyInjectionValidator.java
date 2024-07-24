@@ -129,7 +129,7 @@ import com.google.inject.Inject;
  * For other DI-related validations (covering invocations of N4Injector methods) see
  * {@link N4JSInjectorCallsitesValidator}
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings("all")
 public class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject
@@ -964,7 +964,7 @@ public class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeVal
 		// declared type must not be a built-in type (except N4Provider)
 		if (declType instanceof BuiltInType
 				|| (N4Scheme.isFromResourceWithN4Scheme(declType)
-						&& declType.getName() != BuiltInTypeScope.QN_N4PROVIDER.toString())) {
+						&& !BuiltInTypeScope.QN_N4PROVIDER.toString().equals(declType.getName()))) {
 			return false;
 		}
 		// declared type must be a class or interface
