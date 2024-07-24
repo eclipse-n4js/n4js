@@ -612,7 +612,7 @@ public class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeVal
 	}
 
 	private Type typeOfUseInjector(Annotation it) {
-		if (WITH_PARENT_INJECTOR.name == it.getName() && !isNullOrEmpty(it.getArgs())
+		if (WITH_PARENT_INJECTOR.name.equals(it.getName()) && !isNullOrEmpty(it.getArgs())
 				&& it.getArgs().get(0) instanceof TypeRefAnnotationArgument) {
 			TypeRefAnnotationArgument arg = (TypeRefAnnotationArgument) it.getArgs().get(0);
 			if (arg.getTypeRef() instanceof ParameterizedTypeRef) {
@@ -623,7 +623,7 @@ public class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeVal
 	}
 
 	private Type typeOfUseInjector(TAnnotation it) {
-		if (WITH_PARENT_INJECTOR.name == it.getName() && !isNullOrEmpty(it.getArgs())
+		if (WITH_PARENT_INJECTOR.name.equals(it.getName()) && !isNullOrEmpty(it.getArgs())
 				&& it.getArgs().get(0) instanceof TAnnotationTypeRefArgument) {
 			TAnnotationTypeRefArgument arg = (TAnnotationTypeRefArgument) it.getArgs().get(0);
 			if (arg.getTypeRef() instanceof ParameterizedTypeRef) {
