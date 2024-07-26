@@ -351,6 +351,7 @@ public class ValidatorMessageHelper {
 		for (TAnnotation a : filter(tfunction.getAnnotations(),
 				it -> !Objects.equals(it.getName(), AnnotationDefinition.INTERNAL.name))) {
 			strb.append(a.getAnnotationAsString());
+			strb.append(" ");
 		}
 		if (tfunction instanceof TMethod) {
 			TMethod tm = (TMethod) tfunction;
@@ -481,4 +482,5 @@ public class ValidatorMessageHelper {
 		}
 		return TypeUtils.isGeneratorOrAsyncGenerator(tfunction.getReturnTypeRef(), BuiltInTypeScope.get(rs));
 	}
+
 }
