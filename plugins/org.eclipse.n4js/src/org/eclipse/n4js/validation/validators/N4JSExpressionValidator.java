@@ -389,9 +389,8 @@ public class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		 * IDE-1048.
 		 */
 		boolean shouldWarn = true;
-		if (enclosing instanceof ParameterizedCallExpression
-				&& ((ParameterizedCallExpression) enclosing).getTarget() != propAccessExpression) {
-			shouldWarn = false;
+		if (enclosing instanceof ParameterizedCallExpression) {
+			shouldWarn = ((ParameterizedCallExpression) enclosing).getTarget() != propAccessExpression;
 		} else if (enclosing instanceof ParameterizedPropertyAccessExpression) {
 			shouldWarn = false;
 		} else if (enclosing instanceof UnaryExpression) {
@@ -401,7 +400,7 @@ public class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		} else if (enclosing instanceof ExpressionStatement) {
 			shouldWarn = false;
 		} else if (enclosing instanceof TaggedTemplateString) {
-			shouldWarn = false;// allow something like: new C().method``;
+			shouldWarn = false; // allow something like: new C().method``;
 		}
 		if (!shouldWarn) {
 			return;
