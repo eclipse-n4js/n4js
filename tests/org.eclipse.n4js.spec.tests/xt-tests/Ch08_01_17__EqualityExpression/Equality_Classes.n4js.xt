@@ -139,7 +139,7 @@ ub === new B(); // is union of type Object ?
 
 
 
-// XPECT warnings --> "Neither { Object,  R2 } is a subtype of 0 nor 0 is a subtype of { Object,  R2 }. The expression will always evaluate to false." at "ur === 0"
+// XPECT warnings --> "Neither { Object, R2 } is a subtype of 0 nor 0 is a subtype of { Object, R2 }. The expression will always evaluate to false." at "ur === 0"
 ur === 0;
 //  OK
 ur === o;

@@ -1220,7 +1220,7 @@ public class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (tset.size() == 1) {
 			return warningNameOf(tset.iterator().next());
 		}
-		return "{«FOR s : tset SEPARATOR ','» «s.warningNameOf» «ENDFOR»}";
+		return "{ " + Strings.join(", ", t -> warningNameOf(t), tset) + " }";
 	}
 
 	private String warningNameOf(Type t) {
@@ -1721,7 +1721,7 @@ public class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			TypeRef receiverTypeRef, CompileTimeValue indexValue, boolean indexIsNumeric) {
 
 		String memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue);
-		if (N4JSLanguageUtils.SYMBOL_ITERATOR_MANGLED == memberName) {
+		if (N4JSLanguageUtils.SYMBOL_ITERATOR_MANGLED.equals(memberName)) {
 			// Implementation restriction: member name clashes with compiler-internal, synthetic, mangled name.
 			addIssue(indexedAccess, EXP_INDEXED_ACCESS_IMPL_RESTRICTION.toIssueItem());
 			return;
