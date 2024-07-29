@@ -243,8 +243,8 @@ public class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 						}
 
 						if (jsUri != null && nonJsUri != null && nonJsExt != null
-								&& (nonJsExt == N4JSGlobals.N4JSD_FILE_EXTENSION
-										|| nonJsExt == N4JSGlobals.DTS_FILE_EXTENSION)) {
+								&& (N4JSGlobals.N4JSD_FILE_EXTENSION.equals(nonJsExt)
+										|| N4JSGlobals.DTS_FILE_EXTENSION.equals(nonJsExt))) {
 							// it is allowed that a js module has an n4jsd or d.ts module with the same fqn
 							return;
 						}
@@ -273,7 +273,9 @@ public class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 									.substring(baseModuleSrcCon.length());
 							String otherModuleSrcContainerRelativePath = u.toString()
 									.substring(otherModuleSrcCon.length());
-							return baseModuleSrcContainerRelativePath == otherModuleSrcContainerRelativePath;
+
+							return Objects.equals(baseModuleSrcContainerRelativePath,
+									otherModuleSrcContainerRelativePath);
 						} else {
 							// main modules are not hidden by main module in other projects
 							// (resolved by project import)
@@ -376,7 +378,7 @@ public class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	private static String replaceJSXByJS(String ext) {
-		if (ext == N4JSGlobals.JSX_FILE_EXTENSION) {
+		if (N4JSGlobals.JSX_FILE_EXTENSION.equals(ext)) {
 			return N4JSGlobals.JS_FILE_EXTENSION;
 		}
 		return ext;
