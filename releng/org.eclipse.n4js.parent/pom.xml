@@ -311,29 +311,6 @@ Contributors:
 				<!-- we do no sign yet <plugin> <groupId>org.eclipse.dash.maven</groupId>
 					<artifactId>eclipse-signing-maven-plugin</artifactId> <version>${eclipse-signing-maven-plugin.version}</version>
 					</plugin> -->
-				<plugin>
-					<groupId>org.eclipse.xtend</groupId>
-					<artifactId>xtend-maven-plugin</artifactId>
-					<version>${xtext-version}</version>
-					<executions>
-						<execution>
-							<goals>
-								<goal>compile</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<outputDirectory>${basedir}/xtend-gen</outputDirectory>
-					</configuration>
-					<dependencies>
-						<dependency>
-							<groupId>org.eclipse.xtend</groupId>
-							<artifactId>org.eclipse.xtend.lib</artifactId>
-							<version>${xtext-version}</version>
-							<type>pom</type>
-						</dependency>
-					</dependencies>
-				</plugin>
 				<!-- enforce jdk, mvn versions -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
