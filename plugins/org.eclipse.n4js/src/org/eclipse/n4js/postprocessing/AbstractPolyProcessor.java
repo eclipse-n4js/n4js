@@ -140,7 +140,7 @@ abstract class AbstractPolyProcessor extends AbstractProcessor {
 			return false;
 		}
 		RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(obj);
-		return N4JSLanguageUtils.isUndefinedLiteral(G, obj) || N4JSLanguageUtils.isNullLiteral(G, obj);
+		return N4JSLanguageUtils.isUndefinedLiteral(G, obj) || N4JSLanguageUtils.isNullLiteral(obj);
 	}
 
 	/**
