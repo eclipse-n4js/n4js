@@ -1226,6 +1226,19 @@ abstract class FunctionTypeExprOrRef extends StaticBaseTypeRef {
 			+ (if (returnValueOptional) "?" else "")
 			+ "}" + getModifiersAsString();
 	}
+	
+	op String getAsFunctionString() {
+		val TFunction tfun = getFunctionType();
+		val StringBuilder strb = new StringBuilder();
+		if (generic) strb.append("<").append(typeVars.map[typeAsString].join(",")).append("> ");
+		if (tfun!==null && tfun.declaredAsync) strb.append("async ");
+		strb.append("function ");
+		if (tfun!==null && tfun.declaredGenerator) strb.append("* ");
+		strb.append(tfun?.name).append("(").append(fpars.map[formalParameterAsString].join(", ")).append(")");
+		if (returnTypeRef!==null) strb.append(": ").append(returnTypeRef.typeRefAsString);
+		if (returnValueOptional) strb.append('?');
+		return strb.toString();
+	}
 }
 
 /*

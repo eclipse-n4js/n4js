@@ -1859,6 +1859,16 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
+	public EOperation getFunctionTypeExprOrRef__GetAsFunctionString() {
+		return functionTypeExprOrRefEClass.getEOperations().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getFunctionTypeRef() {
 		return functionTypeRefEClass;
 	}
@@ -2482,6 +2492,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEOperation(functionTypeExprOrRefEClass, FUNCTION_TYPE_EXPR_OR_REF___IS_RAW);
 		createEOperation(functionTypeExprOrRefEClass, FUNCTION_TYPE_EXPR_OR_REF___GET_FPAR_FOR_ARG_IDX__INT);
 		createEOperation(functionTypeExprOrRefEClass, FUNCTION_TYPE_EXPR_OR_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN);
+		createEOperation(functionTypeExprOrRefEClass, FUNCTION_TYPE_EXPR_OR_REF___GET_AS_FUNCTION_STRING);
 
 		functionTypeRefEClass = createEClass(FUNCTION_TYPE_REF);
 		createEOperation(functionTypeRefEClass, FUNCTION_TYPE_REF___GET_DECLARED_THIS_TYPE);
@@ -2901,6 +2912,8 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 
 		op = initEOperation(getFunctionTypeExprOrRef__InternalGetTypeRefAsString__boolean(), theEcorePackage.getEString(), "internalGetTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, theEcorePackage.getEBoolean(), "resolveProxies", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getFunctionTypeExprOrRef__GetAsFunctionString(), theEcorePackage.getEString(), "getAsFunctionString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(functionTypeRefEClass, FunctionTypeRef.class, "FunctionTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

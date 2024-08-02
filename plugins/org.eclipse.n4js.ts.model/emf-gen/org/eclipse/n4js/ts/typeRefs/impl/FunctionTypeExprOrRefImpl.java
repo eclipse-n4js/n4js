@@ -288,6 +288,53 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 	 * @generated
 	 */
 	@Override
+	public String getAsFunctionString() {
+		final TFunction tfun = this.getFunctionType();
+		final StringBuilder strb = new StringBuilder();
+		boolean _isGeneric = this.isGeneric();
+		if (_isGeneric) {
+			final Function1<TypeVariable, String> _function = new Function1<TypeVariable, String>() {
+				public String apply(final TypeVariable it) {
+					return it.getTypeAsString();
+				}
+			};
+			strb.append("<").append(IterableExtensions.join(XcoreEListExtensions.<TypeVariable, String>map(this.getTypeVars(), _function), ",")).append("> ");
+		}
+		if (((tfun != null) && tfun.isDeclaredAsync())) {
+			strb.append("async ");
+		}
+		strb.append("function ");
+		if (((tfun != null) && tfun.isDeclaredGenerator())) {
+			strb.append("* ");
+		}
+		String _name = null;
+		if (tfun!=null) {
+			_name=tfun.getName();
+		}
+		final Function1<TFormalParameter, String> _function_1 = new Function1<TFormalParameter, String>() {
+			public String apply(final TFormalParameter it) {
+				return it.getFormalParameterAsString();
+			}
+		};
+		strb.append(_name).append("(").append(IterableExtensions.join(XcoreEListExtensions.<TFormalParameter, String>map(this.getFpars(), _function_1), ", ")).append(")");
+		TypeRef _returnTypeRef = this.getReturnTypeRef();
+		boolean _tripleNotEquals = (_returnTypeRef != null);
+		if (_tripleNotEquals) {
+			strb.append(": ").append(this.getReturnTypeRef().getTypeRefAsString());
+		}
+		boolean _isReturnValueOptional = this.isReturnValueOptional();
+		if (_isReturnValueOptional) {
+			strb.append("?");
+		}
+		return strb.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
@@ -335,6 +382,8 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 				return getFparForArgIdx((Integer)arguments.get(0));
 			case TypeRefsPackage.FUNCTION_TYPE_EXPR_OR_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN:
 				return internalGetTypeRefAsString((Boolean)arguments.get(0));
+			case TypeRefsPackage.FUNCTION_TYPE_EXPR_OR_REF___GET_AS_FUNCTION_STRING:
+				return getAsFunctionString();
 		}
 		return super.eInvoke(operationID, arguments);
 	}
