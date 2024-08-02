@@ -154,4 +154,12 @@ public interface FunctionTypeExprOrRef extends StaticBaseTypeRef {
 	 */
 	String internalGetTypeRefAsString(boolean resolveProxies);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	String getAsFunctionString();
+
 } // FunctionTypeExprOrRef

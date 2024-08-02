@@ -35,6 +35,7 @@ import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.constraints.InferenceContext;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper.Callable;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -72,14 +73,16 @@ class PolyProcessor_CallExpression extends AbstractPolyProcessor {
 		// IMPORTANT: do not use #processExpr() here (if target is a PolyExpression, it has been processed in a
 		// separate, independent inference!)
 		TypeRef targetTypeRef = ts.type(G, target);
-		Callable callable = tsh.getCallableTypeRef(G, targetTypeRef);
+		RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
+		tsh.addSubstitutions(G2, targetTypeRef);
+		Callable callable = tsh.getCallableTypeRef(G2, targetTypeRef);
 		if (callable == null || !callable.getSignatureTypeRef().isPresent()) {
 			return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
 		}
 		FunctionTypeExprOrRef sigTypeRef = callable.getSignatureTypeRef().get();
 
 		if (!N4JSLanguageUtils.isPoly(sigTypeRef, callExpr)) {
-			TypeRef result = ts.type(G, callExpr);
+			TypeRef result = ts.type(G2, callExpr);
 			// do not store in cache (TypeProcessor responsible for storing types of non-poly expressions in cache)
 			return result;
 		}
@@ -91,14 +94,14 @@ class PolyProcessor_CallExpression extends AbstractPolyProcessor {
 			typeParam2infVar.put(typeParam, infCtx.newInferenceVariable());
 		}
 
-		processParameters(G, cache, infCtx, callExpr, sigTypeRef, typeParam2infVar);
+		processParameters(G2, cache, infCtx, callExpr, sigTypeRef, typeParam2infVar);
 
 		// create temporary type (i.e. may contain inference variables)
 		TypeRef resultTypeRefRaw = sigTypeRef.getReturnTypeRef();
-		TypeRef resultTypeRef = subst(resultTypeRefRaw, G, typeParam2infVar);
+		TypeRef resultTypeRef = subst(resultTypeRefRaw, G2, typeParam2infVar);
 
 		// register onSolved handlers to add final types to cache (i.e. may not contain inference variables)
-		infCtx.onSolved(solution -> handleOnSolved(G, cache, callExpr, resultTypeRef, typeParam2infVar, solution));
+		infCtx.onSolved(solution -> handleOnSolved(G2, cache, callExpr, resultTypeRef, typeParam2infVar, solution));
 
 		// return temporary type of callExpr (i.e. may contain inference variables)
 		return resultTypeRef;

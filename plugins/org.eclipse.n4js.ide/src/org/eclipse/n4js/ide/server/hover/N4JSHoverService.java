@@ -21,7 +21,6 @@ import org.eclipse.n4js.jsdoc2spec.adoc.Html2ADocConverter;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.ts.types.TNamespace;
-import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.hover.HoverContext;
@@ -34,7 +33,6 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.TextRegion;
 
-import com.google.common.base.Strings;
 import com.google.inject.Inject;
 
 /**
@@ -47,8 +45,6 @@ public class N4JSHoverService extends HoverService {
 
 	@Inject
 	private N4JSElementSignatureProvider signatureProvider;
-	@Inject
-	private N4JSElementKeywordProvider keywordProvider;
 	@Inject
 	private IEObjectDocumentationProvider documentationProvider;
 	@Inject
@@ -68,9 +64,7 @@ public class N4JSHoverService extends HoverService {
 
 		String signature = signatureProvider.get(idRef);
 		if (signature != null) {
-			String keyword = keywordProvider.keyword(element);
-			String signatureLabel = composeFirstLine(keyword, signature);
-			CharSequence signatureAdoc = html2adocConverter.transformHTML(signatureLabel);
+			CharSequence signatureAdoc = html2adocConverter.transformHTML(signature);
 			MarkedString mdSignatureLabel = new MarkedString("n4js", signatureAdoc.toString());
 			contents.add(Either.forRight(mdSignatureLabel));
 		}
@@ -98,16 +92,6 @@ public class N4JSHoverService extends HoverService {
 			idRef = ctx.getElement();
 		}
 		return idRef;
-	}
-
-	private String composeFirstLine(String keyword, String label) {
-		// TFunction#getFunctionAsString() already contains 'function'
-		keyword = ("function".equals(keyword)) ? "" : keyword;
-		String htmlKeyword = Strings.isNullOrEmpty(keyword) ? "" : keyword + " ";
-		String htmlLabel = Strings.nullToEmpty(label);
-		String line = htmlKeyword + htmlLabel;
-
-		return line;
 	}
 
 	@Override

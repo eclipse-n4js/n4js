@@ -6613,13 +6613,22 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_EXPR_OR_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = STATIC_BASE_TYPE_REF_OPERATION_COUNT + 10;
 
 	/**
+	 * The operation id for the '<em>Get As Function String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPR_OR_REF___GET_AS_FUNCTION_STRING = STATIC_BASE_TYPE_REF_OPERATION_COUNT + 11;
+
+	/**
 	 * The number of operations of the '<em>Function Type Expr Or Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPR_OR_REF_OPERATION_COUNT = STATIC_BASE_TYPE_REF_OPERATION_COUNT + 11;
+	int FUNCTION_TYPE_EXPR_OR_REF_OPERATION_COUNT = STATIC_BASE_TYPE_REF_OPERATION_COUNT + 12;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeRefImpl <em>Function Type Ref</em>}' class.
@@ -7082,13 +7091,22 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 10;
 
 	/**
+	 * The operation id for the '<em>Get As Function String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_REF___GET_AS_FUNCTION_STRING = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 11;
+
+	/**
 	 * The operation id for the '<em>Get Declared This Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF___GET_DECLARED_THIS_TYPE = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 11;
+	int FUNCTION_TYPE_REF___GET_DECLARED_THIS_TYPE = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get Type Vars</em>' operation.
@@ -7097,7 +7115,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF___GET_TYPE_VARS = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 12;
+	int FUNCTION_TYPE_REF___GET_TYPE_VARS = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Get Type Var Upper Bound</em>' operation.
@@ -7106,7 +7124,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF___GET_TYPE_VAR_UPPER_BOUND__TYPEVARIABLE = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 13;
+	int FUNCTION_TYPE_REF___GET_TYPE_VAR_UPPER_BOUND__TYPEVARIABLE = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 14;
 
 	/**
 	 * The operation id for the '<em>Get Fpars</em>' operation.
@@ -7115,7 +7133,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF___GET_FPARS = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 14;
+	int FUNCTION_TYPE_REF___GET_FPARS = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 15;
 
 	/**
 	 * The operation id for the '<em>Get Return Type Ref</em>' operation.
@@ -7124,7 +7142,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF___GET_RETURN_TYPE_REF = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 15;
+	int FUNCTION_TYPE_REF___GET_RETURN_TYPE_REF = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 16;
 
 	/**
 	 * The number of operations of the '<em>Function Type Ref</em>' class.
@@ -7133,7 +7151,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF_OPERATION_COUNT = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 16;
+	int FUNCTION_TYPE_REF_OPERATION_COUNT = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 17;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl <em>Function Type Expression</em>}' class.
@@ -7603,6 +7621,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int FUNCTION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = FUNCTION_TYPE_EXPR_OR_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN;
+
+	/**
+	 * The operation id for the '<em>Get As Function String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPRESSION___GET_AS_FUNCTION_STRING = FUNCTION_TYPE_EXPR_OR_REF___GET_AS_FUNCTION_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Type Vars</em>' operation.
@@ -11439,6 +11466,16 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getFunctionTypeExprOrRef__InternalGetTypeRefAsString__boolean();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef#getAsFunctionString() <em>Get As Function String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get As Function String</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef#getAsFunctionString()
+	 * @generated
+	 */
+	EOperation getFunctionTypeExprOrRef__GetAsFunctionString();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeRef <em>Function Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13156,6 +13193,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation FUNCTION_TYPE_EXPR_OR_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN = eINSTANCE.getFunctionTypeExprOrRef__InternalGetTypeRefAsString__boolean();
+
+		/**
+		 * The meta object literal for the '<em><b>Get As Function String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation FUNCTION_TYPE_EXPR_OR_REF___GET_AS_FUNCTION_STRING = eINSTANCE.getFunctionTypeExprOrRef__GetAsFunctionString();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeRefImpl <em>Function Type Ref</em>}' class.
