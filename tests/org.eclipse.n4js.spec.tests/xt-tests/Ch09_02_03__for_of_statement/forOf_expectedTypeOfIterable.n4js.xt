@@ -35,7 +35,7 @@ var listOfB : Iterable<B>;
 // CASE A1
 //
 
-// XPECT errors --> "Iterable<?> is not a structural subtype of Iterable<? extends A> due to type argument incompatibility: ? is not a subtype of A." at "list"
+// XPECT errors --> "Iterable<?> is not a structural subtype of Iterable<? extends A> due to incompatible type arguments: ? is not a subtype of A." at "list"
 for(var v01 : A of list) {}
 
 // XPECT noerrors -->
@@ -76,7 +76,7 @@ for(var v06init = new X() of listOfB) {}
 //
 
 var v07 : A;
-// XPECT errors --> "Iterable<?> is not a structural subtype of Iterable<? extends A> due to type argument incompatibility: ? is not a subtype of A." at "list"
+// XPECT errors --> "Iterable<?> is not a structural subtype of Iterable<? extends A> due to incompatible type arguments: ? is not a subtype of A." at "list"
 for(v07 of list) {}
 
 var v08 : A;
@@ -93,7 +93,7 @@ for(v09 of listOfB) {}
 //
 
 var v11 = new A();
-// XPECT errors --> "Iterable<?> is not a structural subtype of Iterable<? extends A> due to type argument incompatibility: ? is not a subtype of A." at "list"
+// XPECT errors --> "Iterable<?> is not a structural subtype of Iterable<? extends A> due to incompatible type arguments: ? is not a subtype of A." at "list"
 for(v11 of list) {}
 
 var v12 = new A();
