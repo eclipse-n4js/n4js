@@ -453,7 +453,7 @@ public class ProjectDiscoveryHelper {
 		if (prjDescr == null) {
 			return;
 		}
-		if (!prjDescr.hasN4JSNature() && prjDescr.getTypes() == null) {
+		if (!prjDescr.hasN4JSNature() && !prjDescr.isWorkspaceRoot() && prjDescr.getTypes() == null) {
 			return;
 		}
 
