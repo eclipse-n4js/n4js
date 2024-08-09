@@ -28,15 +28,16 @@ import static org.eclipse.n4js.utils.StructuralMembersPredicates.GETTERS_PREDICA
 import static org.eclipse.n4js.utils.StructuralMembersPredicates.READABLE_FIELDS_PREDICATE;
 import static org.eclipse.n4js.utils.StructuralMembersPredicates.SETTERS_PREDICATE;
 import static org.eclipse.n4js.utils.StructuralMembersPredicates.WRITABLE_FIELDS_PREDICATE;
+import static org.eclipse.n4js.validation.IssueCodes.TYS_NO_STRUCTURAL_SUBTYPE;
 import static org.eclipse.n4js.validation.IssueCodes.TYS_NO_SUBTYPE;
 
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil.EqualityHelper;
 import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.FieldAccessor;
@@ -221,47 +222,51 @@ public class StructuralTypingComputer extends TypeSystemHelperStrategy {
 
 	/***/
 	public StructuralTypingResult isStructuralSubtype(RuleEnvironment G, TypeRef left, TypeRef right) {
-		TypingStrategy leftStrategy = left.getTypingStrategy();
-		TypingStrategy rightStrategy = right.getTypingStrategy();
-
-		// shortcut: keep in sync with Reducer#reduceStructuralTypeRef()
-		if (leftStrategy == rightStrategy
-				&& left.getDeclaredType() == right.getDeclaredType()
-				&& (left.getDeclaredType() instanceof TN4Classifier || left.getDeclaredType() instanceof TypeVariable) // <--
-																														// IDEBUG-838
-				&& left.getStructuralMembers().isEmpty() && right.getStructuralMembers().isEmpty()) {
-
-			if (!left.isGeneric()) {
-				return result(left, right, Collections.emptyList(), Collections.emptyList());
-			} else if (left instanceof ParameterizedTypeRef && right instanceof ParameterizedTypeRef) {
-				EList<TypeArgument> leftTypeArgs = left.getTypeArgsWithDefaults();
-				EList<TypeArgument> rightTypeArgs = right.getTypeArgsWithDefaults();
-				if (leftTypeArgs.size() == rightTypeArgs.size()
-						&& leftTypeArgs.size() == right.getDeclaredType().getTypeVars().size()) {
-					var typeArgsEqual = true;
-					for (var i = 0; typeArgsEqual && i < leftTypeArgs.size(); i++) {
-						TypeArgument leftTypeArg = leftTypeArgs.get(i);
-						TypeArgument rightTypeArg = rightTypeArgs.get(i);
-
-						Variance variance = right.getDeclaredType().getVarianceOfTypeVar(i);
-						Result tempResult = tsh.checkTypeArgumentCompatibility(G, leftTypeArg, rightTypeArg,
-								Optional.of(variance), false);
-
-						if (tempResult.isFailure()) {
-							return failure(left.getTypeRefAsString() + " is not a structural subtype of "
-									+ right.getTypeRefAsString() + " due to type argument incompatibility: "
-									+ tempResult.getFailureMessage());
-						}
-					}
-					return result(left, right, Collections.emptyList(), Collections.emptyList());
-				}
-			}
-		}
 
 		// check if we are dealing with structural primitive types
 		StructuralTypingResult primitiveSubtypingResult = isPrimitiveStructuralSubtype(G, left, right);
 		if (null != primitiveSubtypingResult) {
 			return primitiveSubtypingResult;
+		}
+
+		TypingStrategy leftStrategy = left.getTypingStrategy();
+		TypingStrategy rightStrategy = right.getTypingStrategy();
+		Type leftDT = left.getDeclaredType();
+		Type rightDT = right.getDeclaredType();
+
+		// shortcut: keep in sync with Reducer#reduceStructuralTypeRef()
+		if (leftStrategy == rightStrategy
+				&& (leftDT instanceof TN4Classifier || leftDT instanceof TypeVariable) // <-- IDEBUG-838
+				&& right.getStructuralMembers().isEmpty()
+				&& (!(right instanceof StructuralTypeRef)
+						|| ((StructuralTypeRef) right).getStructuralMembersWithCallConstructSignatures().isEmpty())) {
+
+			if (leftDT == rightDT) {
+				Result tempResult = tsh.checkSameDeclaredTypes(G, left, right, rightDT);
+
+				if (tempResult.isFailure()) {
+					return failure(TYS_NO_STRUCTURAL_SUBTYPE.getMessage(
+							left.getTypeRefAsString(),
+							right.getTypeRefAsString() + " due to incompatible type arguments: "
+									+ tempResult.getFailureMessage()));
+				}
+
+				return result(left, right, Collections.emptyList(), Collections.emptyList());
+
+			} else if (left instanceof ParameterizedTypeRef && right instanceof ParameterizedTypeRef) {
+				Result tempResult = tsh.checkDeclaredSubtypes(G, (ParameterizedTypeRef) left, right, rightDT);
+				if (tempResult != null) {
+					if (tempResult.isFailure()) {
+
+						return failure(TYS_NO_STRUCTURAL_SUBTYPE.getMessage(
+								left.getTypeRefAsString(),
+								right.getTypeRefAsString() + " due to incompatible type arguments: "
+										+ tempResult.getPriorityFailureMessage()));
+					}
+
+					return result(left, right, Collections.emptyList(), Collections.emptyList());
+				}
+			}
 		}
 
 		// recursion guard (see method #isStructuralSubtypingInProgressFor() for details)
@@ -271,9 +276,8 @@ public class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
 		rememberStructuralSubtypingInProgressFor(G2, left, right);
 
-		StructTypingInfo info = new StructTypingInfo(G2, left, right, leftStrategy, rightStrategy); // we'll collect
-																									// error messages in
-																									// here
+		// we'll collect error messages in here
+		StructTypingInfo info = new StructTypingInfo(G2, left, right, leftStrategy, rightStrategy);
 
 		StructuralMembersTripleIterator iter = structuralTypesHelper.getMembersTripleIterator(G2, left, right, true);
 		while (iter.hasNext()) {

@@ -253,6 +253,15 @@ public class TypeSystemHelper {
 		return subtypeComputer.isSubtypeFunction(G, left, right);
 	}
 
+	public Result checkSameDeclaredTypes(RuleEnvironment G, TypeRef left, TypeRef right, Type rightDeclType) {
+		return subtypeComputer.checkSameDeclaredTypes(G, left, right, rightDeclType);
+	}
+
+	public Result checkDeclaredSubtypes(RuleEnvironment G, ParameterizedTypeRef left, TypeRef right,
+			Type rightDeclType) {
+		return subtypeComputer.checkDeclaredSubtypes(G, left, right, rightDeclType);
+	}
+
 	public StructuralTypingResult isStructuralSubtype(RuleEnvironment G, TypeRef left, TypeRef right) {
 		return structuralTypingComputer.isStructuralSubtype(G, left, right);
 	}

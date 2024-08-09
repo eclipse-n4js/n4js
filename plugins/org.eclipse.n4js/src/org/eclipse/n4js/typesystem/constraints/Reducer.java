@@ -10,14 +10,17 @@
  */
 package org.eclipse.n4js.typesystem.constraints;
 
+import static org.eclipse.n4js.ts.types.util.TypeExtensions.ref;
 import static org.eclipse.n4js.ts.types.util.Variance.CO;
 import static org.eclipse.n4js.ts.types.util.Variance.CONTRA;
 import static org.eclipse.n4js.ts.types.util.Variance.INV;
 import static org.eclipse.n4js.types.utils.TypeUtils.isInferenceVariable;
 import static org.eclipse.n4js.typesystem.constraints.Reducer.BooleanOp.CONJUNCTION;
 import static org.eclipse.n4js.typesystem.constraints.Reducer.BooleanOp.DISJUNCTION;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.collectAllImplicitSuperTypes;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isAnyDynamic;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isObjectStructural;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -33,6 +36,7 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
@@ -53,6 +57,7 @@ import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.types.utils.TypeCompareUtils;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
+import org.eclipse.n4js.typesystem.utils.AllSuperTypeRefsCollector;
 import org.eclipse.n4js.typesystem.utils.AllSuperTypesCollector;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
@@ -62,9 +67,12 @@ import org.eclipse.n4js.utils.DeclMergingHelper;
 import org.eclipse.n4js.utils.StructuralMembersTriple;
 import org.eclipse.n4js.utils.StructuralMembersTripleIterator;
 import org.eclipse.n4js.utils.StructuralTypesHelper;
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
 /**
@@ -906,30 +914,56 @@ import com.google.common.collect.Sets;
 		Type rightDT = right.getDeclaredType();
 		TypingStrategy leftStrategy = left.getTypingStrategy();
 		TypingStrategy rightStrategy = right.getTypingStrategy();
-		if (leftStrategy == rightStrategy && leftDT == rightDT
+		if (leftStrategy == rightStrategy
 				&& (leftDT instanceof TN4Classifier || leftDT instanceof TypeVariable) // <-- IDEBUG-838
-				&& left.getStructuralMembers().isEmpty() && right.getStructuralMembers().isEmpty()) {
+				&& right.getStructuralMembers().isEmpty()
+				&& (!(right instanceof StructuralTypeRef)
+						|| ((StructuralTypeRef) right).getStructuralMembersWithCallConstructSignatures().isEmpty())) {
 
-			if (!leftDT.isGeneric()) {
-				return true;
-			} else if (left instanceof ParameterizedTypeRef && right instanceof ParameterizedTypeRef) {
-				List<TypeArgument> leftTypeArgs = left.getTypeArgsWithDefaults();
-				List<TypeArgument> rightTypeArgs = right.getTypeArgsWithDefaults();
-				if (leftTypeArgs.size() == rightTypeArgs.size()) {
-					boolean wasAdded = false;
-					for (var i = 0; i < leftTypeArgs.size(); i++) {
-						TypeArgument leftTypeArg = leftTypeArgs.get(i);
-						TypeArgument rightTypeArg = rightTypeArgs.get(i);
+			if (leftDT == rightDT) {
+				if (!leftDT.isGeneric()) {
+					return true;
 
-						List<TypeConstraint> constraints = new ArrayList<>();
-						constraints.addAll(tsh.reduceTypeArgumentCompatibilityCheck(G2, leftTypeArg, rightTypeArg,
-								Optional.of(variance), false));
-						wasAdded |= reduce(constraints);
+				} else if (left instanceof ParameterizedTypeRef && right instanceof ParameterizedTypeRef) {
+					List<TypeArgument> leftTypeArgs = left.getTypeArgsWithDefaults();
+					List<TypeArgument> rightTypeArgs = right.getTypeArgsWithDefaults();
+
+					if (leftTypeArgs.size() == rightTypeArgs.size()) {
+						boolean wasAdded = false;
+						for (int i = 0; i < leftTypeArgs.size(); i++) {
+							TypeArgument leftTypeArg = leftTypeArgs.get(i);
+							TypeArgument rightTypeArg = rightTypeArgs.get(i);
+
+							List<TypeConstraint> constraints = new ArrayList<>();
+							constraints.addAll(tsh.reduceTypeArgumentCompatibilityCheck(G2, leftTypeArg, rightTypeArg,
+									Optional.of(variance), false));
+							wasAdded |= reduce(constraints);
+						}
+						return wasAdded;
 					}
-					return wasAdded;
+				}
+				return true;
+
+			} else if (left instanceof ParameterizedTypeRef && right instanceof ParameterizedTypeRef) {
+				List<ParameterizedTypeRef> allSuperTypeRefs = leftDT instanceof ContainerType<?>
+						? AllSuperTypeRefsCollector.collect((ParameterizedTypeRef) left, declMergingHelper)
+						: CollectionLiterals.newArrayList();
+				Iterable<ParameterizedTypeRef> superTypeRefs = IterableExtensions.operator_plus(allSuperTypeRefs,
+						collectAllImplicitSuperTypes(G, left));
+
+				if (Iterables.any(superTypeRefs, str -> str.getDeclaredType() == rightDT)) {
+					RuleEnvironment localG_left = wrap(G);
+					tsh.addSubstitutions(localG_left, left);
+					TypeArgument[] syntheticTypeArgs = rightDT.getTypeVars().stream()
+							.map(tv -> ref(tv))
+							.toArray(l -> new TypeArgument[l]);
+					TypeRef syntheticTypeRef = ref(rightDT, syntheticTypeArgs);
+					TypeRef effectiveSuperTypeRef = ts.substTypeVariables(localG_left, syntheticTypeRef);
+
+					return reduceParameterizedTypeRefNominal((ParameterizedTypeRef) effectiveSuperTypeRef,
+							(ParameterizedTypeRef) right, variance);
 				}
 			}
-			return true;
 		}
 
 		boolean wasAdded = false;
