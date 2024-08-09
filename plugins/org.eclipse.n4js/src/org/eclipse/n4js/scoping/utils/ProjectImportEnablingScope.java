@@ -400,18 +400,19 @@ public class ProjectImportEnablingScope implements IScope {
 			storeModuleSpecifierFormInAST(moduleSpecifierForm);
 		}
 
+		final N4JSPackageName firstSegment = N4JSPackageName.create(name.getFirstSegment());
+		if (firstSegment == null) {
+			return Collections.emptyList();
+		}
 		switch (moduleSpecifierForm) {
 		case PROJECT: {
-			final N4JSPackageName firstSegment = new N4JSPackageName(name.getFirstSegment());
 			return findModulesInProject(Optional.absent(), firstSegment);
 		}
 		case PROJECT_EXPORTS: {
-			final N4JSPackageName firstSegment = new N4JSPackageName(name.getFirstSegment());
 			final QualifiedName exportsName = name.skipFirst(1);
 			return findModulesInProjectExports(firstSegment, exportsName);
 		}
 		case COMPLETE: {
-			final N4JSPackageName firstSegment = new N4JSPackageName(name.getFirstSegment());
 			return findModulesInProject(Optional.of(name.skipFirst(1)), firstSegment);
 		}
 		case PLAIN: {
@@ -610,7 +611,8 @@ public class ProjectImportEnablingScope implements IScope {
 	 */
 	public ModuleSpecifierForm computeImportType(QualifiedName name, N4JSProjectConfigSnapshot project) {
 		final String firstSegment = name.getFirstSegment();
-		final N4JSProjectConfigSnapshot targetProject = findProject(new N4JSPackageName(firstSegment), project, true);
+		final N4JSProjectConfigSnapshot targetProject = findProject(N4JSPackageName.create(firstSegment), project,
+				true);
 		final boolean firstSegmentIsProjectName = targetProject != null;
 		return ImportSpecifierUtil.computeImportType(name, firstSegmentIsProjectName, targetProject);
 	}
