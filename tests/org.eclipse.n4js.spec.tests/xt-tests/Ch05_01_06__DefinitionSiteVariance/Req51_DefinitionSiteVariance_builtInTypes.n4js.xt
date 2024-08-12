@@ -21,7 +21,7 @@ var ia: Iterable<A>;
 var ib: Iterable<B>;
 var ic: Iterable<C>;
 
-// XPECT errors --> "Iterable<A> is not a structural subtype of Iterable<B> due to type argument incompatibility: A is not a subtype of B." at "ia"
+// XPECT errors --> "Iterable<A> is not a structural subtype of Iterable<B> due to incompatible type arguments: A is not a subtype of B." at "ia"
 ib = ia;
 // XPECT noerrors -->
 ib = ic;
@@ -32,7 +32,7 @@ var is: Iterable<string>;
 var iand: Iterable<int&string>;
 var ior: Iterable<int|string>;
 
-// XPECT errors --> "Iterable<union{int,string}> is not a structural subtype of Iterable<string> due to type argument incompatibility: union{int,string} is not a subtype of string." at "ior"
+// XPECT errors --> "Iterable<union{int,string}> is not a structural subtype of Iterable<string> due to incompatible type arguments: union{int,string} is not a subtype of string." at "ior"
 is = ior;
 // XPECT noerrors -->
 is = iand;
@@ -41,7 +41,7 @@ is = iand;
 // XPECT noerrors -->
 ior = is;
 
-// XPECT errors --> "Iterable<string> is not a structural subtype of Iterable<intersection{int,string}> due to type argument incompatibility: string is not a subtype of intersection{int,string}." at "is"
+// XPECT errors --> "Iterable<string> is not a structural subtype of Iterable<intersection{int,string}> due to incompatible type arguments: string is not a subtype of intersection{int,string}." at "is"
 iand = is;
 
 

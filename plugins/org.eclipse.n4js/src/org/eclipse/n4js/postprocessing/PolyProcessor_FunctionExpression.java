@@ -282,7 +282,10 @@ class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 						EObject eob = N4JSASTUtils.skipParenExpressionDownward(re);
 						if (eob instanceof CastExpression) {
 							CastExpression ce = (CastExpression) eob;
-							retrs.add(TypeUtils.copy(ce.getTargetTypeRefNode().getTypeRefInAST()));
+							TypeRef typeRefInAST = ce.getTargetTypeRefNode().getTypeRefInAST();
+							if (typeRefInAST != null) {
+								retrs.add(TypeUtils.copy(typeRefInAST));
+							}
 						}
 					}
 					if (!retrs.isEmpty()) {

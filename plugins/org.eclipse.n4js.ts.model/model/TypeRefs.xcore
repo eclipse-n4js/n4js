@@ -820,8 +820,13 @@ abstract class StructuralTypeRef {
 	 * (if non-empty) or the genStructuralMembers.
 	 */
 	op TStructMember[] getStructuralMembers() {
-		return (if (structuralType !== null) structuralType.ownedMembers else if (!astStructuralMembers.empty) astStructuralMembers else genStructuralMembers).
-			unmodifiableView;
+		if (structuralType !== null) {
+			return structuralType.ownedMembers.unmodifiableView;
+		}
+		if (!astStructuralMembers.empty) {
+			return astStructuralMembers.unmodifiableView;
+		}
+		return genStructuralMembers.unmodifiableView;
 	}
 	op TStructMember[] getStructuralMembersWithCallConstructSignatures() {
 		val structType = getStructuralType();
@@ -881,8 +886,13 @@ class ParameterizedTypeRefStructural extends ParameterizedTypeRef, StructuralTyp
 	 * (if non-empty) or the genStructuralMembers.
 	 */
 	op TStructMember[] getStructuralMembers() {
-		return (if (structuralType !== null) structuralType.ownedMembers else if (!astStructuralMembers.empty) astStructuralMembers else genStructuralMembers).
-			unmodifiableView;
+		if (structuralType !== null) {
+			return structuralType.ownedMembers.unmodifiableView;
+		}
+		if (!astStructuralMembers.empty) {
+			return astStructuralMembers.unmodifiableView;
+		}
+		return genStructuralMembers.unmodifiableView;
 	}
 	/*
 	 * Overrides {@link TypeRef#internalGetTypeRefAsString(boolean)}

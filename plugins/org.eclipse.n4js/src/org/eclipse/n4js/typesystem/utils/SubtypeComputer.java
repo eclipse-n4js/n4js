@@ -10,7 +10,9 @@
  */
 package org.eclipse.n4js.typesystem.utils;
 
+import static org.eclipse.n4js.ts.types.util.TypeExtensions.ref;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.addTypeMapping;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.collectAllImplicitSuperTypes;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getCancelIndicator;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.newRuleEnvironment;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.undefinedTypeRef;
@@ -23,8 +25,10 @@ import java.util.Map.Entry;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.InferenceVariable;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TFormalParameter;
@@ -38,8 +42,12 @@ import org.eclipse.n4js.typesystem.constraints.InferenceContext;
 import org.eclipse.n4js.utils.DeclMergingHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.service.OperationCanceledManager;
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -57,6 +65,82 @@ class SubtypeComputer extends TypeSystemHelperStrategy {
 	private DeclMergingHelper declMergingHelper;
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
+
+	Result checkSameDeclaredTypes(RuleEnvironment G, TypeRef left, TypeRef right, Type rightDeclType) {
+		Type leftDT = left.getDeclaredType();
+		Type rightDT = right.getDeclaredType();
+		Preconditions.checkArgument(leftDT == rightDT);
+
+		if (left.isAliasResolved() && right.isAliasResolved()) {
+			// shortcut to mitigate recursion, caused by e.g.: type AliasType = Map<string, string | AliasType>;
+			Type leftDeclTypeTmp = left.getOriginalAliasTypeRef().getDeclaredType();
+			Type rightDeclTypeTmp = right.getOriginalAliasTypeRef().getDeclaredType();
+			if (leftDeclTypeTmp == rightDeclTypeTmp) {
+				left = left.getOriginalAliasTypeRef();
+				right = right.getOriginalAliasTypeRef();
+				rightDeclType = rightDeclTypeTmp;
+			}
+		}
+
+		if (!left.isGeneric()) {
+			return Result.success();
+		}
+
+		final List<TypeArgument> leftArgs = left.getTypeArgsWithDefaults();
+		final List<TypeArgument> rightArgs = right.getTypeArgsWithDefaults();
+
+		final int leftArgsCount = leftArgs.size();
+		final int rightArgsCount = rightArgs.size();
+		if (leftArgsCount > 0 && leftArgsCount <= rightArgsCount) { // ignore raw types
+			final int len = Math.min(Math.min(leftArgsCount, rightArgsCount), rightDeclType.getTypeVars().size());
+			for (int i = 0; i < len; i++) {
+				final TypeArgument leftArg = leftArgs.get(i);
+				final TypeArgument rightArg = rightArgs.get(i);
+				final Variance variance = rightDeclType.getVarianceOfTypeVar(i);
+
+				final Result currResult = tsh.checkTypeArgumentCompatibility(G, leftArg, rightArg,
+						Optional.of(variance), false);
+				if (currResult.isFailure()) {
+					return currResult;
+				}
+			}
+			return Result.success();
+		}
+		return Result.success(); // always true for raw types
+	}
+
+	Result checkDeclaredSubtypes(RuleEnvironment G, ParameterizedTypeRef left, TypeRef right, Type rightDeclType) {
+		Type leftDT = left.getDeclaredType();
+
+		List<ParameterizedTypeRef> allSuperTypeRefs = leftDT instanceof ContainerType<?>
+				? AllSuperTypeRefsCollector.collect(left, declMergingHelper)
+				: CollectionLiterals.newArrayList();
+		Iterable<ParameterizedTypeRef> superTypeRefs = IterableExtensions.operator_plus(allSuperTypeRefs,
+				collectAllImplicitSuperTypes(G, left));
+
+		// Note: rightDeclType might appear in superTypes several times in case of multiple implementation
+		// of the same interface, which is allowed in case of definition-site co-/contravariance.
+		// To support such cases without duplicating any logic, we will use judgment 'substTypeVariables' below.
+		if (Iterables.any(superTypeRefs, str -> str.getDeclaredType() == rightDeclType)) {
+			// at this point we have 1..* type references in superTypeRefs with a declared type of rightDeclType
+			// (more than one possible in case of multiple implementation of the same interface, which is legal
+			// in case of definition-site co-/contravariance)
+			// (a) these type references may contain unbound type variables from lower level of the inheritance
+			// hierarchy and (b) in case of more than 1 type reference we have to combine them into a single
+			// type reference
+			// --> use type variable substitution on a synthetic type reference with a declared type of
+			// rightDeclType to solve all those cases without duplicating any logic:
+			final RuleEnvironment localG_left = wrap(G);
+			tsh.addSubstitutions(localG_left, left);
+			final TypeArgument[] syntheticTypeArgs = rightDeclType.getTypeVars().stream()
+					.map(tv -> ref(tv))
+					.toArray(l -> new TypeArgument[l]);
+			final TypeRef syntheticTypeRef = ref(rightDeclType, syntheticTypeArgs);
+			final TypeRef effectiveSuperTypeRef = ts.substTypeVariables(localG_left, syntheticTypeRef);
+			return ts.subtype(G, effectiveSuperTypeRef, right);
+		}
+		return null;
+	}
 
 	/**
 	 * Returns true iff function/method 'left' is a subtype of function/method 'right'.

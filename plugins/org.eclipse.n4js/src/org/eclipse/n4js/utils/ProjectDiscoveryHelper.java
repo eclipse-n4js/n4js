@@ -453,6 +453,9 @@ public class ProjectDiscoveryHelper {
 		if (prjDescr == null) {
 			return;
 		}
+		if (!prjDescr.hasN4JSNature() && !prjDescr.isWorkspaceRoot() && prjDescr.getTypes() == null) {
+			return;
+		}
 
 		for (ProjectDependency dependency : prjDescr.getProjectDependencies()) {
 			String depName = dependency.getPackageName();
@@ -503,7 +506,7 @@ public class ProjectDiscoveryHelper {
 
 				dependencies.add(depLocation);
 
-				if (depPD.hasN4JSNature()) {
+				if (depPD.hasN4JSNature() || depPD.getTypes() != null) {
 					workList.add(depLocation);
 				}
 			}

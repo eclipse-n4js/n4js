@@ -15,7 +15,6 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE__REPLACE_BOOLEAN_BY_UNION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE__REPLACE_ENUM_TYPE_BY_UNION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyType;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.collectAllImplicitSuperTypes;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functionType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getContextResource;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getReplacement;
@@ -41,7 +40,6 @@ import static org.eclipse.n4js.validation.IssueCodes.TYS_NO_SUBTYPE;
 
 import java.math.BigDecimal;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -78,19 +76,15 @@ import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.types.utils.TypeUtils;
-import org.eclipse.n4js.typesystem.utils.AllSuperTypeRefsCollector;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.StructuralTypingResult;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
-import org.eclipse.xtext.xbase.lib.CollectionLiterals;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.Iterables;
 
 /**
  * Note that 'left' and 'right' denote the two arguments in the following relation: <br/>
@@ -530,75 +524,23 @@ import com.google.common.collect.Iterables;
 				return failure();
 			}
 		} else if (leftDeclType == rightDeclType) {
-			return checkSameDeclaredTypes(G, left, right, rightDeclType);
+			Result tempResult = tsh.checkSameDeclaredTypes(G, left, right, rightDeclType);
+			if (tempResult.isOrIsCausedByPriority()) {
+				// fail with a custom message including the nested custom failure message:
+				String msg = TYS_NO_SUBTYPE.getMessage(
+						left.getTypeRefAsString(),
+						right.getTypeRefAsString()
+								+ " due to incompatible type arguments: "
+								+ tempResult.getPriorityFailureMessage());
+				return failure(msg);
+			}
+			return tempResult;
 		} else {
-			final List<ParameterizedTypeRef> allSuperTypeRefs = leftDeclType instanceof ContainerType<?>
-					? AllSuperTypeRefsCollector.collect(left, declMergingHelper)
-					: CollectionLiterals.newArrayList();
-			final Iterable<ParameterizedTypeRef> superTypeRefs = IterableExtensions.operator_plus(allSuperTypeRefs,
-					collectAllImplicitSuperTypes(G, left));
-			// Note: rightDeclType might appear in superTypes several times in case of multiple implementation
-			// of the same interface, which is allowed in case of definition-site co-/contravariance.
-			// To support such cases without duplicating any logic, we will use judgment 'substTypeVariables' below.
-			if (Iterables.any(superTypeRefs, str -> str.getDeclaredType() == rightDeclType)) {
-				// at this point we have 1..* type references in superTypeRefs with a declared type of rightDeclType
-				// (more than one possible in case of multiple implementation of the same interface, which is legal
-				// in case of definition-site co-/contravariance)
-				// (a) these type references may contain unbound type variables from lower level of the inheritance
-				// hierarchy and (b) in case of more than 1 type reference we have to combine them into a single
-				// type reference
-				// --> use type variable substitution on a synthetic type reference with a declared type of
-				// rightDeclType to solve all those cases without duplicating any logic:
-				final RuleEnvironment localG_left = wrap(G);
-				typeSystemHelper.addSubstitutions(localG_left, left);
-				final TypeArgument[] syntheticTypeArgs = rightDeclType.getTypeVars().stream()
-						.map(tv -> ref(tv))
-						.toArray(l -> new TypeArgument[l]);
-				final TypeRef syntheticTypeRef = ref(rightDeclType, syntheticTypeArgs);
-				final TypeRef effectiveSuperTypeRef = ts.substTypeVariables(localG_left, syntheticTypeRef);
-				return requireAllSuccess(
-						ts.subtype(G, effectiveSuperTypeRef, right));
-			} else {
-				return failure();
+			Result result = tsh.checkDeclaredSubtypes(G, left, right, rightDeclType);
+			if (result != null) {
+				return result;
 			}
-		}
-	}
-
-	private Result checkSameDeclaredTypes(RuleEnvironment G, ParameterizedTypeRef left, ParameterizedTypeRef right,
-			Type rightDeclType) {
-
-		if (left.isAliasResolved() && right.isAliasResolved()) {
-			// shortcut to mitigate recursion, caused by e.g.: type AliasType = Map<string, string | AliasType>;
-			Type leftDeclTypeTmp = left.getOriginalAliasTypeRef().getDeclaredType();
-			Type rightDeclTypeTmp = right.getOriginalAliasTypeRef().getDeclaredType();
-			if (leftDeclTypeTmp == rightDeclTypeTmp) {
-				left = left.getOriginalAliasTypeRef();
-				right = right.getOriginalAliasTypeRef();
-				rightDeclType = rightDeclTypeTmp;
-			}
-		}
-
-		final List<TypeArgument> leftArgs = left.getTypeArgsWithDefaults();
-		final List<TypeArgument> rightArgs = right.getTypeArgsWithDefaults();
-
-		final int leftArgsCount = leftArgs.size();
-		final int rightArgsCount = rightArgs.size();
-		if (leftArgsCount > 0 && leftArgsCount <= rightArgsCount) { // ignore raw types
-			final int len = Math.min(Math.min(leftArgsCount, rightArgsCount), rightDeclType.getTypeVars().size());
-			for (int i = 0; i < len; i++) {
-				final TypeArgument leftArg = leftArgs.get(i);
-				final TypeArgument rightArg = rightArgs.get(i);
-				final Variance variance = rightDeclType.getVarianceOfTypeVar(i);
-
-				final Result currResult = checkTypeArgumentCompatibility(G, left, right, leftArg, rightArg,
-						Optional.of(variance));
-				if (currResult.isFailure()) {
-					return currResult;
-				}
-			}
-			return success();
-		} else {
-			return success(); // always true for raw types
+			return failure();
 		}
 	}
 

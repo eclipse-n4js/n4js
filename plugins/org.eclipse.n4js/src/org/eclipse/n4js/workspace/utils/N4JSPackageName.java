@@ -28,6 +28,15 @@ import com.google.common.base.Preconditions;
  */
 public final class N4JSPackageName implements Comparable<N4JSPackageName> {
 
+	/** Returns new instance or null. */
+	static public N4JSPackageName create(String name) {
+		try {
+			return new N4JSPackageName(name);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 	private final String name;
 
 	/**

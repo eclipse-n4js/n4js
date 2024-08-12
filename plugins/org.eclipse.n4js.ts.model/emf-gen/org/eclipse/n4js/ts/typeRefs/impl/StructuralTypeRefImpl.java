@@ -234,25 +234,17 @@ public abstract class StructuralTypeRefImpl extends ProxyResolvingEObjectImpl im
 	 */
 	@Override
 	public EList<TStructMember> getStructuralMembers() {
-		EList<TStructMember> _xifexpression = null;
 		TStructuralType _structuralType = this.getStructuralType();
 		boolean _tripleNotEquals = (_structuralType != null);
 		if (_tripleNotEquals) {
-			_xifexpression = this.getStructuralType().getOwnedMembers();
+			return ECollections.<TStructMember>unmodifiableEList(this.getStructuralType().getOwnedMembers());
 		}
-		else {
-			EList<TStructMember> _xifexpression_1 = null;
-			boolean _isEmpty = this.getAstStructuralMembers().isEmpty();
-			boolean _not = (!_isEmpty);
-			if (_not) {
-				_xifexpression_1 = this.getAstStructuralMembers();
-			}
-			else {
-				_xifexpression_1 = this.getGenStructuralMembers();
-			}
-			_xifexpression = _xifexpression_1;
+		boolean _isEmpty = this.getAstStructuralMembers().isEmpty();
+		boolean _not = (!_isEmpty);
+		if (_not) {
+			return ECollections.<TStructMember>unmodifiableEList(this.getAstStructuralMembers());
 		}
-		return ECollections.<TStructMember>unmodifiableEList(_xifexpression);
+		return ECollections.<TStructMember>unmodifiableEList(this.getGenStructuralMembers());
 	}
 
 	/**

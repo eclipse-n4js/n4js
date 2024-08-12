@@ -1,0 +1,65 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+	
+	END_SETUP
+ */
+
+class C1<T> {
+    public f: T;
+}
+class D1 extends C1<number> {
+    @Override
+	// XPECT errors --> "Type of field D1.f must equal type of overridden field C1.f." at "f"
+    public f: "Welt";
+}
+
+let c1 : ~C1<string> = null;
+let d1 : ~D1 = null;
+// XPECT errors --> "~D1 is not a structural subtype of ~C1<string> due to incompatible type arguments: C1<number> is not a structural subtype of ~C1<string>: f failed: number is not equal to string." at "d1"
+c1 = d1;
+
+
+
+
+class C2<T> {
+    public f: string;
+}
+class D2 extends C2<number> {
+    @Override
+	// XPECT errors --> "Type of field D2.f must equal type of overridden field C2.f." at "f"
+    public f: "Welt";
+}
+
+let c2 : ~C2<string> = null;
+let d2 : ~D2 = null;
+// XPECT noerrors --> "~D2 is not a structural subtype of ~C2<string> due to incompatible type arguments: C2<number> is not a subtype of ~C2<string>." at "d2"
+c2 = d2;
+
+
+
+interface Effect {
+	public combinator: boolean;
+}
+
+interface CombinatorEffect extends Effect {
+	@Override
+	// XPECT errors --> "Type of field CombinatorEffect.combinator must equal type of implemented field Effect.combinator." at "combinator"
+	public combinator: true
+}
+
+let e: Effect = null;
+let ce: CombinatorEffect = null;
+// XPECT noerrors --> "CombinatorEffect is not a structural subtype of Effect: combinator failed: true is not equal to boolean." at "ce"
+e = ce;
+

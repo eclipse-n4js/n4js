@@ -1132,6 +1132,9 @@ public enum IssueCodes {
 	/** 0: left expression, 1: right expression */
 	TYS_NO_SUBTYPE(ERROR, "{0} is not a subtype of {1}"),
 
+	/** 0: left expression, 1: right expression */
+	TYS_NO_STRUCTURAL_SUBTYPE(ERROR, "{0} is not a structural subtype of {1}"),
+
 	/** 0: expected type, 1: actual type */
 	TYS_NO_SUPERTYPE_WRITE_ACCESS(ERROR, "expecting write-access for type {0} but {1} is not a super type of {0}."),
 
