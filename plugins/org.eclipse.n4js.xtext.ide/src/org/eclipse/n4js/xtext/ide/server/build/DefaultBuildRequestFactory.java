@@ -12,7 +12,6 @@ package org.eclipse.n4js.xtext.ide.server.build;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,15 +53,6 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 			boolean writeStorageResources) {
 
 		String projectID = projectConfig.getName();
-		if (workspaceConfig.isInDependencyCycle(projectID)) {
-			// remove all resources (except for the project description) from the build
-			// since cycles are not supported
-			dirtyFiles = new HashSet<>(dirtyFiles);
-			dirtyFiles.retainAll(projectConfig.getProjectDescriptionUris());
-			deletedFiles = new HashSet<>(deletedFiles);
-			deletedFiles.retainAll(projectConfig.getProjectDescriptionUris());
-		}
-
 		XBuildRequest request = new XBuildRequest(projectID, projectConfig.getPath(),
 				dirtyFiles, deletedFiles, externalDeltas,
 				index, resourceSet, fileMappings,

@@ -267,11 +267,6 @@ public class ProjectBuilder {
 	protected ResourceChangeSet scanForSourceFileChanges(
 			Set<URI> currSourceFileURIsToConsider, Set<URI> currSourceFileURIsOnDisk) {
 
-		if (workspaceManager.getWorkspaceConfig().isInDependencyCycle(getProjectID())) {
-			// see DefaultBuildRequestFactory#createBuildRequest(...)
-			currSourceFileURIsOnDisk.retainAll(getProjectConfig().getProjectDescriptionUris());
-		}
-
 		ResourceChangeSet result = new ResourceChangeSet();
 		ImmutableProjectState oldProjectState = this.projectStateSnapshot.get();
 		Map<URI, HashedFileContent> oldHashes = oldProjectState.getFileHashes();
