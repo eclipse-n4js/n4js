@@ -52,16 +52,14 @@ public class BuildOrderIterator implements IOrderIterator<ProjectConfigSnapshot>
 		for (ProjectConfigSnapshot pc : projectConfigs) {
 			String projectID = pc.getName();
 
-			if (!visitedAlready.contains(pc)
-					&& boi.sortedProjects.indexOf(pc) < boi.sortedProjects.indexOf(lastVisited)) {
-				String currentProjectID = current().getName();
-				throw new IllegalStateException("Dependency-inverse visit order not supported: from "
-						+ currentProjectID + " to " + projectID);
-			}
+			if (boi.sortedProjects.indexOf(pc) < boi.sortedProjects.indexOf(lastVisited)) {
+				// Dependency-inverse visit order not supported. Happens in dependency cycles
+			} else {
 
-			visitProjectIDs.add(projectID);
-			iteratorIndex = boi.sortedProjects.indexOf(lastVisited);
-			moveNext();
+				visitProjectIDs.add(projectID);
+				iteratorIndex = boi.sortedProjects.indexOf(lastVisited);
+				moveNext();
+			}
 		}
 		return this;
 	}
