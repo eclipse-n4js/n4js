@@ -44,9 +44,7 @@ public class CyclicDependenciesBuilderNoRebuildTest extends AbstractIncrementalB
 						Pair.of(CFG_DEPENDENCIES, "P2"))),
 				Pair.of("P2", List.of(
 						Pair.of("M2",
-								"import {C1} from 'M1'; \n" +
-										"const x: C1 = null;\n" +
-										"x;"),
+								"export public class C2 {}"),
 						Pair.of(CFG_DEPENDENCIES, "P1"))));
 
 		startAndWaitForLspServer();

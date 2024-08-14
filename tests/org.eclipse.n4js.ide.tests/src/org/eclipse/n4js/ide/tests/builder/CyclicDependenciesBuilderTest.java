@@ -39,9 +39,7 @@ public class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTes
 							"""),
 			"P2", Map.of(
 					"M2", """
-							import {C1} from "M1";
-							const x: C1 = null;
-							x;
+							export public class C2 {}
 							""",
 					CFG_DEPENDENCIES, """
 							P1
@@ -58,8 +56,43 @@ public class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTes
 							"""),
 			"P2", Map.of(
 					"M2", """
-							import {C1} from "M1";
+							export public class C2 {}
+							""",
+					CFG_DEPENDENCIES, """
+							P1
+							"""));
+
+	private static Map<String, Map<String, String>> testData3 = Map.of(
+			"P1", Map.of(
+					"M1", """
+							export public class C1 {
+							}
+							""",
+					"I1A", """
+							import {C2} from "M2"; // expect error
+							const x: C2 = null;
+							x;
+							""",
+					"I1B", """
+							import {C1} from "M1"; // expect no error
 							const x: C1 = null;
+							x;
+							""",
+					CFG_DEPENDENCIES, """
+							P2
+							"""),
+			"P2", Map.of(
+					"M2", """
+									export public class C2 {}
+							""",
+					"I2A", """
+							import {C1} from "M1"; // expect error
+							const x: C1 = null;
+							x;
+							""",
+					"I2B", """
+							import {C2} from "M2"; // expect no error
+							const x: C2 = null;
 							x;
 							""",
 					CFG_DEPENDENCIES, """
@@ -169,7 +202,8 @@ public class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTes
 				"P1/package.json", List.of(
 						"(Error, [14:18 - 14:22], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"),
 				"P2/package.json", List.of(
-						"(Error, [14:18 - 14:22], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)")));
+						"(Error, [14:18 - 14:22], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"),
+				"M1", List.of("(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')")));
 	}
 
 	@Test
@@ -210,7 +244,8 @@ public class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTes
 				"P1/package.json", List.of(
 						"(Error, [14:18 - 14:22], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"),
 				"P2/package.json", List.of(
-						"(Error, [14:18 - 14:22], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)")));
+						"(Error, [14:18 - 14:22], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"),
+				"M1", List.of("(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')")));
 
 		// remove cycle
 		openFile("P1/package.json");
@@ -260,5 +295,26 @@ public class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTes
 
 		assertIssues2(Map.of(
 				"M1", List.of("(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')")));
+	}
+
+	@Test
+	public void testCycleImportErrors() {
+		testWorkspaceManager.createTestOnDisk(testData3);
+
+		startAndWaitForLspServer();
+
+		assertIssues2(Map.of(
+				"P1/package.json", List.of(
+						"(Error, [14:18 - 14:22], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"),
+				"P2/package.json", List.of(
+						"(Error, [14:18 - 14:22], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"),
+
+				"I1A",
+				List.of("(Error, [0:17 - 0:21], Couldn't resolve reference to TModule 'M2'.)",
+						"(Error, [1:9 - 1:11], Couldn't resolve reference to Type 'C2'.)"),
+				"I2A",
+				List.of("(Error, [0:17 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
+						"(Error, [1:9 - 1:11], Couldn't resolve reference to Type 'C1'.)")));
+
 	}
 }
