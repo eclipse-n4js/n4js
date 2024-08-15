@@ -193,7 +193,22 @@ public class ProjectImportEnablingScope implements IScope {
 
 		if (size == 1) {
 			// main case
-			return result.get(0);
+			IEObjectDescription objDescr = result.get(0);
+
+			// references within a dependency cycle not supported
+			if (workspaceConfigSnapshot.isInDependencyCycle(contextProject.getName())) {
+				URI uri = objDescr.getEObjectURI();
+				N4JSProjectConfigSnapshot n4jsdProject = workspaceConfigSnapshot.findProjectContaining(uri);
+
+				if (workspaceConfigSnapshot.isInDependencyCycle(n4jsdProject.getName())) {
+					if (Objects.equals(n4jsdProject.getName(), contextProject.getName())) {
+						// allow references within the same project
+					} else {
+						return null;
+					}
+				}
+			}
+			return objDescr;
 		}
 
 		// use sorted entries and linked map for determinism in error message
