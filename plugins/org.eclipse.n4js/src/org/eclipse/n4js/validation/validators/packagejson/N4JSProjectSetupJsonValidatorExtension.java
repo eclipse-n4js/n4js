@@ -1285,7 +1285,17 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			if (pair.getValue() instanceof JSONStringLiteral) {
 				JSONStringLiteral stringLit = (JSONStringLiteral) pair.getValue();
 				String prjName = pair.getName();
-				String prjID = currentProject.getProjectIdForPackageName(prjName);
+				String prjID = prjName;
+				if (currentProject.isKnownDependency(prjName)) {
+					prjID = currentProject.getProjectIdForPackageName(prjName);
+				} else {
+					N4JSWorkspaceConfigSnapshot wsConfig = workspaceAccess.getWorkspaceConfig(getDocument());
+					N4JSPackageName pckName = N4JSPackageName.create(prjName);
+					N4JSProjectConfigSnapshot depPrj = wsConfig.findProjectByPackageName(pckName);
+					if (depPrj != null) {
+						prjID = depPrj.getName();
+					}
+				}
 				IParseResult parseResult = semverHelper.getParseResult(stringLit.getValue());
 				NPMVersionRequirement npmVersion = semverHelper.parse(parseResult);
 				ValidationProjectReference vpr = new ValidationProjectReference(prjName, prjID, npmVersion,

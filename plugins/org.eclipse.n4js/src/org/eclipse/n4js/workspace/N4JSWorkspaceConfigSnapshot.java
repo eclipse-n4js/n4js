@@ -10,9 +10,15 @@
  */
 package org.eclipse.n4js.workspace;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.packagejson.projectDescription.ModuleFilterType;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.n4js.xtext.workspace.BuildOrderInfo;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.ProjectSet;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -29,9 +35,28 @@ public class N4JSWorkspaceConfigSnapshot extends WorkspaceConfigSnapshot {
 	public static final N4JSWorkspaceConfigSnapshot EMPTY = new N4JSWorkspaceConfigSnapshot(EMPTY_PATH,
 			ProjectSet.EMPTY, BuildOrderInfo.NULL);
 
+	/** Maps package names to projects. In case of name collisions only one is mapped. */
+	// TODO: Move to {@link ProjectSet} when development setup allows
+	protected final Map<N4JSPackageName, N4JSProjectConfigSnapshot> packageName2Project;
+
 	/** Creates a {@link N4JSWorkspaceConfigSnapshot}. */
 	public N4JSWorkspaceConfigSnapshot(URI path, ProjectSet projects, BuildOrderInfo buildOrderInfo) {
 		super(path, projects, buildOrderInfo);
+		packageName2Project = computeMap(projects);
+	}
+
+	static private Map<N4JSPackageName, N4JSProjectConfigSnapshot> computeMap(ProjectSet projects) {
+		Map<N4JSPackageName, N4JSProjectConfigSnapshot> packageName2Project = new LinkedHashMap<>();
+		for (ProjectConfigSnapshot prj : projects.getProjects()) {
+			N4JSProjectConfigSnapshot n4jsPCS = (N4JSProjectConfigSnapshot) prj;
+			packageName2Project.put(n4jsPCS.getN4JSPackageName(), n4jsPCS);
+		}
+		return Collections.unmodifiableMap(packageName2Project);
+	}
+
+	/** Returns a project for package name. In case of name collisions one project is returned. */
+	public N4JSProjectConfigSnapshot findProjectByPackageName(N4JSPackageName name) {
+		return packageName2Project.get(name);
 	}
 
 	@Override
