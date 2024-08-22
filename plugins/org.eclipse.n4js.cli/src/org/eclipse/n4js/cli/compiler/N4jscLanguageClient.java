@@ -120,7 +120,7 @@ public class N4jscLanguageClient extends AbstractN4JSLanguageClient implements A
 		}
 		if (notification instanceof WorkDoneProgressReport) {
 			WorkDoneProgressReport report = (WorkDoneProgressReport) notification;
-			String msg = String.format("%2d%%  %dERRs  %dWRNs  %s", report.getPercentage(), errCount, wrnCount,
+			String msg = String.format(" %2d%%  %dERRs  %dWRNs  %s", report.getPercentage(), errCount, wrnCount,
 					report.getMessage());
 			N4jscConsole.setInfoLine(msg);
 		}

@@ -479,7 +479,7 @@ public class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTe
 		assertFalse(projectStateInNodeModules.exists());
 		assertFalse(projectStateInOrdinaryProject.exists());
 
-		languageServer.getFrontend().reinitWorkspace();
+		languageServer.getFrontend().rebuildWorkspace();
 		joinServerRequests();
 
 		assertFalse(outputFileInNodeModules.exists());

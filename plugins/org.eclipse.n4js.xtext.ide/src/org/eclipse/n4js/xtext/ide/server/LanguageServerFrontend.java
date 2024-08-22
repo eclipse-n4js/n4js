@@ -114,11 +114,10 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 	/**
 	 * Initialize this front-end according to the given arguments.
 	 */
-	public void initialize(InitializeParams params, URI baseDir, ILanguageServerAccess access) {
+	public void initialize(InitializeParams params, ILanguageServerAccess access) {
 		logWelcomeMessage();
 		workspaceFrontend.initialize(access);
 		textDocumentFrontend.initialize(params, access);
-		builderFrontend.initialize(baseDir);
 	}
 
 	/**
@@ -131,8 +130,8 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 	/**
 	 * Notifies the front-end that the initialization was completed.
 	 */
-	public void initialized() {
-		builderFrontend.initialBuild();
+	public void initialized(URI baseDir) {
+		builderFrontend.initialize(baseDir);
 	}
 
 	/**
@@ -191,7 +190,7 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 
 	@Override
 	public void didChangeConfiguration(DidChangeConfigurationParams params) {
-		reinitWorkspace();
+		rebuildWorkspace();
 	}
 
 	@Override
@@ -214,8 +213,13 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 	}
 
 	/** Triggers rebuild of the whole workspace in the background. Can be awaited by {@link #join()}. */
-	public void reinitWorkspace() {
-		builderFrontend.reinitWorkspace();
+	public void rebuildWorkspace() {
+		rebuildWorkspace(true);
+	}
+
+	/** Triggers rebuild of the whole workspace in the background. Can be awaited by {@link #join()}. */
+	public void rebuildWorkspace(boolean recreateWorkspace) {
+		builderFrontend.rebuildWorkspace(recreateWorkspace);
 	}
 
 	@Override

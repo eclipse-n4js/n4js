@@ -20,7 +20,6 @@ import java.util.TreeMap;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.lsp4j.InitializeParams;
-import org.eclipse.lsp4j.InitializedParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscException;
@@ -84,6 +83,11 @@ public class N4jscCompiler {
 
 		params.setWorkspaceFolders(Collections.singletonList(new WorkspaceFolder(baseDir.toURI().toString())));
 		languageServer.initialize(params).get();
+		LanguageServerFrontend frontend = languageServer.getFrontend();
+		frontend.initialized(languageServer.getBaseDir());
+		N4jscConsole.println("Scanning workspace ...");
+		workspaceManager.createWorkspaceConfig();
+
 		throwIfNoProjectsFound();
 		verbosePrintAllProjects();
 
@@ -120,9 +124,10 @@ public class N4jscCompiler {
 			callback.resetCounters();
 		}
 		Stopwatch compilationTime = Stopwatch.createStarted();
+		LanguageServerFrontend frontend = languageServer.getFrontend();
 		try (Measurement m = N4JSDataCollectors.dcBuild.getMeasurement()) {
-			languageServer.initialized(new InitializedParams());
-			languageServer.joinServerRequests();
+			frontend.rebuildWorkspace(false);
+			frontend.join();
 		}
 		printCompileResults(compilationTime.stop());
 	}

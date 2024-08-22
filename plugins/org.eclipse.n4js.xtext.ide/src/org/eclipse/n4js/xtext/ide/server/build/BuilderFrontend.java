@@ -86,13 +86,6 @@ public class BuilderFrontend {
 	}
 
 	/**
-	 * Trigger an initial build in the background.
-	 */
-	public void initialBuild() {
-		asyncRunBuildTask("initialBuild", workspaceBuilder::createInitialBuildTask);
-	}
-
-	/**
 	 * Trigger a clean operation in the background. Afterwards, all previously build artifacts have been removed. This
 	 * includes index data, source2generated mappings, cached issues and persisted index state. A subsequent build is
 	 * not triggered automatically.
@@ -104,8 +97,8 @@ public class BuilderFrontend {
 	/**
 	 * Triggers rebuild of the whole workspace
 	 */
-	public void reinitWorkspace() {
-		asyncRunBuildTask("reinitWorkspace", workspaceBuilder::createReinitialBuildTask);
+	public void rebuildWorkspace(boolean recreateWorkspace) {
+		asyncRunBuildTask("rebuildWorkspace", () -> workspaceBuilder.createFullBuildTask(recreateWorkspace));
 	}
 
 	/**
