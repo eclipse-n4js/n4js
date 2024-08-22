@@ -178,7 +178,8 @@ public class SemanticDependencySupplier {
 			}
 
 			// Second check if it is a dependency in the node_modules folder
-			for (File nodeModulesDir : nodeModulesFolder.getNodeModulesFoldersInOrderOfPriority()) {
+			List<File> nmFolders = nodeModulesFolder.getNodeModulesFoldersInOrderOfPriority();
+			for (File nodeModulesDir : nmFolders) {
 				Path absDepPath = nodeModulesDir.toPath().resolve(depName);
 				absDepPath = resolveSymbolicLinkOrDefault(absDepPath);
 				if (candidatePaths.contains(absDepPath)) {
@@ -247,7 +248,6 @@ public class SemanticDependencySupplier {
 			}
 		}
 		return null;
-
 	}
 
 	/**
