@@ -13,6 +13,7 @@ package org.eclipse.n4js.scoping.accessModifiers;
 import static java.util.Collections.emptyList;
 
 import java.util.Collection;
+import java.util.Objects;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
@@ -218,31 +219,27 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	}
 
 	/**
-	 * Returns with {@code true} if the context module argument belongs to a {@link ProjectType#TEST test} project and
-	 * any of its tested projects contains the element module argument.
+	 * Returns {@code true} if the context module argument belongs to a {@link ProjectType#TEST test} project and any of
+	 * its tested projects contains the element module argument.
 	 *
 	 * @param contextModule
 	 *            the content module.
-	 * @param elementModule
+	 * @param importedModule
 	 *            the element module.
 	 * @return {@code true} if the element module's container project is the tested project of the context module.
 	 *         Otherwise returns with {@code false}.
 	 */
-	public boolean isTestedProjectOf(final TModule contextModule, final TModule elementModule) {
-		if (null == elementModule || null == contextModule || null == elementModule.eResource()
+	public boolean isTestedProjectOf(final TModule contextModule, final TModule importedModule) {
+		if (null == importedModule || null == contextModule || null == importedModule.eResource()
 				|| null == contextModule.eResource()) {
 			return false;
 		}
 
-		for (final ProjectReference testedProject : getTestedProjects(contextModule.eResource())) {
-			final Resource eResource = elementModule.eResource();
-			if (null != eResource) {
-				final N4JSProjectConfigSnapshot elementProject = workspaceAccess.findProjectContaining(eResource);
-				if (null != elementProject) {
-					String projectId = elementProject.getProjectIdForPackageName(testedProject.getPackageName());
-					if (elementProject.getName().equals(projectId)) {
-						return true;
-					}
+		N4JSProjectConfigSnapshot importedProject = workspaceAccess.findProjectContaining(importedModule.eResource());
+		if (null != importedProject) {
+			for (ProjectReference testedProjectRef : getTestedProjects(contextModule.eResource())) {
+				if (Objects.equals(importedProject.getPackageName(), testedProjectRef.getPackageName())) {
+					return true;
 				}
 			}
 		}
@@ -263,7 +260,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	 */
 	public boolean isTestedProjectOf(final TModule contextModule, final N4JSProjectConfigSnapshot elementProject) {
 		for (final ProjectReference testedProject : getTestedProjects(contextModule.eResource())) {
-			if (elementProject.getName().equals(testedProject.getPackageName())) {
+			if (Objects.equals(elementProject.getPackageName(), testedProject.getPackageName())) {
 				return true;
 			}
 		}
