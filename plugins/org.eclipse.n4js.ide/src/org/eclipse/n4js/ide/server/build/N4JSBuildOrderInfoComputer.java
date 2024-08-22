@@ -12,6 +12,7 @@ package org.eclipse.n4js.ide.server.build;
 
 import java.util.Set;
 
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
@@ -30,12 +31,18 @@ public class N4JSBuildOrderInfoComputer extends BuildOrderFactory.BuildOrderInfo
 		N4JSProjectConfigSnapshot n4pcs = pc instanceof N4JSProjectConfigSnapshot
 				? (N4JSProjectConfigSnapshot) pc
 				: null;
-		if (n4pcs != null && n4pcs.getType() == ProjectType.PLAINJS) {
-			// ignore dependencies of plain-JS projects to non-n4js-lib projects, because
-			// (1) they are irrelevant for the build order of N4JS code,
-			// (2) npm packages sometimes declare cyclic dependencies (and we must not show errors for those cycles)
-			Set<String> n4jsDeps = Sets.filter(dependencies, dep -> n4pcs.isKnownDependency(dep));
-			return n4jsDeps;
+
+		if (n4pcs != null) {
+			ProjectDescription prjDescr = n4pcs.getProjectDescription();
+
+			// keep in sync with ProjectDiscoveryHelper#findDependencies()
+			if (!prjDescr.hasN4JSNature() && !prjDescr.isWorkspaceRoot() && prjDescr.getTypes() == null) {
+				// ignore dependencies of plain-JS projects to non-n4js-lib projects, because
+				// (1) they are irrelevant for the build order of N4JS code,
+				// (2) npm packages sometimes declare cyclic dependencies (and we must not show errors for those cycles)
+				Set<String> n4jsDeps = Sets.filter(dependencies, dep -> n4pcs.isKnownDependency(dep));
+				return n4jsDeps;
+			}
 		}
 		return dependencies;
 	}
