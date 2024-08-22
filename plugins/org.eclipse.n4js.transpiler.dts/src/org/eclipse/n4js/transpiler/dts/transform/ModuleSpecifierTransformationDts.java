@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.transpiler.dts.transform;
 
+import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.transpiler.es.transform.ModuleSpecifierTransformation;
 import org.eclipse.n4js.ts.types.TModule;
 
@@ -19,7 +20,7 @@ import org.eclipse.n4js.ts.types.TModule;
 public class ModuleSpecifierTransformationDts extends ModuleSpecifierTransformation {
 
 	@Override
-	protected String getActualFileExtension(TModule targetModule) {
+	protected String getActualFileExtension(ImportDeclaration importingDeclIM, TModule targetModule) {
 		// file extensions are not required in module specifiers inside .d.ts files
 		return null;
 	}

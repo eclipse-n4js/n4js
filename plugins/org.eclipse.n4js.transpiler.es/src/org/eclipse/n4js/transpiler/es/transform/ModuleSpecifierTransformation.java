@@ -85,8 +85,10 @@ public class ModuleSpecifierTransformation extends Transformation {
 	}
 
 	/** Returns file extension of output module */
-	protected String getActualFileExtension(TModule targetModule) {
-		return n4jsLanguageHelper.getOutputFileExtension(getState().index, targetModule);
+	protected String getActualFileExtension(ImportDeclaration importingDeclIM, TModule targetModule) {
+		ImportDeclaration importingDeclOrigAST = (ImportDeclaration) getState().tracer
+				.getOriginalASTNode(importingDeclIM);
+		return n4jsLanguageHelper.getOutputFileExtension(getState().index, importingDeclOrigAST, targetModule);
 	}
 
 	private void transformImportDecl(ImportDeclaration importDeclIM) {
@@ -160,7 +162,7 @@ public class ModuleSpecifierTransformation extends Transformation {
 			// module specifiers are always absolute in N4JS, but Javascript requires relative module
 			// specifiers when importing from a module within the same npm package
 			// --> need to create a relative module specifier here:
-			return createRelativeModuleSpecifier(targetModule);
+			return createRelativeModuleSpecifier(importDeclIM, targetModule);
 		}
 
 		ModuleSpecifierForm moduleSpecifierForm = importDeclIM.getModuleSpecifierForm();
@@ -177,10 +179,10 @@ public class ModuleSpecifierTransformation extends Transformation {
 			return importDeclIM.getModuleSpecifierAsText();
 		}
 
-		return createAbsoluteModuleSpecifier(targetProject, targetModule);
+		return createAbsoluteModuleSpecifier(targetProject, importDeclIM, targetModule);
 	}
 
-	private String createRelativeModuleSpecifier(TModule targetModule) {
+	private String createRelativeModuleSpecifier(ImportDeclaration importingDeclIM, TModule targetModule) {
 		String targetModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(targetModule);
 		String[] targetModuleSpecifierSegments = targetModuleSpecifier.split("/", -1);
 		String targetModuleName = targetModuleSpecifierSegments[targetModuleSpecifierSegments.length - 1];
@@ -195,14 +197,16 @@ public class ModuleSpecifierTransformation extends Transformation {
 		List<String> allSegm = new ArrayList<>(Arrays.asList(differingSegments));
 		allSegm.add(targetModuleName);
 		int goUpCount = localModulePath.length - i;
-		String ext = getActualFileExtension(targetModule);
+		String ext = getActualFileExtension(importingDeclIM, targetModule);
 		String result = ((goUpCount > 0) ? "../".repeat(goUpCount) : "./")
 				+ org.eclipse.n4js.utils.Strings.join("/", allSegm)
 				+ ((ext != null && !ext.isEmpty()) ? "." + ext : "");
 		return result;
 	}
 
-	private String createAbsoluteModuleSpecifier(N4JSProjectConfigSnapshot targetProject, TModule targetModule) {
+	private String createAbsoluteModuleSpecifier(N4JSProjectConfigSnapshot targetProject,
+			ImportDeclaration importingDeclIM, TModule targetModule) {
+
 		if (N4JSLanguageUtils.isMainModule(targetProject, targetModule)) {
 			// 'targetModule' is the main module of 'targetProject', so we can use a project import:
 			return getActualProjectName(targetProject).toString();
@@ -236,7 +240,7 @@ public class ModuleSpecifierTransformation extends Transformation {
 		String targetModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(targetModule);
 		sb.append(targetModuleSpecifier);
 
-		String ext = getActualFileExtension(targetModule);
+		String ext = getActualFileExtension(importingDeclIM, targetModule);
 		if (ext != null && !ext.isEmpty()) {
 			sb.append('.');
 			sb.append(ext);
