@@ -388,26 +388,26 @@ public class PackageJsonHelper {
 
 		Objects.requireNonNull(type);
 
-		Set<String> existingProjectNames = new HashSet<>();
+		Set<String> existingPackageNames = new HashSet<>();
 		if (avoidDuplicates) {
 			for (ProjectDependency pd : target.getDependencies()) {
-				existingProjectNames.add(pd.getPackageName());
+				existingPackageNames.add(pd.getPackageName());
 			}
 		}
 
 		for (NameValuePair pair : depPairs) {
-			String projectName = pair.getName();
+			String packageName = pair.getName();
 
 			boolean addProjectDependency = true;
-			addProjectDependency &= projectName != null && !projectName.isEmpty();
-			addProjectDependency &= !(avoidDuplicates && existingProjectNames.contains(projectName));
-			existingProjectNames.add(projectName);
+			addProjectDependency &= packageName != null && !packageName.isEmpty();
+			addProjectDependency &= !(avoidDuplicates && existingPackageNames.contains(packageName));
+			existingPackageNames.add(packageName);
 
 			if (addProjectDependency) {
 				JSONValue value = pair.getValue();
 				String valueStr = asStringOrNull(value);
 				NPMVersionRequirement versionRequirement = valueStr != null ? semverHelper.parse(valueStr) : null;
-				ProjectDependency dep = new ProjectDependency(projectName, type, valueStr, versionRequirement);
+				ProjectDependency dep = new ProjectDependency(packageName, type, valueStr, versionRequirement);
 				target.addDependency(dep);
 			}
 		}

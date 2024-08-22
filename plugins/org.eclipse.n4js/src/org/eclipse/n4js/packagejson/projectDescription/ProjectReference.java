@@ -31,7 +31,7 @@ public class ProjectReference extends ImmutableDataClass {
 		return packageName;
 	}
 
-	public N4JSPackageName getN4JSProjectName() {
+	public N4JSPackageName getN4JSPackageName() {
 		return packageName != null ? new N4JSPackageName(packageName) : null;
 	}
 
