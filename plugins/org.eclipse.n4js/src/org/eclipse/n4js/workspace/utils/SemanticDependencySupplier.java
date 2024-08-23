@@ -62,7 +62,7 @@ public class SemanticDependencySupplier {
 
 		boolean sawDefinitionsOnly = true;
 		for (ProjectDependency dependency : dependencies) {
-			N4JSPackageName dependencyName = dependency.getN4JSProjectName();
+			N4JSPackageName dependencyName = dependency.getN4JSPackageName();
 			existingDependencies.add(dependencyName.getRawName());
 			Collection<N4JSPackageName> defPrjDeps = definitionProjects.getDefinitionProjects(dependencyName);
 			for (N4JSPackageName prjName : defPrjDeps) {
@@ -108,7 +108,7 @@ public class SemanticDependencySupplier {
 		List<ProjectDependency> typesDefDeps = new ArrayList<>();
 		for (Iterator<ProjectDependency> iter = moveToTop.iterator(); iter.hasNext();) {
 			ProjectDependency topDep = iter.next();
-			if (Objects.equals(N4JSGlobals.TYPES_SCOPE, topDep.getN4JSProjectName().getScopeName())) {
+			if (Objects.equals(N4JSGlobals.TYPES_SCOPE, topDep.getN4JSPackageName().getScopeName())) {
 				iter.remove();
 				typesDefDeps.add(topDep);
 			}
@@ -178,7 +178,8 @@ public class SemanticDependencySupplier {
 			}
 
 			// Second check if it is a dependency in the node_modules folder
-			for (File nodeModulesDir : nodeModulesFolder.getNodeModulesFoldersInOrderOfPriority()) {
+			List<File> nmFolders = nodeModulesFolder.getNodeModulesFoldersInOrderOfPriority();
+			for (File nodeModulesDir : nmFolders) {
 				Path absDepPath = nodeModulesDir.toPath().resolve(depName);
 				absDepPath = resolveSymbolicLinkOrDefault(absDepPath);
 				if (candidatePaths.contains(absDepPath)) {
@@ -247,7 +248,6 @@ public class SemanticDependencySupplier {
 			}
 		}
 		return null;
-
 	}
 
 	/**

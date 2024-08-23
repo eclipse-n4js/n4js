@@ -266,16 +266,16 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		if (initializeParams != null) {
 			throw new IllegalStateException("This language server has already been initialized.");
 		}
-		URI baseDir = getBaseDir(params);
 		if (languagesRegistry.getExtensionToFactoryMap().isEmpty()) {
 			throw new IllegalStateException(
 					"No Xtext languages have been registered. Please make sure you have added the languages\'s setup class in \'/META-INF/services/org.eclipse.xtext.ISetup\'");
 		}
 		this.initializeParams = params;
+		URI baseDir = getBaseDir();
 
 		Stopwatch sw = Stopwatch.createStarted();
 		LOG.info("Start server initialization in workspace directory " + baseDir);
-		lsFrontend.initialize(initializeParams, baseDir, access);
+		lsFrontend.initialize(initializeParams, access);
 		LOG.info("Server initialization done after " + sw);
 
 		initializeResult = new InitializeResult();
@@ -392,7 +392,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void initialized(InitializedParams params) {
-		lsFrontend.initialized();
+		URI baseDir = getBaseDir();
+		lsFrontend.initialized(baseDir);
+		lsFrontend.rebuildWorkspace();
 	}
 
 	@Deprecated
@@ -416,8 +418,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Compute the base directory.
 	 */
-	protected URI getBaseDir(InitializeParams params) {
-		List<WorkspaceFolder> workspaceFolders = params.getWorkspaceFolders();
+	public URI getBaseDir() {
+		List<WorkspaceFolder> workspaceFolders = initializeParams.getWorkspaceFolders();
 		if (workspaceFolders != null && !workspaceFolders.isEmpty()) {
 			// TODO: Support multiple workspace folders
 			WorkspaceFolder workspaceFolder = workspaceFolders.get(0);
@@ -427,7 +429,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			}
 			return uriExtensions.toUri(workspaceFolder.getUri());
 		}
-		return deprecatedToBaseDir2(params);
+		return deprecatedToBaseDir2(initializeParams);
 	}
 
 	@SuppressWarnings("hiding")

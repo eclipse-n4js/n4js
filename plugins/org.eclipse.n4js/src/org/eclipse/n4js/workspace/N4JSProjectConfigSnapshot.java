@@ -47,9 +47,9 @@ import org.eclipse.xtext.util.UriExtensions;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -61,7 +61,7 @@ import com.google.common.collect.Sets;
 public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 
 	private final ProjectDescription projectDescription;
-	private final ImmutableMap<String, String> packageNameToProjectIds;
+	private final ImmutableBiMap<String, String> packageNameToProjectIds;
 	private final boolean external;
 
 	/** Creates a new {@link N4JSProjectConfigSnapshot}. */
@@ -74,7 +74,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 				indexOnly, generatorEnabled, dependencies, sourceFolders);
 
 		this.projectDescription = Objects.requireNonNull(projectDescription);
-		this.packageNameToProjectIds = ImmutableMap.copyOf(packageNameToProjectIds);
+		this.packageNameToProjectIds = ImmutableBiMap.copyOf(packageNameToProjectIds);
 		this.external = isDirectlyLocatedInNodeModulesFolder(path);
 	}
 
@@ -169,8 +169,16 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	 * Returns true iff the given packageName can be resolved to a project id. Usually it cannot be resolved for ignored
 	 * dependencies of plain-js projects and returns false in those cases.
 	 */
-	public boolean isKnownDependency(String packageName) {
-		return !packageNameToProjectIds.containsKey(packageName);
+	public boolean isKnownDependency(N4JSPackageName packageName) {
+		return packageNameToProjectIds.containsKey(packageName.toString());
+	}
+
+	/**
+	 * Returns true iff the given project id can be resolved. Usually it cannot be resolved for ignored dependencies of
+	 * plain-js projects and returns false in those cases.
+	 */
+	public boolean isKnownDependency(String projectId) {
+		return packageNameToProjectIds.containsValue(projectId);
 	}
 
 	// ==============================================================================================================

@@ -90,7 +90,7 @@ public class DtsAfterBuildListener implements AfterBuildRequestListener {
 		sb.append("[");
 		sb.append("\"es2019\", \"es2020\"");
 		for (ProjectReference requiredLibRef : projectConfig.getProjectDescription().getRequiredRuntimeLibraries()) {
-			N4JSPackageName requiredLibName = requiredLibRef.getN4JSProjectName();
+			N4JSPackageName requiredLibName = requiredLibRef.getN4JSPackageName();
 			ImmutableSet<String> dtsLibNames = N4JSGlobals.N4JS_DTS_LIB_CORRESPONDENCE.get(requiredLibName);
 			for (String dtsLibName : dtsLibNames) {
 				sb.append(", \"");

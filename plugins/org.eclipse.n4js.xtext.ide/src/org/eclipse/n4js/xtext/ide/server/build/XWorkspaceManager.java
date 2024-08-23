@@ -77,6 +77,8 @@ public class XWorkspaceManager {
 
 	private final Map<String, ProjectBuilder> projectID2ProjectBuilder = new HashMap<>();
 
+	private URI baseDir;
+
 	private XIWorkspaceConfig workspaceConfig;
 
 	private WorkspaceConfigSnapshot workspaceConfigSnapshot;
@@ -113,11 +115,6 @@ public class XWorkspaceManager {
 		}
 	}
 
-	/** Reinitialize a workspace at the current location. */
-	public void reinitialize() {
-		initialize(getBaseDir());
-	}
-
 	/**
 	 * Initialize a workspace at the given location.
 	 *
@@ -125,7 +122,13 @@ public class XWorkspaceManager {
 	 *            the location
 	 */
 	public void initialize(URI newBaseDir) {
-		setWorkspaceConfig(workspaceConfigFactory.createWorkspaceConfig(newBaseDir));
+		baseDir = newBaseDir;
+	}
+
+	/** Scans the workspace at the current location. */
+	public void createWorkspaceConfig() {
+		initialize(getBaseDir());
+		setWorkspaceConfig(workspaceConfigFactory.createWorkspaceConfig(getBaseDir()));
 	}
 
 	/**
@@ -267,7 +270,7 @@ public class XWorkspaceManager {
 	/** @return the current base directory {@link URI} */
 	public URI getBaseDir() {
 		if (this.workspaceConfig == null) {
-			return null;
+			return baseDir;
 		}
 		return this.workspaceConfig.getPath();
 	}

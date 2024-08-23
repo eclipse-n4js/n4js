@@ -150,14 +150,18 @@ public class CommonJsImportsTransformation extends Transformation {
 		if (allImportDeclsForThisModule.isEmpty()) {
 			return Collections.emptyList();
 		}
-		if (!requiresRewrite(targetModule)) {
+		ImportDeclaration importingDeclIM = allImportDeclsForThisModule.get(0);
+		if (!requiresRewrite(importingDeclIM, targetModule)) {
 			return Collections.emptyList();
 		}
 
 		List<ImportDeclaration> importDeclsToRewrite = new ArrayList<>(allImportDeclsForThisModule);
 		if (exists(importDeclsToRewrite, id -> id.getModuleSpecifierForm() == ModuleSpecifierForm.PROJECT)) {
+			ImportDeclaration importingDeclOrigAST = (ImportDeclaration) getState().tracer
+					.getOriginalASTNode(importingDeclIM);
+
 			N4JSProjectConfigSnapshot targetProject = n4jsLanguageHelper.replaceDefinitionProjectByDefinedProject(
-					getState().resource, workspaceAccess.findProjectContaining(targetModule), true);
+					importingDeclOrigAST, workspaceAccess.findProjectContaining(targetModule), true);
 			if (targetProject != null && targetProject.getProjectDescription().hasModuleProperty()) {
 				// don't rewrite project imports in case the target project has a top-level property "module" in its
 				// package.json,
@@ -264,8 +268,10 @@ public class CommonJsImportsTransformation extends Transformation {
 		}
 	}
 
-	private boolean requiresRewrite(TModule targetModule) {
-		return !n4jsLanguageHelper.isES6Module(getState().index, targetModule);
+	private boolean requiresRewrite(ImportDeclaration importingDeclIM, TModule targetModule) {
+		ImportDeclaration importingDeclOrigAST = (ImportDeclaration) getState().tracer
+				.getOriginalASTNode(importingDeclIM);
+		return !n4jsLanguageHelper.isES6Module(getState().index, importingDeclOrigAST, targetModule);
 	}
 
 	private String computeNameForIntermediateDefaultImport(TModule targetModule) {

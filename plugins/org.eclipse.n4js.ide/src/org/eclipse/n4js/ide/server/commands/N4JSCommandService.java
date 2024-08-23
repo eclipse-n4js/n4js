@@ -227,7 +227,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	@ExecutableCommandHandler(N4JS_REBUILD)
 	public Void rebuild(ILanguageServerAccess access, CancelIndicator cancelIndicator) {
 		builderFrontend.clean();
-		builderFrontend.reinitWorkspace();
+		builderFrontend.rebuildWorkspace(true);
 		return null;
 	}
 
@@ -383,7 +383,7 @@ access.getLanguageClient().showMessage(new MessageParams(MessageType.Warning, "I
 // @formatter:on
 				return new CoarseGrainedChangeEvent();
 			};
-		}).whenComplete((a, b) -> builderFrontend.reinitWorkspace());
+		}).whenComplete((a, b) -> builderFrontend.rebuildWorkspace(true));
 
 		return null;
 	}
