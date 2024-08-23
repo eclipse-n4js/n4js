@@ -1396,7 +1396,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		}
 
 		// obtain corresponding N4JSProjectConfigSnapshot
-		N4JSProjectConfigSnapshot project = allProjects.get(refId);
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectByName(getCurrentObject(),
+				N4JSPackageName.create(refName));
 
 		// type cannot be resolved from index, hence project does not exist in workspace.
 		if (null == project || null == project.getType()) {
