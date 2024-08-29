@@ -15,13 +15,11 @@ import {TestExecutor} from "org/eclipse/n4js/mangelhaft/TestExecutor";
 import {PreconditionNotMet} from "org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet";
 import {IInstrumentedTest} from "org/eclipse/n4js/mangelhaft/types/IInstrumentedTest";
 import {ITestReporter} from "org/eclipse/n4js/mangelhaft/types/ITestReporter";
-import {ResultGroup} from "org/eclipse/n4js/mangelhaft/types/ResultGroup";
 import {ResultGroups} from "org/eclipse/n4js/mangelhaft/types/ResultGroups";
 import {TestFunctionType} from "org/eclipse/n4js/mangelhaft/types/TestFunctionType";
 import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
 import {TestCatalogInfo} from "org/eclipse/n4js/mangelhaft/types/TestCatalogInfo";
 import {TestMethodDescriptor} from "org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor";
-import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult";
 import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy";
 import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
 import {findPackageJson} from "org/eclipse/n4js/mangelhaft/util/npm";
@@ -103,7 +101,7 @@ export public class TestController {
         for (let numOfBatches = 0; numOfBatches < batchedTestInfos.length; ++numOfBatches) {
             try {
                 const testInfosBatch = batchedTestInfos[numOfBatches];
-                const instrumentedTestsBatch = await this.instrumentBatch(testCatalog, testInfosBatch);
+                const instrumentedTestsBatch = await this.instrumentBatch(testCatalog, testInfosBatch, resultGroups);
                 res = await this.executor.runTestsAsync(instrumentedTestsBatch, scope);
                 resultGroups.push(res);
             } catch (er) {
@@ -116,16 +114,16 @@ export public class TestController {
         return res;
     }
 
-    private async instrumentBatch(testCatalog: TestCatalogInfo, testInfosBatch: TestInfo[]): InstrumentedTest[] {
+    private async instrumentBatch(testCatalog: TestCatalogInfo, testInfosBatch: TestInfo[], resultGroups: ResultGroups[]): InstrumentedTest[] {
         let result: InstrumentedTest[] = [];
         for (const testInfo of testInfosBatch) {
-            const instrumentedTest = await this.instrument(testCatalog, testInfo);
+            const instrumentedTest = await this.instrument(testCatalog, testInfo, resultGroups);
             result = result.concat(instrumentedTest);
         }
         return result;
     }
 
-    private async instrument(testCatalog: TestCatalogInfo, info: TestInfo): InstrumentedTest[] {
+    private async instrument(testCatalog: TestCatalogInfo, info: TestInfo, resultGroups: ResultGroups[]): InstrumentedTest[] {
         let testClasses: constructor{N4Object}[];
 
         const originOrPackageName = info.origin || testCatalog.packageName; // TODO: remove when origin is not set by n4jsc anymore
@@ -150,18 +148,19 @@ export public class TestController {
             }
             testClasses = [groupModule[ctorName] as constructor{N4Object}];
         } catch (ex) {
-            await this.errorGroup(info, originOrPackageName + "/" + moduleName, null, ex);
-            return null;
+            const errorTest = this.createErrorTest(info, originOrPackageName + "/" + moduleName, null, ex);
+            return [errorTest];
         }
         if (!testClasses) {
-            await this.errorGroup(info, originOrPackageName + "/" + parts.join("/"));
-            return null;
+            const errorTest = this.createErrorTest(info, originOrPackageName + "/" + parts.join("/"));
+            return [errorTest];
         }
         let instrumentedTests: IInstrumentedTest[] = [];
         for (const testClass of testClasses) {
             if (!testClass) {
-                await this.errorGroup(info, originOrPackageName + "/" + moduleName, null,
-                new Error("Empty object loaded (is the test class exported?)"));
+                const errorTest = this.createErrorTest(info, originOrPackageName + "/" + moduleName, null,
+                    new Error("Empty object loaded (is the test class exported?)"));
+                instrumentedTests.push(errorTest);
                 continue;
             }
 
@@ -178,29 +177,20 @@ export public class TestController {
                 instrumentedTests.push(stubTestInstrumentationError);
             }
         }
-        const result = (await Promise.all(instrumentedTests)).filter(notNull);
+        const result = instrumentedTests.filter(notNull);
         return result as InstrumentedTest[];
     }
 
     /**
      * creates special group to show errors that occur prior to group being run
      */
-    private async errorGroup(info: TestInfo, loadPath: string, testObject: InstrumentedTest=, originalError: any=) {
-        if (!testObject) testObject = this.getInstrumentedTestStub(info);
-        await this.spy.groupStarted.dispatch([testObject]);
-
-        const testResults: TestResult[] = [];
-        const that = this;
-        for (const test of testObject.tests) {
-            await that.spy.testStarted.dispatch([testObject, test]);
-            const error = originalError ? originalError : new Error("could not load test " + loadPath);
-            const testResult = TestExecutor.generateFailureTestResult(error, "could not load test " + loadPath);
-            testResults.push(testResult);
-            await that.spy.testFinished.dispatch([testObject, test, testResult]);
+    private createErrorTest(info: TestInfo, loadPath: string, testObject: InstrumentedTest=, originalError: any=) : InstrumentedTest {
+        if (!testObject) { 
+            testObject = this.getInstrumentedTestStub(info);
         }
-        await this.spy.groupFinished.dispatch([testObject,
-            new ResultGroup(testResults, `${info.fqn} ${testObject.parameterizedName}`)]);
-        return true;
+        const error = originalError ? originalError : new Error("could not load test " + loadPath);
+        testObject.setError(error);
+        return testObject;
     }
 
     /** Creates artificial {@link InstrumentedTest} to be used in error cases */
