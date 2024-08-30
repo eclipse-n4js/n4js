@@ -45,11 +45,11 @@ public class N4jscIssueSerializer {
 	static public String getShortSeverity(DiagnosticSeverity severity) {
 		switch (severity) {
 		case Error:
-			// return "ERR";
-			return "🔴";
+			return "ERR";
+		// return "🔴";
 		case Warning:
-			// return "WRN";
-			return "🟡";
+			return "WRN";
+		// return "🟡";
 		case Information:
 			return "INF";
 		case Hint:
