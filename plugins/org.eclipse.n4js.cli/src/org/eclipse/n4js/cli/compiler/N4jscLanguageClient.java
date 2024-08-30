@@ -119,7 +119,7 @@ public class N4jscLanguageClient extends AbstractN4JSLanguageClient implements A
 			// WorkDoneProgressBegin begin = (WorkDoneProgressBegin) notification;
 			// N4jscConsole.println(begin.getTitle());
 		}
-		if (notification instanceof WorkDoneProgressReport) {
+		if (!isHidingProgressReports() && notification instanceof WorkDoneProgressReport) {
 			WorkDoneProgressReport report = (WorkDoneProgressReport) notification;
 			String errSymbol = N4jscIssueSerializer.getShortSeverity(DiagnosticSeverity.Error);
 			String wrnSymbol = N4jscIssueSerializer.getShortSeverity(DiagnosticSeverity.Warning);
@@ -142,6 +142,11 @@ public class N4jscLanguageClient extends AbstractN4JSLanguageClient implements A
 	@Override
 	public void afterGenerate(URI source, URI generated) {
 		genCount++;
+	}
+
+	/** Returns true if progress reports should not be written to console. */
+	public boolean isHidingProgressReports() {
+		return false;
 	}
 
 	/**
