@@ -104,7 +104,6 @@ import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.xtext.ide.server.issues.PublishingIssueAcceptor;
 import org.eclipse.n4js.xtext.ide.server.util.IHeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.xtext.ide.server.util.LspLogger;
@@ -255,8 +254,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		if (languagesRegistry.getProtocolToFactoryMap().containsKey(scheme)) {
 			return true;
 		}
+		String ext = uri.fileExtension(); // do not use: URIUtils.fileExtension(uri) since that does not support d.ts
 		if ("file".equalsIgnoreCase(scheme)
-				&& languagesRegistry.getExtensionToFactoryMap().containsKey(URIUtils.fileExtension(uri))) {
+				&& languagesRegistry.getExtensionToFactoryMap().containsKey(ext)) {
 			return true;
 		}
 		return false;
