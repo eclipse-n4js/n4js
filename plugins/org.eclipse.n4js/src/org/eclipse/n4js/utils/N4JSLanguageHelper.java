@@ -11,6 +11,7 @@
 package org.eclipse.n4js.utils;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
@@ -127,9 +128,11 @@ public final class N4JSLanguageHelper {
 			N4JSPackageName definitionPackageName = importedProject.getDefinesPackage();
 			N4JSProjectConfigSnapshot importingPrj = workspaceAccess.findProjectContaining(importingDeclOrigAST);
 			if (definitionPackageName != null && importingPrj != null) {
-				String definitionProjectId = importingPrj.getProjectIdForPackageName(definitionPackageName.getRawName());
+				String definitionProjectId = importingPrj
+						.getProjectIdForPackageName(definitionPackageName.getRawName());
 				if (definitionProjectId != null) {
-					N4JSProjectConfigSnapshot definitionProject = workspaceAccess.findProjectByName(importingDeclOrigAST,
+					N4JSProjectConfigSnapshot definitionProject = workspaceAccess.findProjectByName(
+							importingDeclOrigAST,
 							definitionProjectId);
 					if (definitionProject != null) {
 						return definitionProject;
@@ -154,7 +157,7 @@ public final class N4JSLanguageHelper {
 		// 1) decide based on the file extension of the target module
 		Resource resource = module.eResource();
 		URI uri = resource != null ? resource.getURI() : null;
-		String ext = uri != null ? uri.fileExtension() : null;
+		String ext = uri != null ? URIUtils.fileExtension(uri) : null;
 		if (!module.isN4jsdModule() && N4JSGlobals.ALL_N4JS_FILE_EXTENSIONS.contains(ext)) {
 			return true; // the N4JS transpiler always emits ES6 module code
 		}
@@ -208,7 +211,7 @@ public final class N4JSLanguageHelper {
 		}
 		Resource targetResource = targetModule.eResource();
 		URI uri = targetResource != null ? targetResource.getURI() : null;
-		String ext = uri != null ? uri.fileExtension() : null;
+		String ext = uri != null ? URIUtils.fileExtension(uri) : null;
 		if (N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(ext)) {
 			if (N4JSGlobals.JSX_FILE_EXTENSION.equals(ext)) {
 				// we assume .jsx files are transpiled to .js by other tools
@@ -226,31 +229,50 @@ public final class N4JSLanguageHelper {
 	 * In case of .n4jsd files, we have to find out the extension of the plain-JS file being described by the .n4jsd
 	 * file *and* provide special handling for directory imports.
 	 */
-	private String getActualFileExtensionForN4jsdFile(IResourceDescriptions index, ImportDeclaration importingDeclOrigAST,
-			TModule targetModule) {
+	private String getActualFileExtensionForN4jsdFile(IResourceDescriptions index,
+			ImportDeclaration importingDeclOrigAST, TModule targetModule) {
+
+		URI targetUri = targetModule.eResource().getURI();
+		String targetExt = URIUtils.fileExtension(targetUri);
+		N4JSProjectConfigSnapshot targetPrj = workspaceAccess.findProjectContaining(targetModule);
+		ProjectDescription targetPD = targetPrj.getProjectDescription();
+		String definesPackageName = targetPD.getDefinesPackage();
+		if (definesPackageName == null && N4JSGlobals.DTS_FILE_EXTENSION.equals(targetExt)) {
+			if (targetPrj.getPackageName().startsWith(N4JSGlobals.TYPES_SCOPE)) {
+				definesPackageName = targetPrj.getPackageName().replace(N4JSGlobals.TYPES_SCOPE + "/", "");
+			} else {
+				// assume this ts project also contains the js files
+				definesPackageName = targetPrj.getPackageName();
+			}
+		}
 
 		QualifiedName targetQN = qualifiedNameConverter.toQualifiedName(targetModule.getQualifiedName());
 		Iterable<IEObjectDescription> matchingTModules = index.getExportedObjects(TypesPackage.Literals.TMODULE,
 				targetQN, false);
 		boolean gotJS = false;
 		boolean gotCJS = false;
-		boolean gotMJS = false;
 		for (IEObjectDescription desc : matchingTModules) {
-			String ext = desc.getEObjectURI().fileExtension();
-			if (N4JSGlobals.JS_FILE_EXTENSION.equals(ext)) {
+			URI descUri = desc.getEObjectURI().trimFragment();
+			N4JSProjectConfigSnapshot definedPrj = workspaceAccess.findProjectByNestedLocation(targetModule, descUri);
+			if (definesPackageName != null && !Objects.equals(definesPackageName, definedPrj.getPackageName())) {
+				continue;
+			}
+			if (targetUri == descUri) {
+				continue;
+			}
+			String ext = URIUtils.fileExtension(descUri);
+			if (N4JSGlobals.MJS_FILE_EXTENSION.equals(ext)) {
+				return N4JSGlobals.MJS_FILE_EXTENSION;
+			} else if (N4JSGlobals.JS_FILE_EXTENSION.equals(ext)) {
 				gotJS = true;
 			} else if (N4JSGlobals.CJS_FILE_EXTENSION.equals(ext)) {
 				gotCJS = true;
-			} else if (N4JSGlobals.MJS_FILE_EXTENSION.equals(ext)) {
-				gotMJS = true;
 			}
-			if (gotJS && gotCJS && gotMJS) {
+			if (gotJS && gotCJS) {
 				break;
 			}
 		}
-		if (gotMJS) {
-			return N4JSGlobals.MJS_FILE_EXTENSION;
-		} else if (gotCJS) {
+		if (gotCJS) {
 			return N4JSGlobals.CJS_FILE_EXTENSION;
 		} else if (gotJS) {
 			return N4JSGlobals.JS_FILE_EXTENSION;
