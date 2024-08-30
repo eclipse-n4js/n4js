@@ -36,7 +36,7 @@ export const JRE_VERSION = 17;
 export public function getJavaVersionInfo(log: {function(string)}) : ~Object with {version: int, suffices: boolean} {
     try {
         const version = detectJavaVersion();
-        const suffices: boolean = !!version && version == JRE_VERSION;
+        const suffices: boolean = version >= JRE_VERSION;
         return {version: version, suffices: suffices};
 
     } catch (err) {

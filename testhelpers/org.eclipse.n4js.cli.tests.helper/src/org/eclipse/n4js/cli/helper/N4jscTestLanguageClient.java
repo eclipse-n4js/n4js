@@ -49,6 +49,11 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 	Set<URI> deletedFiles = Collections.synchronizedSet(new HashSet<>());
 
 	@Override
+	public boolean isHidingProgressReports() {
+		return true;
+	}
+
+	@Override
 	public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
 		super.publishDiagnostics(diagnostics);
 

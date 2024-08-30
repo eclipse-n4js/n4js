@@ -18,6 +18,7 @@ import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Diagnostic;
+import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.ProgressParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
@@ -118,10 +119,12 @@ public class N4jscLanguageClient extends AbstractN4JSLanguageClient implements A
 			// WorkDoneProgressBegin begin = (WorkDoneProgressBegin) notification;
 			// N4jscConsole.println(begin.getTitle());
 		}
-		if (notification instanceof WorkDoneProgressReport) {
+		if (!isHidingProgressReports() && notification instanceof WorkDoneProgressReport) {
 			WorkDoneProgressReport report = (WorkDoneProgressReport) notification;
-			String msg = String.format(" %2d%%  %dERRs  %dWRNs  %s", report.getPercentage(), errCount, wrnCount,
-					report.getMessage());
+			String errSymbol = N4jscIssueSerializer.getShortSeverity(DiagnosticSeverity.Error);
+			String wrnSymbol = N4jscIssueSerializer.getShortSeverity(DiagnosticSeverity.Warning);
+			String msg = String.format(" %2d%%  %d%s  %d%s  %s", report.getPercentage(), errCount, errSymbol, wrnCount,
+					wrnSymbol, report.getMessage());
 			N4jscConsole.setInfoLine(msg);
 		}
 		if (notification instanceof WorkDoneProgressEnd) {
@@ -139,6 +142,11 @@ public class N4jscLanguageClient extends AbstractN4JSLanguageClient implements A
 	@Override
 	public void afterGenerate(URI source, URI generated) {
 		genCount++;
+	}
+
+	/** Returns true if progress reports should not be written to console. */
+	public boolean isHidingProgressReports() {
+		return false;
 	}
 
 	/**

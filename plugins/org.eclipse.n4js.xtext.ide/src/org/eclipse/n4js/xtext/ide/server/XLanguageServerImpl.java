@@ -254,8 +254,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		if (languagesRegistry.getProtocolToFactoryMap().containsKey(scheme)) {
 			return true;
 		}
+		String ext = uri.fileExtension(); // do not use: URIUtils.fileExtension(uri) since that does not support d.ts
 		if ("file".equalsIgnoreCase(scheme)
-				&& languagesRegistry.getExtensionToFactoryMap().containsKey(uri.fileExtension())) {
+				&& languagesRegistry.getExtensionToFactoryMap().containsKey(ext)) {
 			return true;
 		}
 		return false;

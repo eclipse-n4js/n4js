@@ -29,7 +29,7 @@ import org.junit.Test;
 /**
  * Test for bug GH-2154.
  */
-public class AT_GH_2154_HeadlessBuilderNotShowingAllIssues extends AbstractCliCompileTest {
+public class AT_GH_2154_HeadlessBuilderNotShowingAllIssuesTest extends AbstractCliCompileTest {
 
 	File workspace;
 	File packagesFolder;
@@ -56,18 +56,19 @@ public class AT_GH_2154_HeadlessBuilderNotShowingAllIssues extends AbstractCliCo
 
 		String actualOutput = cliResult.getStdOut();
 		actualOutput = actualOutput.replaceAll("Duration: .*s", "Duration: ----");
-		actualOutput = actualOutput.replaceAll("done \\(.*s\\)", "done (----)");
+		actualOutput = actualOutput.replaceAll("done. \\(.*s\\)", "done. (----)");
 
-		String expectedOutput = "n4jsc version 0.0.0.v19990101_0000\n"
-				+ "Clean results - Deleted: 0, Duration: ----\n"
-				+ "Initial build ...\n"
-				+ "packages/TestProject/src/TestModule.n4js\n"
-				+ "  WRN 15:5     The local variable Unused is never used\n"
-				+ "  WRN 15:5     Variable names should start with lower case letter.\n"
-				+ "  ERR 20:17    any is not a subtype of string.\n"
-				+ "  WRN 20:17    Unnecessary cast from null to any\n"
-				+ "... initial build done (----).\n"
-				+ "Compile results - Generated: 0, Deleted: 0, Errors: 1, Warnings: 3, Duration: ----";
+		String expectedOutput = """
+				n4jsc version 0.0.0.v19990101_0000
+				Scanning workspace ...
+				Clean results - Deleted: 0, Duration: ----
+				packages/TestProject/src/TestModule.n4js
+				  WRN 15:5     The local variable Unused is never used
+				  WRN 15:5     Variable names should start with lower case letter.
+				  ERR 20:17    any is not a subtype of string.
+				  WRN 20:17    Unnecessary cast from null to any
+				Full build done. (----)
+				Compile results - Generated: 0, Deleted: 0, Errors: 1, Warnings: 3, Duration: ----""";
 
 		assertEquals(cliResult.toString(), expectedOutput, actualOutput);
 	}

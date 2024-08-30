@@ -72,11 +72,12 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes();
 		n4jsc(options, SUCCESS);
 
-		assertEquals("TestInit\n"
-				+ "- package.json\n"
-				+ "+ src\n"
-				+ "+ src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				- package.json
+				+ src
+				+ src-gen
+				""", FileUtils.serializeFileTree(cwd));
 
 		npmInstall(cwd.toPath());
 		CliCompileResult result = n4jsc(IMPLICIT_COMPILE(cwd).setWorkingDirectory(cwd.toPath()), SUCCESS);
@@ -107,13 +108,14 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		N4jscTestOptions options = INIT().setWorkingDirectory(subfolder.toPath()).yes().scope();
 		n4jsc(options, SUCCESS);
 
-		assertEquals("TestInit\n"
-				+ "+ @myScope\n"
-				+ "  + scopedProject\n"
-				+ "    - package.json\n"
-				+ "    + src\n"
-				+ "    + src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				+ @myScope
+				  + scopedProject
+				    - package.json
+				    + src
+				    + src-gen
+				""", FileUtils.serializeFileTree(cwd));
 
 		String packagejsonContents = Files.readString(subfolder.toPath().resolve(PACKAGE_JSON));
 		assertTrue(packagejsonContents.contains("\"name\": \"@myScope/scopedProject\""));
@@ -139,13 +141,14 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().scope().create();
 		n4jsc(options, SUCCESS);
 
-		assertEquals("TestInit\n"
-				+ "+ @scope\n"
-				+ "  + my-project\n"
-				+ "    - package.json\n"
-				+ "    + src\n"
-				+ "    + src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				+ @scope
+				  + my-project
+				    - package.json
+				    + src
+				    + src-gen
+				""", FileUtils.serializeFileTree(cwd));
 
 		File subfolder = new File(cwd, "@scope/my-project");
 		String packagejsonContents = Files.readString(subfolder.toPath().resolve(PACKAGE_JSON));
@@ -211,43 +214,45 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		n4jsc(options, SUCCESS);
 
 		String packagejsonContents = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
-		assertEquals("{\n"
-				+ "  \"name\": \"TestInit\",\n"
-				+ "  \"version\": \"0.0.1\",\n"
-				+ "  \"type\": \"module\",\n"
-				+ "  \"main\": \"src-gen/index.js\",\n"
-				+ "  \"scripts\": {\n"
-				+ "    \"n4jsc\": \"n4jsc\",\n"
-				+ "    \"build\": \"n4jsc compile . --clean || true\"\n"
-				+ "  },\n"
-				+ "  \"dependencies\": {\n"
-				+ "    \"n4js-runtime\": \"\",\n"
-				+ "    \"n4js-runtime-es2015\": \"\"\n"
-				+ "  },\n"
-				+ "  \"devDependencies\": {\n"
-				+ "    \"n4js-cli\": \"\"\n"
-				+ "  },\n"
-				+ "  \"n4js\": {\n"
-				+ "    \"projectType\": \"library\",\n"
-				+ "    \"mainModule\": \"index\",\n"
-				+ "    \"output\": \"src-gen\",\n"
-				+ "    \"sources\": {\n"
-				+ "      \"source\": [\n"
-				+ "        \"src\"\n"
-				+ "      ]\n"
-				+ "    },\n"
-				+ "    \"requiredRuntimeLibraries\": [\n"
-				+ "      \"n4js-runtime-es2015\"\n"
-				+ "    ]\n"
-				+ "  }\n"
-				+ "}", packagejsonContents);
+		assertEquals("""
+				{
+				  "name": "TestInit",
+				  "version": "0.0.1",
+				  "type": "module",
+				  "main": "src-gen/index.js",
+				  "scripts": {
+				    "n4jsc": "n4jsc",
+				    "build": "n4jsc compile . --clean || true"
+				  },
+				  "dependencies": {
+				    "n4js-runtime": "",
+				    "n4js-runtime-es2015": ""
+				  },
+				  "devDependencies": {
+				    "n4js-cli": ""
+				  },
+				  "n4js": {
+				    "projectType": "library",
+				    "mainModule": "index",
+				    "output": "src-gen",
+				    "sources": {
+				      "source": [
+				        "src"
+				      ]
+				    },
+				    "requiredRuntimeLibraries": [
+				      "n4js-runtime-es2015"
+				    ]
+				  }
+				}""", packagejsonContents);
 
-		assertEquals("TestInit\n"
-				+ "- package.json\n"
-				+ "+ src\n"
-				+ "  - index.n4js\n"
-				+ "+ src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				- package.json
+				+ src
+				  - index.n4js
+				+ src-gen
+				""", FileUtils.serializeFileTree(cwd));
 
 		npmInstall(cwd.toPath());
 		CliCompileResult result = n4jsc(IMPLICIT_COMPILE(cwd).setWorkingDirectory(cwd.toPath()), SUCCESS);
@@ -265,12 +270,13 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertTrue(packagejsonContents.contains("  \"main\": \"src-gen/index.js\",\n"));
 		assertTrue(packagejsonContents.contains("    \"mainModule\": \"index\",\n"));
 
-		assertEquals("TestInit\n"
-				+ "- package.json\n"
-				+ "+ src\n"
-				+ "  - index.n4js\n"
-				+ "+ src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				- package.json
+				+ src
+				  - index.n4js
+				+ src-gen
+				""", FileUtils.serializeFileTree(cwd));
 	}
 
 	/** test for a custom main module */
@@ -284,12 +290,13 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertTrue(packagejsonContents.contains("  \"main\": \"src-gen/index.jsx\",\n"));
 		assertTrue(packagejsonContents.contains("    \"mainModule\": \"index\",\n"));
 
-		assertEquals("TestInit\n"
-				+ "- package.json\n"
-				+ "+ src\n"
-				+ "  - index.n4jsx\n"
-				+ "+ src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				- package.json
+				+ src
+				  - index.n4jsx
+				+ src-gen
+				""", FileUtils.serializeFileTree(cwd));
 	}
 
 	/** test for a custom main module */
@@ -303,12 +310,13 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertTrue(packagejsonContents.contains("  \"main\": \"src-gen/index.jsx\",\n"));
 		assertTrue(packagejsonContents.contains("    \"mainModule\": \"index\",\n"));
 
-		assertEquals("TestInit\n"
-				+ "- package.json\n"
-				+ "+ src\n"
-				+ "  - index.n4jsx\n"
-				+ "+ src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				- package.json
+				+ src
+				  - index.n4jsx
+				+ src-gen
+				""", FileUtils.serializeFileTree(cwd));
 	}
 
 	/** test also create yarn */
@@ -317,14 +325,15 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces();
 		n4jsc(options, SUCCESS);
 
-		assertEquals("TestInit\n"
-				+ "- package.json\n"
-				+ "+ packages\n"
-				+ "  + my-project\n"
-				+ "    - package.json\n"
-				+ "    + src\n"
-				+ "    + src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				- package.json
+				+ packages
+				  + my-project
+				    - package.json
+				    + src
+				    + src-gen
+				""", FileUtils.serializeFileTree(cwd));
 
 		yarnInstall(cwd.toPath());
 		n4jsc(IMPLICIT_COMPILE(cwd).setWorkingDirectory(cwd.toPath()), SUCCESS);
@@ -376,15 +385,16 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces().create();
 		n4jsc(options, SUCCESS);
 
-		assertEquals("TestInit\n"
-				+ "+ yarn-project\n"
-				+ "  - package.json\n"
-				+ "  + packages\n"
-				+ "    + my-project\n"
-				+ "      - package.json\n"
-				+ "      + src\n"
-				+ "      + src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				+ yarn-project
+				  - package.json
+				  + packages
+				    + my-project
+				      - package.json
+				      + src
+				      + src-gen
+				""", FileUtils.serializeFileTree(cwd));
 	}
 
 	/** test yarn create with scope project */
@@ -394,16 +404,17 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces().scope().create();
 		n4jsc(options, SUCCESS);
 
-		assertEquals("TestInit\n"
-				+ "+ yarn-project\n"
-				+ "  - package.json\n"
-				+ "  + packages\n"
-				+ "    + @scope\n"
-				+ "      + my-project\n"
-				+ "        - package.json\n"
-				+ "        + src\n"
-				+ "        + src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				+ yarn-project
+				  - package.json
+				  + packages
+				    + @scope
+				      + my-project
+				        - package.json
+				        + src
+				        + src-gen
+				""", FileUtils.serializeFileTree(cwd));
 	}
 
 	/** test yarn at wrong location */
@@ -413,14 +424,15 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces();
 		n4jsc(options, SUCCESS);
 
-		assertEquals("TestInit\n"
-				+ "- package.json\n"
-				+ "+ packages\n"
-				+ "  + my-project\n"
-				+ "    - package.json\n"
-				+ "    + src\n"
-				+ "    + src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				- package.json
+				+ packages
+				  + my-project
+				    - package.json
+				    + src
+				    + src-gen
+				""", FileUtils.serializeFileTree(cwd));
 
 		// test
 		File newProject = new File(cwd, "packages");
@@ -440,14 +452,15 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces();
 		n4jsc(options, SUCCESS);
 
-		assertEquals("TestInit\n"
-				+ "- package.json\n"
-				+ "+ packages\n"
-				+ "  + my-project\n"
-				+ "    - package.json\n"
-				+ "    + src\n"
-				+ "    + src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				- package.json
+				+ packages
+				  + my-project
+				    - package.json
+				    + src
+				    + src-gen
+				""", FileUtils.serializeFileTree(cwd));
 
 		// test
 		File newProject = new File(cwd, "packages");
@@ -467,14 +480,15 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces();
 		n4jsc(options, SUCCESS);
 
-		assertEquals("TestInit\n"
-				+ "- package.json\n"
-				+ "+ packages\n"
-				+ "  + my-project\n"
-				+ "    - package.json\n"
-				+ "    + src\n"
-				+ "    + src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				- package.json
+				+ packages
+				  + my-project
+				    - package.json
+				    + src
+				    + src-gen
+				""", FileUtils.serializeFileTree(cwd));
 
 		// test
 		File newProject = new File(cwd, "packages");
@@ -494,14 +508,15 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces();
 		n4jsc(options, SUCCESS);
 
-		assertEquals("TestInit\n"
-				+ "- package.json\n"
-				+ "+ packages\n"
-				+ "  + my-project\n"
-				+ "    - package.json\n"
-				+ "    + src\n"
-				+ "    + src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				- package.json
+				+ packages
+				  + my-project
+				    - package.json
+				    + src
+				    + src-gen
+				""", FileUtils.serializeFileTree(cwd));
 
 		// test
 		options = INIT().yes().setWorkingDirectory(cwd.toPath()).workspaces();
@@ -521,14 +536,15 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces();
 		n4jsc(options, SUCCESS);
 
-		assertEquals("TestInit\n"
-				+ "- package.json\n"
-				+ "+ packages\n"
-				+ "  + my-project\n"
-				+ "    - package.json\n"
-				+ "    + src\n"
-				+ "    + src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				- package.json
+				+ packages
+				  + my-project
+				    - package.json
+				    + src
+				    + src-gen
+				""", FileUtils.serializeFileTree(cwd));
 
 		// test
 		options = INIT().yes().setWorkingDirectory(cwd.toPath().resolve("packages")).workspaces().scope();
@@ -547,14 +563,15 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces();
 		n4jsc(options, SUCCESS);
 
-		assertEquals("TestInit\n"
-				+ "- package.json\n"
-				+ "+ packages\n"
-				+ "  + my-project\n"
-				+ "    - package.json\n"
-				+ "    + src\n"
-				+ "    + src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				- package.json
+				+ packages
+				  + my-project
+				    - package.json
+				    + src
+				    + src-gen
+				""", FileUtils.serializeFileTree(cwd));
 
 		// test
 		File newProject = new File(cwd, "packages/newProject");
@@ -562,18 +579,19 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		options = INIT().yes().setWorkingDirectory(newProject.toPath()).workspaces();
 		n4jsc(options, SUCCESS);
 
-		assertEquals("TestInit\n"
-				+ "- package.json\n"
-				+ "+ packages\n"
-				+ "  + my-project\n"
-				+ "    - package.json\n"
-				+ "    + src\n"
-				+ "    + src-gen\n"
-				+ "  + newProject\n"
-				+ "    - package.json\n"
-				+ "    + src\n"
-				+ "    + src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				- package.json
+				+ packages
+				  + my-project
+				    - package.json
+				    + src
+				    + src-gen
+				  + newProject
+				    - package.json
+				    + src
+				    + src-gen
+				""", FileUtils.serializeFileTree(cwd));
 	}
 
 	/** test to init a scoped project to a yarn workspace */
@@ -583,14 +601,15 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces();
 		n4jsc(options, SUCCESS);
 
-		assertEquals("TestInit\n"
-				+ "- package.json\n"
-				+ "+ packages\n"
-				+ "  + my-project\n"
-				+ "    - package.json\n"
-				+ "    + src\n"
-				+ "    + src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				- package.json
+				+ packages
+				  + my-project
+				    - package.json
+				    + src
+				    + src-gen
+				""", FileUtils.serializeFileTree(cwd));
 
 		// test
 		File newProject = new File(cwd, "packages/@newScope/newProject");
@@ -598,19 +617,20 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		options = INIT().yes().setWorkingDirectory(newProject.toPath()).workspaces().scope();
 		n4jsc(options, SUCCESS);
 
-		assertEquals("TestInit\n"
-				+ "- package.json\n"
-				+ "+ packages\n"
-				+ "  + @newScope\n"
-				+ "    + newProject\n"
-				+ "      - package.json\n"
-				+ "      + src\n"
-				+ "      + src-gen\n"
-				+ "  + my-project\n"
-				+ "    - package.json\n"
-				+ "    + src\n"
-				+ "    + src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				- package.json
+				+ packages
+				  + @newScope
+				    + newProject
+				      - package.json
+				      + src
+				      + src-gen
+				  + my-project
+				    - package.json
+				    + src
+				    + src-gen
+				""", FileUtils.serializeFileTree(cwd));
 	}
 
 	/** Basic extend existing project test. */
@@ -619,56 +639,58 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		npmRun(cwd.toPath(), "init", "--yes");
 
 		String packagejsonContents = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
-		assertEquals("{\n"
-				+ "  \"name\": \"testinit\",\n"
-				+ "  \"version\": \"1.0.0\",\n"
-				+ "  \"description\": \"\",\n"
-				+ "  \"main\": \"index.js\",\n"
-				+ "  \"scripts\": {\n"
-				+ "    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n"
-				+ "  },\n"
-				+ "  \"keywords\": [],\n"
-				+ "  \"author\": \"\",\n"
-				+ "  \"license\": \"ISC\"\n"
-				+ "}\n"
-				+ "", packagejsonContents);
+		assertEquals("""
+				{
+				  "name": "testinit",
+				  "version": "1.0.0",
+				  "main": "index.js",
+				  "scripts": {
+				    "test": "echo \\"Error: no test specified\\" && exit 1"
+				  },
+				  "keywords": [],
+				  "author": "",
+				  "license": "ISC",
+				  "description": ""
+				}
+				""", packagejsonContents);
 
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().n4js();
 		n4jsc(options, SUCCESS);
 
 		String packagejsonContentsExt = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
-		assertEquals("{\n"
-				+ "  \"name\": \"testinit\",\n"
-				+ "  \"version\": \"1.0.0\",\n"
-				+ "  \"description\": \"\",\n"
-				+ "  \"main\": \"index.js\",\n"
-				+ "  \"scripts\": {\n"
-				+ "    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n"
-				+ "  },\n"
-				+ "  \"keywords\": [],\n"
-				+ "  \"author\": \"\",\n"
-				+ "  \"license\": \"ISC\",\n"
-				+ "  \"devDependencies\" : {\n"
-				+ "    \"n4js-cli\": \"\"\n"
-				+ "  },\n"
-				+ "  \"dependencies\" : {\n"
-				+ "    \"n4js-runtime\": \"\",\n"
-				+ "    \"n4js-runtime-es2015\": \"\"\n"
-				+ "  },\n"
-				+ "  \"n4js\" : {\n"
-				+ "    \"projectType\": \"library\",\n"
-				+ "    \"output\": \"src-gen\",\n"
-				+ "    \"sources\": {\n"
-				+ "      \"source\": [\n"
-				+ "        \"src\"\n"
-				+ "      ]\n"
-				+ "    },\n"
-				+ "    \"requiredRuntimeLibraries\": [\n"
-				+ "      \"n4js-runtime-es2015\"\n"
-				+ "    ]\n"
-				+ "  }\n"
-				+ "}\n"
-				+ "", packagejsonContentsExt);
+		assertEquals("""
+				{
+				  "name": "testinit",
+				  "version": "1.0.0",
+				  "main": "index.js",
+				  "scripts": {
+				    "test": "echo \\"Error: no test specified\\" && exit 1"
+				  },
+				  "keywords": [],
+				  "author": "",
+				  "license": "ISC",
+				  "description": "",
+				  "devDependencies" : {
+				    "n4js-cli": ""
+				  },
+				  "dependencies" : {
+				    "n4js-runtime": "",
+				    "n4js-runtime-es2015": ""
+				  },
+				  "n4js" : {
+				    "projectType": "library",
+				    "output": "src-gen",
+				    "sources": {
+				      "source": [
+				        "src"
+				      ]
+				    },
+				    "requiredRuntimeLibraries": [
+				      "n4js-runtime-es2015"
+				    ]
+				  }
+				}
+				""", packagejsonContentsExt);
 	}
 
 	/** Extend existing project test and modify main module. */
@@ -677,61 +699,64 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		npmRun(cwd.toPath(), "init", "--yes");
 
 		String packagejsonContents = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
-		assertEquals("{\n"
-				+ "  \"name\": \"testinit\",\n"
-				+ "  \"version\": \"1.0.0\",\n"
-				+ "  \"description\": \"\",\n"
-				+ "  \"main\": \"index.js\",\n"
-				+ "  \"scripts\": {\n"
-				+ "    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n"
-				+ "  },\n"
-				+ "  \"keywords\": [],\n"
-				+ "  \"author\": \"\",\n"
-				+ "  \"license\": \"ISC\"\n"
-				+ "}\n"
-				+ "", packagejsonContents);
+		assertEquals("""
+				{
+				  "name": "testinit",
+				  "version": "1.0.0",
+				  "main": "index.js",
+				  "scripts": {
+				    "test": "echo \\"Error: no test specified\\" && exit 1"
+				  },
+				  "keywords": [],
+				  "author": "",
+				  "license": "ISC",
+				  "description": ""
+				}
+				""", packagejsonContents);
 
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(",,index.js").n4js();
 		n4jsc(options, SUCCESS);
 
-		assertEquals("TestInit\n"
-				+ "- package.json\n"
-				+ "+ src\n"
-				+ "+ src-gen\n"
-				+ "", FileUtils.serializeFileTree(cwd));
+		assertEquals("""
+				TestInit
+				- package.json
+				+ src
+				+ src-gen
+				""", FileUtils.serializeFileTree(cwd));
 
 		String packagejsonContentsExt = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
-		assertEquals("{\n"
-				+ "  \"name\": \"testinit\",\n"
-				+ "  \"version\": \"1.0.0\",\n"
-				+ "  \"description\": \"\",\n"
-				+ "  \"main\": \"index.js\",\n"
-				+ "  \"scripts\": {\n"
-				+ "    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n"
-				+ "  },\n"
-				+ "  \"keywords\": [],\n"
-				+ "  \"author\": \"\",\n"
-				+ "  \"license\": \"ISC\",\n"
-				+ "  \"devDependencies\" : {\n"
-				+ "    \"n4js-cli\": \"\"\n"
-				+ "  },\n"
-				+ "  \"dependencies\" : {\n"
-				+ "    \"n4js-runtime\": \"\",\n"
-				+ "    \"n4js-runtime-es2015\": \"\"\n"
-				+ "  },\n"
-				+ "  \"n4js\" : {\n"
-				+ "    \"projectType\": \"library\",\n"
-				+ "    \"output\": \"src-gen\",\n"
-				+ "    \"sources\": {\n"
-				+ "      \"source\": [\n"
-				+ "        \"src\"\n"
-				+ "      ]\n"
-				+ "    },\n"
-				+ "    \"requiredRuntimeLibraries\": [\n"
-				+ "      \"n4js-runtime-es2015\"\n"
-				+ "    ]\n"
-				+ "  }\n"
-				+ "}\n"
-				+ "", packagejsonContentsExt);
+		assertEquals("""
+				{
+				  "name": "testinit",
+				  "version": "1.0.0",
+				  "main": "index.js",
+				  "scripts": {
+				    "test": "echo \\"Error: no test specified\\" && exit 1"
+				  },
+				  "keywords": [],
+				  "author": "",
+				  "license": "ISC",
+				  "description": "",
+				  "devDependencies" : {
+				    "n4js-cli": ""
+				  },
+				  "dependencies" : {
+				    "n4js-runtime": "",
+				    "n4js-runtime-es2015": ""
+				  },
+				  "n4js" : {
+				    "projectType": "library",
+				    "output": "src-gen",
+				    "sources": {
+				      "source": [
+				        "src"
+				      ]
+				    },
+				    "requiredRuntimeLibraries": [
+				      "n4js-runtime-es2015"
+				    ]
+				  }
+				}
+				""", packagejsonContentsExt);
 	}
 }

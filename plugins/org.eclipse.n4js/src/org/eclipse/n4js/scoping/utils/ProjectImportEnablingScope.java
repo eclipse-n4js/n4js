@@ -677,7 +677,7 @@ public class ProjectImportEnablingScope implements IScope {
 				// IEObjectDescriptions as TModules, so for everything else we can continue here:
 				continue;
 			}
-			String currExt = curr.getEObjectURI().fileExtension();
+			String currExt = URIUtils.fileExtension(curr.getEObjectURI());
 			if (N4JSGlobals.JS_FILE_EXTENSION.equals(currExt)
 					|| N4JSGlobals.JSX_FILE_EXTENSION.equals(currExt)) {
 				if (firstJS == null) {
