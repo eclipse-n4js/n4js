@@ -175,10 +175,14 @@ public class ProjectImportEnablingScope implements IScope {
 			} else {
 				// if mixed -> filter for module augmentations only
 				// else -> nothing
+				boolean isAugmentationModuleOrModule = !importOrExportDecl.isPresent()
+						|| DeclMergingUtils.isAugmentationModuleOrModule(importOrExportDecl.get());
 				List<IEObjectDescription> modAugmentations = new ArrayList<>();
-				for (IEObjectDescription res : result) {
-					if (DeclMergingUtils.isAugmentationModuleOrModule(res)) {
-						modAugmentations.add(res);
+				if (isAugmentationModuleOrModule) {
+					for (IEObjectDescription res : result) {
+						if (DeclMergingUtils.isAugmentationModuleOrModule(res)) {
+							modAugmentations.add(res);
+						}
 					}
 				}
 				result = modAugmentations.isEmpty() ? result : modAugmentations;

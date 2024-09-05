@@ -17,9 +17,12 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSMetaModelUtils.N4JSMetaModelCache;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.EcoreUtil2;
@@ -113,7 +116,7 @@ public class DeclMergingUtils {
 
 	/** Returns <code>true</code> iff the given element is the main module of a project or a (transitive) child. */
 	public static boolean isOrInMainModule(EObject elem) {
-		TModule tModule = EcoreUtil2.getContainerOfType(elem, TModule.class);
+		TModule tModule = getTModule(elem);
 		return tModule != null && tModule.isMainModule();
 	}
 
@@ -130,7 +133,7 @@ public class DeclMergingUtils {
 
 	/** Returns <code>true</code> iff the given element is either a non-ambient module or module augmentation. */
 	public static boolean isAugmentationModuleOrModule(EObject eobj) {
-		TModule tModule = EcoreUtil2.getContainerOfType(eobj, TModule.class);
+		TModule tModule = getTModule(eobj);
 		if (tModule == null) {
 			return false;
 		}
@@ -146,5 +149,18 @@ public class DeclMergingUtils {
 	public static boolean isAugmentationModuleOrModule(IEObjectDescription descr) {
 		EObject eobj = descr.getEObjectOrProxy();
 		return isAugmentationModuleOrModule(eobj);
+	}
+
+	/** Returns the TModule of a given T-element or AST-element */
+	public static TModule getTModule(EObject eobj) {
+		if (eobj instanceof SyntaxRelatedTElement) {
+			return EcoreUtil2.getContainerOfType(eobj, TModule.class);
+		} else if (eobj instanceof ScriptElement) {
+			Script script = EcoreUtil2.getContainerOfType(eobj, Script.class);
+			if (script != null) {
+				return script.getModule();
+			}
+		}
+		return null;
 	}
 }
