@@ -625,7 +625,8 @@ class TFunction extends GenericType, AccessibleTypeElement, SyntaxRelatedTElemen
 		if (declaredAsync) strb.append("async ");
 		strb.append("function ");
 		if (declaredGenerator) strb.append("* ");
-		strb.append(name).append("(").append(fpars.map[formalParameterAsString].join(", ")).append(")");
+		if (name!==null) strb.append(name);
+		strb.append("(").append(fpars.map[formalParameterAsString].join(", ")).append(")");
 		if (returnTypeRef!==null) strb.append(": ").append(returnTypeRef.typeRefAsString);
 		if (returnValueOptional) strb.append('?');
 		return strb.toString();
