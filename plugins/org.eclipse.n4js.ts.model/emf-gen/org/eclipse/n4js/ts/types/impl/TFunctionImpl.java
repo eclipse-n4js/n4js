@@ -672,15 +672,20 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 		if (_isDeclaredGenerator) {
 			strb.append("* ");
 		}
+		String _name = this.getName();
+		boolean _tripleNotEquals = (_name != null);
+		if (_tripleNotEquals) {
+			strb.append(this.getName());
+		}
 		final Function1<TFormalParameter, String> _function_1 = new Function1<TFormalParameter, String>() {
 			public String apply(final TFormalParameter it) {
 				return it.getFormalParameterAsString();
 			}
 		};
-		strb.append(this.getName()).append("(").append(IterableExtensions.join(XcoreEListExtensions.<TFormalParameter, String>map(this.getFpars(), _function_1), ", ")).append(")");
+		strb.append("(").append(IterableExtensions.join(XcoreEListExtensions.<TFormalParameter, String>map(this.getFpars(), _function_1), ", ")).append(")");
 		TypeRef _returnTypeRef = this.getReturnTypeRef();
-		boolean _tripleNotEquals = (_returnTypeRef != null);
-		if (_tripleNotEquals) {
+		boolean _tripleNotEquals_1 = (_returnTypeRef != null);
+		if (_tripleNotEquals_1) {
 			strb.append(": ").append(this.getReturnTypeRef().getTypeRefAsString());
 		}
 		boolean _isReturnValueOptional = this.isReturnValueOptional();
