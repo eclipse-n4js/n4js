@@ -673,8 +673,11 @@ public class N4JSScopeProvider extends AbstractScopeProvider
 	private IScope scope_AllTopLevelElementsFromAbstractNamespace(AbstractNamespace ns, EObject context,
 			boolean includeHollows, boolean includeValueOnlyElements) {
 
-		return scope_AllTopLevelElementsFromAbstractNamespace(ns, context, IScope.NULLSCOPE, includeHollows,
-				includeValueOnlyElements);
+		return cache.get(context.eResource(),
+				() -> scope_AllTopLevelElementsFromAbstractNamespace(ns, context, IScope.NULLSCOPE, includeHollows,
+						includeValueOnlyElements),
+				"createScopeForMergedNamespaces", ns, includeHollows, includeValueOnlyElements);
+
 	}
 
 	private IScope scope_AllTopLevelElementsFromAbstractNamespace(AbstractNamespace ns, EObject context,
@@ -908,7 +911,17 @@ public class N4JSScopeProvider extends AbstractScopeProvider
 
 	/** Returns <code>parentOrNull</code> unchanged if no namespaces are merged onto "elem". */
 	private IScope createScopeForMergedNamespaces(EObject context, Type elem, IScope parentOrNull) {
-		var result = parentOrNull;
+		return cache.get(context.eResource(),
+				() -> createScopeForMergedNamespacesUncached(context, elem, parentOrNull),
+				"createScopeForMergedNamespaces", elem);
+	}
+
+	private IScope createScopeForMergedNamespacesUncached(EObject context, Type elem, IScope parentOrNull) {
+		if (elem instanceof AbstractNamespace) {
+			return scope_AllTopLevelElementsFromAbstractNamespace((AbstractNamespace) elem, context, parentOrNull,
+					false, true);
+		}
+		IScope result = parentOrNull;
 		if (DeclMergingUtils.mayBeMerged(elem)) {
 			Set<Type> mergedElems = declMergingHelper.getMergedElements((N4JSResource) context.eResource(), elem);
 			List<TNamespace> mergedNamespaces = toList(filter(mergedElems, TNamespace.class));

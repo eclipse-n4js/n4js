@@ -119,7 +119,7 @@ public class LocallyKnownTypesScopingHelper {
 			IScope localTypes = scopeWithLocallyDeclaredElems(script, importScope, onlyNamespacelikes);
 
 			return localTypes;
-		}, script, "locallyKnownTypes_" + String.valueOf(onlyNamespacelikes));
+		}, script, "locallyKnownTypes_", onlyNamespacelikes);
 	}
 
 	/** Returns scope with locally declared types (without import scope). */
@@ -133,7 +133,7 @@ public class LocallyKnownTypesScopingHelper {
 		return cache.get(namespace.eResource(),
 				() -> scopeWithLocallyDeclaredElems((AbstractNamespace) namespace.getDefinedType(), namespace, parent,
 						onlyNamespacelikes),
-				namespace, "scopeWithLocallyDeclaredElems_" + String.valueOf(onlyNamespacelikes));
+				namespace, "scopeWithLocallyDeclaredElems_", onlyNamespacelikes);
 	}
 
 	/** Returns scope with locally declared types (without import scope). */
